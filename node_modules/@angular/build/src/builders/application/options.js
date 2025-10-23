@@ -96,7 +96,12 @@ async function normalizeOptions(context, projectName, options, extensions) {
             if (extension[0] !== '.' || /\.[cm]?[jt]sx?$/.test(extension)) {
                 continue;
             }
-            if (value !== 'text' && value !== 'binary' && value !== 'file' && value !== 'empty') {
+            if (value !== 'text' &&
+                value !== 'binary' &&
+                value !== 'file' &&
+                value !== 'dataurl' &&
+                value !== 'base64' &&
+                value !== 'empty') {
                 continue;
             }
             loaderExtensions ??= {};

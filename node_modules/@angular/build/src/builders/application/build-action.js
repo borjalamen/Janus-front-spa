@@ -50,6 +50,7 @@ const bundler_context_1 = require("../../tools/esbuild/bundler-context");
 const sass_language_1 = require("../../tools/esbuild/stylesheets/sass-language");
 const utils_1 = require("../../tools/esbuild/utils");
 const environment_options_1 = require("../../utils/environment-options");
+const path_1 = require("../../utils/path");
 const results_1 = require("./results");
 // Watch workspace for package manager changes
 const packageWatchFiles = [
@@ -91,7 +92,7 @@ async function* runEsBuildBuildAction(action, options) {
             // Ignore the output and cache paths to avoid infinite rebuild cycles
             outputOptions.base,
             cacheOptions.basePath,
-            `${workspaceRoot.replace(/\\/g, '/')}/**/.*/**`,
+            `${(0, path_1.toPosixPath)(workspaceRoot)}/**/.*/**`,
         ];
         // Setup a watcher
         const { createWatcher } = await Promise.resolve().then(() => __importStar(require('../../tools/esbuild/watcher')));

@@ -161,22 +161,12 @@ function generateLazyLoadedFilesMappings(metafile, initialFiles, publicPath = ''
         if (!entryPoint || exports?.length < 1 || !fileName.endsWith('.js')) {
             continue;
         }
-        const importedPaths = [
-            {
-                path: `${publicPath}${fileName}`,
-                dynamicImport: false,
-            },
-        ];
+        const importedPaths = [`${publicPath}${fileName}`];
         for (const { kind, external, path } of imports) {
-            if (external ||
-                initialFiles.has(path) ||
-                (kind !== 'dynamic-import' && kind !== 'import-statement')) {
+            if (external || initialFiles.has(path) || kind !== 'import-statement') {
                 continue;
             }
-            importedPaths.push({
-                path: `${publicPath}${path}`,
-                dynamicImport: kind === 'dynamic-import',
-            });
+            importedPaths.push(`${publicPath}${path}`);
         }
         entryPointToBundles[entryPoint] = importedPaths;
     }

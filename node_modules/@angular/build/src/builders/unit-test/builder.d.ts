@@ -7,9 +7,9 @@
  */
 import type { BuilderContext, BuilderOutput } from '@angular-devkit/architect';
 import type { ApplicationBuilderExtensions } from '../application/options';
-import type { Schema as UnitTestOptions } from './schema';
-export type { UnitTestOptions };
+import type { Schema as UnitTestBuilderOptions } from './schema';
+export type { UnitTestBuilderOptions };
 /**
  * @experimental Direct usage of this function is considered experimental.
  */
-export declare function execute(options: UnitTestOptions, context: BuilderContext, extensions?: ApplicationBuilderExtensions): AsyncIterable<BuilderOutput>;
+export declare function execute(options: UnitTestBuilderOptions, context: BuilderContext, extensions?: ApplicationBuilderExtensions): AsyncIterable<BuilderOutput>;

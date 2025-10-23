@@ -281,6 +281,7 @@ class BundlerContext {
             for (const { external, kind, path } of imports) {
                 if (!external ||
                     utils_1.SERVER_GENERATED_EXTERNALS.has(path) ||
+                    isInternalAngularFile(path) ||
                     (kind !== 'import-statement' && kind !== 'dynamic-import' && kind !== 'require-call')) {
                     continue;
                 }

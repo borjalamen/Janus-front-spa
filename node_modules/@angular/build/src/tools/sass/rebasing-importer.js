@@ -17,6 +17,7 @@ const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 const node_url_1 = require("node:url");
 const error_1 = require("../../utils/error");
+const path_1 = require("../../utils/path");
 const lexer_1 = require("./lexer");
 /**
  * A Sass Importer base class that provides the load logic to rebase all `url()` functions
@@ -69,7 +70,7 @@ class UrlRebasingImporter {
             const rebasedPath = (0, node_path_1.relative)(this.entryDirectory, stylesheetDirectory);
             // Normalize path separators and escape characters
             // https://developer.mozilla.org/en-US/docs/Web/CSS/url#syntax
-            const rebasedUrl = rebasedPath.replace(/\\/g, '/').replace(/[()\s'"]/g, '\\$&');
+            const rebasedUrl = (0, path_1.toPosixPath)(rebasedPath).replace(/[()\s'"]/g, '\\$&');
             updatedContents ??= new magic_string_1.default(contents);
             // Always quote the URL to avoid potential downstream parsing problems
             updatedContents.update(start, end, `"${rebasedUrl}||file:${valueNormalized}"`);

@@ -55,6 +55,7 @@ const profiling_1 = require("../profiling");
 const compilation_state_1 = require("./compilation-state");
 const file_reference_tracker_1 = require("./file-reference-tracker");
 const jit_plugin_callbacks_1 = require("./jit-plugin-callbacks");
+const rewrite_bazel_paths_1 = require("./rewrite-bazel-paths");
 // eslint-disable-next-line max-lines-per-function
 function createCompilerPlugin(pluginOptions, compilationOrFactory, stylesheetBundler) {
     return {
@@ -321,7 +322,7 @@ function createCompilerPlugin(pluginOptions, compilationOrFactory, stylesheetBun
                 return result;
             });
             build.onLoad({ filter: /\.[cm]?[jt]sx?$/ }, async (args) => {
-                const request = path.normalize(pluginOptions.fileReplacements?.[path.normalize(args.path)] ?? args.path);
+                const request = (0, rewrite_bazel_paths_1.rewriteForBazel)(path.normalize(pluginOptions.fileReplacements?.[path.normalize(args.path)] ?? args.path));
                 const isJS = /\.[cm]?js$/.test(request);
                 // Skip TS load attempt if JS TypeScript compilation not enabled and file is JS
                 if (shouldTsIgnoreJs && isJS) {
@@ -375,10 +376,11 @@ function createCompilerPlugin(pluginOptions, compilationOrFactory, stylesheetBun
                 return {
                     contents,
                     loader,
+                    resolveDir: path.dirname(request),
                 };
             });
             build.onLoad({ filter: /\.[cm]?js$/ }, (0, load_result_cache_1.createCachedLoad)(pluginOptions.loadResultCache, async (args) => {
-                let request = args.path;
+                let request = (0, rewrite_bazel_paths_1.rewriteForBazel)(args.path);
                 if (pluginOptions.fileReplacements) {
                     const replacement = pluginOptions.fileReplacements[path.normalize(args.path)];
                     if (replacement) {
@@ -391,6 +393,7 @@ function createCompilerPlugin(pluginOptions, compilationOrFactory, stylesheetBun
                     return {
                         contents,
                         loader: 'js',
+                        resolveDir: path.dirname(request),
                         watchFiles: request !== args.path ? [request] : undefined,
                     };
                 }, true);

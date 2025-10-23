@@ -27,6 +27,7 @@ async function createAngularSsrTransformPlugin(workspaceRoot) {
             remappedMap.sourceRoot = normalizePath(workspaceRoot) + '/';
             return {
                 code,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 map: remappedMap,
             };
         },

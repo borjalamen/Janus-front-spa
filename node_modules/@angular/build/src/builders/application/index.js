@@ -81,7 +81,8 @@ context, extensions) {
             }
             const buildTime = Number(process.hrtime.bigint() - startTime) / 10 ** 9;
             const hasError = result.errors.length > 0;
-            result.addLog(`Application bundle generation ${hasError ? 'failed' : 'complete'}. [${buildTime.toFixed(3)} seconds]\n`);
+            result.addLog(`Application bundle generation ${hasError ? 'failed' : 'complete'}.` +
+                ` [${buildTime.toFixed(3)} seconds] - ${new Date().toISOString()}\n`);
         }
         return result;
     }, {

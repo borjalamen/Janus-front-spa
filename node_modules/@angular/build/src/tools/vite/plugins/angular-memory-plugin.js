@@ -98,13 +98,13 @@ async function createAngularMemoryPlugin(options) {
  */
 async function loadViteClientCode(file, disableViteTransport = false) {
     const originalContents = await (0, promises_1.readFile)(file, 'utf-8');
-    let updatedContents = originalContents.replace(`"You can also disable this overlay by setting ",
-      h("code", { part: "config-option-name" }, "server.hmr.overlay"),
-      " to ",
-      h("code", { part: "config-option-value" }, "false"),
-      " in ",
-      h("code", { part: "config-file-name" }, hmrConfigName),
-      "."`, '');
+    let updatedContents = originalContents.replace('"You can also disable this overlay by setting ", ' +
+        'h("code", { part: "config-option-name" }, "server.hmr.overlay"), ' +
+        '" to ", ' +
+        'h("code", { part: "config-option-value" }, "false"), ' +
+        '" in ", ' +
+        'h("code", { part: "config-file-name" }, hmrConfigName), ' +
+        '"."', '');
     (0, node_assert_1.default)(originalContents !== updatedContents, 'Failed to update Vite client error overlay text.');
     if (disableViteTransport) {
         const previousUpdatedContents = updatedContents;

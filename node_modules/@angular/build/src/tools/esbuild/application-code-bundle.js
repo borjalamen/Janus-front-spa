@@ -20,6 +20,7 @@ const node_crypto_1 = require("node:crypto");
 const node_path_1 = require("node:path");
 const schema_1 = require("../../builders/application/schema");
 const environment_options_1 = require("../../utils/environment-options");
+const path_1 = require("../../utils/path");
 const manifest_1 = require("../../utils/server-rendering/manifest");
 const compilation_1 = require("../angular/compilation");
 const compiler_plugin_1 = require("./angular/compiler-plugin");
@@ -511,9 +512,7 @@ function getEsBuildCommonPolyfillsOptions(options, namespace, tryToResolvePolyfi
                 }));
             }
             // Generate module contents with an import statement per defined polyfill
-            let contents = polyfillPaths
-                .map((file) => `import '${file.replace(/\\/g, '/')}';`)
-                .join('\n');
+            let contents = polyfillPaths.map((file) => `import '${(0, path_1.toPosixPath)(file)}';`).join('\n');
             // The below should be done after loading `$localize` as otherwise the locale will be overridden.
             if (i18nOptions.shouldInline) {
                 // When inlining, a placeholder is used to allow the post-processing step to inject the $localize locale identifier.
@@ -534,8 +533,5 @@ function getEsBuildCommonPolyfillsOptions(options, namespace, tryToResolvePolyfi
     return buildOptions;
 }
 function entryFileToWorkspaceRelative(workspaceRoot, entryFile) {
-    return ('./' +
-        (0, node_path_1.relative)(workspaceRoot, entryFile)
-            .replace(/.[mc]?ts$/, '')
-            .replace(/\\/g, '/'));
+    return './' + (0, path_1.toPosixPath)((0, node_path_1.relative)(workspaceRoot, entryFile).replace(/.[mc]?ts$/, ''));
 }

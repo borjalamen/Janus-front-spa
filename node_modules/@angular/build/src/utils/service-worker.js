@@ -49,6 +49,7 @@ const path = __importStar(require("node:path"));
 const bundler_context_1 = require("../tools/esbuild/bundler-context");
 const error_1 = require("./error");
 const load_esm_1 = require("./load-esm");
+const path_1 = require("./path");
 class CliFilesystem {
     fs;
     base;
@@ -81,7 +82,7 @@ class CliFilesystem {
             const stats = await this.fs.stat(entryPath);
             if (stats.isFile()) {
                 // Uses posix paths since the service worker expects URLs
-                items.push('/' + path.relative(this.base, entryPath).replace(/\\/g, '/'));
+                items.push('/' + (0, path_1.toPosixPath)(path.relative(this.base, entryPath)));
             }
             else if (stats.isDirectory()) {
                 subdirectories.push(entryPath);
@@ -98,11 +99,11 @@ class ResultFilesystem {
     constructor(outputFiles, assetFiles) {
         for (const file of outputFiles) {
             if (file.type === bundler_context_1.BuildOutputFileType.Media || file.type === bundler_context_1.BuildOutputFileType.Browser) {
-                this.fileReaders.set('/' + file.path.replace(/\\/g, '/'), async () => file.contents);
+                this.fileReaders.set('/' + (0, path_1.toPosixPath)(file.path), async () => file.contents);
             }
         }
         for (const file of assetFiles) {
-            this.fileReaders.set('/' + file.destination.replace(/\\/g, '/'), () => node_fs_1.promises.readFile(file.source));
+            this.fileReaders.set('/' + (0, path_1.toPosixPath)(file.destination), () => node_fs_1.promises.readFile(file.source));
         }
     }
     async list(dir) {

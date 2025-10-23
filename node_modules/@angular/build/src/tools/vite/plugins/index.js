@@ -7,11 +7,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAngularSsrTransformPlugin = exports.ServerSsrMode = exports.createAngularSetupMiddlewaresPlugin = exports.createRemoveIdPrefixPlugin = exports.createAngularLocaleDataPlugin = exports.createAngularMemoryPlugin = void 0;
+exports.createAngularSsrTransformPlugin = exports.ServerSsrMode = exports.createAngularSetupMiddlewaresPlugin = exports.createRemoveIdPrefixPlugin = exports.createAngularMemoryPlugin = void 0;
 var angular_memory_plugin_1 = require("./angular-memory-plugin");
 Object.defineProperty(exports, "createAngularMemoryPlugin", { enumerable: true, get: function () { return angular_memory_plugin_1.createAngularMemoryPlugin; } });
-var i18n_locale_plugin_1 = require("./i18n-locale-plugin");
-Object.defineProperty(exports, "createAngularLocaleDataPlugin", { enumerable: true, get: function () { return i18n_locale_plugin_1.createAngularLocaleDataPlugin; } });
 var id_prefix_plugin_1 = require("./id-prefix-plugin");
 Object.defineProperty(exports, "createRemoveIdPrefixPlugin", { enumerable: true, get: function () { return id_prefix_plugin_1.createRemoveIdPrefixPlugin; } });
 var setup_middlewares_plugin_1 = require("./setup-middlewares-plugin");

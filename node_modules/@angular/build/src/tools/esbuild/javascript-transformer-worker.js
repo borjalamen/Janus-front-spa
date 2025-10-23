@@ -84,16 +84,10 @@ async function transformWithBabel(filename, data, options) {
         plugins.push(linkerPlugin);
     }
     if (options.advancedOptimizations) {
+        const { adjustStaticMembers, adjustTypeScriptEnums, elideAngularMetadata, markTopLevelPure } = await Promise.resolve().then(() => __importStar(require('../babel/plugins')));
         const sideEffectFree = options.sideEffects === false;
         const safeAngularPackage = sideEffectFree && /[\\/]node_modules[\\/]@angular[\\/]/.test(filename);
-        const { adjustStaticMembers, adjustTypeScriptEnums, elideAngularMetadata, markTopLevelPure } = await Promise.resolve().then(() => __importStar(require('../babel/plugins')));
-        if (safeAngularPackage) {
-            plugins.push(markTopLevelPure);
-        }
-        plugins.push(elideAngularMetadata, adjustTypeScriptEnums, [
-            adjustStaticMembers,
-            { wrapDecorators: sideEffectFree },
-        ]);
+        plugins.push([markTopLevelPure, { topLevelSafeMode: !safeAngularPackage }], elideAngularMetadata, adjustTypeScriptEnums, [adjustStaticMembers, { wrapDecorators: sideEffectFree }]);
     }
     // If no additional transformations are needed, return the data directly
     if (plugins.length === 0) {

@@ -12,6 +12,7 @@ exports.getTestEntrypoints = getTestEntrypoints;
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 const tinyglobby_1 = require("tinyglobby");
+const path_1 = require("../../utils/path");
 /* Go through all patterns and find unique list of files */
 async function findTests(include, exclude, workspaceRoot, projectSourceRoot) {
     const matchingTestsPromises = include.map((pattern) => findMatchingTests(pattern, exclude, workspaceRoot, projectSourceRoot));
@@ -39,7 +40,6 @@ function getTestEntrypoints(testFiles, { projectSourceRoot, workspaceRoot }) {
         return [uniqueName, testFile];
     }));
 }
-const normalizePath = (path) => path.replace(/\\/g, '/');
 const removeLeadingSlash = (pattern) => {
     if (pattern.charAt(0) === '/') {
         return pattern.substring(1);
@@ -62,9 +62,9 @@ function removeRoots(path, roots) {
 }
 async function findMatchingTests(pattern, ignore, workspaceRoot, projectSourceRoot) {
     // normalize pattern, glob lib only accepts forward slashes
-    let normalizedPattern = normalizePath(pattern);
+    let normalizedPattern = (0, path_1.toPosixPath)(pattern);
     normalizedPattern = removeLeadingSlash(normalizedPattern);
-    const relativeProjectRoot = normalizePath((0, node_path_1.relative)(workspaceRoot, projectSourceRoot) + '/');
+    const relativeProjectRoot = (0, path_1.toPosixPath)((0, node_path_1.relative)(workspaceRoot, projectSourceRoot) + '/');
     // remove relativeProjectRoot to support relative paths from root
     // such paths are easy to get when running scripts via IDEs
     normalizedPattern = removeRelativeRoot(normalizedPattern, relativeProjectRoot);
@@ -84,7 +84,7 @@ async function findMatchingTests(pattern, ignore, workspaceRoot, projectSourceRo
         }
     }
     // normalize the patterns in the ignore list
-    const normalizedIgnorePatternList = ignore.map((pattern) => removeRelativeRoot(removeLeadingSlash(normalizePath(pattern)), relativeProjectRoot));
+    const normalizedIgnorePatternList = ignore.map((pattern) => removeRelativeRoot(removeLeadingSlash((0, path_1.toPosixPath)(pattern)), relativeProjectRoot));
     return (0, tinyglobby_1.glob)(normalizedPattern, {
         cwd: projectSourceRoot,
         absolute: true,

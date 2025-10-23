@@ -13,6 +13,7 @@ const node_path_1 = require("node:path");
 const schema_1 = require("../../builders/application/schema");
 const bundler_context_1 = require("../../tools/esbuild/bundler-context");
 const error_1 = require("../error");
+const path_1 = require("../path");
 const url_1 = require("../url");
 const worker_pool_1 = require("../worker-pool");
 const utils_1 = require("./esm-in-memory-loader/utils");
@@ -49,7 +50,7 @@ async function prerenderPages(workspaceRoot, baseHref, appShellOptions, prerende
     serverBundlesSourceMaps.clear();
     const assetsReversed = {};
     for (const { source, destination } of assets) {
-        assetsReversed[addLeadingSlash(destination.replace(/\\/g, node_path_1.posix.sep))] = source;
+        assetsReversed[addLeadingSlash((0, path_1.toPosixPath)(destination))] = source;
     }
     // Get routes to prerender
     const { errors: extractionErrors, serializedRouteTree: serializableRouteTreeNode, appShellRoute, } = await getAllRoutes(workspaceRoot, baseHref, outputFilesForWorker, assetsReversed, appShellOptions, prerenderOptions, sourcemap, outputMode).catch((err) => {

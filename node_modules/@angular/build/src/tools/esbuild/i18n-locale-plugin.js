@@ -9,6 +9,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LOCALE_DATA_BASE_MODULE = exports.LOCALE_DATA_NAMESPACE = void 0;
 exports.createAngularLocaleDataPlugin = createAngularLocaleDataPlugin;
+const node_module_1 = require("node:module");
 /**
  * The internal namespace used by generated locale import statements and Angular locale data plugin.
  */
@@ -26,16 +27,6 @@ function createAngularLocaleDataPlugin() {
     return {
         name: 'angular-locale-data',
         setup(build) {
-            // If packages are configured to be external then leave the original angular locale import path.
-            // This happens when using the development server with caching enabled to allow Vite prebundling to work.
-            // There currently is no option on the esbuild resolve function to resolve while disabling the option. To
-            // workaround the inability to resolve the full locale location here, the Vite dev server prebundling also
-            // contains a plugin to allow the locales to be correctly resolved when prebundling.
-            // NOTE: If esbuild eventually allows controlling the external package options in a build.resolve call, this
-            //       workaround can be removed.
-            if (build.initialOptions.packages === 'external') {
-                return;
-            }
             build.onResolve({ filter: /^angular:locale\/data:/ }, async ({ path }) => {
                 // Extract the locale from the path
                 const rawLocaleTag = path.split(':', 3)[2];
@@ -57,6 +48,7 @@ function createAngularLocaleDataPlugin() {
                     };
                 }
                 let exact = true;
+                let localeRequire;
                 while (partialLocaleTag) {
                     // Angular embeds the `en`/`en-US` locale into the framework and it does not need to be included again here.
                     // The onLoad hook below for the locale data namespace has an `empty` loader that will prevent inclusion.
@@ -69,11 +61,37 @@ function createAngularLocaleDataPlugin() {
                     }
                     // Attempt to resolve the locale tag data within the Angular base module location
                     const potentialPath = `${exports.LOCALE_DATA_BASE_MODULE}/${partialLocaleTag}`;
-                    const result = await build.resolve(potentialPath, {
-                        kind: 'import-statement',
-                        resolveDir: build.initialOptions.absWorkingDir,
-                    });
-                    if (result.path) {
+                    // If packages are configured to be external then leave the original angular locale import path.
+                    // This happens when using the development server with caching enabled to allow Vite prebundling to work.
+                    // There currently is no option on the esbuild resolve function to resolve while disabling the option.
+                    // NOTE: If esbuild eventually allows controlling the external package options in a build.resolve call, this
+                    // workaround can be removed.
+                    let result;
+                    const { packages, absWorkingDir } = build.initialOptions;
+                    if (packages === 'external' && absWorkingDir) {
+                        localeRequire ??= (0, node_module_1.createRequire)(absWorkingDir + '/');
+                        try {
+                            localeRequire.resolve(potentialPath);
+                            result = {
+                                errors: [],
+                                warnings: [],
+                                external: true,
+                                sideEffects: true,
+                                namespace: '',
+                                suffix: '',
+                                pluginData: undefined,
+                                path: potentialPath,
+                            };
+                        }
+                        catch { }
+                    }
+                    else {
+                        result = await build.resolve(potentialPath, {
+                            kind: 'import-statement',
+                            resolveDir: absWorkingDir,
+                        });
+                    }
+                    if (result?.path) {
                         if (exact) {
                             return result;
                         }
