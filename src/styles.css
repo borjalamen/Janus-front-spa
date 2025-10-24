@@ -1,0 +1,13 @@
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+a{
+    color: #61dafb;
+    text-decoration: none;
+}/*Links amb color personalitzat*/
+*{
+    box-sizing: border-box;
+}
+/*Per a que al padding  i borde*/
