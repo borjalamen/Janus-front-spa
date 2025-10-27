@@ -16,3 +16,22 @@ h1 {
     color: #61dafb;
     font-size: 24px;
 }
+nav {
+  background: #2c3e50;
+  padding: 12px 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 20px;
+  font-weight: bold;
+  font-size: 1.15rem;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}

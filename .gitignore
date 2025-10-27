@@ -22,3 +22,5 @@ rad.json
 TestResults.xml
 # Ignorar configuración del IDE JetBrains
 .idea/
+#Cache Angular
+.angular/

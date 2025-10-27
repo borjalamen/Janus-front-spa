@@ -1,1 +1,6 @@
-<p>documents works!</p>
+<h2>Llista de Documents</h2>
+<ul>
+  <li *ngFor="let doc of documents">
+    {{ doc.name }} - {{ doc.date }}
+  </li>
+</ul>

@@ -1,6 +1,9 @@
-<header>
-    {{ title }}
-</header>
+<nav>
+  <a routerLink="/">Home</a> |
+  <a routerLink="/documents">Documents</a> |
+  <a routerLink="/login">Login</a> 
+
+</nav>
 <main>
-    <app-home></app-home>
+  <router-outlet></router-outlet>
 </main>
