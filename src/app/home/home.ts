@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.css']
 })
 export class HomeComponent { 
-  homeMsg = 'Uola';
+  homeMsg = 'Benvenuto in JanusHUB.v0';
 }

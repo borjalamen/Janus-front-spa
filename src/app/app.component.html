@@ -1,9 +1,28 @@
-<nav>
-  <a routerLink="/">Home</a> |
-  <a routerLink="/documents">Documents</a> |
-  <a routerLink="/login">Login</a> 
-
-</nav>
-<main>
-  <router-outlet></router-outlet>
-</main>
+<mat-sidenav-container>
+  <mat-sidenav mode="side" opened>
+    <mat-toolbar color="primary" class="sidenav-toolbar">JanusHub</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home">
+        <mat-icon>home</mat-icon>
+        Home
+      </a>
+      <a mat-list-item routerLink="/documents">
+        <mat-icon>upload_file</mat-icon>
+        Documents
+      </a>
+      <a mat-list-item routerLink="/login">
+        <mat-icon>login</mat-icon>
+        Login
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="main-toolbar">
+      <span class="app-title">JanusHub Portal</span>
+      <span class="spacer"></span>
+    </mat-toolbar>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,37 +1,144 @@
-header{
-    background-color: #282c34;
-    min-height: 10vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* Barra lateral visual i marcada */
+mat-sidenav {
+  width: 220px;
+  background: #16181c;
+  color: #E0E0E0;
+  box-shadow: 2px 0 10px #E5393585;
+  border-right: 2px solid #E53935;
+  z-index: 5;
 }
-main{
-    padding: 20px;
-    font-size: calc(10px + 1vmin);
-}
-h1 {
-    color: #61dafb;
-    font-size: 24px;
-}
-nav {
-  background: #2c3e50;
-  padding: 12px 24px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-nav a {
-  color: #fff;
-  text-decoration: none;
-  margin: 0 20px;
+
+.sidenav-toolbar {
+  background: #E53935;
+  color: #E0E0E0;
   font-weight: bold;
-  font-size: 1.15rem;
-  transition: color 0.2s;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: center;
 }
-nav a:hover {
-  color: #ffd700;
-  text-decoration: underline;
+
+/* Menú dins la barra */
+mat-nav-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #E0E0E0;
+  margin-bottom: 22px;
+  border-radius: 6px;
+  padding: 9px 12px 9px 14px;
+  font-size: 1.12em;
+  text-decoration: none;
+  min-height: 44px;
+  transition: background 0.18s, color 0.18s;
+}
+
+/* Hover més visible */
+mat-nav-list a:hover {
+  background: #e53935;
+  color: #0F1115;
+  box-shadow: 2px 2px 12px #FBC02D70;
+}
+
+mat-icon {
+  color: #FBC02D !important;
+  font-size: 28px !important;
+  min-width: 28px;
+}
+
+@media (max-width: 800px) {
+  mat-sidenav {
+    width: 64vw;
+    min-width: 180px;
+  }
+}
+
+.main-content {
+  padding: 28px 24px;
+  color: rgb(216, 219, 219);
+  background: #0F1115;
+  min-height: 90vh;
+}
+
+/* Toolbar superior ben centrada */
+mat-toolbar.main-toolbar {
+  background: #E53935 !important;
+  color: #E0E0E0 !important;
+  font-weight: bold;
+  font-size: 1.18em;
+  min-height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* LOGIN: caixa a dalt dreta */
+.login-fullscreen {
+  width: 100vw;
+  min-height: 100vh;
+  background: #0F1115;
+  display: flex;
+  justify-content: flex-end;   /* Dreta */
+  align-items: flex-start;     /* Dalt */
+  padding-top: 40px;           /* Separació dalt */
+  padding-right: 52px;         /* Separació dreta */
+}
+
+.login-central {
+  max-width: 370px;
+  width: 100%;
+  padding: 36px 18px 24px 18px;
+  border-radius: 18px;
+  background: #16181c;
+  color: #E0E0E0;
+}
+
+.login-central-icon {
+  font-size: 46px !important;
+  color: #FBC02D;
+  margin-bottom: 18px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: #FBC02D;
+  text-align: center;
+  font-size: 1.35em;
+  font-weight: bold;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+input, mat-label, .menu-text {
+  color: #E0E0E0 !important;
+}
+
+button[mat-raised-button] {
+  background: #E53935 !important;
+  color: #E0E0E0 !important;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 13px;
+  border-radius: 18px;
+  font-size: 1.13em;
+  transition: background 0.2s;
+}
+
+button[mat-raised-button]:hover {
+  background: #FBC02D !important;
+  color: #0F1115 !important;
+}
+
+.error-msg {
+  color: #E53935;
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 1.07em;
+}
+body {
+  color: #b4b4b270;
 }
