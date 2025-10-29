@@ -16,7 +16,6 @@ body {
 /* Card login moderna */
 .login-central {
   display: flex;
-  margin-top: 10px;
   flex-direction: column;
   align-items: center;
   background: #16181c;
