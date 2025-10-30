@@ -10,19 +10,23 @@
         <mat-icon>upload_file</mat-icon>
         Documents
       </a>
-      <a mat-list-item routerLink="/login">
-        <mat-icon>login</mat-icon>
-        Login
-      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
-      <span class="spacer"></span>
     </mat-toolbar>
+    <div class="login-user">
+      <a routerLink="/login" class="login-link">
+        <mat-icon>person</mat-icon>
+        <span class="login-text">Login Usuari</span>
+      </a>
+    </div>
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
+    <footer class="footer">
+      Versión del proyecto v1.0.0
+    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

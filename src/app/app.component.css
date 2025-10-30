@@ -1,4 +1,4 @@
-/* Barra lateral visual i marcada */
+/* Barra lateral */
 mat-sidenav {
   width: 220px;
   background: #16181c;
@@ -7,7 +7,6 @@ mat-sidenav {
   border-right: 2px solid #E53935;
   z-index: 5;
 }
-
 .sidenav-toolbar {
   background: #E53935;
   color: #E0E0E0;
@@ -16,8 +15,6 @@ mat-sidenav {
   display: flex;
   justify-content: center;
 }
-
-/* Menú dins la barra */
 mat-nav-list a {
   display: flex;
   align-items: center;
@@ -31,20 +28,16 @@ mat-nav-list a {
   min-height: 44px;
   transition: background 0.18s, color 0.18s;
 }
-
-/* Hover més visible */
 mat-nav-list a:hover {
   background: #e53935;
   color: #0F1115;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
-
 mat-icon {
   color: #FBC02D !important;
   font-size: 28px !important;
   min-width: 28px;
 }
-
 @media (max-width: 800px) {
   mat-sidenav {
     width: 64vw;
@@ -52,14 +45,7 @@ mat-icon {
   }
 }
 
-.main-content {
-  padding: 28px 24px;
-  color: rgb(216, 219, 219);
-  background: #0F1115;
-  min-height: 90vh;
-}
-
-/* Toolbar superior ben centrada */
+/* Toolbar superior centrada */
 mat-toolbar.main-toolbar {
   background: #E53935 !important;
   color: #E0E0E0 !important;
@@ -73,72 +59,61 @@ mat-toolbar.main-toolbar {
   box-shadow: none;
 }
 
-/* LOGIN: caixa a dalt dreta */
-.login-fullscreen {
-  width: 100vw;
-  min-height: 100vh;
-  background: #0F1115;
+/* Login usuari a la cantonada superior dreta */
+.login-user {
+  position: absolute;
+  top: 15px;
+  right: 40px;
   display: flex;
-  justify-content: flex-end;   /* Dreta */
-  align-items: flex-start;     /* Dalt */
-  padding-top: 40px;           /* Separació dalt */
-  padding-right: 52px;         /* Separació dreta */
+  align-items: center;
+  gap: 8px;
+  background: #16181c;
+  border-radius: 26px;
+  padding: 7px 18px;
+  font-weight: bold;
+  font-size: 1.01em;
+  color: #FBC02D;
+  box-shadow: 0 2px 10px #333a;
+  z-index: 100;
+}
+.login-user mat-icon {
+  font-size: 1.55em;
+  color: #FBC02D;
+}
+.login-user:hover {
+  background: #000000;
+  color: #0F1115;
+  box-shadow: 0 4px 16px #E5393570;
+  cursor: pointer;
 }
 
-.login-central {
-  max-width: 370px;
-  width: 100%;
-  padding: 36px 18px 24px 18px;
-  border-radius: 18px;
+/* Footer fixat abaix */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
   background: #16181c;
   color: #E0E0E0;
-}
-
-.login-central-icon {
-  font-size: 46px !important;
-  color: #FBC02D;
-  margin-bottom: 18px;
-}
-
-h2 {
-  margin-bottom: 10px;
-  color: #FBC02D;
+  font-size: 0.98em;
+  font-weight: 500;
   text-align: center;
-  font-size: 1.35em;
-  font-weight: bold;
+  padding: 10px 0 6px 0;
+  border-top: 1.5px solid #E53935;
+  letter-spacing: 0.5px;
+  z-index: 101;
 }
 
-mat-form-field {
-  width: 100%;
-  margin-bottom: 16px;
+/* Contingut principal */
+.main-content {
+  padding: 28px 24px;
+  color: rgb(216, 219, 219);
+  background: #0F1115;
+  min-height: 90vh;
 }
 
-input, mat-label, .menu-text {
-  color: #E0E0E0 !important;
-}
-
-button[mat-raised-button] {
-  background: #E53935 !important;
-  color: #E0E0E0 !important;
-  font-weight: bold;
-  width: 100%;
-  margin-top: 13px;
-  border-radius: 18px;
-  font-size: 1.13em;
-  transition: background 0.2s;
-}
-
-button[mat-raised-button]:hover {
-  background: #FBC02D !important;
-  color: #0F1115 !important;
-}
-
-.error-msg {
-  color: #E53935;
-  font-weight: bold;
-  margin-top: 15px;
-  font-size: 1.07em;
-}
+/* Colors bàsics del body */
 body {
+  background: #0F1115;
   color: #b4b4b270;
 }
