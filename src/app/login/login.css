@@ -6,7 +6,7 @@ body {
 
 /* Centrat vertical i horitzontal */
 .login-fullscreen {
-  min-height: 50em;
+  min-height: 40em;
   display: flex;
   justify-content: center;
   align-items: center;
