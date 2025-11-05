@@ -10,4 +10,8 @@ a{
 *{
     box-sizing: border-box;
 }
-/*Per a que al padding  i borde*/
+.mat-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}

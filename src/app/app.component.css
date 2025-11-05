@@ -116,4 +116,19 @@ mat-toolbar.main-toolbar {
 body {
   background: #0F1115;
   color: #b4b4b270;
+
 }
+.janus{
+  height: 36px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.login-link mat-icon {
+  font-size: 1.4em;
+}
+.login-text {
+  font-size: 1.1em;
+}
+

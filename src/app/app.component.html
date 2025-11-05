@@ -1,6 +1,8 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
-    <mat-toolbar color="primary" class="sidenav-toolbar">JanusHub</mat-toolbar>
+    <mat-toolbar color="primary" class="sidenav-toolbar"> 
+       <img src="tiger.jpeg" alt="JanusHub" class="janus" />
+    </mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
@@ -17,16 +19,15 @@
       <span class="app-title">JanusHub Portal</span>
     </mat-toolbar>
     <div class="login-user">
-      <a routerLink="/login" class="login-link">
+      <a (click)="openLoginDialog()" class="login-link">
         <mat-icon>person</mat-icon>
-        <span class="login-text">Login Usuari</span>
       </a>
     </div>
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
     <footer class="footer">
-      Versión del proyecto v1.0.0
+      Copyright | v1.0.0
     </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

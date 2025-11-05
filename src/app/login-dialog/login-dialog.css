@@ -1,0 +1,55 @@
+.login-central {
+  max-width: 700px;
+  width: 100%;
+  padding: 32px 20px 24px 20px;
+  background: #16181c;
+  color: #E0E0E0;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px #e4040020;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+}
+
+.login-central h2 {
+  color: #FBC02D;
+  font-size: 1.28em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+button[mat-raised-button] {
+  background: #E53935 !important;
+  color: #E0E0E0 !important;
+  font-weight: bold;
+  width: 100%;
+  border-radius: 14px;
+  font-size: 1.12em;
+  margin-top: 8px;
+  transition: background 0.18s;
+}
+
+button[mat-raised-button]:hover {
+  background: #FBC02D !important;
+  color: #16181c !important;
+}
+
+.error-msg {
+  color: #E53935;
+  font-weight: bold;
+  margin-top: 13px;
+  font-size: 1.02em;
+  text-align: center;
+}
