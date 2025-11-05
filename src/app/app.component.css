@@ -119,10 +119,11 @@ body {
 
 }
 .janus{
-  height: 36px;
+  height: 70px;
   width: auto;
   margin: 0 auto;
   display: block;
+  justify-content: center;
 }
 
 .login-link mat-icon {
@@ -130,5 +131,10 @@ body {
 }
 .login-text {
   font-size: 1.1em;
+}
+mat-nav-list {
+  max-height: 70vh;      /* Ajusta aquest valor segons el que vulguis que ocupi el menú */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
