@@ -1,0 +1,36 @@
+{
+  "LOGIN": {
+    "TITLE": "Sign in",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "BUTTON": "Login",
+    "ERROR_EMPTY": "Please fill in all fields.",
+    "ERROR_INVALID": "Invalid username or password."
+  },
+  "HEADER": {
+    "LOGO_ALT": "Janus Team Logo",
+    "SEARCH_PLACEHOLDER": "Search projects, users or tools...",
+    "USER_MENU": {
+      "PROFILE": "Profile",
+      "ROLES": "Roles",
+      "LOGOUT": "Logout"
+    }
+  },
+  "DASHBOARD": {
+    "TITLE": "Main Dashboard",
+    "WELCOME": "Welcome to Janus Hub",
+    "TEAM_CARD": "DevOps Team",
+    "SHORTCUTS": "Quick Links"
+  },
+  "MENU": {
+    "PROJECTS": "Projects / Knowledge",
+    "SECURITY": "Security",
+    "ADMIN": "Administration",
+    "TRAINING": "Training",
+    "TASKS": "Tasks",
+    "DOCS": "Documentation"
+  },
+  "FOOTER": {
+    "VERSION": "Project Version"
+  }
+}

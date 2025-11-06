@@ -1,17 +1,36 @@
 <div class="login-central">
-  <h2>Accés a JanusHub</h2>
+  <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
+
   <form>
     <mat-form-field appearance="fill">
-      <mat-label>Usuari</mat-label>
-      <input matInput [(ngModel)]="username" name="username" autocomplete="username" title="Usuari"/>
+      <mat-label>{{ 'LOGIN.USERNAME' | translate }}</mat-label>
+      <input
+        matInput
+        [(ngModel)]="username"
+        name="username"
+        autocomplete="username"
+        [placeholder]="'LOGIN.USERNAME' | translate"
+        title="{{ 'LOGIN.USERNAME' | translate }}"
+      />
     </mat-form-field>
+
     <mat-form-field appearance="fill">
-      <mat-label>Contrasenya</mat-label>
-      <input matInput type="password" [(ngModel)]="password" name="password" autocomplete="current-password" title="Contrasenya"/>
+      <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
+      <input
+        matInput
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        autocomplete="current-password"
+        [placeholder]="'LOGIN.PASSWORD' | translate"
+        title="{{ 'LOGIN.PASSWORD' | translate }}"
+      />
     </mat-form-field>
+
     <button mat-raised-button color="primary" (click)="login()" type="button">
-      <mat-icon>login</mat-icon> Entrar
+      <mat-icon>login</mat-icon> {{ 'LOGIN.BUTTON' | translate }}
     </button>
-    <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+    <div *ngIf="error" class="error-msg">{{ error | translate }}</div>
   </form>
 </div>

@@ -1,0 +1,36 @@
+{
+  "LOGIN": {
+    "TITLE": "Iniciar sesión",
+    "USERNAME": "Usuario",
+    "PASSWORD": "Contraseña",
+    "BUTTON": "Entrar",
+    "ERROR_EMPTY": "Por favor, completa todos los campos.",
+    "ERROR_INVALID": "Usuario o contraseña incorrectos."
+  },
+  "HEADER": {
+    "LOGO_ALT": "Logo del equipo Janus",
+    "SEARCH_PLACEHOLDER": "Buscar proyectos, usuarios o herramientas...",
+    "USER_MENU": {
+      "PROFILE": "Perfil",
+      "ROLES": "Roles",
+      "LOGOUT": "Cerrar sesión"
+    }
+  },
+  "DASHBOARD": {
+    "TITLE": "Panel Principal",
+    "WELCOME": "Bienvenido a Janus Hub",
+    "TEAM_CARD": "Equipo DevOps",
+    "SHORTCUTS": "Enlaces rápidos"
+  },
+  "MENU": {
+    "PROJECTS": "Proyectos / Conocimiento",
+    "SECURITY": "Seguridad",
+    "ADMIN": "Administración",
+    "TRAINING": "Formación",
+    "TASKS": "Tareas",
+    "DOCS": "Documentación"
+  },
+  "FOOTER": {
+    "VERSION": "Versión del proyecto"
+  }
+}
