@@ -6,11 +6,11 @@
     <mat-nav-list>
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
-        Home
+        <span class="menu-text">Home</span>
       </a>
       <a mat-list-item routerLink="/documents">
         <mat-icon>upload_file</mat-icon>
-        Documents
+        <span class="menu-text">Documents</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>
@@ -18,10 +18,8 @@
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
     </mat-toolbar>
-    <div class="login-user">
-      <a (click)="openLoginDialog()" class="login-link">
-        <mat-icon>person</mat-icon>
-      </a>
+    <div class="login-user" (click)="openLoginDialog()">
+      <mat-icon>person</mat-icon>
     </div>
     <div class="main-content">
       <router-outlet></router-outlet>
