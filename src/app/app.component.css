@@ -3,12 +3,10 @@ mat-sidenav {
   width: 220px;
   background: #16181c;
   color: #E0E0E0;
-  box-shadow: 2px 0 10px #E5393585;
-  border-right: 2px solid #920200;
+  box-shadow: 2px 0 10px #1e84a3;
+  border-right: 2px solid #1e84a3;
   z-index: 5;
-  
 }
-
 .sidenav-toolbar {
   background: #16181c !important; /* Fondo negro */
   display: flex;
@@ -49,7 +47,7 @@ mat-nav-list a:hover .menu-text {
   max-width: 200px;
 }
 mat-nav-list a:hover {
-  background: #e53935;
+  background: #1e84a3;
   color: #0F1115;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
@@ -67,7 +65,7 @@ mat-icon {
 
 /* Toolbar superior centrada */
 mat-toolbar.main-toolbar {
-  background: #E53935 !important;
+  background: #1e84a3 !important;
   color: #E0E0E0 !important;
   font-weight: bold;
   font-size: 1.18em;
@@ -119,7 +117,7 @@ mat-toolbar.main-toolbar {
   font-weight: 500;
   text-align: center;
   padding: 10px 0 6px 0;
-  border-top: 3px solid #E53935;   /* Mateix gruix que el border del sidenav */
+  border-top: 3px solid #1e84a3;   /* Mateix gruix que el border del sidenav */
   letter-spacing: 0.5px;
   z-index: 101;
 }
@@ -156,5 +154,14 @@ mat-nav-list {
   max-height: 70vh;      /* Ajusta aquest valor segons el que vulguis que ocupi el menú */
   overflow-y: auto;
   overflow-x: hidden;
+}
+.check-green {
+  color: #43a047;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+.no-list {
+  list-style: none;
+  padding-left: 0;
 }
 
