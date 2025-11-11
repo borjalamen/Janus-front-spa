@@ -1,29 +1,69 @@
 <mat-sidenav-container>
+  <!-- Menú lateral -->
   <mat-sidenav mode="side" opened>
-    <mat-toolbar color="primary" class="sidenav-toolbar"> 
-       <img src="https://i.imgur.com/7dRimV7.png" alt="JanusHub" class="janus" />
+    <mat-toolbar color="primary" class="sidenav-toolbar">
+      <img src="https://i.imgur.com/7dRimV7.png" alt="JanusHub" class="janus" />
     </mat-toolbar>
+
     <mat-nav-list>
+      <!-- Home -->
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
         <span class="menu-text">Home</span>
       </a>
+
+      <!-- Documents -->
       <a mat-list-item routerLink="/documents">
         <mat-icon>upload_file</mat-icon>
         <span class="menu-text">Documents</span>
       </a>
+
+      <!-- Projects -->
+      <a mat-list-item routerLink="/projects">
+        <mat-icon>folder_open</mat-icon>
+        <span class="menu-text">Projects</span>
+      </a>
+
+      <!-- Procedimientos -->
+      <a mat-list-item routerLink="/procedimientos">
+        <mat-icon>assignment</mat-icon>
+        <span class="menu-text">Procedimientos</span>
+      </a>
+
+      <!-- Formación -->
+      <a mat-list-item routerLink="/formacion">
+        <mat-icon>school</mat-icon>
+        <span class="menu-text">Formación</span>
+      </a>
+
+      <!-- Planificación -->
+      <a mat-list-item routerLink="/planificacion">
+        <mat-icon>event_note</mat-icon>
+        <span class="menu-text">Planificación</span>
+      </a>
+
+      <!-- Administración -->
+      <a mat-list-item routerLink="/administracion">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span class="menu-text">Administración</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
+
+  <!-- Contingut principal -->
   <mat-sidenav-content>
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
     </mat-toolbar>
+
     <div class="login-user" (click)="openLoginDialog()">
       <mat-icon>person</mat-icon>
     </div>
+
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
+
     <footer class="footer">
       Copyright | v1.0.0
     </footer>
