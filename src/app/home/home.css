@@ -55,3 +55,9 @@ button[mat-raised-button]:hover {
   background: #FBC02D !important;
   color: #0F1115 !important;
 }
+.menu-content-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
