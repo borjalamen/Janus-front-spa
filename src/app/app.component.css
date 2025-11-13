@@ -45,10 +45,11 @@ mat-nav-list a {
 mat-nav-list a:hover .menu-text {
   opacity: 1;                 /* Mostra el text en hover */
   max-width: 200px;
+  color: #FBC02D;
 }
 mat-nav-list a:hover {
   background: #1e84a3;
-  color: #0F1115;
+  color: #ffffff;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
 mat-icon {
