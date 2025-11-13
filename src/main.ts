@@ -4,7 +4,12 @@ import { provideRouter } from "@angular/router";
 import { HomeComponent } from './app/home/home';
 import { DocumentsComponent } from './app/documents/documents';
 import { UsuariComponent } from "./app/usuari/usuari";
-import { provideAnimations } from '@angular/platform-browser/animations'; // ← Importa animaciones
+import { ProjectsComponent } from './app/projects/projects';
+import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
+import { FormacionComponent } from './app/formacion/formacion';
+import { PlanificacionComponent } from './app/planificacion/planificacion';
+import { AdministracionComponent } from './app/administracion/administracion';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -12,9 +17,14 @@ bootstrapApplication(AppComponent, {
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'documents', component: DocumentsComponent },
-      { path: 'usuari', component: UsuariComponent }
+      { path: 'usuari', component: UsuariComponent },
+      {path: 'projects', component: ProjectsComponent },
+      {path: 'procedimientos', component: ProcedimientosComponent },
+      {path: 'formacion', component: FormacionComponent },
+      {path: 'planificacion', component: PlanificacionComponent },
+      { path: 'administracion', component: AdministracionComponent },
     ]),
-    provideAnimations() // ← Añade el provider aquí
+    
   ]
 })
   .catch((err) => console.error(err));

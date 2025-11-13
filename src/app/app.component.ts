@@ -6,14 +6,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LoginDialogComponent } from './login-dialog/login-dialog';
-
-// Importem els components que es mostraran
 import { DocumentsComponent } from './documents/documents';
-import { ProjectsComponent } from './projects/projects.component';
+import { ProjectsComponent } from './projects/projects';
 import { ProcedimientosComponent } from './procedimientos/procedimientos';
 import { FormacionComponent } from './formacion/formacion';
 import { PlanificacionComponent } from './planificacion/planificacion';
 import { AdministracionComponent } from './administracion/administracion';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +20,7 @@ import { AdministracionComponent } from './administracion/administracion';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   imports: [
+    RouterModule,
     MatSidenavModule,
     MatListModule,
     MatToolbarModule,
@@ -28,7 +28,6 @@ import { AdministracionComponent } from './administracion/administracion';
     MatIconModule,
     MatDialogModule,
     LoginDialogComponent,
-    // Els components del menú
     DocumentsComponent,
     ProjectsComponent,
     ProcedimientosComponent,
