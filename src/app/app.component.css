@@ -168,10 +168,12 @@ mat-nav-list {
   padding-left: 0;
 }
 .menu-content-scroll {
-  height: calc(100vh - 128px); /* ajusta segons toolbars/footers */
+  height: calc(100vh - 128px);
   overflow-y: auto;
   padding: 24px;
   box-sizing: border-box;
+  scrollbar-color:#FBC02D #000000 ;
+  scrollbar-width: thin;
 }
 
 

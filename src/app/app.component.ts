@@ -13,7 +13,7 @@ import { FormacionComponent } from './formacion/formacion';
 import { PlanificacionComponent } from './planificacion/planificacion';
 import { AdministracionComponent } from './administracion/administracion';
 import { RouterModule } from '@angular/router';
-
+import { BuscadorComponent } from './buscador/buscador';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -33,7 +33,8 @@ import { RouterModule } from '@angular/router';
     ProcedimientosComponent,
     FormacionComponent,
     PlanificacionComponent,
-    AdministracionComponent
+    AdministracionComponent,
+    BuscadorComponent 
   ]
 })
 export class AppComponent {
