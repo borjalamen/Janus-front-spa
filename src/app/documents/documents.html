@@ -1,7 +1,6 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
-<h2>Llista de Documents</h2>
-<ul>
-  <li *ngFor="let doc of documents">
-    {{ doc.name }} - {{ doc.date }}
-  </li>
-</ul>
+
+<div *ngFor="let doc of documentsFiltrats" class="document-item">
+  <div>{{ doc.name }}</div>
+  <div class="document-date">{{ doc.date }}</div>
+</div>

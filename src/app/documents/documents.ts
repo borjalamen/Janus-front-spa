@@ -4,6 +4,7 @@ import { BuscadorComponent } from '../buscador/buscador';
 
 @Component({
   selector: 'app-documents',
+  standalone: true,
   imports: [CommonModule, BuscadorComponent],
   templateUrl: './documents.html',
   styleUrl: './documents.css',
@@ -14,7 +15,7 @@ export class DocumentsComponent {
     { name: 'Document 2.pdf', date: '2025-01-20' },
   ];
 
-  documentsFiltrats = this.documents; // Array amb el resultat filtrat
+  documentsFiltrats = this.documents; 
 
   filtrar(valor: string) {
     if (!valor) {
