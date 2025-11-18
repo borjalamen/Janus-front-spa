@@ -9,7 +9,7 @@ import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
 import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { AdministracionComponent } from './app/administracion/administracion';
-
+import { provideHttpClient } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -24,6 +24,8 @@ bootstrapApplication(AppComponent, {
       {path: 'planificacion', component: PlanificacionComponent },
       { path: 'administracion', component: AdministracionComponent },
     ]),
+
+    provideHttpClient()
     
   ]
 })

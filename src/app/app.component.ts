@@ -14,6 +14,7 @@ import { PlanificacionComponent } from './planificacion/planificacion';
 import { AdministracionComponent } from './administracion/administracion';
 import { RouterModule } from '@angular/router';
 import { BuscadorComponent } from './buscador/buscador';
+import { ApiService } from './api.service'; 
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -34,14 +35,27 @@ import { BuscadorComponent } from './buscador/buscador';
     FormacionComponent,
     PlanificacionComponent,
     AdministracionComponent,
-    BuscadorComponent 
+    BuscadorComponent,
   ]
 })
 export class AppComponent {
   title = 'JanusHUB.v1';
-  activeSection: string = 'home'; // controla què es mostra
+  activeSection: string = 'home';
+  version: string = ''; // <-- SOLUCIÓ: Afegeix això!
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private api: ApiService) {}
+
+  ngOnInit() {
+    this.api.fetchVersion().subscribe({
+      next: (data) => {
+        this.version = data.version; // Canvia la clau si el backend envia una altra
+      },
+      error: (err) => {
+        this.version = 'ERROR';
+        console.error('Error obtenint versió:', err);
+      }
+    });
+  }
 
   openLoginDialog(): void {
     this.dialog.open(LoginDialogComponent, {
@@ -51,7 +65,6 @@ export class AppComponent {
     });
   }
 
-  // Funció per canviar secció
   setActive(section: string) {
     this.activeSection = section;
   }

@@ -17,6 +17,11 @@
   background-color: goldenrod;
   border-radius: 18px;
 }
+::ng-deep .mat-mdc-dialog-surface {
+  background: #202124;
+  border-radius: 22px;
+  box-shadow: 0 8px 40px #2227;
+}
 
 
 
