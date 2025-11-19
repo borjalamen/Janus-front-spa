@@ -5,10 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   constructor(private http: HttpClient) {}
-  
-  
-  fetchVersion(): Observable<any> {
-    return this.http.get('http://localhost:8080/api/config/all');
-    
+
+  fetchVersion(): Observable<string> {
+    return this.http.get('http://localhost:8080/api/config/all', { responseType: 'text' });
   }
 }

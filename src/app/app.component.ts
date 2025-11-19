@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -38,20 +38,21 @@ import { ApiService } from './api.service';
     BuscadorComponent,
   ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'JanusHUB.v1';
   activeSection: string = 'home';
-  version: string = ''; // <-- SOLUCIÓ: Afegeix això!
+  appVersion: string | null = null;
 
   constructor(public dialog: MatDialog, private api: ApiService) {}
 
   ngOnInit() {
     this.api.fetchVersion().subscribe({
-      next: (data) => {
-        this.version = data.version; // Canvia la clau si el backend envia una altra
+      next: (version) => {
+        const sanitized = version?.trim();
+        this.appVersion = sanitized || 'Desconeguda';
       },
       error: (err) => {
-        this.version = 'ERROR';
+        this.appVersion = 'No disponible';
         console.error('Error obtenint versió:', err);
       }
     });
