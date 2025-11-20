@@ -3,29 +3,28 @@
   margin-bottom: 24px;
 }
 
-mat-form-field {
-  width: 100%;
+mat-form-field.mat-form-field-appearance-outline {
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline-start,
+mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline-end,
+mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline-gap {
   border-radius: 30px;
 }
 
-/* Arrodonir el contorn del mat-form-field (input) */
-.mat-form-field-appearance-outline .mat-form-field-outline {
-  border-radius: 30px;
-}
-
-/* Afegir marge intern a l'input per escriure */
-::ng-deep input.mat-input-element {
-  padding-left: 12px;
-  border-radius: 30px;
-}
-.mat-form-field-appearance-outline .mat-form-field-outline {
-  border-radius: 30px;
-  border-color: #FBC02D;
+mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 30px !important;
 }
 
 ::ng-deep input.mat-input-element {
-  background-color: #16181c;
-  padding-left: 12px;
-  border-radius: 30px;
-  color: #E0E0E0;
+  padding-left: 12px !important;
+  border-radius: 30px !important;
+  background-color: transparent !important;
+  color: #E0E0E0 !important;
+}
+
+mat-icon, button.mat-icon-button {
+  border-radius: 50% !important;
 }
