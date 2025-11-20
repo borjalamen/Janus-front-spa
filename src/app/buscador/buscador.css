@@ -3,25 +3,29 @@
   margin-bottom: 24px;
 }
 
-/* Aplica estil al contorn */
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-  border-radius: 22px !important;   /* Cantos arrodonits */
+mat-form-field {
+  width: 100%;
+  border-radius: 30px;
 }
 
-/* Aplica també als contorns quan està en focus */
-::ng-deep .mat-form-field-outline-start,
-::ng-deep .mat-form-field-outline-end {
-  border-radius: 22px !important;
+/* Arrodonir el contorn del mat-form-field (input) */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 30px;
 }
 
-/* Input amb padding interior */
+/* Afegir marge intern a l'input per escriure */
 ::ng-deep input.mat-input-element {
-  padding: 10px 14px !important;   /* MARGE INTERIOR */
-  border-radius: 22px;             /* Per si Angular aplica cap override */
-  color: #E0E0E0;
+  padding-left: 12px;
+  border-radius: 30px;
+}
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 30px;
+  border-color: #FBC02D;
 }
 
-/* Icona dins del buscador */
-::ng-deep .mat-icon {
-  color: #FBC02D !important;
+::ng-deep input.mat-input-element {
+  background-color: #16181c;
+  padding-left: 12px;
+  border-radius: 30px;
+  color: #E0E0E0;
 }
