@@ -62,7 +62,10 @@
     </div>
 
     <footer class="footer">
-      Copyright | v{{ version }}
+      <span>
+        Copyright |
+        <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
+      </span>
     </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

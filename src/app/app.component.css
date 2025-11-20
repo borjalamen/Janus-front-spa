@@ -40,8 +40,7 @@ mat-nav-list a {
   align-items: center;
   transition: opacity 0.3s ease, max-width 0.3s ease;
   margin-left:15px;
-  color: #1e84a3;gi
-
+  color: #1e84a3;
 }
 mat-nav-list a:hover .menu-text {
   opacity: 1;                 /* Mostra el text en hover */
