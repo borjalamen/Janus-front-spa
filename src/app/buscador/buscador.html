@@ -1,7 +1,8 @@
 <div class="buscador-container">
   <mat-form-field appearance="outline" style="width:100%;">
     <mat-label>Buscar</mat-label>
-    <input matInput [(ngModel)]="valorBusqueda" (input)="onBuscar()" placeholder="Escriu per buscar...">
+    <mat-icon matSuffix>search</mat-icon>
+    <input matInput [(ngModel)]="valorBusqueda" (input)="onBuscar()" placeholder="  Escribe para buscar...">
     <button matSuffix mat-icon-button aria-label="Clear" *ngIf="valorBusqueda" (click)="clearBusqueda()">
       <mat-icon>close</mat-icon>
     </button>

@@ -3,3 +3,9 @@
   width: 100%;
   margin-bottom: 24px;
 }
+mat-form-field {
+  border-radius: 30px;
+}
+::ng-deep input.mat-input-element {
+  padding-left: 10px; 
+}
