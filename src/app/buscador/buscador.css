@@ -1,11 +1,27 @@
-
 .buscador-container {
   width: 100%;
   margin-bottom: 24px;
 }
-mat-form-field {
-  border-radius: 30px;
+
+/* Aplica estil al contorn */
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 22px !important;   /* Cantos arrodonits */
 }
+
+/* Aplica també als contorns quan està en focus */
+::ng-deep .mat-form-field-outline-start,
+::ng-deep .mat-form-field-outline-end {
+  border-radius: 22px !important;
+}
+
+/* Input amb padding interior */
 ::ng-deep input.mat-input-element {
-  padding-left: 10px; 
+  padding: 10px 14px !important;   /* MARGE INTERIOR */
+  border-radius: 22px;             /* Per si Angular aplica cap override */
+  color: #E0E0E0;
+}
+
+/* Icona dins del buscador */
+::ng-deep .mat-icon {
+  color: #FBC02D !important;
 }
