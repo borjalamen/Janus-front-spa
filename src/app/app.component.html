@@ -1,4 +1,5 @@
 <mat-sidenav-container>
+
   <!-- Menú lateral -->
   <mat-sidenav mode="side" opened>
     <mat-toolbar color="primary" class="sidenav-toolbar">
@@ -6,12 +7,14 @@
     </mat-toolbar>
 
     <mat-nav-list>
+
       <!-- Home -->
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
         <span class="menu-text"><strong>Bienvenida</strong></span>
       </a>
-      <!-- Projects -->
+
+      <!-- Proyectos -->
       <a mat-list-item routerLink="/projects">
         <mat-icon>folder_open</mat-icon>
         <span class="menu-text"><strong>Proyectos</strong></span>
@@ -22,11 +25,13 @@
         <mat-icon>assignment</mat-icon>
         <span class="menu-text"><strong>Procedimientos</strong></span>
       </a>
-      <!-- Documents -->
+
+      <!-- Documentos -->
       <a mat-list-item routerLink="/documents">
         <mat-icon>upload_file</mat-icon>
         <span class="menu-text"><strong>Documentos</strong></span>
       </a>
+
       <!-- Formación -->
       <a mat-list-item routerLink="/formacion">
         <mat-icon>school</mat-icon>
@@ -45,20 +50,23 @@
         <span class="menu-text"><strong>Administración</strong></span>
       </a>
 
-      
+      <!-- Bitácora -->
       <a mat-list-item routerLink="/bitacora">
         <mat-icon>bug_report</mat-icon>
-        <span class="menu-text">Bitácora</span>
+        <span class="menu-text"><strong>Bitácora</strong></span>
       </a>
+
     </mat-nav-list>
+  </mat-sidenav>
 
-
-  <!-- Contingut principal -->
+  <!-- Contenido principal -->
   <mat-sidenav-content>
+
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
     </mat-toolbar>
 
+    <!-- Icono login -->
     <div class="login-user" (click)="openLoginDialog()">
       <mat-icon>person</mat-icon>
     </div>
@@ -67,12 +75,13 @@
       <router-outlet></router-outlet>
     </div>
 
-    
   </mat-sidenav-content>
+
 </mat-sidenav-container>
+
 <footer class="footer">
-      <span>
-        Copyright |
-        <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
-      </span>
+  <span>
+    Copyright |
+    <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
+  </span>
 </footer>
