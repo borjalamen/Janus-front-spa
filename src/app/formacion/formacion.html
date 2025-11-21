@@ -1,4 +1,13 @@
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
 <div class="section-container">
   <h2>{{ title }}</h2>
   <p>Recursos formativos y material de aprendizaje del equipo DevOps.</p>
+
+  <ul>
+    <li *ngFor="let f of formacionesFiltradas">
+      <strong>{{ f.nombre }}</strong><br>
+      Responsable: {{ f.responsable }}<br>
+      Estado: {{ f.estado }}
+    </li>
+  </ul>
 </div>

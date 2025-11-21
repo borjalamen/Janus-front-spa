@@ -1,4 +1,13 @@
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
 <div class="section-container">
   <h2>{{ title }}</h2>
   <p>Gestión y documentación de procedimientos internos.</p>
+
+  <ul>
+    <li *ngFor="let p of procedimientosFiltrados">
+      <strong>{{ p.nombre }}</strong><br>
+      Responsable: {{ p.responsable }}<br>
+      Estado: {{ p.estado }}
+    </li>
+  </ul>
 </div>

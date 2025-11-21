@@ -1,0 +1,26 @@
+.buscador-container {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+/* Wrapper per poder controlar border radius del mat-form-field */
+.buscador-wrapper {
+  border-radius: 30px;
+  overflow: hidden; /* Important per arrodonir el mat-form-field */
+  border: 2px solid #fbc02d;
+  background-color: #16181c;
+}
+
+/* Estil de l'input intern */
+.buscador-wrapper input.mat-input-element {
+  padding: 12px 16px; /* marge dins */
+  color: #E0E0E0;
+  background: transparent;
+  border-radius: 30px;
+}
+
+/* Botons i icones rodons */
+mat-icon, button.mat-icon-button {
+  border-radius: 50%;
+  background-color: #292b2f;
+}

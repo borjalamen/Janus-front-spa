@@ -1,4 +1,13 @@
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 <div class="section-container">
   <h2>{{ title }}</h2>
   <p>Gestión de usuarios, roles y configuración del portal.</p>
+
+  <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
+    <div class="usuari-nom">
+      <b>{{ usuari.nom }}</b> <span class="usuari-rol">({{ usuari.rol }})</span>
+    </div>
+    <div class="usuari-email">{{ usuari.email }}</div>
+  </div>
 </div>

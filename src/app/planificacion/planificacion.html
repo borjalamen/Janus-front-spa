@@ -1,4 +1,11 @@
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
 <div class="section-container">
   <h2>{{ title }}</h2>
-  <p>Visualiza la planificación, tareas y calendarios del equipo.</p>
+  <p>Planificació anual, responsables i estat dels plans.</p>
+
+  <div *ngFor="let plan of plansFiltrats" class="plan-item">
+    <div class="plan-nom"><b>{{ plan.nom }}</b></div>
+    <div class="plan-responsable">Responsable: {{ plan.responsable }}</div>
+    <div class="plan-estat">Estat: {{ plan.estat }}</div>
+  </div>
 </div>

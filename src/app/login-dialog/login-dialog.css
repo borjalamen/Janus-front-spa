@@ -2,10 +2,10 @@
   max-width: 700px;
   width: 100%;
   padding: 32px 20px 24px 20px;
-  background: #16181c;
-  color: #E0E0E0;
+  background: #16181c; /* Caixa una mica més fosca o més clara */
+  color: #ffffff;
   border-radius: 18px;
-  box-shadow: 0 6px 24px #e4040020;
+  box-shadow: 0 6px 24px #00000040; /* Ombra negra/fosca per ressaltar el borde */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,8 +14,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  background-color: goldenrod;
+  border-radius: 18px;
 }
+::ng-deep .mat-mdc-dialog-surface {
+  background: #202124;
+  border-radius: 22px;
+  box-shadow: 0 8px 40px #2227;
+}
+
+
 
 .login-central h2 {
   color: #FBC02D;
@@ -31,8 +39,8 @@ mat-form-field {
 }
 
 button[mat-raised-button] {
-  background: #E53935 !important;
-  color: #E0E0E0 !important;
+  background: #1e84a3 !important;
+  color: #FBC02D !important;
   font-weight: bold;
   width: 100%;
   border-radius: 14px;
