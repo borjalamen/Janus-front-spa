@@ -6,12 +6,12 @@ import { BuscadorComponent } from '../buscador/buscador';
   selector: 'app-bitacora',
   standalone: true,
   imports: [CommonModule, BuscadorComponent],
-  templateUrl: './bitacora.component.html',
-  styleUrls: ['./bitacora.component.css']
+  templateUrl: './bitacora.html',
+  styleUrls: ['./bitacora.css']
 })
 export class BitacoraComponent {
 
-  title = 'Bitácora de errores';
+  title = 'La Pokedex de Errores';
 
   errores = [
     {
