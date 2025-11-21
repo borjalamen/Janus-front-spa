@@ -6,14 +6,14 @@
 
   <ul>
     <li *ngFor="let e of erroresFiltrados" class="error-item">
-      <strong>{{ e.nombre }}</strong>
+
+      <strong>{{ e.titulo }}</strong>
       <span *ngIf="e.resuelto" class="check-green">✓ Resuelto</span>
       <br>
 
-      <strong>Causa:</strong> {{ e.causa }}<br>
-      <strong>Solución:</strong> {{ e.solucion }}<br>
+      <strong>Categoría:</strong> {{ e.categoria }}<br>
+      <strong>Descripción:</strong> {{ e.descripcion }}<br>
 
-      <!-- Nueva funcionalidad -->
       <button mat-raised-button
               (click)="toggleResuelto(e)"
               style="margin-top: 6px;">
