@@ -158,6 +158,10 @@ mat-nav-list {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.scroll-nat-nav-list{
+  scrollbar-color:#FBC02D #000000 ;
+  scrollbar-width: thin;
+}
 .check-green {
   color: #43a047;
   font-size: 1.2em;
