@@ -49,24 +49,31 @@
 
   <!-- Contingut principal -->
   <mat-sidenav-content>
+    <!-- Franja superior exclusiva per icones/imatges -->
+    <div class="banner-imatges">
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+    </div>
+
+    <!-- Franja inferior exclusiva pel títol, login, etc -->
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
+      <span class="spacer"></span>
+      <div class="login-user" (click)="openLoginDialog()">
+        <mat-icon>person</mat-icon>
+      </div>
     </mat-toolbar>
-
-    <div class="login-user" (click)="openLoginDialog()">
-      <mat-icon>person</mat-icon>
-    </div>
 
     <div class="main-content menu-content-scroll">
       <router-outlet></router-outlet>
     </div>
-
-    
   </mat-sidenav-content>
 </mat-sidenav-container>
 <footer class="footer">
-      <span>
-        Copyright |
-        <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
-      </span>
+  <span>
+    Copyright |
+    <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
+  </span>
 </footer>
