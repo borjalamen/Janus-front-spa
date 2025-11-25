@@ -1,34 +1,46 @@
-/* Contenidor centrat i més petit */
+/* CONTENEDOR DEL BUSCADOR */
 .buscador-container {
-  width: 80%;
-  margin: 20px auto;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
-/* Converteix el quadre blanc en groc i arrodonit */
-.buscador-field .mat-form-field-outline,
-.buscador-field .mat-form-field-outline-start,
-.buscador-field .mat-form-field-outline-end {
+/* BORDE EXTERNO REDONDEADO */
+.buscador-wrapper {
+  border-radius: 14px;
+  border: 2px solid #fbc02d;
+  background-color: #16181c;
+  padding: 4px 10px; /* SEPARA EL CUADRO INTERNO DEL BORDE */
+}
+
+/* ---- OVERRIDE DE ANGULAR MATERIAL ---- */
+
+/* Fuerza al cuadro a tener bordes redondeados estéticos */
+.mat-mdc-text-field-wrapper {
+  border-radius: 14px !important;
+  background-color: #0F1115 !important;
+}
+
+/* Input interno */
+input.mat-mdc-input-element {
+  padding: 10px 14px !important;
+  color: #E0E0E0 !important;
+}
+
+/* Icono de búsqueda */
+.mat-mdc-form-field-icon-suffix .mat-icon {
   color: #fbc02d !important;
-  border-color: #fbc02d !important;
+  font-size: 22px !important;
 }
 
-/* Color del text del input */
-.buscador-field .mat-input-element {
-  color: #E0E0E0;
-  padding: 12px 14px;   /* 👉 MARC GE dins */
-}
-
-/* Color del label */
-.buscador-field .mat-form-field-label {
+/* Botón de limpiar */
+button.mat-icon-button {
   color: #fbc02d !important;
 }
 
-/* Color icones */
-.buscador-field mat-icon {
-  color: #fbc02d !important;
+/* El label (placeholder) */
+.mdc-floating-label {
+  color: #e0e0e0 !important;
 }
-
-/* Arrodonim el quadre */
-.buscador-field .mat-form-field-outline {
-  border-radius: 20px !important;
+.mdc-floating-label--float-above {
+  color: #fbc02d !important;
 }
