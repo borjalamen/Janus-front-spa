@@ -1,35 +1,34 @@
+/* Contenidor centrat i més petit */
 .buscador-container {
-  width: 90%;
-  margin: 0 auto 20px auto;
+  width: 80%;
+  margin: 20px auto;
 }
 
-.buscador-wrapper {
-  border: 2px solid #fbc02d;
-  border-radius: 25px;
-  padding: 6px 14px;
-  background-color: #16181c;
-  display: flex;
-  align-items: center;
+/* Converteix el quadre blanc en groc i arrodonit */
+.buscador-field .mat-form-field-outline,
+.buscador-field .mat-form-field-outline-start,
+.buscador-field .mat-form-field-outline-end {
+  color: #fbc02d !important;
+  border-color: #fbc02d !important;
 }
 
-/* ELIMINA el quadre blanc i la línia d’outline de Angular Material */
-.mat-form-field-appearance-outline .mat-form-field-outline,
-.mat-form-field-outline-start,
-.mat-form-field-outline-end {
-  display: none !important;
-}
-
-input.mat-input-element {
+/* Color del text del input */
+.buscador-field .mat-input-element {
   color: #E0E0E0;
-  padding: 6px;
-  font-size: 15px;
-  background: transparent;
+  padding: 12px 14px;   /* 👉 MARC GE dins */
 }
 
-mat-icon {
-  color: #fbc02d;
-  margin-left: 10px;
+/* Color del label */
+.buscador-field .mat-form-field-label {
+  color: #fbc02d !important;
 }
-.mat-form-field-flex {
-  background: transparent !important;
+
+/* Color icones */
+.buscador-field mat-icon {
+  color: #fbc02d !important;
+}
+
+/* Arrodonim el quadre */
+.buscador-field .mat-form-field-outline {
+  border-radius: 20px !important;
 }
