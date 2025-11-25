@@ -49,8 +49,8 @@ mat-nav-list a:hover .menu-text {
 }
 
 mat-nav-list a:hover {
+  /* #1e84a3*/
   background: #1e84a3;
-  color: #1e84a3;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
 mat-icon {
@@ -67,11 +67,11 @@ mat-icon {
 
 /* Toolbar superior centrada */
 mat-toolbar.main-toolbar {
-  background: #1e84a3 !important;
+  background: #14b1e1!important;
   color: #FBC02D !important;
   font-weight: bold;
   font-size: 1.18em;
-  min-height: 56px;
+  min-height: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +181,7 @@ mat-nav-list {
 }
 .banner-imatges {
   width: 100%;
-  background: #1e84a3;
+  background: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -190,8 +190,8 @@ mat-nav-list {
 }
 
 .imatge-menu {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
 }
 
 .main-toolbar {
