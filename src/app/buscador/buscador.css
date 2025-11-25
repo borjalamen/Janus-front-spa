@@ -1,47 +1,35 @@
 .buscador-container {
-  width: 100%;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: center;
+  width: 90%;
+  margin: 0 auto 20px auto;
 }
 
-/* Marc groc – ÚNIC que es veu */
 .buscador-wrapper {
-  width: 70%;               /* ✔ més petit */
   border: 2px solid #fbc02d;
-  border-radius: 18px;
+  border-radius: 25px;
+  padding: 6px 14px;
   background-color: #16181c;
-  padding: 4px 14px;        /* ✔ espai intern */
+  display: flex;
+  align-items: center;
 }
 
-/* Eliminar totalment l’estil de Material */
-.mat-mdc-text-field-wrapper {
-  background: transparent !important;   /* ✔ elimina quadre blanc */
-  box-shadow: none !important;
-  border: none !important;
-  height: 42px !important;              /* ✔ més petit */
-  padding: 0 !important;
+/* El mat-form-field NO ha de dibuixar cap quadre */
+mat-form-field {
+  flex: 1;
 }
 
-/* Input intern */
-input.mat-mdc-input-element {
-  padding: 10px 6px !important;    /* ✔ separació del text */
-  color: #E0E0E0 !important;
-  font-size: 14px;
+.mat-form-field-appearance-outline .mat-form-field-outline,
+.mat-form-field-outline-start,
+.mat-form-field-outline-end {
+  display: none !important;   /* ELIMINA EL QUADRE BLANC */
 }
 
-/* Eliminar línies i contorns del material */
-.mdc-notched-outline {
-  display: none !important;
+input.mat-input-element {
+  color: #E0E0E0;
+  padding: 6px;
+  font-size: 15px;
 }
 
-/* Icono de búsqueda */
-.mat-mdc-form-field-icon-suffix .mat-icon {
-  color: #fbc02d !important;
-  margin-right: 6px;
-}
-
-/* Botón para limpiar */
-button.mat-icon-button {
-  color: #fbc02d !important;
+mat-icon {
+  color: #fbc02d;
+  margin-left: 10px;
 }
