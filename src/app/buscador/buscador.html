@@ -1,12 +1,12 @@
 <div class="buscador-container">
   <div class="buscador-wrapper">
-    
-    <mat-form-field appearance="none" style="width: 100%;">
+
+    <mat-form-field appearance="outline" style="width: 100%;">
       <input
         matInput
         [(ngModel)]="valorBusqueda"
         (input)="onBuscar()"
-        placeholder="Buscar..."
+        placeholder="Escribe para buscar..."
       >
     </mat-form-field>
 

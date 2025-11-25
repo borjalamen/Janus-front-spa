@@ -12,24 +12,24 @@
   align-items: center;
 }
 
-/* El mat-form-field NO ha de dibuixar cap quadre */
-mat-form-field {
-  flex: 1;
-}
-
+/* ELIMINA el quadre blanc i la línia d’outline de Angular Material */
 .mat-form-field-appearance-outline .mat-form-field-outline,
 .mat-form-field-outline-start,
 .mat-form-field-outline-end {
-  display: none !important;   /* ELIMINA EL QUADRE BLANC */
+  display: none !important;
 }
 
 input.mat-input-element {
   color: #E0E0E0;
   padding: 6px;
   font-size: 15px;
+  background: transparent;
 }
 
 mat-icon {
   color: #fbc02d;
   margin-left: 10px;
+}
+.mat-form-field-flex {
+  background: transparent !important;
 }
