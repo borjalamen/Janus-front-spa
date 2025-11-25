@@ -1,46 +1,47 @@
-/* CONTENEDOR DEL BUSCADOR */
 .buscador-container {
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
 }
 
-/* BORDE EXTERNO REDONDEADO */
+/* Marc groc – ÚNIC que es veu */
 .buscador-wrapper {
-  border-radius: 14px;
+  width: 70%;               /* ✔ més petit */
   border: 2px solid #fbc02d;
+  border-radius: 18px;
   background-color: #16181c;
-  padding: 4px 10px; /* SEPARA EL CUADRO INTERNO DEL BORDE */
+  padding: 4px 14px;        /* ✔ espai intern */
 }
 
-/* ---- OVERRIDE DE ANGULAR MATERIAL ---- */
-
-/* Fuerza al cuadro a tener bordes redondeados estéticos */
+/* Eliminar totalment l’estil de Material */
 .mat-mdc-text-field-wrapper {
-  border-radius: 14px !important;
-  background-color: #0F1115 !important;
+  background: transparent !important;   /* ✔ elimina quadre blanc */
+  box-shadow: none !important;
+  border: none !important;
+  height: 42px !important;              /* ✔ més petit */
+  padding: 0 !important;
 }
 
-/* Input interno */
+/* Input intern */
 input.mat-mdc-input-element {
-  padding: 10px 14px !important;
+  padding: 10px 6px !important;    /* ✔ separació del text */
   color: #E0E0E0 !important;
+  font-size: 14px;
+}
+
+/* Eliminar línies i contorns del material */
+.mdc-notched-outline {
+  display: none !important;
 }
 
 /* Icono de búsqueda */
 .mat-mdc-form-field-icon-suffix .mat-icon {
   color: #fbc02d !important;
-  font-size: 22px !important;
+  margin-right: 6px;
 }
 
-/* Botón de limpiar */
+/* Botón para limpiar */
 button.mat-icon-button {
-  color: #fbc02d !important;
-}
-
-/* El label (placeholder) */
-.mdc-floating-label {
-  color: #e0e0e0 !important;
-}
-.mdc-floating-label--float-above {
   color: #fbc02d !important;
 }
