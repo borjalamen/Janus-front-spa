@@ -6,7 +6,7 @@
       <img src="https://i.imgur.com/7dRimV7.png" alt="JanusHub" class="janus" />
     </mat-toolbar>
 
-    <mat-nav-list>
+    <mat-nav-list class="scroll-nat-nav-list">
 
       <!-- Home -->
       <a mat-list-item routerLink="/home">
@@ -61,20 +61,26 @@
 
   <!-- Contenido principal -->
   <mat-sidenav-content>
+    <!-- Franja superior exclusiva per icones/imatges -->
+    <div class="banner-imatges">
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+      <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
+    </div>
 
+    <!-- Franja inferior exclusiva pel títol, login, etc -->
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
+      <span class="spacer"></span>
+      <div class="login-user" (click)="openLoginDialog()">
+        <mat-icon>person</mat-icon>
+      </div>
     </mat-toolbar>
-
-    <!-- Icono login -->
-    <div class="login-user" (click)="openLoginDialog()">
-      <mat-icon>person</mat-icon>
-    </div>
 
     <div class="main-content menu-content-scroll">
       <router-outlet></router-outlet>
     </div>
-
   </mat-sidenav-content>
 
 </mat-sidenav-container>

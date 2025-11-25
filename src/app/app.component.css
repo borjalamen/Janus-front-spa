@@ -158,6 +158,10 @@ mat-nav-list {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.scroll-nat-nav-list{
+  scrollbar-color:#FBC02D #000000 ;
+  scrollbar-width: thin;
+}
 .check-green {
   color: #43a047;
   font-size: 1.2em;
@@ -174,6 +178,41 @@ mat-nav-list {
   box-sizing: border-box;
   scrollbar-color:#FBC02D #000000 ;
   scrollbar-width: thin;
+}
+.banner-imatges {
+  width: 100%;
+  background: #1e84a3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  gap: 30px;
+}
+
+.imatge-menu {
+  width: 80px;
+  height: 80px;
+}
+
+.main-toolbar {
+  min-height: 56px;
+  background: #1565c0;
+  display: flex;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd600;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.spacer {
+  flex: 1 1 auto;
 }
 
 
