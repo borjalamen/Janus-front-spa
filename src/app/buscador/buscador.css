@@ -3,24 +3,33 @@
   margin-bottom: 24px;
 }
 
-/* Wrapper per poder controlar border radius del mat-form-field */
+/* Contenedor externo con borde redondeado */
 .buscador-wrapper {
-  border-radius: 30px;
-  overflow: hidden; /* Important per arrodonir el mat-form-field */
   border: 2px solid #fbc02d;
-  background-color: #16181c;
+  border-radius: 14px;
+  padding: 0;
+  background: #16181c;
 }
 
-/* Estil de l'input intern */
-.buscador-wrapper input.mat-input-element {
-  padding: 12px 16px; /* marge dins */
-  color: #E0E0E0;
-  background: transparent;
-  border-radius: 30px;
+/* Ajuste del mat-form-field */
+mat-form-field {
+  width: 100%;
 }
 
-/* Botons i icones rodons */
+/* Forzar el borde redondeado EN EL INPUT REAL */
+.mat-mdc-text-field-wrapper {
+  border-radius: 14px !important;
+  background: #16181c !important;
+}
+
+/* Input interno → margen para que no quede pegado */
+input.mat-input-element {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  color: #E0E0E0 !important;
+}
+
+/* Iconos */
 mat-icon, button.mat-icon-button {
-  border-radius: 50%;
-  background-color: #292b2f;
+  color: #fbc02d;
 }
