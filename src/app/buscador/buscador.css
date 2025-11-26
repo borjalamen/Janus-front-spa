@@ -1,73 +1,70 @@
-/* Contenedor general */
+/* ===== CONTENIDOR ===== */
 .buscador-container {
   width: 100%;
   margin-bottom: 24px;
 }
 
-/* Caja externa con borde amarillo */
+/* ===== MARC EXTERN (sense contorn) ===== */
 .buscador-wrapper {
   width: 100%;
-  border: 2px solid #fbc02d;
-  border-radius: 14px;
-  padding: 4px 10px;
-  background: #16181c;
+  border: none;                  /* contorn eliminat */
+  border-radius: 0;              /* sense arrodoniment */
+  padding: 6px 10px;
+  background: transparent;       /* fons transparent */
   transition: border-color 0.25s ease;
 }
 
-/* Cuando el input está enfocado → borde amarillo brillante */
-.buscador-wrapper:has(input:focus) {
-  border-color: #ffd740;
-}
-
-/* Ajuste del mat-form-field */
-mat-form-field {
+/* ===== MAT-FORM-FIELD ===== */
+.buscador-field {
   width: 100%;
 }
 
-/* Wrapper del input de Angular Material */
+/* Elimina fons intern i quadrat blanc */
 .mat-mdc-text-field-wrapper {
-  border-radius: 14px !important;
-  background: #0F1115 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-/* Input interno → márgenes amplios */
-input.mat-mdc-input-element,
-input.mat-input-element {
+/* Input */
+input.mat-mdc-input-element {
+  color: #ffd740 !important;      /* text groc */
+  caret-color: #ffd740 !important;
   padding: 10px 14px !important;
-  color: #E0E0E0 !important;
 }
 
-/* --- ICONO DE LA LUPA --- */
+/* Placeholder groc */
+.mdc-text-field__input::placeholder {
+  color: #fbc02d !important;
+  opacity: 1 !important;
+}
 
-/* Estilo base */
-.mat-mdc-form-field-icon-suffix .mat-icon {
+/* ===== ICONA LUPA ===== */
+.icono-lupa {
   color: #fbc02d !important;
   transition: color 0.2s ease, transform 0.2s ease;
-  font-size: 22px !important;
+  font-size: 24px !important;
 }
 
-/* Hover sobre la lupa */
-.mat-mdc-form-field-icon-suffix .mat-icon:hover {
+/* Hover: lupa groga + zoom */
+.icono-lupa:hover {
   color: #ffd740 !important;
-  transform: scale(1.15);
+  transform: scale(1.25);
   cursor: pointer;
 }
 
-/* Cuando el input está en focus → lupa más brillante */
-.buscador-wrapper:has(input:focus) .mat-mdc-form-field-icon-suffix .mat-icon {
+/* En focus del camp: lupa més brillant */
+.buscador-wrapper:has(input:focus) .icono-lupa {
   color: #ffd740 !important;
 }
 
-/* Botón limpiar */
+/* ===== BOTÓ CLEAR (X) ===== */
 button.mat-icon-button {
   color: #fbc02d !important;
+  transition: transform 0.2s ease;
 }
 
-/* Placeholders / labels */
-.mdc-floating-label {
-  color: #e0e0e0 !important;
-}
-
-.mdc-floating-label--float-above {
-  color: #fbc02d !important;
+button.mat-icon-button:hover {
+  color: #ffd740 !important;
+  transform: scale(1.2);
 }
