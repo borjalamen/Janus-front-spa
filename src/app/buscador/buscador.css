@@ -4,26 +4,36 @@
   margin-bottom: 24px;
 }
 
-/* BORDE EXTERNO REDONDEADO */
+/* Contenedor externo con borde redondeado */
 .buscador-wrapper {
-  border-radius: 14px;
   border: 2px solid #fbc02d;
-  background-color: #16181c;
-  padding: 4px 10px; /* SEPARA EL CUADRO INTERNO DEL BORDE */
+  border-radius: 14px;
+  padding: 4px 10px;
+  background: #16181c;
 }
 
-/* ---- OVERRIDE DE ANGULAR MATERIAL ---- */
+/* Ajuste del mat-form-field */
+mat-form-field {
+  width: 100%;
+}
 
-/* Fuerza al cuadro a tener bordes redondeados estéticos */
+/* Forzar el borde redondeado en el wrapper del input */
 .mat-mdc-text-field-wrapper {
   border-radius: 14px !important;
   background-color: #0F1115 !important;
 }
 
-/* Input interno */
-input.mat-mdc-input-element {
+/* Input interno con padding agradable */
+input.mat-mdc-input-element,
+input.mat-input-element {
   padding: 10px 14px !important;
   color: #E0E0E0 !important;
+}
+
+/* Iconos */
+mat-icon,
+button.mat-icon-button {
+  color: #fbc02d !important;
 }
 
 /* Icono de búsqueda */
@@ -37,10 +47,11 @@ button.mat-icon-button {
   color: #fbc02d !important;
 }
 
-/* El label (placeholder) */
+/* Placeholder / label */
 .mdc-floating-label {
   color: #e0e0e0 !important;
 }
+
 .mdc-floating-label--float-above {
   color: #fbc02d !important;
 }
