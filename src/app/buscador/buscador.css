@@ -1,15 +1,22 @@
-/* CONTENEDOR DEL BUSCADOR */
+/* Contenedor general */
 .buscador-container {
   width: 100%;
   margin-bottom: 24px;
 }
 
-/* Contenedor externo con borde redondeado */
+/* Caja externa con borde amarillo */
 .buscador-wrapper {
+  width: 100%;
   border: 2px solid #fbc02d;
   border-radius: 14px;
   padding: 4px 10px;
   background: #16181c;
+  transition: border-color 0.25s ease;
+}
+
+/* Cuando el input está enfocado → borde amarillo brillante */
+.buscador-wrapper:has(input:focus) {
+  border-color: #ffd740;
 }
 
 /* Ajuste del mat-form-field */
@@ -17,37 +24,46 @@ mat-form-field {
   width: 100%;
 }
 
-/* Forzar el borde redondeado en el wrapper del input */
+/* Wrapper del input de Angular Material */
 .mat-mdc-text-field-wrapper {
   border-radius: 14px !important;
-  background-color: #0F1115 !important;
+  background: #0F1115 !important;
 }
 
-/* Input interno con padding agradable */
+/* Input interno → márgenes amplios */
 input.mat-mdc-input-element,
 input.mat-input-element {
   padding: 10px 14px !important;
   color: #E0E0E0 !important;
 }
 
-/* Iconos */
-mat-icon,
-button.mat-icon-button {
-  color: #fbc02d !important;
-}
+/* --- ICONO DE LA LUPA --- */
 
-/* Icono de búsqueda */
+/* Estilo base */
 .mat-mdc-form-field-icon-suffix .mat-icon {
   color: #fbc02d !important;
+  transition: color 0.2s ease, transform 0.2s ease;
   font-size: 22px !important;
 }
 
-/* Botón de limpiar */
+/* Hover sobre la lupa */
+.mat-mdc-form-field-icon-suffix .mat-icon:hover {
+  color: #ffd740 !important;
+  transform: scale(1.15);
+  cursor: pointer;
+}
+
+/* Cuando el input está en focus → lupa más brillante */
+.buscador-wrapper:has(input:focus) .mat-mdc-form-field-icon-suffix .mat-icon {
+  color: #ffd740 !important;
+}
+
+/* Botón limpiar */
 button.mat-icon-button {
   color: #fbc02d !important;
 }
 
-/* Placeholder / label */
+/* Placeholders / labels */
 .mdc-floating-label {
   color: #e0e0e0 !important;
 }
