@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
+import {OnInit} from '@angular/core';
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-login-dialog',
@@ -15,13 +17,21 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './login-dialog.html',
   styleUrls: ['./login-dialog.css'],
 })
-export class LoginDialogComponent {
+export class LoginDialogComponent implements OnInit, OnDestroy {
   username:string = '';
   password:string = '';
   error:string =''
   
   constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
+  ngOnInit(): void {
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+}
 
+ngOnDestroy(): void {
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+}
   login() {
     if (this.username === 'Janus' && this.password === '1234') {
       this.dialogRef.close(true);

@@ -53,6 +53,10 @@ mat-nav-list a:hover {
   background: #1e84a3;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
+mat-nav-list a mat-icon {
+  position: relative;
+  top: 2px; /* Augmenta el valor per baixar més la icona */
+}
 mat-icon {
   color: #FBC02D !important;
   font-size: 28px !important;
@@ -180,19 +184,28 @@ mat-nav-list {
   scrollbar-width: thin;
 }
 .banner-imatges {
-  width: 100%;
+  min-width: 100%;
   background: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px 0;
   gap: 30px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: #FBC02D #000000;
 }
 
 .imatge-menu {
   width: 70px;
   height: 70px;
+  transition: transform 0.18s cubic-bezier(0.4,0,0.2,1);
 }
+
+.imatge-menu:hover {
+  transform: scale(1.43); /* 100/70 ≈ 1.43, per simular el mateix efecte visual */
+}
+
 
 .main-toolbar {
   min-height: 56px;
