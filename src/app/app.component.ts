@@ -15,6 +15,8 @@ import { AdministracionComponent } from './administracion/administracion';
 import { RouterModule } from '@angular/router';
 import { BuscadorComponent } from './buscador/buscador';
 import { ApiService } from './api.service'; 
+import {HostListener } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -42,6 +44,7 @@ export class AppComponent implements OnInit {
   title = 'JanusHUB.v1';
   activeSection: string = 'home';
   appVersion: string | null = null;
+  isScrolled: boolean = false;
 
   constructor(public dialog: MatDialog, private api: ApiService) {}
 
@@ -56,6 +59,14 @@ export class AppComponent implements OnInit {
         console.error('Error obtenint versió:', err);
       }
     });
+  }
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const scrollY = window.pageYOffset
+      || document.documentElement.scrollTop
+      || document.body.scrollTop
+      || 0;
+    this.isScrolled = scrollY > 20; 
   }
 
   openLoginDialog(): void {

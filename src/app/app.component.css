@@ -136,6 +136,12 @@ mat-toolbar.main-toolbar {
   background: #0F1115;
   min-height: 90vh;
 }
+.main-toolbar.scrolled {
+  background: rgba(21, 101, 192, 0.77);
+  transition: background 0.3s;
+  box-shadow: 0 2px 16px #0008;
+  backdrop-filter: blur(2px);
+}
 
 /* Colors bàsics del body */
 body {

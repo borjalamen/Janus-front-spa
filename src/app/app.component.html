@@ -92,7 +92,7 @@
     </div>
 
     <!-- Franja inferior exclusiva pel títol, login, etc -->
-    <mat-toolbar color="primary" class="main-toolbar">
+    <mat-toolbar color="primary" class="main-toolbar" [class.scrolled]="isScrolled">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
       <div class="login-user" (click)="openLoginDialog()">
