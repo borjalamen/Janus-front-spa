@@ -11,6 +11,7 @@ import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { AdministracionComponent } from './app/administracion/administracion';
 import { provideHttpClient } from '@angular/common/http';
 import { BitacoraComponent as Bitacora} from './app/Bitacora/Bitacora';
+import { Jenkins } from './app/jenkins/jenkins';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -24,7 +25,8 @@ bootstrapApplication(AppComponent, {
       {path: 'formacion', component: FormacionComponent },
       {path: 'planificacion', component: PlanificacionComponent },
       { path: 'administracion', component: AdministracionComponent },
-      { path: 'bitacora', component: Bitacora}
+      { path: 'bitacora', component: Bitacora},
+      {path: 'jenkins', component: Jenkins}
     ]),
 
     provideHttpClient()
