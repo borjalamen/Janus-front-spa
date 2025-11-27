@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login-dialog',
@@ -40,9 +40,9 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    // Aquí va tu lógica de autenticación
+    // Validación básica de usuario
     if (this.username === 'Janus' && this.password === '1234') {
-      this.dialogRef.close(true); // cerrar el popup
+      this.dialogRef.close(true);
     } else {
       this.error = 'Usuario o contraseña inválidos';
     }
