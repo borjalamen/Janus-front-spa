@@ -40,9 +40,20 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    // Validación básica de usuario
-    if (this.username === 'Janus' && this.password === '1234') {
-      this.dialogRef.close(true);
+    // Usuaris simulats amb rol assignat
+    const usersSimulats = [
+      { username: 'janus', password: '1234', rol: 'admin' },
+      { username: 'consultor', password: 'abcd', rol: 'consultor' },
+      { username: 'devops', password: 'xyz', rol: 'devops' }
+    ];
+
+    const usuariTrobat = usersSimulats.find(
+      u => u.username === this.username && u.password === this.password
+    );
+
+    if (usuariTrobat) {
+      // Tanquem el diàleg i retornem l'usuari amb el seu rol
+      this.dialogRef.close({ username: usuariTrobat.username, rol: usuariTrobat.rol });
     } else {
       this.error = 'Usuario o contraseña inválidos';
     }
