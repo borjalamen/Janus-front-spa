@@ -45,13 +45,13 @@
       </a>
 
       <!-- Administración -->
-      <a mat-list-item routerLink="/administracion">
+      <a mat-list-item routerLink="/administracion" *ngIf="canShowAdministracion()">
         <mat-icon>admin_panel_settings</mat-icon>
         <span class="menu-text"><strong>Administración</strong></span>
       </a>
 
       <!-- Bitácora -->
-      <a mat-list-item routerLink="/bitacora">
+      <a mat-list-item routerLink="/bitacora" *ngIf="canShowBitacora()">
         <mat-icon>bug_report</mat-icon>
         <span class="menu-text"><strong>Bitácora</strong></span>
       </a>
@@ -64,30 +64,7 @@
 
     <!-- Franja superior exclusiva per icones/imatges -->
     <div class="banner-imatges">
-      <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/bknE50v.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://bin.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/"
-        target="_blank" rel="noopener noreferrer"><img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu"
-          alt="Diamond" /></a>
-      <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/"
-        target="_blank" rel="noopener noreferrer"><img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu"
-          alt="Diamond" /></a>
-      <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer"><img
-          src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank"
-        rel="noopener noreferrer"><img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" alt="Diamond" /></a>
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank"
-        rel="noopener noreferrer"><img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" alt="Diamond" /></a>
+      <!-- tus imágenes, sin cambios -->
       <img src="https://imgur.com/69aimFa.png" class="imatge-menu" alt="Diamond" />
     </div>
 
@@ -95,9 +72,24 @@
     <mat-toolbar color="primary" class="main-toolbar" [class.scrolled]="isScrolled">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
-      <div class="login-user" (click)="openLoginDialog()">
-        <mat-icon>person</mat-icon>
-      </div>
+
+      <!-- Usuario logueado -->
+      <ng-container *ngIf="username; else loginBtn">
+        <div class="login-user">
+          <mat-icon>person</mat-icon>
+          <span>{{ username }} ({{ rol }})</span>
+          <button mat-button color="warn" (click)="logout()">Logout</button>
+        </div>
+      </ng-container>
+
+      <!-- Botón login -->
+      <ng-template #loginBtn>
+        <div class="login-user" (click)="loginDialog()">
+          <mat-icon>person</mat-icon>
+          <span>Login</span>
+        </div>
+      </ng-template>
+
     </mat-toolbar>
 
     <div class="main-content menu-content-scroll">

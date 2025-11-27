@@ -2,6 +2,8 @@
   <h2>Iniciar sesión</h2>
 
   <form>
+
+    <!-- USUARIO -->
     <mat-form-field appearance="fill">
       <mat-label>Usuario</mat-label>
       <input
@@ -9,11 +11,11 @@
         [(ngModel)]="username"
         name="username"
         autocomplete="username"
-        
         title="Usuario"
       />
     </mat-form-field>
 
+    <!-- CONTRASEÑA -->
     <mat-form-field appearance="fill">
       <mat-label>Contraseña</mat-label>
       <input
@@ -26,10 +28,22 @@
       />
     </mat-form-field>
 
+    <!-- 🚨 NUEVO: SELECTOR DE ROL -->
+    <mat-form-field appearance="fill">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="rol" name="rol">
+        <mat-option value="admin">Administrador</mat-option>
+        <mat-option value="consultor">Consultor</mat-option>
+        <mat-option value="devops">DevOps</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- BOTÓN LOGIN -->
     <button mat-raised-button color="primary" (click)="login()" type="button">
       <mat-icon>login</mat-icon> Acceder
     </button>
 
+    <!-- ERROR -->
     <div *ngIf="error" class="error-msg">{{ error }}</div>
   </form>
 </div>
