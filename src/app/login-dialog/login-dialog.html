@@ -1,20 +1,27 @@
-<div class="login-central">
-  <h2>Iniciar sesión</h2>
-  <form>
-    <mat-form-field appearance="fill">
-      <mat-label>Usuario</mat-label>
-      <input matInput [(ngModel)]="username" name="username" autocomplete="username" title="Usuario" />
-    </mat-form-field>
+<h2 mat-dialog-title>Iniciar sesión</h2>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Contraseña</mat-label>
-      <input matInput type="password" [(ngModel)]="password" name="password" autocomplete="current-password" title="Contraseña" />
-    </mat-form-field>
+<mat-dialog-content class="login-dialog-content">
+  <p>Introduce tus credenciales:</p>
 
-    <button mat-raised-button color="primary" (click)="login()" type="button">
-      <mat-icon>login</mat-icon> Acceder
-    </button>
+  <!-- Usuario -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Usuario</mat-label>
+    <input matInput [(ngModel)]="username" />
+    <mat-icon matSuffix>person</mat-icon>
+  </mat-form-field>
 
-    <div *ngIf="error" class="error-msg">{{ error }}</div>
-  </form>
-</div>
+  <!-- Contraseña -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Contraseña</mat-label>
+    <input matInput [(ngModel)]="password" type="password" />
+    <mat-icon matSuffix>lock</mat-icon>
+  </mat-form-field>
+
+  <!-- Mensaje de error -->
+  <p *ngIf="error" class="error-text">{{ error }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" (click)="cancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="login()">Login</button>
+</mat-dialog-actions>
