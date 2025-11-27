@@ -14,11 +14,10 @@
       <strong>Categoría:</strong> {{ e.categoria }}<br>
       <strong>Descripción:</strong> {{ e.descripcion }}<br>
 
-      <button mat-raised-button
-              (click)="toggleResuelto(e)"
-              style="margin-top: 6px;">
+      <button mat-raised-button (click)="toggleResuelto(e)" style="margin-top: 6px;">
         {{ e.resuelto ? 'Marcar como pendiente' : 'Marcar como resuelto' }}
       </button>
+
     </li>
   </ul>
 </div>

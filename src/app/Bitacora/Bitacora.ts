@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-bitacora',
   standalone: true,
-  imports: [CommonModule, BuscadorComponent],
+  imports: [
+    CommonModule,
+    BuscadorComponent,
+    MatButtonModule  // <-- NECESARIO PARA mat-raised-button
+  ],
   templateUrl: './bitacora.html',
-  styleUrls: ['./bitacora.css']
+  styleUrls: ['./Bitacora.css']   // <-- NOMBRE CON MAYÚSCULA
 })
 export class BitacoraComponent {
 
@@ -52,5 +57,4 @@ export class BitacoraComponent {
   toggleResuelto(error: any) {
     error.resuelto = !error.resuelto;
   }
-
 }
