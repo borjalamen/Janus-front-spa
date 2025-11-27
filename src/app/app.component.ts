@@ -1,8 +1,14 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { RouterModule, RouterOutlet } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
@@ -12,17 +18,24 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,       // <-- necesario para usar [routerLink]
+    RouterOutlet,
+    
+    // Angular Material
     MatToolbarModule,
     MatIconModule,
-    LoginDialogComponent
+    MatSidenavModule,
+    MatListModule,
+    MatButtonModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-  username: string = '';  
-  rol: Rol = 'invitado';  
+  username: string = '';
+  rol: Rol = 'invitado';
+  appVersion: string | null = null;
+  isScrolled = false;
 
   constructor(private dialog: MatDialog) {}
 
@@ -51,33 +64,16 @@ export class AppComponent {
   }
 
   canShow(menuItem: string): boolean {
-    switch(menuItem) {
-      case 'bienvenida':
-        return true;
-
-      case 'proyectos':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
-
-      case 'procedimientos':
-        return ['devops', 'admin'].includes(this.rol);
-
-      case 'documentos':
-        return ['devops', 'admin'].includes(this.rol);
-
-      case 'formacion':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
-
-      case 'planificacion':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
-
-      case 'administracion':
-        return ['admin'].includes(this.rol);
-
-      case 'bitacora':
-        return ['devops', 'admin'].includes(this.rol);
-
-      default:
-        return false;
+    switch (menuItem) {
+      case 'bienvenida': return true;
+      case 'proyectos': return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'procedimientos': return ['devops', 'admin'].includes(this.rol);
+      case 'documentos': return ['devops', 'admin'].includes(this.rol);
+      case 'formacion': return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'planificacion': return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'administracion': return ['admin'].includes(this.rol);
+      case 'bitacora': return ['devops', 'admin'].includes(this.rol);
+      default: return false;
     }
   }
 }

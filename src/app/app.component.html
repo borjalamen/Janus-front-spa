@@ -8,63 +8,56 @@
 
     <mat-nav-list class="scroll-nat-nav-list">
 
-      <!-- Bienvenida (siempre habilitada) -->
+      <!-- Bienvenida -->
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
         <span class="menu-text"><strong>Bienvenida</strong></span>
       </a>
 
       <!-- Proyectos -->
-      <a mat-list-item 
-         [routerLink]="canShow('proyectos') ? '/projects' : null"
+      <a mat-list-item [routerLink]="canShow('proyectos') ? '/projects' : null"
          [class.disabled]="!canShow('proyectos')">
         <mat-icon>folder_open</mat-icon>
         <span class="menu-text"><strong>Proyectos</strong></span>
       </a>
 
       <!-- Procedimientos -->
-      <a mat-list-item 
-         [routerLink]="canShow('procedimientos') ? '/procedimientos' : null"
+      <a mat-list-item [routerLink]="canShow('procedimientos') ? '/procedimientos' : null"
          [class.disabled]="!canShow('procedimientos')">
         <mat-icon>assignment</mat-icon>
         <span class="menu-text"><strong>Procedimientos</strong></span>
       </a>
 
       <!-- Documentos -->
-      <a mat-list-item 
-         [routerLink]="canShow('documentos') ? '/documents' : null"
+      <a mat-list-item [routerLink]="canShow('documentos') ? '/documents' : null"
          [class.disabled]="!canShow('documentos')">
         <mat-icon>upload_file</mat-icon>
         <span class="menu-text"><strong>Documentos</strong></span>
       </a>
 
       <!-- Formación -->
-      <a mat-list-item 
-         [routerLink]="canShow('formacion') ? '/formacion' : null"
+      <a mat-list-item [routerLink]="canShow('formacion') ? '/formacion' : null"
          [class.disabled]="!canShow('formacion')">
         <mat-icon>school</mat-icon>
         <span class="menu-text"><strong>Formación</strong></span>
       </a>
 
       <!-- Planificación -->
-      <a mat-list-item 
-         [routerLink]="canShow('planificacion') ? '/planificacion' : null"
+      <a mat-list-item [routerLink]="canShow('planificacion') ? '/planificacion' : null"
          [class.disabled]="!canShow('planificacion')">
         <mat-icon>event_note</mat-icon>
         <span class="menu-text"><strong>Planificación</strong></span>
       </a>
 
       <!-- Administración -->
-      <a mat-list-item 
-         [routerLink]="canShow('administracion') ? '/administracion' : null"
+      <a mat-list-item [routerLink]="canShow('administracion') ? '/administracion' : null"
          [class.disabled]="!canShow('administracion')">
         <mat-icon>admin_panel_settings</mat-icon>
         <span class="menu-text"><strong>Administración</strong></span>
       </a>
 
       <!-- Bitácora -->
-      <a mat-list-item 
-         [routerLink]="canShow('bitacora') ? '/bitacora' : null"
+      <a mat-list-item [routerLink]="canShow('bitacora') ? '/bitacora' : null"
          [class.disabled]="!canShow('bitacora')">
         <mat-icon>bug_report</mat-icon>
         <span class="menu-text"><strong>Bitácora</strong></span>
@@ -78,7 +71,6 @@
 
     <!-- Logos -->
     <div class="banner-imatges">
-
       <!-- Logos antiguos -->
       <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" alt="Git Intranet" />
@@ -95,11 +87,11 @@
 
       <!-- Logos CTTI -->
       <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/"
-        target="_blank" rel="noopener noreferrer">
+         target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" alt="CTTI 1" />
       </a>
       <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/"
-        target="_blank" rel="noopener noreferrer">
+         target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" alt="CTTI 2" />
       </a>
 
@@ -107,25 +99,20 @@
       <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" alt="Bitbucket" />
       </a>
-
       <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" alt="Qamindce" />
       </a>
-
       <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" alt="Nexus" />
       </a>
-
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank"
-        rel="noopener noreferrer">
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/"
+         target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" alt="Dev Env" />
       </a>
-
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank"
-        rel="noopener noreferrer">
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/"
+         target="_blank" rel="noopener noreferrer">
         <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" alt="Int Env" />
       </a>
-
       <a routerLink="/jenkins">
         <img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" alt="Jenkins Minsait" />
       </a>
@@ -136,21 +123,23 @@
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
 
-      <!-- Usuario -->
-      <div class="user-info" *ngIf="rol !== 'invitado'">
-        <mat-icon>person</mat-icon>
-        {{ username }} ({{ rol }})
-      </div>
+      <!-- Usuario y acciones -->
+      <ng-container *ngIf="rol !== 'invitado'; else loginButton">
+        <div class="user-info">
+          <mat-icon>person</mat-icon>
+          {{ username }} ({{ rol }})
+        </div>
+        <button mat-icon-button (click)="logout()">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </ng-container>
 
-      <!-- Botón login / logout -->
-      <button mat-icon-button *ngIf="rol === 'invitado'" (click)="openLoginDialog()">
-        <mat-icon>login</mat-icon>
-      </button>
-
-      <button mat-icon-button *ngIf="rol !== 'invitado'" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-      </button>
-
+      <!-- Botón login -->
+      <ng-template #loginButton>
+        <button mat-icon-button (click)="openLoginDialog()">
+          <mat-icon>login</mat-icon>
+        </button>
+      </ng-template>
     </mat-toolbar>
 
     <div class="main-content menu-content-scroll">
