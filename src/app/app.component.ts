@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';   // <-- NECESARIO para mat-nav-list
+import { Router } from '@angular/router';        // ⬅ IMPORTANTE
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
@@ -15,7 +15,6 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     CommonModule,
     MatToolbarModule,
     MatIconModule,
-    MatListModule,           // <-- IMPORT SOLUCIÓN ERROR
     LoginDialogComponent
   ],
   templateUrl: './app.component.html',
@@ -24,58 +23,46 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 export class AppComponent {
 
   username: string = '';
-  rol: Rol = 'invitado';   // Rol inicial para usuarios no logueados
-  isScrolled = false;
+  rol: Rol = 'invitado';
 
-  constructor(private dialog: MatDialog) {
-    // Listener para cambiar estilo de toolbar si haces scroll
-    window.addEventListener('scroll', () => {
-      this.isScrolled = window.scrollY > 10;
-    });
-  }
+  constructor(
+    private dialog: MatDialog,
+    private router: Router      // ⬅ NECESARIO PARA navegar()
+  ) {}
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.success) {
-
-        // Guardamos datos de login
         this.username = result.username;
         this.rol = result.rol;
-
-        console.log("Usuario logueado:", this.username, "Rol:", this.rol);
       }
     });
   }
 
-  // Control universal de permisos del menú
+  // ⬅ MÉTODO QUE TE FALTABA
+  navegar(ruta: string) {
+    this.router.navigate([`/${ruta}`]);
+  }
+
   canShow(menuItem: string): boolean {
     switch(menuItem) {
-      case 'bienvenida': 
-        return true;
-
+      case 'bienvenida': return true;
       case 'proyectos':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
-
       case 'procedimientos':
         return ['devops', 'admin'].includes(this.rol);
-
       case 'documentos':
         return ['devops', 'admin'].includes(this.rol);
-
       case 'formacion':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
-
       case 'planificacion':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
-
       case 'administracion':
-        return this.rol === 'admin';
-
+        return ['admin'].includes(this.rol);
       case 'bitacora':
         return ['devops', 'admin'].includes(this.rol);
-
       default:
         return false;
     }
