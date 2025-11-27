@@ -43,7 +43,7 @@ export class AppComponent {
     });
   }
 
-  canShow(menuItem: string): boolean {
+  canAccess(menuItem: string): boolean {
     switch(menuItem) {
       case 'bienvenida': return true;
       case 'proyectos': return ['consultor', 'devops', 'admin'].includes(this.rol);
