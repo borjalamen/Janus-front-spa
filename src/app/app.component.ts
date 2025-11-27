@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -18,12 +18,17 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,       // necesario para usar [routerLink]
     RouterOutlet,
+
+    // Angular Material
     MatToolbarModule,
     MatIconModule,
     MatSidenavModule,
     MatListModule,
     MatButtonModule,
+
+    // Componente de diálogo
     LoginDialogComponent
   ],
   templateUrl: './app.component.html',
@@ -32,7 +37,8 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 export class AppComponent {
   username: string = '';
   rol: Rol = 'invitado';
-  appVersion: string | null = null;  // Si quieres mostrar la versión en el footer
+  appVersion: string | null = null;
+  isScrolled = false;
 
   constructor(private dialog: MatDialog) {}
 
@@ -59,7 +65,7 @@ export class AppComponent {
   }
 
   canShow(menuItem: string): boolean {
-    switch(menuItem) {
+    switch (menuItem) {
       case 'bienvenida': return true;
       case 'proyectos': return ['consultor', 'devops', 'admin'].includes(this.rol);
       case 'procedimientos': return ['devops', 'admin'].includes(this.rol);
