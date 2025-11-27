@@ -1,56 +1,56 @@
 <mat-sidenav-container class="sidenav-container">
 
   <!-- Menú lateral -->
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav mode="side" opened class="sidenav">
     <mat-toolbar color="primary" class="sidenav-toolbar">
-      <img src="https://i.imgur.com/4ca5f6ae-e0a3-4b4f-8110-e9f4075de4ca.png" alt="JanusHub" class="janus" />
+      <img src="https://i.imgur.com/7dRimV7.png" alt="JanusHub" class="janus" />
     </mat-toolbar>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="/home" (click)="navegar('bienvenida')"
-         [class.disabled]="!canAccess('bienvenida')">
+      <!-- Bienvenida siempre visible -->
+      <a mat-list-item (click)="tryNavigate('home')">
         <mat-icon>home</mat-icon>
         <span class="menu-text"><strong>Bienvenida</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/projects" (click)="navegar('proyectos')"
-         [class.disabled]="!canAccess('proyectos')">
+      <!-- Proyectos -->
+      <a mat-list-item (click)="tryNavigate('projects')">
         <mat-icon>folder_open</mat-icon>
         <span class="menu-text"><strong>Proyectos</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/procedimientos" (click)="navegar('procedimientos')"
-         [class.disabled]="!canAccess('procedimientos')">
+      <!-- Procedimientos -->
+      <a mat-list-item (click)="tryNavigate('procedimientos')">
         <mat-icon>assignment</mat-icon>
         <span class="menu-text"><strong>Procedimientos</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/documents" (click)="navegar('documentos')"
-         [class.disabled]="!canAccess('documentos')">
+      <!-- Documentos -->
+      <a mat-list-item (click)="tryNavigate('documents')">
         <mat-icon>upload_file</mat-icon>
         <span class="menu-text"><strong>Documentos</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/formacion" (click)="navegar('formacion')"
-         [class.disabled]="!canAccess('formacion')">
+      <!-- Formación -->
+      <a mat-list-item (click)="tryNavigate('formacion')">
         <mat-icon>school</mat-icon>
         <span class="menu-text"><strong>Formación</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/planificacion" (click)="navegar('planificacion')"
-         [class.disabled]="!canAccess('planificacion')">
+      <!-- Planificación -->
+      <a mat-list-item (click)="tryNavigate('planificacion')">
         <mat-icon>event_note</mat-icon>
         <span class="menu-text"><strong>Planificación</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/administracion" (click)="navegar('administracion')"
-         [class.disabled]="!canAccess('administracion')">
+      <!-- Administración -->
+      <a mat-list-item (click)="tryNavigate('administracion')">
         <mat-icon>admin_panel_settings</mat-icon>
         <span class="menu-text"><strong>Administración</strong></span>
       </a>
 
-      <a mat-list-item routerLink="/bitacora" (click)="navegar('bitacora')"
-         [class.disabled]="!canAccess('bitacora')">
+      <!-- Bitácora -->
+      <a mat-list-item (click)="tryNavigate('bitacora')">
         <mat-icon>bug_report</mat-icon>
         <span class="menu-text"><strong>Bitácora</strong></span>
       </a>
@@ -60,37 +60,40 @@
   <!-- Contenido principal -->
   <mat-sidenav-content>
 
-    <!-- Logos superiores -->
-    <div class="banner-imatges">
-      <a href="#" target="_blank"><img src="https://i.imgur.com/ctti1.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/ctti2.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/ctti3.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt1.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt2.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt3.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt4.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt5.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt6.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt7.png" class="imatge-menu" /></a>
-      <a href="#" target="_blank"><img src="https://i.imgur.com/mnsyt8.png" class="imatge-menu" /></a>
-      <img src="https://i.imgur.com/mnsyt9.png" class="imatge-menu" />
-    </div>
-
     <!-- Toolbar superior -->
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
       <div class="login-user" (click)="openLoginDialog()">
         <mat-icon>person</mat-icon>
+        <span *ngIf="username"> {{ username }} </span>
       </div>
     </mat-toolbar>
 
-    <div class="main-content menu-content-scroll">
+    <!-- Contenido dinámico según ruta -->
+    <div class="main-content">
       <router-outlet></router-outlet>
     </div>
+
+    <!-- Banner logos (opcional) -->
+    <div class="banner-imatges">
+      <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" />
+      <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" />
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Copyright | <strong>{{ appVersion }}</strong></span>
+    </footer>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<footer class="footer">
-  <span>Copyright | <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong></span>
-</footer>
