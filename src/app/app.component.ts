@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';        // ⬅ IMPORTANTE
+import { MatListModule } from '@angular/material/list';        // ⬅ NECESARIO
+import { MatSidenavModule } from '@angular/material/sidenav';  // ⬅ NECESARIO
+import { Router } from '@angular/router';
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
@@ -15,6 +17,8 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     CommonModule,
     MatToolbarModule,
     MatIconModule,
+    MatListModule,      // ⬅ IMPORTANTE
+    MatSidenavModule,   // ⬅ IMPORTANTE
     LoginDialogComponent
   ],
   templateUrl: './app.component.html',
@@ -27,7 +31,7 @@ export class AppComponent {
 
   constructor(
     private dialog: MatDialog,
-    private router: Router      // ⬅ NECESARIO PARA navegar()
+    private router: Router
   ) {}
 
   openLoginDialog(): void {
@@ -41,7 +45,6 @@ export class AppComponent {
     });
   }
 
-  // ⬅ MÉTODO QUE TE FALTABA
   navegar(ruta: string) {
     this.router.navigate([`/${ruta}`]);
   }
