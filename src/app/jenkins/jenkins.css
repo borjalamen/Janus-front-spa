@@ -1,0 +1,64 @@
+.jenkins-section {
+  min-height: 100vh;
+  background: #05070d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f5f5f5;
+}
+
+/* Títol principal */
+.jenkins-title {
+  font-size: 32px;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Grid de Jenkins */
+.jenkins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 28px;
+  width: 100%;
+  max-width: 1200px;
+  justify-items: center;
+}
+
+/* Targeta de cada Jenkins */
+.jenkins-card {
+  text-align: center;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.jenkins-card img {
+  width: 110px;           /* aquí fas el logo més petit */
+  height: auto;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+}
+
+/* Hover xulo */
+.jenkins-card:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+.jenkins-card:hover img {
+  filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
+}
+
+/* Títol sota el logo */
+.jenkins-name {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #b8c4ff;
+  letter-spacing: 0.5px;
+}
+
+
+.jenkins-title{
+  color:#FBC02D;
+}
