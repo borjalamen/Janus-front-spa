@@ -76,7 +76,6 @@ export class AppComponent implements OnInit {
     this.isScrolled = scrollY > 20; 
   }
 
-  // Abrir login
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '400px',
@@ -86,10 +85,8 @@ export class AppComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // result contiene {username, rol}
         this.username = result.username;
         this.rol = result.rol;
-        // Aquí puedes activar cambios de menú según rol
         console.log('Usuario:', this.username, 'Rol:', this.rol);
       }
     });
