@@ -1,51 +1,63 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+interface User {
+  username: string;
+  password: string;
+  rol: 'invitado' | 'consultor' | 'devops' | 'admin';
+}
 
 @Component({
   selector: 'app-login-dialog',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     MatButtonModule,
-    MatIconModule
+    FormsModule,
+    CommonModule,
+    MatDialogModule
   ],
   templateUrl: './login-dialog.html',
-  styleUrls: ['./login-dialog.css']
+  styleUrls: ['./login-dialog.css'],
 })
-export class LoginDialogComponent {
+export class LoginDialogComponent implements OnInit, OnDestroy {
   username = '';
   password = '';
-  error: string | null = null;
+  error = '';
+
+  private users: User[] = [
+    { username: 'invitado', password: '1234', rol: 'invitado' },
+    { username: 'consultor', password: '1234', rol: 'consultor' },
+    { username: 'devops', password: '1234', rol: 'devops' },
+    { username: 'admin', password: '1234', rol: 'admin' }
+  ];
 
   constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
 
-  login() {
-    // Aquí puedes validar contra un backend real
-    if (!this.username || !this.password) {
-      this.error = 'Usuario y contraseña requeridos';
-      return;
-    }
-
-    // Ejemplo de roles
-    let rol: 'invitado' | 'consultor' | 'devops' | 'admin' = 'invitado';
-    if (this.username === 'admin') rol = 'admin';
-    else if (this.username === 'devops') rol = 'devops';
-    else if (this.username === 'consultor') rol = 'consultor';
-
-    this.dialogRef.close({ success: true, username: this.username, rol });
+  ngOnInit(): void {
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
   }
 
-  cancelar() {
-    this.dialogRef.close({ success: false });
+  ngOnDestroy(): void {
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+  }
+
+  login() {
+    const user = this.users.find(u => u.username === this.username && u.password === this.password);
+    if (user) {
+      this.dialogRef.close({ success: true, rol: user.rol });
+    } else {
+      this.error = 'Usuario o contraseña inválidos';
+    }
   }
 }
