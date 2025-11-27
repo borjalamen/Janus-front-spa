@@ -28,7 +28,7 @@
       />
     </mat-form-field>
 
-    <!-- 🚨 NUEVO: SELECTOR DE ROL -->
+    <!-- SELECTOR DE ROL -->
     <mat-form-field appearance="fill">
       <mat-label>Rol</mat-label>
       <mat-select [(ngModel)]="rol" name="rol">
@@ -43,7 +43,7 @@
       <mat-icon>login</mat-icon> Acceder
     </button>
 
-    <!-- ERROR -->
+    <!-- MENSAJE DE ERROR -->
     <div *ngIf="error" class="error-msg">{{ error }}</div>
   </form>
 </div>

@@ -1,11 +1,13 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button"; 
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { DocumentsComponent } from './documents/documents';
@@ -15,13 +17,11 @@ import { FormacionComponent } from './formacion/formacion';
 import { PlanificacionComponent } from './planificacion/planificacion';
 import { AdministracionComponent } from './administracion/administracion';
 import { BuscadorComponent } from './buscador/buscador';
-import { ApiService } from './api.service';
+import { ApiService } from './api.service'; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
   imports: [
     RouterModule,
     MatSidenavModule,
@@ -30,6 +30,8 @@ import { ApiService } from './api.service';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    CommonModule,
+    FormsModule,
     LoginDialogComponent,
     DocumentsComponent,
     ProjectsComponent,
@@ -37,8 +39,10 @@ import { ApiService } from './api.service';
     FormacionComponent,
     PlanificacionComponent,
     AdministracionComponent,
-    BuscadorComponent,
-  ]
+    BuscadorComponent
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   title = 'JanusHUB.v1';
@@ -46,7 +50,6 @@ export class AppComponent implements OnInit {
   appVersion: string | null = null;
   isScrolled: boolean = false;
 
-  // Variables de login
   username: string | null = null;
   rol: string | null = null;
 
@@ -55,7 +58,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.api.fetchVersion().subscribe({
       next: (version) => {
-        this.appVersion = version?.trim() || 'Desconocida';
+        this.appVersion = version?.trim() || 'Desconeguda';
       },
       error: (err) => {
         this.appVersion = 'No disponible';
@@ -73,7 +76,7 @@ export class AppComponent implements OnInit {
     this.isScrolled = scrollY > 20; 
   }
 
-  // Abrir el diálogo de login
+  // Abrir login
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '400px',
@@ -81,27 +84,15 @@ export class AppComponent implements OnInit {
       panelClass: 'login-model'
     });
 
-    // Recoger el resultado al cerrar el diálogo
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // result contiene {username, rol}
         this.username = result.username;
         this.rol = result.rol;
+        // Aquí puedes activar cambios de menú según rol
         console.log('Usuario:', this.username, 'Rol:', this.rol);
-
-        // Ajustar el menú según rol
-        this.ajustarMenuPorRol();
       }
     });
-  }
-
-  // Ajusta la visibilidad de secciones según rol
-  private ajustarMenuPorRol() {
-    // Por ejemplo, aquí podrías activar/desactivar secciones
-    // Actualmente, solo logueamos
-    console.log('Ajustando menú para rol:', this.rol);
-    // Si quieres, puedes agregar flags como:
-    // this.showAdministracion = this.rol === 'Administrador';
-    // this.showBitacora = this.rol === 'Administrador' || this.rol === 'Devops';
   }
 
   setActive(section: string) {
@@ -112,6 +103,5 @@ export class AppComponent implements OnInit {
     this.username = null;
     this.rol = null;
     this.activeSection = 'home';
-    console.log('Usuario desconectado');
   }
 }

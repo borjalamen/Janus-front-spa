@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-login-dialog',
@@ -15,24 +16,19 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatSelectModule,
     FormsModule,
     CommonModule,
     MatDialogModule
   ],
   templateUrl: './login-dialog.html',
-  styleUrls: ['./login-dialog.css']
+  styleUrls: ['./login-dialog.css'],
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
   username: string = '';
   password: string = '';
+  rol: 'admin' | 'consultor' | 'devops' = 'consultor'; // ✅ propiedad rol añadida
   error: string = '';
-
-  // Aquí podemos definir los roles válidos
-  private rolesMap: { [key: string]: string } = {
-    'Janus': 'Administrador',
-    'Consultor': 'Consultor',
-    'DevOps': 'Devops'
-  };
 
   constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
 
@@ -46,27 +42,13 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
     document.documentElement.style.overflow = "";
   }
 
-  login(): void {
-    const usernameTrim = this.username.trim();
-
-    if (!usernameTrim || !this.password) {
-      this.error = 'Debe introducir usuario y contraseña';
-      return;
-    }
-
-    // Validación simple
-    if ((usernameTrim === 'Janus' && this.password === '1234') ||
-        (usernameTrim === 'Consultor' && this.password === '1234') ||
-        (usernameTrim === 'DevOps' && this.password === '1234')) {
-      
-      // Se obtiene el rol según el usuario
-      const rol = this.rolesMap[usernameTrim] || 'Usuario';
-      
-      // Cerramos el diálogo devolviendo usuario y rol
-      this.dialogRef.close({ username: usernameTrim, rol });
-
+  login() {
+    if (this.username === 'Janus' && this.password === '1234') {
+      // Puedes hacer algo con el rol si quieres
+      console.log('Usuario:', this.username, 'Rol:', this.rol);
+      this.dialogRef.close({ username: this.username, rol: this.rol });
     } else {
-      this.error = 'Usuario o contraseña incorrectos';
+      this.error = 'Usuario o contraseña inválidos';
     }
   }
 }
