@@ -2,7 +2,6 @@
   <h2>Iniciar sesión</h2>
 
   <form>
-
     <!-- USUARIO -->
     <mat-form-field appearance="fill">
       <mat-label>Usuario</mat-label>
@@ -28,16 +27,6 @@
       />
     </mat-form-field>
 
-    <!-- SELECTOR DE ROL -->
-    <mat-form-field appearance="fill">
-      <mat-label>Rol</mat-label>
-      <mat-select [(ngModel)]="rol" name="rol">
-        <mat-option value="admin">Administrador</mat-option>
-        <mat-option value="consultor">Consultor</mat-option>
-        <mat-option value="devops">DevOps</mat-option>
-      </mat-select>
-    </mat-form-field>
-
     <!-- BOTÓN LOGIN -->
     <button mat-raised-button color="primary" (click)="login()" type="button">
       <mat-icon>login</mat-icon> Acceder
@@ -45,6 +34,5 @@
 
     <!-- MENSAJE DE ERROR -->
     <div *ngIf="error" class="error-msg">{{ error }}</div>
-    
   </form>
 </div>
