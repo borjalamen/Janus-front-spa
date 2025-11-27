@@ -1,36 +1,24 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { RouterModule, Router } from '@angular/router';
 import { LoginDialogComponent } from './login-dialog/login-dialog';
-import { MatDialog } from '@angular/material/dialog';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    RouterModule,
-    LoginDialogComponent
-  ],
+  imports: [CommonModule, MatToolbarModule, MatIconModule, LoginDialogComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  username: string = '';
-  rol: Rol = 'invitado';
-  appVersion = '1.0.0';
+  username: string = '';           // Inicialitzem com a cadena buida
+  rol: Rol = 'invitado';           // Rol per defecte: invitado
 
-  constructor(private router: Router, private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {}
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent);
@@ -43,25 +31,25 @@ export class AppComponent {
     });
   }
 
-  canAccess(menuItem: string): boolean {
+  canShow(menuItem: string): boolean {
     switch(menuItem) {
-      case 'home': return true;
-      case 'projects': return ['consultor', 'devops', 'admin'].includes(this.rol);
-      case 'procedimientos': return ['devops', 'admin'].includes(this.rol);
-      case 'documents': return ['devops', 'admin'].includes(this.rol);
-      case 'formacion': return ['consultor', 'devops', 'admin'].includes(this.rol);
-      case 'planificacion': return ['consultor', 'devops', 'admin'].includes(this.rol);
-      case 'administracion': return ['admin'].includes(this.rol);
-      case 'bitacora': return ['devops', 'admin'].includes(this.rol);
-      default: return false;
-    }
-  }
-
-  tryNavigate(menuItem: string): void {
-    if(this.canAccess(menuItem)) {
-      this.router.navigate([menuItem === 'home' ? '/' : menuItem]);
-    } else {
-      alert('No tienes permiso para acceder a esta sección.');
+      case 'bienvenida': return true;
+      case 'proyectos':
+        return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'procedimientos':
+        return ['devops', 'admin'].includes(this.rol);
+      case 'documentos':
+        return ['devops', 'admin'].includes(this.rol);
+      case 'formacion':
+        return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'planificacion':
+        return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'administracion':
+        return ['devops', 'admin'].includes(this.rol);
+      case 'bitacora':
+        return ['devops', 'admin'].includes(this.rol);
+      default:
+        return false;
     }
   }
 }

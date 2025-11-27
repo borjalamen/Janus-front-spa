@@ -1,76 +1,237 @@
-.sidenav-container {
-  height: 100vh;
-  background-color: #16181c;
-}
-
-.sidenav {
+/* Barra lateral */
+mat-sidenav {
   width: 220px;
-  background-color: #202124;
+  background: #16181c;
+  color: #E0E0E0;
+  box-shadow: 2px 0 10px #1e84a3;
+  border-right: 2px solid #1e84a3;
+  z-index: 5;
 }
-
 .sidenav-toolbar {
+  background: #16181c !important; /* Fondo negro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 160px;    /* Que el contenedor sea alto */
+  box-shadow: none;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 8px;
+}
+mat-nav-list a {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 10px;
-  background-color: #202124;
+  gap: 10px;
+  color: #E0E0E0;
+  margin-bottom: 22px;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 1.12em;
+  text-decoration: none;
+  min-height: 44px;
+  transition: background 0.18s, color 0.18s, width 0.3s;
+  position: relative;
 }
-
-.janus {
-  width: 36px;
-  height: 36px;
-}
-
-.app-title {
-  color: #FBC02D;
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-mat-nav-list a.mat-list-item {
-  color: #FBC02D;
-  font-weight: bold;
-}
-
-mat-nav-list a.mat-list-item.disabled {
-  pointer-events: none;
-  opacity: 0.4;
-}
-
 .menu-text {
-  margin-left: 10px;
+  opacity: 1;                 /* Amaga el text per defecte */
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  align-items: center;
+  transition: opacity 0.3s ease, max-width 0.3s ease;
+  margin-left:15px;
+  color: #1e84a3;
+}
+mat-nav-list a:hover .menu-text {
+  opacity: 1;                 /* Mostra el text en hover */
+  max-width: 200px;
+  color: #FBC02D;
 }
 
-.banner-imatges {
+mat-nav-list a:hover {
+  /* #1e84a3*/
+  background: #1e84a3;
+  box-shadow: 2px 2px 12px #FBC02D70;
+}
+mat-nav-list a mat-icon {
+  position: relative;
+  top: 2px; /* Augmenta el valor per baixar més la icona */
+}
+mat-icon {
+  color: #FBC02D !important;
+  font-size: 28px !important;
+  min-width: 28px;
+}
+@media (max-width: 800px) {
+  mat-sidenav {
+    width: 64vw;
+    min-width: 180px;
+  }
+}
+
+/* Toolbar superior centrada */
+mat-toolbar.main-toolbar {
+  background: #14b1e1!important;
+  color: #FBC02D !important;
+  font-weight: bold;
+  font-size: 1.18em;
+  min-height: 0px;
   display: flex;
-  flex-wrap: wrap;
-  padding: 10px;
-  background-color: #16181c;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Login usuari a la cantonada superior dreta */
+.login-user {
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  display: flex;
+  align-items: center;
   gap: 8px;
+  background: #16181c;
+  border-radius: 26px;
+  padding: 7px 18px;
+  font-weight: bold;
+  font-size: 1.01em;
+  color: #FBC02D;
+  box-shadow: 0 2px 10px #333a;
+  z-index: 100;
+}
+.login-user mat-icon {
+  font-size: 1.55em;
+  color: #FBC02D;
+}
+.login-user:hover {
+  background: #000000;
+  color: #0F1115;
+  box-shadow: 0 4px 16px #E5393570;
+  cursor: pointer;
+}
+
+/* Footer fixat abaix */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;            /* Canvia 100vw per 100% */
+  background: #16181c;
+  color: #FBC02D;
+  font-size: 0.98em;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px 0 6px 0;
+  border-top: 3px solid #1e84a3;
+  letter-spacing: 0.5px;
+  z-index: 101;
+  margin: 0;
+}
+
+/* Contingut principal */
+.main-content {
+  padding: 28px 24px;
+  color: rgb(216, 219, 219);
+  background: #0F1115;
+  min-height: 90vh;
+}
+.main-toolbar.scrolled {
+  background: rgba(21, 101, 192, 0.77);
+  transition: background 0.3s;
+  box-shadow: 0 2px 16px #0008;
+  backdrop-filter: blur(2px);
+}
+
+/* Colors bàsics del body */
+body {
+  background: #0F1115;
+  color: #b4b4b270;
+
+}
+.janus{
+  height: 200px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+  justify-content: center;
+}
+
+.login-link mat-icon {
+  font-size: 1.4em;
+}
+.login-text {
+  font-size: 1.1em;
+}
+mat-nav-list {
+  max-height: 70vh;      /* Ajusta aquest valor segons el que vulguis que ocupi el menú */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scroll-nat-nav-list{
+  scrollbar-color:#FBC02D #000000 ;
+  scrollbar-width: thin;
+}
+.check-green {
+  color: #43a047;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+.no-list {
+  list-style: none;
+  padding-left: 0;
+}
+.menu-content-scroll {
+  height: calc(100vh - 128px);
+  overflow-y: auto;
+  padding: 24px;
+  box-sizing: border-box;
+  scrollbar-color:#FBC02D #000000 ;
+  scrollbar-width: thin;
+}
+.banner-imatges {
+  min-width: 100%;
+  background: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  gap: 30px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: #FBC02D #000000;
 }
 
 .imatge-menu {
-  height: 36px;
-  object-fit: contain;
+  width: 70px;
+  height: 70px;
+  transition: transform 0.18s cubic-bezier(0.4,0,0.2,1);
 }
 
-.main-content {
-  padding: 20px;
-  height: calc(100vh - 50px);
-  overflow-y: auto;
-  background-color: #1e1f23;
-  color: #fff;
+.imatge-menu:hover {
+  transform: scale(1.43); /* 100/70 ≈ 1.43, per simular el mateix efecte visual */
 }
 
-.footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #202124;
-  color: #FBC02D;
+
+.main-toolbar {
+  min-height: 56px;
+  background: #1565c0;
+  display: flex;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 1.5rem;
   font-weight: bold;
-  position: fixed;
-  width: calc(100% - 220px);
-  bottom: 0;
-  left: 220px;
+  color: #ffd600;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  display: block;
 }
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+
