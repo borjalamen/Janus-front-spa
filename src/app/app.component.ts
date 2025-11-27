@@ -18,7 +18,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,       // necesario para usar [routerLink]
+    RouterModule,       // necessari per usar [routerLink]
     RouterOutlet,
 
     // Angular Material
@@ -28,7 +28,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     MatListModule,
     MatButtonModule,
 
-    // Componente de diálogo
+    // Componente de diàleg
     LoginDialogComponent
   ],
   templateUrl: './app.component.html',
@@ -38,14 +38,14 @@ export class AppComponent {
   username: string = '';
   rol: Rol = 'invitado';
   appVersion: string | null = null;
-  isScrolled = false;
 
   constructor(private dialog: MatDialog) {}
 
+  // Obrir el diàleg de login, permet tancar fent clic fora
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '350px',
-      disableClose: true
+      disableClose: false  // <-- ara es pot tancar clicant fora
     });
 
     dialogRef.afterClosed().subscribe(result => {

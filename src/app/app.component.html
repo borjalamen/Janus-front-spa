@@ -120,23 +120,20 @@
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
 
-      <!-- Usuario y acciones -->
-      <ng-container *ngIf="rol !== 'invitado'; else loginButton">
-        <div class="user-info">
-          <mat-icon>person</mat-icon>
-          {{ username }} ({{ rol }})
-        </div>
-        <button mat-icon-button (click)="logout()">
-          <mat-icon>logout</mat-icon>
-        </button>
-      </ng-container>
+      <!-- Usuario -->
+      <div class="user-info" *ngIf="rol !== 'invitado'">
+        <mat-icon>person</mat-icon>
+        {{ username }} ({{ rol }})
+      </div>
 
-      <!-- Botón login -->
-      <ng-template #loginButton>
-        <button mat-icon-button (click)="openLoginDialog()">
-          <mat-icon>login</mat-icon>
-        </button>
-      </ng-template>
+      <!-- Botón login / logout -->
+      <button mat-icon-button *ngIf="rol === 'invitado'" (click)="openLoginDialog()">
+        <mat-icon>login</mat-icon>
+      </button>
+
+      <button mat-icon-button *ngIf="rol !== 'invitado'" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
     </mat-toolbar>
 
     <div class="main-content menu-content-scroll">
