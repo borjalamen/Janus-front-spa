@@ -1,36 +1,51 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login-dialog',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './login-dialog.html',
   styleUrls: ['./login-dialog.css']
 })
 export class LoginDialogComponent {
-  username: string = '';
-  password: string = '';
-  error: string = '';
+  username = '';
+  password = '';
+  error: string | null = null;
 
   constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
 
   login() {
-    // Simulamos usuarios con rol
-    const users = [
-      { username: 'admin', password: '1234', rol: 'admin' },
-      { username: 'devops', password: '1234', rol: 'devops' },
-      { username: 'consultor', password: '1234', rol: 'consultor' }
-    ];
-
-    const user = users.find(u => u.username === this.username && u.password === this.password);
-
-    if (user) {
-      this.dialogRef.close({ username: user.username, rol: user.rol });
-    } else {
-      this.error = 'Usuario o contraseña incorrectos';
+    // Aquí puedes validar contra un backend real
+    if (!this.username || !this.password) {
+      this.error = 'Usuario y contraseña requeridos';
+      return;
     }
+
+    // Ejemplo de roles
+    let rol: 'invitado' | 'consultor' | 'devops' | 'admin' = 'invitado';
+    if (this.username === 'admin') rol = 'admin';
+    else if (this.username === 'devops') rol = 'devops';
+    else if (this.username === 'consultor') rol = 'consultor';
+
+    this.dialogRef.close({ success: true, username: this.username, rol });
   }
 
-  cancel() {
-    this.dialogRef.close();
+  cancelar() {
+    this.dialogRef.close({ success: false });
   }
 }

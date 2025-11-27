@@ -1,27 +1,22 @@
-<h2 mat-dialog-title>Iniciar sesión</h2>
+<mat-dialog-content class="login-central">
+  <h2>Iniciar sesión</h2>
 
-<mat-dialog-content class="login-dialog-content">
-  <p>Introduce tus credenciales:</p>
-
-  <!-- Usuario -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Usuario</mat-label>
     <input matInput [(ngModel)]="username" />
     <mat-icon matSuffix>person</mat-icon>
   </mat-form-field>
 
-  <!-- Contraseña -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Contraseña</mat-label>
     <input matInput [(ngModel)]="password" type="password" />
     <mat-icon matSuffix>lock</mat-icon>
   </mat-form-field>
 
-  <!-- Mensaje de error -->
-  <p *ngIf="error" class="error-text">{{ error }}</p>
+  <p *ngIf="error" class="error-msg">{{ error }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="warn" (click)="cancel()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="login()">Login</button>
+  <button mat-raised-button color="primary" (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="accent" (click)="login()">Ingresar</button>
 </mat-dialog-actions>

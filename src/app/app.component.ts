@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { RouterModule, Router } from '@angular/router';
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
@@ -28,24 +28,22 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 export class AppComponent {
   username: string = '';
   rol: Rol = 'invitado';
-  appVersion: string = '1.0.0';
+  appVersion?: string;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private router: Router) {}
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Recibimos username y rol desde el diálogo
+      if (result?.success) {
         this.username = result.username;
         this.rol = result.rol;
       }
     });
   }
 
-  // Función para determinar si un menú puede ser accedido
-  canAccess(menuItem: string): boolean {
+  canShow(menuItem: string): boolean {
     switch(menuItem) {
       case 'bienvenida': return true;
       case 'proyectos': return ['consultor', 'devops', 'admin'].includes(this.rol);
@@ -56,6 +54,12 @@ export class AppComponent {
       case 'administracion': return ['admin'].includes(this.rol);
       case 'bitacora': return ['devops', 'admin'].includes(this.rol);
       default: return false;
+    }
+  }
+
+  navegar(route: string) {
+    if(this.rol !== 'invitado' || route === 'bienvenida') {
+      this.router.navigate([route]);
     }
   }
 }
