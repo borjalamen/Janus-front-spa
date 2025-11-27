@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-login-dialog',
@@ -16,18 +17,19 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatSelectModule,
     FormsModule,
     CommonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    MatOptionModule
   ],
   templateUrl: './login-dialog.html',
-  styleUrls: ['./login-dialog.css'],
+  styleUrls: ['./login-dialog.css']
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
   username: string = '';
   password: string = '';
-  rol: 'admin' | 'consultor' | 'devops' = 'consultor'; // ✅ propiedad rol añadida
+  rol: string = '';
   error: string = '';
 
   constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
@@ -42,13 +44,18 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
     document.documentElement.style.overflow = "";
   }
 
-  login() {
-    if (this.username === 'Janus' && this.password === '1234') {
-      // Puedes hacer algo con el rol si quieres
-      console.log('Usuario:', this.username, 'Rol:', this.rol);
-      this.dialogRef.close({ username: this.username, rol: this.rol });
-    } else {
-      this.error = 'Usuario o contraseña inválidos';
+  login(): void {
+    // Aquí puedes validar según tu lógica
+    if (!this.username || !this.password || !this.rol) {
+      this.error = 'Por favor completa todos los campos';
+      return;
     }
+
+    // Simulación de login: acepta cualquier combinación
+    // Puedes reemplazar por validación real
+    this.dialogRef.close({
+      username: this.username,
+      rol: this.rol
+    });
   }
 }
