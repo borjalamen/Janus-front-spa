@@ -4,7 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -13,13 +13,22 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatSidenavModule, MatListModule, LoginDialogComponent],
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    RouterModule,
+    LoginDialogComponent
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   username: string = '';
   rol: Rol = 'invitado';
+  appVersion = '1.0.0';
 
   constructor(private router: Router, private dialog: MatDialog) {}
 
