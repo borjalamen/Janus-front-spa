@@ -10,6 +10,7 @@ import { BuscadorComponent } from '../buscador/buscador';
   styleUrl: './documents.css',
 })
 export class DocumentsComponent {
+  title = 'Documentos';
   documents = [
     { name: 'Document 1.pdf', date: '2025-01-15' },
     { name: 'Document 2.pdf', date: '2025-01-20' },

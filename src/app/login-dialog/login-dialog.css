@@ -9,6 +9,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: hidden;
+  border: 2px solid #FBC02D;
+  
 }
 :host {
   display: flex;
@@ -16,14 +19,14 @@
   align-items: center;
   background-color: goldenrod;
   border-radius: 18px;
+  overflow-y: hidden;
 }
 ::ng-deep .mat-mdc-dialog-surface {
   background: #202124;
   border-radius: 22px;
   box-shadow: 0 8px 40px #2227;
+  overflow-y: hidden;
 }
-
-
 
 .login-central h2 {
   color: #FBC02D;
@@ -31,11 +34,13 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
+  overflow-y: hidden;
 }
 
 mat-form-field {
   width: 100%;
   margin-bottom: 16px;
+  overflow-y: hidden;
 }
 
 button[mat-raised-button] {
@@ -47,11 +52,13 @@ button[mat-raised-button] {
   font-size: 1.12em;
   margin-top: 8px;
   transition: background 0.18s;
+  overflow-y: hidden;
 }
 
 button[mat-raised-button]:hover {
   background: #FBC02D !important;
   color: #16181c !important;
+  overflow-y: hidden;
 }
 
 .error-msg {
@@ -60,4 +67,5 @@ button[mat-raised-button]:hover {
   margin-top: 13px;
   font-size: 1.02em;
   text-align: center;
+  overflow-y: hidden;
 }

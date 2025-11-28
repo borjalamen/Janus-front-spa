@@ -1,29 +1,14 @@
 <div class="login-central">
   <h2>Iniciar sesión</h2>
-
   <form>
     <mat-form-field appearance="fill">
       <mat-label>Usuario</mat-label>
-      <input
-        matInput
-        [(ngModel)]="username"
-        name="username"
-        autocomplete="username"
-        
-        title="Usuario"
-      />
+      <input matInput [(ngModel)]="username" name="username" autocomplete="username" title="Usuario" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Contraseña</mat-label>
-      <input
-        matInput
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        autocomplete="current-password"
-        title="Contraseña"
-      />
+      <input matInput type="password" [(ngModel)]="password" name="password" autocomplete="current-password" title="Contraseña" />
     </mat-form-field>
 
     <button mat-raised-button color="primary" (click)="login()" type="button">

@@ -10,7 +10,7 @@ import { BuscadorComponent } from '../buscador/buscador';
   imports: [CommonModule, BuscadorComponent]
 })
 export class ProjectsComponent {
-  title = 'Projectes';
+  title = 'Proyectos';
 
   // Exemple de projectes
   projectes = [

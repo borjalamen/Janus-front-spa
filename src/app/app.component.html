@@ -1,68 +1,150 @@
 <mat-sidenav-container>
+
   <!-- Menú lateral -->
   <mat-sidenav mode="side" opened>
     <mat-toolbar color="primary" class="sidenav-toolbar">
       <img src="https://i.imgur.com/7dRimV7.png" alt="JanusHub" class="janus" />
     </mat-toolbar>
 
-    <mat-nav-list>
-      <!-- Home -->
+    <mat-nav-list class="scroll-nat-nav-list">
+
+      <!-- Bienvenida -->
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
         <span class="menu-text"><strong>Bienvenida</strong></span>
       </a>
-      <!-- Projects -->
-      <a mat-list-item routerLink="/projects">
+
+      <!-- Proyectos -->
+      <a mat-list-item [routerLink]="canShow('proyectos') ? '/projects' : null"
+         [class.disabled]="!canShow('proyectos')">
         <mat-icon>folder_open</mat-icon>
         <span class="menu-text"><strong>Proyectos</strong></span>
       </a>
 
       <!-- Procedimientos -->
-      <a mat-list-item routerLink="/procedimientos">
+      <a mat-list-item [routerLink]="canShow('procedimientos') ? '/procedimientos' : null"
+         [class.disabled]="!canShow('procedimientos')">
         <mat-icon>assignment</mat-icon>
         <span class="menu-text"><strong>Procedimientos</strong></span>
       </a>
-      <!-- Documents -->
-      <a mat-list-item routerLink="/documents">
+
+      <!-- Documentos -->
+      <a mat-list-item [routerLink]="canShow('documentos') ? '/documents' : null"
+         [class.disabled]="!canShow('documentos')">
         <mat-icon>upload_file</mat-icon>
         <span class="menu-text"><strong>Documentos</strong></span>
       </a>
+
       <!-- Formación -->
-      <a mat-list-item routerLink="/formacion">
+      <a mat-list-item [routerLink]="canShow('formacion') ? '/formacion' : null"
+         [class.disabled]="!canShow('formacion')">
         <mat-icon>school</mat-icon>
         <span class="menu-text"><strong>Formación</strong></span>
       </a>
 
       <!-- Planificación -->
-      <a mat-list-item routerLink="/planificacion">
+      <a mat-list-item [routerLink]="canShow('planificacion') ? '/planificacion' : null"
+         [class.disabled]="!canShow('planificacion')">
         <mat-icon>event_note</mat-icon>
         <span class="menu-text"><strong>Planificación</strong></span>
       </a>
 
       <!-- Administración -->
-      <a mat-list-item routerLink="/administracion">
+      <a mat-list-item [routerLink]="canShow('administracion') ? '/administracion' : null"
+         [class.disabled]="!canShow('administracion')">
         <mat-icon>admin_panel_settings</mat-icon>
         <span class="menu-text"><strong>Administración</strong></span>
       </a>
+
+      <!-- Bitácora -->
+      <a mat-list-item [routerLink]="canShow('bitacora') ? '/bitacora' : null"
+         [class.disabled]="!canShow('bitacora')">
+        <mat-icon>bug_report</mat-icon>
+        <span class="menu-text"><strong>Bitácora</strong></span>
+      </a>
+
     </mat-nav-list>
   </mat-sidenav>
 
-  <!-- Contingut principal -->
+  <!-- Contenido principal -->
   <mat-sidenav-content>
+
+    <!-- Logos -->
+    <div class="banner-imatges">
+      <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" alt="Git Intranet" />
+      </a>
+      <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" alt="Codi Qualitat" />
+      </a>
+      <a href="https://bin.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" alt="Bin Sic" />
+      </a>
+      <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" alt="CICD Sic" />
+      </a>
+
+      <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/"
+         target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" alt="CTTI 1" />
+      </a>
+      <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/"
+         target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" alt="CTTI 2" />
+      </a>
+
+      <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" alt="Bitbucket" />
+      </a>
+      <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" alt="Qamindce" />
+      </a>
+      <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" alt="Nexus" />
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/"
+         target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" alt="Dev Env" />
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/"
+         target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" alt="Int Env" />
+      </a>
+      <a routerLink="/jenkins">
+        <img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" alt="Jenkins Minsait" />
+      </a>
+    </div>
+
+    <!-- Toolbar superior -->
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
-    </mat-toolbar>
+      <span class="spacer"></span>
 
-    <div class="login-user" (click)="openLoginDialog()">
-      <mat-icon>person</mat-icon>
-    </div>
+      <!-- Usuario -->
+      <div class="user-info" *ngIf="rol !== 'invitado'">
+        <mat-icon>person</mat-icon>
+        {{ username }} ({{ rol }})
+      </div>
+
+      <!-- Botón login / logout -->
+      <button mat-icon-button *ngIf="rol === 'invitado'" (click)="openLoginDialog()">
+        <mat-icon>login</mat-icon>
+      </button>
+
+      <button mat-icon-button *ngIf="rol !== 'invitado'" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
 
     <div class="main-content menu-content-scroll">
       <router-outlet></router-outlet>
     </div>
 
-    <footer class="footer">
-      Copyright | v{{ version }}
-    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<footer class="footer">
+  <span>Copyright |
+    <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
+  </span>
+</footer>

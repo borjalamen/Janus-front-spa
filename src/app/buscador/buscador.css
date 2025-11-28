@@ -1,5 +1,70 @@
-
+/* ===== CONTENIDOR ===== */
 .buscador-container {
   width: 100%;
   margin-bottom: 24px;
+}
+
+/* ===== MARC EXTERN (sense contorn) ===== */
+.buscador-wrapper {
+  width: 100%;
+  border: none;                  /* contorn eliminat */
+  border-radius: 0;              /* sense arrodoniment */
+  padding: 6px 10px;
+  background: transparent;       /* fons transparent */
+  transition: border-color 0.25s ease;
+}
+
+/* ===== MAT-FORM-FIELD ===== */
+.buscador-field {
+  width: 100%;
+}
+
+/* Elimina fons intern i quadrat blanc */
+.mat-mdc-text-field-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Input */
+input.mat-mdc-input-element {
+  color: #ffd740 !important;      /* text groc */
+  caret-color: #ffd740 !important;
+  padding: 10px 14px !important;
+}
+
+/* Placeholder groc */
+.mdc-text-field__input::placeholder {
+  color: #fbc02d !important;
+  opacity: 1 !important;
+}
+
+/* ===== ICONA LUPA ===== */
+.icono-lupa {
+  color: #fbc02d !important;
+  transition: color 0.2s ease, transform 0.2s ease;
+  font-size: 24px !important;
+}
+
+/* Hover: lupa groga + zoom */
+.icono-lupa:hover {
+  color: #ffd740 !important;
+  transform: scale(1.25);
+  cursor: pointer;
+}
+
+/* En focus del camp: lupa més brillant */
+.buscador-wrapper:has(input:focus) .icono-lupa {
+  color: #ffd740 !important;
+}
+
+/* ===== BOTÓ CLEAR (X) ===== */
+button.mat-icon-button {
+  color: #fbc02d !important;
+  transition: transform 0.2s ease;
+}
+
+button.mat-icon-button:hover {
+  color: #ffd740 !important;
+  transform: scale(1.2);
 }

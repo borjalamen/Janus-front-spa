@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   templateUrl: './buscador.html',
   styleUrls: ['./buscador.css'],
-  imports: [MatFormFieldModule, MatInputModule, MatIconModule, FormsModule]
+  imports: [MatFormFieldModule, MatInputModule, MatIconModule, FormsModule, NgIf]
 })
 export class BuscadorComponent {
   valorBusqueda = '';

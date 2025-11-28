@@ -2,7 +2,6 @@
 <div class="section-container">
   <h2>{{ title }}</h2>
   <p>Llistat de projectes, client i estat.</p>
-
   <div *ngFor="let project of projectesFiltrats" class="project-item">
     <div class="project-nom"><b>{{ project.nom }}</b></div>
     <div class="project-client">Client: {{ project.client }}</div>
