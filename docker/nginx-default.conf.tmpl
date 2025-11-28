@@ -1,0 +1,41 @@
+#include conf/resolvers.conf;
+
+server {
+    listen      1080;
+    server_name localhost;
+    underscores_in_headers on;
+
+    proxy_read_timeout 3h;
+    proxy_connect_timeout 3h;
+    proxy_send_timeout 3h;
+
+    proxy_busy_buffers_size   1024k;
+    proxy_buffers   4 1024k;
+    proxy_buffer_size   512k;
+
+    client_header_buffer_size    64k;
+    client_max_body_size 120m;
+    large_client_header_buffers 4 64k; 
+
+    location / {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ /index.html;
+        client_max_body_size 64M;
+
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+        add_header Pragma "no-cache";
+        add_header Expires "0";
+        expires -1;
+    }
+
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+        add_header Pragma "no-cache";
+        add_header Expires "0";
+        expires -1;
+    }
+}
+
