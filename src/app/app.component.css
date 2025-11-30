@@ -1,4 +1,6 @@
-/* Barra lateral */
+/* ─────────────────────────────────────────── */
+/* BARRA LATERAL */
+/* ─────────────────────────────────────────── */
 mat-sidenav {
   width: 220px;
   background: #16181c;
@@ -7,17 +9,18 @@ mat-sidenav {
   border-right: 2px solid #1e84a3;
   z-index: 5;
 }
+
 .sidenav-toolbar {
-  background: #16181c !important; /* Fondo negro */
+  background: #16181c !important;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 160px;    /* Que el contenedor sea alto */
-  box-shadow: none;
+  min-height: 160px;
   border-radius: 12px;
-  border: none;
   margin-bottom: 8px;
 }
+
+/* Ítems menú */
 mat-nav-list a {
   display: flex;
   align-items: center;
@@ -27,41 +30,45 @@ mat-nav-list a {
   border-radius: 6px;
   padding: 12px 16px;
   font-size: 1.12em;
-  text-decoration: none;
   min-height: 44px;
+  text-decoration: none;
   transition: background 0.18s, color 0.18s, width 0.3s;
-  position: relative;
-}
-.menu-text {
-  opacity: 1;                 /* Amaga el text per defecte */
-  max-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  align-items: center;
-  transition: opacity 0.3s ease, max-width 0.3s ease;
-  margin-left:15px;
-  color: #1e84a3;
-}
-mat-nav-list a:hover .menu-text {
-  opacity: 1;                 /* Mostra el text en hover */
-  max-width: 200px;
-  color: #FBC02D;
 }
 
+/* Texto emergente del menú lateral */
+.menu-text {
+  opacity: 1;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-left: 15px;
+  color: #1e84a3;
+  transition: opacity 0.3s ease, max-width 0.3s ease;
+}
+
+/* Hover del menú */
 mat-nav-list a:hover {
-  /* #1e84a3*/
   background: #1e84a3;
   box-shadow: 2px 2px 12px #FBC02D70;
 }
-mat-nav-list a mat-icon {
-  position: relative;
-  top: 2px; /* Augmenta el valor per baixar més la icona */
+
+mat-nav-list a:hover .menu-text {
+  color: #FBC02D;
 }
-mat-icon {
+
+mat-nav-list a mat-icon {
   color: #FBC02D !important;
   font-size: 28px !important;
-  min-width: 28px;
 }
+
+/* ÍTEMS DESHABILITADOS (rol sin acceso) */
+.disabled {
+  pointer-events: none;
+  opacity: 0.35;
+  filter: grayscale(70%);
+}
+
+/* RESPONSIVE menú lateral */
 @media (max-width: 800px) {
   mat-sidenav {
     width: 64vw;
@@ -69,164 +76,15 @@ mat-icon {
   }
 }
 
-/* Toolbar superior centrada */
+/* ─────────────────────────────────────────── */
+/* TOOLBAR SUPERIOR */
+/* ─────────────────────────────────────────── */
 mat-toolbar.main-toolbar {
-  background: #14b1e1!important;
+  background: #14b1e1 !important;
   color: #FBC02D !important;
-  font-weight: bold;
   font-size: 1.18em;
-  min-height: 0px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-/* Login usuari a la cantonada superior dreta */
-.login-user {
-  position: absolute;
-  top: 15px;
-  right: 40px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #16181c;
-  border-radius: 26px;
-  padding: 7px 18px;
-  font-weight: bold;
-  font-size: 1.01em;
-  color: #FBC02D;
-  box-shadow: 0 2px 10px #333a;
-  z-index: 100;
-}
-.login-user mat-icon {
-  font-size: 1.55em;
-  color: #FBC02D;
-}
-.login-user:hover {
-  background: #000000;
-  color: #0F1115;
-  box-shadow: 0 4px 16px #E5393570;
-  cursor: pointer;
-}
-
-/* Footer fixat abaix */
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;            /* Canvia 100vw per 100% */
-  background: #16181c;
-  color: #FBC02D;
-  font-size: 0.98em;
-  font-weight: 500;
-  text-align: center;
-  padding: 10px 0 6px 0;
-  border-top: 3px solid #1e84a3;
-  letter-spacing: 0.5px;
-  z-index: 101;
-  margin: 0;
-}
-
-/* Contingut principal */
-.main-content {
-  padding: 28px 24px;
-  color: rgb(216, 219, 219);
-  background: #0F1115;
-  min-height: 90vh;
-}
-
-
-/* Colors bàsics del body */
-body {
-  background: #0F1115;
-  color: #b4b4b270;
-
-}
-.janus{
-  height: 200px;
-  width: auto;
-  margin: 0 auto;
-  display: block;
-  justify-content: center;
-}
-
-.login-link mat-icon {
-  font-size: 1.4em;
-}
-.login-text {
-  font-size: 1.1em;
-}
-mat-nav-list {
-  max-height: 70vh;      /* Ajusta aquest valor segons el que vulguis que ocupi el menú */
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.scroll-nat-nav-list{
-  scrollbar-color:#FBC02D #000000 ;
-  scrollbar-width: thin;
-}
-.check-green {
-  color: #43a047;
-  font-size: 1.2em;
-  vertical-align: middle;
-}
-.no-list {
-  list-style: none;
-  padding-left: 0;
-}
-.menu-content-scroll {
-  height: calc(100vh - 128px);
-  overflow-y: auto;
-  padding: 24px;
-  box-sizing: border-box;
-  scrollbar-color:#FBC02D #000000 ;
-  scrollbar-width: thin;
-}
-.banner-imatges {
-  min-width: 100%;
-  width: 100%;
-  background: #000000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 0;
-  gap: 30px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-color: #FBC02D #000000;
-}
-.banner-imatges a {
-  display: flex;
-  align-items: center;   /* centra verticalment el logo */
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  line-height: 0;        /* evita desalineacions per text inline */
-  text-decoration: none;
-}
-
-.imatge-menu {
-  width: 70px;
-  height: 70px;
-  transition: transform 0.18s cubic-bezier(0.4,0,0.2,1);
-
-}
-
-.imatge-menu:hover {
-  transform: scale(1.43); /* 100/70 ≈ 1.43, per simular el mateix efecte visual */
-}
-.imatge-menu-jenkins:hover {
-  border-radius: 8px; /* opcional */
-  background-color: #FBC02D;
-}
-
-
-.main-toolbar {
-  min-height: 56px;
-  background: #1565c0;
-  display: flex;
   align-items: center;
 }
 
@@ -234,14 +92,160 @@ mat-nav-list {
   font-size: 1.5rem;
   font-weight: bold;
   color: #ffd600;
-  margin: 0 auto;
   text-align: center;
   width: 100%;
-  display: block;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
 
+/* ─────────────────────────────────────────── */
+/* DROPDOWN DEL USUARIO */
+/* ─────────────────────────────────────────── */
+.user-dropdown-container {
+  position: relative;
+  margin-right: 25px;
+}
 
+.user-icon {
+  background: #16181c;
+  padding: 8px 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 2px solid #1e84a3;
+  transition: 0.2s;
+}
+
+.user-icon:hover {
+  background: #0a0c0f;
+  border-color: #FBC02D;
+  box-shadow: 0 0 12px #FBC02D90;
+}
+
+.user-icon mat-icon {
+  color: #FBC02D;
+  font-size: 26px;
+}
+
+/* MENÚ EMERGENTE */
+.dropdown-user-menu {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: #16181c;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 2px solid #FBC02D;
+  width: 210px;
+  box-shadow: 0 4px 14px #000a;
+  animation: fadeMenu 0.2s ease-out;
+  z-index: 200;
+}
+
+.dropdown-user-menu p {
+  margin: 6px 0;
+  color: #E0E0E0;
+}
+
+.dropdown-user-menu button {
+  width: 100%;
+  margin-top: 10px;
+  background: #1e84a3;
+  color: #FBC02D;
+}
+
+.dropdown-user-menu button:hover {
+  background: #FBC02D;
+  color: #16181c;
+}
+
+/* Animación del menú usuario */
+@keyframes fadeMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────── */
+/* FOOTER */
+/* ─────────────────────────────────────────── */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #16181c;
+  color: #FBC02D;
+  text-align: center;
+  padding: 10px 0;
+  border-top: 3px solid #1e84a3;
+}
+
+/* ─────────────────────────────────────────── */
+/* SCROLL Y CONTENIDO */
+/* ─────────────────────────────────────────── */
+.main-content {
+  padding: 28px 24px;
+  background: #0F1115;
+  min-height: calc(100vh - 100px);
+}
+
+body {
+  background: #0F1115;
+  color: #b4b4b270;
+  overflow-x: hidden !important;   /* 🔥 BLOQUEA SCROLL HORIZONTAL */
+}
+
+.banner-imatges {
+  width: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px 0;
+  overflow-x: auto;
+  scrollbar-color: #FBC02D #000;
+}
+
+/* LOGOS */
+.imatge-menu {
+  width: 70px;
+  height: 70px;
+  transition: transform 0.18s ease;
+}
+
+.imatge-menu:hover {
+  transform: scale(1.43);
+}
+
+.imatge-menu-jenkins:hover {
+  border-radius: 8px;
+  background-color: #FBC02D;
+}
+
+/* Scroll del contenido principal */
+.menu-content-scroll {
+  height: calc(100vh - 128px);
+  overflow-y: auto;
+  scrollbar-color: #FBC02D #000;
+}
+
+/* Scroll del menú lateral */
+.scroll-nat-nav-list {
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-color: #FBC02D #000;
+}
+
+/* Logo Janus */
+.janus {
+  height: 200px;
+  margin: 0 auto;
+}

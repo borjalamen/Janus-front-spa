@@ -1,20 +1,19 @@
-<div class="login-central">
-  <h2>Iniciar sesión</h2>
-  <form>
-    <mat-form-field appearance="fill">
-      <mat-label>Usuario</mat-label>
-      <input matInput [(ngModel)]="username" name="username" autocomplete="username" title="Usuario" />
-    </mat-form-field>
+<div class="login-dialog-container">
 
-    <mat-form-field appearance="fill">
-      <mat-label>Contraseña</mat-label>
-      <input matInput type="password" [(ngModel)]="password" name="password" autocomplete="current-password" title="Contraseña" />
-    </mat-form-field>
+  <h2 class="dialog-title">Iniciar sesión</h2>
 
-    <button mat-raised-button color="primary" (click)="login()" type="button">
-      <mat-icon>login</mat-icon> Acceder
-    </button>
+  <mat-form-field appearance="outline">
+    <mat-label>Usuario</mat-label>
+    <input matInput [(ngModel)]="username" />
+  </mat-form-field>
 
-    <div *ngIf="error" class="error-msg">{{ error }}</div>
-  </form>
+  <mat-form-field appearance="outline">
+    <mat-label>Contraseña</mat-label>
+    <input matInput type="password" [(ngModel)]="password" />
+  </mat-form-field>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <button mat-raised-button color="primary" (click)="login()">Entrar</button>
+
 </div>

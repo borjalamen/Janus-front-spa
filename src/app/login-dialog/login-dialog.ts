@@ -53,9 +53,13 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    const user = this.users.find(u => u.username === this.username && u.password === this.password);
+    const user = this.users.find(
+      u => u.username === this.username && u.password === this.password
+    );
+
     if (user) {
-      this.dialogRef.close({ success: true, rol: user.rol });
+      localStorage.setItem("user", JSON.stringify(user));
+      this.dialogRef.close({ success: true, username: user.username, rol: user.rol });
     } else {
       this.error = 'Usuario o contraseña inválidos';
     }
