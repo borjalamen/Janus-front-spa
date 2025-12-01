@@ -129,8 +129,14 @@
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
 
+      <button *ngIf="!username"
+          mat-icon-button
+          (click)="openLoginDialog()">
+        <mat-icon>login</mat-icon>
+      </button>
+
       <!-- ICONA USUARI + MENÚ -->
-      <div class="user-dropdown-container">
+      <div class="user-dropdown-container" *ngIf="username">
         <div class="user-icon" (click)="userMenuOpen = !userMenuOpen">
           <mat-icon>person</mat-icon>
         </div>
