@@ -1,7 +1,7 @@
 <mat-sidenav-container>
 
   <!-- ──────────────────────────────── -->
-  <!--  MENÚ LATERAL                    -->
+  <!--  MENÚ LATERAL                   -->
   <!-- ──────────────────────────────── -->
   <mat-sidenav mode="side" opened>
     <mat-toolbar color="primary" class="sidenav-toolbar">
@@ -82,48 +82,66 @@
 
     <!-- Logos -->
     <div class="banner-imatges">
-      <a href="https://git.intranet.gencat.cat/" target="_blank"><img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" /></a>
-      <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank"><img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" /></a>
-      <a href="https://bin.sic.intranet.gencat.cat/" target="_blank"><img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" /></a>
-      <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank"><img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" /></a>
-      <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/" target="_blank"><img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" /></a>
-      <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/" target="_blank"><img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" /></a>
-      <a href="https://bitbucket.indra.es/" target="_blank"><img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" /></a>
-      <a href="https://qamindce.indra.es/" target="_blank"><img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" /></a>
-      <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank"><img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" /></a>
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank"><img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" /></a>
-      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank"><img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" /></a>
-      <a routerLink="/jenkins"><img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" /></a>
+      <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://bin.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" title="imatge" />
+      </a>
+      <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" title="imatge"/>
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" title="imatge"/>
+      </a>
+
+      <!-- Aquest no obre nova pestanya, no cal rel -->
+      <a routerLink="/jenkins">
+        <img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" title="imatge" />
+      </a>
     </div>
 
     <!-- ──────────────────────────────── -->
-    <!--  TOOLBAR SUPERIOR                -->
+    <!--  TOOLBAR SUPERIOR               -->
     <!-- ──────────────────────────────── -->
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
 
-      <!-- DESPLEGABLE DE USUARIO -->
-      <div class="user-dropdown-container" *ngIf="rol !== 'invitado'">
-        <div class="user-icon" (click)="toggleUserMenu()">
+      <!-- ICONA USUARI + MENÚ -->
+      <div class="user-dropdown-container">
+        <div class="user-icon" (click)="userMenuOpen = !userMenuOpen">
           <mat-icon>person</mat-icon>
         </div>
 
-        <!-- MENÚ EMERGENTE -->
         <div class="dropdown-user-menu" *ngIf="userMenuOpen">
           <p><strong>{{ username }}</strong></p>
-          <p>Rol: <strong>{{ rol }}</strong></p>
           <button mat-button color="warn" (click)="logout()">
             <mat-icon>logout</mat-icon> Cerrar sesión
           </button>
         </div>
       </div>
-
-      <!-- BOTÓN LOGIN SI ES INVITADO -->
-      <button mat-icon-button *ngIf="rol === 'invitado'" (click)="openLoginDialog()">
-        <mat-icon>login</mat-icon>
-      </button>
-
     </mat-toolbar>
 
     <!-- CONTENIDO INTERIOR -->

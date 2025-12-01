@@ -109,14 +109,17 @@ mat-toolbar.main-toolbar {
 }
 
 .user-icon {
+  width: 50px;
+  height: 40px;
+  border-radius: 50%;          /* rodó */
   background: #16181c;
-  padding: 8px 14px;
-  border-radius: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border: 2px solid #1e84a3;
+  border: 2px solid #FBC02D;   /* vora groga */
   transition: 0.2s;
+  padding: 0;                  /* que no quedi rectangular */
 }
 
 .user-icon:hover {
@@ -126,10 +129,9 @@ mat-toolbar.main-toolbar {
 }
 
 .user-icon mat-icon {
-  color: #FBC02D;
-  font-size: 26px;
+  color: #FBC02D;              /* icona groga */
+  font-size: 22px;             /* una mica més petit */
 }
-
 /* MENÚ EMERGENTE */
 .dropdown-user-menu {
   position: absolute;
@@ -199,8 +201,8 @@ mat-toolbar.main-toolbar {
 
 body {
   background: #0F1115;
-  color: #b4b4b270;
-  overflow-x: hidden !important;   /* 🔥 BLOQUEA SCROLL HORIZONTAL */
+  color: #E0E0E0;      
+  overflow-x: hidden !important;
 }
 
 .banner-imatges {
@@ -212,6 +214,10 @@ body {
   padding: 10px 0;
   overflow-x: auto;
   scrollbar-color: #FBC02D #000;
+  overflow-y: hidden;
+  overflow-x:auto;
+
+;
 }
 
 /* LOGOS */

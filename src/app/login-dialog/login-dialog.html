@@ -4,12 +4,12 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Usuario</mat-label>
-    <input matInput [(ngModel)]="username" />
+    <input matInput [(ngModel)]="username" title="user"/>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Contraseña</mat-label>
-    <input matInput type="password" [(ngModel)]="password" />
+    <input matInput type="password" [(ngModel)]="password" title="contra"/>
   </mat-form-field>
 
   <p class="error" *ngIf="error">{{ error }}</p>
