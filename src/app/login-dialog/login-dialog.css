@@ -100,3 +100,49 @@ button[mat-raised-button]:active {
   box-shadow: 0 0 12px #fbc02d80 !important;
   border-radius: 10px;
 }
+
+/* ─────────────────────────────── */
+/* TITOL AMB COLOR GROC INTENS     */
+/* (només reforça, no substitueix) */
+/* ─────────────────────────────── */
+.dialog-title {
+  color: #FBC02D !important;
+  font-size: 1.45em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* ─────────────────────────────── */
+/* LABELS EN GROC                  */
+/* ─────────────────────────────── */
+mat-label {
+  color: #FBC02D !important;
+  font-weight: bold;
+}
+
+/* ─────────────────────────────── */
+/* BOTÓ TANCAR (✕)                 */
+/* ─────────────────────────────── */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #FBC02D;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+
+  transition: 0.15s ease-in-out;
+}
+
+.close-btn:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.close-btn:active {
+  transform: scale(0.92);
+}

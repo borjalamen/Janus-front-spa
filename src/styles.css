@@ -16,3 +16,27 @@ a{
   box-shadow: none !important;
   padding: 0 !important;
 }
+
+body, app-root {
+  color: #E0E0E0 !important;
+}
+
+app-root * {
+  color: #E0E0E0 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FBC02D !important;
+}
+
+.mat-mdc-card-title,
+.mat-mdc-card-subtitle {
+  color: #FBC02D !important;
+}
+mat-toolbar *,
+mat-sidenav *,
+mat-nav-list *,
+.user-dropdown-container *,
+.mat-list-item * {
+  color: inherit !important;
+}

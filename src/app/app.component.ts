@@ -67,11 +67,15 @@ openLoginDialog(): void {
   });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.success) {
-        this.username = result.username;
-        this.rol = result.rol;
-      }
-    });
+  if (result?.success) {
+    this.username = result.username;
+    this.rol = result.rol;
+  } else {
+    // Si es tanca el popup sense login → usuario invitado
+    this.username = '';
+    this.rol = 'invitado';
+  }
+});
   }
 
   toggleUserMenu() {

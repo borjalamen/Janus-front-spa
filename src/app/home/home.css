@@ -67,3 +67,12 @@ h2 {
   font-weight: bold;
   margin-bottom: 16px;
 }
+:host {
+  color: #E0E0E0 !important;
+}
+
+:host p,
+:host span,
+:host div {
+  color: #E0E0E0 !important;
+}
