@@ -1,3 +1,5 @@
+<!-- Buscador -->
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
 <div class="section-container documents-header">
   <h2>{{ title }}</h2>
   <button mat-raised-button class="add-document-btn" (click)="toggleAddPopup()">
@@ -5,8 +7,7 @@
   </button>
 </div>
 
-<!-- Buscador -->
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 
 <!-- Popup afegir document -->
 <div class="add-document-popup" *ngIf="showAddPopup">

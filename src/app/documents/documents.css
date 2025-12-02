@@ -124,3 +124,10 @@ body {
   margin-left: 28px;
   color: #E0E0E0;
 }
+input{
+  color: black;
+}
+.add-document-popup input{
+  color: black !important;
+  background: white !important;
+}
