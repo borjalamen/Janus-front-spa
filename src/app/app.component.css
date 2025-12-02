@@ -42,7 +42,7 @@ mat-nav-list a {
   overflow: hidden;
   white-space: nowrap;
   margin-left: 15px;
-  color: #1e84a3;
+  color: #007BFF;
   transition: opacity 0.3s ease, max-width 0.3s ease;
 }
 
