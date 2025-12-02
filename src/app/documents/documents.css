@@ -5,56 +5,7 @@ body {
   margin: 0;
 }
 
-/* Menú lateral corporatiu */
-mat-sidenav {
-  background: #0F1115;
-  color: #E0E0E0;
-}
-.sidenav-toolbar, .main-toolbar {
-  background: #E53935;
-  color: #E0E0E0;
-  font-weight: bold;
-}
-
-/* Enllaços i icones del menú */
-mat-nav-list a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #E0E0E0;
-  margin-bottom: 18px;
-  border-radius: 6px;
-  font-size: 1.15em;
-  text-decoration: none;
-  min-height: 40px;
-}
-mat-nav-list a:hover {
-  background: #FBC02D;
-  color: #0F1115;
-}
-mat-icon {
-  color: #FBC02D !important;
-}
-
-mat-card,
-.mat-card {
-  background: #16181c;
-  color: #E0E0E0;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px #E5393530;
-}
-
-button[mat-raised-button] {
-  background: #E53935 !important;
-  color: #E0E0E0 !important;
-  font-weight: bold;
-  border-radius: 18px;
-  font-size: 1em;
-}
-button[mat-raised-button]:hover {
-  background: #FBC02D !important;
-  color: #0F1115 !important;
-}
+/* Section general */
 .section-container {
   padding: 24px;
   background: #16181c;
@@ -62,8 +13,114 @@ button[mat-raised-button]:hover {
   box-shadow: 0 2px 8px #E53935;
   margin: 20px;
 }
-h2 {
+
+/* Header documents + botó */
+.documents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.documents-header h2 {
   color: #FBC02D;
   font-weight: bold;
+  margin: 0;
+}
+
+.add-document-btn {
+  background-color: #1976d2; /* blau */
+  color: #FBC02D; /* groc */
+  font-weight: bold;
+}
+
+.add-document-btn:hover {
+  background-color: #1565c0;
+}
+
+/* Popup afegir document */
+.add-document-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #16181c;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px #E5393530;
+  padding: 24px;
+  z-index: 1000;
+  width: 320px;
+}
+
+.add-document-popup h3 {
+  color: #FBC02D;
+  margin-top: 0;
+}
+
+.popup-field {
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-field label {
+  margin-bottom: 4px;
+  color: #FBC02D;
+}
+
+.popup-field input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  color: #0F1115; /* text negre dins input */
+  background: #fff;
+}
+
+/* Botons del popup */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.popup-btn {
+  background-color: #1976d2; /* blau */
+  color: #FBC02D; /* groc */
+  font-weight: bold;
+}
+
+.popup-btn:hover {
+  background-color: #1565c0;
+}
+
+/* Llista projectes */
+.project-container {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  background: #0F1115;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.project-folder {
+  color: #FBC02D;
+  font-size: 40px;
+}
+
+.project-info .project-id,
+.project-info .project-name,
+.project-info .project-date {
+  margin: 2px 0;
+}
+
+/* Llista documents dins del projecte */
+.document-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 28px;
+  color: #E0E0E0;
 }

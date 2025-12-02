@@ -1,30 +1,85 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
+
+interface Project {
+  projectId: number;
+  name: string;
+  date: string;
+  documents?: { name: string; date: string }[];
+}
 
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule, BuscadorComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    BuscadorComponent
+  ],
   templateUrl: './documents.html',
-  styleUrl: './documents.css',
+  styleUrls: ['./documents.css']
 })
 export class DocumentsComponent {
-  title = 'Documentos';
-  documents = [
-    { name: 'Document 1.pdf', date: '2025-01-15' },
-    { name: 'Document 2.pdf', date: '2025-01-20' },
+  title = 'Documents';
+  showAddPopup = false;
+
+  projects: Project[] = [
+    { projectId: 1, name: 'Project A', date: '2025-01-10', documents: [{ name: 'Doc1.pdf', date: '2025-01-11' }] },
+    { projectId: 2, name: 'Project B', date: '2025-01-15', documents: [{ name: 'Doc2.pdf', date: '2025-01-16' }] },
   ];
 
-  documentsFiltrats = this.documents; 
+  projectsFiltrats = [...this.projects];
 
+  // Variables del popup
+  projectId!: number;
+  name = '';
+  date = '';
+
+  // Mostra/Oculta el popup
+  toggleAddPopup() {
+    this.showAddPopup = !this.showAddPopup;
+    if (!this.showAddPopup) {
+      this.projectId = 0;
+      this.name = '';
+      this.date = '';
+    }
+  }
+
+  // Filtra projectes pel nom
   filtrar(valor: string) {
     if (!valor) {
-      this.documentsFiltrats = this.documents;
+      this.projectsFiltrats = [...this.projects];
     } else {
-      this.documentsFiltrats = this.documents.filter(doc =>
-        doc.name.toLowerCase().includes(valor.toLowerCase())
+      const lower = valor.toLowerCase();
+      this.projectsFiltrats = this.projects.filter(
+        p => p.name.toLowerCase().includes(lower)
       );
     }
+  }
+
+  // Afegeix un document a un projecte
+  addDocument() {
+    const project = this.projects.find(p => p.projectId === this.projectId);
+    if (project) {
+      if (!project.documents) project.documents = [];
+      project.documents.push({ name: this.name, date: this.date });
+    } else {
+      // Si no existeix el projecte, el crea
+      this.projects.push({
+        projectId: this.projectId,
+        name: `Project ${this.projectId}`,
+        date: this.date,
+        documents: [{ name: this.name, date: this.date }]
+      });
+    }
+
+    this.toggleAddPopup();
+    this.projectsFiltrats = [...this.projects];
   }
 }

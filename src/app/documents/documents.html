@@ -1,8 +1,49 @@
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
-<div class="section-container">
+<div class="section-container documents-header">
   <h2>{{ title }}</h2>
-  <div *ngFor="let doc of documentsFiltrats" class="document-item">
-    <div>{{ doc.name }}</div>
-    <div class="document-date">{{ doc.date }}</div>
+  <button mat-raised-button class="add-document-btn" (click)="toggleAddPopup()">
+    <mat-icon>add</mat-icon> Afegir document
+  </button>
+</div>
+
+<!-- Buscador -->
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
+
+<!-- Popup afegir document -->
+<div class="add-document-popup" *ngIf="showAddPopup">
+  <h3>Afegir document</h3>
+  <div class="popup-field">
+    <label>Project ID:</label>
+    <input type="number" [(ngModel)]="projectId" />
+  </div>
+  <div class="popup-field">
+    <label>Nom del document:</label>
+    <input type="text" [(ngModel)]="name" />
+  </div>
+  <div class="popup-field">
+    <label>Data:</label>
+    <input type="date" [(ngModel)]="date" />
+  </div>
+  <div class="popup-actions">
+    <button mat-raised-button class="popup-btn" (click)="addDocument()">Guardar</button>
+    <button mat-raised-button class="popup-btn" (click)="toggleAddPopup()">Cancelar</button>
+  </div>
+</div>
+
+<!-- Llista de projectes/documentes -->
+<div class="section-container projects-list">
+  <div *ngFor="let project of projectsFiltrats" class="project-container">
+    <mat-icon class="project-folder">folder</mat-icon>
+    <div class="project-info">
+      <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
+      <div class="project-name"><strong>Nom:</strong> {{ project.name }}</div>
+      <div class="project-date"><strong>Data:</strong> {{ project.date }}</div>
+
+      <!-- Documents del projecte -->
+      <div *ngIf="project.documents?.length">
+        <div *ngFor="let doc of project.documents" class="document-item">
+          <mat-icon>description</mat-icon> {{ doc.name }} - {{ doc.date }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
