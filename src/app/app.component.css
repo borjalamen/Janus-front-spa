@@ -181,13 +181,16 @@ mat-toolbar.main-toolbar {
 /* ─────────────────────────────────────────── */
 .footer {
   position: fixed;
+  left: 0;
   bottom: 0;
   width: 100%;
   background: #16181c;
   color: #FBC02D;
   text-align: center;
-  padding: 10px 0;
-  border-top: 3px solid #1e84a3;
+  padding: 10px 0 6px 0;
+  border-top: 3px solid #1e84a3;  /* aquesta serà l’única línia visible a baix */
+  z-index: 200;                   /* una mica més alt que la resta */
+  margin: 0;
 }
 
 /* ─────────────────────────────────────────── */
@@ -197,6 +200,15 @@ mat-toolbar.main-toolbar {
   padding: 28px 24px;
   background: #0F1115;
   min-height: calc(100vh - 100px);
+  padding-bottom: 100px;
+  
+}
+mat-sidenav-container {
+  height: calc(100vh - 37px);  /* 40px ≈ alçada del footer */
+  overflow: hidden;
+}
+mat-sidenav-content {
+  overflow: hidden;            /* talla el scroll gris del content */
 }
 
 body {

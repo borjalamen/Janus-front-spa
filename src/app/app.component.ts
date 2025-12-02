@@ -55,15 +55,13 @@ export class AppComponent {
       this.username = user.username;
       this.rol = user.rol;
     }
-    if (!savedUser) {
-      this.openLoginDialog();
-    }
+    
   }
 
 openLoginDialog(): void {
   const dialogRef = this.dialog.open(LoginDialogComponent, {
     width: '400px',
-    disableClose: true
+    disableClose: false
   });
 
     dialogRef.afterClosed().subscribe(result => {

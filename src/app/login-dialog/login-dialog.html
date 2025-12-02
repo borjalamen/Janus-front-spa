@@ -1,21 +1,35 @@
-<div class="login-dialog-container">
+<div class="login-central">
+  <h2>Iniciar sesión</h2>
 
-  <button class="close-btn" (click)="dialogRef.close(false)">✕</button>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Usuario</mat-label>
+      <input
+        matInput
+        [(ngModel)]="username"
+        name="username"
+        autocomplete="username"
+        
+        title="Usuario"
+      />
+    </mat-form-field>
 
-  <h2 class="dialog-title">Iniciar sesión</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        autocomplete="current-password"
+        title="Contraseña"
+      />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Usuario</mat-label>
-    <input matInput [(ngModel)]="username" title="user"/>
-  </mat-form-field>
+    <button mat-raised-button color="primary" (click)="login()" type="button">
+      <mat-icon>login</mat-icon> Acceder
+    </button>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Contraseña</mat-label>
-    <input matInput type="password" [(ngModel)]="password" title="contra"/>
-  </mat-form-field>
-
-  <p class="error" *ngIf="error">{{ error }}</p>
-
-  <button mat-raised-button color="primary" (click)="login()">Entrar</button>
-
+    <div *ngIf="error" class="error-msg">{{ error }}</div>
+  </form>
 </div>
