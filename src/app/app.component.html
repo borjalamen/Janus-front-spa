@@ -128,12 +128,17 @@
 
     <!-- Menú només si hi ha usuari -->
     <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
-      <p>Usuario: <strong>{{ username }}</strong></p>
-      <p>Rol: <strong>{{ rol }}</strong></p>
-      <button mat-button color="warn" (click)="logout()">
-        <mat-icon>logout</mat-icon> Cerrar sesión
-      </button>
-    </div>
+  
+
+  <!-- AFEGEIX AQUI el botó de secció usuari -->
+  <button mat-button (click)="abrirSeccionUsuario()">
+    <mat-icon>manage_accounts</mat-icon> Perfil
+  </button>
+
+  <button mat-button color="warn" (click)="logout()">
+    <mat-icon>logout</mat-icon> Cerrar sesión
+  </button>
+</div>
   </div>
 </mat-toolbar>
 

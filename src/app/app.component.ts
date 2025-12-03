@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import {Router} from '@angular/router';
 
 // 👇 Angular Material Sidenav + List
 import {
@@ -19,6 +20,7 @@ import {
 } from '@angular/router';
 
 import { LoginDialogComponent } from './login-dialog/login-dialog';
+import { UsuarioComponent } from './usuari/usuari';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -48,7 +50,7 @@ export class AppComponent {
   userMenuOpen = false;
   appVersion?: string;
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private router: Router) {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
@@ -82,11 +84,23 @@ openLoginDialog(): void {
   }
 
   logout() {
+    // Esborrar usuari loguejat
     localStorage.removeItem('user');
+
+    // Deixar estat intern com a convidat
     this.username = '';
     this.rol = 'invitado';
     this.showUserMenu = false;
     this.userMenuOpen = false;
+
+    // Opcional: guardar també al localStorage que el rol actual és invitado
+    localStorage.setItem('user', JSON.stringify({
+      username: '',
+      rol: 'invitado'
+    }));
+
+    // Redirigir a la pàgina de Bienvenida
+    this.router.navigate(['/home']);
   }
 
   canShow(menuItem: string): boolean {
@@ -109,5 +123,10 @@ openLoginDialog(): void {
       default:
         return false;
     }
+  }
+  abrirSeccionUsuario() {
+    this.showUserMenu = false;
+    this.userMenuOpen = false;
+    this.router.navigate(['/usuario']);  // assegura’t que tens la ruta 'usuario'
   }
 }

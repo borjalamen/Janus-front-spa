@@ -3,7 +3,7 @@ import { AppComponent } from './app/app.component';
 import { provideRouter } from "@angular/router";
 import { HomeComponent } from './app/home/home';
 import { DocumentsComponent } from './app/documents/documents';
-import { UsuariComponent } from "./app/usuari/usuari";
+import { UsuarioComponent } from "./app/usuari/usuari";
 import { ProjectsComponent } from './app/projects/projects';
 import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
 import { FormacionComponent } from './app/formacion/formacion';
@@ -19,14 +19,15 @@ bootstrapApplication(AppComponent, {
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'documents', component: DocumentsComponent },
-      { path: 'usuari', component: UsuariComponent },
+      { path: 'usuario', component: UsuarioComponent },
       {path: 'projects', component: ProjectsComponent },
       {path: 'procedimientos', component: ProcedimientosComponent },
       {path: 'formacion', component: FormacionComponent },
       {path: 'planificacion', component: PlanificacionComponent },
       { path: 'administracion', component: AdministracionComponent },
       { path: 'bitacora', component: Bitacora},
-      {path: 'jenkins', component: Jenkins}
+      {path: 'jenkins', component: Jenkins},
+      {path: 'usuario', component: UsuarioComponent}
     ]),
 
     provideHttpClient()

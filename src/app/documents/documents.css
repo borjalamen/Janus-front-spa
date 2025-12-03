@@ -102,21 +102,61 @@ body {
   background: #fff;
 }
 
-/* Botons del popup */
+/* Botons del popup: Examinar / Guardar / Cancel·lar */
+.examinar-btn,
+.popup-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 12px !important;
+  border: 1px solid #1e84a3;
+  background: #0F1115 !important;
+  color: #FBC02D !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem;
+  text-transform: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px #0008;
+  transition: background 0.18s ease, color 0.18s ease,
+              transform 0.18s ease, box-shadow 0.18s ease;
+  margin-top: 10px;
+  
+}
+
+/* Hover genèric */
+.examinar-btn:hover,
+.popup-btn:hover {
+  background: #1e84a3 !important;
+  color: #0F1115 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px #000c;
+  
+}
+
+/* Diferenciar Guardar / Cancel·lar (opcional) */
+.guardar-btn {
+  border-color: #1e84a3;
+  color: #FBC02D !important;
+}
+
+.cancelar-btn {
+  border-color: #E53935;
+  color: #FBC02D !important;
+}
+
+.cancelar-btn:hover {
+  background: #E53935 !important;
+  color: #0F1115 !important;
+}
+
+/* Botons container */
 .popup-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-}
-
-.popup-btn {
-  background-color: #1976d2;
-  color: #FBC02D;
-  font-weight: bold;
-}
-
-.popup-btn:hover {
-  background-color: #1565c0;
 }
 
 /* Llista projectes */
@@ -158,35 +198,7 @@ input {
   color: black !important;
   background: white !important;
 }
-
-/* Botó groc “Examinar” i guardar/cancel·lar */
-.examinar-btn {
-  background-color: #FBC02D !important;
-  color: black !important;
-  border-radius: 12px !important;
-  font-weight: bold !important;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin-top: 12px;
-}
-
-.examinar-btn:hover {
-  background-color: #2196F3 !important;
-  color: white !important;
-}
-
-/* Botó groc genèric (si el vols reutilitzar) */
-.btn-groc {
-  background-color: #FBC02D;
-  color: black;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.btn-groc:hover {
-  background-color: #2196F3;
-  color: white;
+.examinar-btn .mdc-button__label,
+.popup-btn .mdc-button__label {
+  color: #FBC02D !important;
 }

@@ -15,6 +15,7 @@
   align-items: center;
   overflow-y: hidden;
 }
+
 :host {
   display: flex;
   justify-content: center;
@@ -23,14 +24,13 @@
   border-radius: 18px;
   overflow-y: hidden;
 }
+
 ::ng-deep .mat-mdc-dialog-surface {
   background: #202124;
   border-radius: 22px;
   box-shadow: 0 8px 40px #2227;
   overflow-y: hidden;
 }
-
-
 
 .login-central h2 {
   color: #FBC02D;
@@ -47,21 +47,38 @@ mat-form-field {
   overflow-y: hidden;
 }
 
-button[mat-raised-button] {
-  background: #1e84a3 !important;
-  color: #FBC02D !important;
-  font-weight: bold;
+/* Botó Accedir amb estil coherent amb el menú d'usuari */
+button[mat-raised-button].login-btn {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 12px;
   border-radius: 14px;
-  font-size: 1.12em;
-  margin-top: 8px;
-  transition: background 0.18s;
+  border: 1px solid #1e84a3;
+  background: #0F1115 !important;
+  color: #FBC02D !important;
+  font-weight: 600;
+  font-size: 1.02em;
+  margin-top: 16px;
+  box-shadow: 0 1px 3px #0008;
+  text-transform: none;
+  transition: background 0.18s ease, color 0.18s ease,
+              transform 0.18s ease, box-shadow 0.18s ease;
   overflow-y: hidden;
 }
 
-button[mat-raised-button]:hover {
-  background: #FBC02D !important;
-  color: #16181c !important;
+button[mat-raised-button].login-btn mat-icon {
+  font-size: 22px;
+  color: inherit;
+}
+
+button[mat-raised-button].login-btn:hover {
+  background: #1e84a3 !important;
+  color: #0F1115 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px #000c;
   overflow-y: hidden;
 }
 
