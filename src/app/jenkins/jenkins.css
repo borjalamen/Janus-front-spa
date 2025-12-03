@@ -1,3 +1,4 @@
+/* Secció general */
 .jenkins-section {
   min-height: 100vh;
   background: #05070d;
@@ -10,55 +11,94 @@
   color: #f5f5f5;
 }
 
+/* Wrapper interior (ample màxim) */
+.jenkins-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Header: títol + botó al mateix nivell */
+.jenkins-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* títol esquerra, botó dreta */
+  width: 100%;
+  margin-bottom: 30px;
+}
+
 /* Títol principal */
 .jenkins-title {
   font-size: 32px;
   letter-spacing: 1px;
-  margin-bottom: 40px;
-  text-align: center;
-  color: #ffffff;
+  margin: 0;                        /* eliminem margin-bottom antic */
+  text-align: left;
+  color: #FBC02D;
 }
 
-/* Grid de Jenkins */
+/* Botó "Afegir Jenkins" */
+.jenkins-add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid #FBC02D;
+  background: transparent;
+  color: #FBC02D;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jenkins-add-btn:hover {
+  background: #FBC02D;
+  color: #05070d;
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
+}
+
+/* Grid de Jenkins (cards com taula) */
 .jenkins-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 28px;
   width: 100%;
-  max-width: 1200px;
-  justify-items: center;
+  justify-items: stretch;
 }
 
-/* Targeta de cada Jenkins */
+/* Card de cada Jenkins */
 .jenkins-card {
   text-align: center;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease,
+              border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid #ff1744;      /* vermell per defecte */
+  border-radius: 10px;
+  padding: 12px;
+  box-sizing: border-box;
+  position: relative;
 }
 
-.jenkins-card img {
-  width: 110px;           /* aquí fas el logo més petit */
-  height: auto;
-  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
-}
-
-/* Hover xulo */
+/* Hover: resalta el borde i glow */
 .jenkins-card:hover {
   transform: translateY(-4px) scale(1.03);
+  border-color: #ff5252;
+  box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.25);
+}
+
+/* Imatge del Jenkins */
+.jenkins-card img {
+  width: 110px;
+  height: auto;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
 }
 
 .jenkins-card:hover img {
   filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
 }
 
-/* Títol sota el logo */
+/* Nom sota el logo */
 .jenkins-name {
   margin-top: 10px;
   font-size: 14px;
   color: #b8c4ff;
   letter-spacing: 0.5px;
-}
-
-
-.jenkins-title{
-  color:#FBC02D;
 }

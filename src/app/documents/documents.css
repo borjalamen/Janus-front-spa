@@ -14,19 +14,12 @@ body {
   margin: 20px;
 }
 
-.documents-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;  
-}
-
-
 /* Header documents + botó */
 .documents-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .documents-header h2 {
@@ -35,27 +28,51 @@ body {
   margin: 0;
 }
 
-.add-document-btn {
-  background-color: #1976d2; /* blau */
-  color: #FBC02D; /* groc */
+/* Botó estil Jenkins per documents */
+.jenkins-add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid #FBC02D;
+  background: transparent;
+  color: #FBC02D;
   font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.add-document-btn:hover {
-  background-color: #1565c0;
+.jenkins-add-btn:hover {
+  background: #FBC02D;
+  color: #0F1115;
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
+}
+
+.jenkins-add-btn mat-icon {
+  font-size: 20px;
+}
+
+/* Backdrop per tancar en fer clic fora */
+.add-document-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 
 /* Popup afegir document */
 .add-document-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: #16181c;
   border-radius: 10px;
   box-shadow: 0 2px 15px #E5393530;
   padding: 24px;
-  z-index: 1000;
   width: 320px;
 }
 
@@ -81,7 +98,7 @@ body {
   border: none;
   outline: none;
   font-size: 1em;
-  color: #0F1115; /* text negre dins input */
+  color: #0F1115;
   background: #fff;
 }
 
@@ -93,8 +110,8 @@ body {
 }
 
 .popup-btn {
-  background-color: #1976d2; /* blau */
-  color: #FBC02D; /* groc */
+  background-color: #1976d2;
+  color: #FBC02D;
   font-weight: bold;
 }
 
@@ -132,14 +149,17 @@ body {
   margin-left: 28px;
   color: #E0E0E0;
 }
-input{
+
+input {
   color: black;
 }
-.add-document-popup input{
+
+.add-document-popup input {
   color: black !important;
   background: white !important;
 }
 
+/* Botó groc “Examinar” i guardar/cancel·lar */
 .examinar-btn {
   background-color: #FBC02D !important;
   color: black !important;
@@ -149,23 +169,24 @@ input{
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  margin-top: 12px; /* marge superior per separar del nom del document */
+  margin-top: 12px;
 }
 
 .examinar-btn:hover {
-  background-color: #2196F3 !important; /* blau */
-  color: white !important;               /* text blanc */
+  background-color: #2196F3 !important;
+  color: white !important;
 }
 
+/* Botó groc genèric (si el vols reutilitzar) */
 .btn-groc {
-  background-color: #FBC02D; /* groc */
-  color: black;               /* text negre */
+  background-color: #FBC02D;
+  color: black;
   font-weight: bold;
-  border-radius: 8px;         /* bordes rodons */
+  border-radius: 8px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-groc:hover {
-  background-color: #2196F3; /* blau */
-  color: white;               /* text blanc */
+  background-color: #2196F3;
+  color: white;
 }

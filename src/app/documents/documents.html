@@ -1,13 +1,13 @@
 <!-- Buscador -->
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-
 <div class="section-container documents-wrapper">
 
   <div class="documents-header">
     <h2>{{ title }}</h2>
-    <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">
-      <mat-icon>add</mat-icon> Añadir documento
+    <button mat-raised-button class="jenkins-add-btn" (click)="toggleAddPopup()">
+      <mat-icon inline="true">add</mat-icon>
+      <span>Añadir documento</span>
     </button>
   </div>
 
@@ -17,7 +17,6 @@
       <div class="project-info">
         <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
         <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
-        
 
         <!-- Documents del projecte -->
         <div *ngIf="project.documents?.length">
@@ -29,37 +28,41 @@
     </div>
   </div>
 
-  
-<!-- Popup afegir document -->
-<div class="add-document-popup" *ngIf="showAddPopup">
-  <h3>Añadir documento</h3>
-  <div class="popup-field">
-    <label>ID Proyecto:</label>
-    <input type="number" [(ngModel)]="projectId" />
-  </div>
- <div class="popup-field">
-  <label>Nombre del documento:</label>
-
-  <!-- Mostra el nom del fitxer seleccionat (deshabilitat) -->
- <input type="text" [(ngModel)]="name" style="width: 100%; margin-bottom: 4px;" />
-
-
-  <button mat-raised-button class="examinar-btn" type="button" (click)="fileInput.click()">
-      Examinar
-    </button>
-
-  <!-- Input real de fitxer, amagat -->
-  <input 
-      type="file" 
-      #fileInput 
-      style="display: none;" 
-      (change)="onFileSelected($event)" />
-</div>
-  
-  <div class="popup-actions">
-    <button mat-raised-button class="examinar-btn" (click)="addDocument()">Guardar</button>
-    <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">Cancelar</button>
-  </div>
 </div>
 
+<!-- Popup afegir document (amb clic fora per tancar) -->
+<div class="add-document-backdrop" *ngIf="showAddPopup" (click)="toggleAddPopup()">
 
+  <div class="add-document-popup" (click)="$event.stopPropagation()">
+    <h3>Añadir documento</h3>
+
+    <div class="popup-field">
+      <label>ID Proyecto:</label>
+      <input type="number" [(ngModel)]="projectId" />
+    </div>
+
+    <div class="popup-field">
+      <label>Nombre del documento:</label>
+
+      <!-- Mostra el nom del fitxer seleccionat -->
+      <input type="text" [(ngModel)]="name" style="width: 100%; margin-bottom: 4px;" />
+
+      <button mat-raised-button class="examinar-btn" type="button" (click)="fileInput.click()">
+        Examinar
+      </button>
+
+      <!-- Input real de fitxer, amagat -->
+      <input
+        type="file"
+        #fileInput
+        style="display: none;"
+        (change)="onFileSelected($event)" />
+    </div>
+
+    <div class="popup-actions">
+      <button mat-raised-button class="examinar-btn" (click)="addDocument()">Guardar</button>
+      <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">Cancelar</button>
+    </div>
+  </div>
+
+</div>
