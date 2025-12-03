@@ -5,10 +5,20 @@
     <div class="jenkins-header">
       <h2 class="jenkins-title">Múltiples Jenkins</h2>
 
-      <button class="jenkins-add-btn" type="button">
-        + Afegir Jenkins
+      <button class="jenkins-add-btn" type="button" (click)="fileInput.click()">
+        + Añadir Jenkins
       </button>
+    
+
+        <input
+            type="file"
+            #fileInput
+            accept=".xml,.json,.txt"
+            style="display: none"
+            (change)="onJenkinsSelected($event)"
+        />
     </div>
+
 
     <!-- Grid de Jenkins -->
     <div class="jenkins-grid">
