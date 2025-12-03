@@ -41,6 +41,17 @@ export class DocumentsComponent {
   name = '';
   date = '';
 
+  // Fitxer seleccionat
+  selectedFile?: File;
+
+onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+    this.name = file.name; // Omple automàticament el camp de nom
+  }
+}
+
   // Mostra/Oculta el popup
   toggleAddPopup() {
     this.showAddPopup = !this.showAddPopup;

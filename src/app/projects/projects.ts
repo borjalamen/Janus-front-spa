@@ -14,10 +14,10 @@ export class ProjectsComponent {
 
   // Exemple de projectes
   projectes = [
-    { nom: 'Web ERP', client: 'Empresa X', estat: 'En curs' },
-    { nom: 'Nova App Mobile', client: 'Client Y', estat: 'Finalitzat' },
-    { nom: 'Migració de servidors', client: 'Empresa Z', estat: 'Actiu' },
-    { nom: 'CRM Cloud', client: 'Client W', estat: 'Planificat' },
+    { nom: 'Web ERP', client: 'Empresa X', estat: 'En curso' },
+    { nom: 'Nueva App Mobile', client: 'Cliene Y', estat: 'Finalizado' },
+    { nom: 'Migración de servidores', client: 'Empresa Z', estat: 'Activo' },
+    { nom: 'CRM Cloud', client: 'Cliente W', estat: 'Planificado' },
   ];
 
   projectesFiltrats = this.projectes;

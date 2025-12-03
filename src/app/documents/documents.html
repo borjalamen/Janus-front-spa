@@ -6,8 +6,8 @@
 
   <div class="documents-header">
     <h2>{{ title }}</h2>
-    <button mat-raised-button class="add-document-btn" (click)="toggleAddPopup()">
-      <mat-icon>add</mat-icon> Afegir document
+    <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">
+      <mat-icon>add</mat-icon> Añadir documento
     </button>
   </div>
 
@@ -16,8 +16,8 @@
       <mat-icon class="project-folder">folder</mat-icon>
       <div class="project-info">
         <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
-        <div class="project-name"><strong>Nom:</strong> {{ project.name }}</div>
-        <div class="project-date"><strong>Data:</strong> {{ project.date }}</div>
+        <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
+        
 
         <!-- Documents del projecte -->
         <div *ngIf="project.documents?.length">
@@ -29,24 +29,36 @@
     </div>
   </div>
 
+  
 <!-- Popup afegir document -->
 <div class="add-document-popup" *ngIf="showAddPopup">
-  <h3>Afegir document</h3>
+  <h3>Añadir documento</h3>
   <div class="popup-field">
-    <label>Project ID:</label>
+    <label>ID Proyecto:</label>
     <input type="number" [(ngModel)]="projectId" />
   </div>
-  <div class="popup-field">
-    <label>Nom del document:</label>
-    <input type="text" [(ngModel)]="name" />
-  </div>
-  <div class="popup-field">
-    <label>Data:</label>
-    <input type="date" [(ngModel)]="date" />
-  </div>
+ <div class="popup-field">
+  <label>Nombre del documento:</label>
+
+  <!-- Mostra el nom del fitxer seleccionat (deshabilitat) -->
+ <input type="text" [(ngModel)]="name" style="width: 100%; margin-bottom: 4px;" />
+
+
+  <button mat-raised-button class="examinar-btn" type="button" (click)="fileInput.click()">
+      Examinar
+    </button>
+
+  <!-- Input real de fitxer, amagat -->
+  <input 
+      type="file" 
+      #fileInput 
+      style="display: none;" 
+      (change)="onFileSelected($event)" />
+</div>
+  
   <div class="popup-actions">
-    <button mat-raised-button class="popup-btn" (click)="addDocument()">Guardar</button>
-    <button mat-raised-button class="popup-btn" (click)="toggleAddPopup()">Cancelar</button>
+    <button mat-raised-button class="examinar-btn" (click)="addDocument()">Guardar</button>
+    <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">Cancelar</button>
   </div>
 </div>
 
