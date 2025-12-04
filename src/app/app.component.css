@@ -2,7 +2,8 @@
 /* BARRA LATERAL */
 /* ─────────────────────────────────────────── */
 mat-sidenav {
-  width: 220px;
+  width: 240px;
+  min-width: 240px;
   background: #16181c;
   color: #E0E0E0;
   box-shadow: 2px 0 10px #1e84a3;
@@ -38,8 +39,9 @@ mat-nav-list a {
 /* Texto emergente del menú lateral */
 .menu-text {
   opacity: 1;
-  max-width: 200px;
-  overflow: hidden;
+  max-width: none;
+  overflow: visible;
+  text-overflow: nowrap;
   white-space: nowrap;
   margin-left: 15px;
   color: #1e84a3;
