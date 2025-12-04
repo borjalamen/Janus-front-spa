@@ -18,8 +18,8 @@ server {
     large_client_header_buffers 4 64k; 
 
     location / {
-        root   /usr/share/nginx/html;
-        try_files $uri $uri/ /demo/browser/index.html;
+        root   /usr/share/nginx/html/demo/browser;
+        try_files $uri $uri/ /index.html;
         client_max_body_size 120m;
 
         add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
