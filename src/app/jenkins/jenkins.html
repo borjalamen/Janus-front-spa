@@ -80,7 +80,17 @@
       <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
         <div class="jenkins-name"><strong>IPSOPG</strong></div>
         <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>      
+      </a> 
+      
+      <a class="jenkins-card"
+        *ngFor="let jk of customJenkins"
+        [href]="jk.url"
+        target="_blank"
+        rel="noopener noreferrer">
+
+        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
+        <img src="https://imgur.com/69aimFa.png" alt="jenkins custom">
+</a>
     </div>
   </div>
 
