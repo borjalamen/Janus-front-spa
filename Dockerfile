@@ -11,7 +11,7 @@ COPY docker/nginx-default.conf.tmpl /etc/nginx/conf.d/nginx-default.conf.tmpl
 
 COPY docker/docker-entrypoint.sh /
 
-# COPY dist/op-dgc-spa /usr/share/nginx/html/dgc
+COPY dist/demo /usr/share/nginx/html/demo
 
 RUN chmod +x /docker-entrypoint.sh
 
