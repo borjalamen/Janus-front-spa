@@ -74,6 +74,7 @@ body {
   box-shadow: 0 2px 15px #E5393530;
   padding: 24px;
   width: 320px;
+  border: 3px solid #FBC02D;
 }
 
 .add-document-popup h3 {

@@ -128,7 +128,7 @@
 
     <!-- Menú només si hi ha usuari -->
     <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
-  
+       <p>Usuario: <strong>{{ username }}</strong></p>
 
   <!-- AFEGEIX AQUI el botó de secció usuari -->
   <button mat-button (click)="abrirSeccionUsuario()">

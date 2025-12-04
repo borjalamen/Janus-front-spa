@@ -6,12 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
-interface User {
-  username: string;
-  password: string;
-  rol: 'invitado' | 'consultor' | 'devops' | 'admin';
-}
+
 
 @Component({
   selector: 'app-login-dialog',
@@ -33,14 +30,9 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   password = '';
   error = '';
 
-  private users: User[] = [
-    { username: 'invitado', password: '1234', rol: 'invitado' },
-    { username: 'consultor', password: '1234', rol: 'consultor' },
-    { username: 'devops', password: '1234', rol: 'devops' },
-    { username: 'admin', password: '1234', rol: 'admin' }
-  ];
 
-  constructor(public dialogRef: MatDialogRef<LoginDialogComponent>) {}
+
+  constructor(public dialogRef: MatDialogRef<LoginDialogComponent>, private http: HttpClient) { }
 
   ngOnInit(): void {
     document.body.style.overflow = "hidden";
@@ -53,15 +45,49 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    const user = this.users.find(
-      u => u.username === this.username && u.password === this.password
-    );
+    this.error = '';
 
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-      this.dialogRef.close({ success: true, username: user.username, rol: user.rol });
-    } else {
-      this.error = 'Usuario o contraseña inválidos';
-    }
+    this.http.post<{ username: string; roles: string[] }>(
+      'http://localhost:8080/api/auth/signin',
+      {
+        username: this.username,
+        password: this.password
+      }
+    ).subscribe({
+      next: (user) => {
+        console.log('RESPUESTA BACK:', user);
+
+        // user.roles és un array, p.ex. ["ROLE_ADMIN"]
+        const rolesArray = user.roles || [];
+        const rolesStr = rolesArray.join(',');
+
+        let rolFront: 'invitado' | 'consultor' | 'devops' | 'admin' = 'invitado';
+
+        if (rolesStr.includes('ADMIN')) {
+          rolFront = 'admin';
+        } else if (rolesStr.includes('DEVOPS')) {
+          rolFront = 'devops';
+        } else if (rolesStr.includes('CONSULTOR')) {
+          rolFront = 'consultor';
+        }
+
+        const loggedUser = {
+          username: user.username,
+          rol: rolFront
+        };
+
+        localStorage.setItem('user', JSON.stringify(loggedUser));
+
+        this.dialogRef.close({
+          success: true,
+          username: loggedUser.username,
+          rol: loggedUser.rol
+        });
+      },
+      error: () => {
+        this.error = 'Usuario o contraseña inválidos';
+      }
+    });
   }
+
 }

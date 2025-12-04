@@ -4,15 +4,13 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
-// 👇 Angular Material Sidenav + List
-import {
-  MatSidenavModule
-} from '@angular/material/sidenav';
+// Angular Material Sidenav + List
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
-// 👇 Router (routerLink, router-outlet)
+// Router (routerLink, router-outlet)
 import {
   RouterLink,
   RouterLinkWithHref,
@@ -21,6 +19,7 @@ import {
 
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { UsuarioComponent } from './usuari/usuari';
+import { HttpClient } from '@angular/common/http';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -31,12 +30,13 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     CommonModule,
     MatToolbarModule,
     MatIconModule,
-    MatSidenavModule,    // 👈 para mat-sidenav-container, mat-sidenav, mat-sidenav-content
-    MatListModule,       // 👈 para mat-nav-list
-    RouterOutlet,        // 👈 para <router-outlet>
-    RouterLink,          // 👈 para [routerLink]
-    RouterLinkWithHref,  // 👈 opcional pero recomendable
-    LoginDialogComponent
+    MatSidenavModule,
+    MatListModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkWithHref,
+    LoginDialogComponent,
+    UsuarioComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -46,36 +46,58 @@ export class AppComponent {
   rol: Rol = 'admin';
   showUserMenu = false;
 
-  // 👇 propiedades que faltaban en el template
   userMenuOpen = false;
   appVersion?: string;
 
-  constructor(private dialog: MatDialog, private router: Router) {
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private http: HttpClient          // 👈 afegit
+  ) {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
       this.username = user.username;
       this.rol = user.rol;
     }
-    
+
+    // cridem al backend per la versió
+    this.loadVersion();
   }
 
-openLoginDialog(): void {
-  const dialogRef = this.dialog.open(LoginDialogComponent, {
-    width: '400px',
-    disableClose: false
-  });
+  // 🔹 Crida al back per obtenir la versió
+  loadVersion() {
+  console.log('CRIDANT /api/config/all');
+
+  this.http.get<any>('http://localhost:8080/api/config/all')
+    .subscribe({
+      next: (data) => {
+        console.log('RESPUESTA VERSION:', data);
+        this.appVersion = data[0]; 
+      },
+      error: (err) => {
+        console.error('ERROR VERSION:', err);
+        this.appVersion = 'error obteniendo versión';
+      }
+    });
+}
+
+  openLoginDialog(): void {
+    const dialogRef = this.dialog.open(LoginDialogComponent, {
+      width: '400px',
+      disableClose: false
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-  if (result?.success) {
-    this.username = result.username;
-    this.rol = result.rol;
-  } else {
-    // Si es tanca el popup sense login → usuario invitado
-    this.username = '';
-    this.rol = 'invitado';
-  }
-});
+      if (result?.success) {
+        this.username = result.username;
+        this.rol = result.rol;
+      } else {
+        // Si es tanca el popup sense login → usuario invitado
+        this.username = '';
+        this.rol = 'invitado';
+      }
+    });
   }
 
   toggleUserMenu() {
@@ -84,22 +106,18 @@ openLoginDialog(): void {
   }
 
   logout() {
-    // Esborrar usuari loguejat
     localStorage.removeItem('user');
 
-    // Deixar estat intern com a convidat
     this.username = '';
     this.rol = 'invitado';
     this.showUserMenu = false;
     this.userMenuOpen = false;
 
-    // Opcional: guardar també al localStorage que el rol actual és invitado
     localStorage.setItem('user', JSON.stringify({
       username: '',
       rol: 'invitado'
     }));
 
-    // Redirigir a la pàgina de Bienvenida
     this.router.navigate(['/home']);
   }
 
@@ -124,9 +142,10 @@ openLoginDialog(): void {
         return false;
     }
   }
+
   abrirSeccionUsuario() {
     this.showUserMenu = false;
     this.userMenuOpen = false;
-    this.router.navigate(['/usuario']);  // assegura’t que tens la ruta 'usuario'
+    this.router.navigate(['/usuario']);
   }
 }
