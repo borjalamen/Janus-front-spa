@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
     BuscadorComponent,
     MatButtonModule  // <-- NECESARIO PARA mat-raised-button
   ],
-  templateUrl: './bitacora.html',
+  templateUrl: './Bitacora.html',
   styleUrls: ['./Bitacora.css']   // <-- NOMBRE CON MAYÚSCULA
 })
 export class BitacoraComponent {
