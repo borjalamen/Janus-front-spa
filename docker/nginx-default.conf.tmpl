@@ -19,7 +19,7 @@ server {
 
     location / {
         root   /usr/share/nginx/html;
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /demo/browser/index.html
         client_max_body_size 120m;
 
         add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
