@@ -5,7 +5,7 @@
     <div class="jenkins-header">
       <h2 class="jenkins-title">Múltiples Jenkins</h2>
 
-      <button class="jenkins-add-btn" type="button" (click)="fileInput.click()">
+      <button class="jenkins-add-btn" type="button" (click)="openPopup()">
         + Añadir Jenkins
       </button>
     
@@ -80,8 +80,24 @@
       <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
         <div class="jenkins-name"><strong>IPSOPG</strong></div>
         <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>
+      </a>      
     </div>
+  </div>
 
+  <div class="popup-overlay" *ngIf="popupOpen">
+    <div class="popup-box">
+      <h3>Añadir Jenkins</h3>
+
+      <label>Nombre:</label>
+      <input type="text" [(ngModel)]="newName" class="popup-input" placeholder="Nombre del Jenkins" />
+
+      <label>URL:</label>
+      <input type="text" [(ngModel)]="newUrl" class="popup-input" placeholder="https://..." />
+
+      <div class="popup-buttons">
+        <button class="cancel-btn" (click)="closePopup()">Cancelar</button>
+        <button class="save-btn" (click)="savePopup()" [disabled]="!newName || !newUrl">Guardar</button>
+      </div>
+    </div>
   </div>
 </section>
