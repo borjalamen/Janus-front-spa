@@ -1,4 +1,4 @@
-FROM registreimatges.sic.intranet.gencat.cat/gencatcloud/nginx:1.20
+FROM 172.19.208.1:5000/gencatcloud/nginx:1.20
 
 USER root
 
