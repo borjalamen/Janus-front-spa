@@ -14,13 +14,12 @@ server {
     proxy_buffer_size   512k;
 
     client_header_buffer_size    64k;
-    client_max_body_size 120m;
+    client_max_body_size 500m;
     large_client_header_buffers 4 64k; 
 
     location / {
         root   /usr/share/nginx/html/demo/browser;
         try_files $uri $uri/ /index.html;
-        client_max_body_size 120m;
 
         add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
         add_header Pragma "no-cache";
@@ -33,6 +32,17 @@ server {
         add_header X-XSS-Protection "1; mode=block";
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     }
+
+    location /api/ {
+        proxy_set_header Host $host;
+        client_body_buffer_size    10m;
+        proxy_buffers   4 512k;
+        proxy_buffer_size   512k;
+        proxy_busy_buffers_size    512k;
+        proxy_temp_file_write_size 512k;
+        proxy_read_timeout 600s;
+        proxy_pass http://janus-back-service.${base_service_domain}:8080/;
+    }    
 
     error_page   404 /404.html;
     location = /404.html {
@@ -48,4 +58,3 @@ server {
         expires -1;
     }
 }
-
