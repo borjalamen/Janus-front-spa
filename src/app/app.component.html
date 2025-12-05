@@ -57,6 +57,10 @@
         <mat-icon>bug_report</mat-icon>
         <span class="menu-text"><strong>Bitácora</strong></span>
       </a>
+      <a *ngIf="canShow('infraestructura')" mat-list-item routerLink="/infraestructura">
+        <mat-icon>storage</mat-icon>
+        <span class="menu-text"><strong>Infraestructura</strong></span>
+      </a>
 
     </mat-nav-list>
   </mat-sidenav>
@@ -68,79 +72,79 @@
 
     <!-- Logos -->
     <div class="banner-imatges">
-  <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" title="Git Intranet Gencat" />
-  </a>
-  <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" title="Codi Qualitat Solucions Gencat" />
-  </a>
-  <a href="https://bin.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" title="BIN SIC Intranet Gencat" />
-  </a>
-  <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" title="CI/CD SIC Intranet Gencat" />
-  </a>
-  <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/"
-     target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" title="OpenShift Dev Monitoring PRE" />
-  </a>
-  <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/"
-     target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" title="OpenShift Dev Monitoring PROD" />
-  </a>
-  <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" title="Bitbucket Indra" />
-  </a>
-  <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" title="QA Mindce Indra" />
-  </a>
-  <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer">
-    <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" title="Nexus SLMaven" />
-  </a>
-  <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank"
-     rel="noopener noreferrer">
-    <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" title="OpenShift CRC Dev" />
-  </a>
-  <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank"
-     rel="noopener noreferrer">
-    <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" title="OpenShift CRC Int" />
-  </a>
+      <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/bknE50v.png" class="imatge-menu" title="Git Intranet Gencat" />
+      </a>
+      <a href="https://codi.qualitat.solucions.gencat.cat" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/Zadx1Z5.png" class="imatge-menu" title="Codi Qualitat Solucions Gencat" />
+      </a>
+      <a href="https://bin.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YTUL8j6.png" class="imatge-menu" title="BIN SIC Intranet Gencat" />
+      </a>
+      <a href="https://cicd.sic.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/YDyH4j0.png" class="imatge-menu" title="CI/CD SIC Intranet Gencat" />
+      </a>
+      <a href="https://console-openshift-console.apps.cer01-gct-007-k01.cpd2pre.intranet.gencat.cat/dev-monitoring/"
+        target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/rL2dIOn.png" class="imatge-menu" title="OpenShift Dev Monitoring PRE" />
+      </a>
+      <a href="https://console-openshift-console.apps.cer01-gct-008-k01.cpd2.intranet.gencat.cat/dev-monitoring/"
+        target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/LMRdKym.png" class="imatge-menu" title="OpenShift Dev Monitoring PROD" />
+      </a>
+      <a href="https://bitbucket.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/aLBxDxO.png" class="imatge-menu" title="Bitbucket Indra" />
+      </a>
+      <a href="https://qamindce.indra.es/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/0vFxwra.png" class="imatge-menu" title="QA Mindce Indra" />
+      </a>
+      <a href="https://slmaven.indra.es/nexus/#browse/browse" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.imgur.com/ZOQXBuY.png" class="imatge-menu" title="Nexus SLMaven" />
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-dev-env/" target="_blank"
+        rel="noopener noreferrer">
+        <img src="https://i.imgur.com/swGo7Aa.png" class="imatge-menu" title="OpenShift CRC Dev" />
+      </a>
+      <a href="https://console-openshift-console.apps-crc.testing/k8s/ns/ms-crc-int-env/" target="_blank"
+        rel="noopener noreferrer">
+        <img src="https://i.imgur.com/dhXgpv5.png" class="imatge-menu" title="OpenShift CRC Int" />
+      </a>
 
-  <!-- Jenkins -->
-  <a routerLink="/jenkins">
-    <img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" title="Jenkins" />
-  </a>
-</div>
+      <!-- Jenkins -->
+      <a routerLink="/jenkins">
+        <img src="https://imgur.com/69aimFa.png" class="imatge-menu imatge-menu-jenkins" title="Jenkins" />
+      </a>
+    </div>
 
     <!-- ──────────────────────────────── -->
     <!--  TOOLBAR SUPERIOR               -->
     <!-- ──────────────────────────────── -->
     <mat-toolbar color="primary" class="main-toolbar">
-  <span class="app-title">JanusHub Portal</span>
-  <span class="spacer"></span>
+      <span class="app-title">JanusHub Portal</span>
+      <span class="spacer"></span>
 
-  <!-- ICONA ÚNICA -->
-  <div class="user-dropdown-container">
-    <div class="user-icon"
-         (click)="username ? userMenuOpen = !userMenuOpen : openLoginDialog()">
-      <mat-icon>person</mat-icon>
-    </div>
+      <!-- ICONA ÚNICA -->
+      <div class="user-dropdown-container">
+        <div class="user-icon" (click)="username ? userMenuOpen = !userMenuOpen : openLoginDialog()">
+          <mat-icon>person</mat-icon>
+        </div>
 
-    <!-- Menú només si hi ha usuari -->
-    <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
-       <p>Usuario: <strong>{{ username }}</strong></p>
+        <!-- Menú només si hi ha usuari -->
+        <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
+          <p>Usuario: <strong>{{ username }}</strong></p>
+          <strong>{{rol}}</strong>
 
-  <!-- AFEGEIX AQUI el botó de secció usuari -->
-  <button mat-button (click)="abrirSeccionUsuario()">
-    <mat-icon>manage_accounts</mat-icon> Perfil
-  </button>
+          <!-- AFEGEIX AQUI el botó de secció usuari -->
+          <button mat-button (click)="abrirSeccionUsuario()">
+            <mat-icon>manage_accounts</mat-icon> Perfil
+          </button>
 
-  <button mat-button color="warn" (click)="logout()">
-    <mat-icon>logout</mat-icon> Cerrar sesión
-  </button>
-</div>
-  </div>
-</mat-toolbar>
+          <button mat-button color="warn" (click)="logout()">
+            <mat-icon>logout</mat-icon> Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </mat-toolbar>
 
     <!-- CONTENIDO INTERIOR -->
     <div class="main-content menu-content-scroll">

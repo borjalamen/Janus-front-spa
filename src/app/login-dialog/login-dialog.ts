@@ -57,7 +57,6 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       next: (user) => {
         console.log('RESPUESTA BACK:', user);
 
-        // user.roles és un array, p.ex. ["ROLE_ADMIN"]
         const rolesArray = user.roles || [];
         const rolesStr = rolesArray.join(',');
 

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     BuscadorComponent,
-    MatButtonModule  // <-- NECESARIO PARA mat-raised-button
+    MatButtonModule  
   ],
   templateUrl: './Bitacora.html',
   styleUrls: ['./Bitacora.css']   // <-- NOMBRE CON MAYÚSCULA

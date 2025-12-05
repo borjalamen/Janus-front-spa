@@ -28,7 +28,7 @@
 
 /* Input */
 input.mat-mdc-input-element {
-  color: #ffd740 !important;      /* text groc */
+  color: #ffd740 !important;      
   caret-color: #ffd740 !important;
   padding: 10px 14px !important;
 }
