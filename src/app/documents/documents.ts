@@ -44,6 +44,19 @@ export class DocumentsComponent {
   // Fitxer seleccionat
   selectedFile?: File;
 
+  deleteDocPopupOpen = false;
+  docToDelete: { project: Project, document: { name: string; date: string } } | null = null;
+
+  toggleAddPopup() {
+    this.showAddPopup = !this.showAddPopup;
+    if (!this.showAddPopup) {
+      this.projectId = 0;
+      this.name = '';
+      this.date = '';
+      this.selectedFile = undefined;
+    }
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -51,16 +64,7 @@ export class DocumentsComponent {
       this.name = file.name; // Omple automàticament el camp de nom
     }
   }
-
-  // Mostra/Oculta el popup
-  toggleAddPopup() {
-    this.showAddPopup = !this.showAddPopup;
-    if (!this.showAddPopup) {
-      this.projectId = 0;
-      this.name = '';
-      this.date = '';
-    }
-  }
+  
 
   // Filtra projectes pel nom
   filtrar(valor: string) {
@@ -92,5 +96,23 @@ export class DocumentsComponent {
 
     this.toggleAddPopup();
     this.projectsFiltrats = [...this.projects];
+  }
+
+   confirmDeleteDocument(project: Project, doc: { name: string; date: string }) {
+    this.docToDelete = { project, document: doc };
+    this.deleteDocPopupOpen = true;
+  }
+
+   cancelDeleteDocument() {
+    this.deleteDocPopupOpen = false;
+    this.docToDelete = null;
+  }
+
+   deleteDocument() {
+    if (this.docToDelete) {
+      const { project, document } = this.docToDelete;
+      project.documents = project.documents?.filter(d => d !== document);
+      this.cancelDeleteDocument();
+    }
   }
 }

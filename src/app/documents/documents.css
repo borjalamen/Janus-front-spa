@@ -203,3 +203,88 @@ input {
 .popup-btn .mdc-button__label {
   color: #FBC02D !important;
 }
+
+.delete-doc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid #E53935;
+  background: transparent;
+  color: #E53935;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-doc-btn:hover {
+  background: #E53935;
+  color: #0F1115;
+  transform: translateY(-1px);
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+}
+
+.delete-doc-btn mat-icon {
+  font-size: 16px;
+}
+
+.delete-doc-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.delete-doc-popup {
+  background: #16181c;
+  border-radius: 10px;
+  padding: 24px;
+  width: 300px;
+  border: 3px solid #E53935;
+  box-shadow: 0 2px 15px #E5393530;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+}
+
+.delete-doc-popup h3 {
+  color: #E53935;
+  margin: 0;
+}
+
+.delete-doc-popup p {
+  color: #E0E0E0;
+  font-size: 0.95rem;
+}
+
+.delete-doc-popup .popup-actions {
+  justify-content: center;
+  gap: 12px;
+}
+
+.delete-doc-popup .cancelar-btn {
+  border-color: #E53935;
+  color: #FBC02D !important;
+}
+
+.delete-doc-popup .guardar-btn {
+  border-color: #E53935;
+  color: #FBC02D !important;
+}
+
+.delete-doc-popup .guardar-btn:hover {
+  background: #E53935 !important;
+  color: #0F1115 !important;
+}
+
+.delete-doc-popup .cancelar-btn:hover {
+  background: #1e84a3 !important;
+  color: #0F1115 !important;
+}

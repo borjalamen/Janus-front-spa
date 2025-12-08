@@ -22,6 +22,10 @@
         <div *ngIf="project.documents?.length">
           <div *ngFor="let doc of project.documents" class="document-item">
             <mat-icon>description</mat-icon> {{ doc.name }} - {{ doc.date }}
+
+            <button mat-icon-button color="warn" (click)="confirmDeleteDocument(project, doc)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -29,6 +33,7 @@
   </div>
 
 </div>
+
 
 <!-- Popup afegir document (amb clic fora per tancar) -->
 <div class="add-document-backdrop" *ngIf="showAddPopup" (click)="toggleAddPopup()">
@@ -65,4 +70,15 @@
     </div>
   </div>
 
+</div>
+
+<div class="add-document-backdrop" *ngIf="deleteDocPopupOpen && docToDelete" (click)="cancelDeleteDocument()">
+  <div class="add-document-popup" (click)="$event.stopPropagation()">
+    <h3>Eliminar documento</h3>
+    <p>¿Estás seguro que deseas eliminar el documento "{{ docToDelete.document.name }}"?</p>
+    <div class="popup-actions">
+      <button mat-raised-button class="guardar-btn" (click)="deleteDocument()">Eliminar</button>
+      <button mat-raised-button class="cancelar-btn" (click)="cancelDeleteDocument()">Cancelar</button>
+    </div>
+  </div>
 </div>
