@@ -5,9 +5,17 @@
     <div class="jenkins-header">
       <h2 class="jenkins-title">Múltiples Jenkins</h2>
 
+      <div class="jenkins-buttons">
+
       <button class="jenkins-add-btn" type="button" (click)="openPopup()">
         + Añadir Jenkins
       </button>
+
+       <button class="jenkins-add-btn" type="button" (click)="toggleDeleteMode()">
+        {{ deleteMode ? 'Cancelar eliminar' : 'Eliminar Jenkins' }}
+      </button>
+    </div>
+    </div>
     
 
         <input
@@ -82,17 +90,23 @@
         <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
       </a> 
       
-      <a class="jenkins-card"
-        *ngFor="let jk of customJenkins"
-        [href]="jk.url"
-        target="_blank"
-        rel="noopener noreferrer">
+  <div class="jenkins-card" 
+       *ngFor="let jk of customJenkins"
+       [ngClass]="{'selected': jk.selected}"
+       (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
 
-        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenkins custom">
-</a>
+    <div class="jenkins-info">
+      <a [href]="jk.url" target="_blank">
+        <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
+      </a>
+      <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
     </div>
-  </div>
+
+    <div class="delete-icon" *ngIf="deleteMode" (click)="confirmDelete(jk); $event.stopPropagation()">🗑️</div>
+
+  </div> 
+</div> 
+   
 
   <div class="popup-overlay" *ngIf="popupOpen">
     <div class="popup-box">
@@ -110,4 +124,17 @@
       </div>
     </div>
   </div>
+
+  <div class="popup-overlay" *ngIf="deletePopupOpen">
+  <div class="popup-box">
+    <h3>Eliminar Jenkins</h3>
+
+    <p>¿Estas seguro que quieres eliminar? </p>
+
+    <div class="popup-buttons">
+      <button class="cancel-btn" (click)="cancelDelete()">Cancelar</button>
+      <button class="save-btn" (click)="deleteJenkins()">Eliminar</button>
+    </div>
+  </div>
+</div>
 </section>
