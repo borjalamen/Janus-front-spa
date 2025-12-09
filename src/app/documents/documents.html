@@ -14,18 +14,23 @@
   <div class="projects-list">
     <div *ngFor="let project of projectsFiltrats" class="project-container">
       <mat-icon class="project-folder">folder</mat-icon>
+
       <div class="project-info">
-        <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
-        <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
+        <div class="project-header-line">
+          <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
+          <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
+
+          <!-- Botó per eliminar TOT el projecte -->
+          <button mat-icon-button color="warn" (click)="confirmDeleteProject(project)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
 
         <!-- Documents del projecte -->
         <div *ngIf="project.documents?.length">
           <div *ngFor="let doc of project.documents" class="document-item">
             <mat-icon>description</mat-icon> {{ doc.name }} - {{ doc.date }}
-
-            <button mat-icon-button color="warn" (click)="confirmDeleteDocument(project, doc)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            
           </div>
         </div>
       </div>
@@ -34,10 +39,8 @@
 
 </div>
 
-
-<!-- Popup afegir document (amb clic fora per tancar) -->
+<!-- Popup afegir document -->
 <div class="add-document-backdrop" *ngIf="showAddPopup" (click)="toggleAddPopup()">
-
   <div class="add-document-popup" (click)="$event.stopPropagation()">
     <h3>Añadir documento</h3>
 
@@ -49,14 +52,12 @@
     <div class="popup-field">
       <label>Nombre del documento:</label>
 
-      <!-- Mostra el nom del fitxer seleccionat -->
       <input type="text" [(ngModel)]="name" style="width: 100%; margin-bottom: 4px;" title="text"/>
 
       <button mat-raised-button class="examinar-btn" type="button" (click)="fileInput.click()">
         Examinar
       </button>
 
-      <!-- Input real de fitxer, amagat -->
       <input
         type="file"
         #fileInput
@@ -69,16 +70,32 @@
       <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">Cancelar</button>
     </div>
   </div>
-
 </div>
 
-<div class="add-document-backdrop" *ngIf="deleteDocPopupOpen && docToDelete" (click)="cancelDeleteDocument()">
+<!-- Popup eliminar DOCUMENT (si el vols mantenir) -->
+<div class="add-document-backdrop"
+     *ngIf="deleteDocPopupOpen && docToDelete"
+     (click)="cancelDeleteDocument()">
   <div class="add-document-popup" (click)="$event.stopPropagation()">
     <h3>Eliminar documento</h3>
     <p>¿Estás seguro que deseas eliminar el documento "{{ docToDelete.document.name }}"?</p>
     <div class="popup-actions">
       <button mat-raised-button class="guardar-btn" (click)="deleteDocument()">Eliminar</button>
       <button mat-raised-button class="cancelar-btn" (click)="cancelDeleteDocument()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup eliminar PROJECTE (NOU) -->
+<div class="add-document-backdrop"
+     *ngIf="deleteProjectPopupOpen && projectToDelete"
+     (click)="cancelDeleteProject()">
+  <div class="add-document-popup" (click)="$event.stopPropagation()">
+    <h3>Eliminar proyecto</h3>
+    <p>¿Estás seguro que deseas eliminar el proyecto "{{ projectToDelete.name }}" y sus documentos?</p>
+    <div class="popup-actions">
+      <button mat-raised-button class="guardar-btn" (click)="deleteProject()">Eliminar</button>
+      <button mat-raised-button class="cancelar-btn" (click)="cancelDeleteProject()">Cancelar</button>
     </div>
   </div>
 </div>

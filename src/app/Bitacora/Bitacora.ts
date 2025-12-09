@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class BitacoraComponent {
 
-  title = 'La Pokedex de Errores';
+  title = 'Control de errores';
 
   errores = [
     {

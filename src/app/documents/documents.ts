@@ -26,7 +26,7 @@ interface Project {
   styleUrls: ['./documents.css']
 })
 export class DocumentsComponent {
-  title = 'Documents';
+  title = 'Documentos';
   showAddPopup = false;
 
   projects: Project[] = [
@@ -36,7 +36,7 @@ export class DocumentsComponent {
 
   projectsFiltrats = [...this.projects];
 
-  // Variables del popup
+  // Variables del popup d'afegir
   projectId!: number;
   name = '';
   date = '';
@@ -44,8 +44,13 @@ export class DocumentsComponent {
   // Fitxer seleccionat
   selectedFile?: File;
 
+  // Popup eliminar DOCUMENT
   deleteDocPopupOpen = false;
   docToDelete: { project: Project, document: { name: string; date: string } } | null = null;
+
+  // Popup eliminar PROJECTE (NOU)
+  deleteProjectPopupOpen = false;
+  projectToDelete: Project | null = null;
 
   toggleAddPopup() {
     this.showAddPopup = !this.showAddPopup;
@@ -61,10 +66,9 @@ export class DocumentsComponent {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      this.name = file.name; // Omple automàticament el camp de nom
+      this.name = file.name;
     }
   }
-  
 
   // Filtra projectes pel nom
   filtrar(valor: string) {
@@ -85,7 +89,6 @@ export class DocumentsComponent {
       if (!project.documents) project.documents = [];
       project.documents.push({ name: this.name, date: this.date });
     } else {
-      // Si no existeix el projecte, el crea
       this.projects.push({
         projectId: this.projectId,
         name: `Project ${this.projectId}`,
@@ -98,21 +101,45 @@ export class DocumentsComponent {
     this.projectsFiltrats = [...this.projects];
   }
 
-   confirmDeleteDocument(project: Project, doc: { name: string; date: string }) {
+  // ======== DOCUMENTS ========
+
+  confirmDeleteDocument(project: Project, doc: { name: string; date: string }) {
     this.docToDelete = { project, document: doc };
     this.deleteDocPopupOpen = true;
   }
 
-   cancelDeleteDocument() {
+  cancelDeleteDocument() {
     this.deleteDocPopupOpen = false;
     this.docToDelete = null;
   }
 
-   deleteDocument() {
+  deleteDocument() {
     if (this.docToDelete) {
       const { project, document } = this.docToDelete;
       project.documents = project.documents?.filter(d => d !== document);
       this.cancelDeleteDocument();
+    }
+  }
+
+  // ======== PROJECTES (NOU) ========
+
+  confirmDeleteProject(project: Project) {
+    this.projectToDelete = project;
+    this.deleteProjectPopupOpen = true;
+  }
+
+  cancelDeleteProject() {
+    this.deleteProjectPopupOpen = false;
+    this.projectToDelete = null;
+  }
+
+  deleteProject() {
+    if (this.projectToDelete) {
+      this.projects = this.projects.filter(
+        p => p.projectId !== this.projectToDelete!.projectId
+      );
+      this.projectsFiltrats = [...this.projects];
+      this.cancelDeleteProject();
     }
   }
 }

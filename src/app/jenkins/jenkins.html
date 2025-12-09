@@ -7,106 +7,98 @@
 
       <div class="jenkins-buttons">
 
-      <button class="jenkins-add-btn" type="button" (click)="openPopup()">
-        + Añadir Jenkins
-      </button>
+        <button class="jenkins-add-btn" type="button" (click)="openPopup()" *ngIf="canEditJenkins">
+          + Añadir Jenkins
+        </button>
 
-       <button class="jenkins-add-btn" type="button" (click)="toggleDeleteMode()">
-        {{ deleteMode ? 'Cancelar eliminar' : '🗑️ Eliminar Jenkins' }}
-      </button>
-    </div>
-    </div>
-    
-
-        <input
-            type="file"
-            #fileInput
-            accept=".xml,.json,.txt"
-            style="display: none"
-            (change)="onJenkinsSelected($event)"
-        />
+        <button class="jenkins-add-btn" type="button" (click)="toggleDeleteMode()" *ngIf="canEditJenkins">
+          {{ deleteMode ? 'Cancelar eliminar' : '🗑️ Eliminar Jenkins' }}
+        </button>
+      </div>
     </div>
 
 
-    <!-- Grid de Jenkins -->
-    <div class="jenkins-grid">
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsOBQUAD/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>OBQUAD</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk OBQUAD">
-      </a>
+    <input type="file" #fileInput accept=".xml,.json,.txt" style="display: none" (change)="onJenkinsSelected($event)" />
+  </div>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_ERVC/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>ERVC</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk ERVC">
-      </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>EDERAN</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-      </a>
+  <!-- Grid de Jenkins -->
+  <div class="jenkins-grid">
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsOBQUAD/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>OBQUAD</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk OBQUAD">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>IPSOPG</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_ERVC/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>ERVC</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk ERVC">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>EDERAN</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>EDERAN</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>IPSOPG</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>IPSOPG</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>EDERAN</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>EDERAN</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>IPSOPG</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>IPSOPG</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>EDERAN</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>EDERAN</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>IPSOPG</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>IPSOPG</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>EDERAN</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-      </a>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>EDERAN</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
+    </a>
 
-      <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
-        <div class="jenkins-name"><strong>IPSOPG</strong></div>
-        <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-      </a> 
-      
-  <div class="jenkins-card" 
-       *ngFor="let jk of customJenkins"
-       [ngClass]="{'selected': jk.selected}"
-       (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>IPSOPG</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
+    </a>
 
-    <div class="jenkins-info">
-      <a [href]="jk.url" target="_blank">
-        <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
-      </a>
-      <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_EDERAN/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>EDERAN</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
+    </a>
+
+    <a class="jenkins-card" href="https://jenkins.indra.es/jenkinsJK_IPSOPG/" target="_blank" rel="noopener noreferrer">
+      <div class="jenkins-name"><strong>IPSOPG</strong></div>
+      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
+    </a>
+
+    <div class="jenkins-card" *ngFor="let jk of customJenkins" [ngClass]="{'selected': jk.selected}"
+      (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
+
+      <div class="jenkins-info">
+        <a [href]="jk.url" target="_blank">
+          <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
+        </a>
+        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
+      </div>
+
+      <div class="delete-icon" *ngIf="deleteMode" (click)="confirmDelete(jk); $event.stopPropagation()">🗑️</div>
+
     </div>
+  </div>
 
-    <div class="delete-icon" *ngIf="deleteMode" (click)="confirmDelete(jk); $event.stopPropagation()">🗑️</div>
-
-  </div> 
-</div> 
-   
 
   <div class="popup-overlay" *ngIf="popupOpen">
     <div class="popup-box">
@@ -126,15 +118,15 @@
   </div>
 
   <div class="popup-overlay" *ngIf="deletePopupOpen">
-  <div class="popup-box">
-    <h3>Eliminar Jenkins</h3>
+    <div class="popup-box">
+      <h3>Eliminar Jenkins</h3>
 
-    <p>¿Estas seguro que quieres eliminar? </p>
+      <p>¿Estas seguro que quieres eliminar? </p>
 
-    <div class="popup-buttons">
-      <button class="cancel-btn" (click)="cancelDelete()">Cancelar</button>
-      <button class="save-btn" (click)="deleteJenkins()">Eliminar</button>
+      <div class="popup-buttons">
+        <button class="cancel-btn" (click)="cancelDelete()">Cancelar</button>
+        <button class="save-btn" (click)="deleteJenkins()">Eliminar</button>
+      </div>
     </div>
   </div>
-</div>
 </section>
