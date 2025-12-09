@@ -320,3 +320,59 @@ body {
   height: 200px;
   margin: 0 auto;
 }
+
+/* Clip helper persistente */
+.clip-helper {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 84px; /* 56px * 1.5 = 84px */
+  height: 84px; /* 56px * 1.5 = 84px */
+  z-index: 1000;
+  cursor: pointer;
+  background-image: url('/assets/images/Clip.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  border-radius: 8px;
+}
+
+.clip-helper:hover {
+  transform: scale(1.12);
+  filter: brightness(1.3) saturate(1.2);
+  box-shadow: 0 6px 18px rgba(247, 183, 49, 0.45);
+  background-image: url('/assets/images/Clip2.png');
+}
+
+/* pequeño outline amarillo cuando hover (coincide con otros iconos) */
+.clip-helper:focus, .clip-helper:active {
+  outline: none;
+  box-shadow: 0 0 12px #FBC02D99;
+}
+
+/* Popup 'habla' */
+.clip-popup {
+  position: fixed;
+  right: 110px; /* a la izquierda del icono */
+  bottom: 18px;
+  z-index: 1200;
+  background: #0F1115;
+  border: 2px solid #FBC02D;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+.clip-text {
+  width: 280px;
+  height: 72px;
+  resize: none;
+  background: transparent;
+  color: #E0E0E0;
+  border: none;
+  outline: none;
+  font-weight: 600;
+  padding: 8px;
+  font-size: 0.98rem;
+}

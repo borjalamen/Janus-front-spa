@@ -70,6 +70,15 @@
   <!-- ──────────────────────────────── -->
   <mat-sidenav-content>
 
+    <!-- Clip helper persistente -->
+    <div class="clip-helper" tabindex="0" title="Ayuda" (click)="toggleClip()"></div>
+
+    <!-- Popup tipo 'habla' del clip -->
+    <div class="clip-popup" *ngIf="clipOpen">
+      <textarea readonly class="clip-text">Yo no dudo, yo imputo.</textarea>
+    </div>
+
+
     <!-- Logos -->
     <div class="banner-imatges">
   <a href="https://git.intranet.gencat.cat/" target="_blank" rel="noopener noreferrer">

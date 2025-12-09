@@ -23,6 +23,7 @@ import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { UsuarioComponent } from './usuari/usuari';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { HostListener } from '@angular/core';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -48,6 +49,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  clipOpen = false;
   username: string = '';
   rol: Rol = 'admin';
   showUserMenu = false;
@@ -82,6 +84,24 @@ export class AppComponent {
     if (!lang) return;
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
+  }
+
+  toggleClip(): void {
+    this.clipOpen = !this.clipOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const clip = document.querySelector('.clip-helper');
+    const popup = document.querySelector('.clip-popup');
+    if (!clip || !popup) return;
+    if (clip.contains(target) || popup.contains(target)) {
+      // click dentro: no cerrar
+      return;
+    }
+    // click fuera: cerrar
+    this.clipOpen = false;
   }
 
   // 🔹 Crida al back per obtenir la versió
