@@ -10,7 +10,7 @@ import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { AdministracionComponent } from './app/administracion/administracion';
 import { provideHttpClient } from '@angular/common/http';
-import { BitacoraComponent as Bitacora} from './app/bitacora/Bitacora';
+import { BitacoraComponent as Bitacora} from './app/bitacora/bitacora';
 import { Jenkins } from './app/jenkins/jenkins';
 import { Infraestructura } from './app/infraestructura/infraestructura';
 
