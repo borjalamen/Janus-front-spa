@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.html',
   styleUrls: ['./projects.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent]
+  imports: [CommonModule, BuscadorComponent, TranslateModule]
 })
 export class ProjectsComponent {
   title = 'Proyectos';

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Project {
   projectId: number;
@@ -20,7 +21,8 @@ interface Project {
     FormsModule,
     MatButtonModule,
     MatIconModule,
-    BuscadorComponent
+    BuscadorComponent,
+    TranslateModule
   ],
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']

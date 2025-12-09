@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface JenkinsItem {
   id?: string;      
@@ -12,7 +13,7 @@ interface JenkinsItem {
 
 @Component({
   selector: 'app-jenkins',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslateModule],
   standalone: true,
   templateUrl: './jenkins.html',
   styleUrls: ['./jenkins.css'],

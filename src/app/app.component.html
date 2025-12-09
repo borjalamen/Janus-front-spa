@@ -13,52 +13,52 @@
       <!-- Bienvenida (sempre visible) -->
       <a mat-list-item routerLink="/home">
         <mat-icon>home</mat-icon>
-        <span class="menu-text"><strong>Bienvenida</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.WELCOME' | translate }}</strong></span>
       </a>
 
       <!-- Proyectos -->
       <a *ngIf="canShow('proyectos')" mat-list-item routerLink="/projects">
         <mat-icon>folder_open</mat-icon>
-        <span class="menu-text"><strong>Proyectos</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.PROJECTS' | translate }}</strong></span>
       </a>
       <!-- Procedimientos -->
       <a *ngIf="canShow('procedimientos')" mat-list-item routerLink="/procedimientos">
         <mat-icon>assignment</mat-icon>
-        <span class="menu-text"><strong>Procedimientos</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.PROCEDURES' | translate }}</strong></span>
       </a>
 
       <!-- Bitácora -->
       <a *ngIf="canShow('bitacora')" mat-list-item routerLink="/bitacora">
         <mat-icon>bug_report</mat-icon>
-        <span class="menu-text"><strong>Bitácora</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.LOGBOOK' | translate }}</strong></span>
       </a>
       <!-- Infraestructura -->
       <a *ngIf="canShow('infraestructura')" mat-list-item routerLink="/infraestructura">
         <mat-icon>storage</mat-icon>
-        <span class="menu-text"><strong>Infraestructura</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.INFRASTRUCTURE' | translate }}</strong></span>
       </a>
       <!-- Documentos -->
       <a *ngIf="canShow('documentos')" mat-list-item routerLink="/documents">
         <mat-icon>upload_file</mat-icon>
-        <span class="menu-text"><strong>Documentos</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.DOCUMENTS' | translate }}</strong></span>
       </a>
 
       <!-- Formación -->
       <a *ngIf="canShow('formacion')" mat-list-item routerLink="/formacion">
         <mat-icon>school</mat-icon>
-        <span class="menu-text"><strong>Formación</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.TRAINING' | translate }}</strong></span>
       </a>
 
       <!-- Planificación -->
       <a *ngIf="canShow('planificacion')" mat-list-item routerLink="/planificacion">
         <mat-icon>event_note</mat-icon>
-        <span class="menu-text"><strong>Planificación</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.PLANNING' | translate }}</strong></span>
       </a>
 
       <!-- Administración -->
       <a *ngIf="canShow('administracion')" mat-list-item routerLink="/administracion">
         <mat-icon>admin_panel_settings</mat-icon>
-        <span class="menu-text"><strong>Administración</strong></span>
+        <span class="menu-text"><strong>{{ 'MENU.ADMIN' | translate }}</strong></span>
       </a>
       
 
@@ -122,6 +122,13 @@
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
+      <mat-form-field appearance="fill" style="width:140px; margin-right:12px;">
+        <mat-select [value]="translate.currentLang" (selectionChange)="translateLanguage($event.value)">
+          <mat-option value="es">ES</mat-option>
+          <mat-option value="ca">CA</mat-option>
+          <mat-option value="en">EN</mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <!-- ICONA ÚNICA -->
       <div class="user-dropdown-container">
@@ -131,16 +138,16 @@
 
         <!-- Menú només si hi ha usuari -->
         <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
-          <p>Usuario: <strong>{{ username }}</strong></p>
+          <p>{{ 'USER.USERNAME' | translate }}: <strong>{{ username }}</strong></p>
           <strong>{{rol}}</strong>
 
           <!-- AFEGEIX AQUI el botó de secció usuari -->
           <button mat-button (click)="abrirSeccionUsuario()">
-            <mat-icon>manage_accounts</mat-icon> Perfil
+            <mat-icon>manage_accounts</mat-icon> {{ 'USER.PROFILE' | translate }}
           </button>
 
           <button mat-button color="warn" (click)="logout()">
-            <mat-icon>logout</mat-icon> Cerrar sesión
+            <mat-icon>logout</mat-icon> {{ 'USER.LOGOUT' | translate }}
           </button>
         </div>
       </div>
@@ -155,7 +162,7 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <span>Copyright |
+      <span>{{ 'FOOTER.COPYRIGHT' | translate }} |
         <strong>{{ appVersion ?? 'obteniendo versión...' }}</strong>
       </span>
     </footer>

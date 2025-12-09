@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bitacora',
@@ -9,7 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     BuscadorComponent,
-    MatButtonModule  
+    MatButtonModule,
+    TranslateModule
   ],
   templateUrl: './bitacora.html',
   styleUrls: ['./bitacora.css']   // <-- NOMBRE CON MAYÚSCULA

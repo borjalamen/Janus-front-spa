@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 
 // Angular Material Sidenav + List
@@ -20,6 +22,7 @@ import {
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { UsuarioComponent } from './usuari/usuari';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -30,6 +33,9 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     CommonModule,
     MatToolbarModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    TranslateModule,
     MatSidenavModule,
     MatListModule,
     RouterOutlet,
@@ -53,7 +59,14 @@ export class AppComponent {
     private dialog: MatDialog,
     private router: Router,
     private http: HttpClient          // 👈 afegit
+    , public translate: TranslateService
   ) {
+    this.translate.addLangs(['es', 'ca', 'en']);
+    const saved = localStorage.getItem('lang');
+    const browserLang = this.translate.getBrowserLang();
+    const defaultLang = saved ?? browserLang ?? 'es';
+    this.translate.setDefaultLang('es');
+    this.translate.use(defaultLang.match(/en|es|ca/) ? defaultLang : 'es');
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
@@ -63,6 +76,12 @@ export class AppComponent {
 
     // cridem al backend per la versió
     this.loadVersion();
+  }
+
+  translateLanguage(lang: string) {
+    if (!lang) return;
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang);
   }
 
   // 🔹 Crida al back per obtenir la versió

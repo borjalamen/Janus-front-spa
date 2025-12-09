@@ -1,0 +1,29 @@
+{
+  "MENU": {
+    "WELCOME": "Bienvenida",
+    "PROJECTS": "Proyectos",
+    "PROCEDURES": "Procedimientos",
+    "DOCUMENTS": "Documentos",
+    "TRAINING": "Formación",
+    "PLANNING": "Planificación",
+    "ADMIN": "Administración",
+    "LOGBOOK": "Bitácora",
+    "INFRASTRUCTURE": "Infraestructura"
+  },
+  "USER": {
+    "PROFILE": "Perfil",
+    "LOGOUT": "Cerrar sesión",
+    "USERNAME": "Usuario"
+  },
+  "FOOTER": {
+    "COPYRIGHT": "Copyright"
+  }
+  ,
+  "HOME": {
+    "TITLE": "Bienvenido a JanusHUB.v0",
+    "WHO_WE_ARE": "Quiénes somos",
+    "WHAT_WE_DO": "Qué hacemos",
+    "MISSION": "Nuestra misión",
+    "CONTACT": "Contacto"
+  }
+}

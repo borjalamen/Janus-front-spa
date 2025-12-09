@@ -18,12 +18,18 @@
     "@angular/platform-browser-dynamic": "^20.3.7",
     "@angular/router": "^20.0.0",
     "@apollo/client": "^4.0.7",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "apollo-angular": "^12.0.0",
     "bootstrap": "^5.3.8",
     "graphql": "^16.11.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.15.0"
+  },
+  "ngxTranslate": {
+    "core": "@ngx-translate/core",
+    "http-loader": "@ngx-translate/http-loader"
   },
   "devDependencies": {
     "@angular/build": "^20.0.0",

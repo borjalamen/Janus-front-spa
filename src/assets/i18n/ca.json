@@ -1,0 +1,29 @@
+{
+  "MENU": {
+    "WELCOME": "Benvinguda",
+    "PROJECTS": "Projectes",
+    "PROCEDURES": "Procediments",
+    "DOCUMENTS": "Documents",
+    "TRAINING": "Formació",
+    "PLANNING": "Planificació",
+    "ADMIN": "Administració",
+    "LOGBOOK": "Bitàcola",
+    "INFRASTRUCTURE": "Infraestructura"
+  },
+  "USER": {
+    "PROFILE": "Perfil",
+    "LOGOUT": "Tancar sessió",
+    "USERNAME": "Usuari"
+  },
+  "FOOTER": {
+    "COPYRIGHT": "Copyright"
+  }
+  ,
+  "HOME": {
+    "TITLE": "Benvingut a JanusHUB.v0",
+    "WHO_WE_ARE": "Qui som",
+    "WHAT_WE_DO": "Què fem",
+    "MISSION": "La nostra missió",
+    "CONTACT": "Contacte"
+  }
+}

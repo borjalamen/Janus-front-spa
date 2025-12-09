@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-planificacion',
   templateUrl: './planificacion.html',
   styleUrls: ['./planificacion.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent]
+  imports: [CommonModule, BuscadorComponent, TranslateModule]
 })
 export class PlanificacionComponent {
   title = 'Planificaciones';

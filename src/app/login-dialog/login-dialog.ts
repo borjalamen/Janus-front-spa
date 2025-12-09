@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -20,7 +21,8 @@ import { HttpClient } from '@angular/common/http';
     MatButtonModule,
     FormsModule,
     CommonModule,
-    MatDialogModule
+    MatDialogModule,
+    TranslateModule
   ],
   templateUrl: './login-dialog.html',
   styleUrls: ['./login-dialog.css'],

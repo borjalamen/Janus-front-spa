@@ -3,13 +3,14 @@ import { BuscadorComponent } from '../buscador/buscador';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-administracion',
   templateUrl: './administracion.html',
   styleUrls: ['./administracion.css'],
   standalone: true,
-  imports: [BuscadorComponent, CommonModule, MatIconModule, FormsModule]
+  imports: [BuscadorComponent, CommonModule, MatIconModule, FormsModule, TranslateModule]
 })
 export class AdministracionComponent {
   title = 'Administración';
