@@ -13,7 +13,15 @@ body {
   margin: 20px;
 }
 
-h2 {
+.documents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+.documents-header h2 {
   color: #FBC02D;
   font-weight: bold;
   margin-bottom: 16px;
@@ -21,4 +29,153 @@ h2 {
 
 p {
   color: #E0E0E0;
+}
+
+.jenkins-add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid #FBC02D;
+  background: transparent;
+  color: #FBC02D;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jenkins-add-btn:hover {
+  background: #FBC02D;
+  color: #0F1115;
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
+}
+
+.jenkins-add-btn mat-icon {
+  font-size: 20px;
+}
+
+.add-document-backdrop,
+.popup-fons {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.add-document-popup,
+.popup-container {
+  background: #16181c;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px #FBC02D30;
+  padding: 24px;
+  width: 360px;
+  border: 3px solid #FBC02D;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-document-popup h3,
+.popup-container h3 {
+  color: #FBC02D;
+  margin-top: 0;
+  text-align: center;
+}
+
+.popup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popup-field label {
+  color: #FBC02D;
+}
+
+
+.form-field input[type="text"],
+.form-field input[type="password"] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #1e84a3;
+  background: white;
+  color: black; /* text negre */
+  outline: none;
+  font-size: 1em;
+}
+
+.form-field input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* Botons del pop-up */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.popup-btn{
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #1e84a3;
+  background: #0F1115;
+  color: #FBC02D;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.popup-btn:hover {
+  background: #1e84a3;
+  color: #0F1115;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px #000c;
+}
+
+.guardar-btn {
+  border-color: #1e84a3;
+  color: #FBC02D !important;
+}
+
+.cancelar-btn {
+  border-color: #E53935;
+  color: #FBC02D !important;
+}
+
+.cancelar-btn:hover {
+  background: #E53935 !important;
+  color: #0F1115 !important;
+}
+
+.usuari-item {
+  padding: 8px;
+  border-radius: 6px;
+  background: #0F1115;
+  margin-bottom: 6px;
+}
+
+.usuari-nom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usuari-rol {
+  color: #FBC02D;
+  font-size: 0.9rem;
+}
+
+.usuari-email {
+  font-size: 0.9rem;
+  color: #E0E0E0;
+  margin-top: 2px;
 }

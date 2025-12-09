@@ -1,13 +1,64 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-<div class="section-container">
-  <h2>{{ title }}</h2>
-  <p>Gestión de usuarios, roles y configuración del portal.</p>
+<div class="section-container documents-wrapper">
 
-  <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
-    <div class="usuari-nom">
-      <b>{{ usuari.nom }}</b> <span class="usuari-rol">({{ usuari.rol }})</span>
+  <div class="documents-header">
+    <h2>{{ title }}</h2>
+    <div style="display: flex; gap: 12px;">
+      <button class="jenkins-add-btn" (click)="toggleLlista()">
+        {{ mostrarLlista ? 'Ocultar listado de usuarios' : 'Listado de usuarios' }}
+      </button>
+
+      <button class="jenkins-add-btn" (click)="obrirPopup()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>Añadir usuario</span>
+      </button>
     </div>
-    <div class="usuari-email">{{ usuari.email }}</div>
+  </div>
+
+  <div *ngIf="mostrarLlista">
+    <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item" style="margin-bottom:12px;">
+      <div class="usuari-nom">
+        <b>{{ usuari.nom }}</b>
+        <span class="usuari-rol">
+          ({{ isArray(usuari.rols) ? usuari.rols.join(', ') : usuari.rols }})
+        </span>
+      </div>
+      <div class="usuari-email">{{ usuari.email }}</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="popup-fons" *ngIf="mostrarPopup">
+  <div class="popup-container">
+    <h3>Añadir nuevo usuario</h3>
+
+    <div class="form-field">
+      <label>Nombre:</label>
+      <input type="text" [(ngModel)]="nouUsuari.nombre" />
+    </div>
+
+    <div class="form-field">
+      <label>Contraseña:</label>
+      <input type="password" [(ngModel)]="nouUsuari.contrasenya" />
+    </div>
+
+    <div class="form-field">
+      <label>
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin" /> Admin
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor" /> Consultor
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops" /> DevOps
+      </label>
+    </div>
+
+    <div class="popup-actions" style="margin-top: 12px;">
+      <button class="jenkins-add-btn" (click)="guardarUsuari()">Guardar</button>
+      <button class="jenkins-add-btn cancel-btn" (click)="tancarPopup()">Cancelar</button>
+    </div>
   </div>
 </div>

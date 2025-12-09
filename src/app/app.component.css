@@ -82,7 +82,7 @@ mat-nav-list a mat-icon {
 /* TOOLBAR SUPERIOR */
 /* ─────────────────────────────────────────── */
 mat-toolbar.main-toolbar {
-  background: #14b1e1 !important;
+  background: #0d86a4 !important;
   color: #FBC02D !important;
   font-size: 1.18em;
   display: flex;
@@ -96,7 +96,20 @@ mat-toolbar.main-toolbar {
   color: #FBC02D;
   text-align: center;
   width: 100%;
+
+  background: linear-gradient(90deg, #003948 0%, #003948 50%, #003948 100%);
+  -webkit-background-clip: text;
+
+
+  text-shadow:
+    0 0 6px #fbc02d80,
+    0 0 12px #fbc02d40;
+
+  letter-spacing: 1px;
 }
+
+
+
 
 .spacer {
   flex: 1 1 auto;
