@@ -21,6 +21,7 @@ export class AdministracionComponent {
   nouUsuari = {
     nombre: '',
     contrasenya: '',
+    email: "",
     rols: {
       admin: false,
       consultor: false,
@@ -93,6 +94,7 @@ export class AdministracionComponent {
     this.nouUsuari = {
       nombre: '',
       contrasenya: '',
+      email: "",
       rols: { admin: false, consultor: false, devops: false }
     };
   }
