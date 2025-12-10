@@ -1,13 +1,14 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 <div class="section-container">
-  <h2>{{ title }}</h2>
-  <p>Gestión y documentación de procedimientos internos.</p>
+  <h2>{{ 'PROCEDURES_SECTION.TITLE' | translate }}</h2>
+  <p>{{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}</p>
 
   <ul>
     <li *ngFor="let p of procedimientosFiltrados">
       <strong>{{ p.nombre }}</strong><br>
-      Responsable: {{ p.responsable }}<br>
-      Estado: {{ p.estado }}
+      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ p.responsable }}<br>
+      {{ 'PROCEDURES_SECTION.STATUS' | translate }}: {{ p.estado }}
     </li>
   </ul>
 </div>

@@ -1,5 +1,5 @@
 <section class="usuario-section">
-  <h2>Sección usuario</h2>
+  <h2>{{ 'USER_SECTION.TITLE' | translate }}</h2>
 
   <div class="usuario-card">
     <div class="usuario-avatar">
@@ -7,8 +7,14 @@
     </div>
 
     <div class="usuario-info">
-      <p><strong>Usuario:</strong> {{ username }}</p>
-      <p><strong>Rol:</strong> {{ rol }}</p>
+      <p>
+        <strong>{{ 'USER_SECTION.LABEL_USER' | translate }}:</strong>
+        {{ username }}
+      </p>
+      <p>
+        <strong>{{ 'USER_SECTION.LABEL_ROLE' | translate }}:</strong>
+        {{ rol }}
+      </p>
     </div>
   </div>
 </section>

@@ -1,28 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
-
-// Angular Material Sidenav + List
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-
-// Router (routerLink, router-outlet)
 import {
   RouterLink,
   RouterLinkWithHref,
   RouterOutlet
 } from '@angular/router';
-
 import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { HostListener } from '@angular/core';
+import { AuthService } from './auth.service';
+import { Subscription } from 'rxjs';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -45,20 +41,22 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   clipOpen = false;
   username: string = '';
-  rol: Rol = 'admin';
+  rol: Rol = 'invitado';
   showUserMenu = false;
-
   userMenuOpen = false;
   appVersion?: string;
+
+  private authSubscription?: Subscription;
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private http: HttpClient          // 👈 afegit
-    , public translate: TranslateService
+    private http: HttpClient,
+    public translate: TranslateService,
+    private authService: AuthService  // ⬅ Afegit
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = localStorage.getItem('lang');
@@ -66,15 +64,23 @@ export class AppComponent {
     const defaultLang = saved ?? browserLang ?? 'es';
     this.translate.setDefaultLang('es');
     this.translate.use(defaultLang.match(/en|es|ca/) ? defaultLang : 'es');
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      this.username = user.username;
-      this.rol = user.rol;
-    }
 
-    // cridem al backend per la versió
+    // ⬅ Subscriu-te als canvis d'usuari
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.username = user.username;
+        this.rol = user.rol;
+      } else {
+        this.username = '';
+        this.rol = 'invitado';
+      }
+    });
+
     this.loadVersion();
+  }
+
+  ngOnDestroy() {
+    this.authSubscription?.unsubscribe();
   }
 
   translateLanguage(lang: string) {
@@ -94,29 +100,26 @@ export class AppComponent {
     const popup = document.querySelector('.clip-popup');
     if (!clip || !popup) return;
     if (clip.contains(target) || popup.contains(target)) {
-      // click dentro: no cerrar
       return;
     }
-    // click fuera: cerrar
     this.clipOpen = false;
   }
 
-  // 🔹 Crida al back per obtenir la versió
   loadVersion() {
-  console.log('CRIDANT /api/config/all');
+    console.log('CRIDANT /api/config/all');
 
-  this.http.get<any>('http://localhost:8080/api/config/all')
-    .subscribe({
-      next: (data) => {
-        console.log('RESPUESTA VERSION:', data);
-        this.appVersion = data[0]; 
-      },
-      error: (err) => {
-        console.error('ERROR VERSION:', err);
-        this.appVersion = 'error obteniendo versión';
-      }
-    });
-}
+    this.http.get<any>('http://localhost:8080/api/config/all')
+      .subscribe({
+        next: (data) => {
+          console.log('RESPUESTA VERSION:', data);
+          this.appVersion = data[0]; 
+        },
+        error: (err) => {
+          console.error('ERROR VERSION:', err);
+          this.appVersion = 'error obteniendo versión';
+        }
+      });
+  }
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
@@ -125,14 +128,11 @@ export class AppComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.success) {
-        this.username = result.username;
-        this.rol = result.rol;
-      } else {
-        // Si es tanca el popup sense login → usuario invitado
-        this.username = '';
-        this.rol = 'invitado';
+      if (!result?.success) {
+        // Si es tanca sense login → invitado
+        this.authService.logout();
       }
+      // Si hi ha success, ja s'ha fet login al LoginDialogComponent
     });
   }
 
@@ -142,19 +142,12 @@ export class AppComponent {
   }
 
   logout() {
-    localStorage.removeItem('user');
+    this.authService.logout();  // ⬅ Usa el servei
 
-    this.username = '';
-    this.rol = 'invitado';
     this.showUserMenu = false;
     this.userMenuOpen = false;
 
-    localStorage.setItem('user', JSON.stringify({
-      username: '',
-      rol: 'invitado'
-    }));
-
-    this.router.navigate(['/home']);
+    this.router.navigate(['/bienvenida']);
   }
 
   canShow(menuItem: string): boolean {
@@ -174,8 +167,8 @@ export class AppComponent {
         return ['admin'].includes(this.rol);
       case 'bitacora':
         return ['devops', 'admin'].includes(this.rol);
-        case 'infraestructura':
-          return ['devops', 'admin','consultor'].includes(this.rol);
+      case 'infraestructura':
+        return ['devops', 'admin','consultor'].includes(this.rol);
       default:
         return false;
     }

@@ -1,97 +1,91 @@
 <div class="menu-content-scroll">
-    <div class="section-container">
-        <h2>{{ 'HOME.TITLE' | translate }}</h2>
-        <p>
-            JanusHub toma su nombre del dios romano Jano (Janus), simbolizado por dos rostros que miran al pasado y al
-            futuro. Representa la visión estratégica capaz de aprender de la experiencia y, al mismo tiempo, anticipar y
-            construir el mañana.
-            Desde esa filosofía, JanusHub nace como un punto de convergencia tecnológica, donde tradición e innovación
-            se
-            combinan para impulsar a los equipos hacia un modelo de entrega continua, eficiente y de máxima calidad.
-        </p>
+  <div class="section-container">
+    <!--  -->
+    <h2>{{ 'HOME.TITLE' | translate }}</h2>
 
-        <hr />
+    <!--  -->
+    <p>{{ 'HOME.INTRO' | translate }}</p>
 
-        <h2>{{ 'HOME.WHO_WE_ARE' | translate }}</h2>
-        <p>
-            Somos un equipo transversal de expertos DevOps especializado en habilitar, evolucionar y consolidar
-            prácticas
-            modernas de desarrollo y operación de software.
-            Nos enfocamos en acelerar la entrega de valor mediante automatización, integración continua y despliegue
-            continuo, garantizando calidad, seguridad y observabilidad en cada fase del ciclo de vida del software.
-        </p>
-        <hr />
-        <h2>{{ 'HOME.WHAT_WE_DO' | translate }}</h2>
-        <ul class="no-list">
-            
-                ✅ <strong>DevOps transversal</strong>
-                <ul>
-                    <li>Implantación de cultura DevOps y modelos operativos colaborativos</li>
-                    <li>Asesoría y soporte en buenas prácticas CI/CD</li>
-                </ul>
-            
-            
-                ✅ <strong>Integración Continua y Despliegue Continuo (CI/CD)</strong>
-                <ul>
-                    <li>Creación, mantenimiento y optimización de <strong>pipelines</strong> CI/CD</li>
-                    <li>Automatización de compilación, pruebas y análisis de código</li>
-                    <li>Integración de herramientas de calidad como <strong>SonarQube</strong></li>
-                </ul>
-            
-            
-                ✅ <strong>Despliegue y operación multientorno</strong>
-                <ul>
-                    <li><strong>Cloud:</strong> OpenShift, Azure</li>
-                    <li><strong>On-Premise:</strong> Nginx, Apache, WebLogic</li>
-                </ul>
-            
-            
-                ✅ <strong>Arquitectura y gestión de bases de datos</strong>
-                <ul>
-                    <li><strong>SQL:</strong> PostgreSQL, MySQL</li>
-                    <li><strong>NoSQL:</strong> MongoDB</li>
-                </ul>
-            
-            
-                ✅ <strong>Gobierno y estándares</strong>
-                <ul>
-                    <li>Definición de plantillas, componentes reusables y buenas prácticas</li>
-                    <li>Capacitación, apoyo continuo y transferencia de conocimiento</li>
-                </ul>
-            
-        </ul>
-        <hr />
-        <h2>{{ 'HOME.MISSION' | translate }}</h2>
-        <div>
-            <p>Facilitar que los equipos de desarrollo entreguen software:</p>
-            <ul>
-                <li>Más rápido</li>
-                <li>Con mayor calidad</li>
-                <li>Con procesos estandarizados y automatizados</li>
-                <li>Independientemente de la tecnología o plataforma</li>
-            </ul>
-        </div>
-        <hr />
-        <h2>{{ 'HOME.CONTACT' | translate }}</h2>
-        <div>
-            <ul>
-                <li>
-                    <strong>Raúl Gallego García</strong> –
-                    <a href="mailto:rgallegoga@minsait.com">rgallegoga@minsait.com✉️</a>
-                </li>
-                <li>
-                    <strong>Rubén Planté Félix</strong> –
-                    <a href="mailto:rplante@minsait.com">rplante@minsait.com✉️</a>
-                </li>
-                <li>
-                    <strong>Fernando Silvano Gil Pérez</strong> –
-                    <a href="mailto:fsgil@minsait.com">fsgil@minsait.com✉️</a>
-                </li>
-                <li>
-                    <strong>Borja Lara Menéndez</strong> –
-                    <a href="mailto:blara@eservicios.indra.es">blara@eservicios.indra.es✉️</a>
-                </li>
-            </ul>
-        </div>
+    <hr />
+
+    <!-- -->
+    <h2>{{ 'HOME.WHO_WE_ARE' | translate }}</h2>
+    <p>{{ 'HOME.WHO_WE_ARE_TEXT' | translate }}</p>
+
+    <hr />
+
+    <!--  -->
+    <h2>{{ 'HOME.WHAT_WE_DO' | translate }}</h2>
+    <ul class="no-list">
+      ✅ <strong>{{ 'HOME.WHAT_WE_DO_DEVOPS' | translate }}</strong>
+      <ul>
+        <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.CULTURE' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.ADVICE' | translate }}</li>
+      </ul>
+
+      ✅ <strong>{{ 'HOME.WHAT_WE_DO_CICD' | translate }}</strong>
+      <ul>
+        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.PIPELINES' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.AUTOMATION' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.SONARQUBE' | translate }}</li>
+      </ul>
+
+      ✅ <strong>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS' | translate }}</strong>
+      <ul>
+        <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.CLOUD' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.ON_PREM' | translate }}</li>
+      </ul>
+
+      ✅ <strong>{{ 'HOME.WHAT_WE_DO_DATABASES' | translate }}</strong>
+      <ul>
+        <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.SQL' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.NOSQL' | translate }}</li>
+      </ul>
+
+      ✅ <strong>{{ 'HOME.WHAT_WE_DO_GOVERNANCE' | translate }}</strong>
+      <ul>
+        <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TEMPLATES' | translate }}</li>
+        <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TRAINING' | translate }}</li>
+      </ul>
+    </ul>
+
+    <hr />
+
+    <!-- Missió -->
+    <h2>{{ 'HOME.MISSION' | translate }}</h2>
+    <div>
+      <p>{{ 'HOME.MISSION_INTRO' | translate }}</p>
+      <ul>
+        <li>{{ 'HOME.MISSION_ITEMS.FASTER' | translate }}</li>
+        <li>{{ 'HOME.MISSION_ITEMS.QUALITY' | translate }}</li>
+        <li>{{ 'HOME.MISSION_ITEMS.STANDARDIZED' | translate }}</li>
+        <li>{{ 'HOME.MISSION_ITEMS.TECH_AGNOSTIC' | translate }}</li>
+      </ul>
     </div>
+
+    <hr />
+
+    <!-- Contacte -->
+    <h2>{{ 'HOME.CONTACT' | translate }}</h2>
+    <div>
+      <ul>
+        <li>
+          <strong>{{ 'HOME.CONTACT_LIST.RAUL' | translate }}</strong> –
+          <a href="mailto:rgallegoga@minsait.com">rgallegoga@minsait.com✉️</a>
+        </li>
+        <li>
+          <strong>{{ 'HOME.CONTACT_LIST.RUBEN' | translate }}</strong> –
+          <a href="mailto:rplante@minsait.com">rplante@minsait.com✉️</a>
+        </li>
+        <li>
+          <strong>{{ 'HOME.CONTACT_LIST.FERNANDO' | translate }}</strong> –
+          <a href="mailto:fsgil@minsait.com">fsgil@minsait.com✉️</a>
+        </li>
+        <li>
+          <strong>{{ 'HOME.CONTACT_LIST.BORJA' | translate }}</strong> –
+          <a href="mailto:blara@eservicios.indra.es">blara@eservicios.indra.es✉️</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

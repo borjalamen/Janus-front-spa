@@ -17,16 +17,161 @@
   },
   "FOOTER": {
     "COPYRIGHT": "Copyright"
-  }
-  ,
+  },
   "HOME": {
     "TITLE": "Bienvenido a JanusHUB.v0",
     "WHO_WE_ARE": "Quiénes somos",
     "WHAT_WE_DO": "Qué hacemos",
     "MISSION": "Nuestra misión",
-    "CONTACT": "Contacto"
-  }
-  ,
+    "CONTACT": "Contacto",
+    "INTRO": "JanusHub toma su nombre del dios romano Jano (Janus), simbolizado por dos rostros que miran al pasado y al futuro. Representa la visión estratégica capaz de aprender de la experiencia y, al mismo tiempo, anticipar y construir el mañana. Desde esa filosofía, JanusHub nace como un punto de convergencia tecnológica, donde tradición e innovación se combinan para impulsar a los equipos hacia un modelo de entrega continua, eficiente y de máxima calidad.",
+    "WHO_WE_ARE_TEXT": "Somos un equipo transversal de expertos DevOps especializado en habilitar, evolucionar y consolidar prácticas modernas de desarrollo y operación de software. Nos enfocamos en acelerar la entrega de valor mediante automatización, integración continua y despliegue continuo, garantizando calidad, seguridad y observabilidad en cada fase del ciclo de vida del software.",
+    "WHAT_WE_DO_DEVOPS": "DevOps transversal",
+    "WHAT_WE_DO_DEVOPS_ITEMS": {
+      "CULTURE": "Implantación de cultura DevOps y modelos operativos colaborativos",
+      "ADVICE": "Asesoría y soporte en buenas prácticas CI/CD"
+    },
+    "WHAT_WE_DO_CICD": "Integración Continua y Despliegue Continuo (CI/CD)",
+    "WHAT_WE_DO_CICD_ITEMS": {
+      "PIPELINES": "Creación, mantenimiento y optimización de pipelines CI/CD",
+      "AUTOMATION": "Automatización de compilación, pruebas y análisis de código",
+      "SONARQUBE": "Integración de herramientas de calidad como SonarQube"
+    },
+    "WHAT_WE_DO_ENVIRONMENTS": "Despliegue y operación multientorno",
+    "WHAT_WE_DO_ENVIRONMENTS_ITEMS": {
+      "CLOUD": "Cloud: OpenShift, Azure",
+      "ON_PREM": "On-Premise: Nginx, Apache, WebLogic"
+    },
+    "WHAT_WE_DO_DATABASES": "Arquitectura y gestión de bases de datos",
+    "WHAT_WE_DO_DATABASES_ITEMS": {
+      "SQL": "SQL: PostgreSQL, MySQL",
+      "NOSQL": "NoSQL: MongoDB"
+    },
+    "WHAT_WE_DO_GOVERNANCE": "Gobierno y estándares",
+    "WHAT_WE_DO_GOVERNANCE_ITEMS": {
+      "TEMPLATES": "Definición de plantillas, componentes reusables y buenas prácticas",
+      "TRAINING": "Capacitación, apoyo continuo y transferencia de conocimiento"
+    },
+    "MISSION_INTRO": "Facilitar que los equipos de desarrollo entreguen software:",
+    "MISSION_ITEMS": {
+      "FASTER": "Más rápido",
+      "QUALITY": "Con mayor calidad",
+      "STANDARDIZED": "Con procesos estandarizados y automatizados",
+      "TECH_AGNOSTIC": "Independientemente de la tecnología o plataforma"
+    },
+    "CONTACT_LIST": {
+      "RAUL": "Raúl Gallego García",
+      "RUBEN": "Rubén Planté Félix",
+      "FERNANDO": "Fernando Silvano Gil Pérez",
+      "BORJA": "Borja Lara Menéndez"
+    }
+  },
+  "USER_SECTION": {
+    "TITLE": "Sección usuario",
+    "LABEL_USER": "Usuario",
+    "LABEL_ROLE": "Rol"
+  },
+  "PROJECTS": {
+  "TITLE": "Proyectos",
+  "DESCRIPTION": "Listado de proyectos, cliente y estado.",
+  "CLIENT": "Cliente",
+  "STATUS": "Estado"
+},
+"PROCEDURES_SECTION": {
+  "TITLE": "Procedimientos",
+  "DESCRIPTION": "Gestión y documentación de procedimientos internos.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estado"
+},
+"PLANNING_SECTION": {
+  "TITLE": "Planificación",
+  "DESCRIPTION": "Planificación anual, responsables y estado de los planes.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estado"
+}
+,
+"LOGIN": {
+  "TITLE": "Iniciar sesión",
+  "USERNAME_LABEL": "Usuario",
+  "USERNAME_TITLE": "Usuario",
+  "PASSWORD_LABEL": "Contraseña",
+  "PASSWORD_TITLE": "Contraseña",
+  "BUTTON": "Acceder",
+  "ERROR": "Usuario o contraseña incorrectos"
+},
+"JENKINS": {
+  "TITLE": "Múltiples Jenkins",
+  "ADD_BUTTON": "+ Añadir Jenkins",
+  "DELETE_BUTTON_ON": "Cancelar eliminar",
+  "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
+  "POPUP_ADD_TITLE": "Añadir Jenkins",
+  "FIELD_NAME_LABEL": "Nombre:",
+  "FIELD_NAME_PLACEHOLDER": "Nombre del Jenkins",
+  "FIELD_URL_LABEL": "URL:",
+  "FIELD_URL_PLACEHOLDER": "https://...",
+  "CANCEL": "Cancelar",
+  "SAVE": "Guardar",
+  "DELETE_TITLE": "Eliminar Jenkins",
+  "DELETE_MESSAGE": "¿Estas seguro que quieres eliminar?",
+  "DELETE_ACTION": "Eliminar"
+},
+"INFRA": {
+  "TITLE": "Estado de Proyectos",
+  "STATUS_UP": "UP",
+  "STATUS_WARN": "WARN",
+  "STATUS_DOWN": "DOWN"
+},
+"TRAINING": {
+  "TITLE": "Formaciones",
+  "DESCRIPTION": "Recursos formativos y material de aprendizaje del equipo DevOps.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estado"
+},
+"DOCUMENTS": {
+  "TITLE": "Documentos",
+  "ADD_BUTTON": "Añadir documento",
+  "PROJECT_ID": "ID:",
+  "PROJECT_NAME": "Nombre:",
+  "ADD_POPUP_TITLE": "Añadir documento",
+  "FIELD_PROJECT_ID": "ID Proyecto:",
+  "FIELD_DOC_NAME": "Nombre del documento:",
+  "BROWSE": "Examinar",
+  "SAVE": "Guardar",
+  "CANCEL": "Cancelar",
+  "DELETE_DOC_TITLE": "Eliminar documento",
+  "DELETE_DOC_QUESTION": "¿Estás seguro que deseas eliminar el documento \"{{name}}\"?",
+  "DELETE_PROJECT_TITLE": "Eliminar proyecto",
+  "DELETE_PROJECT_QUESTION": "¿Estás seguro que deseas eliminar el proyecto \"{{name}}\" y sus documentos?",
+  "DELETE": "Eliminar"
+},
+"SEARCH": {
+  "PLACEHOLDER": "Escribe para buscar..."
+},
+"ERRORS": {
+  "TITLE": "Errores",
+  "DESCRIPTION": "Wiki de errores y soluciones del equipo DevOps.",
+  "RESOLVED": "Resuelto",
+  "CATEGORY": "Categoría",
+  "DESCRIPTION_LABEL": "Descripción",
+  "MARK_PENDING": "Marcar como pendiente",
+  "MARK_RESOLVED": "Marcar como resuelto"
+},
+"USERS": {
+  "TITLE": "Usuarios",
+  "TOGGLE_LIST_SHOW": "Listado de usuarios",
+  "TOGGLE_LIST_HIDE": "Ocultar listado de usuarios",
+  "ADD_BUTTON": "Añadir usuario",
+  "ADD_POPUP_TITLE": "Añadir nuevo usuario",
+  "FIELD_NAME": "Nombre:",
+  "FIELD_PASSWORD": "Contraseña:",
+  "FIELD_EMAIL": "Email:",
+  "ROLE_ADMIN": "Admin",
+  "ROLE_CONSULTOR": "Consultor",
+  "ROLE_DEVOPS": "DevOps",
+  "CANCEL": "Cancelar",
+  "SAVE": "Guardar"
+},
+
   "CLIP": {
     "HELLO": "Hola soy tu asistente IAnusHub, ¿cómo puedo ayudarte?"
   }

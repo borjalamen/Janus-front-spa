@@ -1,13 +1,11 @@
-<!-- Buscador -->
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container documents-wrapper">
-
   <div class="documents-header">
-    <h2>{{ title }}</h2>
+    <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
     <button mat-raised-button class="jenkins-add-btn" (click)="toggleAddPopup()">
       <mat-icon inline="true">add</mat-icon>
-      <span>Añadir documento</span>
+      <span>{{ 'DOCUMENTS.ADD_BUTTON' | translate }}</span>
     </button>
   </div>
 
@@ -17,14 +15,14 @@
 
       <div class="project-info">
         <div class="project-header-line">
-          <div class="project-id"><strong>ID:</strong> {{ project.projectId }}</div>
-          <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
-
-          <!-- Botó per eliminar TOT el projecte -->
-          
+          <div class="project-id">
+            <strong>{{ 'DOCUMENTS.PROJECT_ID' | translate }}</strong> {{ project.projectId }}
+          </div>
+          <div class="project-name">
+            <strong>{{ 'DOCUMENTS.PROJECT_NAME' | translate }}</strong> {{ project.name }}
+          </div>
         </div>
 
-        <!-- Documents del projecte -->
         <div *ngIf="project.documents?.length">
           <div *ngFor="let doc of project.documents" class="document-item">
             <div class="doc-left">
@@ -32,37 +30,45 @@
               <span>{{ doc.name }} - {{ doc.date }}</span>
             </div>
 
-  
-              <button mat-icon-button color="warn" class="delete-doc-btn"
-                  (click)="confirmDeleteDocument(project, doc)">
-                  <mat-icon>delete</mat-icon>
-              </button>
-
-            </div>
+            <button
+              mat-icon-button
+              color="warn"
+              class="delete-doc-btn"
+              (click)="confirmDeleteDocument(project, doc)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Popup afegir document -->
 <div class="add-document-backdrop" *ngIf="showAddPopup" (click)="toggleAddPopup()">
   <div class="add-document-popup" (click)="$event.stopPropagation()">
-    <h3>Añadir documento</h3>
+    <h3>{{ 'DOCUMENTS.ADD_POPUP_TITLE' | translate }}</h3>
 
     <div class="popup-field">
-      <label>ID Proyecto:</label>
-      <input type="number" [(ngModel)]="projectId" title="numero"/>
+      <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
+      <input type="number" [(ngModel)]="projectId" title="numero" />
     </div>
 
     <div class="popup-field">
-      <label>Nombre del documento:</label>
+      <label>{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}</label>
 
-      <input type="text" [(ngModel)]="name" style="width: 100%; margin-bottom: 4px;" title="text"/>
+      <input
+        type="text"
+        [(ngModel)]="name"
+        style="width: 100%; margin-bottom: 4px;"
+        title="text" />
 
-      <button mat-raised-button class="examinar-btn" type="button" (click)="fileInput.click()">
-        Examinar
+      <button
+        mat-raised-button
+        class="examinar-btn"
+        type="button"
+        (click)="fileInput.click()">
+        {{ 'DOCUMENTS.BROWSE' | translate }}
       </button>
 
       <input
@@ -73,36 +79,66 @@
     </div>
 
     <div class="popup-actions">
-      <button mat-raised-button class="examinar-btn" (click)="addDocument()">Guardar</button>
-      <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">Cancelar</button>
+      <button mat-raised-button class="examinar-btn" (click)="addDocument()">
+        {{ 'DOCUMENTS.SAVE' | translate }}
+      </button>
+      <button mat-raised-button class="examinar-btn" (click)="toggleAddPopup()">
+        {{ 'DOCUMENTS.CANCEL' | translate }}
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Popup eliminar DOCUMENT (si el vols mantenir) -->
-<div class="add-document-backdrop"
-     *ngIf="deleteDocPopupOpen && docToDelete"
-     (click)="cancelDeleteDocument()">
+<!-- Popup eliminar DOCUMENT -->
+<div
+  class="add-document-backdrop"
+  *ngIf="deleteDocPopupOpen && docToDelete"
+  (click)="cancelDeleteDocument()">
   <div class="add-document-popup" (click)="$event.stopPropagation()">
-    <h3>Eliminar documento</h3>
-    <p>¿Estás seguro que deseas eliminar el documento "{{ docToDelete.document.name }}"?</p>
+    <h3>{{ 'DOCUMENTS.DELETE_DOC_TITLE' | translate }}</h3>
+    <p>
+      {{
+        'DOCUMENTS.DELETE_DOC_QUESTION'
+          | translate:{ name: docToDelete.document.name }
+      }}
+    </p>
     <div class="popup-actions">
-      <button mat-raised-button class="guardar-btn" (click)="deleteDocument()">Eliminar</button>
-      <button mat-raised-button class="cancelar-btn" (click)="cancelDeleteDocument()">Cancelar</button>
+      <button mat-raised-button class="guardar-btn" (click)="deleteDocument()">
+        {{ 'DOCUMENTS.DELETE' | translate }}
+      </button>
+      <button
+        mat-raised-button
+        class="cancelar-btn"
+        (click)="cancelDeleteDocument()">
+        {{ 'DOCUMENTS.CANCEL' | translate }}
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Popup eliminar PROJECTE (NOU) -->
-<div class="add-document-backdrop"
-     *ngIf="deleteProjectPopupOpen && projectToDelete"
-     (click)="cancelDeleteProject()">
+<!-- Popup eliminar PROJECTE -->
+<div
+  class="add-document-backdrop"
+  *ngIf="deleteProjectPopupOpen && projectToDelete"
+  (click)="cancelDeleteProject()">
   <div class="add-document-popup" (click)="$event.stopPropagation()">
-    <h3>Eliminar proyecto</h3>
-    <p>¿Estás seguro que deseas eliminar el proyecto "{{ projectToDelete.name }}" y sus documentos?</p>
+    <h3>{{ 'DOCUMENTS.DELETE_PROJECT_TITLE' | translate }}</h3>
+    <p>
+      {{
+        'DOCUMENTS.DELETE_PROJECT_QUESTION'
+          | translate:{ name: projectToDelete.name }
+      }}
+    </p>
     <div class="popup-actions">
-      <button mat-raised-button class="guardar-btn" (click)="deleteProject()">Eliminar</button>
-      <button mat-raised-button class="cancelar-btn" (click)="cancelDeleteProject()">Cancelar</button>
+      <button mat-raised-button class="guardar-btn" (click)="deleteProject()">
+        {{ 'DOCUMENTS.DELETE' | translate }}
+      </button>
+      <button
+        mat-raised-button
+        class="cancelar-btn"
+        (click)="cancelDeleteProject()">
+        {{ 'DOCUMENTS.CANCEL' | translate }}
+      </button>
     </div>
   </div>
 </div>

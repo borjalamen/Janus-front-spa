@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 
 interface JenkinsItem {
   id?: string;      
@@ -18,34 +20,42 @@ interface JenkinsItem {
   templateUrl: './jenkins.html',
   styleUrls: ['./jenkins.css'],
 })
-export class Jenkins {
+export class Jenkins implements OnInit, OnDestroy {
 
   popupOpen = false;
-
   newName = '';
   newUrl = '';
-
   customJenkins: JenkinsItem[] = [];
-
   deletePopupOpen = false;
   jenkinsToDelete: JenkinsItem | null = null;
   deleteMode = false;
 
   private baseUrl = 'http://localhost:8080/api/jenkins';
 
-  // rol de l’usuari
-  userRole: string = '';
+  userRole: string = 'invitado';
+  private authSubscription?: Subscription;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-    const storedRole = localStorage.getItem('role'); 
-    this.userRole = storedRole ?? 'INVITADO';
+  ngOnInit() {
+    // Subscriu-te als canvis d'usuari
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      this.userRole = user?.rol || 'invitado';
+    });
 
     this.loadFromBackend();
   }
 
+  ngOnDestroy() {
+    // Neteja la subscripció
+    this.authSubscription?.unsubscribe();
+  }
+
   get canEditJenkins(): boolean {
-    return this.userRole !== 'INVITADO' && this.userRole !== 'CONSULTOR';
+    return this.userRole === 'admin' || this.userRole === 'devops';
   }
 
   // ========================

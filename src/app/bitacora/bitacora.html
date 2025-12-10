@@ -1,23 +1,27 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container">
-  <h2>{{ title }}</h2>
-  <p>Wiki de errores y soluciones del equipo DevOps.</p>
+  <h2>{{ 'ERRORS.TITLE' | translate }}</h2>
+  <p>{{ 'ERRORS.DESCRIPTION' | translate }}</p>
 
   <ul>
     <li *ngFor="let e of erroresFiltrados" class="error-item">
-
       <strong>{{ e.titulo }}</strong>
-      <span *ngIf="e.resuelto" class="check-green">✓ Resuelto</span>
+      <span *ngIf="e.resuelto" class="check-green">
+        ✓ {{ 'ERRORS.RESOLVED' | translate }}
+      </span>
       <br>
 
-      <strong>Categoría:</strong> {{ e.categoria }}<br>
-      <strong>Descripción:</strong> {{ e.descripcion }}<br>
+      <strong>{{ 'ERRORS.CATEGORY' | translate }}:</strong> {{ e.categoria }}<br>
+      <strong>{{ 'ERRORS.DESCRIPTION_LABEL' | translate }}:</strong> {{ e.descripcion }}<br>
 
       <button mat-raised-button (click)="toggleResuelto(e)" style="margin-top: 6px;">
-        {{ e.resuelto ? 'Marcar como pendiente' : 'Marcar como resuelto' }}
+        {{
+          e.resuelto
+            ? ('ERRORS.MARK_PENDING' | translate)
+            : ('ERRORS.MARK_RESOLVED' | translate)
+        }}
       </button>
-
     </li>
   </ul>
 </div>

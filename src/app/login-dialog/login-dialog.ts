@@ -6,10 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-
-
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -32,9 +31,11 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   password = '';
   error = '';
 
-
-
-  constructor(public dialogRef: MatDialogRef<LoginDialogComponent>, private http: HttpClient) { }
+  constructor(
+    public dialogRef: MatDialogRef<LoginDialogComponent>,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     document.body.style.overflow = "hidden";
@@ -49,46 +50,34 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   login() {
     this.error = '';
 
-    this.http.post<{ username: string; roles: string[] }>(
-      'http://localhost:8080/api/auth/signin',
-      {
-        username: this.username,
-        password: this.password
-      }
-    ).subscribe({
-      next: (user) => {
-        console.log('RESPUESTA BACK:', user);
+    // LOGIN LOCAL, SENSE BACKEND
+    if (this.username === 'admin' && this.password === 'admin') {
+      this.authService.login('admin', 'admin');
 
-        const rolesArray = user.roles || [];
-        const rolesStr = rolesArray.join(',');
+      this.dialogRef.close({
+        success: true,
+        username: 'admin',
+        rol: 'admin'
+      });
 
-        let rolFront: 'invitado' | 'consultor' | 'devops' | 'admin' = 'invitado';
+      this.router.navigate(['/bienvenida']);
+      return;
+    }
 
-        if (rolesStr.includes('ADMIN')) {
-          rolFront = 'admin';
-        } else if (rolesStr.includes('DEVOPS')) {
-          rolFront = 'devops';
-        } else if (rolesStr.includes('CONSULTOR')) {
-          rolFront = 'consultor';
-        }
+    if (this.username === 'user' && this.password === 'user') {
+      this.authService.login('user', 'consultor');
 
-        const loggedUser = {
-          username: user.username,
-          rol: rolFront
-        };
+      this.dialogRef.close({
+        success: true,
+        username: 'user',
+        rol: 'consultor'
+      });
 
-        localStorage.setItem('user', JSON.stringify(loggedUser));
+      this.router.navigate(['/bienvenida']);
+      return;
+    }
 
-        this.dialogRef.close({
-          success: true,
-          username: loggedUser.username,
-          rol: loggedUser.rol
-        });
-      },
-      error: () => {
-        this.error = 'Usuario o contraseña inválidos';
-      }
-    });
+    // Si no coincideix amb cap usuari local
+    this.error = 'Usuario o contraseña inválidos';
   }
-
 }

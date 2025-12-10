@@ -1,24 +1,18 @@
 <div class="buscador-container">
-
   <div class="buscador-wrapper">
     <mat-form-field appearance="outline" class="buscador-field">
-
       <input
         matInput
         [(ngModel)]="valorBusqueda"
         (input)="onBuscar()"
-        placeholder="Escribe para buscar..."
+        [placeholder]="'SEARCH.PLACEHOLDER' | translate"
       >
 
-      <!-- Botó de neteja (X) -->
       <button matSuffix mat-icon-button *ngIf="valorBusqueda" (click)="clearBusqueda()">
         <mat-icon>close</mat-icon>
       </button>
 
-      <!-- Icona lupa -->
       <mat-icon matSuffix class="icono-lupa">search</mat-icon>
-
     </mat-form-field>
   </div>
-
 </div>

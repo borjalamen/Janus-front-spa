@@ -1,11 +1,16 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 <div class="section-container">
-  <h2>{{ title }}</h2>
-  <p>Planificación anual, responsables y estado de los planes.</p>
+  <h2>{{ 'PLANNING_SECTION.TITLE' | translate }}</h2>
+  <p>{{ 'PLANNING_SECTION.DESCRIPTION' | translate }}</p>
 
   <div *ngFor="let plan of plansFiltrats" class="plan-item">
     <div class="plan-nom"><b>{{ plan.nom }}</b></div>
-    <div class="plan-responsable">Responsable: {{ plan.responsable }}</div>
-    <div class="plan-estat">Estado: {{ plan.estat }}</div>
+    <div class="plan-responsable">
+      {{ 'PLANNING_SECTION.RESPONSIBLE' | translate }}: {{ plan.responsable }}
+    </div>
+    <div class="plan-estat">
+      {{ 'PLANNING_SECTION.STATUS' | translate }}: {{ plan.estat }}
+    </div>
   </div>
 </div>

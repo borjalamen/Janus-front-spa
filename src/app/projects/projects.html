@@ -1,10 +1,16 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 <div class="section-container">
-  <h2>{{ title }}</h2>
-  <p>Listado de proyectos, cliente y estado.</p>
+  <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
+  <p>{{ 'PROJECTS.DESCRIPTION' | translate }}</p>
+
   <div *ngFor="let project of projectesFiltrats" class="project-item">
     <div class="project-nom"><b>{{ project.nom }}</b></div>
-    <div class="project-client">Cliente: {{ project.client }}</div>
-    <div class="project-estat">Estado: {{ project.estat }}</div>
+    <div class="project-client">
+      {{ 'PROJECTS.CLIENT' | translate }}: {{ project.client }}
+    </div>
+    <div class="project-estat">
+      {{ 'PROJECTS.STATUS' | translate }}: {{ project.estat }}
+    </div>
   </div>
 </div>

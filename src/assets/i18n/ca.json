@@ -17,17 +17,166 @@
   },
   "FOOTER": {
     "COPYRIGHT": "Copyright"
-  }
-  ,
+  },
   "HOME": {
     "TITLE": "Benvingut a JanusHUB.v0",
     "WHO_WE_ARE": "Qui som",
     "WHAT_WE_DO": "Què fem",
     "MISSION": "La nostra missió",
-    "CONTACT": "Contacte"
-  }
-  ,
+    "CONTACT": "Contacte",
+    "INTRO": "JanusHub rep el seu nom del déu romà Janus, simbolitzat per dues cares que miren al passat i al futur. Representa una visió estratègica capaç d'aprendre de l'experiència i, alhora, anticipar i construir el demà. Des d'aquesta filosofia, JanusHub neix com un punt de convergència tecnològica, on tradició i innovació es combinen per impulsar els equips cap a un model de lliurament continu, eficient i de màxima qualitat.",
+    "WHO_WE_ARE_TEXT": "Som un equip transversal d'experts DevOps especialitzat a habilitar, evolucionar i consolidar pràctiques modernes de desenvolupament i operació de programari. Ens centrem a accelerar el lliurament de valor mitjançant l'automatització, la integració contínua i el desplegament continu, garantint qualitat, seguretat i observabilitat en cada fase del cicle de vida del programari.",
+    "WHAT_WE_DO_DEVOPS": "DevOps transversal",
+    "WHAT_WE_DO_DEVOPS_ITEMS": {
+      "CULTURE": "Implantació de cultura DevOps i models operatius col·laboratius",
+      "ADVICE": "Assessorament i suport en bones pràctiques de CI/CD"
+    },
+    "WHAT_WE_DO_CICD": "Integració Contínua i Desplegament Continu (CI/CD)",
+    "WHAT_WE_DO_CICD_ITEMS": {
+      "PIPELINES": "Creació, manteniment i optimització de pipelines de CI/CD",
+      "AUTOMATION": "Automatització de la compilació, les proves i l'anàlisi de codi",
+      "SONARQUBE": "Integració d'eines de qualitat com SonarQube"
+    },
+    "WHAT_WE_DO_ENVIRONMENTS": "Desplegament i operació multientorn",
+    "WHAT_WE_DO_ENVIRONMENTS_ITEMS": {
+      "CLOUD": "Cloud: OpenShift, Azure",
+      "ON_PREM": "On-premise: Nginx, Apache, WebLogic"
+    },
+    "WHAT_WE_DO_DATABASES": "Arquitectura i gestió de bases de dades",
+    "WHAT_WE_DO_DATABASES_ITEMS": {
+      "SQL": "SQL: PostgreSQL, MySQL",
+      "NOSQL": "NoSQL: MongoDB"
+    },
+    "WHAT_WE_DO_GOVERNANCE": "Governança i estàndards",
+    "WHAT_WE_DO_GOVERNANCE_ITEMS": {
+      "TEMPLATES": "Definició de plantilles, components reutilitzables i bones pràctiques",
+      "TRAINING": "Formació, suport continu i transferència de coneixement"
+    },
+    "MISSION_INTRO": "Facilitar que els equips de desenvolupament entreguin programari:",
+    "MISSION_ITEMS": {
+      "FASTER": "Més ràpid",
+      "QUALITY": "Amb més qualitat",
+      "STANDARDIZED": "Amb processos estandarditzats i automatitzats",
+      "TECH_AGNOSTIC": "Independentment de la tecnologia o plataforma"
+    },
+    "CONTACT_LIST": {
+      "RAUL": "Raúl Gallego García",
+      "RUBEN": "Rubén Planté Félix",
+      "FERNANDO": "Fernando Silvano Gil Pérez",
+      "BORJA": "Borja Lara Menéndez"
+    }
+  },
+  "USER_SECTION": {
+    "TITLE": "Secció usuari",
+    "LABEL_USER": "Usuari",
+    "LABEL_ROLE": "Rol"
+  },
+  "PROJECTS": {
+  "TITLE": "Projectes",
+  "DESCRIPTION": "Llistat de projectes, client i estat.",
+  "CLIENT": "Client",
+  "STATUS": "Estat"
+}
+,
+"PROCEDURES_SECTION": {
+  "TITLE": "Procediments",
+  "DESCRIPTION": "Gestió i documentació de procediments interns.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estat"
+},
+"PLANNING_SECTION": {
+  "TITLE": "Planificació",
+  "DESCRIPTION": "Planificació anual, responsables i estat dels plans.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estat"
+}
+,
+"LOGIN": {
+  "TITLE": "Inicia sessió",
+  "USERNAME_LABEL": "Usuari",
+  "USERNAME_TITLE": "Usuari",
+  "PASSWORD_LABEL": "Contrasenya",
+  "PASSWORD_TITLE": "Contrasenya",
+  "BUTTON": "Accedir",
+  "ERROR": "Usuari o contrasenya incorrectes"
+},
+"JENKINS": {
+  "TITLE": "Múltiples Jenkins",
+  "ADD_BUTTON": "+ Afegir Jenkins",
+  "DELETE_BUTTON_ON": "Cancel·lar eliminació",
+  "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
+  "POPUP_ADD_TITLE": "Afegir Jenkins",
+  "FIELD_NAME_LABEL": "Nom:",
+  "FIELD_NAME_PLACEHOLDER": "Nom del Jenkins",
+  "FIELD_URL_LABEL": "URL:",
+  "FIELD_URL_PLACEHOLDER": "https://...",
+  "CANCEL": "Cancel·lar",
+  "SAVE": "Desar",
+  "DELETE_TITLE": "Eliminar Jenkins",
+  "DELETE_MESSAGE": "Estàs segur que vols eliminar?",
+  "DELETE_ACTION": "Eliminar"
+},
+"INFRA": {
+  "TITLE": "Estat de Projectes",
+  "STATUS_UP": "UP",
+  "STATUS_WARN": "WARN",
+  "STATUS_DOWN": "DOWN"
+},
+"TRAINING": {
+  "TITLE": "Formacions",
+  "DESCRIPTION": "Recursos formatius i material d'aprenentatge de l'equip DevOps.",
+  "RESPONSIBLE": "Responsable",
+  "STATUS": "Estat"
+},
+"DOCUMENTS": {
+  "TITLE": "Documents",
+  "ADD_BUTTON": "Afegir document",
+  "PROJECT_ID": "ID:",
+  "PROJECT_NAME": "Nom:",
+  "ADD_POPUP_TITLE": "Afegir document",
+  "FIELD_PROJECT_ID": "ID Projecte:",
+  "FIELD_DOC_NAME": "Nom del document:",
+  "BROWSE": "Examinar",
+  "SAVE": "Desar",
+  "CANCEL": "Cancel·lar",
+  "DELETE_DOC_TITLE": "Eliminar document",
+  "DELETE_DOC_QUESTION": "Estàs segur que vols eliminar el document \"{{name}}\"?",
+  "DELETE_PROJECT_TITLE": "Eliminar projecte",
+  "DELETE_PROJECT_QUESTION": "Estàs segur que vols eliminar el projecte \"{{name}}\" i els seus documents?",
+  "DELETE": "Eliminar"
+},
+"SEARCH": {
+  "PLACEHOLDER": "Escriu per buscar..."
+},
+"ERRORS": {
+  "TITLE": "Errors",
+  "DESCRIPTION": "Wiki d'errors i solucions de l'equip DevOps.",
+  "RESOLVED": "Resolt",
+  "CATEGORY": "Categoria",
+  "DESCRIPTION_LABEL": "Descripció",
+  "MARK_PENDING": "Marcar com a pendent",
+  "MARK_RESOLVED": "Marcar com a resolt"
+},
+"USERS": {
+  "TITLE": "Usuaris",
+  "TOGGLE_LIST_SHOW": "Llistat d'usuaris",
+  "TOGGLE_LIST_HIDE": "Amagar llistat d'usuaris",
+  "ADD_BUTTON": "Afegir usuari",
+  "ADD_POPUP_TITLE": "Afegir nou usuari",
+  "FIELD_NAME": "Nom:",
+  "FIELD_PASSWORD": "Contrasenya:",
+  "FIELD_EMAIL": "Correu electrònic:",
+  "ROLE_ADMIN": "Admin",
+  "ROLE_CONSULTOR": "Consultor",
+  "ROLE_DEVOPS": "DevOps",
+  "CANCEL": "Cancel·lar",
+  "SAVE": "Desar"
+},
+
+
+
+
   "CLIP": {
-    "HELLO": "Hola sóc el teu assistent IAnusHub, com et puc ajudar?"
+    "HELLO": "Hola, sóc el teu assistent IAnusHub, en què et puc ajudar?"
   }
 }

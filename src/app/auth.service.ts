@@ -1,26 +1,55 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
-interface LoginRequest {
+export interface User {
   username: string;
-  password: string;
-}
-
-interface LoginResponse {
-  username: string;
-  roles: Rol;   // o string si al back ve com cadena
+  rol: Rol;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth/signin';
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor() {
+    // Carregar usuari de localStorage al iniciar
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        this.currentUserSubject.next(JSON.parse(userStr));
+      } catch (e) {
+        console.error('Error carregant usuari', e);
+      }
+    }
+  }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(this.apiUrl, credentials);
+  login(username: string, rol: Rol) {
+    const user: User = { username, rol };
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSubject.next(null);
+  }
+
+  get currentUserValue(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  get isAdmin(): boolean {
+    return this.currentUserValue?.rol === 'admin';
+  }
+
+  get isDevOps(): boolean {
+    return this.currentUserValue?.rol === 'devops';
+  }
+
+  get canEdit(): boolean {
+    const rol = this.currentUserValue?.rol;
+    return rol === 'admin' || rol === 'devops';
   }
 }

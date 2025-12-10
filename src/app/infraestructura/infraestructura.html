@@ -1,27 +1,33 @@
 <section class="infra-section">
-	<div class="infra-container">
-		<div class="infra-header">
-			<h2 class="infra-title">Estado de Proyectos</h2>
-		</div>
+  <div class="infra-container">
+    <div class="infra-header">
+      <h2 class="infra-title">{{ 'INFRA.TITLE' | translate }}</h2>
+    </div>
 
-		<div class="infra-grid">
-			<div class="infra-card" *ngFor="let p of projects" (click)="openProject(p)">
-				<div class="infra-top">
-					<div class="project-name"><strong>{{ p.name }}</strong></div>
-					<div class="traffic-light" [ngClass]="{'up': p.status === 'UP', 'warn': p.status === 'WARN', 'down': p.status === 'DOWN'}">
-						<svg viewBox="0 0 64 160" class="tl-svg" aria-hidden="true">
-							<rect x="4" y="4" width="56" height="152" rx="10" fill="#111" stroke="#333" stroke-width="2"></rect>
-							<circle cx="32" cy="40" r="14" class="light red" />
-							<circle cx="32" cy="80" r="14" class="light yellow" />
-							<circle cx="32" cy="120" r="14" class="light green" />
-						</svg>
-					</div>
-				</div>
+    <div class="infra-grid">
+      <div class="infra-card" *ngFor="let p of projects" (click)="openProject(p)">
+        <div class="infra-top">
+          <div class="project-name"><strong>{{ p.name }}</strong></div>
+          <div
+            class="traffic-light"
+            [ngClass]="{
+              'up': p.status === 'UP',
+              'warn': p.status === 'WARN',
+              'down': p.status === 'DOWN'
+            }">
+            <svg viewBox="0 0 64 160" class="tl-svg" aria-hidden="true">
+              <rect x="4" y="4" width="56" height="152" rx="10" fill="#111" stroke="#333" stroke-width="2"></rect>
+              <circle cx="32" cy="40" r="14" class="light red" />
+              <circle cx="32" cy="80" r="14" class="light yellow" />
+              <circle cx="32" cy="120" r="14" class="light green" />
+            </svg>
+          </div>
+        </div>
 
-				<div class="infra-meta">
-					<span class="status-label">{{ p.status }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="infra-meta">
+          <span class="status-label">{{ p.status }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

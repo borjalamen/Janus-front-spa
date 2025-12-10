@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-formacion',
   templateUrl: './formacion.html',
   styleUrls: ['./formacion.css'],
-  imports: [CommonModule, BuscadorComponent],
+  standalone: true,
+  imports: [CommonModule, BuscadorComponent, TranslateModule],
 })
 export class FormacionComponent {
   title = 'Formación';

@@ -1,17 +1,20 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container documents-wrapper">
-
   <div class="documents-header">
-    <h2>{{ title }}</h2>
+    <h2>{{ 'USERS.TITLE' | translate }}</h2>
     <div style="display: flex; gap: 12px;">
       <button class="jenkins-add-btn" (click)="toggleLlista()">
-        {{ mostrarLlista ? 'Ocultar listado de usuarios' : 'Listado de usuarios' }}
+        {{
+          mostrarLlista
+            ? ('USERS.TOGGLE_LIST_HIDE' | translate)
+            : ('USERS.TOGGLE_LIST_SHOW' | translate)
+        }}
       </button>
 
       <button class="jenkins-add-btn" (click)="obrirPopup()">
         <mat-icon inline="true">add</mat-icon>
-        <span>Añadir usuario</span>
+        <span>{{ 'USERS.ADD_BUTTON' | translate }}</span>
       </button>
     </div>
   </div>
@@ -27,44 +30,49 @@
       <div class="usuari-email">{{ usuari.email }}</div>
     </div>
   </div>
-
 </div>
 
 <div class="popup-fons" *ngIf="mostrarPopup">
   <div class="popup-container">
-    <h3>Añadir nuevo usuario</h3>
+    <h3>{{ 'USERS.ADD_POPUP_TITLE' | translate }}</h3>
 
     <div class="form-field">
-      <label>Nombre:</label>
+      <label>{{ 'USERS.FIELD_NAME' | translate }}</label>
       <input type="text" [(ngModel)]="nouUsuari.nombre" />
     </div>
 
     <div class="form-field">
-      <label>Contraseña:</label>
+      <label>{{ 'USERS.FIELD_PASSWORD' | translate }}</label>
       <input type="password" [(ngModel)]="nouUsuari.contrasenya" />
     </div>
 
     <div class="form-field">
-      <label>email:</label>
+      <label>{{ 'USERS.FIELD_EMAIL' | translate }}</label>
       <input type="email" [(ngModel)]="nouUsuari.email" />
     </div>
 
-
     <div class="form-field">
       <label>
-        <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin" /> Admin
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin" />
+        {{ 'USERS.ROLE_ADMIN' | translate }}
       </label>
       <label>
-        <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor" /> Consultor
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor" />
+        {{ 'USERS.ROLE_CONSULTOR' | translate }}
       </label>
       <label>
-        <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops" /> DevOps
+        <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops" />
+        {{ 'USERS.ROLE_DEVOPS' | translate }}
       </label>
     </div>
 
     <div class="popup-actions" style="margin-top: 12px;">
-      <button class="jenkins-add-btn cancel-btn" (click)="tancarPopup()">Cancelar</button>
-      <button class="jenkins-add-btn" (click)="guardarUsuari()">Guardar</button>
+      <button class="jenkins-add-btn cancel-btn" (click)="tancarPopup()">
+        {{ 'USERS.CANCEL' | translate }}
+      </button>
+      <button class="jenkins-add-btn" (click)="guardarUsuari()">
+        {{ 'USERS.SAVE' | translate }}
+      </button>
     </div>
   </div>
 </div>

@@ -17,17 +17,163 @@
   },
   "FOOTER": {
     "COPYRIGHT": "Copyright"
-  }
-  ,
+  },
+
   "HOME": {
     "TITLE": "Welcome to JanusHUB.v0",
     "WHO_WE_ARE": "Who we are",
     "WHAT_WE_DO": "What we do",
     "MISSION": "Our mission",
-    "CONTACT": "Contact"
-  }
-  ,
+    "CONTACT": "Contact",
+    "INTRO": "JanusHub is named after the Roman god Janus, symbolized by two faces looking to the past and the future. It represents a strategic vision that learns from experience while anticipating and building tomorrow. From this philosophy, JanusHub is born as a technological convergence point where tradition and innovation combine to drive teams towards a continuous, efficient and high‑quality delivery model.",
+    "WHO_WE_ARE_TEXT": "We are a cross-functional team of DevOps experts focused on enabling, evolving and consolidating modern software development and operations practices. We focus on accelerating value delivery through automation, continuous integration and continuous deployment, ensuring quality, security and observability at every stage of the software lifecycle.",
+    "WHAT_WE_DO_DEVOPS": "Cross-cutting DevOps",
+    "WHAT_WE_DO_DEVOPS_ITEMS": {
+      "CULTURE": "Implementation of DevOps culture and collaborative operating models",
+      "ADVICE": "Consulting and support on CI/CD best practices"
+    },
+    "WHAT_WE_DO_CICD": "Continuous Integration and Continuous Deployment (CI/CD)",
+    "WHAT_WE_DO_CICD_ITEMS": {
+      "PIPELINES": "Creation, maintenance and optimization of CI/CD pipelines",
+      "AUTOMATION": "Automation of build, testing and code analysis",
+      "SONARQUBE": "Integration of quality tools such as SonarQube"
+    },
+    "WHAT_WE_DO_ENVIRONMENTS": "Multi-environment deployment and operations",
+    "WHAT_WE_DO_ENVIRONMENTS_ITEMS": {
+      "CLOUD": "Cloud: OpenShift, Azure",
+      "ON_PREM": "On-premise: Nginx, Apache, WebLogic"
+    },
+    "WHAT_WE_DO_DATABASES": "Database architecture and management",
+    "WHAT_WE_DO_DATABASES_ITEMS": {
+      "SQL": "SQL: PostgreSQL, MySQL",
+      "NOSQL": "NoSQL: MongoDB"
+    },
+    "WHAT_WE_DO_GOVERNANCE": "Governance and standards",
+    "WHAT_WE_DO_GOVERNANCE_ITEMS": {
+      "TEMPLATES": "Definition of templates, reusable components and best practices",
+      "TRAINING": "Training, continuous support and knowledge transfer"
+    },
+    "MISSION_INTRO": "Enable development teams to deliver software:",
+    "MISSION_ITEMS": {
+      "FASTER": "Faster",
+      "QUALITY": "With higher quality",
+      "STANDARDIZED": "With standardized and automated processes",
+      "TECH_AGNOSTIC": "Regardless of technology or platform"
+    },
+    "CONTACT_LIST": {
+      "RAUL": "Raúl Gallego García",
+      "RUBEN": "Rubén Planté Félix",
+      "FERNANDO": "Fernando Silvano Gil Pérez",
+      "BORJA": "Borja Lara Menéndez"
+    }
+  },
+  "USER_SECTION": {
+  "TITLE": "User section",
+  "LABEL_USER": "User",
+  "LABEL_ROLE": "Role"
+},
+"PROJECTS": {
+  "TITLE": "Projects",
+  "DESCRIPTION": "List of projects, client and status.",
+  "CLIENT": "Client",
+  "STATUS": "Status"
+},
+"PROCEDURES_SECTION": {
+  "TITLE": "Procedures",
+  "DESCRIPTION": "Management and documentation of internal procedures.",
+  "RESPONSIBLE": "Owner",
+  "STATUS": "Status"
+},
+"PLANNING_SECTION": {
+  "TITLE": "Planning",
+  "DESCRIPTION": "Annual planning, owners and status of the plans.",
+  "RESPONSIBLE": "Owner",
+  "STATUS": "Status"
+}
+,
+"LOGIN": {
+  "TITLE": "Sign in",
+  "USERNAME_LABEL": "Username",
+  "USERNAME_TITLE": "Username",
+  "PASSWORD_LABEL": "Password",
+  "PASSWORD_TITLE": "Password",
+  "BUTTON": "Log in",
+  "ERROR": "Invalid username or password"
+},
+"JENKINS": {
+  "TITLE": "Multiple Jenkins",
+  "ADD_BUTTON": "+ Add Jenkins",
+  "DELETE_BUTTON_ON": "Cancel delete",
+  "DELETE_BUTTON_OFF": "🗑️ Delete Jenkins",
+  "POPUP_ADD_TITLE": "Add Jenkins",
+  "FIELD_NAME_LABEL": "Name:",
+  "FIELD_NAME_PLACEHOLDER": "Jenkins name",
+  "FIELD_URL_LABEL": "URL:",
+  "FIELD_URL_PLACEHOLDER": "https://...",
+  "CANCEL": "Cancel",
+  "SAVE": "Save",
+  "DELETE_TITLE": "Delete Jenkins",
+  "DELETE_MESSAGE": "Are you sure you want to delete?",
+  "DELETE_ACTION": "Delete"
+},
+"INFRA": {
+  "TITLE": "Project Status",
+  "STATUS_UP": "UP",
+  "STATUS_WARN": "WARN",
+  "STATUS_DOWN": "DOWN"
+},
+"TRAINING": {
+  "TITLE": "Training",
+  "DESCRIPTION": "Training resources and learning material for the DevOps team.",
+  "RESPONSIBLE": "Owner",
+  "STATUS": "Status"
+},
+"DOCUMENTS": {
+  "TITLE": "Documents",
+  "ADD_BUTTON": "Add document",
+  "PROJECT_ID": "ID:",
+  "PROJECT_NAME": "Name:",
+  "ADD_POPUP_TITLE": "Add document",
+  "FIELD_PROJECT_ID": "Project ID:",
+  "FIELD_DOC_NAME": "Document name:",
+  "BROWSE": "Browse",
+  "SAVE": "Save",
+  "CANCEL": "Cancel",
+  "DELETE_DOC_TITLE": "Delete document",
+  "DELETE_DOC_QUESTION": "Are you sure you want to delete the document \"{{name}}\"?",
+  "DELETE_PROJECT_TITLE": "Delete project",
+  "DELETE_PROJECT_QUESTION": "Are you sure you want to delete the project \"{{name}}\" and its documents?",
+  "DELETE": "Delete"
+},
+"SEARCH": {
+  "PLACEHOLDER": "Type to search..."
+},
+"ERRORS": {
+  "TITLE": "Errors",
+  "DESCRIPTION": "Error and solution wiki for the DevOps team.",
+  "RESOLVED": "Resolved",
+  "CATEGORY": "Category",
+  "DESCRIPTION_LABEL": "Description",
+  "MARK_PENDING": "Mark as pending",
+  "MARK_RESOLVED": "Mark as resolved"
+},
+"USERS": {
+  "TITLE": "Users",
+  "TOGGLE_LIST_SHOW": "User list",
+  "TOGGLE_LIST_HIDE": "Hide user list",
+  "ADD_BUTTON": "Add user",
+  "ADD_POPUP_TITLE": "Add new user",
+  "FIELD_NAME": "Name:",
+  "FIELD_PASSWORD": "Password:",
+  "FIELD_EMAIL": "Email:",
+  "ROLE_ADMIN": "Admin",
+  "ROLE_CONSULTOR": "Consultant",
+  "ROLE_DEVOPS": "DevOps",
+  "CANCEL": "Cancel",
+  "SAVE": "Save"
+},
+
   "CLIP": {
-    "HELLO": "Hello, I'm your IAnusHub assistant. How can I help you?"
+    "HELLO": "Hi, I am your IAnusHub assistant, how can I help you?"
   }
 }
