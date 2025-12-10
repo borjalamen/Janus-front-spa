@@ -142,12 +142,12 @@ export class AppComponent implements OnDestroy {
   }
 
   logout() {
-    this.authService.logout();  // ⬅ Usa el servei
+    this.authService.logout();  
 
     this.showUserMenu = false;
     this.userMenuOpen = false;
 
-    this.router.navigate(['/bienvenida']);
+    this.router.navigate(['/home']);
   }
 
   canShow(menuItem: string): boolean {

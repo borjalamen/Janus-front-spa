@@ -6,9 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService, Rol } from '../auth.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -33,51 +33,56 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
-    private router: Router,
+    private http: HttpClient,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
 
   ngOnDestroy(): void {
-    document.body.style.overflow = "";
-    document.documentElement.style.overflow = "";
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }
 
   login() {
     this.error = '';
 
-    // LOGIN LOCAL, SENSE BACKEND
-    if (this.username === 'admin' && this.password === 'admin') {
-      this.authService.login('admin', 'admin');
+    this.http.post<{ username: string; roles: string[] }>(
+      'http://localhost:8080/api/auth/signin',
+      {
+        username: this.username,
+        password: this.password
+      }
+    ).subscribe({
+      next: (user) => {
+        const rolesArray = user.roles || [];
+        const rolesStr = rolesArray.join(',');
 
-      this.dialogRef.close({
-        success: true,
-        username: 'admin',
-        rol: 'admin'
-      });
+        let rolFront: Rol = 'invitado';
+        if (rolesStr.includes('ADMIN')) {
+          rolFront = 'admin';
+        } else if (rolesStr.includes('DEVOPS')) {
+          rolFront = 'devops';
+        } else if (rolesStr.includes('CONSULTOR')) {
+          rolFront = 'consultor';
+        }
 
-      this.router.navigate(['/bienvenida']);
-      return;
-    }
+        // Actualitza servei + localStorage
+        this.authService.login(user.username, rolFront);
 
-    if (this.username === 'user' && this.password === 'user') {
-      this.authService.login('user', 'consultor');
-
-      this.dialogRef.close({
-        success: true,
-        username: 'user',
-        rol: 'consultor'
-      });
-
-      this.router.navigate(['/bienvenida']);
-      return;
-    }
-
-    // Si no coincideix amb cap usuari local
-    this.error = 'Usuario o contraseña inválidos';
+        // Tanca el diàleg informant del resultat
+        this.dialogRef.close({
+          success: true,
+          username: user.username,
+          rol: rolFront
+        });
+      },
+      error: () => {
+        this.error = 'Usuario o contraseña inválidos';
+      }
+    });
   }
 }

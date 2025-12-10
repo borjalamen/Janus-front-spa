@@ -33,125 +33,16 @@
   </div>
 
   <div class="jenkins-grid">
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsOBQUAD/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>OBQUAD</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk OBQUAD">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_ERVC/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>ERVC</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk ERVC">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_EDERAN/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>EDERAN</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_IPSOPG/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>IPSOPG</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_EDERAN/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>EDERAN</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_IPSOPG/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>IPSOPG</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_EDERAN/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>EDERAN</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_IPSOPG/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>IPSOPG</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_EDERAN/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>EDERAN</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_IPSOPG/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>IPSOPG</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_EDERAN/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>EDERAN</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk EDERAN">
-    </a>
-
-    <a
-      class="jenkins-card"
-      href="https://jenkins.indra.es/jenkinsJK_IPSOPG/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <div class="jenkins-name"><strong>IPSOPG</strong></div>
-      <img src="https://imgur.com/69aimFa.png" alt="jenk IPSOPG">
-    </a>
-
     <div
       class="jenkins-card"
       *ngFor="let jk of customJenkins"
       [ngClass]="{ 'selected': jk.selected }"
       (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
-
       <div class="jenkins-info">
+        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
         <a [href]="jk.url" target="_blank" rel="noopener noreferrer">
           <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
         </a>
-        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
       </div>
 
       <div
@@ -170,6 +61,7 @@
 
       <label>{{ 'JENKINS.FIELD_NAME_LABEL' | translate }}</label>
       <input
+        title="text"
         type="text"
         [(ngModel)]="newName"
         class="popup-input"
@@ -177,6 +69,7 @@
 
       <label>{{ 'JENKINS.FIELD_URL_LABEL' | translate }}</label>
       <input
+        title="text"
         type="text"
         [(ngModel)]="newUrl"
         class="popup-input"

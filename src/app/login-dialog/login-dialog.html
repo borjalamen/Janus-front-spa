@@ -4,7 +4,7 @@
   <form>
     <mat-form-field appearance="fill">
       <mat-label>{{ 'LOGIN.USERNAME_LABEL' | translate }}</mat-label>
-      <input
+      <input title="username"
         matInput
         [(ngModel)]="username"
         name="username"
@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>{{ 'LOGIN.PASSWORD_LABEL' | translate }}</mat-label>
-      <input
+      <input title="password"
         matInput
         type="password"
         [(ngModel)]="password"

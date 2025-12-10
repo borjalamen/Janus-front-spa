@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 export type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -11,10 +12,10 @@ export interface User {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
+  public currentUser$: Observable<User | null> =
+    this.currentUserSubject.asObservable();
 
-  constructor() {
-    // Carregar usuari de localStorage al iniciar
+  constructor(private router: Router) {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
@@ -34,6 +35,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/home']);
   }
 
   get currentUserValue(): User | null {
