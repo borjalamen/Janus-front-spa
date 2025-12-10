@@ -186,38 +186,35 @@ body {
 .document-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 10px 14px;
   margin-left: 28px;
-  color: #E0E0E0;
+  margin-bottom: 10px;
+  background: #1a1c20;
+  border-radius: 6px;
+  border: 1px solid #333;
 }
 
-input {
-  color: black;
-}
-
-.add-document-popup input {
-  color: black !important;
-  background: white !important;
-}
-.examinar-btn .mdc-button__label,
-.popup-btn .mdc-button__label {
-  color: #FBC02D !important;
+.doc-left {
+margin-right: 16px;
+display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .delete-doc-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 999px;
   border: 2px solid #E53935;
-  background: transparent;
   color: #E53935;
-  font-weight: 600;
-  font-size: 0.85rem;
+  border-radius: 50%;
+  padding: 4px;
+  background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  height: 28px;             
+  width: 28px;
 }
 
 .delete-doc-btn:hover {
@@ -228,9 +225,8 @@ input {
 }
 
 .delete-doc-btn mat-icon {
-  font-size: 16px;
+  font-size: 18px;
 }
-
 .delete-doc-backdrop {
   position: fixed;
   inset: 0;

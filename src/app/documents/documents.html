@@ -21,17 +21,24 @@
           <div class="project-name"><strong>Nombre:</strong> {{ project.name }}</div>
 
           <!-- Botó per eliminar TOT el projecte -->
-          <button mat-icon-button color="warn" (click)="confirmDeleteProject(project)">
-            <mat-icon>delete</mat-icon>
-          </button>
+          
         </div>
 
         <!-- Documents del projecte -->
         <div *ngIf="project.documents?.length">
           <div *ngFor="let doc of project.documents" class="document-item">
-            <mat-icon>description</mat-icon> {{ doc.name }} - {{ doc.date }}
-            
-          </div>
+            <div class="doc-left">
+              <mat-icon>description</mat-icon>
+              <span>{{ doc.name }} - {{ doc.date }}</span>
+            </div>
+
+  
+              <button mat-icon-button color="warn" class="delete-doc-btn"
+                  (click)="confirmDeleteDocument(project, doc)">
+                  <mat-icon>delete</mat-icon>
+              </button>
+
+            </div>
         </div>
       </div>
     </div>
