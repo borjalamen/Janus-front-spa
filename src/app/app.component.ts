@@ -20,7 +20,6 @@ import {
 } from '@angular/router';
 
 import { LoginDialogComponent } from './login-dialog/login-dialog';
-import { UsuarioComponent } from './usuari/usuari';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { HostListener } from '@angular/core';
@@ -41,9 +40,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     MatListModule,
     RouterOutlet,
     RouterLink,
-    RouterLinkWithHref,
-    LoginDialogComponent,
-    UsuarioComponent
+    RouterLinkWithHref
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
