@@ -105,14 +105,18 @@ p {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #1e84a3;
-  background: white;
+  background: rgb(0, 0, 0);
   color: black; /* text negre */
   outline: none;
   font-size: 1em;
 }
 
-.form-field input[type="checkbox"] {
+.form-field input[type="email"] {
+  padding: 8px;
+  border-radius: 6px;
   margin-right: 6px;
+  background: rgb(0, 0, 0);
+  border: 1px solid #1e84a3;
 }
 
 /* Botons del pop-up */

@@ -61,25 +61,49 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
+  animation: fadeBackdrop 0.25s ease-out;
+}
+@keyframes fadeBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Popup afegir document */
 .add-document-popup {
-  background: #16181c;
+  background: rgba(22, 24, 28, 0.92);
+  backdrop-filter: blur(6px);
   border-radius: 10px;
+  border: 2px solid #FBC02D;
   box-shadow: 0 2px 15px #E5393530;
   padding: 24px;
   width: 320px;
-  border: 3px solid #FBC02D;
+  box-shadow: 0 4px 28px #000a;
+  animation: fadePopup 0.25s ease-out;
+  color: #E0E0E0;
+}
+
+@keyframes fadePopup {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .add-document-popup h3 {
   color: #FBC02D;
-  margin-top: 0;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
 }
 
 .popup-field {
@@ -91,6 +115,7 @@ body {
 .popup-field label {
   margin-bottom: 4px;
   color: #FBC02D;
+  font-weight: 600;
 }
 
 .popup-field input {
@@ -100,7 +125,7 @@ body {
   outline: none;
   font-size: 1em;
   color: #0F1115;
-  background: #fff;
+  background: #000000;
 }
 
 /* Botons del popup: Examinar / Guardar / Cancel·lar */
