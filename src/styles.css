@@ -42,3 +42,33 @@ mat-nav-list *,
 .mat-list-item * {
   color: inherit !important;
 }
+/* ----- DESPLEGABLE (que ja et funciona i t’agrada) ----- */
+
+.lang-panel.mat-mdc-select-panel {
+  background-color: #021920;
+  color: #f5f5f5;
+  border-radius: 10px;
+  border: 1px solid #00a7c4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  padding: 4px 0;
+}
+
+.lang-panel .mat-mdc-option {
+  font-weight: 500;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.lang-panel .mat-mdc-option:last-child {
+  border-bottom: none;
+}
+
+.lang-panel .mat-mdc-option.mdc-list-item--selected,
+.lang-panel .mat-mdc-option.mdc-list-item--activated {
+  background-color: rgba(0, 167, 196, 0.32);
+}
+
+.lang-panel .mat-mdc-option:hover {
+  background-color: rgba(255, 230, 109, 0.12);
+}

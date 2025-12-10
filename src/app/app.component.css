@@ -376,3 +376,31 @@ body {
   padding: 8px;
   font-size: 0.98rem;
 }
+
+/* Contenidor del form-field */
+.lang-field {
+  min-width: 100px;
+}
+
+/* Forma de pastilla, sense línia inferior */
+.lang-field .mat-mdc-text-field-wrapper.mdc-text-field--filled {
+  background-color: #006f80;
+  border-radius: 999px;
+  padding: 2px 14px;
+  box-shadow: 0 0 0 1px #ffe66d;
+}
+
+/* Amagar la línia inferior típica */
+.lang-field .mdc-line-ripple::before,
+.lang-field .mdc-line-ripple::after {
+  border-bottom-width: 0;
+}
+
+/* Text i fletxa */
+.lang-field .mat-mdc-select-value,
+.lang-field .mat-mdc-select-arrow {
+  color: #ffe66d;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
