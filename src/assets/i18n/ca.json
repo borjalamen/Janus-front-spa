@@ -26,4 +26,8 @@
     "MISSION": "La nostra missió",
     "CONTACT": "Contacte"
   }
+  ,
+  "CLIP": {
+    "HELLO": "Hola sóc el teu assistent IAnusHub, com et puc ajudar?"
+  }
 }

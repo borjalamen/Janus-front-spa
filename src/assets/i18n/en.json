@@ -26,4 +26,8 @@
     "MISSION": "Our mission",
     "CONTACT": "Contact"
   }
+  ,
+  "CLIP": {
+    "HELLO": "Hello, I'm your IAnusHub assistant. How can I help you?"
+  }
 }
