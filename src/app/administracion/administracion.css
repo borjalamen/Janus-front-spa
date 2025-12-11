@@ -114,6 +114,7 @@ p {
 .form-field input[type="email"] {
   padding: 8px;
   border-radius: 6px;
+  
   margin-right: 6px;
   background: rgb(0, 0, 0);
   border: 1px solid #1e84a3;
@@ -157,7 +158,7 @@ p {
 
 .cancelar-btn:hover {
   background: #E53935 !important;
-  color: #0F1115 !important;
+  color: #1e84a3 !important;
 }
 
 .usuari-item {
