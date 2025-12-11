@@ -4,7 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build"
+    "start:local": "ng serve --configuration=local",
+    "start:dev": "ng serve --configuration=development",
+    "build": "ng build",
+    "build:dev": "ng build --configuration=development"
   },
   "dependencies": {
     "@angular/animations": "^20.0.0",
