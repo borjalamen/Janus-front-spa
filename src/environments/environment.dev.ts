@@ -1,10 +1,10 @@
 // Environment configuration for DEV environment.
 export const environment = {
-  production: false,
   name: 'dev',
+  production: false,
+  local: false,
   // API base URL for dev environment. Usando el host del route en service.yaml.
-  // Añadimos `/api` para llegar al endpoint real del backend (evita recibir el index.html).
-  apiBaseUrl: 'https://janushub-dev.apps-crc.testing/api',
-  // Habilitar o deshabilitar flags específicas para dev
-  featureFlagX: true
+  apiBaseUrl: 'https://janushub-dev.apps-crc.testing',
+  // Path prefix for API on the host (kept separate to avoid double slashes)
+  api: '/api',
 };

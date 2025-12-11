@@ -107,9 +107,10 @@ export class AppComponent implements OnDestroy {
   }
 
   loadVersion() {
-    console.log('CRIDANT /api/config/all ->', environment.apiBaseUrl + '/config/all');
+    const apiBase = `${environment.apiBaseUrl.replace(/\/$/, '')}${environment.api ?? ''}`;
+    console.log('CRIDANT /api/config/all ->', apiBase + '/config/all');
 
-    this.http.get<any>(`${environment.apiBaseUrl.replace(/\/$/, '')}/config/all`)
+    this.http.get<any>(`${apiBase}/config/all`)
       .subscribe({
         next: (data) => {
           console.log('RESPUESTA VERSION:', data);
