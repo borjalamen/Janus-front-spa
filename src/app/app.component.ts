@@ -19,6 +19,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { HostListener } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Subscription } from 'rxjs';
+import { environment } from '../environments/environment';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -106,9 +107,9 @@ export class AppComponent implements OnDestroy {
   }
 
   loadVersion() {
-    console.log('CRIDANT /api/config/all');
+    console.log('CRIDANT /api/config/all ->', environment.apiBaseUrl + '/config/all');
 
-    this.http.get<any>('http://localhost:8080/api/config/all')
+    this.http.get<any>(`${environment.apiBaseUrl.replace(/\/$/, '')}/config/all`)
       .subscribe({
         next: (data) => {
           console.log('RESPUESTA VERSION:', data);
