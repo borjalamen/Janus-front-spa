@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, Rol } from '../auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login-dialog',
@@ -51,7 +52,7 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
     this.error = '';
 
     this.http.post<{ username: string; roles: string[] }>(
-      'http://localhost:8080/api/auth/signin',
+      `${environment.baseUrl}auth/signin`,
       {
         username: this.username,
         password: this.password

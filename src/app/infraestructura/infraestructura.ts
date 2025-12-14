@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { TranslateModule } from '@ngx-translate/core';
 
 interface ProjectItem {
@@ -20,7 +21,7 @@ interface ProjectItem {
 export class Infraestructura {
 
   projects: ProjectItem[] = [];
-  private baseUrl = 'http://localhost:8080/api/infra';
+  private baseUrl = `${environment.baseUrl}infra`;
 
   constructor(private http: HttpClient) {
     this.loadProjects();

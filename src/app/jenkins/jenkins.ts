@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth.service';
+import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
 
 interface JenkinsItem {
@@ -30,7 +31,7 @@ export class Jenkins implements OnInit, OnDestroy {
   jenkinsToDelete: JenkinsItem | null = null;
   deleteMode = false;
 
-  private baseUrl = 'http://localhost:8080/api/jenkins';
+  private baseUrl = `${environment.baseUrl}jenkins`;
 
   userRole: string = 'invitado';
   private authSubscription?: Subscription;
