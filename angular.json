@@ -22,6 +22,18 @@
                 }
               ]
             },
+            "loc": {
+              "extractLicenses": false,
+              "namedChunks": true,
+              "optimization": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.loc.ts"
+                }
+              ]
+            },
             "production": {
               "aot": true,
               "extractLicenses": true,
@@ -56,6 +68,9 @@
           "configurations": {
             "development": {
               "buildTarget": "demo:build:development"
+            },
+            "loc": {
+              "buildTarget": "demo:build:loc"
             },
             "production": {
               "buildTarget": "demo:build:production"

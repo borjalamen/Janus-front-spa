@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:dev": "ng serve --configuration=development",
+    "start:loc": "ng serve --configuration=loc",
     "build": "ng build"
   },
   "dependencies": {
