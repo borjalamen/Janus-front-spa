@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+// src/app/documents/documents.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { DocumentService, BackendDocument } from '../document.service';
 
 interface Project {
-  projectId: number;
+  projectId: string | number;
   name: string;
   date: string;
-  documents?: { name: string; date: string }[];
+  documents: BackendDocument[]; // string[]
 }
 
 @Component({
@@ -27,37 +29,63 @@ interface Project {
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']
 })
-export class DocumentsComponent {
+export class DocumentsComponent implements OnInit {
   title = 'Documentos';
   showAddPopup = false;
 
-  projects: Project[] = [
-    { projectId: 1, name: 'Project A', date: '2025-01-10', documents: [{ name: 'Doc1.pdf', date: '2025-01-11' }] },
-    { projectId: 2, name: 'Project B', date: '2025-01-15', documents: [{ name: 'Doc2.pdf', date: '2025-01-16' }] },
-  ];
+  projects: Project[] = [];
+  projectsFiltrats: Project[] = [];
 
-  projectsFiltrats = [...this.projects];
-
-  // Variables del popup d'afegir
-  projectId!: number;
+  // popup afegir
+  projectId!: string | number;
   name = '';
   date = '';
 
-  // Fitxer seleccionat
   selectedFile?: File;
 
-  // Popup eliminar DOCUMENT
+  // popup eliminar document
   deleteDocPopupOpen = false;
-  docToDelete: { project: Project, document: { name: string; date: string } } | null = null;
+  docToDelete: { project: Project; document: BackendDocument } | null = null;
 
-  // Popup eliminar PROJECTE (NOU)
+  // popup eliminar projecte
   deleteProjectPopupOpen = false;
   projectToDelete: Project | null = null;
 
+  constructor(private documentService: DocumentService) {}
+
+  ngOnInit(): void {
+    this.loadProjects();
+  }
+
+  // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
+  loadProjects() {
+    this.documentService.getAllFolders().subscribe({
+      next: ids => {
+        this.projects = [];
+        ids.forEach(id => {
+          this.documentService.getAllFiles(id).subscribe({
+            next: docs => {
+              this.projects.push({
+                projectId: id,
+                name: `Project ${id}`,
+                date: '',
+                documents: docs || []
+              });
+              this.projectsFiltrats = [...this.projects];
+            },
+            error: err => console.error('Error carregant fitxers', err)
+          });
+        });
+      },
+      error: err => console.error('Error carregant carpetes', err)
+    });
+  }
+
+  // ===== POPUP AFEGIR =====
   toggleAddPopup() {
     this.showAddPopup = !this.showAddPopup;
     if (!this.showAddPopup) {
-      this.projectId = 0;
+      this.projectId = '';
       this.name = '';
       this.date = '';
       this.selectedFile = undefined;
@@ -69,43 +97,60 @@ export class DocumentsComponent {
     if (file) {
       this.selectedFile = file;
       this.name = file.name;
+      console.log('FITXER SELECCIONAT', this.selectedFile);
     }
   }
 
-  // Filtra projectes pel nom
+  // filtre per id o nom
   filtrar(valor: string) {
     if (!valor) {
       this.projectsFiltrats = [...this.projects];
     } else {
       const lower = valor.toLowerCase();
       this.projectsFiltrats = this.projects.filter(
-        p => p.name.toLowerCase().includes(lower)
+        p =>
+          String(p.projectId).toLowerCase().includes(lower) ||
+          p.name.toLowerCase().includes(lower)
       );
     }
   }
 
-  // Afegeix un document a un projecte
+  // ===== AFEGIR DOCUMENT (NO DUPLICA PROJECTES) =====
   addDocument() {
-    const project = this.projects.find(p => p.projectId === this.projectId);
-    if (project) {
-      if (!project.documents) project.documents = [];
-      project.documents.push({ name: this.name, date: this.date });
-    } else {
-      this.projects.push({
-        projectId: this.projectId,
-        name: `Project ${this.projectId}`,
-        date: this.date,
-        documents: [{ name: this.name, date: this.date }]
-      });
+    console.log('ADD', this.projectId, this.selectedFile);
+
+    if (!this.projectId || !this.selectedFile) {
+      console.warn('Falten projectId o fitxer');
+      return;
     }
 
-    this.toggleAddPopup();
-    this.projectsFiltrats = [...this.projects];
+    this.documentService.uploadDocument(this.projectId, this.selectedFile)
+      .subscribe({
+        next: () => {
+          let project = this.projects.find(p => p.projectId === this.projectId);
+
+          if (!project) {
+            project = {
+              projectId: this.projectId,
+              name: `Project ${this.projectId}`,
+              date: this.date,
+              documents: []
+            };
+            this.projects.push(project);
+          }
+
+          // afegim sempre el nom del fitxer al mateix projecte
+          project.documents.push(this.name || this.selectedFile!.name);
+
+          this.projectsFiltrats = [...this.projects];
+          this.toggleAddPopup();
+        },
+        error: err => console.error('Error pujant document', err)
+      });
   }
 
-  // ======== DOCUMENTS ========
-
-  confirmDeleteDocument(project: Project, doc: { name: string; date: string }) {
+  // ===== DOCUMENTS =====
+  confirmDeleteDocument(project: Project, doc: BackendDocument) {
     this.docToDelete = { project, document: doc };
     this.deleteDocPopupOpen = true;
   }
@@ -116,15 +161,24 @@ export class DocumentsComponent {
   }
 
   deleteDocument() {
-    if (this.docToDelete) {
-      const { project, document } = this.docToDelete;
-      project.documents = project.documents?.filter(d => d !== document);
-      this.cancelDeleteDocument();
-    }
+    if (!this.docToDelete) return;
+
+    const { project, document } = this.docToDelete;
+
+    console.log('DELETE DOC', project.projectId, document);
+
+    this.documentService.deleteDocument(project.projectId, document)
+      .subscribe({
+        next: () => {
+          project.documents = project.documents.filter(d => d !== document);
+          this.projectsFiltrats = [...this.projects];
+          this.cancelDeleteDocument();
+        },
+        error: err => console.error('Error esborrant document', err)
+      });
   }
 
-  // ======== PROJECTES (NOU) ========
-
+  // ===== PROJECTES =====
   confirmDeleteProject(project: Project) {
     this.projectToDelete = project;
     this.deleteProjectPopupOpen = true;
@@ -136,12 +190,18 @@ export class DocumentsComponent {
   }
 
   deleteProject() {
-    if (this.projectToDelete) {
-      this.projects = this.projects.filter(
-        p => p.projectId !== this.projectToDelete!.projectId
-      );
-      this.projectsFiltrats = [...this.projects];
-      this.cancelDeleteProject();
-    }
+    if (!this.projectToDelete) return;
+
+    this.documentService.deleteProjectFiles(this.projectToDelete.projectId)
+      .subscribe({
+        next: () => {
+          this.projects = this.projects.filter(
+            p => p.projectId !== this.projectToDelete!.projectId
+          );
+          this.projectsFiltrats = [...this.projects];
+          this.cancelDeleteProject();
+        },
+        error: err => console.error('Error esborrant projecte', err)
+      });
   }
 }

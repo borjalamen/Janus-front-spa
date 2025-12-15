@@ -27,7 +27,7 @@
           <div *ngFor="let doc of project.documents" class="document-item">
             <div class="doc-left">
               <mat-icon>description</mat-icon>
-              <span>{{ doc.name }} - {{ doc.date }}</span>
+              <span>{{ doc }}</span>
             </div>
 
             <button
@@ -99,7 +99,7 @@
     <p>
       {{
         'DOCUMENTS.DELETE_DOC_QUESTION'
-          | translate:{ name: docToDelete.document.name }
+          | translate:{ name: docToDelete.document }
       }}
     </p>
     <div class="popup-actions">
