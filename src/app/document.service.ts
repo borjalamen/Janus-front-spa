@@ -10,7 +10,7 @@ export type BackendDocument = string;
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
   // en loc: http://localhost:8080/api/documentos
-  private baseUrl = `${environment.baseUrl3}/documentos`;
+  private baseUrl = `${environment.baseUrl}/documentos`;
 
   constructor(private http: HttpClient) {}
 
