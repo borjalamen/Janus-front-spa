@@ -67,7 +67,8 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "development": {
-              "buildTarget": "demo:build:development"
+              "buildTarget": "demo:build:development",
+              "proxyConfig": "proxy.conf.json"
             },
             "loc": {
               "buildTarget": "demo:build:loc"

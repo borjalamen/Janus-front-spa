@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -20,6 +21,8 @@ import { HostListener } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { AiService } from './ai.service';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -28,7 +31,9 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatToolbarModule,
+    MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -56,6 +61,7 @@ export class AppComponent implements OnDestroy {
     private dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
+    private ai: AiService,
     public translate: TranslateService,
     private authService: AuthService  // ⬅ Afegit
   ) {
@@ -79,6 +85,9 @@ export class AppComponent implements OnDestroy {
 
     this.loadVersion();
   }
+    // Chat state
+    aiMessages: { from: 'user'|'ai', text: string }[] = [];
+    userInput = '';
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
@@ -93,6 +102,40 @@ export class AppComponent implements OnDestroy {
   toggleClip(): void {
     this.clipOpen = !this.clipOpen;
   }
+  
+    sendToAi(){
+      const text = this.userInput?.trim();
+      if(!text) return;
+      this.aiMessages.push({ from: 'user', text });
+      this.userInput = '';
+      // call backend
+      this.ai.query(text).subscribe({
+        next: res => {
+          const answer = res?.answer ?? 'No hay respuesta';
+          this.aiMessages.push({ from: 'ai', text: answer });
+          this.speak(answer);
+        },
+        error: err => {
+          const msg = 'Error al consultar AI';
+          this.aiMessages.push({ from: 'ai', text: msg });
+          console.error(err);
+        }
+      });
+    }
+  
+    // Text-to-speech via Web Speech API
+    speak(text: string){
+      try{
+        const synth = (window as any).speechSynthesis;
+        if(!synth) return;
+        const ut = new SpeechSynthesisUtterance(text);
+        ut.lang = this.translate.currentLang || 'es-ES';
+        synth.cancel();
+        synth.speak(ut);
+      }catch(e){
+        console.warn('TTS no disponible', e);
+      }
+    }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -104,6 +147,12 @@ export class AppComponent implements OnDestroy {
       return;
     }
     this.clipOpen = false;
+  }
+
+  speakLast(){
+    const last = this.aiMessages.length ? this.aiMessages[this.aiMessages.length-1].text : null;
+    const content = last ?? this.translate.instant('CLIP.HELLO');
+    this.speak(content);
   }
 
   loadVersion() {

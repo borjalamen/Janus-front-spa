@@ -73,9 +73,25 @@
     <!-- Clip helper persistente -->
     <div class="clip-helper" tabindex="0" title="Ayuda" (click)="toggleClip()"></div>
 
-    <!-- Popup tipo 'habla' del clip -->
+    <!-- Popup tipo 'habla' del clip -> chat AI -->
     <div class="clip-popup" *ngIf="clipOpen">
-      <textarea readonly class="clip-text" title="translate">{{ 'CLIP.HELLO' | translate }}</textarea>
+      <div class="clip-chat">
+        <div class="messages">
+          <div *ngFor="let m of aiMessages" [class.user]="m.from==='user'" [class.ai]="m.from==='ai'">
+            <strong *ngIf="m.from==='user'">Tú:</strong>
+            <strong *ngIf="m.from==='ai'">AI:</strong>
+            <span>{{ m.text }}</span>
+          </div>
+        </div>
+
+        <div class="clip-input-row">
+          <textarea id="clip-input" class="clip-input" rows="2" [(ngModel)]="userInput" (keydown.enter)="sendToAi()" placeholder="Escribe tu pregunta..."></textarea>
+          <div class="clip-buttons">
+            <button mat-button color="primary" (click)="sendToAi()">Enviar</button>
+            <button mat-button (click)="speakLast()">Hablar</button>
+          </div>
+        </div>
+      </div>
     </div>
 
 
