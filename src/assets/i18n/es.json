@@ -173,6 +173,12 @@
 },
 
   "CLIP": {
-    "HELLO": "Hola soy tu asistente IAnusHub, ¿cómo puedo ayudarte?"
+    "HELLO": "Hola, soy tu asistente IAnusHub, ¿en qué te puedo ayudar?",
+    "SEND": "Enviar",
+    "SPEAK": "Hablar",
+    "PLACEHOLDER": "Escribe tu pregunta...",
+    "USER": "Tú:",
+    "AI": "IAnusHub:",
+    "ERROR_QUERY": "Error al consultar IA"
   }
 }

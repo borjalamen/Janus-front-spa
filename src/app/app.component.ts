@@ -88,6 +88,8 @@ export class AppComponent implements OnDestroy {
     // Chat state
     aiMessages: { from: 'user'|'ai', text: string }[] = [];
     userInput = '';
+    // reference flag to indicate whether initial greeting has been shown
+    private greeted = false;
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
@@ -101,6 +103,10 @@ export class AppComponent implements OnDestroy {
 
   toggleClip(): void {
     this.clipOpen = !this.clipOpen;
+    if (this.clipOpen) {
+      // show greeting once
+      setTimeout(() => this.showGreeting(), 50);
+    }
   }
   
     sendToAi(){
@@ -113,14 +119,39 @@ export class AppComponent implements OnDestroy {
         next: res => {
           const answer = res?.answer ?? 'No hay respuesta';
           this.aiMessages.push({ from: 'ai', text: answer });
+          setTimeout(() => this.scrollMessagesToBottom(), 10);
           this.speak(answer);
         },
         error: err => {
-          const msg = 'Error al consultar AI';
+          const msg = this.translate.instant('CLIP.ERROR_QUERY');
           this.aiMessages.push({ from: 'ai', text: msg });
           console.error(err);
         }
       });
+    }
+
+    onEnter(ev: Event){
+      // Event comes from template; cast to KeyboardEvent to access keys
+      const ke = ev as KeyboardEvent;
+      // Allow Shift+Enter for new line
+      if (ke.shiftKey) return;
+      ke.preventDefault();
+      this.sendToAi();
+    }
+
+    private showGreeting(){
+      if(this.greeted) return;
+      const hello = this.translate.instant('CLIP.HELLO');
+      this.aiMessages.push({ from: 'ai', text: hello });
+      this.greeted = true;
+      setTimeout(() => this.scrollMessagesToBottom(), 20);
+    }
+
+    private scrollMessagesToBottom(){
+      try{
+        const container = document.querySelector('.messages');
+        if(container) container.scrollTop = container.scrollHeight;
+      }catch(e){/* ignore */}
     }
   
     // Text-to-speech via Web Speech API

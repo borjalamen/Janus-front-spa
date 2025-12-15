@@ -174,6 +174,12 @@
 },
 
   "CLIP": {
-    "HELLO": "Hi, I am your IAnusHub assistant, how can I help you?"
+    "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",
+    "SEND": "Send",
+    "SPEAK": "Speak",
+    "PLACEHOLDER": "Type your question...",
+    "USER": "You:",
+    "AI": "IAnusHub:",
+    "ERROR_QUERY": "Error querying AI"
   }
 }
