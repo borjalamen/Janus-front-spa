@@ -104,17 +104,24 @@
   "ADD_BUTTON": "+ Añadir Jenkins",
   "DELETE_BUTTON_ON": "Cancelar eliminar",
   "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
+
   "POPUP_ADD_TITLE": "Añadir Jenkins",
+  "POPUP_EDIT_TITLE": "Editar Jenkins",
+
   "FIELD_NAME_LABEL": "Nombre:",
   "FIELD_NAME_PLACEHOLDER": "Nombre del Jenkins",
   "FIELD_URL_LABEL": "URL:",
   "FIELD_URL_PLACEHOLDER": "https://...",
+
   "CANCEL": "Cancelar",
   "SAVE": "Guardar",
+  "UPDATE": "Actualizar",
+
   "DELETE_TITLE": "Eliminar Jenkins",
   "DELETE_MESSAGE": "¿Estas seguro que quieres eliminar?",
   "DELETE_ACTION": "Eliminar"
-},
+}
+,
 "INFRA": {
   "TITLE": "Estado de Proyectos",
   "STATUS_UP": "UP",

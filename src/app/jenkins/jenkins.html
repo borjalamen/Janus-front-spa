@@ -6,7 +6,7 @@
         <button
           class="jenkins-add-btn"
           type="button"
-          (click)="openPopup()"
+          (click)="openPopupForCreate()"
           *ngIf="canEditJenkins">
           {{ 'JENKINS.ADD_BUTTON' | translate }}
         </button>
@@ -38,12 +38,25 @@
       *ngFor="let jk of customJenkins"
       [ngClass]="{ 'selected': jk.selected }"
       (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
+
       <div class="jenkins-info">
-        <div class="jenkins-name"><strong>{{ jk.name }}</strong></div>
+        <div class="jenkins-name">
+          <strong>{{ jk.name }}</strong>
+        </div>
+
         <a [href]="jk.url" target="_blank" rel="noopener noreferrer">
           <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
         </a>
       </div>
+
+      <!-- Botó editar (només si es pot editar i no estem en deleteMode) -->
+      <button
+  title="Editar Jenkins"
+  class="edit-icon"
+  *ngIf="canEditJenkins && !deleteMode"
+  (click)="openPopupForEdit(jk, $event)">
+  <img src="assets/images/llapis.png" alt="Editar" class="edit-icon-img" />
+</button>
 
       <div
         class="delete-icon"
@@ -54,10 +67,16 @@
     </div>
   </div>
 
-  <!-- Popup afegir Jenkins -->
+  <!-- Popup afegir / editar Jenkins -->
   <div class="popup-overlay" *ngIf="popupOpen" (click)="closePopup()">
     <div class="popup-box" (click)="$event.stopPropagation()">
-      <h3>{{ 'JENKINS.POPUP_ADD_TITLE' | translate }}</h3>
+      <h3>
+        {{
+          editingJenkins
+            ? ('JENKINS.POPUP_EDIT_TITLE' | translate)
+            : ('JENKINS.POPUP_ADD_TITLE' | translate)
+        }}
+      </h3>
 
       <label>{{ 'JENKINS.FIELD_NAME_LABEL' | translate }}</label>
       <input
@@ -83,7 +102,11 @@
           class="save-btn"
           (click)="savePopup()"
           [disabled]="!newName || !newUrl">
-          {{ 'JENKINS.SAVE' | translate }}
+          {{
+            editingJenkins
+              ? ('JENKINS.UPDATE' | translate)
+              : ('JENKINS.SAVE' | translate)
+          }}
         </button>
       </div>
     </div>

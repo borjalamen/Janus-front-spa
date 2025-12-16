@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
 
 interface JenkinsItem {
-  id?: string;      
+  id?: string;
   name: string;
   url: string;
   selected: boolean;
@@ -31,6 +31,9 @@ export class Jenkins implements OnInit, OnDestroy {
   jenkinsToDelete: JenkinsItem | null = null;
   deleteMode = false;
 
+  // nou: per saber si estem creant o editant
+  editingJenkins: JenkinsItem | null = null;
+
   private baseUrl = `${environment.baseUrl}jenkins`;
 
   userRole: string = 'invitado';
@@ -42,7 +45,6 @@ export class Jenkins implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Subscriu-te als canvis d'usuari
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       this.userRole = user?.rol || 'invitado';
     });
@@ -51,7 +53,6 @@ export class Jenkins implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Neteja la subscripció
     this.authSubscription?.unsubscribe();
   }
 
@@ -67,7 +68,7 @@ export class Jenkins implements OnInit, OnDestroy {
     this.http.get<any[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
         this.customJenkins = data.map(d => ({
-          id: d.id,        
+          id: d.id,
           name: d.nombre,
           url: d.url,
           selected: false
@@ -77,27 +78,44 @@ export class Jenkins implements OnInit, OnDestroy {
     });
   }
 
+  // CREATE + UPDATE
   savePopup() {
     const body = {
-      idProyecto: 'PROY-2025-X',   
+      idProyecto: 'PROY-2025-X',
       nombre: this.newName,
       url: this.newUrl
     };
 
-    this.http.post<any>(`${this.baseUrl}/create`, body).subscribe({
-      next: (created) => {
-        this.customJenkins.push({
-          id: created.id,     
-          name: created.nombre,
-          url: created.url,
-          selected: false
+    // si tenim editingJenkins amb id -> UPDATE
+    if (this.editingJenkins && this.editingJenkins.id) {
+      this.http.put<any>(`${this.baseUrl}/update/${this.editingJenkins.id}`, body)
+        .subscribe({
+          next: (updated) => {
+            this.editingJenkins!.name = updated.nombre;
+            this.editingJenkins!.url = updated.url;
+            this.closePopup();
+            this.editingJenkins = null;
+          },
+          error: (err) => console.error('Error actualizando Jenkins', err)
         });
-        this.closePopup();
-      },
-      error: (err) => console.error('Error creando Jenkins', err)
-    });
+    } else {
+      // si no, és CREATE
+      this.http.post<any>(`${this.baseUrl}/create`, body).subscribe({
+        next: (created) => {
+          this.customJenkins.push({
+            id: created.id,
+            name: created.nombre,
+            url: created.url,
+            selected: false
+          });
+          this.closePopup();
+        },
+        error: (err) => console.error('Error creando Jenkins', err)
+      });
+    }
   }
 
+  // DELETE (individual o múltiple)
   deleteJenkins() {
     if (this.jenkinsToDelete && this.jenkinsToDelete.id) {
       this.http.delete(`${this.baseUrl}/delete/${this.jenkinsToDelete.id}`).subscribe({
@@ -131,7 +149,20 @@ export class Jenkins implements OnInit, OnDestroy {
   //   POPUPS Y SELECCIÓN
   // ========================
 
-  openPopup() {
+  openPopupForCreate() {
+    this.editingJenkins = null;
+    this.newName = '';
+    this.newUrl = '';
+    this.popupOpen = true;
+  }
+
+  openPopupForEdit(jk: JenkinsItem, event: Event) {
+    event.stopPropagation();
+    if (!this.canEditJenkins) return;
+
+    this.editingJenkins = jk;
+    this.newName = jk.name;
+    this.newUrl = jk.url;
     this.popupOpen = true;
   }
 
@@ -139,6 +170,7 @@ export class Jenkins implements OnInit, OnDestroy {
     this.popupOpen = false;
     this.newName = '';
     this.newUrl = '';
+    this.editingJenkins = null;
   }
 
   onJenkinsSelected(event: Event) {

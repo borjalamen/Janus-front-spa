@@ -422,3 +422,18 @@
   box-shadow: 0 0 12px #FBC02D80; 
   transform: scale(1.05);         
 }
+.edit-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+  padding: 0;
+  line-height: 0;          /* important per no afegir espai extra */
+}
+
+.edit-icon img {
+  width: 50px !important;  /* força la mida */
+  height: 50px !important;
+  object-fit: contain;
+  display: block;
+}
