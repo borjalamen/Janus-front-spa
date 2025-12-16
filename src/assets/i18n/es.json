@@ -168,16 +168,27 @@
   "TOGGLE_LIST_SHOW": "Listado de usuarios",
   "TOGGLE_LIST_HIDE": "Ocultar listado de usuarios",
   "ADD_BUTTON": "Añadir usuario",
+
   "ADD_POPUP_TITLE": "Añadir nuevo usuario",
+  "EDIT_POPUP_TITLE": "Editar usuario",
+
   "FIELD_NAME": "Nombre:",
   "FIELD_PASSWORD": "Contraseña:",
   "FIELD_EMAIL": "Email:",
+
   "ROLE_ADMIN": "Admin",
   "ROLE_CONSULTOR": "Consultor",
   "ROLE_DEVOPS": "DevOps",
+
   "CANCEL": "Cancelar",
-  "SAVE": "Guardar"
-},
+  "SAVE": "Guardar",
+  "UPDATE": "Actualizar",
+
+  "DELETE_TITLE": "Eliminar usuario",
+  "DELETE_MESSAGE": "¿Seguro que quieres eliminar al usuario \"{{name}}\"?",
+  "DELETE_ACTION": "Eliminar"
+}
+,
 
   "CLIP": {
     "HELLO": "Hola, soy tu asistente IAnusHub, ¿en qué te puedo ayudar?",
