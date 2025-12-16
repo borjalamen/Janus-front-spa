@@ -88,7 +88,7 @@
         </div>
 
         <div class="clip-input-row">
-          <textarea id="clip-input" class="clip-input" rows="3" [(ngModel)]="userInput" (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)"></textarea>
+          <textarea id="clip-input" class="clip-input" rows="3" title="clip"[(ngModel)]="userInput" (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)"></textarea>
           <div class="clip-buttons">
             <button mat-flat-button color="primary" (click)="sendToAi()">{{ 'CLIP.SEND' | translate }}</button>
             <button mat-stroked-button (click)="speakLast()">{{ 'CLIP.SPEAK' | translate }}</button>
