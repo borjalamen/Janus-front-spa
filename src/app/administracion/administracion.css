@@ -175,13 +175,8 @@ p {
 }
 
 .cancelar-btn:hover {
-<<<<<<< HEAD
-  background: #E53935 !important;
-  color: #0F1115 !important;
-=======
   background: #E53935;
   color: #1e84a3;
->>>>>>> Planeta
 }
 
 .usuari-item {
