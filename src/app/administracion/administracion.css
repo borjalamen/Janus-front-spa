@@ -146,19 +146,42 @@ p {
   box-shadow: 0 3px 8px #000c;
 }
 
+.guardar-btn,
+.cancelar-btn
+ {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 .guardar-btn {
   border-color: #1e84a3;
-  color: #FBC02D !important;
+  color: #FBC02D;
+}
+
+.guardar-btn:hover {
+  background: #FBC02D;
+  color: #16181c;
 }
 
 .cancelar-btn {
-  border-color: #E53935;
-  color: #FBC02D !important;
+  background: #1e1e1e;
+  color: #E0E0E0;
+  border: 1px solid #555;
+
 }
 
 .cancelar-btn:hover {
+<<<<<<< HEAD
   background: #E53935 !important;
   color: #0F1115 !important;
+=======
+  background: #E53935;
+  color: #1e84a3;
+>>>>>>> Planeta
 }
 
 .usuari-item {

@@ -121,7 +121,7 @@ body {
 .popup-field input {
   padding: 8px;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #1e84a3;
   outline: none;
   font-size: 1em;
   color: #0F1115;
@@ -138,9 +138,9 @@ body {
   gap: 6px;
   padding: 8px 12px;
   border-radius: 12px !important;
-  border: 1px solid #1e84a3;
+  border: 1px solid #FBC02D;
   background: #0F1115 !important;
-  color: #FBC02D !important;
+  color: #1e84a3 !important;
   font-weight: 600 !important;
   font-size: 0.95rem;
   text-transform: none;
@@ -155,27 +155,46 @@ body {
 /* Hover genèric */
 .examinar-btn:hover,
 .popup-btn:hover {
-  background: #1e84a3 !important;
+  background: #FBC02D !important;
+  border: 1px solid #FBC02D;
   color: #0F1115 !important;
   transform: translateY(-1px);
   box-shadow: 0 3px 8px #000c;
   
 }
 
+.guardar-btn,
+.cancelar-btn
+ {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 /* Diferenciar Guardar / Cancel·lar (opcional) */
 .guardar-btn {
-  border-color: #1e84a3;
-  color: #FBC02D !important;
+  background: #1e84a3;
+  color: #FBC02D;
+}
+
+.guardar-btn:hover {
+  background: #FBC02D;
+  color: #16181c;
+  
 }
 
 .cancelar-btn {
   border-color: #E53935;
-  color: #FBC02D !important;
+  color: #1e84a3 !important;
+  border: 1px solid #555;
 }
 
 .cancelar-btn:hover {
-  background: #E53935 !important;
-  color: #0F1115 !important;
+  background: #333 !important;
+ 
 }
 
 /* Botons container */
