@@ -6,13 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { DocumentService, BackendDocument } from '../document.service';
+import { DocumentService } from '../document.service';
 
 interface Project {
   projectId: string | number;
   name: string;
   date: string;
-  documents: BackendDocument[]; // string[]
+  documents: string[];
 }
 
 @Component({
@@ -45,7 +45,7 @@ export class DocumentsComponent implements OnInit {
 
   // popup eliminar document
   deleteDocPopupOpen = false;
-  docToDelete: { project: Project; document: BackendDocument } | null = null;
+  docToDelete: { project: Project; document: string } | null = null;
 
   // popup eliminar projecte
   deleteProjectPopupOpen = false;
@@ -140,7 +140,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   // ===== DOCUMENTS =====
-  confirmDeleteDocument(project: Project, doc: BackendDocument) {
+  confirmDeleteDocument(project: Project, doc: string) {
     this.docToDelete = { project, document: doc };
     this.deleteDocPopupOpen = true;
   }
