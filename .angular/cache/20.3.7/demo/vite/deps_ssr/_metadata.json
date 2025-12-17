@@ -1,8 +1,15 @@
 {
+<<<<<<< Updated upstream
   "hash": "65193d01",
   "configHash": "ba84ebe5",
   "lockfileHash": "2ad691c3",
   "browserHash": "ae5dedb1",
+=======
+  "hash": "d1e44b82",
+  "configHash": "3b7f8a95",
+  "lockfileHash": "37899efa",
+  "browserHash": "c5a419cf",
+>>>>>>> Stashed changes
   "optimized": {},
   "chunks": {}
 }
