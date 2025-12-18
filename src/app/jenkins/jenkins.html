@@ -114,7 +114,12 @@
 
   <!-- Popup eliminar Jenkins -->
   <div class="popup-overlay" *ngIf="deletePopupOpen" (click)="cancelDelete()">
-    <div class="popup-box" (click)="$event.stopPropagation()">
+    <div
+      class="popup-box"
+      (click)="$event.stopPropagation()"
+      (keyup.enter)="newName && newUrl && savePopup()"
+      tabindex="0">
+
       <h3>{{ 'JENKINS.DELETE_TITLE' | translate }}</h3>
 
       <p>{{ 'JENKINS.DELETE_MESSAGE' | translate }}</p>
