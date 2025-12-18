@@ -6,23 +6,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { DocumentService } from '../document.service';
+import { DocumentService, BackendDocument } from '../document.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
-export interface BackendDocument {
-  name: string;
-  size: number;
-  contentType: string;
-  lastModified: string;
-}
 
 interface Project {
   projectId: string | number;
   name: string;
   date: string;
   documents: BackendDocument[];
-
 }
 
 @Component({
@@ -55,7 +47,7 @@ export class DocumentsComponent implements OnInit {
 
   // popup eliminar document
   deleteDocPopupOpen = false;
-  docToDelete: { project: Project; document: BackendDocument} | null = null;
+  docToDelete: { project: Project; document: BackendDocument } | null = null;
 
   // popup eliminar projecte
   deleteProjectPopupOpen = false;
@@ -69,50 +61,49 @@ export class DocumentsComponent implements OnInit {
 
   // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
   loadProjects() {
-     this.documentService.getAllFolders().pipe(
-      catchError(err => {
-        console.error('Error carregant carpetes', err);
-        return of([]); // Retorna array buit si hi ha error
-      })
-    ).subscribe(ids => {
-     if (!ids || ids.length === 0) {
-        this.projects = [];
-        this.projectsFiltrats = [];
-        return;
-      }
-        const requests = ids.map(id =>
-        this.documentService.getAllFiles(id).pipe(
-          map((files: any[]) => {
-            const docs: BackendDocument[] = (files || []).map(file => ({
-              name: file.name,
-              size: file.size,
-              contentType: file.contentType,
-              lastModified: file.lastModified
-            }));
-            return {
-              projectId: id,
-              name: `Project ${id}`,
-              date: '',
-              documents: docs
-            } as Project;
-          }),
-          catchError(err => {
-            console.error('Error carregant fitxers project', id, err);
-            return of({
-              projectId: id,
-              name: `Project ${id}`,
-              date: '',
-              documents: []
-            } as Project);
-          })
-        )
-      );
+    this.documentService
+      .getAllFolders()
+      .pipe(
+        catchError(err => {
+          console.error('Error carregant carpetes', err);
+          return of([]); // Retorna array buit si hi ha error
+        })
+      )
+      .subscribe(ids => {
+        if (!ids || ids.length === 0) {
+          this.projects = [];
+          this.projectsFiltrats = [];
+          return;
+        }
 
-      forkJoin(requests).subscribe(projects => {
-        this.projects = projects;
-        this.projectsFiltrats = [...projects];
+        const requests = ids.map(id =>
+          this.documentService.getAllFiles(id).pipe(
+            map((files: BackendDocument[]) => {
+              const docs: BackendDocument[] = files || [];
+              return {
+                projectId: id,
+                name: `Project ${id}`,
+                date: '',
+                documents: docs
+              } as Project;
+            }),
+            catchError(err => {
+              console.error('Error carregant fitxers project', id, err);
+              return of({
+                projectId: id,
+                name: `Project ${id}`,
+                date: '',
+                documents: []
+              } as Project);
+            })
+          )
+        );
+
+        forkJoin(requests).subscribe(projects => {
+          this.projects = projects;
+          this.projectsFiltrats = [...projects];
+        });
       });
-    });
   }
 
   // ===== POPUP AFEGIR =====
@@ -149,7 +140,7 @@ export class DocumentsComponent implements OnInit {
     }
   }
 
-  // ===== AFEGIR DOCUMENT (NO DUPLICA PROJECTES) =====
+  // ===== AFEGIR DOCUMENT =====
   addDocument() {
     console.log('ADD', this.projectId, this.selectedFile);
 
@@ -158,16 +149,13 @@ export class DocumentsComponent implements OnInit {
       return;
     }
 
-    this.documentService.uploadDocument(this.projectId, this.selectedFile)
-      .subscribe({
-        next: () => {
-
-          this.loadProjects();
-          this.toggleAddPopup();
-        },
-          
-        error: err => console.error('Error pujant document', err)
-      });
+    this.documentService.uploadDocument(this.projectId, this.selectedFile).subscribe({
+      next: () => {
+        this.loadProjects();
+        this.toggleAddPopup();
+      },
+      error: err => console.error('Error pujant document', err)
+    });
   }
 
   // ===== DOCUMENTS =====
@@ -188,14 +176,13 @@ export class DocumentsComponent implements OnInit {
 
     console.log('DELETE DOC', project.projectId, document);
 
-    this.documentService.deleteDocument(project.projectId, document.name)
-      .subscribe({
-        next: () => {
-          this.loadProjects();          
-          this.cancelDeleteDocument();
-        },
-        error: err => console.error('Error esborrant document', err)
-      });
+    this.documentService.deleteDocument(project.projectId, document).subscribe({
+      next: () => {
+        this.loadProjects();
+        this.cancelDeleteDocument();
+      },
+      error: err => console.error('Error esborrant document', err)
+    });
   }
 
   // ===== PROJECTES =====
@@ -212,14 +199,14 @@ export class DocumentsComponent implements OnInit {
   deleteProject() {
     if (!this.projectToDelete) return;
 
-    this.documentService.deleteProjectFiles(this.projectToDelete.projectId)
-      .subscribe({
-        next: () => {
-            this.loadProjects();
-          this.cancelDeleteProject();
-        },
-          
-        error: err => console.error('Error esborrant projecte', err)
-      });
+    console.log('DELETE PROJECT', this.projectToDelete.projectId);
+
+    this.documentService.deleteProjectFiles(this.projectToDelete.projectId).subscribe({
+      next: () => {
+        this.loadProjects();
+        this.cancelDeleteProject();
+      },
+      error: err => console.error('Error esborrant projecte', err)
+    });
   }
 }

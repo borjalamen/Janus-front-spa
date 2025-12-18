@@ -1,3 +1,4 @@
+// src/app/jenkins/jenkins.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -22,7 +23,6 @@ interface JenkinsItem {
   styleUrls: ['./jenkins.css'],
 })
 export class Jenkins implements OnInit, OnDestroy {
-
   popupOpen = false;
   newName = '';
   newUrl = '';
@@ -31,10 +31,11 @@ export class Jenkins implements OnInit, OnDestroy {
   jenkinsToDelete: JenkinsItem | null = null;
   deleteMode = false;
 
-  // nou: per saber si estem creant o editant
+  // per saber si estem creant o editant
   editingJenkins: JenkinsItem | null = null;
 
-  private baseUrl = `${environment.baseUrl}jenkins`;
+  // baseUrl: http://localhost:8080/api/jenkins
+  private baseUrl = `${environment.baseUrl}/jenkins`;
 
   userRole: string = 'invitado';
   private authSubscription?: Subscription;
@@ -86,7 +87,7 @@ export class Jenkins implements OnInit, OnDestroy {
       url: this.newUrl
     };
 
-    // si tenim editingJenkins amb id -> UPDATE
+    // UPDATE
     if (this.editingJenkins && this.editingJenkins.id) {
       this.http.put<any>(`${this.baseUrl}/update/${this.editingJenkins.id}`, body)
         .subscribe({
@@ -99,7 +100,7 @@ export class Jenkins implements OnInit, OnDestroy {
           error: (err) => console.error('Error actualizando Jenkins', err)
         });
     } else {
-      // si no, és CREATE
+      // CREATE
       this.http.post<any>(`${this.baseUrl}/create`, body).subscribe({
         next: (created) => {
           this.customJenkins.push({
@@ -117,19 +118,22 @@ export class Jenkins implements OnInit, OnDestroy {
 
   // DELETE (individual o múltiple)
   deleteJenkins() {
+    // individual
     if (this.jenkinsToDelete && this.jenkinsToDelete.id) {
-      this.http.delete(`${this.baseUrl}/delete/${this.jenkinsToDelete.id}`).subscribe({
-        next: () => {
-          this.customJenkins = this.customJenkins.filter(j => j !== this.jenkinsToDelete);
-          this.deletePopupOpen = false;
-          this.jenkinsToDelete = null;
-          this.deleteMode = false;
-        },
-        error: (err) => console.error('Error borrando Jenkins', err)
-      });
+      this.http.delete(`${this.baseUrl}/delete/${this.jenkinsToDelete.id}`)
+        .subscribe({
+          next: () => {
+            this.customJenkins = this.customJenkins.filter(j => j !== this.jenkinsToDelete);
+            this.deletePopupOpen = false;
+            this.jenkinsToDelete = null;
+            this.deleteMode = false;
+          },
+          error: (err) => console.error('Error borrando Jenkins', err)
+        });
       return;
     }
 
+    // múltiples
     const toDelete = this.customJenkins.filter(jk => jk.selected && jk.id);
     toDelete.forEach(jk => {
       this.http.delete(`${this.baseUrl}/delete/${jk.id}`).subscribe({

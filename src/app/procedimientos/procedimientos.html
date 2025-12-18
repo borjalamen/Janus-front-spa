@@ -1,14 +1,118 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container">
-  <h2>{{ 'PROCEDURES_SECTION.TITLE' | translate }}</h2>
+  <div class="documents-header">
+    <h2>{{ 'PROCEDURES_SECTION.TITLE' | translate }}</h2>
+
+    <button
+      class="jenkins-add-btn"
+      *ngIf="canEdit"
+      (click)="obrirPopupCrear()">
+      <mat-icon inline="true">add</mat-icon>
+      <span>Afegir procediment</span>
+    </button>
+  </div>
+
   <p>{{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}</p>
 
-  <ul>
-    <li *ngFor="let p of procedimientosFiltrados">
-      <strong>{{ p.nombre }}</strong><br>
-      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ p.responsable }}<br>
-      {{ 'PROCEDURES_SECTION.STATUS' | translate }}: {{ p.estado }}
-    </li>
-  </ul>
+  <!-- Llista de procediments (mateix estil que usuaris) -->
+  <div *ngFor="let p of procedimientosFiltrados" class="usuari-item">
+    <div class="usuari-nom">
+      <span>
+        <b>{{ p.nombre }}</b>
+      </span>
+      <span class="usuari-rol">
+        {{ 'PROCEDURES_SECTION.STATUS' | translate }}: {{ p.estado }}
+      </span>
+    </div>
+
+    <div class="usuari-email">
+      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ p.responsable }}
+    </div>
+
+    <div style="margin-top:4px;" *ngIf="p.descripcion">
+      {{ p.descripcion }}
+    </div>
+
+    <div style="margin-top:6px; display:flex; gap:6px;" *ngIf="canEdit">
+      <button
+        class="jenkins-add-btn"
+        (click)="obrirPopupEditar(p)"
+        title="Editar procedimiento">
+        ✏️
+      </button>
+      <button
+        class="jenkins-add-btn cancelar-btn"
+        (click)="confirmarEliminar(p)"
+        title="Eliminar procedimiento">
+        🗑️
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup crear / editar -->
+<div class="popup-fons" *ngIf="mostrarPopup" (click)="tancarPopup()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>{{ editando ? 'Editar procedimiento' : 'Nuevo procedimiento' }}</h3>
+
+    <div class="form-field">
+      <label>Nombre</label>
+      <input
+        type="text"
+        [(ngModel)]="procForm.nombre"
+        title="Nombre del procedimiento" />
+    </div>
+
+    <div class="form-field">
+      <label>Responsable</label>
+      <input
+        type="text"
+        [(ngModel)]="procForm.responsable"
+        title="Responsable" />
+    </div>
+
+    <div class="form-field">
+      <label>Estado</label>
+      <input
+        type="text"
+        [(ngModel)]="procForm.estado"
+        title="Estado" />
+    </div>
+
+    <div class="form-field">
+      <label>Descripción</label>
+      <textarea
+        rows="3"
+        [(ngModel)]="procForm.descripcion"
+        title="Descripción del procedimiento">
+      </textarea>
+    </div>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="tancarPopup()">
+        Cancelar
+      </button>
+      <button class="guardar-btn" (click)="guardarProcedimiento()">
+        {{ editando ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup eliminar -->
+<div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>Eliminar procedimiento</h3>
+    <p>¿Seguro que quieres eliminar "{{ procAEliminar?.nombre }}"?</p>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="cancelarEliminar()">
+        Cancelar
+      </button>
+      <button class="guardar-btn" (click)="eliminarProcedimiento()">
+        Eliminar
+      </button>
+    </div>
+  </div>
 </div>

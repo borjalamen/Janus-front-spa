@@ -9,12 +9,12 @@ export type BackendDocument = string;
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
-  // en loc: http://localhost:8080/api/documentos
+  // En loc: http://localhost:8080/api/documentos
   private baseUrl = `${environment.baseUrl}/documentos`;
 
   constructor(private http: HttpClient) {}
 
-  // GET /getAllFolders → [ "test-project", 1, 2, ... ]
+  // GET /getAllFolders
   getAllFolders(): Observable<(string | number)[]> {
     return this.http.get<(string | number)[]>(`${this.baseUrl}/getAllFolders`);
   }
@@ -25,12 +25,15 @@ export class DocumentService {
     return this.http.get<BackendDocument[]>(`${this.baseUrl}/getAllFiles`, { params });
   }
 
-  // POST /uploadDoc (idProyecto + documento)
+  // POST /uploadDoc  (idProyecto + documento)
   uploadDocument(projectId: string | number, file: File) {
     const formData = new FormData();
     formData.append('idProyecto', String(projectId));
     formData.append('documento', file);
-    return this.http.post(`${this.baseUrl}/uploadDoc`, formData, { responseType: 'text' });
+
+    return this.http.post(`${this.baseUrl}/uploadDoc`, formData, {
+      responseType: 'text'
+    });
   }
 
   // DELETE /deleteFile?idProyecto=...&nombreArchivo=...
@@ -38,12 +41,19 @@ export class DocumentService {
     const params = new HttpParams()
       .set('idProyecto', String(projectId))
       .set('nombreArchivo', fileName);
-    return this.http.delete(`${this.baseUrl}/deleteFile`, { params });
+
+    return this.http.delete(`${this.baseUrl}/deleteFile`, {
+      params,
+      responseType: 'text'
+    });
   }
 
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
     const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.delete(`${this.baseUrl}/deleteAllFiles`, { params });
+    return this.http.delete(`${this.baseUrl}/deleteAllFiles`, {
+      params,
+      responseType: 'text'
+    });
   }
 }

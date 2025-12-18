@@ -1,3 +1,4 @@
+<!-- Buscador -->
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container documents-wrapper">
@@ -16,20 +17,33 @@
       <div class="project-info">
         <div class="project-header-line">
           <div class="project-id">
-            <strong>{{ 'DOCUMENTS.PROJECT_ID' | translate }}</strong> {{ project.projectId }}
+            <strong>{{ 'DOCUMENTS.PROJECT_ID' | translate }}</strong>
+            {{ project.projectId }}
           </div>
           <div class="project-name">
-            <strong>{{ 'DOCUMENTS.PROJECT_NAME' | translate }}</strong> {{ project.name }}
+            <strong>{{ 'DOCUMENTS.PROJECT_NAME' | translate }}</strong>
+            {{ project.name }}
           </div>
+
+          <!-- PAPERERA de CARPETA (deleteAllFiles) -->
+          <button
+            mat-icon-button
+            color="warn"
+            class="delete-project-btn"
+            (click)="confirmDeleteProject(project)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
         </div>
 
         <div *ngIf="project.documents?.length">
           <div *ngFor="let doc of project.documents" class="document-item">
             <div class="doc-left">
               <mat-icon>description</mat-icon>
+              <!-- BackendDocument = string -->
               <span>{{ doc }}</span>
             </div>
 
+            <!-- PAPERERA de DOCUMENT (deleteFile) -->
             <button
               mat-icon-button
               color="warn"
@@ -99,7 +113,7 @@
     <p>
       {{
         'DOCUMENTS.DELETE_DOC_QUESTION'
-          | translate:{ name: docToDelete.document }
+          | translate:{ name: docToDelete?.document }
       }}
     </p>
     <div class="popup-actions">
@@ -126,7 +140,7 @@
     <p>
       {{
         'DOCUMENTS.DELETE_PROJECT_QUESTION'
-          | translate:{ name: projectToDelete.name }
+          | translate:{ name: projectToDelete?.name }
       }}
     </p>
     <div class="popup-actions">
