@@ -177,11 +177,11 @@ body {
 /* Diferenciar Guardar / Cancel·lar (opcional) */
 .guardar-btn {
   background: #1e84a3;
-  color: #FBC02D;
+  color: #1e84a3;
 }
 
 .guardar-btn:hover {
-  background: #FBC02D;
+  background: #1e84a3;
   color: #16181c;
   
 }

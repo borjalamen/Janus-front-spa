@@ -51,7 +51,7 @@
 
 .jenkins-add-btn:hover {
   background: #FBC02D;
-  color: #05070d;
+  color: #000;
   transform: translateY(-1px);
   box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
 }
@@ -391,7 +391,7 @@
 }
 
 .save-btn:hover {
-  background: #FBC02D;
+  background: #1e84a3;
   color: #16181c;
 }
 
@@ -414,6 +414,7 @@
 
 .delete-icon:hover {
   background: #b71c1c;
+  color: #000;
   transform: scale(1.1);
 }
 

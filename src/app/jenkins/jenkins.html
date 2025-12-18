@@ -69,7 +69,11 @@
 
   <!-- Popup afegir / editar Jenkins -->
   <div class="popup-overlay" *ngIf="popupOpen" (click)="closePopup()">
-    <div class="popup-box" (click)="$event.stopPropagation()">
+    <div
+  class="popup-box"
+  (click)="$event.stopPropagation()"
+  (keyup.enter)="newName && newUrl && savePopup()"
+  tabindex="0">
       <h3>
         {{
           editingJenkins
