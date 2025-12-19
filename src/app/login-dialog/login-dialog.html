@@ -1,7 +1,7 @@
 <div class="login-central">
   <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
 
-  <form (ngSubmit)="login()">
+  <form (ngSubmit)="login()" (submit)="$event.preventDefault()" novalidate>
     <mat-form-field appearance="fill">
       <mat-label>{{ 'LOGIN.USERNAME_LABEL' | translate }}</mat-label>
       <input title="username"
@@ -22,6 +22,7 @@
         name="password"
         autocomplete="current-password"
         [title]="'LOGIN.PASSWORD_TITLE' | translate"
+        (keydown.enter)="login(); $event.preventDefault()"
       />
     </mat-form-field>
 
