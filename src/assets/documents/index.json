@@ -4,5 +4,11 @@
     "path": "Formulario_Hoja_Despliegue.pdf",
     "size": "78kb",
     "description": "Formulario para Hojas de Despliegues"
+  },
+  {
+    "name": "DUO.pdf",
+    "path": "DUO.pdf",
+    "size": "78kb",
+    "description": "Guía rápida de DUO para autenticación multifactor"
   }
 ]
