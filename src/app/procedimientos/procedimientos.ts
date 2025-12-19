@@ -23,7 +23,20 @@ export class ProcedimientosComponent implements OnInit {
   // popup crear / editar
   mostrarPopup = false;
   editando: Procedure | null = null;
-  procForm: Procedure = { nombre: '', responsable: '', estado: '', descripcion: '' };
+
+  // formulari basat en el model del backend
+  procForm: Procedure = {
+    titulo: '',
+    descripcion: '',
+    departamento: '',
+    tags: null,
+    steps: null,
+    visible: true,
+    deleted: false
+  };
+
+  // responsable principal (primer pas)
+  primerResponsable = '';
 
   // popup delete
   mostrarPopupDelete = false;
@@ -39,7 +52,7 @@ export class ProcedimientosComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.authService.canEdit;   // admin o devops
+    return this.authService.canEdit;
   }
 
   // ===== READ =====
@@ -59,9 +72,9 @@ export class ProcedimientosComponent implements OnInit {
     } else {
       const v = valor.toLowerCase();
       this.procedimientosFiltrados = this.procedures.filter(p =>
-        p.nombre.toLowerCase().includes(v) ||
-        p.responsable.toLowerCase().includes(v) ||
-        p.estado.toLowerCase().includes(v)
+        (p.titulo || '').toLowerCase().includes(v) ||
+        (p.departamento || '').toLowerCase().includes(v) ||
+        (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
       );
     }
   }
@@ -69,13 +82,33 @@ export class ProcedimientosComponent implements OnInit {
   // ===== CREATE / UPDATE =====
   obrirPopupCrear() {
     this.editando = null;
-    this.procForm = { nombre: '', responsable: '', estado: '', descripcion: '' };
+    this.procForm = {
+      titulo: '',
+      descripcion: '',
+      departamento: '',
+      tags: null,
+      steps: null,
+      visible: true,
+      deleted: false
+    };
+    this.primerResponsable = '';
     this.mostrarPopup = true;
   }
 
   obrirPopupEditar(proc: Procedure) {
     this.editando = proc;
-    this.procForm = { ...proc };
+    // còpia superficial
+    this.procForm = {
+      id: proc.id,
+      titulo: proc.titulo,
+      descripcion: proc.descripcion,
+      departamento: proc.departamento,
+      tags: proc.tags || null,
+      steps: proc.steps ? [...proc.steps] : null,
+      visible: proc.visible,
+      deleted: proc.deleted
+    };
+    this.primerResponsable = proc.steps?.[0]?.responsable || '';
     this.mostrarPopup = true;
   }
 
@@ -85,9 +118,25 @@ export class ProcedimientosComponent implements OnInit {
   }
 
   guardarProcedimiento() {
-    if (!this.procForm.nombre || !this.procForm.responsable || !this.procForm.estado) {
-      alert('Falta nombre, responsable o estado');
+    if (!this.procForm.titulo || !this.procForm.descripcion) {
+      alert('Falta títol o descripció');
       return;
+    }
+
+    // muntem steps mínimament si l’usuari ha posat responsable
+    if (this.primerResponsable) {
+      this.procForm.steps = this.procForm.steps && this.procForm.steps.length
+        ? this.procForm.steps
+        : [{
+            id: 'step-1',
+            titulo: 'Pas inicial',
+            descripcion: 'Primer pas del procediment',
+            responsable: this.primerResponsable,
+            metodo: '',
+            orden: 1,
+            tags: []
+          }];
+      this.procForm.steps[0].responsable = this.primerResponsable;
     }
 
     if (this.editando && this.editando.id) {

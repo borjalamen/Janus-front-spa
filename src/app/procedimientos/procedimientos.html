@@ -15,38 +15,48 @@
 
   <p>{{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}</p>
 
-  <!-- Llista de procediments (mateix estil que usuaris) -->
-  <div *ngFor="let p of procedimientosFiltrados" class="usuari-item">
-    <div class="usuari-nom">
-      <span>
-        <b>{{ p.nombre }}</b>
-      </span>
-      <span class="usuari-rol">
-        {{ 'PROCEDURES_SECTION.STATUS' | translate }}: {{ p.estado }}
-      </span>
-    </div>
+  <!-- Llista de procediments com a cards -->
+  <div class="procedures-grid">
+    <div *ngFor="let p of procedimientosFiltrados" class="procedure-card">
 
-    <div class="usuari-email">
-      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ p.responsable }}
-    </div>
+      <!-- capçalera del bloc -->
+      <div class="procedure-header">
+        <h3 class="procedure-name">
+          {{ p.titulo || '(Sense títol)' }}
+        </h3>
 
-    <div style="margin-top:4px;" *ngIf="p.descripcion">
-      {{ p.descripcion }}
-    </div>
+        <span class="procedure-status">
+          {{ 'PROCEDURES_SECTION.STATUS' | translate }}:
+          {{ p.departamento || '-' }}
+        </span>
+      </div>
 
-    <div style="margin-top:6px; display:flex; gap:6px;" *ngIf="canEdit">
-      <button
-        class="jenkins-add-btn"
-        (click)="obrirPopupEditar(p)"
-        title="Editar procedimiento">
-        ✏️
-      </button>
-      <button
-        class="jenkins-add-btn cancelar-btn"
-        (click)="confirmarEliminar(p)"
-        title="Eliminar procedimiento">
-        🗑️
-      </button>
+      <!-- cos del bloc -->
+      <div class="procedure-responsible">
+        {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
+        {{ p.steps?.[0]?.responsable || '-' }}
+      </div>
+
+      <p class="procedure-desc" *ngIf="p.descripcion">
+        {{ p.descripcion }}
+      </p>
+
+      <!-- accions CRUD a la dreta -->
+      <div class="procedure-actions" *ngIf="canEdit">
+        <button
+          class="jenkins-add-btn"
+          (click)="obrirPopupEditar(p)"
+          title="Editar procedimiento">
+          ✏️
+        </button>
+        <button
+          class="jenkins-add-btn cancel-btn"
+          (click)="confirmarEliminar(p)"
+          title="Eliminar procedimiento">
+          🗑️
+        </button>
+      </div>
+
     </div>
   </div>
 </div>
@@ -57,27 +67,27 @@
     <h3>{{ editando ? 'Editar procedimiento' : 'Nuevo procedimiento' }}</h3>
 
     <div class="form-field">
-      <label>Nombre</label>
+      <label>Título</label>
       <input
         type="text"
-        [(ngModel)]="procForm.nombre"
-        title="Nombre del procedimiento" />
+        [(ngModel)]="procForm.titulo"
+        title="Título del procedimiento" />
     </div>
 
     <div class="form-field">
-      <label>Responsable</label>
+      <label>Departamento (Estat)</label>
       <input
         type="text"
-        [(ngModel)]="procForm.responsable"
-        title="Responsable" />
+        [(ngModel)]="procForm.departamento"
+        title="Departamento / Estado" />
     </div>
 
     <div class="form-field">
-      <label>Estado</label>
+      <label>Responsable (primer pas)</label>
       <input
         type="text"
-        [(ngModel)]="procForm.estado"
-        title="Estado" />
+        [(ngModel)]="primerResponsable"
+        title="Responsable principal" />
     </div>
 
     <div class="form-field">
@@ -104,7 +114,7 @@
 <div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>Eliminar procedimiento</h3>
-    <p>¿Seguro que quieres eliminar "{{ procAEliminar?.nombre }}"?</p>
+    <p>¿Seguro que quieres eliminar "{{ procAEliminar?.titulo || '(Sense títol)' }}"?</p>
 
     <div class="popup-actions">
       <button class="cancelar-btn" (click)="cancelarEliminar()">
