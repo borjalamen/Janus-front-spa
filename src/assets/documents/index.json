@@ -1,14 +1,23 @@
 [
   {
-    "name": "Formulario_Hoja_Despliegue.pdf",
-    "path": "Formulario_Hoja_Despliegue.pdf",
-    "size": "78kb",
-    "description": "Formulario para Hojas de Despliegues"
+    "name": "Acord de confidencialitat DGP.doc",
+    "path": "Acord de confidencialitat DGP.doc",
+    "size": 62464,
+    "descriptionKey": "DOCS.ACORD_DGP",
+    "modified": "2025-07-09T18:08:26.5221714+02:00"
   },
   {
     "name": "DUO.pdf",
     "path": "DUO.pdf",
-    "size": "78kb",
-    "description": "Guía rápida de DUO para autenticación multifactor"
+    "size": 766221,
+    "descriptionKey": "DOCS.DUO",
+    "modified": "2025-12-19T12:01:06.7866842+01:00"
+  },
+  {
+    "name": "Formulario_Hoja_Despliegue.pdf",
+    "path": "Formulario_Hoja_Despliegue.pdf",
+    "size": 78859,
+    "descriptionKey": "DOCS.FORMULARIO_HOJA_DESPLIEGUE",
+    "modified": "2025-12-19T09:46:28.7780305+01:00"
   }
 ]

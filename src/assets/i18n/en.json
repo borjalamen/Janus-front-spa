@@ -11,6 +11,20 @@
     "INFRASTRUCTURE": "Infrastructure",
     "DESCARGABLES": "Downloads"
   },
+  "DESCARGABLES": {
+    "TITLE": "Downloads",
+    "LAST_MODIFIED": "Last modified",
+    "DOWNLOAD": "Download",
+    "DOWNLOADING": "Downloading...",
+    "NO_FILES": "No files available for download.",
+    "LOADING": "Loading files...",
+    "ERROR": "Error loading file list. Check browser console."
+  },
+  "DOCS": {
+    "ACORD_DGP": "Confidentiality agreement (DGP)",
+    "DUO": "Quick DUO guide for multi-factor authentication",
+    "FORMULARIO_HOJA_DESPLIEGUE": "Deployment sheet form for the DevOps team"
+  },
   "USER": {
     "PROFILE": "Profile",
     "LOGOUT": "Log out",

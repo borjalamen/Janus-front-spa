@@ -1,25 +1,29 @@
 <div class="descargables-root">
-  <h2>{{ 'MENU.DESCARGABLES' | translate }}</h2>
+  <h2>{{ 'DESCARGABLES.TITLE' | translate }}</h2>
 
   <div *ngIf="documentos?.length; else noFiles">
     <div *ngFor="let doc of documentos" class="doc-row">
       <div class="doc-info">
-        <strong>{{ doc.name }}</strong>
-        <div class="doc-desc">{{ doc.description }}</div>
+        <div class="doc-title-row">
+          <strong class="doc-name">{{ doc.name }}</strong>
+          <span class="doc-size">{{ formatSize(doc.size) }}</span>
+        </div>
+        <div class="doc-desc">{{ doc.descriptionKey ? (doc.descriptionKey | translate) : doc.description }}</div>
+        <div class="doc-modified">{{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: <strong>{{ formatDate(doc.modified) }}</strong></div>
       </div>
       <div class="doc-actions">
         <button mat-stroked-button (click)="download(doc)" [disabled]="downloading[doc.path]">
           <mat-icon>download</mat-icon>
-          <span *ngIf="!downloading[doc.path]">Descargar</span>
-          <span *ngIf="downloading[doc.path]">Descargando...</span>
+          <span *ngIf="!downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOAD' | translate }}</span>
+          <span *ngIf="downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOADING' | translate }}</span>
         </button>
       </div>
     </div>
   </div>
 
   <ng-template #noFiles>
-    <p *ngIf="!loading && !loadError">No hay ficheros disponibles para descargar.</p>
-    <p *ngIf="loading">Cargando ficheros...</p>
-    <p *ngIf="loadError">Error cargando la lista de ficheros. Revisa la consola del navegador.</p>
+    <p *ngIf="!loading && !loadError">{{ 'DESCARGABLES.NO_FILES' | translate }}</p>
+    <p *ngIf="loading">{{ 'DESCARGABLES.LOADING' | translate }}</p>
+    <p *ngIf="loadError">{{ 'DESCARGABLES.ERROR' | translate }}</p>
   </ng-template>
 </div>

@@ -17,3 +17,9 @@
 .doc-desc{color:#666;font-size:0.9em}
 .doc-actions{margin-left:12px}
 .download-link{text-decoration:none}
+
+.doc-title-row{display:flex;gap:12px;align-items:center}
+.doc-size{background:#0a7f7f;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.8em}
+.doc-name{font-weight:600}
+
+.doc-modified{color:#999;font-size:0.85em;margin-top:6px}

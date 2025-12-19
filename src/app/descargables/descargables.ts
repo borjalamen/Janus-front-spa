@@ -10,6 +10,7 @@ interface DocumentoIndexItem {
   path: string;
   size?: number;
   description?: string;
+  modified?: string;
 }
 
 @Component({
@@ -66,5 +67,24 @@ export class DescargablesComponent implements OnInit {
         this.downloading[doc.path] = false;
       }
     });
+  }
+
+  formatSize(bytes?: number): string {
+    if (!bytes && bytes !== 0) return '';
+    const kb = 1024;
+    if (bytes < kb) return bytes + ' B';
+    const mb = kb * kb;
+    if (bytes < mb) return (bytes / kb).toFixed(1) + ' KB';
+    return (bytes / mb).toFixed(2) + ' MB';
+  }
+
+  formatDate(iso?: string): string {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString();
+    } catch (e) {
+      return iso;
+    }
   }
 }

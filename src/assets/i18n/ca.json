@@ -11,6 +11,20 @@
     "INFRASTRUCTURE": "Infraestructura",
     "DESCARGABLES": "Descarregables"
   },
+  "DESCARGABLES": {
+    "TITLE": "Descarregables",
+    "LAST_MODIFIED": "Última modificació",
+    "DOWNLOAD": "Descarregar",
+    "DOWNLOADING": "Descarregant...",
+    "NO_FILES": "No hi ha fitxers disponibles per descarregar.",
+    "LOADING": "Carregant fitxers...",
+    "ERROR": "Error carregant la llista de fitxers. Revisa la consola del navegador."
+  },
+  "DOCS": {
+    "ACORD_DGP": "Acord de confidencialitat (DGP)",
+    "DUO": "Guia ràpida de DUO per a autenticació multifactor",
+    "FORMULARIO_HOJA_DESPLIEGUE": "Formulari per a fulles de desplegament per a l'equip DevOps"
+  },
   "USER": {
     "PROFILE": "Perfil",
     "LOGOUT": "Tancar sessió",

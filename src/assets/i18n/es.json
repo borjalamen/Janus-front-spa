@@ -11,6 +11,20 @@
     "INFRASTRUCTURE": "Infraestructura",
     "DESCARGABLES": "Descargables"
   },
+  "DESCARGABLES": {
+    "TITLE": "Descargables",
+    "LAST_MODIFIED": "Última modificación",
+    "DOWNLOAD": "Descargar",
+    "DOWNLOADING": "Descargando...",
+    "NO_FILES": "No hay ficheros disponibles para descargar.",
+    "LOADING": "Cargando ficheros...",
+    "ERROR": "Error cargando la lista de ficheros. Revisa la consola del navegador."
+  },
+  "DOCS": {
+    "ACORD_DGP": "Acuerdo de confidencialidad (DGP)",
+    "DUO": "Guía rápida de DUO para autenticación multifactor",
+    "FORMULARIO_HOJA_DESPLIEGUE": "Formulario para Hojas de Despliegues para el equipo de DevOps"
+  },
   "USER": {
     "PROFILE": "Perfil",
     "LOGOUT": "Cerrar sesión",
