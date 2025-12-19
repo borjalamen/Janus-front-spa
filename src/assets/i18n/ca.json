@@ -205,5 +205,8 @@
     "USER": "Tu:",
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error consultant la IA"
-  }
+  },
+    "SPINNER": {
+      "LOADING": "Carregant..."
+    }
 }

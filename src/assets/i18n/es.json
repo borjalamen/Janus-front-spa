@@ -207,4 +207,8 @@
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error al consultar IA"
   }
+  ,
+  "SPINNER": {
+    "LOADING": "Cargando..."
+  }
 }

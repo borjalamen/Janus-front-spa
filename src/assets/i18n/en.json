@@ -201,4 +201,8 @@
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error querying AI"
   }
+  ,
+  "SPINNER": {
+    "LOADING": "Loading..."
+  }
 }

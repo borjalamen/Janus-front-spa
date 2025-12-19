@@ -10,7 +10,7 @@ import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
 import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { AdministracionComponent } from './app/administracion/administracion';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -29,6 +29,10 @@ import { BitacoraComponent as Bitacora} from './app/bitacora/bitacora';
 import { Jenkins } from './app/jenkins/jenkins';
 import { Infraestructura } from './app/infraestructura/infraestructura';
 import { DescargablesComponent } from './app/descargables/descargables';
+import { spinnerInterceptor } from './app/spinner.interceptor';
+import installNetworkSpinner from './app/network-spinner-patch';
+import { APP_INITIALIZER } from '@angular/core';
+import { SpinnerService } from './app/spinner.service';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -56,8 +60,16 @@ bootstrapApplication(AppComponent, {
       {path: 'infraestructura', component: Infraestructura}
     ]),
 
-    provideHttpClient()
-    
+    provideHttpClient(withInterceptors([spinnerInterceptor]))
+    ,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (spinner: SpinnerService) => () => {
+        try { installNetworkSpinner(spinner); } catch (e) { /* ignore */ }
+      },
+      deps: [SpinnerService],
+      multi: true
+    }
   ]
 })
   .catch((err) => console.error(err));

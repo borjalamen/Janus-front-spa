@@ -23,6 +23,8 @@ import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { AiService } from './ai.service';
+import { SpinnerComponent } from './spinner.component';
+import { SpinnerService } from './spinner.service';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -43,6 +45,8 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     RouterOutlet,
     RouterLink,
     RouterLinkWithHref
+    ,
+    SpinnerComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -188,18 +192,16 @@ export class AppComponent implements OnDestroy {
 
   loadVersion() {
     console.log('CRIDANT /api/config/all');
-
-    this.http.get<any>(`${environment.baseUrl}config/all`)
-      .subscribe({
-        next: (data) => {
-          console.log('RESPUESTA VERSION:', data);
-          this.appVersion = data[0]; 
-        },
-        error: (err) => {
-          console.error('ERROR VERSION:', err);
-          this.appVersion = 'error obteniendo versión';
-        }
-      });
+    this.http.get<any>(`${environment.baseUrl}config/all`).subscribe({
+      next: (data) => {
+        console.log('RESPUESTA VERSION:', data);
+        this.appVersion = data[0]; 
+      },
+      error: (err) => {
+        console.error('ERROR VERSION:', err);
+        this.appVersion = 'error obteniendo versión';
+      }
+    });
   }
 
   openLoginDialog(): void {
