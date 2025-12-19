@@ -28,6 +28,7 @@ export function httpLoaderFactory(http: HttpClient): TranslateLoader {
 import { BitacoraComponent as Bitacora} from './app/bitacora/bitacora';
 import { Jenkins } from './app/jenkins/jenkins';
 import { Infraestructura } from './app/infraestructura/infraestructura';
+import { DescargablesComponent } from './app/descargables/descargables';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -48,6 +49,7 @@ bootstrapApplication(AppComponent, {
       {path: 'formacion', component: FormacionComponent },
       {path: 'planificacion', component: PlanificacionComponent },
       { path: 'administracion', component: AdministracionComponent },
+      { path: 'descargables', component: DescargablesComponent },
       { path: 'bitacora', component: Bitacora},
       {path: 'jenkins', component: Jenkins},
       {path: 'usuario', component: UsuarioComponent},

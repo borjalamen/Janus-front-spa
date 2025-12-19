@@ -8,7 +8,8 @@
     "PLANNING": "Planning",
     "ADMIN": "Administration",
     "LOGBOOK": "Logbook",
-    "INFRASTRUCTURE": "Infrastructure"
+    "INFRASTRUCTURE": "Infrastructure",
+    "DESCARGABLES": "Downloads"
   },
   "USER": {
     "PROFILE": "Profile",
