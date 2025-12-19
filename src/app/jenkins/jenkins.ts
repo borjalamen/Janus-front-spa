@@ -35,7 +35,7 @@ export class Jenkins implements OnInit, OnDestroy {
   editingJenkins: JenkinsItem | null = null;
 
   // baseUrl: http://localhost:8080/api/jenkins
-  private baseUrl = `${environment.baseUrl}/jenkins`;
+  private baseUrl = `${environment.baseUrl}jenkins`;
 
   userRole: string = 'invitado';
   private authSubscription?: Subscription;

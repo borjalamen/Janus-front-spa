@@ -28,8 +28,8 @@ export interface Procedure {
 
 @Injectable({ providedIn: 'root' })
 export class ProceduresService {
-  // si environment.baseUrl = 'http://localhost:8080/api'
-  private baseUrl = `${environment.baseUrl}/procedures`;
+  
+  private baseUrl = `${environment.baseUrl}procedures`;
 
   constructor(private http: HttpClient) {}
 

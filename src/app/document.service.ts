@@ -9,20 +9,20 @@ export type BackendDocument = string;
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
-  // En loc: http://localhost:8080/api/documentos
-  private baseUrl = `${environment.baseUrl}/documentos`;
+  // http://localhost:8080/api/ + documentos = http://localhost:8080/api/documentos
+  private baseUrl = `${environment.baseUrl}documentos`;
 
   constructor(private http: HttpClient) {}
 
   // GET /getAllFolders
   getAllFolders(): Observable<(string | number)[]> {
-    return this.http.get<(string | number)[]>(`${this.baseUrl}/getAllFolders`);
+    return this.http.get<(string | number)[]>(`${this.baseUrl}\/getAllFolders`);
   }
 
   // GET /getAllFiles?idProyecto=...
   getAllFiles(projectId: string | number): Observable<BackendDocument[]> {
     const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.get<BackendDocument[]>(`${this.baseUrl}/getAllFiles`, { params });
+    return this.http.get<BackendDocument[]>(`${this.baseUrl}\/getAllFiles`, { params });
   }
 
   // POST /uploadDoc  (idProyecto + documento)
@@ -31,7 +31,7 @@ export class DocumentService {
     formData.append('idProyecto', String(projectId));
     formData.append('documento', file);
 
-    return this.http.post(`${this.baseUrl}/uploadDoc`, formData, {
+    return this.http.post(`${this.baseUrl}\/uploadDoc`, formData, {
       responseType: 'text'
     });
   }
@@ -42,7 +42,7 @@ export class DocumentService {
       .set('idProyecto', String(projectId))
       .set('nombreArchivo', fileName);
 
-    return this.http.delete(`${this.baseUrl}/deleteFile`, {
+    return this.http.delete(`${this.baseUrl}\/deleteFile`, {
       params,
       responseType: 'text'
     });
@@ -51,7 +51,7 @@ export class DocumentService {
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
     const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.delete(`${this.baseUrl}/deleteAllFiles`, {
+    return this.http.delete(`${this.baseUrl}\/deleteAllFiles`, {
       params,
       responseType: 'text'
     });
