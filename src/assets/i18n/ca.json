@@ -18,7 +18,10 @@
     "DOWNLOADING": "Descarregant...",
     "NO_FILES": "No hi ha fitxers disponibles per descarregar.",
     "LOADING": "Carregant fitxers...",
-    "ERROR": "Error carregant la llista de fitxers. Revisa la consola del navegador."
+    "ERROR": "Error carregant la llista de fitxers. Revisa la consola del navegador.",
+    "SEARCH_PLACEHOLDER": "Cerca per nom, descripció, data...",
+    "NO_RESULTS": "No s'han trobat resultats per la vostra cerca.",
+    "CLEAR": "Netejar"
   },
   "DOCS": {
     "ACORD_DGP": "Acord de confidencialitat (DGP)",

@@ -18,7 +18,10 @@
     "DOWNLOADING": "Descargando...",
     "NO_FILES": "No hay ficheros disponibles para descargar.",
     "LOADING": "Cargando ficheros...",
-    "ERROR": "Error cargando la lista de ficheros. Revisa la consola del navegador."
+    "ERROR": "Error cargando la lista de ficheros. Revisa la consola del navegador.",
+    "SEARCH_PLACEHOLDER": "Buscar por nombre, descripción, fecha...",
+    "NO_RESULTS": "No se encontraron resultados para la búsqueda.",
+    "CLEAR": "Borrar"
   },
   "DOCS": {
     "ACORD_DGP": "Acuerdo de confidencialidad (DGP)",
@@ -87,124 +90,111 @@
     "LABEL_ROLE": "Rol"
   },
   "PROJECTS": {
-  "TITLE": "Proyectos",
-  "DESCRIPTION": "Listado de proyectos, cliente y estado.",
-  "CLIENT": "Cliente",
-  "STATUS": "Estado"
-},
-"PROCEDURES_SECTION": {
-  "TITLE": "Procedimientos",
-  "DESCRIPTION": "Gestión y documentación de procedimientos internos.",
-  "RESPONSIBLE": "Responsable",
-  "STATUS": "Estado"
-},
-"PLANNING_SECTION": {
-  "TITLE": "Planificación",
-  "DESCRIPTION": "Planificación anual, responsables y estado de los planes.",
-  "RESPONSIBLE": "Responsable",
-  "STATUS": "Estado"
-}
-,
-"LOGIN": {
-  "TITLE": "Iniciar sesión",
-  "USERNAME_LABEL": "Usuario",
-  "USERNAME_TITLE": "Usuario",
-  "PASSWORD_LABEL": "Contraseña",
-  "PASSWORD_TITLE": "Contraseña",
-  "BUTTON": "Acceder",
-  "ERROR": "Usuario o contraseña incorrectos"
-},
-"JENKINS": {
-  "TITLE": "Múltiples Jenkins",
-  "ADD_BUTTON": "+ Añadir Jenkins",
-  "DELETE_BUTTON_ON": "Cancelar eliminar",
-  "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
-
-  "POPUP_ADD_TITLE": "Añadir Jenkins",
-  "POPUP_EDIT_TITLE": "Editar Jenkins",
-
-  "FIELD_NAME_LABEL": "Nombre:",
-  "FIELD_NAME_PLACEHOLDER": "Nombre del Jenkins",
-  "FIELD_URL_LABEL": "URL:",
-  "FIELD_URL_PLACEHOLDER": "https://...",
-
-  "CANCEL": "Cancelar",
-  "SAVE": "Guardar",
-  "UPDATE": "Actualizar",
-
-  "DELETE_TITLE": "Eliminar Jenkins",
-  "DELETE_MESSAGE": "¿Estas seguro que quieres eliminar?",
-  "DELETE_ACTION": "Eliminar"
-}
-,
-"INFRA": {
-  "TITLE": "Estado de Proyectos",
-  "STATUS_UP": "UP",
-  "STATUS_WARN": "WARN",
-  "STATUS_DOWN": "DOWN"
-},
-"TRAINING": {
-  "TITLE": "Formaciones",
-  "DESCRIPTION": "Recursos formativos y material de aprendizaje del equipo DevOps.",
-  "RESPONSIBLE": "Responsable",
-  "STATUS": "Estado"
-},
-"DOCUMENTS": {
-  "TITLE": "Documentos",
-  "ADD_BUTTON": "Añadir documento",
-  "PROJECT_ID": "ID:",
-  "PROJECT_NAME": "Nombre:",
-  "ADD_POPUP_TITLE": "Añadir documento",
-  "FIELD_PROJECT_ID": "ID Proyecto:",
-  "FIELD_DOC_NAME": "Nombre del documento:",
-  "BROWSE": "Examinar",
-  "SAVE": "Guardar",
-  "CANCEL": "Cancelar",
-  "DELETE_DOC_TITLE": "Eliminar documento",
-  "DELETE_DOC_QUESTION": "¿Estás seguro que deseas eliminar el documento \"{{name}}\"?",
-  "DELETE_PROJECT_TITLE": "Eliminar proyecto",
-  "DELETE_PROJECT_QUESTION": "¿Estás seguro que deseas eliminar el proyecto \"{{name}}\" y sus documentos?",
-  "DELETE": "Eliminar"
-},
-"SEARCH": {
-  "PLACEHOLDER": "Escribe para buscar..."
-},
-"ERRORS": {
-  "TITLE": "Errores",
-  "DESCRIPTION": "Wiki de errores y soluciones del equipo DevOps.",
-  "RESOLVED": "Resuelto",
-  "CATEGORY": "Categoría",
-  "DESCRIPTION_LABEL": "Descripción",
-  "MARK_PENDING": "Marcar como pendiente",
-  "MARK_RESOLVED": "Marcar como resuelto"
-},
-"USERS": {
-  "TITLE": "Usuarios",
-  "TOGGLE_LIST_SHOW": "Listado de usuarios",
-  "TOGGLE_LIST_HIDE": "Ocultar listado de usuarios",
-  "ADD_BUTTON": "Añadir usuario",
-
-  "ADD_POPUP_TITLE": "Añadir nuevo usuario",
-  "EDIT_POPUP_TITLE": "Editar usuario",
-
-  "FIELD_NAME": "Nombre:",
-  "FIELD_PASSWORD": "Contraseña:",
-  "FIELD_EMAIL": "Email:",
-
-  "ROLE_ADMIN": "Admin",
-  "ROLE_CONSULTOR": "Consultor",
-  "ROLE_DEVOPS": "DevOps",
-
-  "CANCEL": "Cancelar",
-  "SAVE": "Guardar",
-  "UPDATE": "Actualizar",
-
-  "DELETE_TITLE": "Eliminar usuario",
-  "DELETE_MESSAGE": "¿Seguro que quieres eliminar al usuario \"{{name}}\"?",
-  "DELETE_ACTION": "Eliminar"
-}
-,
-
+    "TITLE": "Proyectos",
+    "DESCRIPTION": "Listado de proyectos, cliente y estado.",
+    "CLIENT": "Cliente",
+    "STATUS": "Estado"
+  },
+  "PROCEDURES_SECTION": {
+    "TITLE": "Procedimientos",
+    "DESCRIPTION": "Gestión y documentación de procedimientos internos.",
+    "RESPONSIBLE": "Responsable",
+    "STATUS": "Estado"
+  },
+  "PLANNING_SECTION": {
+    "TITLE": "Planificación",
+    "DESCRIPTION": "Planificación anual, responsables y estado de los planes.",
+    "RESPONSIBLE": "Responsable",
+    "STATUS": "Estado"
+  },
+  "LOGIN": {
+    "TITLE": "Iniciar sesión",
+    "USERNAME_LABEL": "Usuario",
+    "USERNAME_TITLE": "Usuario",
+    "PASSWORD_LABEL": "Contraseña",
+    "PASSWORD_TITLE": "Contraseña",
+    "BUTTON": "Acceder",
+    "ERROR": "Usuario o contraseña incorrectos"
+  },
+  "JENKINS": {
+    "TITLE": "Múltiples Jenkins",
+    "ADD_BUTTON": "+ Añadir Jenkins",
+    "DELETE_BUTTON_ON": "Cancelar eliminar",
+    "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
+    "POPUP_ADD_TITLE": "Añadir Jenkins",
+    "POPUP_EDIT_TITLE": "Editar Jenkins",
+    "FIELD_NAME_LABEL": "Nombre:",
+    "FIELD_NAME_PLACEHOLDER": "Nombre del Jenkins",
+    "FIELD_URL_LABEL": "URL:",
+    "FIELD_URL_PLACEHOLDER": "https://...",
+    "CANCEL": "Cancelar",
+    "SAVE": "Guardar",
+    "UPDATE": "Actualizar",
+    "DELETE_TITLE": "Eliminar Jenkins",
+    "DELETE_MESSAGE": "¿Estas seguro que quieres eliminar?",
+    "DELETE_ACTION": "Eliminar"
+  },
+  "INFRA": {
+    "TITLE": "Estado de Proyectos",
+    "STATUS_UP": "UP",
+    "STATUS_WARN": "WARN",
+    "STATUS_DOWN": "DOWN"
+  },
+  "TRAINING": {
+    "TITLE": "Formaciones",
+    "DESCRIPTION": "Recursos formativos y material de aprendizaje del equipo DevOps.",
+    "RESPONSIBLE": "Responsable",
+    "STATUS": "Estado"
+  },
+  "DOCUMENTS": {
+    "TITLE": "Documentos",
+    "ADD_BUTTON": "Añadir documento",
+    "PROJECT_ID": "ID:",
+    "PROJECT_NAME": "Nombre:",
+    "ADD_POPUP_TITLE": "Añadir documento",
+    "FIELD_PROJECT_ID": "ID Proyecto:",
+    "FIELD_DOC_NAME": "Nombre del documento:",
+    "BROWSE": "Examinar",
+    "SAVE": "Guardar",
+    "CANCEL": "Cancelar",
+    "DELETE_DOC_TITLE": "Eliminar documento",
+    "DELETE_DOC_QUESTION": "¿Estás seguro que deseas eliminar el documento \"{{name}}\"?",
+    "DELETE_PROJECT_TITLE": "Eliminar proyecto",
+    "DELETE_PROJECT_QUESTION": "¿Estás seguro que deseas eliminar el proyecto \"{{name}}\" y sus documentos?",
+    "DELETE": "Eliminar"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Escribe para buscar..."
+  },
+  "ERRORS": {
+    "TITLE": "Errores",
+    "DESCRIPTION": "Wiki de errores y soluciones del equipo DevOps.",
+    "RESOLVED": "Resuelto",
+    "CATEGORY": "Categoría",
+    "DESCRIPTION_LABEL": "Descripción",
+    "MARK_PENDING": "Marcar como pendiente",
+    "MARK_RESOLVED": "Marcar como resuelto"
+  },
+  "USERS": {
+    "TITLE": "Usuarios",
+    "TOGGLE_LIST_SHOW": "Listado de usuarios",
+    "TOGGLE_LIST_HIDE": "Ocultar listado de usuarios",
+    "ADD_BUTTON": "Añadir usuario",
+    "ADD_POPUP_TITLE": "Añadir nuevo usuario",
+    "EDIT_POPUP_TITLE": "Editar usuario",
+    "FIELD_NAME": "Nombre:",
+    "FIELD_PASSWORD": "Contraseña:",
+    "FIELD_EMAIL": "Email:",
+    "ROLE_ADMIN": "Admin",
+    "ROLE_CONSULTOR": "Consultor",
+    "ROLE_DEVOPS": "DevOps",
+    "CANCEL": "Cancelar",
+    "SAVE": "Guardar",
+    "UPDATE": "Actualizar",
+    "DELETE_TITLE": "Eliminar usuario",
+    "DELETE_MESSAGE": "¿Seguro que quieres eliminar al usuario \"{{name}}\"?",
+    "DELETE_ACTION": "Eliminar"
+  },
   "CLIP": {
     "HELLO": "Hola, soy tu asistente IAnusHub, ¿en qué te puedo ayudar?",
     "SEND": "Enviar",

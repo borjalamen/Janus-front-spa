@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 interface DocumentoIndexItem {
@@ -10,6 +13,7 @@ interface DocumentoIndexItem {
   path: string;
   size?: number;
   description?: string;
+  descriptionKey?: string;
   modified?: string;
 }
 
@@ -18,15 +22,16 @@ interface DocumentoIndexItem {
   standalone: true,
   templateUrl: './descargables.html',
   styleUrls: ['./descargables.css'],
-  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule]
+  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule]
 })
 export class DescargablesComponent implements OnInit {
+  searchText = '';
   documentos: DocumentoIndexItem[] = [];
   loading = true;
   loadError = false;
   downloading: { [path: string]: boolean } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private translate: TranslateService) {}
 
   ngOnInit(): void {
     const url = 'assets/documents/index.json';
@@ -86,5 +91,27 @@ export class DescargablesComponent implements OnInit {
     } catch (e) {
       return iso;
     }
+  }
+
+  get filteredDocuments(): DocumentoIndexItem[] {
+    const q = (this.searchText || '').trim().toLowerCase();
+    if (!q) return this.documentos;
+    return this.documentos.filter(doc => {
+      const parts: string[] = [];
+      parts.push(doc.name || '');
+      parts.push(doc.path || '');
+      // descriptionKey key and translated text
+      if (doc.descriptionKey) parts.push(doc.descriptionKey);
+      try {
+        const trans = this.translate.instant(doc.descriptionKey || '');
+        if (trans) parts.push(trans);
+      } catch {}
+      if (doc.description) parts.push(doc.description);
+      if (doc.modified) parts.push(doc.modified);
+      if (doc.size != null) parts.push(String(doc.size));
+
+      const hay = parts.join(' ').toLowerCase();
+      return hay.includes(q);
+    });
   }
 }

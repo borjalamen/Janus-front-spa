@@ -23,3 +23,10 @@
 .doc-name{font-weight:600}
 
 .doc-modified{color:#999;font-size:0.85em;margin-top:6px}
+
+.desc-search{margin:12px 0}
+.desc-search input[type=search]{width:100%;padding:8px;border-radius:6px;border:1px solid #ccc}
+.search-field{width:100%}
+.search-field .mat-form-field-outline{border-color:rgba(255,255,255,0.05)}
+.search-field .mat-form-field-infix{background:rgba(255,255,255,0.02);padding-left:8px}
+.search-field.mat-form-field-appearance-outline .mat-form-field-outline-thick{border-color:#0a7f7f}

@@ -1,8 +1,18 @@
 <div class="descargables-root">
   <h2>{{ 'DESCARGABLES.TITLE' | translate }}</h2>
 
+  <div class="desc-search">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="search" [(ngModel)]="searchText" [placeholder]="'DESCARGABLES.SEARCH_PLACEHOLDER' | translate" [attr.aria-label]="'DESCARGABLES.SEARCH_PLACEHOLDER' | translate" />
+      <button *ngIf="searchText" mat-icon-button matSuffix (click)="searchText=''" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
   <div *ngIf="documentos?.length; else noFiles">
-    <div *ngFor="let doc of documentos" class="doc-row">
+    <div *ngFor="let doc of filteredDocuments" class="doc-row">
       <div class="doc-info">
         <div class="doc-title-row">
           <strong class="doc-name">{{ doc.name }}</strong>
@@ -23,6 +33,7 @@
 
   <ng-template #noFiles>
     <p *ngIf="!loading && !loadError">{{ 'DESCARGABLES.NO_FILES' | translate }}</p>
+    <p *ngIf="!loading && !loadError && (documentos?.length && filteredDocuments?.length === 0)">{{ 'DESCARGABLES.NO_RESULTS' | translate }}</p>
     <p *ngIf="loading">{{ 'DESCARGABLES.LOADING' | translate }}</p>
     <p *ngIf="loadError">{{ 'DESCARGABLES.ERROR' | translate }}</p>
   </ng-template>
