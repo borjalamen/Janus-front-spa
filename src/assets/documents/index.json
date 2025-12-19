@@ -17,6 +17,7 @@
     "name": "Formulari petició accés a base de dades - CPD v1.2.pdf",
     "path": "Formulari petició accés a base de dades - CPD v1.2.pdf",
     "size": 698943,
+    "descriptionKey": "DOCS.FORMULARIO_ACCESO_BD_CPD_V1_2",
     "modified": "2025-12-19T13:12:11.9298438+01:00"
   },
   {
@@ -30,12 +31,14 @@
     "name": "Guia_PrimerosAuxilios_SAMUR.pdf",
     "path": "Guia_PrimerosAuxilios_SAMUR.pdf",
     "size": 1165775,
+    "descriptionKey": "DOCS.GUIA_PRIMEROSAUXILIOS_SAMUR",
     "modified": "2025-12-19T13:10:13.5857506+01:00"
   },
   {
     "name": "Guía VPayment.pdf",
     "path": "Guía VPayment.pdf",
     "size": 1475891,
+    "descriptionKey": "DOCS.GUIA_VPAYMENT",
     "modified": "2025-12-19T13:12:09.9198146+01:00"
   }
 ]

@@ -26,7 +26,10 @@
   "DOCS": {
     "ACORD_DGP": "Acuerdo de confidencialidad (DGP)",
     "DUO": "Guía rápida de DUO para autenticación multifactor",
-    "FORMULARIO_HOJA_DESPLIEGUE": "Formulario para Hojas de Despliegues para el equipo de DevOps"
+    "FORMULARIO_HOJA_DESPLIEGUE": "Formulario para Hojas de Despliegues para el equipo de DevOps",
+    "FORMULARIO_ACCESO_BD_CPD_V1_2": "Formulario de petición de acceso a base de datos - CPD v1.2",
+    "GUIA_PRIMEROSAUXILIOS_SAMUR": "Guía de Primeros Auxilios (SAMUR)",
+    "GUIA_VPAYMENT": "Guía VPayment"
   },
   "USER": {
     "PROFILE": "Perfil",

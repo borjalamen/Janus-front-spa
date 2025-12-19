@@ -27,6 +27,9 @@
     "ACORD_DGP": "Confidentiality agreement (DGP)",
     "DUO": "Quick DUO guide for multi-factor authentication",
     "FORMULARIO_HOJA_DESPLIEGUE": "Deployment sheet form for the DevOps team"
+    ,"FORMULARIO_ACCESO_BD_CPD_V1_2": "Database access request form - CPD v1.2",
+    "GUIA_PRIMEROSAUXILIOS_SAMUR": "First Aid Guide (SAMUR)",
+    "GUIA_VPAYMENT": "VPayment Guide"
   },
   "USER": {
     "PROFILE": "Profile",
