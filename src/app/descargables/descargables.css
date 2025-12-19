@@ -1,0 +1,19 @@
+.descargables-root {
+  padding: 16px;
+}
+
+.descargables-root h2 {
+  margin-top: 0;
+}
+
+.doc-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+.doc-info{flex:1}
+.doc-desc{color:#666;font-size:0.9em}
+.doc-actions{margin-left:12px}
+.download-link{text-decoration:none}
