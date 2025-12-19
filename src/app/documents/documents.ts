@@ -197,16 +197,21 @@ export class DocumentsComponent implements OnInit {
   }
 
   deleteProject() {
-    if (!this.projectToDelete) return;
+  if (!this.projectToDelete) return;
 
-    console.log('DELETE PROJECT', this.projectToDelete.projectId);
+  const id = this.projectToDelete.projectId;
 
-    this.documentService.deleteProjectFiles(this.projectToDelete.projectId).subscribe({
-      next: () => {
-        this.loadProjects();
-        this.cancelDeleteProject();
-      },
-      error: err => console.error('Error esborrant projecte', err)
-    });
-  }
+  console.log('DELETE PROJECT', id);
+
+  this.documentService.deleteProjectFiles(id).subscribe({
+    next: () => {
+      // Treu la carpeta de les llistes del front
+      this.projects = this.projects.filter(p => p.projectId !== id);
+      this.projectsFiltrats = this.projects.filter(p => p.projectId !== id);
+
+      this.cancelDeleteProject(); 
+    },
+    error: err => console.error('Error esborrant projecte', err)
+  });
+}
 }

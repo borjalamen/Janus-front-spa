@@ -1,3 +1,10 @@
+body {
+  background: #0F1115;
+  color: #E0E0E0;
+  font-family: 'Roboto', Arial, sans-serif;
+  margin: 0;
+}
+
 /* Container general */
 .section-container {
   padding: 24px;
@@ -9,23 +16,21 @@
 }
 
 /* Header + botó afegir */
-.procedures-header {
+.documents-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.procedures-header h2 {
+.documents-header h2 {
   color: #FBC02D;
   font-weight: bold;
-  margin: 0;
+  margin: 0 0 8px 0;
 }
 
-.procedures-header .subtitle {
-  margin: 4px 0 0 0;
-  color: #b0bec5;
-  font-size: 14px;
+p {
+  color: #E0E0E0;
 }
 
 /* Botó estil Jenkins reutilitzat */
@@ -52,7 +57,10 @@
   box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
 }
 
-/* Grid de procediments (cards) */
+/* ========================= */
+/*   BLOCS DE PROCEDIMENTS   */
+/* ========================= */
+
 .procedures-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -116,6 +124,7 @@
   margin-top: 10px;
   display: flex;
   gap: 8px;
+  justify-content: flex-end; /* botons a la dreta */
 }
 
 .procedure-actions .jenkins-add-btn {
@@ -123,7 +132,10 @@
   font-size: 12px;
 }
 
-/* POPUPS (reutilitzant estil documents) */
+/* ========================= */
+/*           POPUPS          */
+/* ========================= */
+
 .popup-fons {
   position: fixed;
   inset: 0;
@@ -184,7 +196,7 @@
   margin-top: 8px;
 }
 
-.cancel-btn,
+.cancelar-btn,
 .guardar-btn {
   padding: 8px 16px;
   border-radius: 999px;
@@ -204,12 +216,13 @@
   color: #16181c;
 }
 
-.cancel-btn {
+.cancelar-btn {
   background: #1e1e1e;
-  color: #1e1e1e;
+  color: #E0E0E0;
   border: 1px solid #555;
 }
 
-.cancel-btn:hover {
-  background: #333;
+.cancelar-btn:hover {
+  background: #E53935;
+  color: #1e84a3;
 }
