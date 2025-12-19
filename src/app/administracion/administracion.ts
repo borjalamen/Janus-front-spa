@@ -47,7 +47,7 @@ export class AdministracionComponent implements OnInit {
   usuariEditant: UsuariBackend | null = null;
   usuariAEsborrar: UsuariBackend | null = null;
 
-  private baseUrl = `${environment.baseUrl}/users`;
+  private baseUrl = `${environment.baseUrl}users`;
 
   constructor(
     private http: HttpClient,
