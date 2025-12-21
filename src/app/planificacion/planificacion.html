@@ -1,16 +1,91 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-<div class="section-container">
-  <h2>{{ 'PLANNING_SECTION.TITLE' | translate }}</h2>
-  <p>{{ 'PLANNING_SECTION.DESCRIPTION' | translate }}</p>
-
-  <div *ngFor="let plan of plansFiltrats" class="plan-item">
-    <div class="plan-nom"><b>{{ plan.nom }}</b></div>
-    <div class="plan-responsable">
-      {{ 'PLANNING_SECTION.RESPONSIBLE' | translate }}: {{ plan.responsable }}
+<div class="planning-root">
+  <div class="planning-header">
+    <button class="nav-btn" (click)="prevWeek()">◀</button>
+    <div class="title-block">
+      <h2>{{ 'PLANNING.TITLE' | translate }}</h2>
+      <div class="sub">{{ weekRange() }}</div>
     </div>
-    <div class="plan-estat">
-      {{ 'PLANNING_SECTION.STATUS' | translate }}: {{ plan.estat }}
+    <button class="nav-btn" (click)="nextWeek()">▶</button>
+  </div>
+
+  <div class="grid-week">
+    <div class="grid-top">
+      <div class="corner"></div>
+      <div *ngFor="let d of daysOfWeek()" class="day-col">{{ formatDay(d) }} <div class="day-sub">{{ d.toUTCString().slice(0,3) }}</div></div>
+    </div>
+
+    <div class="grid-body">
+      <div class="corner-spacer"></div>
+      <div class="days-cols full-width">
+        <div *ngFor="let d of daysOfWeek()" class="day-col-body">
+          <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
+            <div class="slot-inner">
+              <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
+                <div class="event-top">
+                  <strong class="project">{{ ev.project }}</strong>
+                  <span class="time">{{ ev.startTime }}-{{ ev.endTime }}</span>
+                </div>
+                <div class="event-bottom">
+                  <span class="dev">{{ ev.devOps }}</span>
+                  <button class="x" (click)="$event.stopPropagation(); deleteEvent(ev.id)">✖</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend-bottom">
+    <div class="legend-item"><span class="legend-box dev"></span> {{ 'PLANNING.LEGEND_DEV' | translate }}</div>
+    <div class="legend-item"><span class="legend-box int"></span> {{ 'PLANNING.LEGEND_INT' | translate }}</div>
+    <div class="legend-item"><span class="legend-box pre"></span> {{ 'PLANNING.LEGEND_PRE' | translate }}</div>
+    <div class="legend-item"><span class="legend-box pro"></span> {{ 'PLANNING.LEGEND_PRO' | translate }}</div>
+  </div>
+  </div>
+
+<!-- Modal -->
+  <div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ editing ? ('PLANNING.EDIT_EVENT' | translate) : ('PLANNING.NEW_EVENT' | translate) }}</h3>
+    <div class="form-row">
+      <label>{{ 'PLANNING.PROJECT' | translate }}</label>
+      <input [(ngModel)]="draft.project" />
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.ENV' | translate }}</label>
+      <select [(ngModel)]="draft.env">
+        <option *ngFor="let e of envs" [value]="e">{{ e }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.DATE' | translate }}</label>
+      <input type="date" [(ngModel)]="draft.date" />
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.START' | translate }}</label>
+      <input type="time" [(ngModel)]="draft.startTime" />
+      <label>{{ 'PLANNING.END' | translate }}</label>
+      <input type="time" [(ngModel)]="draft.endTime" />
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.DEVOPS' | translate }}</label>
+      <select [(ngModel)]="draft.devOps">
+        <option *ngFor="let d of devOpsList" [value]="d">{{ d }}</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.NOTES' | translate }}</label>
+      <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" (click)="saveModal()">{{ 'PLANNING.SAVE' | translate }}</button>
+      <button class="btn" (click)="closeModal()">{{ 'PLANNING.CANCEL' | translate }}</button>
+      <button *ngIf="editing" class="btn warning" (click)="removeFromModal()">{{ 'PLANNING.DELETE' | translate }}</button>
     </div>
   </div>
 </div>

@@ -205,4 +205,24 @@
   "SPINNER": {
     "LOADING": "Loading..."
   }
+  ,
+  "PLANNING": {
+    "TITLE": "Weekly planning",
+    "LEGEND_DEV": "DEV (Green)",
+    "LEGEND_INT": "INT (Blue)",
+    "LEGEND_PRE": "PRE (Yellow)",
+    "LEGEND_PRO": "PRO (Red)",
+    "NEW_EVENT": "New event",
+    "EDIT_EVENT": "Edit event",
+    "PROJECT": "Project",
+    "ENV": "Environment",
+    "DATE": "Date",
+    "START": "Start time",
+    "END": "End time",
+    "DEVOPS": "DevOps",
+    "NOTES": "Notes",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete"
+  }
 }

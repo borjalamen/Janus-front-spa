@@ -209,4 +209,24 @@
     "SPINNER": {
       "LOADING": "Carregant..."
     }
+     ,
+  "PLANNING": {
+    "TITLE": "Planificació setmanal",
+    "LEGEND_DEV": "DEV (Verd)",
+    "LEGEND_INT": "INT (Blau)",
+    "LEGEND_PRE": "PRE (Groc)",
+    "LEGEND_PRO": "PRO (Vermell)",
+    "NEW_EVENT": "Nou esdeveniment",
+    "EDIT_EVENT": "Editar esdeveniment",
+    "PROJECT": "Projecte",
+    "ENV": "Entorn",
+    "DATE": "Data",
+    "START": "Hora inici",
+    "END": "Hora fi",
+    "DEVOPS": "DevOps",
+    "NOTES": "Notes",
+    "SAVE": "Desar",
+    "CANCEL": "Cancel·lar",
+    "DELETE": "Eliminar"
+  }
 }

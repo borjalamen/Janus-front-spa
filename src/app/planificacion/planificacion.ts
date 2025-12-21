@@ -1,53 +1,201 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
+
+type Env = 'DEV' | 'INT' | 'PRE' | 'PRO';
+
+interface EventItem {
+  id: string;
+  env: Env;
+  project: string;
+  date: string; // ISO yyyy-mm-dd
+  startTime: string; // HH:MM
+  endTime: string;   // HH:MM
+  devOps: string;
+  notes?: string;
+}
 
 @Component({
   selector: 'app-planificacion',
   templateUrl: './planificacion.html',
   styleUrls: ['./planificacion.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent, TranslateModule]
+  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule]
 })
-export class PlanificacionComponent {
-  title = 'Planificaciones';
+export class PlanificacionComponent implements OnInit {
+  title = 'Planificación semanal';
 
-  
- plans = [
-  { nom: 'Plan Formación 2025', responsable: 'Anna', estat: 'Activo' },
-  { nom: 'Plan Mantenimiento 2024', responsable: 'Joan', estat: 'Finalizado' },
-  { nom: 'Plan Seguridad', responsable: 'Carla', estat: 'Activo' },
-  { nom: 'Plan Nuevas Tecnologias', responsable: 'Pau', estat: 'En proceso' },
-  { nom: 'Plan Desarrollo', responsable: 'Marc', estat: 'Activo' },
-  { nom: 'Plan Auditoria', responsable: 'Gemma', estat: 'Finalizado' },
-  { nom: 'Plan RRHH', responsable: 'Sergi', estat: 'En procés' },
-  { nom: 'Plan Infraestructura', responsable: 'Jordi', estat: 'Actiu' },
-  { nom: 'Plan Calidad', responsable: 'Sílvia', estat: 'Finalizado' },
-  { nom: 'Plan Sostenibilidad', responsable: 'Ramon', estat: 'Activo' },
-  { nom: 'Plan Comunicación', responsable: 'Helena', estat: 'En revisión' },
-  { nom: 'Plan Innovación', responsable: 'Núria', estat: 'Activo' },
-  { nom: 'Plan IT', responsable: 'Oriol', estat: 'Finalizado' },
-  { nom: 'Plan Atención al Cliente', responsable: 'Mireia', estat: 'En proceso' },
-  { nom: 'Plan Expansión', responsable: 'Albert', estat: 'Planificado' },
-  { nom: 'Plan Marketing', responsable: 'Cristina', estat: 'Activo' },
-  { nom: 'Plan Logística', responsable: 'Eva', estat: 'Finalitzado' },
-  { nom: 'Plan Controles Internos', responsable: 'Dani', estat: 'En curso' }
-  
-];
+  year = 2026;
+  // current week start (Date object, Monday)
+  weekStart!: Date;
+  envs: Env[] = ['DEV', 'INT', 'PRE', 'PRO'];
 
-  plansFiltrats = this.plans;
+  events: EventItem[] = [];
+
+  // search term from buscador
+  searchTerm = '';
+
+  readonly STORAGE_KEY = 'janus_weekly_planning_2026_v1';
+
+  // modal / draft state
+  showModal = false;
+  editing?: EventItem;
+  draft: Partial<EventItem> = {};
+
+  devOpsList = ['Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil'];
+
+  ngOnInit(): void {
+    // Inicializar la semana en la semana que comienza mañana (por petición)
+    const tomorrow = new Date();
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+    this.weekStart = this.startOfWeek(tomorrow);
+    this.load();
+  }
+
+  startOfWeek(d: Date) {
+    // compute Monday of week in UTC
+    const dt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const day = dt.getUTCDay();
+    const diff = (day === 0 ? -6 : 1 - day);
+    dt.setUTCDate(dt.getUTCDate() + diff);
+    return new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate()));
+  }
+
+  prevWeek() {
+    this.weekStart = new Date(this.weekStart.getTime() - 7 * 24 * 3600 * 1000);
+  }
+
+  nextWeek() {
+    this.weekStart = new Date(this.weekStart.getTime() + 7 * 24 * 3600 * 1000);
+  }
+
+  daysOfWeek() {
+    const days: Date[] = [];
+    for (let i = 0; i < 7; i++) {
+      days.push(new Date(this.weekStart.getTime() + i * 24 * 3600 * 1000));
+    }
+    return days;
+  }
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      if (raw) this.events = JSON.parse(raw) as EventItem[];
+    } catch {}
+  }
+
+  save() {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.events));
+  }
+
+  keyDate(d: Date) {
+    return d.toISOString().slice(0, 10);
+  }
+
+  eventsFor(env: Env, day: Date) {
+    const k = this.keyDate(day);
+    const list = this.events.filter(e => e.env === env && e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    if (!this.searchTerm) return list;
+    const term = this.searchTerm.toLowerCase();
+    return list.filter(e =>
+      (e.project && e.project.toLowerCase().includes(term)) ||
+      (e.devOps && e.devOps.toLowerCase().includes(term)) ||
+      (e.notes && e.notes.toLowerCase().includes(term))
+    );
+  }
+
+  eventsForDay(day: Date) {
+    const k = this.keyDate(day);
+    let list = this.events.filter(e => e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    if (!this.searchTerm) return list;
+    const term = this.searchTerm.toLowerCase();
+    list = list.filter(e =>
+      (e.project && e.project.toLowerCase().includes(term)) ||
+      (e.devOps && e.devOps.toLowerCase().includes(term)) ||
+      (e.notes && e.notes.toLowerCase().includes(term))
+    );
+    return list;
+  }
 
   filtrar(valor: string) {
-    if (!valor) {
-      this.plansFiltrats = this.plans;
+    this.searchTerm = (valor || '').trim().toLowerCase();
+  }
+
+  createOrEditEvent(existing?: EventItem, env?: Env, day?: Date) {
+    // open modal with draft prefilled
+    if (existing) {
+      this.editing = existing;
+      this.draft = { ...existing };
     } else {
-      const v = valor.toLowerCase();
-      this.plansFiltrats = this.plans.filter(p =>
-        p.nom.toLowerCase().includes(v) ||
-        p.responsable.toLowerCase().includes(v) ||
-        p.estat.toLowerCase().includes(v)
-      );
+      const date = (day ? this.keyDate(day) : this.keyDate(this.weekStart));
+      this.editing = undefined;
+      this.draft = {
+        env: env || 'DEV',
+        project: '',
+        date,
+        startTime: '09:00',
+        endTime: '10:00',
+        devOps: this.devOpsList[0]
+      };
     }
+    this.showModal = true;
+  }
+
+  saveModal() {
+    // validate required fields
+    if (!this.draft || !this.draft.project || !this.draft.startTime || !this.draft.endTime || !this.draft.date || !this.draft.env) {
+      alert('Rellena proyecto, hora inicio, hora fin y entorno');
+      return;
+    }
+    if (this.editing) {
+      const idx = this.events.findIndex(e => e.id === this.editing!.id);
+      if (idx !== -1) this.events[idx] = { ...(this.editing as EventItem), ...(this.draft as EventItem) };
+    } else {
+      const e: EventItem = {
+        id: Math.random().toString(36).slice(2,9),
+        env: this.draft.env as Env,
+        project: this.draft.project as string,
+        date: this.draft.date as string,
+        startTime: this.draft.startTime as string,
+        endTime: this.draft.endTime as string,
+        devOps: this.draft.devOps as string,
+        notes: this.draft.notes
+      };
+      this.events.push(e);
+    }
+    this.save();
+    this.closeModal();
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.editing = undefined;
+    this.draft = {};
+  }
+
+  removeFromModal() {
+    if (!this.editing) return;
+    if (!confirm('¿Eliminar evento?')) return;
+    this.events = this.events.filter(e => e.id !== this.editing!.id);
+    this.save();
+    this.closeModal();
+  }
+
+  deleteEvent(id: string) {
+    if (!confirm('¿Eliminar evento?')) return;
+    this.events = this.events.filter(e => e.id !== id);
+    this.save();
+  }
+
+  formatDay(d: Date) {
+    return `${d.getUTCDate()}/${d.getUTCMonth()+1}`;
+  }
+
+  weekRange() {
+    const start = this.weekStart;
+    const end = new Date(this.weekStart.getTime() + 6 * 24 * 3600 * 1000);
+    return `${this.formatDay(start)} - ${this.formatDay(end)}/${end.getUTCFullYear()}`;
   }
 }
