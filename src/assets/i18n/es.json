@@ -229,6 +229,8 @@
     "NOTES": "Notas",
     "SAVE": "Guardar",
     "CANCEL": "Cancelar",
-    "DELETE": "Eliminar"
+    "DELETE": "Eliminar",
+    "ERROR_REQUIRED": "Rellena proyecto, hora inicio, hora fin y entorno",
+    "DELETE_CONFIRM": "¿Eliminar evento?"
   }
 }

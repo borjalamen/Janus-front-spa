@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 type Env = 'DEV' | 'INT' | 'PRE' | 'PRO';
 
@@ -45,6 +45,9 @@ export class PlanificacionComponent implements OnInit {
   draft: Partial<EventItem> = {};
 
   devOpsList = ['Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil'];
+  validationError: string | null = null;
+
+  constructor(private translate: TranslateService) {}
 
   ngOnInit(): void {
     // Inicializar la semana en la semana que comienza mañana (por petición)
@@ -140,13 +143,14 @@ export class PlanificacionComponent implements OnInit {
         devOps: this.devOpsList[0]
       };
     }
+    this.validationError = null;
     this.showModal = true;
   }
 
   saveModal() {
     // validate required fields
     if (!this.draft || !this.draft.project || !this.draft.startTime || !this.draft.endTime || !this.draft.date || !this.draft.env) {
-      alert('Rellena proyecto, hora inicio, hora fin y entorno');
+      this.validationError = this.translate.instant('PLANNING.ERROR_REQUIRED');
       return;
     }
     if (this.editing) {
@@ -173,18 +177,19 @@ export class PlanificacionComponent implements OnInit {
     this.showModal = false;
     this.editing = undefined;
     this.draft = {};
+    this.validationError = null;
   }
 
   removeFromModal() {
     if (!this.editing) return;
-    if (!confirm('¿Eliminar evento?')) return;
+    if (!window.confirm(this.translate.instant('PLANNING.DELETE_CONFIRM'))) return;
     this.events = this.events.filter(e => e.id !== this.editing!.id);
     this.save();
     this.closeModal();
   }
 
   deleteEvent(id: string) {
-    if (!confirm('¿Eliminar evento?')) return;
+    if (!window.confirm(this.translate.instant('PLANNING.DELETE_CONFIRM'))) return;
     this.events = this.events.filter(e => e.id !== id);
     this.save();
   }

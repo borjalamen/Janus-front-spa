@@ -223,6 +223,8 @@
     "NOTES": "Notes",
     "SAVE": "Save",
     "CANCEL": "Cancel",
-    "DELETE": "Delete"
+    "DELETE": "Delete",
+    "ERROR_REQUIRED": "Please fill project, start time, end time and environment",
+    "DELETE_CONFIRM": "Delete event?"
   }
 }

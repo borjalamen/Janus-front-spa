@@ -52,7 +52,8 @@
 .env-col{width:120px;display:flex;flex-direction:column}
 .env-cell{height:84px;display:flex;align-items:center;padding-left:8px;border-bottom:1px solid rgba(255,255,255,0.03);font-weight:700}
 
-.days-cols{display:flex;flex:1}
+.days-scroll{overflow-x:auto}
+.days-cols{display:flex;flex:1;width:max-content}
 .day-col-body{min-width:120px;border-left:1px solid rgba(255,255,255,0.02)}
 .slot{min-height:120px;border-bottom:1px solid rgba(255,255,255,0.02);padding:6px;cursor:pointer}
 .slot-inner{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto}
@@ -92,3 +93,4 @@
 .form-row label{width:110px;font-weight:700}
 .form-row input,.form-row select,.form-row textarea{flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:#081018;color:var(--muted)}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.modal-error{background:#3b1010;color:#ffd7d7;padding:10px;border-radius:6px;margin-top:8px;border:1px solid rgba(244,67,54,0.18)}

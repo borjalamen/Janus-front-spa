@@ -18,6 +18,7 @@
 
     <div class="grid-body">
       <div class="corner-spacer"></div>
+      <div class="days-scroll">
       <div class="days-cols full-width">
         <div *ngFor="let d of daysOfWeek()" class="day-col-body">
           <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
@@ -35,6 +36,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -81,6 +83,8 @@
       <label>{{ 'PLANNING.NOTES' | translate }}</label>
       <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
     </div>
+
+    <div *ngIf="validationError" class="modal-error">{{ validationError }}</div>
 
     <div class="modal-actions">
       <button class="btn" (click)="saveModal()">{{ 'PLANNING.SAVE' | translate }}</button>

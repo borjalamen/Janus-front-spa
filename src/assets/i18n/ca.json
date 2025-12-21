@@ -193,10 +193,6 @@
   "CANCEL": "Cancel·lar",
   "SAVE": "Desar"
 },
-
-
-
-
   "CLIP": {
     "HELLO": "Hola, sóc el teu assistent IAnusHub, en què et puc ajudar?",
     "SEND": "Enviar",
@@ -227,6 +223,8 @@
     "NOTES": "Notes",
     "SAVE": "Desar",
     "CANCEL": "Cancel·lar",
-    "DELETE": "Eliminar"
+    "DELETE": "Eliminar",
+    "ERROR_REQUIRED": "Omple projecte, hora inici, hora fi i entorn",
+    "DELETE_CONFIRM": "Eliminar esdeveniment?"
   }
 }
