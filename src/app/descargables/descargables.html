@@ -11,7 +11,7 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="documentos?.length; else noFiles">
+  <div *ngIf="documentos && documentos.length; else noFiles">
     <div *ngFor="let doc of filteredDocuments" class="doc-row">
       <div class="doc-info">
         <div class="doc-title-row">
@@ -33,7 +33,7 @@
 
   <ng-template #noFiles>
     <p *ngIf="!loading && !loadError">{{ 'DESCARGABLES.NO_FILES' | translate }}</p>
-    <p *ngIf="!loading && !loadError && (documentos?.length && filteredDocuments?.length === 0)">{{ 'DESCARGABLES.NO_RESULTS' | translate }}</p>
+    <p *ngIf="!loading && !loadError && (documentos && documentos.length && filteredDocuments && filteredDocuments.length === 0)">{{ 'DESCARGABLES.NO_RESULTS' | translate }}</p>
     <p *ngIf="loading">{{ 'DESCARGABLES.LOADING' | translate }}</p>
     <p *ngIf="loadError">{{ 'DESCARGABLES.ERROR' | translate }}</p>
   </ng-template>

@@ -126,13 +126,13 @@
 </div>
 
 <!-- Popup confirmar esborrat -->
-<div class="popup-fons" *ngIf="mostrarPopupDelete">
+<div class="popup-fons" *ngIf="mostrarPopupDelete && usuariAEsborrar">
   <div class="popup-container">
     <h3>{{ 'USERS.DELETE_TITLE' | translate }}</h3>
     <p>
       {{
         'USERS.DELETE_MESSAGE'
-          | translate:{ name: usuariAEsborrar?.fullName }
+          | translate:{ name: usuariAEsborrar.fullName }
       }}
     </p>
 

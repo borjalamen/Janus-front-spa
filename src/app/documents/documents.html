@@ -35,7 +35,7 @@
           </button>
         </div>
 
-        <div *ngIf="project.documents?.length">
+        <div *ngIf="project.documents && project.documents.length">
           <div *ngFor="let doc of project.documents" class="document-item">
             <div class="doc-left">
               <mat-icon>description</mat-icon>
@@ -113,7 +113,7 @@
     <p>
       {{
         'DOCUMENTS.DELETE_DOC_QUESTION'
-          | translate:{ name: docToDelete?.document }
+          | translate:{ name: docToDelete.document }
       }}
     </p>
     <div class="popup-actions">
@@ -140,7 +140,7 @@
     <p>
       {{
         'DOCUMENTS.DELETE_PROJECT_QUESTION'
-          | translate:{ name: projectToDelete?.name }
+          | translate:{ name: projectToDelete.name }
       }}
     </p>
     <div class="popup-actions">

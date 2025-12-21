@@ -34,7 +34,7 @@
       <!-- cos del bloc -->
       <div class="procedure-responsible">
         {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
-        {{ p.steps?.[0]?.responsable || '-' }}
+        {{ (p.steps && p.steps[0] && p.steps[0].responsable) || '-' }}
       </div>
 
       <p class="procedure-desc" *ngIf="p.descripcion">
@@ -114,7 +114,7 @@
 <div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>Eliminar procedimiento</h3>
-    <p>¿Seguro que quieres eliminar "{{ procAEliminar?.titulo || '(Sense títol)' }}"?</p>
+    <p>¿Seguro que quieres eliminar "{{ (procAEliminar && procAEliminar.titulo) || '(Sense títol)' }}"?</p>
 
     <div class="popup-actions">
       <button class="cancelar-btn" (click)="cancelarEliminar()">

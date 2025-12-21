@@ -19,6 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { HostListener } from '@angular/core';
 import { AuthService } from './auth.service';
+import { LoggerService } from './logger.service';
 import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
@@ -67,7 +68,8 @@ export class AppComponent implements OnDestroy {
     private http: HttpClient,
     private ai: AiService,
     public translate: TranslateService,
-    private authService: AuthService  // ⬅ Afegit
+    private authService: AuthService,  // ⬅ Afegit
+    private logger: LoggerService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = localStorage.getItem('lang');
@@ -168,7 +170,7 @@ export class AppComponent implements OnDestroy {
         synth.cancel();
         synth.speak(ut);
       }catch(e){
-        console.warn('TTS no disponible', e);
+        this.logger.warn('TTS no disponible', e);
       }
     }
 
