@@ -9,6 +9,7 @@ import { ProjectsComponent } from './app/projects/projects';
 import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
 import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
+import { MultimediaComponent } from './app/multimedia/multimedia';
 import { AdministracionComponent } from './app/administracion/administracion';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -52,6 +53,7 @@ bootstrapApplication(AppComponent, {
       {path: 'procedimientos', component: ProcedimientosComponent },
       {path: 'formacion', component: FormacionComponent },
       {path: 'planificacion', component: PlanificacionComponent },
+      {path: 'multimedia', component: MultimediaComponent },
       { path: 'administracion', component: AdministracionComponent },
       { path: 'descargables', component: DescargablesComponent },
       { path: 'bitacora', component: Bitacora},

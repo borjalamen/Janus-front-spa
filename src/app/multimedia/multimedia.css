@@ -1,0 +1,6 @@
+.multimedia-root{padding:12px}
+.media-card{display:flex;gap:12px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;margin-bottom:8px}
+.media-left .thumb{width:64px;height:48px;background:#071018;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.media-body{flex:1}
+.media-actions{margin-top:6px}
+.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:6px;color:var(--muted);cursor:pointer}

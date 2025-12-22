@@ -1,0 +1,20 @@
+<app-buscador (buscar)="search($event)"></app-buscador>
+
+<div class="multimedia-root">
+  <h2>{{ 'MENU.MULTIMEDIA' | translate }}</h2>
+  <p>{{ 'PLANNING.SEARCH_PLACEHOLDER' | translate }}</p>
+
+  <div class="results">
+    <div *ngFor="let r of results" class="media-card">
+      <div class="media-left">
+        <div class="thumb">▶</div>
+      </div>
+      <div class="media-body">
+        <strong>{{ r.title }}</strong>
+        <div class="media-actions">
+          <button class="btn" (click)="play(r)">{{ 'PLANNING.PLAY' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

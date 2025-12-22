@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -27,7 +27,7 @@ interface EventItem {
   templateUrl: './planificacion.html',
   styleUrls: ['./planificacion.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule]
+  imports: [CommonModule, NgForOf, NgIf, FormsModule, BuscadorComponent, TranslateModule]
 })
 export class PlanificacionComponent implements OnInit {
   title = 'Planificación semanal';

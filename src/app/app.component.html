@@ -57,6 +57,12 @@
         <span class="menu-text"><strong>{{ 'MENU.PLANNING' | translate }}</strong></span>
       </a>
 
+      <!-- Multimedia -->
+      <a *ngIf="canShow('multimedia')" mat-list-item routerLink="/multimedia">
+        <mat-icon>perm_media</mat-icon>
+        <span class="menu-text"><strong>{{ 'MENU.MULTIMEDIA' | translate }}</strong></span>
+      </a>
+
       <!-- Administración -->
       <a *ngIf="canShow('administracion')" mat-list-item routerLink="/administracion">
         <mat-icon>admin_panel_settings</mat-icon>

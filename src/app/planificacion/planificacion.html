@@ -35,7 +35,7 @@
                   <div class="event-devops">
                     <a *ngIf="ev.jiraUrl" class="jira-link" href="{{ ev.jiraUrl }}" target="_blank" (click)="$event.stopPropagation()">🔗</a>
                     <span class="dev">
-                      <ng-container *ngIf="ev.devOps?.startsWith('PLANNING.'); else plainDev">{{ ev.devOps | translate }}</ng-container>
+                      <ng-container *ngIf="ev.devOps && ev.devOps.startsWith('PLANNING.'); else plainDev">{{ ev.devOps | translate }}</ng-container>
                       <ng-template #plainDev>{{ ev.devOps }}</ng-template>
                     </span>
                   </div>
@@ -99,8 +99,8 @@
     <div class="form-row">
       <label>{{ 'PLANNING.DEVOPS' | translate }}</label>
       <select [(ngModel)]="draft.devOps">
-        <option *ngFor="let d of devOpsList" [value]="d">
-          <ng-container *ngIf="d?.startsWith('PLANNING.'); else plain">{{ d | translate }}</ng-container>
+          <option *ngFor="let d of devOpsList" [value]="d">
+          <ng-container *ngIf="d && d.startsWith('PLANNING.'); else plain">{{ d | translate }}</ng-container>
           <ng-template #plain>{{ d }}</ng-template>
         </option>
       </select>
