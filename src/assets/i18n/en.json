@@ -229,6 +229,7 @@
     "END": "End time",
     "DEVOPS": "DevOps",
     "NOTES": "Notes",
+    "PERIOD": "Period (consecutive days)",
     "JIRA_TASK": "JIRA task",
     "EDIT_URL": "Edit URL",
     "RESPONSABLE": "Owner",

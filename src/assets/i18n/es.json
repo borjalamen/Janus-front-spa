@@ -235,6 +235,7 @@
     "END": "Hora fin",
     "DEVOPS": "DevOps",
     "NOTES": "Notas",
+    "PERIOD": "Periodo (días consecutivos)",
     "JIRA_TASK": "Tarea JIRA",
     "EDIT_URL": "Editar URL",
     "RESPONSABLE": "Responsable",

@@ -109,6 +109,10 @@
       <label>{{ 'PLANNING.NOTES' | translate }}</label>
       <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
     </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.PERIOD' | translate }}</label>
+      <input type="number" min="1" max="30" [(ngModel)]="draft.periodDays" />
+    </div>
     
     <div class="form-row">
       <label>{{ 'PLANNING.JIRA_TASK' | translate }}</label>

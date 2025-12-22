@@ -18,6 +18,7 @@ interface EventItem {
   notes?: string;
   jiraUrl?: string;
   responsable?: string;
+  periodDays?: number;
   eventType?: EventType;
 }
 
@@ -156,6 +157,7 @@ export class PlanificacionComponent implements OnInit {
         jiraUrl: '',
         responsable: ''
         ,eventType: 'DEPLOY'
+        ,periodDays: 1
       };
     }
     this.validationError = null;
@@ -183,20 +185,26 @@ export class PlanificacionComponent implements OnInit {
       const idx = this.events.findIndex(e => e.id === this.editing!.id);
       if (idx !== -1) this.events[idx] = { ...(this.editing as EventItem), ...(this.draft as EventItem) };
     } else {
-      const e: EventItem = {
-        id: Math.random().toString(36).slice(2,9),
-        env: this.draft.env as Env,
-        project: this.draft.project as string,
-        date: this.draft.date as string,
-        startTime: this.draft.startTime as string,
-        endTime: this.draft.endTime as string,
-        devOps: this.draft.devOps as string,
-        notes: this.draft.notes as string,
-        jiraUrl: this.draft.jiraUrl as string,
-        responsable: this.draft.responsable as string,
-        eventType: this.draft.eventType as EventType
-      };
-      this.events.push(e);
+      const days = Math.max(1, Math.min(30, Number(this.draft.periodDays || 1)));
+      for (let i = 0; i < days; i++) {
+        const dt = new Date(this.draft.date as string + 'T00:00:00Z');
+        dt.setUTCDate(dt.getUTCDate() + i);
+        const dateStr = dt.toISOString().slice(0,10);
+        const e: EventItem = {
+          id: Math.random().toString(36).slice(2,9),
+          env: this.draft.env as Env,
+          project: this.draft.project as string,
+          date: dateStr,
+          startTime: this.draft.startTime as string,
+          endTime: this.draft.endTime as string,
+          devOps: this.draft.devOps as string,
+          notes: this.draft.notes as string,
+          jiraUrl: this.draft.jiraUrl as string,
+          responsable: this.draft.responsable as string,
+          eventType: this.draft.eventType as EventType
+        };
+        this.events.push(e);
+      }
     }
     this.save();
     this.closeModal();
