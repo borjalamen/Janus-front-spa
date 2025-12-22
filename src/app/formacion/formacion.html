@@ -60,27 +60,28 @@
             </div>
           </div>
 
-          <!-- Course selector modal -->
-          <div class="modal-backdrop" *ngIf="showCourseSelector">
-            <div class="modal" (click)="$event.stopPropagation()">
-              <h3>{{ 'TRAINING.SELECT_COURSE' | translate }}</h3>
-              <app-buscador (buscar)="filterSelector($event)"></app-buscador>
-              <div style="max-height:300px; overflow:auto; margin-top:10px">
-                <ul class="paths-list">
-                  <li *ngFor="let c of selectorFilteredCandidates" [class.selected]="selectedCandidate?.id===c.id" (click)="selectCourse(c)">
-                    <strong>{{ c.name }}</strong>
-                    <div class="meta">{{ c.description }}</div>
-                  </li>
-                </ul>
-              </div>
-              <div class="modal-actions">
-                <button type="button" class="btn" (click)="confirmAddSelectedCourse()" [disabled]="!selectedCandidate">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
-                <button type="button" class="btn" (click)="showCourseSelector=false">{{ 'TRAINING.CANCEL' | translate }}</button>
-              </div>
-            </div>
-          </div>
+          
         </li>
       </ul>
+      <!-- Course selector modal (moved fuera del ngFor para que esté disponible aunque no haya items) -->
+      <div class="modal-backdrop" *ngIf="showCourseSelector">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <h3>{{ 'TRAINING.SELECT_COURSE' | translate }}</h3>
+          <app-buscador (buscar)="filterSelector($event)"></app-buscador>
+          <div style="max-height:300px; overflow:auto; margin-top:10px">
+            <ul class="paths-list">
+              <li *ngFor="let c of selectorFilteredCandidates" [class.selected]="selectedCandidate?.id===c.id" (click)="selectCourse(c)">
+                <strong>{{ c.name }}</strong>
+                <div class="meta">{{ c.description }}</div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn" (click)="confirmAddSelectedCourse()" [disabled]="!selectedCandidate">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
+            <button type="button" class="btn" (click)="showCourseSelector=false">{{ 'TRAINING.CANCEL' | translate }}</button>
+          </div>
+        </div>
+      </div>
                 </div>
                 <ng-template #noSelection>
                   <div class="no-selection">{{ 'TRAINING.NO_SELECTION' | translate }}</div>

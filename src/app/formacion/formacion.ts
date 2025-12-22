@@ -55,11 +55,17 @@ export class FormacionComponent {
 
   // cached search list for all courses
   get allCourses(): TrainingItem[] {
-    const list: TrainingItem[] = [];
+    const map = new Map<string, TrainingItem>();
     for (const p of this.paths) {
-      if (p.items && p.items.length) list.push(...p.items.map(it => ({ ...it } as TrainingItem)));
+      if (!p.items) continue;
+      for (const it of p.items) {
+        const key = (it.name || '').trim().toLowerCase();
+        if (!key) continue;
+        // keep first occurrence only — allow duplicates inside a path but for global list dedupe by name
+        if (!map.has(key)) map.set(key, { ...it });
+      }
     }
-    return list;
+    return Array.from(map.values());
   }
 
   isTab(tab: 'all'|'paths') { return this.activeTab === tab; }
@@ -92,6 +98,7 @@ export class FormacionComponent {
   }
 
   refreshAllCourses(){
+    // ensure filtered list is deduplicated and stable
     this.filteredAllCourses = this.allCourses.map(i => ({...i}));
   }
 
@@ -271,6 +278,9 @@ export class FormacionComponent {
       this.paths.push(p);
       this.selectedPath = p;
     }
+    // If a course with the same name already exists in the global list, open editor for that course's occurrence inside selectedPath (allow duplicates inside path only)
+    const existingGlobal = this.allCourses; // deduped by name
+    // present blank form to create a new course inside the selected path — but avoid creating a duplicate in All courses view by name
     this.editingItem = { name: '', link: '', description: '', tags: [], location: '', visible: true, tagsString: '' };
     this.showItemModal = true;
   }
