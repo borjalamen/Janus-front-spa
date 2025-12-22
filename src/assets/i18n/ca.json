@@ -244,4 +244,13 @@
     "ERROR_REQUIRED": "Omple projecte, hora inici, hora fi i entorn",
     "DELETE_CONFIRM": "Eliminar esdeveniment?"
   }
+  ,
+  "MULTIMEDIA": {
+    "SEARCH_PLACEHOLDER": "Cerca vídeos per títol o descripció...",
+    "SEARCH": "Cerca",
+    "PLAY": "Reproduir",
+    "DOWNLOAD": "Descarregar",
+    "NO_RESULTS": "No s'han trobat vídeos.",
+    "CLOSE": "Tancar"
+  }
 }

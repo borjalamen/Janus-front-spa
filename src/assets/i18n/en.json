@@ -244,4 +244,13 @@
     "ERROR_REQUIRED": "Please fill project, start time, end time and environment",
     "DELETE_CONFIRM": "Delete event?"
   }
+  ,
+  "MULTIMEDIA": {
+    "SEARCH_PLACEHOLDER": "Search videos by title or description...",
+    "SEARCH": "Search",
+    "PLAY": "Play",
+    "DOWNLOAD": "Download",
+    "NO_RESULTS": "No videos found.",
+    "CLOSE": "Close"
+  }
 }

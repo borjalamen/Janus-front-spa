@@ -1,19 +1,55 @@
-<app-buscador (buscar)="search($event)"></app-buscador>
-
 <div class="multimedia-root">
-  <h2>{{ 'MENU.MULTIMEDIA' | translate }}</h2>
-  <p>{{ 'PLANNING.SEARCH_PLACEHOLDER' | translate }}</p>
+  <div class="desc-search">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="search" [(ngModel)]="query" [placeholder]="'MULTIMEDIA.SEARCH_PLACEHOLDER' | translate" [attr.aria-label]="'MULTIMEDIA.SEARCH_PLACEHOLDER' | translate" (input)="search(query)" />
+      <button *ngIf="query" mat-icon-button matSuffix (click)="query=''; search('')" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
 
   <div class="results">
-    <div *ngFor="let r of results" class="media-card">
-      <div class="media-left">
-        <div class="thumb">▶</div>
+    <div *ngFor="let r of results" class="card">
+      <div class="thumb-wrap" (click)="openPlayer(r)">
+        <img *ngIf="r.thumbnail" [src]="r.thumbnail" class="thumb" />
+        <div *ngIf="!r.thumbnail" class="thumb-fallback">▶</div>
       </div>
-      <div class="media-body">
-        <strong>{{ r.title }}</strong>
-        <div class="media-actions">
-          <button class="btn" (click)="play(r)">{{ 'PLANNING.PLAY' | translate }}</button>
+      <div class="meta">
+        <h4 class="title" (click)="openPlayer(r)">{{ r.title }}</h4>
+        <div class="desc">{{ r.description }}</div>
+        <div class="meta-row">
+          <div class="duration">{{ r.duration || '' }}</div>
+          <div class="actions">
+            <button mat-icon-button class="action-btn" (click)="openPlayer(r)" [attr.aria-label]="'MULTIMEDIA.PLAY' | translate" title="{{ 'MULTIMEDIA.PLAY' | translate }}">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+            <button mat-icon-button class="action-btn" (click)="download(r)" [attr.aria-label]="'MULTIMEDIA.DOWNLOAD' | translate" title="{{ 'MULTIMEDIA.DOWNLOAD' | translate }}">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
+    <div *ngIf="results.length === 0" class="empty">{{ 'MULTIMEDIA.NO_RESULTS' | translate }}</div>
+  </div>
+
+  <!-- Player modal -->
+  <div class="modal-backdrop" *ngIf="playing">
+    <div class="modal-player" (click)="$event.stopPropagation()">
+      <button class="close" (click)="closePlayer()">✖</button>
+      <h3>{{ playing.title }}</h3>
+      <div class="player-wrap">
+        <video *ngIf="playerReady" controls autoplay [src]="playing.file" class="player"></video>
+        <div *ngIf="!playerReady" class="player-loading">Cargando...</div>
+      </div>
+      <div class="player-actions">
+        <button mat-icon-button class="action-btn" (click)="download(playing!)" [attr.aria-label]="'MULTIMEDIA.DOWNLOAD' | translate" title="{{ 'MULTIMEDIA.DOWNLOAD' | translate }}">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn" (click)="closePlayer()" [attr.aria-label]="'MULTIMEDIA.CLOSE' | translate" title="{{ 'MULTIMEDIA.CLOSE' | translate }}">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
     </div>
   </div>

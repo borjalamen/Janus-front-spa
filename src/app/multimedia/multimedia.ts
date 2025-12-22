@@ -1,29 +1,84 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+
+interface MediaItem {
+  id: string;
+  title: string;
+  description?: string;
+  file: string;
+  thumbnail?: string;
+  duration?: string;
+}
 
 @Component({
   selector: 'app-multimedia',
-  standalone: true,
-  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule],
   templateUrl: './multimedia.html',
-  styleUrls: ['./multimedia.css']
+  styleUrls: ['./multimedia.css'],
+  standalone: true,
+  imports: [CommonModule, NgForOf, NgIf, FormsModule, TranslateModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatInputModule]
 })
-export class MultimediaComponent {
-  // simple demo state
+export class MultimediaComponent implements OnInit {
   query = '';
-  results: Array<{title:string, url?:string}> = [];
+  all: MediaItem[] = [];
+  results: MediaItem[] = [];
 
-  search(q?: string) {
-    const term = ((q ?? this.query) || '').trim();
-    if (!term) { this.results = []; return; }
-    // demo: generate fake results based on query
-    this.results = Array.from({length:3}).map((_,i) => ({ title: `${term} - Video ${i+1}`, url: '' }));
+  // player modal state
+  playing?: MediaItem;
+  playerReady = false;
+
+  ngOnInit(): void {
+    this.loadManifest();
   }
 
-  play(item: {title:string, url?:string}){
-    alert('Play: ' + item.title);
+  async loadManifest() {
+    try {
+      const resp = await fetch('assets/multimedia/manifest.json');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      this.all = (data || []) as MediaItem[];
+      this.results = [...this.all];
+    } catch (e) {
+      console.error('Error loading multimedia manifest', e);
+    }
+  }
+
+  search(q?: string) {
+    const term = ((q ?? this.query) || '').trim().toLowerCase();
+    this.query = term;
+    if (!term) {
+      this.results = [...this.all];
+      return;
+    }
+    this.results = this.all.filter(it =>
+      (it.title && it.title.toLowerCase().includes(term)) ||
+      (it.description && it.description.toLowerCase().includes(term))
+    );
+  }
+
+  openPlayer(item: MediaItem) {
+    this.playing = item;
+    this.playerReady = false;
+    // small timeout to let modal render
+    setTimeout(() => this.playerReady = true, 50);
+  }
+
+  closePlayer() {
+    this.playing = undefined;
+    this.playerReady = false;
+  }
+
+  download(item: MediaItem) {
+    const a = document.createElement('a');
+    a.href = item.file;
+    a.download = item.file.split('/').pop() || item.id;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 }

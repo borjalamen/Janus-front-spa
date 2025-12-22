@@ -250,4 +250,13 @@
     "ERROR_REQUIRED": "Rellena proyecto, hora inicio, hora fin y entorno",
     "DELETE_CONFIRM": "¿Eliminar evento?"
   }
+  ,
+  "MULTIMEDIA": {
+    "SEARCH_PLACEHOLDER": "Buscar videos por título o descripción...",
+    "SEARCH": "Buscar",
+    "PLAY": "Reproducir",
+    "DOWNLOAD": "Descargar",
+    "NO_RESULTS": "No se encontraron vídeos.",
+    "CLOSE": "Cerrar"
+  }
 }
