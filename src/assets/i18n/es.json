@@ -148,7 +148,31 @@
     "TITLE": "Formaciones",
     "DESCRIPTION": "Recursos formativos y material de aprendizaje del equipo DevOps.",
     "RESPONSIBLE": "Responsable",
-    "STATUS": "Estado"
+    "STATUS": "Estado",
+    "NEW_PATH": "Nueva ruta formativa",
+    "EDIT": "Editar",
+    "DELETE": "Eliminar",
+    "AUDIENCE": "Dirigido a",
+    "OBJECTIVES": "Objetivos",
+    "PREREQUISITES": "Requisitos previos",
+    "ITEMS": "Formaciones",
+    "ADD_ITEM": "Añadir formación",
+    "NO_SELECTION": "Selecciona una ruta formativa",
+    "EDIT_PATH": "Editar ruta formativa",
+    "NAME": "Nombre",
+    "SAVE": "Guardar",
+    "CANCEL": "Cancelar",
+    "EDIT_ITEM": "Editar formación",
+    "NEW_ITEM": "Nueva formación",
+    "ITEM_NAME": "Nombre",
+    "ITEM_LINK": "Enlace",
+    "ITEM_DESC": "Descripción",
+    "ITEM_TAGS": "Etiquetas"
+    ,"DELETE_PATH_TITLE": "Eliminar ruta formativa"
+    ,"DELETE_PATH_QUESTION": "¿Estás seguro que deseas eliminar la ruta formativa \"{{name}}\"?"
+    ,"DELETE_ITEM_TITLE": "Eliminar formación"
+    ,"DELETE_ITEM_QUESTION": "¿Estás seguro que deseas eliminar la formación \"{{name}}\"?"
+    ,"EXPORT": "Exportar a CSV"
   },
   "DOCUMENTS": {
     "TITLE": "Documentos",

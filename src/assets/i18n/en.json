@@ -146,7 +146,31 @@
     "TITLE": "Training",
     "DESCRIPTION": "Training resources and learning material for the DevOps team.",
     "RESPONSIBLE": "Owner",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "NEW_PATH": "New training path",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "AUDIENCE": "Audience",
+    "OBJECTIVES": "Objectives",
+    "PREREQUISITES": "Prerequisites",
+    "ITEMS": "Trainings",
+    "ADD_ITEM": "Add training",
+    "NO_SELECTION": "Select a training path",
+    "EDIT_PATH": "Edit training path",
+    "NAME": "Name",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "EDIT_ITEM": "Edit training",
+    "NEW_ITEM": "New training",
+    "ITEM_NAME": "Name",
+    "ITEM_LINK": "Link",
+    "ITEM_DESC": "Description",
+    "ITEM_TAGS": "Tags"
+    ,"DELETE_PATH_TITLE": "Delete training path"
+    ,"DELETE_PATH_QUESTION": "Are you sure you want to delete the training path \"{{name}}\"?"
+    ,"DELETE_ITEM_TITLE": "Delete training"
+    ,"DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?"
+    ,"EXPORT": "Export to CSV"
   },
   "DOCUMENTS": {
     "TITLE": "Documents",

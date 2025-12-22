@@ -148,7 +148,31 @@
   "TITLE": "Formacions",
   "DESCRIPTION": "Recursos formatius i material d'aprenentatge de l'equip DevOps.",
   "RESPONSIBLE": "Responsable",
-  "STATUS": "Estat"
+  "STATUS": "Estat",
+  "NEW_PATH": "Nova ruta formativa",
+  "EDIT": "Editar",
+  "DELETE": "Eliminar",
+  "AUDIENCE": "Dirigit a",
+  "OBJECTIVES": "Objectius",
+  "PREREQUISITES": "Requisits previs",
+  "ITEMS": "Formacions",
+  "ADD_ITEM": "Afegir formació",
+  "NO_SELECTION": "Selecciona una ruta formativa",
+  "EDIT_PATH": "Editar ruta formativa",
+  "NAME": "Nom",
+  "SAVE": "Desar",
+  "CANCEL": "Cancel·lar",
+  "EDIT_ITEM": "Editar formació",
+  "NEW_ITEM": "Nova formació",
+  "ITEM_NAME": "Nom",
+  "ITEM_LINK": "Enllaç",
+  "ITEM_DESC": "Descripció",
+  "ITEM_TAGS": "Etiquetes"
+    ,"DELETE_PATH_TITLE": "Eliminar ruta formativa"
+    ,"DELETE_PATH_QUESTION": "Estàs segur que vols eliminar la ruta formativa \"{{name}}\"?"
+    ,"DELETE_ITEM_TITLE": "Eliminar formació"
+    ,"DELETE_ITEM_QUESTION": "Estàs segur que vols eliminar la formació \"{{name}}\"?"
+    ,"EXPORT": "Exportar a CSV"
 },
 "DOCUMENTS": {
   "TITLE": "Documents",

@@ -1,13 +1,98 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
-<div class="section-container">
-  <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-  <p>{{ 'TRAINING.DESCRIPTION' | translate }}</p>
 
-  <ul>
-    <li *ngFor="let f of formacionesFiltradas">
-      <strong>{{ f.nombre }}</strong><br>
-      {{ 'TRAINING.RESPONSIBLE' | translate }}: {{ f.responsable }}<br>
-      {{ 'TRAINING.STATUS' | translate }}: {{ f.estado }}
-    </li>
-  </ul>
+<div class="training-root">
+  <div class="left">
+    <div class="left-header">
+      <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
+      <button class="btn" (click)="newPath()">{{ 'TRAINING.NEW_PATH' | translate }}</button>
+    </div>
+
+    <ul class="paths-list">
+      <li *ngFor="let p of filteredPaths" (click)="selectPath(p)" [class.selected]="selectedPath?.id===p.id">
+        <strong>{{ p.name }}</strong>
+        <div class="meta">{{ p.audience }}</div>
+        <div class="actions">
+          <button class="btn small" (click)="editPath(p); $event.stopPropagation()">{{ 'TRAINING.EDIT' | translate }}</button>
+          <button class="btn small" (click)="confirmDeletePath(p.id, p.name); $event.stopPropagation()">{{ 'TRAINING.DELETE' | translate }}</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="right">
+    <div *ngIf="selectedPath; else noSelection">
+      <div class="path-header">
+        <h3>{{ selectedPath.name }}</h3>
+        <button class="btn csv-btn" (click)="exportPathToCsv()" title="{{ 'TRAINING.EXPORT' | translate }}">
+          <span class="csv-icon">CSV</span>
+        </button>
+      </div>
+      <div class="path-meta">
+        <div><strong>{{ 'TRAINING.AUDIENCE' | translate }}:</strong> {{ selectedPath.audience }}</div>
+        <div><strong>{{ 'TRAINING.OBJECTIVES' | translate }}:</strong> {{ selectedPath.objectives }}</div>
+        <div><strong>{{ 'TRAINING.PREREQUISITES' | translate }}:</strong> {{ selectedPath.prerequisites }}</div>
+      </div>
+
+      <div class="items-header">
+        <h4>{{ 'TRAINING.ITEMS' | translate }}</h4>
+        <button class="btn" (click)="addItem()">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
+      </div>
+
+      <ul class="items-list" cdkDropList (cdkDropListDropped)="dropItem($event)" *ngIf="selectedPath">
+        <li *ngFor="let it of selectedPath.items; let i = index" cdkDrag>
+          <div class="item-main" (click)="openCourseLink(it)">
+            <div class="item-number">{{ i + 1 }}</div>
+            <div class="item-content">
+              <strong>{{ it.name }}</strong>
+              <div class="item-desc">{{ it.description }}</div>
+              <div class="item-tags">{{ it.tags?.join(', ') }}</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn small" (click)="editItem(it); $event.stopPropagation()">{{ 'TRAINING.EDIT' | translate }}</button>
+              <button class="btn small" (click)="confirmDeleteItem(it.id, it.name); $event.stopPropagation()">{{ 'TRAINING.DELETE' | translate }}</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noSelection>
+      <div class="no-selection">{{ 'TRAINING.NO_SELECTION' | translate }}</div>
+    </ng-template>
+  </div>
 </div>
+
+<!-- Path modal -->
+<div class="modal-backdrop" *ngIf="showPathModal">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ editingPath.id ? ('TRAINING.EDIT_PATH'|translate) : ('TRAINING.NEW_PATH'|translate) }}</h3>
+    <div class="form-row"><label>{{ 'TRAINING.NAME' | translate }}</label><input [(ngModel)]="editingPath.name" /></div>
+    <div class="form-row"><label>{{ 'TRAINING.AUDIENCE' | translate }}</label><input [(ngModel)]="editingPath.audience" /></div>
+    <div class="form-row"><label>{{ 'TRAINING.OBJECTIVES' | translate }}</label><textarea rows="3" [(ngModel)]="editingPath.objectives"></textarea></div>
+    <div class="form-row"><label>{{ 'TRAINING.PREREQUISITES' | translate }}</label><input [(ngModel)]="editingPath.prerequisites" /></div>
+    <div class="modal-actions"><button class="btn" (click)="savePath()">{{ 'TRAINING.SAVE' | translate }}</button><button class="btn" (click)="showPathModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
+  </div>
+</div>
+
+<!-- Item modal -->
+<div class="modal-backdrop" *ngIf="showItemModal">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ editingItem.id ? ('TRAINING.EDIT_ITEM'|translate) : ('TRAINING.NEW_ITEM'|translate) }}</h3>
+    <div class="form-row"><label>{{ 'TRAINING.ITEM_NAME' | translate }}</label><input [(ngModel)]="editingItem.name" /></div>
+    <div class="form-row"><label>{{ 'TRAINING.ITEM_LINK' | translate }}</label><input [(ngModel)]="editingItem.link" /></div>
+    <div class="form-row"><label>{{ 'TRAINING.ITEM_DESC' | translate }}</label><textarea rows="3" [(ngModel)]="editingItem.description"></textarea></div>
+    <div class="form-row"><label>{{ 'TRAINING.ITEM_TAGS' | translate }}</label><input placeholder="Java,Spring" [(ngModel)]="editingItem.tagsString" /></div>
+    <div class="modal-actions"><button class="btn" (click)="saveItem()">{{ 'TRAINING.SAVE' | translate }}</button><button class="btn" (click)="showItemModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
+  </div>
+</div>
+ 
+  <!-- Confirmation modal -->
+  <div class="modal-backdrop" *ngIf="showConfirm">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>{{ 'TRAINING.DELETE' | translate }}</h3>
+      <div class="modal-body">{{ confirmMessage }}</div>
+      <div class="modal-actions">
+        <button class="btn" (click)="confirmOk()">OK</button>
+        <button class="btn" (click)="confirmCancel()">{{ 'TRAINING.CANCEL' | translate }}</button>
+      </div>
+    </div>
+  </div>
