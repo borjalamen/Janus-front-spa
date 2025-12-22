@@ -187,6 +187,16 @@
     ,"LINK_COPIED": "Link copiado"
     ,"COPY_FAILED": "No se pudo copiar el enlace"
   },
+  "IANUSHUB": {
+    "HOME": "Inicio: Panel principal con un resumen de la actividad reciente, accesos rápidos a las secciones y métricas clave del sistema.",
+    "FORMACION": "Formación: Gestión de rutas formativas y cursos. Permite crear rutas, añadir formaciones, organizar y exportar listados.",
+    "PROYECTOS": "Proyectos: Lista de proyectos activos con su estado, responsables y enlaces a documentación relacionada.",
+    "PROCEDIMIENTOS": "Procedimientos: Repositorio de procedimientos operativos y guías internas, con capacidad de búsqueda y versionado.",
+    "BITACORA": "Bitácora: Registro de eventos y cambios relevantes del sistema, útil para auditoría y trazabilidad.",
+    "ADMINISTRACION": "Administración: Ajustes de la aplicación, gestión de usuarios y permisos, y configuración de integraciones externas.",
+    "DESCARGABLES": "Descargables: Área para gestionar y acceder a archivos y recursos que los usuarios pueden descargar.",
+    "BUSCADOR": "Buscador: Herramienta para localizar rápidamente cursos, rutas y documentos dentro de la aplicación mediante texto libre."
+  },
   "DOCUMENTS": {
     "TITLE": "Documentos",
     "ADD_BUTTON": "Añadir documento",

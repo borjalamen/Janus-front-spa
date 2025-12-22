@@ -186,6 +186,16 @@
     ,"LINK_COPIED": "Enllaç copiat"
     ,"COPY_FAILED": "No s'ha pogut copiar l'enllaç"
 },
+"IANUSHUB": {
+  "HOME": "Inici: Panell principal amb un resum de l'activitat recent, accés ràpid a les seccions i mètriques clau del sistema.",
+  "FORMACION": "Formació: Gestió de rutes formatives i cursos. Permet crear rutes, afegir formacions, organitzar i exportar llistats.",
+  "PROYECTOS": "Projectes: Llista de projectes actius amb el seu estat, responsables i enllaços a documentació relacionada.",
+  "PROCEDIMIENTOS": "Procediments: Repositori de procediments operatius i guies internes, amb capacitat de cerca i versionament.",
+  "BITACORA": "Bitàcola: Registre d'esdeveniments i canvis rellevants del sistema, útil per a auditoria i traçabilitat.",
+  "ADMINISTRACION": "Administració: Ajustos de l'aplicació, gestió d'usuaris i permisos, i configuració d'integracions externes.",
+  "DESCARGABLES": "Descarregables: Àrea per gestionar i accedir a fitxers i recursos que els usuaris poden descarregar.",
+  "BUSCADOR": "Cercador: Eina per localitzar ràpidament cursos, rutes i documents dins de l'aplicació mitjançant text lliure."
+},
 "DOCUMENTS": {
   "TITLE": "Documents",
   "ADD_BUTTON": "Afegir document",

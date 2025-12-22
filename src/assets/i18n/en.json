@@ -185,6 +185,16 @@
     ,"COPY_FAILED": "Failed to copy link"
     ,"SELECT_COURSE": "Select a course to add"
   },
+  "IANUSHUB": {
+    "HOME": "Home: Main dashboard with a summary of recent activity, quick access to sections and key system metrics.",
+    "FORMACION": "Training: Management of training paths and courses. Allows creating paths, adding trainings, organizing and exporting lists.",
+    "PROYECTOS": "Projects: List of active projects with status, owners and links to related documentation.",
+    "PROCEDIMIENTOS": "Procedures: Repository of operational procedures and internal guides, searchable and versioned.",
+    "BITACORA": "Logbook: Record of events and important system changes, useful for auditing and traceability.",
+    "ADMINISTRACION": "Administration: Application settings, user and permissions management, and external integrations configuration.",
+    "DESCARGABLES": "Downloads: Area to manage and access files and resources that users can download.",
+    "BUSCADOR": "Search: Tool to quickly locate courses, paths and documents within the application using free text."
+  },
   "DOCUMENTS": {
     "TITLE": "Documents",
     "ADD_BUTTON": "Add document",
