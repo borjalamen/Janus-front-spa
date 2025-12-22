@@ -171,6 +171,11 @@
     ,"DELETE_ITEM_TITLE": "Delete training"
     ,"DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?"
     ,"EXPORT": "Export to CSV"
+    ,"TABS": {
+      "ALL": "All courses",
+      "PATHS": "Training paths"
+    },
+    "ALL_COURSES": "All courses"
   },
   "DOCUMENTS": {
     "TITLE": "Documents",

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -33,13 +33,15 @@ const STORAGE_KEY = 'training_paths_v1';
   templateUrl: './formacion.html',
   styleUrls: ['./formacion.css'],
   standalone: true,
-  imports: [CommonModule, NgForOf, NgIf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
+  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
 })
 export class FormacionComponent {
   title = '';
 
   paths: TrainingPath[] = [];
   filteredPaths: TrainingPath[] = [];
+  filteredAllCourses: TrainingItem[] = [];
+  lastSearch: string = '';
 
   // UI state
   selectedPath?: TrainingPath;
@@ -48,6 +50,25 @@ export class FormacionComponent {
 
   showItemModal = false;
   editingItem: Partial<TrainingItem> & { tagsString?: string } = {};
+  // tabs: 'all' = all courses search, 'paths' = training paths UI
+  activeTab: 'all' | 'paths' = 'paths';
+
+  // cached search list for all courses
+  get allCourses(): TrainingItem[] {
+    const list: TrainingItem[] = [];
+    for (const p of this.paths) {
+      if (p.items && p.items.length) list.push(...p.items.map(it => ({ ...it } as TrainingItem)));
+    }
+    return list;
+  }
+
+  isTab(tab: 'all'|'paths') { return this.activeTab === tab; }
+
+  setTab(tab: 'all'|'paths'){
+    this.activeTab = tab;
+    // reapply last search when switching tabs
+    this.filtrar(this.lastSearch || '');
+  }
 
   constructor(private translate: TranslateService) {
     this.load();
@@ -61,24 +82,37 @@ export class FormacionComponent {
     } catch (e) { this.paths = []; }
     this.filteredPaths = [...this.paths];
     if (!this.selectedPath && this.paths.length) this.selectedPath = this.paths[0];
+    this.refreshAllCourses();
   }
 
   private save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.paths));
     this.filteredPaths = [...this.paths];
+    this.refreshAllCourses();
+  }
+
+  refreshAllCourses(){
+    this.filteredAllCourses = this.allCourses.map(i => ({...i}));
   }
 
   filtrar(valor: string) {
-    if (!valor) {
-      this.filteredPaths = this.paths;
-      return;
+    this.lastSearch = valor || '';
+    const v = (valor || '').toLowerCase();
+    if (this.activeTab === 'all'){
+      if (!v) { this.refreshAllCourses(); return; }
+      this.filteredAllCourses = this.allCourses.filter(it =>
+        (it.name || '').toLowerCase().includes(v) ||
+        (it.description || '').toLowerCase().includes(v) ||
+        ((it.tags || []).join(' ').toLowerCase().includes(v))
+      );
+    } else {
+      if (!v) { this.filteredPaths = this.paths; return; }
+      this.filteredPaths = this.paths.filter(p =>
+        p.name.toLowerCase().includes(v) ||
+        (p.audience && p.audience.toLowerCase().includes(v)) ||
+        (p.objectives && p.objectives.toLowerCase().includes(v))
+      );
     }
-    const v = valor.toLowerCase();
-    this.filteredPaths = this.paths.filter(p =>
-      p.name.toLowerCase().includes(v) ||
-      (p.audience && p.audience.toLowerCase().includes(v)) ||
-      (p.objectives && p.objectives.toLowerCase().includes(v))
-    );
   }
 
   selectPath(p: TrainingPath) {
@@ -107,6 +141,7 @@ export class FormacionComponent {
       if (idx !== -1) this.paths[idx] = p as TrainingPath;
     }
     this.save();
+    this.refreshAllCourses();
     this.showPathModal = false;
     this.editingPath = {};
   }
@@ -115,6 +150,7 @@ export class FormacionComponent {
     this.paths = this.paths.filter(p => p.id !== id);
     if (this.selectedPath?.id === id) this.selectedPath = this.paths[0];
     this.save();
+    this.refreshAllCourses();
   }
 
   // confirmation modal state (reuse pattern from planning)
@@ -167,6 +203,7 @@ export class FormacionComponent {
     const idxPath = this.paths.findIndex(p => p.id === this.selectedPath!.id);
     if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
     this.save();
+    this.refreshAllCourses();
     this.showItemModal = false;
     this.editingItem = {};
   }
@@ -221,6 +258,7 @@ export class FormacionComponent {
     const idxPath = this.paths.findIndex(p => p.id === this.selectedPath!.id);
     if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
     this.save();
+    this.refreshAllCourses();
   }
 
   confirmDeleteItem(id: string, name?: string) {

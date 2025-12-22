@@ -172,7 +172,12 @@
     ,"DELETE_PATH_QUESTION": "¿Estás seguro que deseas eliminar la ruta formativa \"{{name}}\"?"
     ,"DELETE_ITEM_TITLE": "Eliminar formación"
     ,"DELETE_ITEM_QUESTION": "¿Estás seguro que deseas eliminar la formación \"{{name}}\"?"
-    ,"EXPORT": "Exportar a CSV"
+    ,"EXPORT": "Exportar a CSV",
+    "TABS": {
+      "ALL": "Todos los cursos",
+      "PATHS": "Rutas formativas"
+    },
+    "ALL_COURSES": "Todos los cursos"
   },
   "DOCUMENTS": {
     "TITLE": "Documentos",

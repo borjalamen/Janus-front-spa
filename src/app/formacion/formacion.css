@@ -5,14 +5,48 @@ body {
   margin: 0;
 }
 
-.training-root { display:flex; gap:16px; padding:20px; }
+.training-root { display:flex; flex-direction:column; gap:12px; padding:20px; }
+.tabs{display:flex;gap:8px;padding:8px 20px}
+
+.training-body { display:flex; gap:16px; }
+.tab{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+.tab.active{background:rgba(255,255,255,0.03);color:var(--accent)}
+.course-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
+.course-number{width:36px;height:36px;border-radius:6px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)}
+.course-content .meta{font-size:12px;color:var(--muted)}
 .training-root .left { width:320px; }
 .training-root .right { flex:1; background:var(--panel-bg, #0b0f12); padding:12px; border-radius:8px }
+
+/* Make the 'All courses' panel occupy the full width when visible */
+.all-courses { flex: 1 1 auto; display: block; }
+.all-courses .left { width: 100%; max-width: none; }
+
+/* Hide numbering for course cards in the All Courses tab */
+.all-courses .course-number { display: none; }
+.all-courses .course-card { padding-left: 12px; }
 .left-header{display:flex;justify-content:space-between;align-items:center}
 .path-header{display:flex;align-items:center;gap:12px}
 .path-header h3{margin:0}
 .csv-btn{display:inline-flex;align-items:center;gap:8px}
-.csv-icon{background:rgba(255,255,255,0.04);padding:6px 8px;border-radius:6px;font-weight:700;color:var(--muted)}
+.csv-icon{background:transparent;padding:6px 8px;border-radius:6px;font-weight:700;color:var(--muted)}
+
+/* Blue background and glow on hover/focus for CSV button */
+.csv-btn{
+  background: #007bff;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: #ffffff;
+  padding:6px 10px;
+  border-radius:8px;
+  transition: box-shadow 180ms ease, transform 120ms ease, background-color 120ms ease;
+}
+.csv-btn .csv-icon{background:transparent;color:#ffffff;padding:2px 6px;border-radius:4px}
+.csv-btn:hover, .csv-btn:focus{
+  box-shadow: 0 10px 30px rgba(0,123,255,0.28);
+  transform: translateY(-2px);
+  background: #0090ff;
+  outline: none;
+}
+.csv-btn:active{ transform: translateY(0); }
 .paths-list { list-style:none; padding:0; margin-top:12px }
 .paths-list li { background:rgba(255,255,255,0.02); padding:10px; margin-bottom:8px; border-radius:6px; cursor:pointer }
 .paths-list li.selected { border:1px solid rgba(255,255,255,0.06); box-shadow:0 4px 8px rgba(0,0,0,0.6) }
