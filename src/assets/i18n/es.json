@@ -149,6 +149,7 @@
     "DESCRIPTION": "Recursos formativos y material de aprendizaje del equipo DevOps.",
     "RESPONSIBLE": "Responsable",
     "STATUS": "Estado",
+    "SELECT_COURSE": "Selecciona un curso para añadir",
     "NEW_PATH": "Nueva ruta formativa",
     "EDIT": "Editar",
     "DELETE": "Eliminar",
@@ -178,6 +179,13 @@
       "PATHS": "Rutas formativas"
     },
     "ALL_COURSES": "Todos los cursos"
+    ,"VIEW": "Ver"
+    ,"NEW_COURSE": "Nuevo curso"
+    ,"COPY": "Copiar enlace"
+    ,"BACK": "Regresar"
+    ,"NO_LINK": "No hay enlace para copiar"
+    ,"LINK_COPIED": "Link copiado"
+    ,"COPY_FAILED": "No se pudo copiar el enlace"
   },
   "DOCUMENTS": {
     "TITLE": "Documentos",

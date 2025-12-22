@@ -176,6 +176,14 @@
       "PATHS": "Training paths"
     },
     "ALL_COURSES": "All courses"
+    ,"VIEW": "View"
+    ,"NEW_COURSE": "New course"
+    ,"COPY": "Copy link"
+    ,"BACK": "Back"
+    ,"NO_LINK": "No link to copy"
+    ,"LINK_COPIED": "Link copied"
+    ,"COPY_FAILED": "Failed to copy link"
+    ,"SELECT_COURSE": "Select a course to add"
   },
   "DOCUMENTS": {
     "TITLE": "Documents",

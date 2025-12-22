@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +33,7 @@ const STORAGE_KEY = 'training_paths_v1';
   templateUrl: './formacion.html',
   styleUrls: ['./formacion.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
+  imports: [CommonModule, NgIf, NgForOf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
 })
 export class FormacionComponent {
   title = '';
@@ -46,12 +46,12 @@ export class FormacionComponent {
   // UI state
   selectedPath?: TrainingPath;
   showPathModal = false;
-  editingPath: Partial<TrainingPath> = {};
+  editingPath: Partial<TrainingPath> & { readonly?: boolean } = {};
 
   showItemModal = false;
-  editingItem: Partial<TrainingItem> & { tagsString?: string } = {};
+  editingItem: Partial<TrainingItem> & { tagsString?: string; readonly?: boolean } = {};
   // tabs: 'all' = all courses search, 'paths' = training paths UI
-  activeTab: 'all' | 'paths' = 'paths';
+  activeTab: 'all' | 'paths' = 'all';
 
   // cached search list for all courses
   get allCourses(): TrainingItem[] {
@@ -129,6 +129,12 @@ export class FormacionComponent {
     this.showPathModal = true;
   }
 
+  viewPath(p: TrainingPath) {
+    this.editingPath = { ...p } as any;
+    this.editingPath.readonly = true;
+    this.showPathModal = true;
+  }
+
   savePath() {
     const p = this.editingPath as TrainingPath;
     if (!p.name) return;
@@ -165,9 +171,50 @@ export class FormacionComponent {
 
   // Items (formaciones) inside path
   addItem() {
+    // Open course selector to choose among all available courses
     if (!this.selectedPath) return;
-    this.editingItem = { name: '', link: '', description: '', tags: [], location: '', visible: true, tagsString: '' };
-    this.showItemModal = true;
+    this.openCourseSelector();
+  }
+
+  // Course selector modal state
+  showCourseSelector = false;
+  selectedCandidate?: TrainingItem;
+  selectorCandidates: TrainingItem[] = [];
+  selectorFilteredCandidates: TrainingItem[] = [];
+
+  openCourseSelector() {
+    // prepare local candidate list and filtered copy for the modal
+    this.selectorCandidates = this.allCourses.map(i => ({...i}));
+    this.selectorFilteredCandidates = [...this.selectorCandidates];
+    this.selectedCandidate = undefined;
+    this.showCourseSelector = true;
+  }
+
+  selectCourse(candidate: TrainingItem) {
+    this.selectedCandidate = candidate;
+  }
+
+  filterSelector(query: string) {
+    const v = (query || '').toLowerCase();
+    if (!v) { this.selectorFilteredCandidates = [...this.selectorCandidates]; return; }
+    this.selectorFilteredCandidates = this.selectorCandidates.filter(it =>
+      (it.name || '').toLowerCase().includes(v) ||
+      (it.description || '').toLowerCase().includes(v) ||
+      ((it.tags || []).join(' ').toLowerCase().includes(v))
+    );
+  }
+
+  confirmAddSelectedCourse() {
+    if (!this.selectedPath || !this.selectedCandidate) return;
+    // copy the item into the selected path
+    const itemCopy: TrainingItem = { ...this.selectedCandidate, id: Math.random().toString(36).slice(2,9) };
+    this.selectedPath.items.push(itemCopy);
+    const idxPath = this.paths.findIndex(p => p.id === this.selectedPath!.id);
+    if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
+    this.save();
+    this.refreshAllCourses();
+    this.showCourseSelector = false;
+    this.selectedCandidate = undefined;
   }
 
   editItem(item: TrainingItem) {
@@ -177,6 +224,7 @@ export class FormacionComponent {
 
   saveItem() {
     if (!this.selectedPath) return;
+    if ((this.editingItem as any).readonly) return; // no guardar en modo solo lectura
     const itPartial = this.editingItem as Partial<TrainingItem> & { tagsString?: string };
     const it: TrainingItem = {
       id: itPartial.id || '',
@@ -211,6 +259,95 @@ export class FormacionComponent {
   openCourseLink(it: TrainingItem) {
     if (!it || !it.link) return;
     try { window.open(it.link, '_blank'); } catch(e) { /* ignore */ }
+  }
+
+  /** Actions for All Courses tab */
+  // Create a new course (not tied to a specific path) - will create in a new generic path if needed
+  addCourseFromAll() {
+    // If there is a selected path, add into it; otherwise create a default path
+    if (!this.selectedPath) {
+      // create a generic path to hold orphan courses
+      const p: TrainingPath = { id: Math.random().toString(36).slice(2,9), name: this.translate.instant('TRAINING.ALL_COURSES'), items: [], visible: true } as TrainingPath;
+      this.paths.push(p);
+      this.selectedPath = p;
+    }
+    this.editingItem = { name: '', link: '', description: '', tags: [], location: '', visible: true, tagsString: '' };
+    this.showItemModal = true;
+  }
+
+  viewCourse(it: TrainingItem) {
+    // open readonly modal: reuse editing modal but disable save (simple approach)
+    this.editingItem = { ...it, tagsString: (it.tags||[]).join(',') } as any;
+    this.editingItem.readonly = true;
+    this.showItemModal = true;
+  }
+
+  closeView() {
+    // limpiar flag readonly y cerrar modal
+    if (this.editingItem) this.editingItem.readonly = false;
+    this.showItemModal = false;
+    this.editingItem = {};
+  }
+
+  editCourse(it: TrainingItem) {
+    // find the path that contains the item and select it
+    const found = this.paths.find(p => p.items.some(i => i.id === it.id));
+    if (found) this.selectedPath = found;
+    this.editItem(it);
+  }
+
+  confirmDeleteCourse(id: string, name?: string) {
+    const question = this.translate.instant('TRAINING.DELETE_ITEM_QUESTION', { name: name || '' });
+    this.promptConfirm(question, () => this.deleteCourseById(id));
+  }
+
+  deleteCourseById(id: string) {
+    // find and remove from any path
+    for (const p of this.paths) {
+      const idx = p.items.findIndex(i => i.id === id);
+      if (idx !== -1) {
+        p.items.splice(idx, 1);
+        break;
+      }
+    }
+    this.save();
+    this.refreshAllCourses();
+  }
+
+  copyToClipboard(text?: string) {
+    const link = (text || '').toString();
+    if (!link.trim()) { this.showToast(this.translate.instant('TRAINING.NO_LINK'), ''); return; }
+    const clipboardApi = navigator && (navigator as any).clipboard && (navigator as any).clipboard.writeText;
+    if (clipboardApi) {
+      (navigator as any).clipboard.writeText(link).then(() => {
+        this.showToast(this.translate.instant('TRAINING.LINK_COPIED'), link);
+      }).catch(() => {
+        this.showToast(this.translate.instant('TRAINING.COPY_FAILED'), '');
+      });
+    } else {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = link;
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) this.showToast(this.translate.instant('TRAINING.LINK_COPIED'), link);
+        else this.showToast(this.translate.instant('TRAINING.COPY_FAILED'), '');
+      } catch(e) { this.showToast(this.translate.instant('TRAINING.COPY_FAILED'), ''); }
+    }
+  }
+
+  // toast state
+  toastMessage = '';
+  toastVisible = false;
+  toastMessagePrefix = '';
+
+  showToast(prefix: string, message: string, ms = 2500) {
+    this.toastMessagePrefix = prefix;
+    this.toastMessage = message;
+    this.toastVisible = true;
+    setTimeout(() => { this.toastVisible = false; }, ms);
   }
 
   dropItem(event: CdkDragDrop<TrainingItem[]>) {

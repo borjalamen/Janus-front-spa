@@ -9,8 +9,11 @@ body {
 .tabs{display:flex;gap:8px;padding:8px 20px}
 
 .training-body { display:flex; gap:16px; }
-.tab{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
-.tab.active{background:rgba(255,255,255,0.03);color:var(--accent)}
+.tab{background:transparent;border:1px solid transparent;padding:8px 14px;border-radius:10px;color:var(--muted);cursor:pointer;position:relative;font-weight:600;transition:all 160ms ease}
+.tab:hover{color:var(--accent)}
+.tab:focus{outline:none; box-shadow:0 0 0 4px rgba(0,123,255,0.08);}
+.tab.active{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));color:var(--accent);box-shadow: 0 6px 18px rgba(0,0,0,0.5);transform:translateY(-2px)}
+.tab.active::after{content:'';position:absolute;left:12px;right:12px;bottom:-8px;height:4px;border-radius:4px;background:linear-gradient(90deg,#00a3ff,#0066ff);box-shadow:0 6px 20px rgba(0,123,255,0.2)}
 .course-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .course-number{width:36px;height:36px;border-radius:6px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)}
 .course-content .meta{font-size:12px;color:var(--muted)}
@@ -25,6 +28,8 @@ body {
 .all-courses .course-number { display: none; }
 .all-courses .course-card { padding-left: 12px; }
 .left-header{display:flex;justify-content:space-between;align-items:center}
+.left-header .add-course-btn{background:#0066ff;color:#fff;border-radius:8px;padding:6px 10px;border:none;cursor:pointer;transition:box-shadow 160ms ease, transform 120ms ease}
+.left-header .add-course-btn:hover{box-shadow:0 10px 30px rgba(0,102,255,0.18);transform:translateY(-2px)}
 .path-header{display:flex;align-items:center;gap:12px}
 .path-header h3{margin:0}
 .csv-btn{display:inline-flex;align-items:center;gap:8px}
@@ -62,6 +67,22 @@ body {
 .item-desc { color:var(--muted); font-size:13px }
 .item-tags { color:var(--muted); font-size:12px }
 
+/* Icon buttons for course actions in All Courses */
+.course-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{background:transparent;border:1px solid transparent;padding:6px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background 150ms ease,color 150ms ease,transform 120ms ease}
+.icon-btn span{font-size:16px}
+.icon-btn:hover{background:rgba(0,102,255,0.12);color:#00a3ff;transform:translateY(-2px)}
+.icon-btn:focus{outline:none;box-shadow:0 6px 18px rgba(0,123,255,0.12)}
+.icon-btn.delete:hover{background:rgba(255,50,50,0.08);color:#ff4d4f}
+
+/* Ensure course card layout keeps actions aligned to right */
+.course-card{display:flex;justify-content:space-between;align-items:center}
+.course-card .course-content{flex:1;cursor:pointer}
+
+/* Actions in left lists and items list */
+.actions, .item-actions { display:flex; gap:8px; align-items:center }
+.actions .icon-btn, .item-actions .icon-btn { padding:6px; border-radius:6px }
+
 .no-selection{padding:20px;color:var(--muted)}
 
 /* modal */
@@ -71,5 +92,19 @@ body {
 .form-row input, .form-row textarea { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--muted) }
 .modal-actions { display:flex; gap:8px; justify-content:flex-end }
 
-.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer;transition:box-shadow 140ms ease, transform 120ms ease, background-color 120ms ease, color 120ms ease}
 .btn.small{padding:6px 8px;font-size:13px}
+.btn:hover, .btn:focus{background:#007bff;color:#fff;box-shadow:0 10px 30px rgba(0,123,255,0.18);transform:translateY(-2px);outline:none}
+
+/* toast */
+.toast { position: fixed; right: 20px; bottom: 20px; background: rgba(0,0,0,0.7); color: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 2000; max-width: 380px }
+.toast .toast-link { color:#aee9ff; word-break:break-all }
+
+/* Visual style for readonly inputs to look non-editable */
+.form-row input[readonly], .form-row textarea[readonly] {
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.04);
+  color: #cfcfcf;
+  cursor: default;
+}
+.form-row input[readonly]::selection, .form-row textarea[readonly]::selection { background: rgba(255,255,255,0.04) }

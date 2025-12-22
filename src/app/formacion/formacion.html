@@ -1,9 +1,9 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="training-root">
-  <div class="tabs">
-    <button class="tab" [class.active]="activeTab==='all'" (click)="setTab('all')">{{ 'TRAINING.TABS.ALL' | translate }}</button>
-    <button class="tab" [class.active]="activeTab==='paths'" (click)="setTab('paths')">{{ 'TRAINING.TABS.PATHS' | translate }}</button>
+  <div class="tabs" role="tablist" aria-label="Training tabs">
+    <button role="tab" aria-selected="{{activeTab==='all'}}" class="tab" [class.active]="activeTab==='all'" (click)="setTab('all')">{{ 'TRAINING.TABS.ALL' | translate }}</button>
+    <button role="tab" aria-selected="{{activeTab==='paths'}}" class="tab" [class.active]="activeTab==='paths'" (click)="setTab('paths')">{{ 'TRAINING.TABS.PATHS' | translate }}</button>
   </div>
   <div class="training-body">
     <div class="left" *ngIf="isTab('paths')">
@@ -17,8 +17,9 @@
         <strong>{{ p.name }}</strong>
         <div class="meta">{{ p.audience }}</div>
         <div class="actions">
-          <button class="btn small" (click)="editPath(p); $event.stopPropagation()">{{ 'TRAINING.EDIT' | translate }}</button>
-          <button class="btn small" (click)="confirmDeletePath(p.id, p.name); $event.stopPropagation()">{{ 'TRAINING.DELETE' | translate }}</button>
+          <button type="button" class="icon-btn view" title="{{ 'TRAINING.VIEW' | translate }}" (click)="selectPath(p); $event.stopPropagation()"><span class="icon-eye">👁️</span></button>
+          <button type="button" class="icon-btn edit" title="{{ 'TRAINING.EDIT' | translate }}" (click)="editPath(p); $event.stopPropagation()"><span class="icon-edit">✏️</span></button>
+          <button type="button" class="icon-btn delete" title="{{ 'TRAINING.DELETE' | translate }}" (click)="confirmDeletePath(p.id, p.name); $event.stopPropagation()"><span class="icon-delete">🗑️</span></button>
         </div>
       </li>
     </ul>
@@ -53,8 +54,29 @@
               <div class="item-tags">{{ it.tags?.join(', ') }}</div>
             </div>
             <div class="item-actions">
-              <button class="btn small" (click)="editItem(it); $event.stopPropagation()">{{ 'TRAINING.EDIT' | translate }}</button>
-              <button class="btn small" (click)="confirmDeleteItem(it.id, it.name); $event.stopPropagation()">{{ 'TRAINING.DELETE' | translate }}</button>
+              <button type="button" class="icon-btn view" title="{{ 'TRAINING.VIEW' | translate }}" (click)="viewCourse(it); $event.stopPropagation()"><span class="icon-eye">👁️</span></button>
+              <button type="button" class="icon-btn edit" title="{{ 'TRAINING.EDIT' | translate }}" (click)="editItem(it); $event.stopPropagation()"><span class="icon-edit">✏️</span></button>
+              <button type="button" class="icon-btn delete" title="{{ 'TRAINING.DELETE' | translate }}" (click)="confirmDeleteItem(it.id, it.name); $event.stopPropagation()"><span class="icon-delete">🗑️</span></button>
+            </div>
+          </div>
+
+          <!-- Course selector modal -->
+          <div class="modal-backdrop" *ngIf="showCourseSelector">
+            <div class="modal" (click)="$event.stopPropagation()">
+              <h3>{{ 'TRAINING.SELECT_COURSE' | translate }}</h3>
+              <app-buscador (buscar)="filterSelector($event)"></app-buscador>
+              <div style="max-height:300px; overflow:auto; margin-top:10px">
+                <ul class="paths-list">
+                  <li *ngFor="let c of selectorFilteredCandidates" [class.selected]="selectedCandidate?.id===c.id" (click)="selectCourse(c)">
+                    <strong>{{ c.name }}</strong>
+                    <div class="meta">{{ c.description }}</div>
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn" (click)="confirmAddSelectedCourse()" [disabled]="!selectedCandidate">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
+                <button type="button" class="btn" (click)="showCourseSelector=false">{{ 'TRAINING.CANCEL' | translate }}</button>
+              </div>
             </div>
           </div>
         </li>
@@ -70,17 +92,25 @@
                 <div class="left" style="width:100%">
                   <div class="left-header">
                     <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
+                    <div>
+                      <button type="button" class="btn" (click)="addCourseFromAll()">{{ 'TRAINING.NEW_COURSE' | translate }}</button>
+                    </div>
                   </div>
 
                   <ul class="paths-list">
                     <li *ngFor="let c of filteredAllCourses; let i = index">
-                      <div class="course-card" (click)="openCourseLink(c)">
-                        <div class="course-content">
-                          <strong>{{ c.name }}</strong>
-                          <div class="meta">{{ c.description }}</div>
-                          <div class="meta">{{ (c.tags||[]).join(', ') }}</div>
-                        </div>
-                      </div>
+                          <div class="course-card">
+                            <div class="course-content" (click)="openCourseLink(c)">
+                              <strong>{{ c.name }}</strong>
+                              <div class="meta">{{ c.description }}</div>
+                              <div class="meta">{{ (c.tags||[]).join(', ') }}</div>
+                            </div>
+                            <div class="course-actions">
+                              <button class="icon-btn view" title="{{ 'TRAINING.VIEW' | translate }}" (click)="viewCourse(c); $event.stopPropagation()"><span class="icon-eye">👁️</span></button>
+                              <button class="icon-btn edit" title="{{ 'TRAINING.EDIT' | translate }}" (click)="editCourse(c); $event.stopPropagation()"><span class="icon-edit">✏️</span></button>
+                              <button class="icon-btn delete" title="{{ 'TRAINING.DELETE' | translate }}" (click)="confirmDeleteCourse(c.id, c.name); $event.stopPropagation()"><span class="icon-delete">🗑️</span></button>
+                            </div>
+                          </div>
                     </li>
                   </ul>
                 </div>
@@ -91,24 +121,38 @@
           <!-- Path modal -->
           <div class="modal-backdrop" *ngIf="showPathModal">
             <div class="modal" (click)="$event.stopPropagation()">
-              <h3>{{ editingPath.id ? ('TRAINING.EDIT_PATH'|translate) : ('TRAINING.NEW_PATH'|translate) }}</h3>
-              <div class="form-row"><label>{{ 'TRAINING.NAME' | translate }}</label><input [(ngModel)]="editingPath.name" /></div>
-              <div class="form-row"><label>{{ 'TRAINING.AUDIENCE' | translate }}</label><input [(ngModel)]="editingPath.audience" /></div>
-              <div class="form-row"><label>{{ 'TRAINING.OBJECTIVES' | translate }}</label><textarea rows="3" [(ngModel)]="editingPath.objectives"></textarea></div>
-              <div class="form-row"><label>{{ 'TRAINING.PREREQUISITES' | translate }}</label><input [(ngModel)]="editingPath.prerequisites" /></div>
-              <div class="modal-actions"><button class="btn" (click)="savePath()">{{ 'TRAINING.SAVE' | translate }}</button><button class="btn" (click)="showPathModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
+              <h3 *ngIf="!editingPath.readonly">{{ editingPath.id ? ('TRAINING.EDIT_PATH'|translate) : ('TRAINING.NEW_PATH'|translate) }}</h3>
+              <h3 *ngIf="editingPath.readonly">{{ 'TRAINING.VIEW' | translate }}</h3>
+              <div class="form-row"><label>{{ 'TRAINING.NAME' | translate }}</label><input [(ngModel)]="editingPath.name" [readonly]="editingPath.readonly" /></div>
+              <div class="form-row"><label>{{ 'TRAINING.AUDIENCE' | translate }}</label><input [(ngModel)]="editingPath.audience" [readonly]="editingPath.readonly" /></div>
+              <div class="form-row"><label>{{ 'TRAINING.OBJECTIVES' | translate }}</label><textarea rows="3" [(ngModel)]="editingPath.objectives" [readonly]="editingPath.readonly"></textarea></div>
+              <div class="form-row"><label>{{ 'TRAINING.PREREQUISITES' | translate }}</label><input [(ngModel)]="editingPath.prerequisites" [readonly]="editingPath.readonly" /></div>
+              <div class="modal-actions" *ngIf="!editingPath.readonly"><button type="button" class="btn" (click)="savePath()">{{ 'TRAINING.SAVE' | translate }}</button><button type="button" class="btn" (click)="showPathModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
+              <div class="modal-actions" *ngIf="editingPath.readonly"><button type="button" class="btn" (click)="editingPath.readonly=false; showPathModal=false">{{ 'TRAINING.BACK' | translate }}</button></div>
             </div>
           </div>
 
           <!-- Item modal -->
           <div class="modal-backdrop" *ngIf="showItemModal">
             <div class="modal" (click)="$event.stopPropagation()">
-              <h3>{{ editingItem.id ? ('TRAINING.EDIT_ITEM'|translate) : ('TRAINING.NEW_ITEM'|translate) }}</h3>
-              <div class="form-row"><label>{{ 'TRAINING.ITEM_NAME' | translate }}</label><input [(ngModel)]="editingItem.name" /></div>
-              <div class="form-row"><label>{{ 'TRAINING.ITEM_LINK' | translate }}</label><input [(ngModel)]="editingItem.link" /></div>
-              <div class="form-row"><label>{{ 'TRAINING.ITEM_DESC' | translate }}</label><textarea rows="3" [(ngModel)]="editingItem.description"></textarea></div>
-              <div class="form-row"><label>{{ 'TRAINING.ITEM_TAGS' | translate }}</label><input placeholder="Java,Spring" [(ngModel)]="editingItem.tagsString" /></div>
-              <div class="modal-actions"><button class="btn" (click)="saveItem()">{{ 'TRAINING.SAVE' | translate }}</button><button class="btn" (click)="showItemModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
+              <h3 *ngIf="!editingItem.readonly">{{ editingItem.id ? ('TRAINING.EDIT_ITEM'|translate) : ('TRAINING.NEW_ITEM'|translate) }}</h3>
+              <h3 *ngIf="editingItem.readonly">{{ 'TRAINING.VIEW' | translate }}</h3>
+              <div class="form-row"><label>{{ 'TRAINING.ITEM_NAME' | translate }}</label><input [(ngModel)]="editingItem.name" [readonly]="editingItem.readonly" /></div>
+              <div class="form-row"><label>{{ 'TRAINING.ITEM_LINK' | translate }}</label>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input style="flex:1" [(ngModel)]="editingItem.link" [readonly]="editingItem.readonly" />
+                  <button type="button" class="btn small" title="{{ 'TRAINING.COPY' | translate }}" (click)="copyToClipboard(editingItem.link); $event.stopPropagation()" [disabled]="!(editingItem.link && (editingItem.link+'').trim())">{{ 'TRAINING.COPY' | translate }}</button>
+                </div>
+              </div>
+              <div class="form-row"><label>{{ 'TRAINING.ITEM_DESC' | translate }}</label><textarea rows="3" [(ngModel)]="editingItem.description" [readonly]="editingItem.readonly"></textarea></div>
+              <div class="form-row"><label>{{ 'TRAINING.ITEM_TAGS' | translate }}</label><input placeholder="Java,Spring" [(ngModel)]="editingItem.tagsString" [readonly]="editingItem.readonly" /></div>
+              <div class="modal-actions" *ngIf="!editingItem.readonly">
+                <button type="button" class="btn" (click)="saveItem()">{{ 'TRAINING.SAVE' | translate }}</button>
+                <button type="button" class="btn" (click)="showItemModal=false">{{ 'TRAINING.CANCEL' | translate }}</button>
+              </div>
+              <div class="modal-actions" *ngIf="editingItem.readonly">
+                <button type="button" class="btn" (click)="closeView()">{{ 'TRAINING.BACK' | translate }}</button>
+              </div>
             </div>
           </div>
  
@@ -121,5 +165,10 @@
                   <button class="btn" (click)="confirmOk()">OK</button>
                   <button class="btn" (click)="confirmCancel()">{{ 'TRAINING.CANCEL' | translate }}</button>
                 </div>
+              </div>
+
+              <!-- Toast -->
+              <div class="toast" *ngIf="toastVisible">
+                <div>{{ toastMessagePrefix }} <span class="toast-link">{{ toastMessage }}</span></div>
               </div>
             </div>

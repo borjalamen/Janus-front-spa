@@ -56,7 +56,7 @@
     "WHAT_WE_DO_CICD": "Integració Contínua i Desplegament Continu (CI/CD)",
     "WHAT_WE_DO_CICD_ITEMS": {
       "PIPELINES": "Creació, manteniment i optimització de pipelines de CI/CD",
-      "AUTOMATION": "Automatització de la compilació, les proves i l'anàlisi de codi",
+    ,"SELECT_COURSE": "Selecciona un curs per afegir"
       "SONARQUBE": "Integració d'eines de qualitat com SonarQube"
     },
     "WHAT_WE_DO_ENVIRONMENTS": "Desplegament i operació multientorn",
@@ -178,6 +178,13 @@
       "PATHS": "Rutes formatives"
     },
     "ALL_COURSES": "Tots els cursos"
+    ,"VIEW": "Veure"
+    ,"NEW_COURSE": "Nou curs"
+    ,"COPY": "Copia l'enllaç"
+    ,"BACK": "Tornar"
+    ,"NO_LINK": "No hi ha enllaç per copiar"
+    ,"LINK_COPIED": "Enllaç copiat"
+    ,"COPY_FAILED": "No s'ha pogut copiar l'enllaç"
 },
 "DOCUMENTS": {
   "TITLE": "Documents",
