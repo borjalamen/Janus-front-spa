@@ -56,7 +56,6 @@
     "WHAT_WE_DO_CICD": "Integració Contínua i Desplegament Continu (CI/CD)",
     "WHAT_WE_DO_CICD_ITEMS": {
       "PIPELINES": "Creació, manteniment i optimització de pipelines de CI/CD",
-    ,"SELECT_COURSE": "Selecciona un curs per afegir"
       "SONARQUBE": "Integració d'eines de qualitat com SonarQube"
     },
     "WHAT_WE_DO_ENVIRONMENTS": "Desplegament i operació multientorn",
@@ -184,7 +183,8 @@
     ,"BACK": "Tornar"
     ,"NO_LINK": "No hi ha enllaç per copiar"
     ,"LINK_COPIED": "Enllaç copiat"
-    ,"COPY_FAILED": "No s'ha pogut copiar l'enllaç"
+    ,"COPY_FAILED": "No s'ha pogut copiar l'enllaç",
+    "SELECT_COURSE": "Selecciona un curs per afegir"
 },
 "IANUSHUB": {
   "HOME": "Inici: Panell principal amb un resum de l'activitat recent, accés ràpid a les seccions i mètriques clau del sistema.",

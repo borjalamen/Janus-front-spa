@@ -30,3 +30,20 @@
 .search-field .mat-form-field-outline{border-color:rgba(255,255,255,0.05)}
 .search-field .mat-form-field-infix{background:rgba(255,255,255,0.02);padding-left:8px}
 .search-field.mat-form-field-appearance-outline .mat-form-field-outline-thick{border-color:#0a7f7f}
+
+/* Hover effect consistent with other icon buttons: blue glow + slight lift */
+.doc-actions button.mat-stroked-button,
+.doc-actions button {
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+.doc-actions button.mat-stroked-button:hover,
+.doc-actions button:hover {
+  background-color: rgba(10,127,127,0.08);
+  border-color: rgba(10,127,127,0.6);
+  box-shadow: 0 6px 18px rgba(10,127,127,0.08), 0 2px 6px rgba(10,127,127,0.06);
+  transform: translateY(-3px);
+}
+.doc-actions button.mat-stroked-button:active,
+.doc-actions button:active {
+  transform: translateY(-1px);
+}
