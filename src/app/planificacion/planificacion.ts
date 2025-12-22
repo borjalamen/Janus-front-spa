@@ -15,6 +15,8 @@ interface EventItem {
   endTime: string;   // HH:MM
   devOps: string;
   notes?: string;
+  jiraUrl?: string;
+  responsable?: string;
 }
 
 @Component({
@@ -43,8 +45,12 @@ export class PlanificacionComponent implements OnInit {
   showModal = false;
   editing?: EventItem;
   draft: Partial<EventItem> = {};
+  // confirmation dialog state
+  showConfirm = false;
+  confirmMessage = '';
+  private confirmAction: (() => void) | null = null;
 
-  devOpsList = ['Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil'];
+  devOpsList: string[] = [];
   validationError: string | null = null;
 
   constructor(private translate: TranslateService) {}
@@ -54,6 +60,8 @@ export class PlanificacionComponent implements OnInit {
     const tomorrow = new Date();
     tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
     this.weekStart = this.startOfWeek(tomorrow);
+    // inicializar lista de DevOps con opción no asignado como clave traducible
+    this.devOpsList = [ 'PLANNING.UNASSIGNED', 'Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil' ];
     this.load();
   }
 
@@ -140,7 +148,9 @@ export class PlanificacionComponent implements OnInit {
         date,
         startTime: '09:00',
         endTime: '10:00',
-        devOps: this.devOpsList[0]
+        devOps: (this.devOpsList && this.devOpsList.length>0) ? this.devOpsList[0] : '',
+        jiraUrl: '',
+        responsable: ''
       };
     }
     this.validationError = null;
@@ -165,7 +175,9 @@ export class PlanificacionComponent implements OnInit {
         startTime: this.draft.startTime as string,
         endTime: this.draft.endTime as string,
         devOps: this.draft.devOps as string,
-        notes: this.draft.notes
+        notes: this.draft.notes as string,
+        jiraUrl: this.draft.jiraUrl as string,
+        responsable: this.draft.responsable as string
       };
       this.events.push(e);
     }
@@ -182,16 +194,37 @@ export class PlanificacionComponent implements OnInit {
 
   removeFromModal() {
     if (!this.editing) return;
-    if (!window.confirm(this.translate.instant('PLANNING.DELETE_CONFIRM'))) return;
-    this.events = this.events.filter(e => e.id !== this.editing!.id);
-    this.save();
-    this.closeModal();
+    this.promptConfirm(this.translate.instant('PLANNING.DELETE_CONFIRM'), () => {
+      this.events = this.events.filter(e => e.id !== this.editing!.id);
+      this.save();
+      this.closeModal();
+    });
   }
 
   deleteEvent(id: string) {
-    if (!window.confirm(this.translate.instant('PLANNING.DELETE_CONFIRM'))) return;
-    this.events = this.events.filter(e => e.id !== id);
-    this.save();
+    this.promptConfirm(this.translate.instant('PLANNING.DELETE_CONFIRM'), () => {
+      this.events = this.events.filter(e => e.id !== id);
+      this.save();
+    });
+  }
+
+  promptConfirm(message: string, action: () => void) {
+    this.confirmMessage = message;
+    this.confirmAction = action;
+    this.showConfirm = true;
+  }
+
+  confirmOk() {
+    if (this.confirmAction) this.confirmAction();
+    this.confirmAction = null;
+    this.showConfirm = false;
+    this.confirmMessage = '';
+  }
+
+  confirmCancel() {
+    this.confirmAction = null;
+    this.showConfirm = false;
+    this.confirmMessage = '';
   }
 
   formatDay(d: Date) {

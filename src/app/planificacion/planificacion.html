@@ -11,32 +11,39 @@
   </div>
 
   <div class="grid-week">
-    <div class="grid-top">
+    <div class="grid-rows">
       <div class="corner"></div>
-      <div *ngFor="let d of daysOfWeek()" class="day-col">{{ formatDay(d) }} <div class="day-sub">{{ d.toUTCString().slice(0,3) }}</div></div>
-    </div>
+      <div class="days-scroll combined">
+        <div class="days-cols header-row">
+          <div *ngFor="let d of daysOfWeek()" [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)" class="day-col">{{ formatDay(d) }} <div class="day-sub">{{ d.toUTCString().slice(0,3) }}</div></div>
+        </div>
 
-    <div class="grid-body">
-      <div class="corner-spacer"></div>
-      <div class="days-scroll">
-      <div class="days-cols full-width">
-        <div *ngFor="let d of daysOfWeek()" class="day-col-body">
-          <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
-            <div class="slot-inner">
-              <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
-                <div class="event-top">
-                  <strong class="project">{{ ev.project }}</strong>
-                  <span class="time">{{ ev.startTime }}-{{ ev.endTime }}</span>
+        <div class="days-cols full-width body-row">
+          <div *ngFor="let d of daysOfWeek()" [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)" class="day-col-body">
+            <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
+              <div class="slot-inner">
+                <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
+                  <button class="x" title="{{ 'PLANNING.DELETE' | translate }}" (click)="$event.stopPropagation(); deleteEvent(ev.id)">✖</button>
+                  <div class="event-top">
+                    <strong class="project">{{ ev.project }}</strong>
+                  </div>
+                  <div class="event-hours">{{ ev.startTime }}-{{ ev.endTime }}</div>
+                  <div class="event-devops">
+                    <a *ngIf="ev.jiraUrl" class="jira-link" href="{{ ev.jiraUrl }}" target="_blank" (click)="$event.stopPropagation()">🔗</a>
+                    <span class="dev">
+                      <ng-container *ngIf="ev.devOps?.startsWith('PLANNING.'); else plainDev">{{ ev.devOps | translate }}</ng-container>
+                      <ng-template #plainDev>{{ ev.devOps }}</ng-template>
+                    </span>
+                  </div>
+                  <div *ngIf="ev.responsable" class="event-responsable">{{ ev.responsable }}</div>
                 </div>
-                <div class="event-bottom">
-                  <span class="dev">{{ ev.devOps }}</span>
-                  <button class="x" (click)="$event.stopPropagation(); deleteEvent(ev.id)">✖</button>
-                </div>
+              </div>
+              <div class="add-event-row">
+                <button class="add-event-btn" (click)="$event.stopPropagation(); createOrEditEvent(undefined, 'DEV', d)">{{ 'PLANNING.ADD_EVENT' | translate }}</button>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -76,12 +83,24 @@
     <div class="form-row">
       <label>{{ 'PLANNING.DEVOPS' | translate }}</label>
       <select [(ngModel)]="draft.devOps">
-        <option *ngFor="let d of devOpsList" [value]="d">{{ d }}</option>
+        <option *ngFor="let d of devOpsList" [value]="d">
+          <ng-container *ngIf="d?.startsWith('PLANNING.'); else plain">{{ d | translate }}</ng-container>
+          <ng-template #plain>{{ d }}</ng-template>
+        </option>
       </select>
     </div>
     <div class="form-row">
       <label>{{ 'PLANNING.NOTES' | translate }}</label>
       <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.JIRA_TASK' | translate }}</label>
+      <input placeholder="https://..." [(ngModel)]="draft.jiraUrl" />
+      <button class="btn small" title="{{ 'PLANNING.EDIT_URL' | translate }}" (click)="$event.stopPropagation(); void 0">✎</button>
+    </div>
+    <div class="form-row">
+      <label>{{ 'PLANNING.RESPONSABLE' | translate }}</label>
+      <input [(ngModel)]="draft.responsable" />
     </div>
 
     <div *ngIf="validationError" class="modal-error">{{ validationError }}</div>
@@ -90,6 +109,17 @@
       <button class="btn" (click)="saveModal()">{{ 'PLANNING.SAVE' | translate }}</button>
       <button class="btn" (click)="closeModal()">{{ 'PLANNING.CANCEL' | translate }}</button>
       <button *ngIf="editing" class="btn warning" (click)="removeFromModal()">{{ 'PLANNING.DELETE' | translate }}</button>
+    </div>
+  </div>
+</div>
+<!-- Confirmation modal -->
+<div class="modal-backdrop" *ngIf="showConfirm">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ 'PLANNING.DELETE' | translate }}</h3>
+    <div class="modal-body">{{ confirmMessage }}</div>
+    <div class="modal-actions">
+      <button class="btn" (click)="confirmOk()">OK</button>
+      <button class="btn" (click)="confirmCancel()">{{ 'PLANNING.CANCEL' | translate }}</button>
     </div>
   </div>
 </div>
