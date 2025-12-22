@@ -221,7 +221,7 @@
       "TYPE_ABSENCE": "Ausencia",
       "LEGEND_TRAIN": "Formación (Morado)",
       "LEGEND_OTHER": "OTRO (Negro)",
-      "LEGEND_ABSENCE": "Ausencia (Naranja)",
+      "LEGEND_ABSENCE": "Ausencia (Blanco)",
     "LEGEND_DEV": "DEV (Verde)",
     "LEGEND_INT": "INT (Azul)",
     "LEGEND_PRE": "PRE (Amarillo)",
