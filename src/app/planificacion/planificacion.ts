@@ -5,6 +5,7 @@ import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 type Env = 'DEV' | 'INT' | 'PRE' | 'PRO';
+type EventType = 'DEPLOY' | 'TRAIN' | 'OTHER' | 'ABSENCE';
 
 interface EventItem {
   id: string;
@@ -17,6 +18,7 @@ interface EventItem {
   notes?: string;
   jiraUrl?: string;
   responsable?: string;
+  eventType?: EventType;
 }
 
 @Component({
@@ -139,6 +141,8 @@ export class PlanificacionComponent implements OnInit {
     if (existing) {
       this.editing = existing;
       this.draft = { ...existing };
+      // ensure env visibility/consistency for the loaded type
+      this.onEventTypeChange(this.draft.eventType as EventType);
     } else {
       const date = (day ? this.keyDate(day) : this.keyDate(this.weekStart));
       this.editing = undefined;
@@ -151,15 +155,27 @@ export class PlanificacionComponent implements OnInit {
         devOps: (this.devOpsList && this.devOpsList.length>0) ? this.devOpsList[0] : '',
         jiraUrl: '',
         responsable: ''
+        ,eventType: 'DEPLOY'
       };
     }
     this.validationError = null;
     this.showModal = true;
   }
 
+  onEventTypeChange(newType: EventType | undefined) {
+    // if type doesn't allow env, clear it to avoid persisting an inappropriate value
+    if (!newType) return;
+    if (newType === 'TRAIN' || newType === 'ABSENCE') {
+      this.draft.env = undefined;
+    } else {
+      if (!this.draft.env) this.draft.env = 'DEV';
+    }
+  }
+
   saveModal() {
     // validate required fields
-    if (!this.draft || !this.draft.project || !this.draft.startTime || !this.draft.endTime || !this.draft.date || !this.draft.env) {
+    const needEnv = this.draft.eventType === 'DEPLOY' || this.draft.eventType === 'OTHER';
+    if (!this.draft || !this.draft.project || !this.draft.startTime || !this.draft.endTime || !this.draft.date || (needEnv && !this.draft.env)) {
       this.validationError = this.translate.instant('PLANNING.ERROR_REQUIRED');
       return;
     }
@@ -177,7 +193,8 @@ export class PlanificacionComponent implements OnInit {
         devOps: this.draft.devOps as string,
         notes: this.draft.notes as string,
         jiraUrl: this.draft.jiraUrl as string,
-        responsable: this.draft.responsable as string
+        responsable: this.draft.responsable as string,
+        eventType: this.draft.eventType as EventType
       };
       this.events.push(e);
     }

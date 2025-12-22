@@ -22,7 +22,11 @@
           <div *ngFor="let d of daysOfWeek()" [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)" class="day-col-body">
             <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
               <div class="slot-inner">
-                <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
+                <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" [ngClass]="{
+                    'event-train': ev.eventType==='TRAIN',
+                    'event-other': ev.eventType==='OTHER',
+                    'event-absence': ev.eventType==='ABSENCE'
+                  }" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
                   <button class="x" title="{{ 'PLANNING.DELETE' | translate }}" (click)="$event.stopPropagation(); deleteEvent(ev.id)">✖</button>
                   <div class="event-top">
                     <strong class="project">{{ ev.project }}</strong>
@@ -53,6 +57,9 @@
     <div class="legend-item"><span class="legend-box int"></span> {{ 'PLANNING.LEGEND_INT' | translate }}</div>
     <div class="legend-item"><span class="legend-box pre"></span> {{ 'PLANNING.LEGEND_PRE' | translate }}</div>
     <div class="legend-item"><span class="legend-box pro"></span> {{ 'PLANNING.LEGEND_PRO' | translate }}</div>
+    <div class="legend-item"><span class="legend-box train"></span> {{ 'PLANNING.LEGEND_TRAIN' | translate }}</div>
+    <div class="legend-item"><span class="legend-box other"></span> {{ 'PLANNING.LEGEND_OTHER' | translate }}</div>
+    <div class="legend-item"><span class="legend-box vac"></span> {{ 'PLANNING.LEGEND_ABSENCE' | translate }}</div>
   </div>
   </div>
 
@@ -65,6 +72,15 @@
       <input [(ngModel)]="draft.project" />
     </div>
     <div class="form-row">
+      <label>{{ 'PLANNING.TYPE' | translate }}</label>
+      <select [(ngModel)]="draft.eventType" (ngModelChange)="onEventTypeChange($event)">
+        <option [value]="'DEPLOY'">{{ 'PLANNING.TYPE_DEPLOY' | translate }}</option>
+        <option [value]="'TRAIN'">{{ 'PLANNING.TYPE_TRAIN' | translate }}</option>
+        <option [value]="'OTHER'">{{ 'PLANNING.TYPE_OTHER' | translate }}</option>
+        <option [value]="'ABSENCE'">{{ 'PLANNING.TYPE_ABSENCE' | translate }}</option>
+      </select>
+    </div>
+    <div class="form-row" *ngIf="draft.eventType === 'DEPLOY' || draft.eventType === 'OTHER'">
       <label>{{ 'PLANNING.ENV' | translate }}</label>
       <select [(ngModel)]="draft.env">
         <option *ngFor="let e of envs" [value]="e">{{ e }}</option>
@@ -93,6 +109,7 @@
       <label>{{ 'PLANNING.NOTES' | translate }}</label>
       <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
     </div>
+    
     <div class="form-row">
       <label>{{ 'PLANNING.JIRA_TASK' | translate }}</label>
       <input placeholder="https://..." [(ngModel)]="draft.jiraUrl" />
