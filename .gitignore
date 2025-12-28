@@ -7,13 +7,14 @@ package-lock.json
 yarn.lock
 
 ## ========== Angular / build artifacts ==========
+/# Angular build artifacts
 /dist/
 /out-tsc/
 /build/
-.angular/
-.angular/cache/
-/coverage/
+/.angular/
 /.angular/cache/
+/.angular/cache/**
+/coverage/
 
 ## ========== Editor / IDE ==========
 # VS Code
