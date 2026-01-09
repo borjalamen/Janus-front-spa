@@ -39,6 +39,11 @@
         <mat-icon>storage</mat-icon>
         <span class="menu-text"><strong>{{ 'MENU.INFRASTRUCTURE' | translate }}</strong></span>
       </a>
+      <!-- Herramientas -->
+      <a *ngIf="canShow('herramientas')" mat-list-item routerLink="/herramientas">
+        <mat-icon>build</mat-icon>
+        <span class="menu-text"><strong>{{ 'MENU.TOOLS' | translate }}</strong></span>
+      </a>
       <!-- Documentos -->
       <a *ngIf="canShow('documentos')" mat-list-item routerLink="/documents">
         <mat-icon>upload_file</mat-icon>

@@ -29,6 +29,7 @@ export function httpLoaderFactory(http: HttpClient): TranslateLoader {
 import { BitacoraComponent as Bitacora} from './app/bitacora/bitacora';
 import { Jenkins } from './app/jenkins/jenkins';
 import { Infraestructura } from './app/infraestructura/infraestructura';
+import { Herramientas } from './app/herramientas/herramientas';
 import { DescargablesComponent } from './app/descargables/descargables';
 import { spinnerInterceptor } from './app/spinner.interceptor';
 import installNetworkSpinner from './app/network-spinner-patch';
@@ -59,7 +60,8 @@ bootstrapApplication(AppComponent, {
       { path: 'bitacora', component: Bitacora},
       {path: 'jenkins', component: Jenkins},
       {path: 'usuario', component: UsuarioComponent},
-      {path: 'infraestructura', component: Infraestructura}
+      {path: 'infraestructura', component: Infraestructura},
+      {path: 'herramientas', component: Herramientas}
     ]),
 
     provideHttpClient(withInterceptors([spinnerInterceptor]))
