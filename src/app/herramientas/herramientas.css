@@ -1,0 +1,27 @@
+.tools-root { padding: 12px; }
+.tools-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+.tools-list { display:flex; }
+.paths-list { list-style:none; padding:0; margin:0; width:360px }
+.paths-list li { padding:8px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center }
+.paths-list li.selected { background:#f3f6fb }
+.tool-main { flex:1 }
+.tool-title { font-size:14px }
+.tool-desc { font-size:12px; color:#555 }
+.tool-tags { font-size:11px; color:#777 }
+.actions { display:flex; gap:6px }
+.icon-btn { border:0; background:transparent; cursor:pointer }
+.tool-detail { margin-top:12px; padding:8px; border-top:1px solid #eee }
+.install-steps { background:#fafafa; padding:8px; border-radius:4px; white-space:pre-wrap }
+
+.modal-backdrop { position:fixed; left:0; right:0; top:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center }
+.modal { background:#fff; padding:16px; border-radius:6px; width:720px; max-height:80vh; overflow:auto }
+.form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:8px }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end }
+.btn { background:#1976d2; color:#fff; border:0; padding:6px 10px; border-radius:4px; cursor:pointer }
+.btn.small { padding:4px 8px }
+.csv-btn { background:#4caf50 }
+.toast { position:fixed; right:20px; bottom:20px; background:#222; color:white; padding:10px; border-radius:6px }
+
+/* Dark theme button overrides for this module */
+.jh-btn { background:#1e88e5 !important; color:#fff !important; border:0 !important; padding:6px 10px !important; border-radius:4px !important; cursor:pointer !important; font-size:13px !important }
+.tools-root .btn { background:#1e88e5 !important; color:#fff !important }

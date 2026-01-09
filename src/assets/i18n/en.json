@@ -184,7 +184,38 @@
     ,"NO_LINK": "No link to copy"
     ,"LINK_COPIED": "Link copied"
     ,"COPY_FAILED": "Failed to copy link"
-    ,"SELECT_COURSE": "Select a course to add"
+  ,"SELECT_COURSE": "Select a course to add"
+  },
+  "HERRAMIENTAS": {
+    "NEW_TOOL": "New tool",
+    "EDIT_TOOL": "Edit tool",
+    "VIEW_TOOL": "View tool",
+    "NAME": "Name",
+    "NAME_PLACEHOLDER": "Enter name",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_PLACEHOLDER": "Describe the tool",
+    "FUNCTIONALITY": "Functionality",
+    "FUNCTIONALITY_PLACEHOLDER": "Describe the main functionality",
+    "TAGS": "Tags",
+    "TAGS_PLACEHOLDER": "tag1, tag2, ...",
+    "INSTALL": "Install steps",
+    "INSTALL_PLACEHOLDER": "Steps to install/configure",
+    "PROJECTS": "Projects",
+    "PROJECTS_PLACEHOLDER": "project1, project2",
+    "SAVE": "Save",
+    "CLOSE": "Close",
+    "VIEW": "View",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CONFIRM_DELETE_TITLE": "Delete tool",
+    "CONFIRM_DELETE_MESSAGE": "Are you sure you want to delete the tool \"{{name}}\"?",
+    "CONFIRM_TITLE": "Confirm",
+    "CONFIRM_OK": "OK",
+    "CONFIRM_CANCEL": "Cancel",
+    "LABEL_DESCRIPTION": "Description",
+    "LABEL_FUNCTIONALITY": "Functionality",
+    "LABEL_INSTALL": "Installation",
+    "LABEL_PROJECTS": "Projects"
   },
   "IANUSHUB": {
     "HOME": "Home: Main dashboard with a summary of recent activity, quick access to sections and key system metrics.",

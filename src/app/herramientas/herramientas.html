@@ -1,0 +1,68 @@
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
+
+<div class="tools-root">
+  <div class="tools-header">
+    <h2>{{ 'MENU.TOOLS' | translate }}</h2>
+    <div>
+      <button class="btn" (click)="newTool()">{{ 'TRAINING.NEW_ITEM' | translate }}</button>
+    </div>
+  </div>
+
+  <div class="tools-list">
+    <ul class="paths-list">
+      <li *ngFor="let t of filteredTools" (click)="selectTool(t)" [class.selected]="selectedTool?.id===t.id">
+        <div class="tool-main">
+          <div class="tool-title"><strong>{{ t.name }}</strong></div>
+          <div class="tool-desc">{{ t.description }}</div>
+          <div class="tool-tags">{{ (t.tags||[]).join(', ') }}</div>
+        </div>
+        <div class="actions">
+          <button class="icon-btn view" title="Ver" (click)="viewTool(t); $event.stopPropagation()">👁️</button>
+          <button class="icon-btn edit" title="Editar" (click)="editTool(t); $event.stopPropagation()">✏️</button>
+          <button class="icon-btn delete" title="Eliminar" (click)="confirmDeleteTool(t.id, t.name); $event.stopPropagation()">🗑️</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tool-detail" *ngIf="selectedTool">
+    <h3>{{ selectedTool.name }}</h3>
+    <div><strong>Descripción:</strong> {{ selectedTool.description }}</div>
+    <div><strong>Funcionalidad:</strong> {{ selectedTool.functionality }}</div>
+    <div><strong>Instalación:</strong>
+      <pre class="install-steps">{{ selectedTool.installSteps }}</pre>
+    </div>
+    <div><strong>Proyectos:</strong> {{ (selectedTool.projects||[]).join(', ') }}</div>
+  </div>
+
+  <!-- Tool modal -->
+  <div class="modal-backdrop" *ngIf="showToolModal">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 *ngIf="!editingTool.readonly">{{ editingTool.id ? 'Editar herramienta' : 'Nueva herramienta' }}</h3>
+      <h3 *ngIf="editingTool.readonly">Ver herramienta</h3>
+      <div class="form-row"><label>Nombre</label><input [(ngModel)]="editingTool.name" [readonly]="editingTool.readonly" /></div>
+      <div class="form-row"><label>Descripción</label><textarea rows="3" [(ngModel)]="editingTool.description" [readonly]="editingTool.readonly"></textarea></div>
+      <div class="form-row"><label>Funcionalidad</label><textarea rows="3" [(ngModel)]="editingTool.functionality" [readonly]="editingTool.readonly"></textarea></div>
+      <div class="form-row"><label>Tags (coma separadas)</label><input [(ngModel)]="editingTool.tagsString" [readonly]="editingTool.readonly" /></div>
+      <div class="form-row"><label>Pasos de instalación</label><textarea rows="4" [(ngModel)]="editingTool.installSteps" [readonly]="editingTool.readonly"></textarea></div>
+      <div class="form-row"><label>Proyectos (coma separadas)</label><input [(ngModel)]="editingTool.projectsString" [readonly]="editingTool.readonly" /></div>
+      <div class="modal-actions">
+        <button class="btn" *ngIf="!editingTool.readonly" (click)="saveTool()">Guardar</button>
+        <button class="btn" (click)="showToolModal=false">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm modal -->
+  <div class="modal-backdrop" *ngIf="showConfirm">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Confirmar</h3>
+      <div class="modal-body">{{ confirmMessage }}</div>
+      <div class="modal-actions">
+        <button class="btn" (click)="confirmOk()">OK</button>
+        <button class="btn" (click)="confirmCancel()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
