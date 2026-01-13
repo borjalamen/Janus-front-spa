@@ -3,52 +3,37 @@ import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
-type Env = 'DEV' | 'INT' | 'PRE' | 'PRO';
-type EventType = 'DEPLOY' | 'TRAIN' | 'OTHER' | 'ABSENCE';
-
-interface EventItem {
-  id: string;
-  env: Env;
-  project: string;
-  date: string; // ISO yyyy-mm-dd
-  startTime: string; // HH:MM
-  endTime: string;   // HH:MM
-  devOps: string;
-  notes?: string;
-  jiraUrl?: string;
-  responsable?: string;
-  periodDays?: number;
-  eventType?: EventType;
-}
+import { PlanningService, EventItem, Env, EventType } from './planning.service'; // Asegúrate de importar el servicio
+import { forkJoin } from 'rxjs'; // Necesario para crear múltiples eventos a la vez
 
 @Component({
   selector: 'app-planificacion',
   templateUrl: './planificacion.html',
   styleUrls: ['./planificacion.css'],
   standalone: true,
+  // IMPORTANTE: Asegúrate de que HttpClientModule esté en los providers globales o impórtalo aquí si es necesario
   imports: [CommonModule, NgForOf, NgIf, FormsModule, BuscadorComponent, TranslateModule]
 })
 export class PlanificacionComponent implements OnInit {
   title = 'Planificación semanal';
 
   year = 2026;
-  // current week start (Date object, Monday)
   weekStart!: Date;
   envs: Env[] = ['DEV', 'INT', 'PRE', 'PRO'];
 
   events: EventItem[] = [];
+  
+  // Estado de carga para feedback visual
+  isLoading = false;
 
-  // search term from buscador
   searchTerm = '';
 
-  readonly STORAGE_KEY = 'janus_weekly_planning_2026_v1';
-
-  // modal / draft state
+  // Modal / Draft state
   showModal = false;
   editing?: EventItem;
   draft: Partial<EventItem> = {};
-  // confirmation dialog state
+  
+  // Confirmation dialog state
   showConfirm = false;
   confirmMessage = '';
   private confirmAction: (() => void) | null = null;
@@ -56,20 +41,23 @@ export class PlanificacionComponent implements OnInit {
   devOpsList: string[] = [];
   validationError: string | null = null;
 
-  constructor(private translate: TranslateService) {}
+  constructor(
+    private translate: TranslateService,
+    private planningService: PlanningService // Inyectamos el servicio
+  ) {}
 
   ngOnInit(): void {
-    // Inicializar la semana en la semana que comienza mañana (por petición)
     const tomorrow = new Date();
     tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
     this.weekStart = this.startOfWeek(tomorrow);
-    // inicializar lista de DevOps con opción no asignado como clave traducible
+    
     this.devOpsList = [ 'PLANNING.UNASSIGNED', 'Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil' ];
-    this.load();
+    
+    // Cargar datos del Backend
+    this.loadEvents();
   }
 
   startOfWeek(d: Date) {
-    // compute Monday of week in UTC
     const dt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
     const day = dt.getUTCDay();
     const diff = (day === 0 ? -6 : 1 - day);
@@ -93,25 +81,42 @@ export class PlanificacionComponent implements OnInit {
     return days;
   }
 
-  load() {
-    try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
-      if (raw) this.events = JSON.parse(raw) as EventItem[];
-    } catch {}
-  }
-
-  save() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.events));
+  // --- CONECTIVIDAD: Cargar Eventos ---
+  loadEvents() {
+    this.isLoading = true;
+    this.planningService.getEvents().subscribe({
+      next: (data) => {
+        this.events = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando planificación:', err);
+        this.isLoading = false;
+        // Aquí podrías mostrar una notificación de error
+      }
+    });
   }
 
   keyDate(d: Date) {
     return d.toISOString().slice(0, 10);
   }
 
+  // Filtrado en memoria (se mantiene igual ya que tenemos todos los datos)
   eventsFor(env: Env, day: Date) {
     const k = this.keyDate(day);
     const list = this.events.filter(e => e.env === env && e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
     if (!this.searchTerm) return list;
+    return this.applyFilter(list);
+  }
+
+  eventsForDay(day: Date) {
+    const k = this.keyDate(day);
+    let list = this.events.filter(e => e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    if (!this.searchTerm) return list;
+    return this.applyFilter(list);
+  }
+
+  applyFilter(list: EventItem[]) {
     const term = this.searchTerm.toLowerCase();
     return list.filter(e =>
       (e.project && e.project.toLowerCase().includes(term)) ||
@@ -120,29 +125,14 @@ export class PlanificacionComponent implements OnInit {
     );
   }
 
-  eventsForDay(day: Date) {
-    const k = this.keyDate(day);
-    let list = this.events.filter(e => e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
-    if (!this.searchTerm) return list;
-    const term = this.searchTerm.toLowerCase();
-    list = list.filter(e =>
-      (e.project && e.project.toLowerCase().includes(term)) ||
-      (e.devOps && e.devOps.toLowerCase().includes(term)) ||
-      (e.notes && e.notes.toLowerCase().includes(term))
-    );
-    return list;
-  }
-
   filtrar(valor: string) {
     this.searchTerm = (valor || '').trim().toLowerCase();
   }
 
   createOrEditEvent(existing?: EventItem, env?: Env, day?: Date) {
-    // open modal with draft prefilled
     if (existing) {
       this.editing = existing;
       this.draft = { ...existing };
-      // ensure env visibility/consistency for the loaded type
       this.onEventTypeChange(this.draft.eventType as EventType);
     } else {
       const date = (day ? this.keyDate(day) : this.keyDate(this.weekStart));
@@ -165,7 +155,6 @@ export class PlanificacionComponent implements OnInit {
   }
 
   onEventTypeChange(newType: EventType | undefined) {
-    // if type doesn't allow env, clear it to avoid persisting an inappropriate value
     if (!newType) return;
     if (newType === 'TRAIN' || newType === 'ABSENCE') {
       this.draft.env = undefined;
@@ -174,40 +163,77 @@ export class PlanificacionComponent implements OnInit {
     }
   }
 
+  // --- CONECTIVIDAD: Guardar (Crear o Editar) ---
   saveModal() {
-    // validate required fields
     const needEnv = this.draft.eventType === 'DEPLOY' || this.draft.eventType === 'OTHER';
     if (!this.draft || !this.draft.project || !this.draft.startTime || !this.draft.endTime || !this.draft.date || (needEnv && !this.draft.env)) {
       this.validationError = this.translate.instant('PLANNING.ERROR_REQUIRED');
       return;
     }
-    if (this.editing) {
-      const idx = this.events.findIndex(e => e.id === this.editing!.id);
-      if (idx !== -1) this.events[idx] = { ...(this.editing as EventItem), ...(this.draft as EventItem) };
+
+    this.isLoading = true;
+
+    if (this.editing && this.editing.id) {
+      // --- UPDATE (PUT) ---
+      const payload = { ...(this.editing), ...(this.draft as EventItem) };
+      
+      this.planningService.updateEvent(this.editing.id, payload).subscribe({
+        next: (updatedEvent) => {
+          // Actualizamos la lista localmente
+          const idx = this.events.findIndex(e => e.id === updatedEvent.id);
+          if (idx !== -1) this.events[idx] = updatedEvent;
+          
+          this.isLoading = false;
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Error updating:', err);
+          this.isLoading = false;
+          this.validationError = 'Error al actualizar en servidor';
+        }
+      });
+
     } else {
+      // --- CREATE (POST) ---
+      // Manejo de "Period Days" (Múltiples días)
       const days = Math.max(1, Math.min(30, Number(this.draft.periodDays || 1)));
+      const requests = [];
+
       for (let i = 0; i < days; i++) {
         const dt = new Date(this.draft.date as string + 'T00:00:00Z');
         dt.setUTCDate(dt.getUTCDate() + i);
         const dateStr = dt.toISOString().slice(0,10);
-        const e: EventItem = {
-          id: Math.random().toString(36).slice(2,9),
-          env: this.draft.env as Env,
-          project: this.draft.project as string,
-          date: dateStr,
-          startTime: this.draft.startTime as string,
-          endTime: this.draft.endTime as string,
-          devOps: this.draft.devOps as string,
-          notes: this.draft.notes as string,
-          jiraUrl: this.draft.jiraUrl as string,
-          responsable: this.draft.responsable as string,
-          eventType: this.draft.eventType as EventType
+
+        // Preparamos el objeto para enviar al Back (sin ID, el back lo genera)
+        const newItem: EventItem = {
+            env: this.draft.env as Env,
+            project: this.draft.project as string,
+            date: dateStr,
+            startTime: this.draft.startTime as string,
+            endTime: this.draft.endTime as string,
+            devOps: this.draft.devOps as string,
+            notes: this.draft.notes as string,
+            jiraUrl: this.draft.jiraUrl as string,
+            responsable: this.draft.responsable as string,
+            eventType: this.draft.eventType as EventType
         };
-        this.events.push(e);
+        requests.push(this.planningService.createEvent(newItem));
       }
+
+      // Ejecutamos todas las peticiones en paralelo y esperamos a que todas terminen
+      forkJoin(requests).subscribe({
+        next: (newEvents) => {
+          this.events.push(...newEvents);
+          this.isLoading = false;
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Error creating:', err);
+          this.isLoading = false;
+          this.validationError = 'Error al crear en servidor';
+        }
+      });
     }
-    this.save();
-    this.closeModal();
   }
 
   closeModal() {
@@ -218,18 +244,31 @@ export class PlanificacionComponent implements OnInit {
   }
 
   removeFromModal() {
-    if (!this.editing) return;
+    if (!this.editing || !this.editing.id) return;
     this.promptConfirm(this.translate.instant('PLANNING.DELETE_CONFIRM'), () => {
-      this.events = this.events.filter(e => e.id !== this.editing!.id);
-      this.save();
-      this.closeModal();
+      this.performDelete(this.editing!.id!);
     });
   }
 
   deleteEvent(id: string) {
     this.promptConfirm(this.translate.instant('PLANNING.DELETE_CONFIRM'), () => {
-      this.events = this.events.filter(e => e.id !== id);
-      this.save();
+      this.performDelete(id);
+    });
+  }
+
+  // --- CONECTIVIDAD: Borrar ---
+  performDelete(id: string) {
+    this.isLoading = true;
+    this.planningService.deleteEvent(id).subscribe({
+      next: () => {
+        this.events = this.events.filter(e => e.id !== id);
+        this.isLoading = false;
+        this.closeModal(); // Por si se llamó desde el modal
+      },
+      error: (err) => {
+        console.error('Error deleting:', err);
+        this.isLoading = false;
+      }
     });
   }
 
