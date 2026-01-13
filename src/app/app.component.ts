@@ -103,8 +103,10 @@ export class AppComponent implements OnDestroy {
 
   translateLanguage(lang: string) {
     if (!lang) return;
+    console.log('🌍 Canviant idioma a:', lang);
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
+    console.log('✅ Idioma canviat a:', this.translate.currentLang);
   }
 
   toggleClip(): void {

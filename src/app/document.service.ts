@@ -16,13 +16,17 @@ export class DocumentService {
 
   // GET /getAllFolders
   getAllFolders(): Observable<(string | number)[]> {
-    return this.http.get<(string | number)[]>(`${this.baseUrl}\/getAllFolders`);
+    const url = `${this.baseUrl}/getAllFolders`;
+    console.log('🔗 GET getAllFolders:', url);
+    return this.http.get<(string | number)[]>(url);
   }
 
   // GET /getAllFiles?idProyecto=...
   getAllFiles(projectId: string | number): Observable<BackendDocument[]> {
     const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.get<BackendDocument[]>(`${this.baseUrl}\/getAllFiles`, { params });
+    const url = `${this.baseUrl}/getAllFiles`;
+    console.log('🔗 GET getAllFiles:', url, 'idProyecto:', projectId);
+    return this.http.get<BackendDocument[]>(url, { params });
   }
 
   // POST /uploadDoc  (idProyecto + documento)
@@ -31,7 +35,9 @@ export class DocumentService {
     formData.append('idProyecto', String(projectId));
     formData.append('documento', file);
 
-    return this.http.post(`${this.baseUrl}\/uploadDoc`, formData, {
+    const url = `${this.baseUrl}/uploadDoc`;
+    console.log('🔗 POST uploadDoc:', url);
+    return this.http.post(url, formData, {
       responseType: 'text'
     });
   }
@@ -42,7 +48,9 @@ export class DocumentService {
       .set('idProyecto', String(projectId))
       .set('nombreArchivo', fileName);
 
-    return this.http.delete(`${this.baseUrl}\/deleteFile`, {
+    const url = `${this.baseUrl}/deleteFile`;
+    console.log('🔗 DELETE deleteFile:', url);
+    return this.http.delete(url, {
       params,
       responseType: 'text'
     });
@@ -51,7 +59,9 @@ export class DocumentService {
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
     const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.delete(`${this.baseUrl}\/deleteAllFiles`, {
+    const url = `${this.baseUrl}/deleteAllFiles`;
+    console.log('🔗 DELETE deleteAllFiles:', url);
+    return this.http.delete(url, {
       params,
       responseType: 'text'
     });

@@ -12,21 +12,29 @@
   </div>
 
   <div *ngIf="documentos && documentos.length; else noFiles">
-    <div *ngFor="let doc of filteredDocuments" class="doc-row">
-      <div class="doc-info">
-        <div class="doc-title-row">
-          <strong class="doc-name">{{ doc.name }}</strong>
-          <span class="doc-size">{{ formatSize(doc.size) }}</span>
+    <div class="descargables-grid">
+      <div *ngFor="let doc of filteredDocuments" class="descargable-card">
+        <div class="card-header">
+          <h3 class="doc-name">{{ doc.name }}</h3>
         </div>
-        <div class="doc-desc">{{ doc.descriptionKey ? (doc.descriptionKey | translate) : doc.description }}</div>
-        <div class="doc-modified">{{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: <strong>{{ formatDate(doc.modified) }}</strong></div>
-      </div>
-      <div class="doc-actions">
-        <button mat-stroked-button (click)="download(doc)" [disabled]="downloading[doc.path]">
-          <mat-icon>download</mat-icon>
-          <span *ngIf="!downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOAD' | translate }}</span>
-          <span *ngIf="downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOADING' | translate }}</span>
-        </button>
+        
+        <span class="doc-size">{{ formatSize(doc.size) }}</span>
+        
+        <div class="doc-desc" *ngIf="doc.descriptionKey || doc.description">
+          {{ doc.descriptionKey ? (doc.descriptionKey | translate) : doc.description }}
+        </div>
+        
+        <div class="doc-modified">
+          {{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: {{ formatDate(doc.modified) }}
+        </div>
+        
+        <div class="card-actions">
+          <button class="download-btn" (click)="download(doc)" [disabled]="downloading[doc.path]">
+            <mat-icon>download</mat-icon>
+            <span *ngIf="!downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOAD' | translate }}</span>
+            <span *ngIf="downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOADING' | translate }}</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

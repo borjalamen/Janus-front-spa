@@ -130,7 +130,20 @@
     "TITLE": "Procedures",
     "DESCRIPTION": "Management and documentation of internal procedures.",
     "RESPONSIBLE": "Owner",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "ADD_BUTTON": "Add procedure",
+    "NEW_TITLE": "New procedure",
+    "EDIT_TITLE": "Edit procedure",
+    "DELETE_TITLE": "Delete procedure",
+    "DELETE_CONFIRM": "Are you sure you want to delete \"{{title}}\"?",
+    "FIELD_TITLE": "Title",
+    "FIELD_DEPARTMENT": "Department",
+    "FIELD_RESPONSIBLE": "Owner",
+    "FIELD_DESCRIPTION": "Description",
+    "PLACEHOLDER_TITLE": "Production deployment process",
+    "PLACEHOLDER_DEPARTMENT": "IT, HR, Finance...",
+    "PLACEHOLDER_RESPONSIBLE": "John Doe",
+    "PLACEHOLDER_DESCRIPTION": "Procedure to deploy applications to the production environment..."
   },
   "PLANNING_SECTION": {
     "TITLE": "Planning",

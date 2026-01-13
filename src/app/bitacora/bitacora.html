@@ -15,7 +15,12 @@
       <strong>{{ 'ERRORS.CATEGORY' | translate }}:</strong> {{ e.categoria }}<br>
       <strong>{{ 'ERRORS.DESCRIPTION_LABEL' | translate }}:</strong> {{ e.descripcion }}<br>
 
-      <button mat-raised-button (click)="toggleResuelto(e)" style="margin-top: 6px;">
+      <button 
+        mat-raised-button 
+        (click)="toggleResuelto(e)" 
+        [class.btn-resuelto]="e.resuelto"
+        [class.btn-pendiente]="!e.resuelto"
+        style="margin-top: 6px;">
         {{
           e.resuelto
             ? ('ERRORS.MARK_PENDING' | translate)

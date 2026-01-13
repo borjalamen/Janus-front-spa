@@ -22,3 +22,52 @@ h2 {
 p {
   color: #E0E0E0;
 }
+
+.error-item {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2d33;
+}
+
+.error-item:last-child {
+  border-bottom: none;
+}
+
+.error-item button {
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Botón verde para resuelto */
+.error-item button.btn-resuelto {
+  background: linear-gradient(135deg, #388E3C, #43A047);
+  box-shadow: 0 2px 4px rgba(56, 142, 60, 0.3);
+}
+
+.error-item button.btn-resuelto:hover {
+  background: linear-gradient(135deg, #43A047, #66BB6A);
+  box-shadow: 0 4px 8px rgba(56, 142, 60, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Botón amarillo ámbar para pendiente */
+.error-item button.btn-pendiente {
+  background: linear-gradient(135deg, #F57C00, #FB8C00);
+  box-shadow: 0 2px 4px rgba(245, 124, 0, 0.3);
+}
+
+.error-item button.btn-pendiente:hover {
+  background: linear-gradient(135deg, #FB8C00, #FFA726);
+  box-shadow: 0 4px 8px rgba(245, 124, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.error-item button:active {
+  transform: translateY(0);
+}

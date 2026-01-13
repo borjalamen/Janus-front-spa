@@ -61,16 +61,19 @@ export class DocumentsComponent implements OnInit {
 
   // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
   loadProjects() {
+    console.log('🔍 Carregant projectes...');
     this.documentService
       .getAllFolders()
       .pipe(
         catchError(err => {
-          console.error('Error carregant carpetes', err);
+          console.error('❌ Error carregant carpetes', err);
           return of([]); // Retorna array buit si hi ha error
         })
       )
       .subscribe(ids => {
+        console.log('📁 Carpetes rebudes:', ids);
         if (!ids || ids.length === 0) {
+          console.log('⚠️ No hi ha carpetes');
           this.projects = [];
           this.projectsFiltrats = [];
           return;
@@ -100,6 +103,7 @@ export class DocumentsComponent implements OnInit {
         );
 
         forkJoin(requests).subscribe(projects => {
+          console.log('✅ Projectes carregats:', projects);
           this.projects = projects;
           this.projectsFiltrats = [...projects];
         });

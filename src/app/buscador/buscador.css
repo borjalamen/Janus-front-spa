@@ -8,7 +8,7 @@
 .buscador-wrapper {
   width: 100%;
   border: none;                  /* contorn eliminat */
-  border-radius: 0;              /* sense arrodoniment */
+  border-radius: 1;              /* sense arrodoniment */
   padding: 6px 10px;
   background: transparent;       /* fons transparent */
   transition: border-color 0.25s ease;

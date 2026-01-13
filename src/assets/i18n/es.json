@@ -130,7 +130,20 @@
     "TITLE": "Procedimientos",
     "DESCRIPTION": "Gestión y documentación de procedimientos internos.",
     "RESPONSIBLE": "Responsable",
-    "STATUS": "Estado"
+    "STATUS": "Estado",
+    "ADD_BUTTON": "Añadir procedimiento",
+    "NEW_TITLE": "Nuevo procedimiento",
+    "EDIT_TITLE": "Editar procedimiento",
+    "DELETE_TITLE": "Eliminar procedimiento",
+    "DELETE_CONFIRM": "¿Seguro que quieres eliminar \"{{title}}\"?",
+    "FIELD_TITLE": "Título",
+    "FIELD_DEPARTMENT": "Departamento",
+    "FIELD_RESPONSIBLE": "Responsable",
+    "FIELD_DESCRIPTION": "Descripción",
+    "PLACEHOLDER_TITLE": "Proceso de deploy a producción",
+    "PLACEHOLDER_DEPARTMENT": "IT, RRHH, Finanzas...",
+    "PLACEHOLDER_RESPONSIBLE": "Juan Pérez",
+    "PLACEHOLDER_DESCRIPTION": "Procedimiento para realizar el despliegue de aplicaciones en el entorno de producción..."
   },
   "PLANNING_SECTION": {
     "TITLE": "Planificación",

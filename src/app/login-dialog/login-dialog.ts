@@ -51,14 +51,19 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   login() {
     this.error = '';
 
+    const url = `${environment.baseUrl}auth/signin`;
+    console.log('🔗 Login URL:', url);
+    console.log('📝 Credentials:', { username: this.username });
+
     this.http.post<{ username: string; roles: string[] }>(
-      `${environment.baseUrl}auth/signin`,
+      url,
       {
         username: this.username,
         password: this.password
       }
     ).subscribe({
       next: (user) => {
+        console.log('✅ Login successful:', user);
         const rolesArray = user.roles || [];
         const rolesStr = rolesArray.join(',');
 
@@ -81,7 +86,10 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
           rol: rolFront
         });
       },
-      error: () => {
+      error: (err) => {
+        console.error('❌ Login error:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
         this.error = 'Usuario o contraseña inválidos';
       }
     });

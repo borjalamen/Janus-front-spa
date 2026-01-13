@@ -28,6 +28,14 @@
   justify-content: center;
   color: #FBC02D;
   font-size: 32px;
+  flex-shrink: 0;
+}
+
+.usuario-avatar mat-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+  line-height: 32px;
 }
 
 .usuario-info p {

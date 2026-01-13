@@ -8,6 +8,8 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   fetchVersion(): Observable<string> {
-    return this.http.get(`${environment.baseUrl}config/all`, { responseType: 'text' });
+    const url = `${environment.baseUrl}config/all`;
+    console.log('🔗 Fetching version from:', url);
+    return this.http.get(url, { responseType: 'text' });
   }
 }

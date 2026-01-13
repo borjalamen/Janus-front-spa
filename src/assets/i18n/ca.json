@@ -129,7 +129,20 @@
   "TITLE": "Procediments",
   "DESCRIPTION": "Gestió i documentació de procediments interns.",
   "RESPONSIBLE": "Responsable",
-  "STATUS": "Departament"
+  "STATUS": "Estat",
+  "ADD_BUTTON": "Afegir procediment",
+  "NEW_TITLE": "Nou procediment",
+  "EDIT_TITLE": "Editar procediment",
+  "DELETE_TITLE": "Eliminar procediment",
+  "DELETE_CONFIRM": "Segur que vols eliminar \"{{title}}\"?",
+  "FIELD_TITLE": "Títol",
+  "FIELD_DEPARTMENT": "Departament",
+  "FIELD_RESPONSIBLE": "Responsable",
+  "FIELD_DESCRIPTION": "Descripció",
+  "PLACEHOLDER_TITLE": "Procés de desplegament a producció",
+  "PLACEHOLDER_DEPARTMENT": "IT, RRHH, Finances...",
+  "PLACEHOLDER_RESPONSIBLE": "Joan Pérez",
+  "PLACEHOLDER_DESCRIPTION": "Procediment per realitzar el desplegament d'aplicacions a l'entorn de producció..."
 },
 "PLANNING_SECTION": {
   "TITLE": "Planificació",
