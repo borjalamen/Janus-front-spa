@@ -6,6 +6,7 @@ import { HomeComponent } from './app/home/home';
 import { DocumentsComponent } from './app/documents/documents';
 import { UsuarioComponent } from "./app/usuari/usuari";
 import { ProjectsComponent } from './app/projects/projects';
+import { ProjectDetailComponent } from './app/projects/project-detail';
 import { ProcedimientosComponent } from './app/procedimientos/procedimientos';
 import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
@@ -51,6 +52,7 @@ bootstrapApplication(AppComponent, {
       { path: 'documents', component: DocumentsComponent },
       { path: 'usuario', component: UsuarioComponent },
       {path: 'projects', component: ProjectsComponent },
+      {path: 'projects/:code', component: ProjectDetailComponent },
       {path: 'procedimientos', component: ProcedimientosComponent },
       {path: 'formacion', component: FormacionComponent },
       {path: 'planificacion', component: PlanificacionComponent },

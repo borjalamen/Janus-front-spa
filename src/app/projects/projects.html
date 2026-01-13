@@ -1,16 +1,62 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-<div class="section-container">
-  <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
-  <p>{{ 'PROJECTS.DESCRIPTION' | translate }}</p>
-
-  <div *ngFor="let project of projectesFiltrats" class="project-item">
-    <div class="project-nom"><b>{{ project.nom }}</b></div>
-    <div class="project-client">
-      {{ 'PROJECTS.CLIENT' | translate }}: {{ project.client }}
-    </div>
-    <div class="project-estat">
-      {{ 'PROJECTS.STATUS' | translate }}: {{ project.estat }}
+<div class="tools-root">
+  <div class="tools-header">
+    <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
+    <div>
+      <button class="jh-btn" (click)="newProject()">{{ 'PROJECTS.NEW' | translate }}</button>
     </div>
   </div>
+
+  <div class="tools-list">
+    <div class="projects-grid jenkins-grid">
+      <div class="project-card" *ngFor="let p of projectesFiltrats">
+        <div class="project-top">
+          <div class="project-title">{{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}</div>
+        </div>
+        <div class="project-meta">{{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp; {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}</div>
+        <div class="project-actions">
+          <button class="icon-btn view" title="{{ 'PROJECTS.VIEW' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'view'}" (click)="$event.stopPropagation()">👁️</button>
+          <button class="icon-btn edit" title="{{ 'PROJECTS.EDIT' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'edit'}" (click)="$event.stopPropagation()">✏️</button>
+          <button class="icon-btn delete" title="{{ 'PROJECTS.DELETE' | translate }}" (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail view removed: project detail opens in its own page via the view/edit buttons -->
+  </div>
+
+  <!-- Project modal -->
+  <div class="jh-modal-backdrop" *ngIf="showProjectModal">
+    <div class="jh-modal" (click)="$event.stopPropagation()">
+      <h3 *ngIf="!editingProject.readonly">{{ editingProject.codigoProyecto ? ('PROJECTS.EDIT' | translate) : ('PROJECTS.NEW' | translate) }}</h3>
+      <h3 *ngIf="editingProject.readonly">{{ 'PROJECTS.VIEW' | translate }}</h3>
+      <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label><input [(ngModel)]="editingProject.nombre" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label><input [(ngModel)]="editingProject.codigoProyecto" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label><input [(ngModel)]="editingProject.responsableProyecto" [readonly]="editingProject.readonly"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label><input [(ngModel)]="editingProject.responsableTecnico" [readonly]="editingProject.readonly"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label><input [(ngModel)]="editingProject.lote" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label><input [(ngModel)]="editingProject.departamento" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label><input [(ngModel)]="editingProject.ipString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.IPS_PLACEHOLDER' | translate }}"/></div>
+      <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label><textarea rows="6" [(ngModel)]="editingProject.tareasString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.TASKS_PLACEHOLDER' | translate }}"></textarea></div>
+
+      <div class="jh-modal-actions">
+        <button class="jh-btn" *ngIf="!editingProject.readonly" (click)="saveProject()">{{ 'PROJECTS.SAVE' | translate }}</button>
+        <button class="jh-btn" (click)="showProjectModal=false">{{ 'PROJECTS.CLOSE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm modal -->
+  <div class="jh-modal-backdrop" *ngIf="showConfirm">
+    <div class="jh-modal" (click)="$event.stopPropagation()">
+      <h3>{{ 'PROJECTS.CONFIRM_TITLE' | translate }}</h3>
+      <div class="modal-body">{{ confirmMessage }}</div>
+      <div class="jh-modal-actions">
+        <button class="jh-btn" (click)="confirmOk()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
+        <button class="jh-btn" (click)="confirmCancel()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
 </div>

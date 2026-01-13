@@ -1,0 +1,60 @@
+<div class="project-detail-root">
+  <div class="project-detail-header">
+    <button class="jh-btn" (click)="back()">{{ 'PROJECTS.CLOSE' | translate }}</button>
+  </div>
+
+  <div *ngIf="!proyecto">{{ 'PROJECTS.NOT_FOUND' | translate }}</div>
+
+  <div *ngIf="proyecto" class="project-section">
+    <h2>{{ proyecto.nombre }}</h2>
+
+    <div class="project-form-grid">
+      <div class="form-col">
+        <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label>
+          <input [(ngModel)]="proyecto.codigoProyecto" [readonly]="!editing" />
+        </div>
+        <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+          <input [(ngModel)]="proyecto.responsableProyecto" [readonly]="!editing" />
+        </div>
+        <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
+          <input [(ngModel)]="proyecto.lote" [readonly]="!editing" />
+        </div>
+      </div>
+
+      <div class="form-col">
+        <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label>
+          <input [(ngModel)]="proyecto.nombre" [readonly]="!editing" />
+        </div>
+        <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
+          <input [(ngModel)]="proyecto.responsableTecnico" [readonly]="!editing" />
+        </div>
+        <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
+          <input [(ngModel)]="proyecto.departamento" [readonly]="!editing" />
+        </div>
+      </div>
+
+      <div class="form-col wide">
+        <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label>
+          <input [(ngModel)]="ipString" [readonly]="!editing" />
+        </div>
+        <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
+          <ul>
+            <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
+      <ul>
+        <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
+      </ul>
+    </div>
+
+    <div class="actions">
+      <button class="jh-btn" *ngIf="!editing && routeMode==='edit'" (click)="editing=true">{{ 'PROJECTS.EDIT' | translate }}</button>
+      <button class="jh-btn" *ngIf="editing" (click)="save()">{{ 'PROJECTS.SAVE' | translate }}</button>
+    </div>
+  </div>
+</div>
