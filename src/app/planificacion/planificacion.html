@@ -2,6 +2,9 @@
 
 <div class="planning-root">
   <div class="planning-header">
+    <div *ngIf="isLoading" style="text-align:center; padding: 10px; color: var(--accent);">
+      Cargando datos...
+    </div>
     <button class="nav-btn" (click)="prevWeek()">◀</button>
     <div class="title-block">
       <h2>{{ 'PLANNING.TITLE' | translate }}</h2>
@@ -27,7 +30,7 @@
                     'event-other': ev.eventType==='OTHER',
                     'event-absence': ev.eventType==='ABSENCE'
                   }" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
-                  <button class="x" title="{{ 'PLANNING.DELETE' | translate }}" (click)="$event.stopPropagation(); deleteEvent(ev.id)">✖</button>
+                  <button *ngIf="ev.id" class="x" title="{{ 'PLANNING.DELETE' | translate }}" (click)="$event.stopPropagation(); deleteEvent(ev.id!)">✖</button>
                   <div class="event-top">
                     <strong class="project">{{ ev.project }}</strong>
                   </div>
