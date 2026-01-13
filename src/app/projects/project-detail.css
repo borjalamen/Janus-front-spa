@@ -1,5 +1,11 @@
-.project-detail-root { padding: 20px; max-width:900px }
-.project-detail-header { display:flex; justify-content:flex-end; margin-bottom:12px }
+.project-detail-root { padding: 20px; width:100% }
+.project-detail-header { display:flex; justify-content:flex-end; align-items:center; margin-bottom:12px; position:relative }
+.project-detail-header .header-spacer { flex:1 }
+.project-detail-header .back-icon { background:transparent; border:0; color:#cfcfcf; cursor:pointer; padding:8px; border-radius:8px; transition: background .12s ease, color .12s ease, transform .08s ease, box-shadow .12s ease; display:flex; align-items:center; justify-content:center }
+.project-detail-header .back-icon svg { display:block }
+.project-detail-header .back-icon.top-right { position:absolute; right:12px; top:6px; width:40px; height:40px }
+.project-detail-header .back-icon.top-right svg { width:22px; height:22px }
+.project-detail-header .back-icon:hover { background:rgba(255,255,255,0.06); color:#fff; transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.45) }
 .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:8px }
 .form-row label { color: #cfcfcf; font-size:13px }
 .form-row input { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:4px }
@@ -7,7 +13,8 @@
 .actions { display:flex; gap:8px }
 
 /* Responsive grid for project detail form */
-.project-form-grid { display:grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 16px; align-items:start }
+.project-form-grid { display:grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 16px; align-items:start; width:100% }
+.project-form-grid.full-width { grid-column: 1 / -1; width:100% }
 .project-form-grid .form-col { display:flex; flex-direction:column }
 .project-form-grid .form-col.wide { grid-column: 1 / -1 }
 
