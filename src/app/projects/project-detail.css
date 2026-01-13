@@ -18,6 +18,12 @@
 .project-form-grid .form-col { display:flex; flex-direction:column }
 .project-form-grid .form-col.wide { grid-column: 1 / -1 }
 
+/* Project title centered and prominent */
+.project-title { text-align:center; margin:8px 0 18px 0; display:flex; justify-content:center; align-items:baseline; gap:10px }
+.project-title .project-code { font-weight:700; color:#ffd166; font-size:20px }
+.project-title .sep { color:#cfcfcf; opacity:0.9 }
+.project-title .project-name { font-weight:700; color:#ffffff; font-size:20px }
+
 @media (max-width: 1100px) {
 	.project-form-grid { grid-template-columns: 1fr 1fr }
 	.project-form-grid .form-col.wide { grid-column: 1 / -1 }

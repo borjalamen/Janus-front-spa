@@ -12,7 +12,11 @@
   <div *ngIf="!proyecto">{{ 'PROJECTS.NOT_FOUND' | translate }}</div>
 
   <div *ngIf="proyecto" class="project-section">
-    <h2>{{ proyecto.nombre }}</h2>
+    <div class="project-title">
+      <span class="project-code">{{ proyecto.codigoProyecto }}</span>
+      <span class="sep"> | </span>
+      <span class="project-name">{{ proyecto.nombre }}</span>
+    </div>
 
     <div class="project-form-grid full-width">
       <div class="form-col">
