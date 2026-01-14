@@ -8,7 +8,7 @@
     "start:pro": "ng serve --configuration=production",
     "start:loc": "ng serve --configuration=loc --proxy-config proxy.conf.json",
     "build": "ng build",
-    "build:dev": "ng build --configuration=development",
+    "build:dev": "ng build --configuration=development --proxy-config proxy.conf.json",
     "build:pro": "ng build --configuration=production"
   },
   "dependencies": {
