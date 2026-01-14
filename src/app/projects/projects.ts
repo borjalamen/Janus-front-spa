@@ -38,6 +38,12 @@ export interface OpenShiftInfo {
 export interface Proyecto {
   nombre?: string;
   codigoProyecto?: string;
+  codigoImputacion?: string | null;
+  urlEntornoDesarrollo?: string | null;
+  urlEntornoIntegracion?: string | null;
+  urlEntornoPreproduccion?: string | null;
+  urlEntornoProduccion?: string | null;
+  horaDaily?: string | null;
   ip?: string[];
   lote?: string | null;
   departamento?: string | null;
@@ -60,6 +66,7 @@ export interface Proyecto {
   openshift?: OpenShiftInfo[];
   usuarios?: string[];
   notasGenerales?: string | null;
+  entornoNotas?: string | null;
 }
 
 @Component({

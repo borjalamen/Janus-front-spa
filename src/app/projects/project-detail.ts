@@ -40,6 +40,8 @@ export class ProjectDetailComponent {
         if (this.proyecto) {
           const p = this.proyecto;
           p.ip = (p.ip||[]);
+          // ensure notes field exists for environment
+          (p as any).entornoNotas = (p as any).entornoNotas || '';
           this.ipString = (p.ip||[]).join(', ');
           // cargar máquinas de desarrollo si existen
           this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines as DevMachine[] : [];

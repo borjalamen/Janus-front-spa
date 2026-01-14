@@ -27,6 +27,34 @@
 .section-general .form-row label { color: #6b4a1f }
 .section-general input, .section-general textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
 
+/* General three-column grid inside Datos generales */
+.general-grid.three-col { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items:start }
+.general-grid.three-col { display:grid; grid-template-columns: repeat(3, minmax(220px, 1fr)); gap: 20px; align-items:start }
+.general-grid.three-col .form-row { display:flex; flex-direction:column; justify-content:flex-start }
+.general-grid.three-col .form-row input { width:100%; min-width:120px }
+
+/* Divider and URLs grid */
+.divider { border-top: 1px dotted rgba(255,255,255,0.06); margin: 14px 0 }
+.urls-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top:8px }
+.urls-grid .form-row { display:flex; flex-direction:column }
+.urls-grid .form-row input { padding: 10px; width:100% }
+
+@media (max-width: 1100px) {
+	.general-grid.three-col { grid-template-columns: repeat(2, minmax(200px, 1fr)); }
+	.urls-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+	.general-grid.three-col { grid-template-columns: 1fr }
+	.urls-grid { grid-template-columns: 1fr }
+}
+
+@media (max-width: 1100px) {
+	.general-grid.three-col { grid-template-columns: 1fr 1fr }
+}
+@media (max-width: 720px) {
+	.general-grid.three-col { grid-template-columns: 1fr }
+}
+
 /* Entorno de desarrollo - verde tenue */
 .section-dev { background: rgba(102,187,106,0.04); border-color: rgba(102,187,106,0.12) }
 .section-dev .form-row label { color: #244f2a }
@@ -71,16 +99,21 @@
 .dev-fields.grid-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; align-items:center }
 .dev-fields.grid-3 .field input { width:100% }
 .dev-resources.grid-3.compact { display:grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap:10px; margin-top:4px }
-.dev-resources.grid-3.compact .field label { font-size:12px; color: rgba(207,207,207,0.9) }
+.dev-resources.grid-3.compact .field { display:flex; flex-direction:column }
+.dev-resources.grid-3.compact .field label { font-size:12px; color: rgba(207,207,207,0.9); margin-bottom:6px }
 .dev-resources.grid-3.compact .field input { padding:8px; border-radius:10px }
 .dev-actions { display:flex; align-items:flex-start }
 
 /* Openshift layout inside card */
 .openshift-row { display:flex; align-items:center; justify-content:flex-start }
 .openshift-grid { display:grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap:10px }
+.openshift-grid .field { display:flex; flex-direction:column }
+.openshift-grid .field label { margin-bottom:6px }
 .openshift-grid .field input { width:100% }
 .volumes-row .volumes-list { display:flex; flex-direction:column; gap:8px; margin-top:6px }
-.volumes-list .volume { display:flex; gap:8px; align-items:center }
+.volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
+.volumes-list .volume .field { display:flex; flex-direction:column }
+.volumes-list .volume .field label { margin-bottom:6px }
 .volumes-list .volume input { flex:1; border-radius:8px; padding:6px }
 
 .add-dev-row { margin-top:8px }
@@ -122,8 +155,41 @@
 	padding:10px;
 	border-radius:14px;
 }
+.section-dev input, .section-dev textarea, .section-dev .dev-fields input {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 14px;
+}
+
+/* Unified label / placeholder styling for the development section */
+.section-dev .form-row label,
+.section-dev .dev-fields .field label,
+.section-dev .volumes-row label,
+.section-dev .switch-label {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	color: rgba(255,255,255,0.90);
+	margin-bottom: 6px;
+}
+.section-dev input::placeholder, .section-dev textarea::placeholder {
+	color: rgba(255,255,255,0.70);
+	opacity: 1; /* ensure consistent opacity across browsers */
+}
+
+/* Small visual polish: keep inputs and labels aligned */
+.section-dev .dev-fields .field { display:flex; flex-direction:column }
+.section-dev textarea { min-height: 80px; resize:vertical }
 .section-dev input::placeholder, .section-dev textarea::placeholder { color: rgba(255,255,255,0.6) }
 .section-dev input:focus, .section-dev textarea:focus { outline:none; box-shadow: 0 6px 18px rgba(102,187,106,0.09); border-color: rgba(102,187,106,0.26) }
+
+/* Ensure stacked fields (compact rows) act as column only on small screens */
+@media (max-width: 900px) {
+	.section-dev .stacked { display:flex; flex-direction:column; gap:6px }
+	.section-dev .stacked label { display:block; margin-bottom:6px; font-size:13px; color: rgba(255,255,255,0.9) }
+	.section-dev .stacked input { width:100%; box-sizing:border-box }
+	.dev-resources.grid-3.compact.stacked { align-items:start; grid-template-columns: 1fr }
+	.openshift-grid .stacked { grid-column: 1 / -1 }
+}
 
 .section-mind input, .section-mind textarea, .section-mind .mind-grid input {
 	background: rgba(15,143,168,0.08);

@@ -20,48 +20,83 @@
     <div class="sections-container">
       <!-- Datos generales (naranja) -->
       <section class="section section-general">
-        <div class="section-title">Datos generales</div>
+        <div class="section-title">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</div>
         <div class="project-form-grid full-width">
-          <div class="form-col">
+          <div class="general-grid three-col">
             <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label>
-              <input [(ngModel)]="proyecto.codigoProyecto" [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.codigoProyecto" placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}" [readonly]="!editing" />
             </div>
-            <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
-              <input [(ngModel)]="proyecto.responsableProyecto" [readonly]="!editing" />
-            </div>
-            <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
-              <input [(ngModel)]="proyecto.lote" [readonly]="!editing" />
-            </div>
-          </div>
 
-          <div class="form-col">
             <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label>
-              <input [(ngModel)]="proyecto.nombre" [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.nombre" placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}" [readonly]="!editing" />
             </div>
+
+            <div class="form-row"><label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
+              <input [(ngModel)]="proyecto.codigoImputacion" placeholder="" [readonly]="!editing" />
+            </div>
+
+            <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+              <input [(ngModel)]="proyecto.responsableProyecto" placeholder="{{ 'PROJECTS.RESPONSABLE' | translate }}" [readonly]="!editing" />
+            </div>
+
             <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
-              <input [(ngModel)]="proyecto.responsableTecnico" [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.responsableTecnico" placeholder="{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}" [readonly]="!editing" />
             </div>
+
+            <div class="form-row"><label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+              <input type="time" [(ngModel)]="proyecto.horaDaily" [readonly]="!editing" />
+            </div>
+
+            <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
+              <input [(ngModel)]="proyecto.lote" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}" [readonly]="!editing" />
+            </div>
+
             <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
-              <input [(ngModel)]="proyecto.departamento" [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.departamento" placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}" [readonly]="!editing" />
             </div>
+
+          </div>
+        </div>
+        <div class="divider" aria-hidden="true"></div>
+        <div class="urls-grid">
+          <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
+            <input [(ngModel)]="proyecto.urlEntornoDesarrollo" placeholder="https://..." [readonly]="!editing" />
+          </div>
+          <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
+            <input [(ngModel)]="proyecto.urlEntornoIntegracion" placeholder="https://..." [readonly]="!editing" />
+          </div>
+          <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
+            <input [(ngModel)]="proyecto.urlEntornoPreproduccion" placeholder="https://..." [readonly]="!editing" />
+          </div>
+          <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
+            <input [(ngModel)]="proyecto.urlEntornoProduccion" placeholder="https://..." [readonly]="!editing" />
           </div>
         </div>
       </section>
 
       <!-- Entorno de desarrollo (verde) -->
       <section class="section section-dev">
-        <div class="section-title">Entorno de desarrollo</div>
+        <div class="section-title">{{ 'PROJECTS.SECTION_DEV' | translate }}</div>
         <div class="form-col wide">
-          <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label>
+          <div class="form-row">
               <div class="form-row">
                 <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
                 <div class="dev-machines">
                   <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
                     <div class="dev-card-top">
                       <div class="dev-fields grid-3">
-                        <div class="field"><input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" /></div>
-                        <div class="field"><input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" /></div>
-                        <div class="field"><input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" /></div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
+                          <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
+                          <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
+                          <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" />
+                        </div>
                       </div>
                       <div class="dev-actions">
                         <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
@@ -69,9 +104,9 @@
                     </div>
 
                     <div class="dev-resources grid-3 compact">
-                      <div class="field"><label>RAM</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
-                      <div class="field"><label>CPU</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
-                      <div class="field"><label>Disco</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
                     </div>
 
                     <div class="openshift-row">
@@ -80,28 +115,34 @@
                           <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
                           <span class="slider"></span>
                         </label>
-                        <span class="switch-label">Openshift</span>
+                        <span class="switch-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
                       </div>
                     </div>
 
                     <div class="openshift-section" *ngIf="m.openshiftEnabled">
-                      <div class="openshift-grid">
-                        <div class="field"><label>Usuario Openshift</label><input [(ngModel)]="m.openshift!.user" /></div>
-                        <div class="field"><label>Password Openshift</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
-                        <div class="field"><label>RAM</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
-                        <div class="field"><label>CPU</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
-                        <div class="field"><label>Disco</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
+                        <div class="openshift-grid">
+                        <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift!.user" /></div>
+                        <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
+                        <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
+                        <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
+                        <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
                       </div>
                       <div class="form-row volumes-row">
-                        <label>Volúmenes</label>
+                        <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
                         <div class="volumes-list">
                           <div class="volume" *ngFor="let v of (m.openshift!.volumes || []); let vi = index">
-                            <input [(ngModel)]="v.name" placeholder="Nombre" />
-                            <input [(ngModel)]="v.capacity" placeholder="Capacidad (e.g. 10Gi)" />
+                            <div class="field">
+                              <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
+                              <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                            </div>
+                            <div class="field">
+                              <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
+                              <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                            </div>
                             <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
                           </div>
                           <div>
-                            <button class="btn small" (click)="addVolume(i)">+ Añadir volumen</button>
+                            <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
                           </div>
                         </div>
                       </div>
@@ -113,10 +154,9 @@
                 </div>
               </div>
           </div>
-          <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
-            <ul>
-              <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
-            </ul>
+          <div class="form-row">
+            <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+            <textarea [(ngModel)]="proyecto.entornoNotas" rows="4" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
           </div>
         </div>
       </section>
