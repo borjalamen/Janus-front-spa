@@ -126,6 +126,14 @@
     "DEPARTMENT_PLACEHOLDER": "Departamento asignado",
     "NOT_FOUND": "Proyecto no encontrado"
   },
+  "PROJECTS_MIND": {
+    "TITLE": "Herramientas MIND",
+    "BITBUCKET": "Bitbucket",
+    "NEXUS": "Nexus (Release / Snapshot / Npm / Group)",
+    "SONAR": "Sonar (prefijo / url / token user / token)",
+    "JENKINS": "Jenkins",
+    "CRONTAB": "Crontab"
+  },
   "PROCEDURES_SECTION": {
     "TITLE": "Procedimientos",
     "DESCRIPTION": "Gestión y documentación de procedimientos internos.",

@@ -55,6 +55,56 @@
       </div>
     </div>
 
+    <div class="mind-card">
+      <div class="mind-card-header">
+        <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
+      </div>
+      <div class="mind-card-body">
+        <div class="mind-grid">
+          <div class="mind-col">
+            <label>{{ 'PROJECTS_MIND.BITBUCKET' | translate }}</label>
+            <ng-container *ngIf="editing">
+              <input [(ngModel)]="hm.bitbucket" />
+            </ng-container>
+            <ng-container *ngIf="!editing">
+              <a *ngIf="isValidUrl(hm.bitbucket)" (click)="openUrl(hm.bitbucket)" class="mind-link">{{ hm.bitbucket }}</a>
+              <span *ngIf="!isValidUrl(hm.bitbucket)">{{ hm.bitbucket }}</span>
+            </ng-container>
+          </div>
+
+          <div class="mind-col">
+            <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
+            <ng-container *ngIf="editing">
+              <textarea [(ngModel)]="nexusString" rows="3" placeholder="https://...\nhttps://..."></textarea>
+            </ng-container>
+            <ng-container *ngIf="!editing">
+              <ul class="nexus-list">
+                <li *ngFor="let u of (hm.nexus || [])">
+                  <a *ngIf="isValidUrl(u)" (click)="openUrl(u)" class="mind-link">{{ u }}</a>
+                  <span *ngIf="!isValidUrl(u)">{{ u }}</span>
+                </li>
+              </ul>
+            </ng-container>
+          </div>
+
+          <div class="mind-col">
+            <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
+            <input placeholder="prefijo" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
+            <input placeholder="url" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
+            <input placeholder="user" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
+            <input placeholder="token" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
+          </div>
+
+          <div class="mind-col">
+            <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
+            <input [(ngModel)]="hm.jenkins" [readonly]="!editing" />
+            <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
+            <input [(ngModel)]="hm.crontab" [readonly]="!editing" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="form-row">
       <label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
       <ul>

@@ -45,6 +45,13 @@ export interface Proyecto {
   responsableTecnico?: string | null;
   tareas: Task[];
   herramientas?: string[];
+  herramientasMind?: {
+    bitbucket?: string;
+    nexus?: string[];
+    sonar?: { prefix?: string; url?: string; tokenUser?: string; tokenValue?: string };
+    jenkins?: string;
+    crontab?: string;
+  };
   jenkinsNodes?: string[];
   dockerImages?: DockerImage[];
   pipelines?: string[];
@@ -141,7 +148,8 @@ export class ProjectsComponent {
       bbdd: partial.bbdd || [],
       openshift: partial.openshift || [],
       usuarios: partial.usuarios || [],
-      notasGenerales: partial.notasGenerales || null
+      notasGenerales: partial.notasGenerales || null,
+      herramientasMind: (partial as any).herramientasMind || undefined
     };
 
     if (!proyecto.codigoProyecto) proyecto.codigoProyecto = Math.random().toString(36).slice(2,9);

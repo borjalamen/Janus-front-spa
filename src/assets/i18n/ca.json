@@ -125,6 +125,14 @@
     "DEPARTMENT_PLACEHOLDER": "Departament assignat",
     "NOT_FOUND": "Projecte no trobat"
   },
+  "PROJECTS_MIND": {
+    "TITLE": "Eines MIND",
+    "BITBUCKET": "Bitbucket",
+    "NEXUS": "Nexus (Release / Snapshot / Npm / Group)",
+    "SONAR": "Sonar (prefix / url / token user / token)",
+    "JENKINS": "Jenkins",
+    "CRONTAB": "Crontab"
+  },
 "PROCEDURES_SECTION": {
   "TITLE": "Procediments",
   "DESCRIPTION": "Gestió i documentació de procediments interns.",
