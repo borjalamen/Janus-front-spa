@@ -79,80 +79,78 @@
         <div class="section-title">{{ 'PROJECTS.SECTION_DEV' | translate }}</div>
         <div class="form-col wide">
           <div class="form-row">
-              <div class="form-row">
-                <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
-                <div class="dev-machines">
-                  <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
-                    <div class="dev-card-top">
-                      <div class="dev-fields grid-3">
-                        <div class="field">
-                          <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
-                          <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
-                        </div>
-                        <div class="field">
-                          <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
-                          <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
-                        </div>
-                        <div class="field">
-                          <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
-                          <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" />
-                        </div>
-                      </div>
-                      <div class="dev-actions">
-                        <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
-                      </div>
+            <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
+            <div class="dev-machines">
+              <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
+                <div class="dev-card-top">
+                  <div class="dev-fields grid-3">
+                    <div class="field">
+                      <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
+                      <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
                     </div>
-
-                    <div class="dev-resources grid-3 compact">
-                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
+                    <div class="field">
+                      <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
+                      <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
                     </div>
-
-                    <div class="openshift-row">
-                      <div class="openshift-toggle">
-                        <label class="switch">
-                          <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
-                          <span class="slider"></span>
-                        </label>
-                        <span class="switch-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
-                      </div>
-                    </div>
-
-                    <div class="openshift-section" *ngIf="m.openshiftEnabled">
-                        <div class="openshift-grid">
-                        <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift!.user" /></div>
-                        <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
-                        <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
-                        <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
-                        <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
-                      </div>
-                      <div class="form-row volumes-row">
-                        <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
-                        <div class="volumes-list">
-                          <div class="volume" *ngFor="let v of (m.openshift!.volumes || []); let vi = index">
-                            <div class="field">
-                              <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
-                              <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
-                            </div>
-                            <div class="field">
-                              <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
-                              <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
-                            </div>
-                            <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
-                          </div>
-                          <div>
-                            <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
-                          </div>
-                        </div>
-                      </div>
+                    <div class="field">
+                      <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
+                      <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" />
                     </div>
                   </div>
-                  <div class="add-dev-row">
-                    <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+                  <div class="dev-actions">
+                    <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
+                  </div>
+                </div>
+
+                <div class="dev-resources grid-3 compact">
+                  <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
+                  <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
+                  <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
+                </div>
+
+                <div class="openshift-row">
+                  <div class="openshift-toggle">
+                    <label class="switch">
+                      <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
+                      <span class="slider"></span>
+                    </label>
+                    <span class="switch-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
+                  </div>
+                </div>
+
+                <div class="openshift-section" *ngIf="m.openshiftEnabled">
+                  <div class="openshift-grid">
+                    <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift!.user" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
+                  </div>
+                  <div class="form-row volumes-row">
+                    <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
+                    <div class="volumes-list">
+                      <div class="volume" *ngFor="let v of (m.openshift!.volumes || []); let vi = index">
+                        <div class="field">
+                          <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
+                          <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
+                          <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                        </div>
+                        <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
+                      </div>
+                      <div>
+                        <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="add-dev-row">
+              <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+            </div>
           </div>
           <div class="form-row">
             <label>{{ 'PROJECTS.NOTES' | translate }}</label>
