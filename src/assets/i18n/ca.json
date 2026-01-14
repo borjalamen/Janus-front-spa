@@ -123,7 +123,17 @@
     "DEPARTMENT": "Departament",
     "LOTE_PLACEHOLDER": "Llot del projecte",
     "DEPARTMENT_PLACEHOLDER": "Departament assignat",
-    "NOT_FOUND": "Projecte no trobat"
+    "NOT_FOUND": "Projecte no trobat",
+    "DEV_MACHINES": "Màquines de desenvolupament",
+    "ADD_DEV_MACHINE": "Afegir màquina de desenvolupament",
+    "PLACEHOLDER_IP": "IP (e.g. 172.19.208.1)",
+    "PLACEHOLDER_USER": "Usuari",
+    "PLACEHOLDER_PASSWORD": "Contrasenya",
+    "PLACEHOLDER_NEXUS": "https://... (una URL per línia)",
+    "PLACEHOLDER_SONAR_PREFIX": "Prefix",
+    "PLACEHOLDER_SONAR_URL": "URL Sonar",
+    "PLACEHOLDER_SONAR_USER": "Usuari Sonar",
+    "PLACEHOLDER_SONAR_TOKEN": "Token Sonar"
   },
   "PROJECTS_MIND": {
     "TITLE": "Eines MIND",

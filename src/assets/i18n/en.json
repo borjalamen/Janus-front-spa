@@ -124,7 +124,17 @@
     "DEPARTMENT": "Department",
     "LOTE_PLACEHOLDER": "Project batch",
     "DEPARTMENT_PLACEHOLDER": "Assigned department",
-    "NOT_FOUND": "Project not found"
+    "NOT_FOUND": "Project not found",
+    "DEV_MACHINES": "Development machines",
+    "ADD_DEV_MACHINE": "Add development machine",
+    "PLACEHOLDER_IP": "IP (e.g. 172.19.208.1)",
+    "PLACEHOLDER_USER": "User",
+    "PLACEHOLDER_PASSWORD": "Password",
+    "PLACEHOLDER_NEXUS": "https://... (one URL per line)",
+    "PLACEHOLDER_SONAR_PREFIX": "Prefix",
+    "PLACEHOLDER_SONAR_URL": "Sonar URL",
+    "PLACEHOLDER_SONAR_USER": "Sonar user",
+    "PLACEHOLDER_SONAR_TOKEN": "Sonar token"
   },
   "PROJECTS_MIND": {
     "TITLE": "MIND tools",

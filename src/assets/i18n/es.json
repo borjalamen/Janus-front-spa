@@ -124,7 +124,17 @@
     "DEPARTMENT": "Departamento",
     "LOTE_PLACEHOLDER": "Lote del proyecto",
     "DEPARTMENT_PLACEHOLDER": "Departamento asignado",
-    "NOT_FOUND": "Proyecto no encontrado"
+    "NOT_FOUND": "Proyecto no encontrado",
+    "DEV_MACHINES": "Máquinas de desarrollo",
+    "ADD_DEV_MACHINE": "Añadir máquina de desarrollo",
+    "PLACEHOLDER_IP": "IP (ej. 172.19.208.1)",
+    "PLACEHOLDER_USER": "Usuario",
+    "PLACEHOLDER_PASSWORD": "Contraseña",
+    "PLACEHOLDER_NEXUS": "https://... (una URL por línea)",
+    "PLACEHOLDER_SONAR_PREFIX": "Prefijo",
+    "PLACEHOLDER_SONAR_URL": "URL Sonar",
+    "PLACEHOLDER_SONAR_USER": "Usuario Sonar",
+    "PLACEHOLDER_SONAR_TOKEN": "Token Sonar"
   },
   "PROJECTS_MIND": {
     "TITLE": "Herramientas MIND",

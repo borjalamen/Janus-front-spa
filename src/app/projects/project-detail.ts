@@ -19,6 +19,7 @@ export class ProjectDetailComponent {
   ipString = '';
   nexusString = '';
   routeMode: string = 'view';
+  devMachines: Array<{ ip: string; user: string; password: string }> = [];
 
   constructor(private route: ActivatedRoute, private router: Router) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
@@ -36,6 +37,8 @@ export class ProjectDetailComponent {
           const p = this.proyecto;
           p.ip = (p.ip||[]);
           this.ipString = (p.ip||[]).join(', ');
+          // cargar máquinas de desarrollo si existen
+          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines : [];
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
           h.nexus = h.nexus || [];
@@ -91,10 +94,20 @@ export class ProjectDetailComponent {
       const arr: Proyecto[] = raw ? JSON.parse(raw) : [];
       const code = p.codigoProyecto || '';
       const idx = arr.findIndex(x => x.codigoProyecto === code);
+      // persistir máquinas de desarrollo
+      (p as any).devMachines = this.devMachines;
       if (idx === -1) arr.push(p);
       else arr[idx] = p;
       localStorage.setItem('projects_v1', JSON.stringify(arr));
       this.editing = false;
     } catch (e) { /* noop */ }
+  }
+
+  addDevMachine() {
+    this.devMachines.push({ ip: '', user: '', password: '' });
+  }
+
+  removeDevMachine(index: number) {
+    if (index >= 0 && index < this.devMachines.length) this.devMachines.splice(index, 1);
   }
 }

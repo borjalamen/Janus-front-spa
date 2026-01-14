@@ -45,7 +45,24 @@
 
       <div class="form-col wide">
         <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label>
-          <input [(ngModel)]="ipString" [readonly]="!editing" />
+            <div class="form-row">
+              <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
+              <div class="dev-machines">
+                <div class="dev-machine" *ngFor="let m of devMachines; let i = index">
+                  <div class="dev-fields">
+                    <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
+                    <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
+                    <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" />
+                  </div>
+                  <div class="dev-actions">
+                    <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
+                  </div>
+                </div>
+                <div style="margin-top:8px">
+                  <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+                </div>
+              </div>
+            </div>
         </div>
         <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
           <ul>
@@ -75,7 +92,7 @@
           <div class="mind-col">
             <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
             <ng-container *ngIf="editing">
-              <textarea [(ngModel)]="nexusString" rows="3" placeholder="https://...\nhttps://..."></textarea>
+              <textarea [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
             </ng-container>
             <ng-container *ngIf="!editing">
               <ul class="nexus-list">
@@ -89,10 +106,10 @@
 
           <div class="mind-col">
             <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
-            <input placeholder="prefijo" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
-            <input placeholder="url" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
-            <input placeholder="user" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
-            <input placeholder="token" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
+            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
+            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
+            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
+            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
           </div>
 
           <div class="mind-col">
