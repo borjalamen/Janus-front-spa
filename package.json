@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:dev": "ng serve --configuration=development",
     "start:pro": "ng serve --configuration=production",
-    "start:loc": "ng serve --configuration=loc",
+    "start:loc": "ng serve --configuration=loc --proxy-config proxy.conf.json",
     "build": "ng build",
     "build:dev": "ng build --configuration=development",
     "build:pro": "ng build --configuration=production"

@@ -71,7 +71,8 @@
               "proxyConfig": "proxy.conf.json"
             },
             "loc": {
-              "buildTarget": "demo:build:loc"
+              "buildTarget": "demo:build:loc",
+              "proxyConfig": "proxy.conf.json"
             },
             "production": {
               "buildTarget": "demo:build:production"
