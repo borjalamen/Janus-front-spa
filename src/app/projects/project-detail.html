@@ -17,117 +17,160 @@
       <span class="sep"> | </span>
       <span class="project-name">{{ proyecto.nombre }}</span>
     </div>
+    <div class="sections-container">
+      <!-- Datos generales (naranja) -->
+      <section class="section section-general">
+        <div class="section-title">Datos generales</div>
+        <div class="project-form-grid full-width">
+          <div class="form-col">
+            <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label>
+              <input [(ngModel)]="proyecto.codigoProyecto" [readonly]="!editing" />
+            </div>
+            <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+              <input [(ngModel)]="proyecto.responsableProyecto" [readonly]="!editing" />
+            </div>
+            <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
+              <input [(ngModel)]="proyecto.lote" [readonly]="!editing" />
+            </div>
+          </div>
 
-    <div class="project-form-grid full-width">
-      <div class="form-col">
-        <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label>
-          <input [(ngModel)]="proyecto.codigoProyecto" [readonly]="!editing" />
+          <div class="form-col">
+            <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label>
+              <input [(ngModel)]="proyecto.nombre" [readonly]="!editing" />
+            </div>
+            <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
+              <input [(ngModel)]="proyecto.responsableTecnico" [readonly]="!editing" />
+            </div>
+            <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
+              <input [(ngModel)]="proyecto.departamento" [readonly]="!editing" />
+            </div>
+          </div>
         </div>
-        <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
-          <input [(ngModel)]="proyecto.responsableProyecto" [readonly]="!editing" />
-        </div>
-        <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
-          <input [(ngModel)]="proyecto.lote" [readonly]="!editing" />
-        </div>
-      </div>
+      </section>
 
-      <div class="form-col">
-        <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label>
-          <input [(ngModel)]="proyecto.nombre" [readonly]="!editing" />
-        </div>
-        <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
-          <input [(ngModel)]="proyecto.responsableTecnico" [readonly]="!editing" />
-        </div>
-        <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
-          <input [(ngModel)]="proyecto.departamento" [readonly]="!editing" />
-        </div>
-      </div>
+      <!-- Entorno de desarrollo (verde) -->
+      <section class="section section-dev">
+        <div class="section-title">Entorno de desarrollo</div>
+        <div class="form-col wide">
+          <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label>
+              <div class="form-row">
+                <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
+                <div class="dev-machines">
+                  <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
+                    <div class="dev-card-top">
+                      <div class="dev-fields grid-3">
+                        <div class="field"><input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" /></div>
+                        <div class="field"><input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" /></div>
+                        <div class="field"><input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" /></div>
+                      </div>
+                      <div class="dev-actions">
+                        <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
+                      </div>
+                    </div>
 
-      <div class="form-col wide">
-        <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label>
-            <div class="form-row">
-              <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
-              <div class="dev-machines">
-                <div class="dev-machine" *ngFor="let m of devMachines; let i = index">
-                  <div class="dev-fields">
-                    <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
-                    <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
-                    <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" />
+                    <div class="dev-resources grid-3 compact">
+                      <div class="field"><label>RAM</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
+                      <div class="field"><label>CPU</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
+                      <div class="field"><label>Disco</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
+                    </div>
+
+                    <div class="openshift-row">
+                      <div class="openshift-toggle">
+                        <label class="switch">
+                          <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
+                          <span class="slider"></span>
+                        </label>
+                        <span class="switch-label">Openshift</span>
+                      </div>
+                    </div>
+
+                    <div class="openshift-section" *ngIf="m.openshiftEnabled">
+                      <div class="openshift-grid">
+                        <div class="field"><label>Usuario Openshift</label><input [(ngModel)]="m.openshift!.user" /></div>
+                        <div class="field"><label>Password Openshift</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
+                        <div class="field"><label>RAM</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
+                        <div class="field"><label>CPU</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
+                        <div class="field"><label>Disco</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
+                      </div>
+                      <div class="form-row volumes-row">
+                        <label>Volúmenes</label>
+                        <div class="volumes-list">
+                          <div class="volume" *ngFor="let v of (m.openshift!.volumes || []); let vi = index">
+                            <input [(ngModel)]="v.name" placeholder="Nombre" />
+                            <input [(ngModel)]="v.capacity" placeholder="Capacidad (e.g. 10Gi)" />
+                            <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
+                          </div>
+                          <div>
+                            <button class="btn small" (click)="addVolume(i)">+ Añadir volumen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="dev-actions">
-                    <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
+                  <div class="add-dev-row">
+                    <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
                   </div>
-                </div>
-                <div style="margin-top:8px">
-                  <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
                 </div>
               </div>
+          </div>
+          <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
+            <ul>
+              <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Herramientas MIND (turquesa) -->
+      <section class="section section-mind">
+        <div class="mind-card">
+          <div class="mind-card-header">
+            <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
+          </div>
+          <div class="mind-card-body">
+            <div class="mind-grid">
+              <div class="mind-col">
+                <label>{{ 'PROJECTS_MIND.BITBUCKET' | translate }}</label>
+                <ng-container *ngIf="editing">
+                  <input [(ngModel)]="hm.bitbucket" />
+                </ng-container>
+                <ng-container *ngIf="!editing">
+                  <a *ngIf="isValidUrl(hm.bitbucket)" (click)="openUrl(hm.bitbucket)" class="mind-link">{{ hm.bitbucket }}</a>
+                  <span *ngIf="!isValidUrl(hm.bitbucket)">{{ hm.bitbucket }}</span>
+                </ng-container>
+              </div>
+
+              <div class="mind-col">
+                <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
+                <ng-container *ngIf="editing">
+                  <textarea [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
+                </ng-container>
+                <ng-container *ngIf="!editing">
+                  <textarea readonly rows="3" [value]="(hm.nexus || []).join('\n')" class="mind-readonly-textarea"></textarea>
+                </ng-container>
+              </div>
+
+              <div class="mind-col">
+                <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
+                <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
+                <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
+                <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
+                <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
+              </div>
+
+              <div class="mind-col">
+                <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
+                <input [(ngModel)]="hm.jenkins" [readonly]="!editing" />
+                <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
+                <input [(ngModel)]="hm.crontab" [readonly]="!editing" />
+              </div>
             </div>
-        </div>
-        <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
-          <ul>
-            <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="mind-card">
-      <div class="mind-card-header">
-        <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
-      </div>
-      <div class="mind-card-body">
-        <div class="mind-grid">
-          <div class="mind-col">
-            <label>{{ 'PROJECTS_MIND.BITBUCKET' | translate }}</label>
-            <ng-container *ngIf="editing">
-              <input [(ngModel)]="hm.bitbucket" />
-            </ng-container>
-            <ng-container *ngIf="!editing">
-              <a *ngIf="isValidUrl(hm.bitbucket)" (click)="openUrl(hm.bitbucket)" class="mind-link">{{ hm.bitbucket }}</a>
-              <span *ngIf="!isValidUrl(hm.bitbucket)">{{ hm.bitbucket }}</span>
-            </ng-container>
-          </div>
-
-          <div class="mind-col">
-            <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
-            <ng-container *ngIf="editing">
-              <textarea [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
-            </ng-container>
-            <ng-container *ngIf="!editing">
-              <ul class="nexus-list">
-                <li *ngFor="let u of (hm.nexus || [])">
-                  <a *ngIf="isValidUrl(u)" (click)="openUrl(u)" class="mind-link">{{ u }}</a>
-                  <span *ngIf="!isValidUrl(u)">{{ u }}</span>
-                </li>
-              </ul>
-            </ng-container>
-          </div>
-
-          <div class="mind-col">
-            <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
-            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
-            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
-            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
-            <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
-          </div>
-
-          <div class="mind-col">
-            <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
-            <input [(ngModel)]="hm.jenkins" [readonly]="!editing" />
-            <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
-            <input [(ngModel)]="hm.crontab" [readonly]="!editing" />
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
-    <div class="form-row">
-      <label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label>
-      <ul>
-        <li *ngFor="let t of proyecto.tareas">{{ t.titulo }} - {{ t.estado }} - {{ t.completadoPercent || '' }}%</li>
-      </ul>
-    </div>
+    
 
     <div class="actions">
       <button class="jh-btn" *ngIf="!editing && routeMode==='edit'" (click)="editing=true">{{ 'PROJECTS.EDIT' | translate }}</button>

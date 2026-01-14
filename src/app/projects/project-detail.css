@@ -1,4 +1,4 @@
-.project-detail-root { padding: 20px; width:100% }
+.project-detail-root { padding: 12px; width:100% }
 .project-detail-header { display:flex; justify-content:flex-end; align-items:center; margin-bottom:12px; position:relative }
 .project-detail-header .header-spacer { flex:1 }
 .project-detail-header .back-icon { background:transparent; border:0; color:#cfcfcf; cursor:pointer; padding:8px; border-radius:8px; transition: background .12s ease, color .12s ease, transform .08s ease, box-shadow .12s ease; display:flex; align-items:center; justify-content:center }
@@ -6,17 +6,184 @@
 .project-detail-header .back-icon.top-right { position:absolute; right:12px; top:6px; width:40px; height:40px }
 .project-detail-header .back-icon.top-right svg { width:22px; height:22px }
 .project-detail-header .back-icon:hover { background:rgba(255,255,255,0.06); color:#fff; transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.45) }
-.form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:8px }
-.form-row label { color: #cfcfcf; font-size:13px }
-.form-row input { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:4px }
-.form-row textarea { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:4px }
+.form-row { display:flex; flex-direction:column; gap:4px; margin-bottom:6px }
+.form-row label { color: #cfcfcf; font-size:12px }
+.form-row input { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:8px }
+.form-row textarea { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:8px }
 .actions { display:flex; gap:8px }
 
 /* Responsive grid for project detail form */
-.project-form-grid { display:grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 16px; align-items:start; width:100% }
+.project-form-grid { display:grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 12px; align-items:start; width:100% }
 .project-form-grid.full-width { grid-column: 1 / -1; width:100% }
 .project-form-grid .form-col { display:flex; flex-direction:column }
 .project-form-grid .form-col.wide { grid-column: 1 / -1 }
+
+/* New section container styles */
+.sections-container { display:flex; flex-direction:column; gap:10px }
+.section { border-radius:8px; padding:10px; border:1px solid rgba(0,0,0,0.06) }
+
+/* Datos generales - naranja tenue */
+.section-general { background: rgba(255,159,67,0.04); border-color: rgba(255,159,67,0.12) }
+.section-general .form-row label { color: #6b4a1f }
+.section-general input, .section-general textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+/* Entorno de desarrollo - verde tenue */
+.section-dev { background: rgba(102,187,106,0.04); border-color: rgba(102,187,106,0.12) }
+.section-dev .form-row label { color: #244f2a }
+.section-dev input, .section-dev textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+/* Herramientas MIND - suave turquesa (mantener tarjeta) */
+.section-mind { background: transparent; padding:0 }
+.section-mind .mind-card { background: rgba(15,143,168,0.07); border:1px solid rgba(15,143,168,0.12); color:#06282b; margin-top:8px }
+.section-mind .mind-card-header h3 { color: #ffd166 }
+.section-mind .mind-card-body { padding:10px }
+
+/* Section title */
+.section-title { font-family: 'Roboto', Arial, sans-serif; font-weight:700; color:#ffd166 !important; margin-bottom:6px; font-size:16px; line-height:1.2 }
+
+/* Asegurar que cada sección use la misma apariencia (aplicar explícitamente) */
+.section-general .section-title, .section-dev .section-title, .section-mind .section-title {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-weight:700;
+	color:#ffd166 !important;
+	font-size:16px;
+	line-height:1.2;
+}
+
+/* Alinear el título del card MIND con el resto */
+.section-mind .mind-card-header h3 { font-family: 'Roboto', Arial, sans-serif; font-size:16px; font-weight:700; color:#ffd166 }
+
+/* Openshift subsection styling */
+.openshift-toggle { margin-top:8px; margin-bottom:8px }
+.openshift-section { background: rgba(0,0,0,0.02); padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); margin-top:6px }
+.openshift-section .form-row { margin-bottom:6px }
+.openshift-section .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap:8px }
+.volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
+.volumes-list .volume input { flex:1; padding:6px; border-radius:8px }
+
+/* Dev machine resources layout */
+.dev-resources { margin-top:6px }
+.dev-resources .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(80px, 1fr)); gap:8px }
+
+/* Compact card for each dev machine */
+.dev-machine-card { background: rgba(0,0,0,0.02); border:1px solid rgba(255,255,255,0.02); border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px }
+.dev-card-top { display:flex; justify-content:space-between; gap:8px; align-items:center }
+.dev-fields.grid-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; align-items:center }
+.dev-fields.grid-3 .field input { width:100% }
+.dev-resources.grid-3.compact { display:grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap:10px; margin-top:4px }
+.dev-resources.grid-3.compact .field label { font-size:12px; color: rgba(207,207,207,0.9) }
+.dev-resources.grid-3.compact .field input { padding:8px; border-radius:10px }
+.dev-actions { display:flex; align-items:flex-start }
+
+/* Openshift layout inside card */
+.openshift-row { display:flex; align-items:center; justify-content:flex-start }
+.openshift-grid { display:grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap:10px }
+.openshift-grid .field input { width:100% }
+.volumes-row .volumes-list { display:flex; flex-direction:column; gap:8px; margin-top:6px }
+.volumes-list .volume { display:flex; gap:8px; align-items:center }
+.volumes-list .volume input { flex:1; border-radius:8px; padding:6px }
+
+.add-dev-row { margin-top:8px }
+
+/* Tweak small button spacing inside cards */
+.dev-machine-card .btn.small { padding:6px 8px; font-size:13px }
+
+@media (max-width: 900px) {
+	.openshift-grid { grid-template-columns: 1fr 1fr }
+	.dev-fields.grid-3 { grid-template-columns: 1fr }
+	.dev-resources.grid-3.compact { grid-template-columns: 1fr 1fr 1fr }
+}
+
+/* Modern switch */
+.openshift-toggle { display:flex; align-items:center; gap:8px; margin-top:8px }
+.switch { position: relative; display:inline-block; width:40px; height:22px }
+.switch input { opacity:0; width:0; height:0 }
+.slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#4b4b4b; transition:.18s; border-radius:22px }
+.slider:before { position:absolute; content:""; height:18px; width:18px; left:2px; bottom:2px; background:white; transition:.18s; border-radius:50% }
+.switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) }
+.switch input:checked + .slider:before { transform: translateX(18px) }
+.switch-label { color: #cfcfcf; margin-left:6px; font-size:13px }
+
+/* Inputs styled to match the section (subtle tints + accent borders) */
+.section-general input, .section-general textarea, .section-general .dev-fields input {
+	background: rgba(255,159,67,0.06);
+	border: 1px solid rgba(255,159,67,0.16);
+	color: #fff;
+	padding:10px;
+	border-radius:14px;
+}
+.section-general input::placeholder, .section-general textarea::placeholder { color: rgba(255,255,255,0.6) }
+.section-general input:focus, .section-general textarea:focus { outline: none; box-shadow: 0 6px 18px rgba(255,159,67,0.09); border-color: rgba(255,159,67,0.28) }
+
+.section-dev input, .section-dev textarea, .section-dev .dev-fields input {
+	background: rgba(102,187,106,0.06);
+	border: 1px solid rgba(102,187,106,0.14);
+	color: #fff;
+	padding:10px;
+	border-radius:14px;
+}
+.section-dev input::placeholder, .section-dev textarea::placeholder { color: rgba(255,255,255,0.6) }
+.section-dev input:focus, .section-dev textarea:focus { outline:none; box-shadow: 0 6px 18px rgba(102,187,106,0.09); border-color: rgba(102,187,106,0.26) }
+
+.section-mind input, .section-mind textarea, .section-mind .mind-grid input {
+	background: rgba(15,143,168,0.08);
+	border: 1px solid rgba(15,143,168,0.14);
+	color: #03292a;
+	padding:10px;
+	border-radius:12px;
+}
+.section-mind textarea { min-height: 60px }
+.section-mind .mind-card .mind-readonly-textarea {
+	background: rgba(15,143,168,0.08) !important;
+	border: 1px solid rgba(15,143,168,0.14) !important;
+	color: #03292a !important;
+	padding: 8px !important;
+	border-radius: 8px !important;
+	width: 100% !important;
+	resize: vertical !important;
+}
+.project-section .section-mind .mind-card .mind-card-body .mind-readonly-textarea[readonly] {
+	background-color: rgba(15,143,168,0.08) !important;
+	background-image: none !important;
+	border-color: rgba(15,143,168,0.14) !important;
+	color: #03292a !important;
+	-webkit-text-fill-color: #03292a !important;
+	box-shadow: none !important;
+	outline: none !important;
+	caret-color: transparent !important;
+}
+.project-section .section-mind .mind-card .mind-card-body .mind-readonly-textarea::placeholder { color: rgba(3,41,42,0.45) !important }
+.mind-grid input[readonly], .mind-grid textarea[readonly], .section-mind .mind-card .mind-readonly-textarea[readonly] { opacity:1; color:#03292a }
+.mind-grid input[readonly] { background: rgba(15,143,168,0.08); border:1px solid rgba(15,143,168,0.14) }
+.section-mind input::placeholder, .section-mind textarea::placeholder { color: rgba(3,41,42,0.45) }
+.section-mind input:focus, .section-mind textarea:focus { outline:none; box-shadow: 0 8px 26px rgba(15,143,168,0.08); border-color: rgba(15,143,168,0.26) }
+.mind-readonly-textarea::placeholder { color: rgba(3,41,42,0.45) }
+
+/* Button styling: primary app-style and per-section accents */
+.project-detail-root .jh-btn, .project-detail-root .btn.primary {
+	background: linear-gradient(180deg, #0fb1c0 0%, #0f8fa8 100%);
+	color: #fff;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 6px;
+	box-shadow: 0 8px 20px rgba(15,143,168,0.12);
+	cursor: pointer;
+	transition: transform .08s ease, box-shadow .12s ease, filter .08s ease;
+}
+.project-detail-root .jh-btn:hover { transform: translateY(-2px); filter:brightness(1.04) }
+
+.section-general .jh-btn, .section-general .btn.primary { background: linear-gradient(180deg,#ffb86b 0%,#ff9240 100%); box-shadow: 0 8px 20px rgba(255,159,67,0.12) }
+.section-dev .jh-btn, .section-dev .btn.primary { background: linear-gradient(180deg,#8fe896 0%,#45b05a 100%); box-shadow: 0 8px 20px rgba(102,187,106,0.12); color:#04260f }
+.section-mind .jh-btn, .section-mind .btn.primary { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%); box-shadow: 0 8px 20px rgba(15,143,168,0.12); color:#042b2b }
+
+/* Small buttons and danger variant */
+.project-detail-root .btn.small { background: rgba(255,255,255,0.04); color:#fff; border:1px solid rgba(255,255,255,0.04); padding:6px 8px; border-radius:6px }
+.project-detail-root .btn.small.danger { background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none }
+.project-detail-root .btn.small:hover { filter:brightness(1.06) }
+
+/* Ensure action buttons are readable on dark backgrounds */
+.project-detail-root .actions { margin-top:16px }
+.project-detail-root .actions .jh-btn[disabled] { opacity:0.6; cursor:not-allowed }
 
 /* Project title centered and prominent */
 .project-title { text-align:center; margin:8px 0 18px 0; display:flex; justify-content:center; align-items:baseline; gap:10px }

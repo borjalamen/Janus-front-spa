@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Proyecto, Task } from './projects';
 
+type Volume = { name?: string; capacity?: string };
+type OpenShift = { user?: string; password?: string; ram?: string; cpu?: string; disk?: string; volumes?: Volume[] };
+type DevMachine = { ip: string; user: string; password: string; openshiftEnabled?: boolean; openshift?: OpenShift; ram?: string; cpu?: string; disk?: string };
+
 @Component({
   selector: 'app-project-detail',
   standalone: true,
@@ -19,7 +23,7 @@ export class ProjectDetailComponent {
   ipString = '';
   nexusString = '';
   routeMode: string = 'view';
-  devMachines: Array<{ ip: string; user: string; password: string }> = [];
+  devMachines: DevMachine[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
@@ -38,7 +42,14 @@ export class ProjectDetailComponent {
           p.ip = (p.ip||[]);
           this.ipString = (p.ip||[]).join(', ');
           // cargar máquinas de desarrollo si existen
-          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines : [];
+          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines as DevMachine[] : [];
+          // garantizar estructura openshift para cada máquina
+          this.devMachines = this.devMachines.map(m => ({
+            ip: m.ip || '', user: m.user || '', password: m.password || '',
+            openshiftEnabled: !!m.openshiftEnabled,
+            openshift: m.openshift || { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] },
+            ram: (m as any).ram || '', cpu: (m as any).cpu || '', disk: (m as any).disk || ''
+          } as DevMachine));
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
           h.nexus = h.nexus || [];
@@ -104,10 +115,24 @@ export class ProjectDetailComponent {
   }
 
   addDevMachine() {
-    this.devMachines.push({ ip: '', user: '', password: '' });
+    this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] } });
   }
 
   removeDevMachine(index: number) {
     if (index >= 0 && index < this.devMachines.length) this.devMachines.splice(index, 1);
+  }
+
+  addVolume(machineIndex: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    m.openshift = m.openshift || { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] };
+    m.openshift.volumes = m.openshift.volumes || [];
+    m.openshift.volumes.push({ name: '', capacity: '' });
+  }
+
+  removeVolume(machineIndex: number, volumeIndex: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m || !m.openshift || !Array.isArray(m.openshift.volumes)) return;
+    if (volumeIndex >= 0 && volumeIndex < (m.openshift.volumes || []).length) m.openshift!.volumes!.splice(volumeIndex, 1);
   }
 }
