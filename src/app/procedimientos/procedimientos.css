@@ -12,6 +12,7 @@ body {
   border-radius: 10px;
   margin: 20px;
   color: #E0E0E0;
+  box-shadow: 0 2px 8px #E53935;
 }
 
 /* Header + botó afegir */

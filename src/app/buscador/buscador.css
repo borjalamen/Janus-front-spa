@@ -19,6 +19,13 @@
   width: 100%;
 }
 
+/* Alinear los iconos en el sufijo */
+.buscador-field .mat-mdc-form-field-icon-suffix {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
 /* Elimina fons intern i quadrat blanc */
 .mat-mdc-text-field-wrapper {
   background: transparent !important;
@@ -30,7 +37,8 @@
 input.mat-mdc-input-element {
   color: #ffd740 !important;      
   caret-color: #ffd740 !important;
-  padding: 10px 14px !important;
+  padding: 10px 30px !important;
+  padding-right: 3px !important;
 }
 
 /* Placeholder groc */
@@ -41,16 +49,39 @@ input.mat-mdc-input-element {
 
 /* ===== ICONA LUPA ===== */
 .icono-lupa {
+  background: transparent !important;
+  background-color: transparent !important;
   color: #fbc02d !important;
-  transition: color 0.2s ease, transform 0.2s ease;
-  font-size: 24px !important;
+  border: 0 !important;
+  transition: all 0.3s ease;
+  font-size: 28px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+  margin: 0 8px !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
 }
 
 /* Hover: lupa groga + zoom */
 .icono-lupa:hover {
-  color: #ffd740 !important;
-  transform: scale(1.25);
+  color: #fff !important;
+  transform: scale(1.15) translateY(-2px);
   cursor: pointer;
+  background: linear-gradient(145deg, #fbc02d, #f9a825) !important;
+  box-shadow: 0 6px 16px rgba(251, 192, 45, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(251, 192, 45, 0.4) !important;
+  border: 1px solid rgba(251, 192, 45, 0.5) !important;
+  filter: none;
 }
 
 /* En focus del camp: lupa més brillant */
@@ -59,12 +90,114 @@ input.mat-mdc-input-element {
 }
 
 /* ===== BOTÓ CLEAR (X) ===== */
-button.mat-icon-button {
-  color: #fbc02d !important;
-  transition: transform 0.2s ease;
+button[mat-icon-button],
+button.mat-icon-button,
+.buscador-field button[matsuffix] {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #E53935 !important;
+  border: 0 !important;
+  padding: 4px !important;
+  margin: 0 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease;
+  box-shadow: none !important;
+  flex-shrink: 0 !important;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
 }
 
-button.mat-icon-button:hover {
-  color: #ffd740 !important;
-  transform: scale(1.2);
+
+
+/* Eliminar el fondo gris de Material Design */
+button[mat-icon-button] .mat-mdc-button-persistent-ripple,
+button.mat-icon-button .mat-mdc-button-persistent-ripple,
+button[mat-icon-button] .mat-mdc-button-ripple,
+button.mat-icon-button .mat-mdc-button-ripple,
+button[mat-icon-button]::before,
+button.mat-icon-button::before,
+button[mat-icon-button] .mat-mdc-focus-indicator,
+button.mat-icon-button .mat-mdc-focus-indicator {
+  background: transparent !important;
+  background-color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* Eliminar el hover gris por defecto */
+button[mat-icon-button]:hover .mat-mdc-button-persistent-ripple,
+button.mat-icon-button:hover .mat-mdc-button-persistent-ripple,
+button[mat-icon-button]:focus .mat-mdc-button-persistent-ripple,
+button.mat-icon-button:focus .mat-mdc-button-persistent-ripple,
+button[mat-icon-button]:active .mat-mdc-button-persistent-ripple,
+button.mat-icon-button:active .mat-mdc-button-persistent-ripple {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+button[mat-icon-button] mat-icon,
+button.mat-icon-button mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+button[mat-icon-button]:hover,
+button.mat-icon-button:hover,
+button[mat-icon-button]:focus-visible,
+button.mat-icon-button:focus-visible,
+button[mat-icon-button].cdk-keyboard-focused,
+button.mat-icon-button.cdk-keyboard-focused,
+button[mat-icon-button].cdk-program-focused,
+button.mat-icon-button.cdk-program-focused {
+  transform: scale(1.15) translateY(-2px) !important;
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  background-color: #E53935 !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
+  outline: none !important;
+  filter: none !important;
+}
+
+button[mat-icon-button]:focus,
+button.mat-icon-button:focus {
+  transform: scale(1.15) translateY(-2px) !important;
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  background-color: #E53935 !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
+  outline: none !important;
+  filter: none !important;
+}
+
+button[mat-icon-button]:active,
+button.mat-icon-button:active {
+  transform: scale(1.15) translateY(-2px) !important;
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  background-color: #E53935 !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
+  filter: none !important;
 }

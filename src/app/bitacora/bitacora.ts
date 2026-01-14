@@ -25,22 +25,19 @@ export class BitacoraComponent {
       id: 1,
       titulo: 'Error de despliegue en Jenkins',
       descripcion: 'El pipeline falla en el stage de build por versión incorrecta de Node.',
-      categoria: 'DevOps',
-      resuelto: false
+      categoria: 'DevOps'
     },
     {
       id: 2,
       titulo: 'Timeout en API REST',
       descripcion: 'La API no responde en menos de 5 segundos en PRE.',
-      categoria: 'Backend',
-      resuelto: true
+      categoria: 'Backend'
     },
     {
       id: 3,
       titulo: 'Problema con permisos en GitLab',
       descripcion: 'No se puede hacer push por pérdida de credenciales SSH.',
-      categoria: 'Repo',
-      resuelto: false
+      categoria: 'Repo'
     }
   ];
 
@@ -54,9 +51,5 @@ export class BitacoraComponent {
       e.descripcion.toLowerCase().includes(v) ||
       e.categoria.toLowerCase().includes(v)
     );
-  }
-
-  toggleResuelto(error: any) {
-    error.resuelto = !error.resuelto;
   }
 }
