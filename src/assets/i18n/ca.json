@@ -136,6 +136,8 @@
     "PLACEHOLDER_SONAR_TOKEN": "Token Sonar",
     "TAB_INFO": "Informació general",
     "TAB_DOCS": "Documentació",
+    "TAB_DEV": "Entorn de desenvolupament",
+    "TAB_MIND": "Eines MIND",
     "TABS_ARIA": "Pestanyes de detall del projecte",
     "DOCUMENTATION_LABEL": "Documentació",
     "PLACEHOLDER_DOCUMENTATION": "Escriu o enganxa la documentació del projecte aquí",
@@ -152,11 +154,15 @@
     "URL_ENTORNO_PREPROD": "URL entorn de preproducció",
     "URL_ENTORNO_PRODUCCION": "URL entorn de producció",
     "HORA_DAILY": "Hora de la daily",
+    "PLACEHOLDER_URL": "https://...",
     "SECTION_GENERAL": "Dades generals",
     "SECTION_DEV": "Entorn de desenvolupament",
     "DEV_RAM": "RAM",
     "DEV_CPU": "CPU",
     "DEV_DISK": "Disc",
+    "DEV_RAM_PLACEHOLDER": "e.g. 4GB",
+    "DEV_CPU_PLACEHOLDER": "e.g. 2",
+    "DEV_DISK_PLACEHOLDER": "e.g. 40GB",
     "OPENSHIFT": "Openshift",
     "OPENSHIFT_USER": "Usuari Openshift",
     "OPENSHIFT_PASSWORD": "Contrasenya Openshift",
@@ -165,6 +171,12 @@
     "NOTES": "Notes",
     "NOTES_PLACEHOLDER": "Notes opcionals sobre l'entorn de desenvolupament"
   },
+  "PLACEHOLDERS": {
+    "DEV_RAM": "e.g. 4GB",
+    "DEV_CPU": "e.g. 2",
+    "DEV_DISK": "e.g. 40GB"
+  },
+  
   "PROJECTS_MIND": {
     "TITLE": "Eines MIND",
     "BITBUCKET": "Bitbucket",

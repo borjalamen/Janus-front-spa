@@ -138,6 +138,8 @@
     ,
     "TAB_INFO": "General information",
     "TAB_DOCS": "Documentation",
+    "TAB_DEV": "Development environment",
+    "TAB_MIND": "MIND tools",
     "TABS_ARIA": "Project detail tabs",
     "DOCUMENTATION_LABEL": "Documentation",
     "PLACEHOLDER_DOCUMENTATION": "Write or paste project documentation here",
@@ -146,6 +148,9 @@
     "DEV_RAM": "RAM",
     "DEV_CPU": "CPU",
     "DEV_DISK": "Disk",
+    "DEV_RAM_PLACEHOLDER": "e.g. 4GB",
+    "DEV_CPU_PLACEHOLDER": "e.g. 2",
+    "DEV_DISK_PLACEHOLDER": "e.g. 40GB",
     "OPENSHIFT": "Openshift",
     "OPENSHIFT_USER": "Openshift user",
     "OPENSHIFT_PASSWORD": "Openshift password",
@@ -166,8 +171,15 @@
     "URL_ENTORNO_INTEGRACION": "Integration environment URL",
     "URL_ENTORNO_PREPROD": "Pre-production environment URL",
     "URL_ENTORNO_PRODUCCION": "Production environment URL",
-    "HORA_DAILY": "Daily standup time"
+    "HORA_DAILY": "Daily standup time",
+    "PLACEHOLDER_URL": "https://..."
   },
+  "PLACEHOLDERS": {
+    "DEV_RAM": "e.g. 4GB",
+    "DEV_CPU": "e.g. 2",
+    "DEV_DISK": "e.g. 40GB"
+  },
+  
   "PROJECTS_MIND": {
     "TITLE": "MIND tools",
     "BITBUCKET": "Bitbucket",

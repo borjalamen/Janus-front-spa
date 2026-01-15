@@ -23,7 +23,7 @@ export class ProjectDetailComponent {
   ipString = '';
   nexusString = '';
   docsString = '';
-  activeTab: 'info' | 'docs' = 'info';
+  activeTab: 'info' | 'dev' | 'mind' | 'docs' = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
 

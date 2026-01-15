@@ -20,6 +20,8 @@
     <!-- Tabs -->
     <div class="tabs" role="tablist" aria-label="{{ 'PROJECTS.TABS_ARIA' | translate }}">
       <button class="tab" [class.active]="activeTab==='info'" (click)="activeTab='info'" role="tab" [attr.aria-selected]="activeTab==='info'">{{ 'PROJECTS.TAB_INFO' | translate }}</button>
+      <button class="tab" [class.active]="activeTab==='dev'" (click)="activeTab='dev'" role="tab" [attr.aria-selected]="activeTab==='dev'">{{ 'PROJECTS.TAB_DEV' | translate }}</button>
+      <button class="tab" [class.active]="activeTab==='mind'" (click)="activeTab='mind'" role="tab" [attr.aria-selected]="activeTab==='mind'">{{ 'PROJECTS.TAB_MIND' | translate }}</button>
       <button class="tab" [class.active]="activeTab==='docs'" (click)="activeTab='docs'" role="tab" [attr.aria-selected]="activeTab==='docs'">{{ 'PROJECTS.TAB_DOCS' | translate }}</button>
     </div>
 
@@ -69,21 +71,27 @@
           <div class="divider" aria-hidden="true"></div>
           <div class="urls-grid">
             <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoDesarrollo" placeholder="https://..." [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.urlEntornoDesarrollo" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
             </div>
             <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoIntegracion" placeholder="https://..." [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.urlEntornoIntegracion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
             </div>
             <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoPreproduccion" placeholder="https://..." [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.urlEntornoPreproduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
             </div>
             <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoProduccion" placeholder="https://..." [readonly]="!editing" />
+              <input [(ngModel)]="proyecto.urlEntornoProduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
             </div>
           </div>
         </section>
 
-        <!-- Entorno de desarrollo (verde) -->
+        <!-- Entorno and MIND moved to their own tabs -->
+      </div>
+    </div>
+
+    <!-- Dev tab -->
+    <div *ngIf="activeTab==='dev'">
+      <div class="sections-container">
         <section class="section section-dev">
           <div class="section-title">{{ 'PROJECTS.SECTION_DEV' | translate }}</div>
           <div class="form-col wide">
@@ -111,11 +119,11 @@
                     </div>
                   </div>
 
-                  <div class="dev-resources grid-3 compact">
-                    <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="e.g. 4GB" /></div>
-                    <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="e.g. 2" /></div>
-                    <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="e.g. 40GB" /></div>
-                  </div>
+                        <div class="dev-resources grid-3 compact">
+                          <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
+                          <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
+                          <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
+                        </div>
 
                   <div class="openshift-row">
                     <div class="openshift-toggle">
@@ -131,9 +139,9 @@
                     <div class="openshift-grid">
                       <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift!.user" /></div>
                       <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="e.g. 4GB" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="e.g. 2" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="e.g. 40GB" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                     </div>
                     <div class="form-row volumes-row">
                       <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
@@ -166,8 +174,13 @@
               <textarea [(ngModel)]="proyecto.entornoNotas" rows="4" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
             </div>
           </div>
+        </section>
+      </div>
+    </div>
 
-        <!-- Herramientas MIND (turquesa) -->
+    <!-- MIND tab -->
+    <div *ngIf="activeTab==='mind'">
+      <div class="sections-container">
         <section class="section section-mind">
           <div class="mind-card">
             <div class="mind-card-header">
@@ -213,7 +226,6 @@
               </div>
             </div>
           </div>
-        </section>
         </section>
       </div>
     </div>
