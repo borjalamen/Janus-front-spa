@@ -88,6 +88,8 @@
 .openshift-section .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap:8px }
 .volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
 .volumes-list .volume input { flex:1; padding:6px; border-radius:8px }
+.volumes-list .volume .field { display:flex; flex-direction:column }
+.volumes-list .volume .field label { margin-bottom:6px }
 
 /* Dev machine resources layout */
 .dev-resources { margin-top:6px }
@@ -106,7 +108,7 @@
 
 /* Openshift layout inside card */
 .openshift-row { display:flex; align-items:center; justify-content:flex-start }
-.openshift-grid { display:grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap:10px }
+.openshift-grid { display:grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap:12px }
 .openshift-grid .field { display:flex; flex-direction:column }
 .openshift-grid .field label { margin-bottom:6px }
 .openshift-grid .field input { width:100% }
