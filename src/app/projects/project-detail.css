@@ -60,6 +60,75 @@
 .section-dev .form-row label { color: #244f2a }
 .section-dev input, .section-dev textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
 
+/* Equipo Minsait - morado tenue */
+.section-minsait { background: rgba(123,63,191,0.04); border-color: rgba(123,63,191,0.12) }
+.section-minsait .form-row label { color: #4b2a6b }
+.section-minsait input, .section-minsait textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+.members-grid { display:flex; flex-direction:column; gap:12px; margin-top:12px }
+.member-card { background: rgba(0,0,0,0.02); padding:10px; border-radius:8px }
+.member-row { display:flex; align-items:center; gap:12px }
+.member-fields { display:flex; gap:12px; flex:1; align-items:center }
+.member-input { padding:10px; border-radius:8px; background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06); }
+.member-input.name { flex: 2 1 220px }
+.member-input.role { flex: 1 1 160px }
+.member-input.email { flex: 2 1 260px }
+.member-actions { display:flex; align-items:center; margin-left:6px }
+.member-controls .members-actions { margin-top:6px }
+
+/* daily access row layout: keep time and person on separate columns on wide screens */
+.daily-access-row { display:grid; grid-template-columns: 200px 1fr; gap:12px; align-items:center; margin-top:12px }
+.daily-access-row .form-row { margin:0 }
+
+/* Ensure the persona responsable input fills the available space and matches other inputs */
+.section-minsait .daily-access-row .form-row input {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px;
+	border-radius: 8px;
+	background: rgba(255,255,255,0.03);
+	color: #fff;
+	border: 1px solid rgba(0,0,0,0.06);
+}
+
+@media (max-width: 900px) {
+	.daily-access-row { grid-template-columns: 1fr; }
+	.member-row { flex-direction:column; align-items:stretch }
+	.member-fields { flex-direction:column }
+	.member-input { width:100% }
+	.member-actions { justify-content:flex-end }
+}
+
+/* dotted divider between daily and members */
+.divider-dots { border-top: 1px dotted rgba(255,255,255,0.06); margin: 12px 0 }
+
+/* Members layout: make each member a full-width row with horizontal inputs on wide screens */
+.members-grid { display:flex; flex-direction:column; gap:12px; margin-top:12px }
+.member-card { width:100%; background: rgba(0,0,0,0.02); padding:10px; border-radius:8px; }
+.member-row { display:flex; align-items:center; gap:12px }
+.member-fields { display:flex; gap:12px; flex:1; align-items:center }
+.member-input { padding:10px; border-radius:8px; background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06); }
+.member-input.name { flex: 2 1 220px }
+.member-input.role { flex: 1 1 160px }
+.member-input.email { flex: 2 1 260px }
+.member-actions { margin-left:8px; display:flex; align-items:center }
+
+@media (max-width: 900px) {
+	.member-row { flex-direction:column; align-items:stretch }
+	.member-fields { flex-direction:column }
+	.member-input { width:100% }
+	.member-actions { justify-content:flex-end }
+}
+
+/* Modal styles for confirm delete */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000 }
+.modal { background: #0f1112; padding:16px; border-radius:8px; width:320px; border:1px solid rgba(255,255,255,0.04) }
+.modal-header { font-weight:700; color:#ffd166; margin-bottom:8px }
+.modal-body { color:#cfcfcf; margin-bottom:12px }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end }
+.modal-actions .btn.small { padding:6px 10px }
+
 /* Herramientas MIND - suave turquesa (mantener tarjeta) */
 .section-mind { background: transparent; padding:0 }
 .section-mind .mind-card { background: rgba(15,143,168,0.07); border:1px solid rgba(15,143,168,0.12); color:#06282b; margin-top:8px }
@@ -301,6 +370,30 @@
 .mind-card-header { padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04) }
 .mind-card-header h3 { margin:0; font-size:0.95rem; color: #ffd166 /* amarillo título */ }
 .mind-card-body { padding: 14px 16px 18px 16px }
+
+/* Nexus editing textarea: keep turquoise focus and white text while editing */
+.nexus-edit-textarea {
+	background: #061b1a;
+	color: #ffffff;
+	border: 1px solid rgba(0,0,0,0.08);
+	padding: 8px;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 8px;
+}
+.nexus-edit-textarea:focus {
+	outline: none;
+	border-color: #11b6b0; /* turquoise */
+	box-shadow: 0 0 0 3px rgba(17,182,176,0.12);
+}
+
+/* Save button full width */
+.jh-btn-full {
+	display: block;
+	width: 100%;
+	padding: 12px 16px;
+	font-size: 1rem;
+}
 .mind-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px }
 .mind-grid .mind-col { display:flex; flex-direction:column; gap:6px }
 .mind-grid input, .mind-grid textarea { background: rgba(255,255,255,0.95); color:#111; border:1px solid rgba(0,0,0,0.08); padding:8px; border-radius:4px }
@@ -386,4 +479,31 @@
 .section-mind .mind-card .mind-readonly-textarea[readonly] {
 	color: #03292a !important;
 	caret-color: transparent !important;
+}
+
+/* Minsait members section spacing */
+.minsait-members-section { margin-top: 12px }
+.minsait-members-section .add-member-row { display:flex; align-items:center; justify-content:flex-start; gap:12px; margin-bottom:10px }
+.minsait-members-section .members-grid { /* use global .members-grid styles (full-width rows) */ }
+.minsait-members-section .member-card { /* allow global .member-card styles to control width */ }
+
+@media (max-width: 900px) {
+  .minsait-members-section .members-grid { flex-direction:column }
+  .minsait-members-section .member-card { width: 100% }
+}
+
+/* Place members section under the daily row (first column) on wide screens */
+@media (min-width: 901px) {
+	.general-grid.three-col > .minsait-members-section { grid-column: 1 / 2; }
+	.general-grid.three-col > .daily-access-row { grid-column: 1 / 2; }
+	/* ensure divider is above the members section */
+	.general-grid.three-col > .divider-dots { grid-column: 1 / -1; }
+}
+
+/* left column wrapper for minsait content */
+.general-grid.three-col > .minsait-left-col { grid-column: 1 / 2; display:flex; flex-direction:column; gap:12px }
+.general-grid.three-col > .minsait-left-col .divider-dots { grid-column: 1 / -1 }
+
+@media (max-width: 900px) {
+	.general-grid.three-col > .minsait-left-col { grid-column: 1 / -1 }
 }

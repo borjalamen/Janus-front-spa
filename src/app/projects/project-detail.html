@@ -20,6 +20,7 @@
     <!-- Tabs -->
     <div class="tabs" role="tablist" aria-label="{{ 'PROJECTS.TABS_ARIA' | translate }}">
       <button class="tab" [class.active]="activeTab==='info'" (click)="activeTab='info'" role="tab" [attr.aria-selected]="activeTab==='info'">{{ 'PROJECTS.TAB_INFO' | translate }}</button>
+      <button class="tab" [class.active]="activeTab==='minsait'" (click)="activeTab='minsait'" role="tab" [attr.aria-selected]="activeTab==='minsait'">{{ 'PROJECTS.TAB_MINSAIT' | translate }}</button>
       <button class="tab" [class.active]="activeTab==='dev'" (click)="activeTab='dev'" role="tab" [attr.aria-selected]="activeTab==='dev'">{{ 'PROJECTS.TAB_DEV' | translate }}</button>
       <button class="tab" [class.active]="activeTab==='mind'" (click)="activeTab='mind'" role="tab" [attr.aria-selected]="activeTab==='mind'">{{ 'PROJECTS.TAB_MIND' | translate }}</button>
       <button class="tab" [class.active]="activeTab==='docs'" (click)="activeTab='docs'" role="tab" [attr.aria-selected]="activeTab==='docs'">{{ 'PROJECTS.TAB_DOCS' | translate }}</button>
@@ -46,17 +47,7 @@
                 <input [(ngModel)]="proyecto.codigoImputacion" placeholder="" [readonly]="!editing" />
               </div>
 
-              <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
-                <input [(ngModel)]="proyecto.responsableProyecto" placeholder="{{ 'PROJECTS.RESPONSABLE' | translate }}" [readonly]="!editing" />
-              </div>
-
-              <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
-                <input [(ngModel)]="proyecto.responsableTecnico" placeholder="{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}" [readonly]="!editing" />
-              </div>
-
-              <div class="form-row"><label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
-                <input type="time" [(ngModel)]="proyecto.horaDaily" [readonly]="!editing" />
-              </div>
+              <!-- Responsable fields moved to Equipo Minsait tab -->
 
               <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
                 <input [(ngModel)]="proyecto.lote" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}" [readonly]="!editing" />
@@ -89,41 +80,93 @@
       </div>
     </div>
 
+    <!-- Equipo Minsait tab -->
+    <div *ngIf="activeTab==='minsait'">
+      <div class="sections-container">
+        <section class="section section-minsait">
+          <div class="section-title">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</div>
+          <div class="project-form-grid full-width">
+            <div class="general-grid three-col">
+
+              <div class="minsait-left-col">
+                <div class="daily-access-row">
+                  <div class="form-row"><label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+                    <input type="time" [(ngModel)]="proyecto.horaDaily" [disabled]="!editing" />
+                  </div>
+                  <div class="form-row"><label>{{ 'PROJECTS.DAILY_ACCESS_PERSON' | translate }}</label>
+                    <input [(ngModel)]="proyecto.dailyAccessPerson" placeholder="{{ 'PROJECTS.DAILY_ACCESS_PERSON_PLACEHOLDER' | translate }}" [disabled]="!editing" />
+                  </div>
+                </div>
+
+                <div class="divider-dots" aria-hidden="true"></div>
+
+                <div class="minsait-members-section">
+                  <div class="member-controls add-member-row">
+                    <label>{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</label>
+                    <div class="members-actions">
+                      <button class="btn small" (click)="addMember()">+ {{ 'PROJECTS.ADD_MEMBER' | translate }}</button>
+                    </div>
+                  </div>
+
+                  <div class="members-grid">
+                    <div class="member-card" *ngFor="let m of proyecto.equipoMinsait || []; let mi = index">
+                      <div class="member-row">
+                        <div class="member-fields">
+                          <input class="member-input name" [(ngModel)]="m.nombre" placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}" [disabled]="!editing" />
+                          <input class="member-input role" [(ngModel)]="m.rol" placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}" [disabled]="!editing" />
+                          <input class="member-input email" [(ngModel)]="m.email" placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}" [disabled]="!editing" />
+                        </div>
+                        <div class="member-actions">
+                          <button class="btn small" (click)="promptRemoveMember(mi)">-</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-backdrop" *ngIf="removeCandidateIndex !== null">
+                    <div class="modal">
+                      <div class="modal-header">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}</div>
+                      <div class="modal-body">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
+                      <div class="modal-actions">
+                        <button class="btn small" (click)="confirmRemoveMember()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
+                        <button class="btn small" (click)="cancelRemoveMember()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
     <!-- Dev tab -->
     <div *ngIf="activeTab==='dev'">
       <div class="sections-container">
         <section class="section section-dev">
           <div class="section-title">{{ 'PROJECTS.SECTION_DEV' | translate }}</div>
-          <div class="form-col wide">
+          <div class="project-form-grid full-width">
             <div class="form-row">
               <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
-              <div class="dev-machines">
+              <div class="dev-machines-list">
                 <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
                   <div class="dev-card-top">
                     <div class="dev-fields grid-3">
-                      <div class="field">
-                        <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
-                        <input [(ngModel)]="m.ip" placeholder="{{ 'PROJECTS.PLACEHOLDER_IP' | translate }}" />
-                      </div>
-                      <div class="field">
-                        <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
-                        <input [(ngModel)]="m.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_USER' | translate }}" />
-                      </div>
-                      <div class="field">
-                        <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
-                        <input [(ngModel)]="m.password" placeholder="{{ 'PROJECTS.PLACEHOLDER_PASSWORD' | translate }}" type="password" />
-                      </div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_USER' | translate }}</label><input [(ngModel)]="m.user" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label><input [(ngModel)]="m.password" type="password" /></div>
                     </div>
-                    <div class="dev-actions">
-                      <button class="btn small danger" (click)="removeDevMachine(i)">-</button>
-                    </div>
+                    <div class="dev-actions"><button class="btn small danger" (click)="removeDevMachine(i)">-</button></div>
                   </div>
 
-                        <div class="dev-resources grid-3 compact">
-                          <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
-                          <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
-                          <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
-                        </div>
+                  <div class="dev-resources grid-3 compact">
+                    <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
+                    <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
+                  </div>
 
                   <div class="openshift-row">
                     <div class="openshift-toggle">
@@ -135,18 +178,18 @@
                     </div>
                   </div>
 
-                  <div class="openshift-section" *ngIf="m.openshiftEnabled">
+                  <div class="openshift-section" *ngIf="m.openshiftEnabled && m.openshift">
                     <div class="openshift-grid">
-                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift!.user" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift!.password" type="password" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift!.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift!.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift!.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift.user" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift.password" type="password" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                     </div>
                     <div class="form-row volumes-row">
                       <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
                       <div class="volumes-list">
-                        <div class="volume" *ngFor="let v of (m.openshift!.volumes || []); let vi = index">
+                        <div class="volume" *ngFor="let v of (m.openshift?.volumes || []); let vi = index">
                           <div class="field">
                             <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
                             <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
@@ -169,10 +212,10 @@
                 <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
               </div>
             </div>
-            <div class="form-row">
-              <label>{{ 'PROJECTS.NOTES' | translate }}</label>
-              <textarea [(ngModel)]="proyecto.entornoNotas" rows="4" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
-            </div>
+          </div>
+          <div class="form-row notes-row">
+            <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+            <textarea [(ngModel)]="proyecto.entornoNotas" rows="4" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
           </div>
         </section>
       </div>
@@ -202,7 +245,7 @@
                 <div class="mind-col">
                   <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
                   <ng-container *ngIf="editing">
-                    <textarea [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
+                    <textarea class="nexus-edit-textarea" [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
                   </ng-container>
                   <ng-container *ngIf="!editing">
                     <textarea readonly rows="3" [value]="(hm.nexus || []).join('\n')" class="mind-readonly-textarea"></textarea>
@@ -247,7 +290,7 @@
 
     <div class="actions">
       <button class="jh-btn" *ngIf="!editing && routeMode==='edit'" (click)="editing=true">{{ 'PROJECTS.EDIT' | translate }}</button>
-      <button class="jh-btn" *ngIf="editing" (click)="save()">{{ 'PROJECTS.SAVE' | translate }}</button>
+      <button class="jh-btn jh-btn-full" *ngIf="editing" (click)="save()">{{ 'PROJECTS.SAVE' | translate }}</button>
     </div>
   </div>
 </div>

@@ -23,7 +23,7 @@ export class ProjectDetailComponent {
   ipString = '';
   nexusString = '';
   docsString = '';
-  activeTab: 'info' | 'dev' | 'mind' | 'docs' = 'info';
+  activeTab: 'info' | 'minsait' | 'dev' | 'mind' | 'docs' = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
 
@@ -61,6 +61,8 @@ export class ProjectDetailComponent {
           this.nexusString = (h.nexus || []).join('\n');
           (p as any).documentacion = (p as any).documentacion || '';
           this.docsString = (p as any).documentacion || '';
+          // ensure equipoMinsait exists
+          (p as any).equipoMinsait = (p as any).equipoMinsait || [];
         }
       }
     } catch (e) { this.proyecto = undefined; }
@@ -105,8 +107,10 @@ export class ProjectDetailComponent {
       // sync documentation
       (p as any).documentacion = this.docsString || '';
     
-      // lote y departamento se enlazan por ngModel directamente a `proyecto`,
-      // por lo que no hace falta sincronizarlos explícitamente aquí.
+      // Asegurar que los campos de equipo Minsait estén definidos y persistir la lista
+      p.equipoMinsait = p.equipoMinsait || [];
+      p.horaDaily = p.horaDaily || null;
+      p.dailyAccessPerson = p.dailyAccessPerson || null;
     } catch(e) { /* ignore */ }
     try {
       const raw = localStorage.getItem('projects_v1');
@@ -115,6 +119,8 @@ export class ProjectDetailComponent {
       const idx = arr.findIndex(x => x.codigoProyecto === code);
       // persistir máquinas de desarrollo
       (p as any).devMachines = this.devMachines;
+      // persistir equipo minsait
+      (p as any).equipoMinsait = p.equipoMinsait || [];
       if (idx === -1) arr.push(p);
       else arr[idx] = p;
       localStorage.setItem('projects_v1', JSON.stringify(arr));
@@ -124,6 +130,33 @@ export class ProjectDetailComponent {
 
   addDevMachine() {
     this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] } });
+  }
+
+  addMember() {
+    if (!this.proyecto) return;
+    this.proyecto.equipoMinsait = this.proyecto.equipoMinsait || [];
+    this.proyecto.equipoMinsait.push({ nombre: '', rol: '', email: '' });
+  }
+
+  removeMember(index: number) {
+    if (!this.proyecto || !Array.isArray(this.proyecto.equipoMinsait)) return;
+    if (index >= 0 && index < this.proyecto.equipoMinsait.length) this.proyecto.equipoMinsait.splice(index, 1);
+  }
+
+  // confirm remove flow
+  removeCandidateIndex: number | null = null;
+  promptRemoveMember(index: number) {
+    this.removeCandidateIndex = index;
+  }
+
+  confirmRemoveMember() {
+    if (this.removeCandidateIndex === null) return;
+    this.removeMember(this.removeCandidateIndex);
+    this.removeCandidateIndex = null;
+  }
+
+  cancelRemoveMember() {
+    this.removeCandidateIndex = null;
   }
 
   removeDevMachine(index: number) {

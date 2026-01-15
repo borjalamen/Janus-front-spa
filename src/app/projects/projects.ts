@@ -44,6 +44,7 @@ export interface Proyecto {
   urlEntornoPreproduccion?: string | null;
   urlEntornoProduccion?: string | null;
   horaDaily?: string | null;
+  dailyAccessPerson?: string | null;
   ip?: string[];
   lote?: string | null;
   departamento?: string | null;
@@ -67,6 +68,7 @@ export interface Proyecto {
   usuarios?: string[];
   notasGenerales?: string | null;
   entornoNotas?: string | null;
+  equipoMinsait?: { nombre?: string; rol?: string; email?: string }[];
 }
 
 @Component({
