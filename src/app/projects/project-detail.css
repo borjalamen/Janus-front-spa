@@ -253,6 +253,28 @@
 .project-detail-root .actions { margin-top:16px }
 .project-detail-root .actions .jh-btn[disabled] { opacity:0.6; cursor:not-allowed }
 
+/* Make primary action button span full width and larger for project detail footer */
+.project-detail-root .actions {
+	display:flex;
+	width:100%;
+}
+.project-detail-root .actions .jh-btn {
+	flex: 1 1 auto;
+	padding: 12px 16px;
+	font-size: 16px;
+	border-radius: 8px;
+}
+.project-detail-root .actions .jh-btn + .jh-btn {
+	margin-left: 12px;
+	flex: 0 0 auto;
+	width: auto;
+}
+
+@media (max-width: 720px) {
+	.project-detail-root .actions { flex-direction: column; gap:8px }
+	.project-detail-root .actions .jh-btn + .jh-btn { margin-left: 0; }
+}
+
 /* Project title centered and prominent */
 .project-title { text-align:center; margin:8px 0 18px 0; display:flex; justify-content:center; align-items:baseline; gap:10px }
 .project-title .project-code { font-weight:700; color:#ffd166; font-size:20px }
@@ -294,3 +316,63 @@
 
 .mind-link::after { content: ' \2197'; font-size:12px; margin-left:6px; color:rgba(255,255,255,0.6) }
 .mind-link:hover { color:#ffeb99 }
+
+/* Ensure MIND inputs/textarea keep the turquoise styling when focused (editing) */
+.section-mind input:focus,
+.section-mind textarea:focus,
+.mind-grid input:focus,
+.mind-grid textarea:focus,
+.mind-card-body .mind-readonly-textarea:focus {
+	background: rgba(15,143,168,0.08) !important;
+	color: #03292a !important;
+	border-color: rgba(15,143,168,0.14) !important;
+	box-shadow: 0 8px 26px rgba(15,143,168,0.08) !important;
+	outline: none !important;
+	caret-color: #03292a !important;
+}
+
+/* Also handle focus-visible for keyboard navigation */
+.section-mind input:focus-visible,
+.section-mind textarea:focus-visible,
+.mind-grid input:focus-visible,
+.mind-grid textarea:focus-visible {
+	box-shadow: 0 8px 26px rgba(15,143,168,0.12) !important;
+}
+
+/* More specific override: when inside .section-mind, ensure mind-grid fields keep turquoise look */
+.section-mind .mind-grid input,
+.section-mind .mind-grid textarea,
+.section-mind .mind-card .mind-readonly-textarea {
+	background: rgba(15,143,168,0.08) !important;
+	border: 1px solid rgba(15,143,168,0.14) !important;
+	color: #03292a !important;
+	padding:8px !important;
+	border-radius:8px !important;
+}
+
+/* Ensure placeholder color is appropriate inside the turquoise fields */
+.section-mind .mind-grid input::placeholder,
+.section-mind .mind-grid textarea::placeholder,
+.section-mind .mind-card .mind-readonly-textarea::placeholder {
+	color: rgba(3,41,42,0.45) !important;
+}
+
+/* Editable fields should show white text for contrast; readonly keep dark theme */
+.section-mind .mind-grid input:not([readonly]),
+.section-mind .mind-grid textarea:not([readonly]),
+.section-mind input:not([readonly]),
+.section-mind textarea:not([readonly]) {
+	color: #ffffff !important;
+}
+.section-mind .mind-grid input:not([readonly])::placeholder,
+.section-mind .mind-grid textarea:not([readonly])::placeholder,
+.section-mind input:not([readonly])::placeholder,
+.section-mind textarea:not([readonly])::placeholder {
+	color: rgba(255,255,255,0.6) !important;
+}
+
+/* Ensure readonly textarea used for display keeps dark text */
+.section-mind .mind-card .mind-readonly-textarea[readonly] {
+	color: #03292a !important;
+	caret-color: transparent !important;
+}
