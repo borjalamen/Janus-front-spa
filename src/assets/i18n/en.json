@@ -136,6 +136,11 @@
     "PLACEHOLDER_SONAR_USER": "Sonar user",
     "PLACEHOLDER_SONAR_TOKEN": "Sonar token"
     ,
+    "TAB_INFO": "General information",
+    "TAB_DOCS": "Documentation",
+    "TABS_ARIA": "Project detail tabs",
+    "DOCUMENTATION_LABEL": "Documentation",
+    "PLACEHOLDER_DOCUMENTATION": "Write or paste project documentation here",
     "SECTION_GENERAL": "General information",
     "SECTION_DEV": "Development environment",
     "DEV_RAM": "RAM",

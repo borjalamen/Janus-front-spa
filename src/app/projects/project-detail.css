@@ -317,6 +317,17 @@
 .mind-link::after { content: ' \2197'; font-size:12px; margin-left:6px; color:rgba(255,255,255,0.6) }
 .mind-link:hover { color:#ffeb99 }
 
+/* Tabs styling (match look from formacion) */
+.tabs{display:flex;gap:8px;padding:8px 0 16px}
+.tab{background:transparent;border:1px solid transparent;padding:8px 14px;border-radius:10px;color:rgba(207,207,207,0.7);cursor:pointer;position:relative;font-weight:600;transition:all 160ms ease}
+.tab:hover{color:#0fb1c0}
+.tab:focus{outline:none; box-shadow:0 0 0 4px rgba(15,143,168,0.06);}
+.tab.active{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));color:#0fb1c0;box-shadow: 0 6px 18px rgba(0,0,0,0.45);transform:translateY(-2px)}
+.tab.active::after{content:'';position:absolute;left:12px;right:12px;bottom:-8px;height:4px;border-radius:4px;background:linear-gradient(90deg,#5fd3db,#0f8fa8);box-shadow:0 6px 20px rgba(15,143,168,0.12)}
+
+/* Tab panel spacing */
+.project-detail-root .tab-panel { padding-top: 6px }
+
 /* Ensure MIND inputs/textarea keep the turquoise styling when focused (editing) */
 .section-mind input:focus,
 .section-mind textarea:focus,

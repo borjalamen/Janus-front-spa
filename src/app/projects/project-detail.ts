@@ -22,6 +22,8 @@ export class ProjectDetailComponent {
   editing = false;
   ipString = '';
   nexusString = '';
+  docsString = '';
+  activeTab: 'info' | 'docs' = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
 
@@ -57,6 +59,8 @@ export class ProjectDetailComponent {
           h.nexus = h.nexus || [];
           h.sonar = h.sonar || {} as any;
           this.nexusString = (h.nexus || []).join('\n');
+          (p as any).documentacion = (p as any).documentacion || '';
+          this.docsString = (p as any).documentacion || '';
         }
       }
     } catch (e) { this.proyecto = undefined; }
@@ -98,6 +102,8 @@ export class ProjectDetailComponent {
       // sync nexus textarea -> proyecto.herramientasMind.nexus
       const hm = p.herramientasMind = p.herramientasMind || {} as any;
       hm.nexus = (this.nexusString||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      // sync documentation
+      (p as any).documentacion = this.docsString || '';
     
       // lote y departamento se enlazan por ngModel directamente a `proyecto`,
       // por lo que no hace falta sincronizarlos explícitamente aquí.
