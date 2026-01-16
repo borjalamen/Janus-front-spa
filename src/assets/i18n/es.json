@@ -31,7 +31,8 @@
     "FORMULARIO_HOJA_DESPLIEGUE": "Formulario para Hojas de Despliegues para el equipo de DevOps",
     "FORMULARIO_ACCESO_BD_CPD_V1_2": "Formulario de petición de acceso a base de datos - CPD v1.2",
     "GUIA_PRIMEROSAUXILIOS_SAMUR": "Guía de Primeros Auxilios (SAMUR)",
-    "GUIA_VPAYMENT": "Guía VPayment"
+    "GUIA_VPAYMENT": "Guía VPayment",
+    "PLN_GSEG_EXCEPCIO": "Excel para enviar para gestionar una excepción de seguridad"
   },
   "USER": {
     "PROFILE": "Perfil",

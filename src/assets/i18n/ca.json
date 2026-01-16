@@ -31,7 +31,8 @@
     "FORMULARIO_HOJA_DESPLIEGUE": "Formulari per a fulles de desplegament per a l'equip DevOps"
     ,"FORMULARIO_ACCESO_BD_CPD_V1_2": "Formulari de sol·licitud d'accés a base de dades - CPD v1.2",
     "GUIA_PRIMEROSAUXILIOS_SAMUR": "Guia de Primers Auxilis (SAMUR)",
-    "GUIA_VPAYMENT": "Guia VPayment"
+    "GUIA_VPAYMENT": "Guia VPayment",
+    "PLN_GSEG_EXCEPCIO": "Excel per enviar per gestionar una excepció de seguretat"
   },
   "USER": {
     "PROFILE": "Perfil",

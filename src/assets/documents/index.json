@@ -41,4 +41,12 @@
     "descriptionKey": "DOCS.GUIA_VPAYMENT",
     "modified": "2025-12-19T13:12:09.9198146+01:00"
   }
+  ,
+  {
+    "name": "PLN-GSEG-Excepció estàndard seguretat v3.8_20250401.xlsx",
+    "path": "PLN-GSEG-Excepció estàndard seguretat v3.8_20250401.xlsx",
+    "size": 167179,
+    "descriptionKey": "DOCS.PLN_GSEG_EXCEPCIO",
+    "modified": "2026-01-15T12:57:23.3540000+00:00"
+  }
 ]
