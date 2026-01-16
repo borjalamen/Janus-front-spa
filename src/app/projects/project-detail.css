@@ -222,6 +222,14 @@
 .openshift-section .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap:8px }
 .volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
 .volumes-list .volume input { flex:1; padding:6px; border-radius:8px }
+.db-config .db-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:8px }
+.db-config .field input, .db-config textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
+.other-tool-config .field { margin-bottom:8px }
+.other-tool-config input[type="checkbox"] { transform: scale(1.2); margin-left:8px }
+
+@media (max-width: 720px) {
+	.db-config .db-grid { grid-template-columns: 1fr }
+}
 .volumes-list .volume .field { display:flex; flex-direction:column }
 .volumes-list .volume .field label { margin-bottom:6px }
 
@@ -572,3 +580,34 @@
 @media (max-width: 900px) {
 	.general-grid.three-col > .minsait-left-col { grid-column: 1 / -1 }
 }
+
+/* === Force labels above fields and inputs full width === */
+.project-detail-root .form-row,
+.project-detail-root .field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.project-detail-root .form-row label,
+.project-detail-root .field label {
+	display: block;
+	margin-bottom: 0;
+	font-size: 13px;
+	color: inherit;
+}
+
+.project-detail-root input,
+.project-detail-root textarea,
+.project-detail-root select {
+	width: 100%;
+	box-sizing: border-box;
+	display: block;
+}
+
+/* Keep member inputs proportions but ensure labels above on narrow screens */
+.member-fields .member-input { min-width: 0 }
+@media (max-width: 900px) {
+	.member-fields { flex-direction: column }
+}
+

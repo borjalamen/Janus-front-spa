@@ -8,7 +8,9 @@ import { Proyecto, Task } from './projects';
 
 type Volume = { name?: string; capacity?: string };
 type OpenShift = { user?: string; password?: string; ram?: string; cpu?: string; disk?: string; volumes?: Volume[] };
-type DevMachine = { ip: string; user: string; password: string; openshiftEnabled?: boolean; openshift?: OpenShift; ram?: string; cpu?: string; disk?: string };
+type DBConfig = { engine?: string; instanceName?: string; host?: string; description?: string; properties?: string };
+type OtherTool = { name?: string; path?: string; running?: boolean };
+type DevMachine = { ip: string; user: string; password: string; openshiftEnabled?: boolean; openshift?: OpenShift; ram?: string; cpu?: string; disk?: string; dbEnabled: boolean; dbConfig: DBConfig; otherToolEnabled: boolean; otherTool: OtherTool };
 
 @Component({
   selector: 'app-project-detail',
@@ -61,6 +63,7 @@ export class ProjectDetailComponent {
             openshiftEnabled: !!m.openshiftEnabled,
             openshift: m.openshift || { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] },
             ram: (m as any).ram || '', cpu: (m as any).cpu || '', disk: (m as any).disk || ''
+            , dbEnabled: !!(m as any).dbEnabled, dbConfig: (m as any).dbConfig || { engine: '', instanceName: '', host: '', description: '', properties: '' }, otherToolEnabled: !!(m as any).otherToolEnabled, otherTool: (m as any).otherTool || { name: '', path: '', running: false }
           } as DevMachine));
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
@@ -148,7 +151,12 @@ export class ProjectDetailComponent {
       const code = p.codigoProyecto || '';
       const idx = arr.findIndex(x => x.codigoProyecto === code);
       // persistir máquinas de desarrollo
-      (p as any).devMachines = this.devMachines;
+      // ensure new fields are persisted
+      (p as any).devMachines = this.devMachines.map(m => ({
+        ip: m.ip, user: m.user, password: m.password, openshiftEnabled: !!m.openshiftEnabled, openshift: m.openshift, ram: m.ram, cpu: m.cpu, disk: m.disk,
+        dbEnabled: !!m.dbEnabled, dbConfig: m.dbConfig || { engine:'', instanceName:'', host:'', description:'', properties: '' },
+        otherToolEnabled: !!m.otherToolEnabled, otherTool: m.otherTool || { name:'', path:'', running:false }
+      }));
       // persistir equipo minsait
       (p as any).equipoMinsait = p.equipoMinsait || [];
       if (idx === -1) arr.push(p);
@@ -159,7 +167,7 @@ export class ProjectDetailComponent {
   }
 
   addDevMachine() {
-    this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] } });
+    this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, dbEnabled: false, dbConfig: { engine:'', instanceName:'', host:'', description:'', properties:'' }, otherToolEnabled: false, otherTool: { name:'', path:'', running:false } });
   }
 
   // code repos
