@@ -126,7 +126,12 @@
                   <div class="modal-backdrop" *ngIf="removeCandidateIndex !== null">
                     <div class="modal">
                       <div class="modal-header">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}</div>
-                      <div class="modal-body">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
+                      <div class="modal-body">
+                        <div>{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
+                        <div *ngIf="proyecto?.equipoMinsait?.length">
+                          <strong>{{ proyecto?.equipoMinsait?.[removeCandidateIndex]?.nombre || ( 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate ) }}</strong>
+                        </div>
+                      </div>
                       <div class="modal-actions">
                         <button class="btn small" (click)="confirmRemoveMember()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
                         <button class="btn small" (click)="cancelRemoveMember()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
