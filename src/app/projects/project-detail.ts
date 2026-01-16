@@ -7,10 +7,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Proyecto, Task } from './projects';
 
 type Volume = { name?: string; capacity?: string };
-type OpenShift = { user?: string; password?: string; ram?: string; cpu?: string; disk?: string; volumes?: Volume[] };
-type DBConfig = { engine?: string; instanceName?: string; host?: string; description?: string; properties?: string };
-type OtherTool = { name?: string; path?: string; running?: boolean };
-type DevMachine = { ip: string; user: string; password: string; openshiftEnabled?: boolean; openshift?: OpenShift; ram?: string; cpu?: string; disk?: string; dbEnabled: boolean; dbConfig: DBConfig; otherToolEnabled: boolean; otherTool: OtherTool };
+type OpenShift = { identifier?: string; user?: string; password?: string; ram?: string; cpu?: string; disk?: string; volumes?: Volume[] };
+type DBConfig = { identifier?: string; engine?: string; instanceName?: string; host?: string; port?: string; sid?: string; user?: string; password?: string; description?: string; properties?: string; contactPerson?: string; contactMail?: string };
+type OtherTool = { identifier?: string; name?: string; path?: string; running?: boolean; contactPerson?: string; contactMail?: string };
+type DevMachine = { ip: string; user: string; password: string; identifier?: string; openshiftEnabled?: boolean; openshifts?: OpenShift[]; ram?: string; cpu?: string; disk?: string; dbEnabled: boolean; dbs?: DBConfig[]; otherToolEnabled: boolean; otherTools?: OtherTool[] };
 
 @Component({
   selector: 'app-project-detail',
@@ -35,7 +35,7 @@ export class ProjectDetailComponent {
   crontabList: Array<{expr?:string; desc?:string}> = [];
   sonarList: Array<{prefix?:string; url?:string; tokenUser?:string; tokenValue?:string}> = [];
   // removal workflow
-  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar' , index: number } | null = null;
+  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine' , index: number } | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
@@ -57,13 +57,16 @@ export class ProjectDetailComponent {
           this.ipString = (p.ip||[]).join(', ');
           // cargar máquinas de desarrollo si existen
           this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines as DevMachine[] : [];
-          // garantizar estructura openshift para cada máquina
+          // garantizar estructura de arrays (openshifts, dbs, otherTools) para cada máquina
           this.devMachines = this.devMachines.map(m => ({
-            ip: m.ip || '', user: m.user || '', password: m.password || '',
+            ip: m.ip || '', user: m.user || '', password: m.password || '', identifier: (m as any).identifier || '',
             openshiftEnabled: !!m.openshiftEnabled,
-            openshift: m.openshift || { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] },
-            ram: (m as any).ram || '', cpu: (m as any).cpu || '', disk: (m as any).disk || ''
-            , dbEnabled: !!(m as any).dbEnabled, dbConfig: (m as any).dbConfig || { engine: '', instanceName: '', host: '', description: '', properties: '' }, otherToolEnabled: !!(m as any).otherToolEnabled, otherTool: (m as any).otherTool || { name: '', path: '', running: false }
+            openshifts: (m as any).openshifts && Array.isArray((m as any).openshifts) ? (m as any).openshifts.map((o: any) => Object.assign({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, o || {})) : ((m as any).openshift ? [ Object.assign({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, (m as any).openshift || {}) ] : []),
+            ram: (m as any).ram || '', cpu: (m as any).cpu || '', disk: (m as any).disk || '',
+            dbEnabled: !!(m as any).dbEnabled,
+            dbs: (m as any).dbs && Array.isArray((m as any).dbs) ? (m as any).dbs.map((d: any) => Object.assign({ identifier: '', engine: '', instanceName: '', host: '', port: '', sid: '', user: '', password: '', description: '', properties: '', contactPerson: '', contactMail: '' }, d || {})) : ((m as any).dbConfig ? [ Object.assign({ identifier: '', engine: '', instanceName: '', host: '', port: '', sid: '', user: '', password: '', description: '', properties: '', contactPerson: '', contactMail: '' }, (m as any).dbConfig || {}) ] : []),
+            otherToolEnabled: !!(m as any).otherToolEnabled,
+            otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools) ? (m as any).otherTools.map((t: any) => Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, t || {})) : ((m as any).otherTool ? [ Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, (m as any).otherTool || {}) ] : [])
           } as DevMachine));
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
@@ -153,9 +156,9 @@ export class ProjectDetailComponent {
       // persistir máquinas de desarrollo
       // ensure new fields are persisted
       (p as any).devMachines = this.devMachines.map(m => ({
-        ip: m.ip, user: m.user, password: m.password, openshiftEnabled: !!m.openshiftEnabled, openshift: m.openshift, ram: m.ram, cpu: m.cpu, disk: m.disk,
-        dbEnabled: !!m.dbEnabled, dbConfig: m.dbConfig || { engine:'', instanceName:'', host:'', description:'', properties: '' },
-        otherToolEnabled: !!m.otherToolEnabled, otherTool: m.otherTool || { name:'', path:'', running:false }
+        ip: m.ip, user: m.user, password: m.password, openshiftEnabled: !!m.openshiftEnabled, openshifts: (m.openshifts||[]).map(o => Object.assign({}, o || { identifier:'', user:'', password:'', ram:'', cpu:'', disk:'', volumes: [] })), ram: m.ram, cpu: m.cpu, disk: m.disk,
+        dbEnabled: !!m.dbEnabled, dbs: (m.dbs||[]).map(d => Object.assign({}, d || { identifier:'', engine:'', instanceName:'', host:'', port:'', sid:'', user:'', password:'', description:'', properties:'', contactPerson:'', contactMail:'' })),
+        otherToolEnabled: !!m.otherToolEnabled, otherTools: (m.otherTools||[]).map(t => Object.assign({}, t || { identifier:'', name:'', path:'', running:false, contactPerson:'', contactMail:'' }))
       }));
       // persistir equipo minsait
       (p as any).equipoMinsait = p.equipoMinsait || [];
@@ -167,7 +170,7 @@ export class ProjectDetailComponent {
   }
 
   addDevMachine() {
-    this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, dbEnabled: false, dbConfig: { engine:'', instanceName:'', host:'', description:'', properties:'' }, otherToolEnabled: false, otherTool: { name:'', path:'', running:false } });
+    this.devMachines.push({ ip: '', user: '', password: '', identifier: '', openshiftEnabled: false, openshifts: [], ram: '', dbEnabled: false, dbs: [], otherToolEnabled: false, otherTools: [] });
   }
 
   // code repos
@@ -191,7 +194,7 @@ export class ProjectDetailComponent {
   removeSonar(i:number) { if (i>=0 && i < this.sonarList.length) this.sonarList.splice(i,1); }
 
   // confirm remove generic
-  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar', index:number) {
+  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine', index:number) {
     this.removeCandidate = { type, index };
   }
   confirmRemove() {
@@ -203,6 +206,10 @@ export class ProjectDetailComponent {
     else if (type === 'crontab') this.removeCrontab(index);
     else if (type === 'sonar') this.removeSonar(index);
     else if (type === 'member') this.removeMember(index);
+    else if (type === 'openshift') this.removeOpenshift(index);
+    else if (type === 'db') this.removeDb(index);
+    else if (type === 'othertool') this.removeOtherTool(index);
+    else if (type === 'machine') this.removeDevMachine(index);
     this.removeCandidate = null;
   }
   cancelRemove() { this.removeCandidate = null; }
@@ -241,14 +248,75 @@ export class ProjectDetailComponent {
   addVolume(machineIndex: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
-    m.openshift = m.openshift || { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] };
-    m.openshift.volumes = m.openshift.volumes || [];
-    m.openshift.volumes.push({ name: '', capacity: '' });
+    m.openshifts = m.openshifts || [];
+    if (m.openshifts.length === 0) {
+      m.openshifts.push({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
+    }
+    const last = m.openshifts[m.openshifts.length - 1];
+    last.volumes = last.volumes || [];
+    last.volumes.push({ name: '', capacity: '' });
   }
 
   removeVolume(machineIndex: number, volumeIndex: number) {
     const m = this.devMachines[machineIndex];
-    if (!m || !m.openshift || !Array.isArray(m.openshift.volumes)) return;
-    if (volumeIndex >= 0 && volumeIndex < (m.openshift.volumes || []).length) m.openshift!.volumes!.splice(volumeIndex, 1);
+    if (!m || !Array.isArray(m.openshifts) || m.openshifts.length === 0) return;
+    const last = m.openshifts[m.openshifts.length - 1];
+    if (!last || !Array.isArray(last.volumes)) return;
+    if (volumeIndex >= 0 && volumeIndex < last.volumes.length) last.volumes.splice(volumeIndex, 1);
+  }
+
+  // Clearers used by the small remove buttons in dev-duo blocks
+  removeOpenshift(machineIndex: number, openshiftIndex?: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    if (typeof openshiftIndex === 'number' && Array.isArray(m.openshifts)) {
+      if (openshiftIndex >=0 && openshiftIndex < m.openshifts.length) m.openshifts.splice(openshiftIndex, 1);
+    } else {
+      m.openshiftEnabled = false;
+      m.openshifts = [];
+    }
+  }
+
+  removeDb(machineIndex: number, dbIndex?: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    if (typeof dbIndex === 'number' && Array.isArray(m.dbs)) {
+      if (dbIndex >=0 && dbIndex < m.dbs.length) m.dbs.splice(dbIndex, 1);
+    } else {
+      m.dbEnabled = false;
+      m.dbs = [];
+    }
+  }
+
+  removeOtherTool(machineIndex: number, otherIndex?: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    if (typeof otherIndex === 'number' && Array.isArray(m.otherTools)) {
+      if (otherIndex >=0 && otherIndex < m.otherTools.length) m.otherTools.splice(otherIndex, 1);
+    } else {
+      m.otherToolEnabled = false;
+      m.otherTools = [];
+    }
+  }
+
+  addOpenshift(machineIndex: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    m.openshifts = m.openshifts || [];
+    m.openshifts.push({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
+  }
+
+  addDb(machineIndex: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    m.dbs = m.dbs || [];
+    m.dbs.push({ identifier: '', engine:'', instanceName:'', host:'', port:'', sid:'', user:'', password:'', description:'', properties:'', contactPerson:'', contactMail:'' });
+  }
+
+  addOtherTool(machineIndex: number) {
+    const m = this.devMachines[machineIndex];
+    if (!m) return;
+    m.otherTools = m.otherTools || [];
+    m.otherTools.push({ identifier: '', name:'', path:'', running:false, contactPerson:'', contactMail:'' });
   }
 }

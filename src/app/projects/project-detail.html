@@ -140,12 +140,15 @@
                 <div class="dev-machines-list">
                 <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
                   <div class="dev-card-top">
-                    <div class="dev-fields grid-3">
+                      <div class="dev-fields grid-3">
+                      <div class="field"><label>ID</label><input [(ngModel)]="m.identifier" placeholder="e.g. dev-01" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_USER' | translate }}</label><input [(ngModel)]="m.user" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label><input [(ngModel)]="m.password" type="password" /></div>
                     </div>
-                    <div class="dev-actions"><button class="btn small danger" (click)="removeDevMachine(i)">-</button></div>
+                    <div class="dev-fields grid-3" style="margin-top:6px">
+                      <div class="field"><label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label><input [(ngModel)]="m.password" type="text" /></div>
+                    </div>
+                    <div class="dev-actions"><button class="btn small danger" (click)="promptRemove('machine', i)">-</button></div>
                   </div>
 
                   <div class="dev-resources grid-3 compact">
@@ -154,81 +157,137 @@
                     <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                   </div>
 
-                  <div class="openshift-row">
-                    <div class="openshift-toggle">
-                      <label class="switch">
-                        <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="switch-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
+                  <div class="toggle-row">
+                    <div class="toggle-label"> <label class="inline-label" [attr.title]="'PROJECTS.OPENSHIFT' | translate">{{ 'PROJECTS.OPENSHIFT' | translate }}</label> </div>
+                    <div class="toggle-controls">
+                      <div class="toggle-switch">
+                        <label class="switch">
+                          <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.openshiftEnabled" (click)="promptRemove('openshift', i)">-</button> </div>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.openshiftEnabled" (click)="addOpenshift(i)">+</button> </div>
                     </div>
                   </div>
 
-                  <div class="openshift-section" *ngIf="m.openshiftEnabled && m.openshift">
-                    <div class="openshift-grid">
-                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="m.openshift.user" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="m.openshift.password" type="password" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.openshift.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.openshift.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.openshift.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
-                    </div>
-                    <div class="form-row volumes-row">
-                      <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
-                      <div class="volumes-list">
-                        <div class="volume" *ngFor="let v of (m.openshift?.volumes || []); let vi = index">
-                          <div class="field">
-                            <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
-                            <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                  <div *ngIf="m.openshiftEnabled">
+                    <div *ngFor="let o of (m.openshifts || []); let oi = index" class="repo-duo dev-duo">
+                      <div class="repo-fields">
+                        <div class="openshift-section">
+                          <div class="openshift-grid">
+                            <div class="field"><label>ID</label><input [(ngModel)]="o.identifier" placeholder="e.g. ocp-01" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="o.user" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="o.password" type="text" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="o.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="o.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="o.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                           </div>
-                          <div class="field">
-                            <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
-                            <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                          <div class="form-row volumes-row">
+                            <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
+                            <div class="volumes-list">
+                              <div class="volume" *ngFor="let v of (o.volumes || []); let vi = index">
+                                <div class="field">
+                                  <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
+                                  <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                                </div>
+                                <div class="field">
+                                  <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
+                                  <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                                </div>
+                                <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
+                              </div>
+                              <div>
+                                <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
+                              </div>
+                            </div>
                           </div>
-                          <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
-                        </div>
-                        <div>
-                          <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
                         </div>
                       </div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('openshift', i)">-</button></div>
                     </div>
-                    
                   </div>
 
                   <!-- Database toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="form-row">
-                    <label>Base de datos</label>
-                    <label class="switch">
-                      <input type="checkbox" [(ngModel)]="m.dbEnabled" />
-                      <span class="slider"></span>
-                    </label>
-                  </div>
-                  <div *ngIf="m.dbEnabled" class="form-row db-config">
-                    <div class="db-grid">
-                      <div class="field"><label>Motor Base de dades</label><input [(ngModel)]="m.dbConfig.engine" placeholder="Oracle 19c" /></div>
-                      <div class="field"><label>Instancia (user/pssw/nombre)</label><input [(ngModel)]="m.dbConfig.instanceName" placeholder="IPSOPG" /></div>
-                      <div class="field"><label>Host:Port/SID</label><input [(ngModel)]="m.dbConfig.host" placeholder="172.19.208.49:1521/IPSOPG19" /></div>
-                      <div class="field"><label>Usuario y contraseña</label><input [(ngModel)]="m.dbConfig.description" placeholder="IPSOPG" /></div>
+                  <div class="toggle-row">
+                    <div class="toggle-label"> <label class="inline-label" title="Base de datos">Base de datos</label> </div>
+                    <div class="toggle-controls">
+                      <div class="toggle-switch">
+                        <label class="switch">
+                          <input type="checkbox" [(ngModel)]="m.dbEnabled" />
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.dbEnabled" (click)="promptRemove('db', i)">-</button> </div>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.dbEnabled" (click)="addDb(i)">+</button> </div>
                     </div>
-                    <div class="form-row">
-                      <label>OracleDB connection settings</label>
-                      <textarea [(ngModel)]="m.dbConfig.properties" rows="5" placeholder="spring.datasource.url=...\nspring.datasource.username=...\nspring.datasource.password=..."></textarea>
+                  </div>
+
+                  <div *ngIf="m.dbEnabled">
+                    <div *ngFor="let d of (m.dbs || []); let di = index" class="repo-duo dev-duo">
+                      <div class="repo-fields">
+                        <div class="form-row db-config">
+                          <div class="db-grid">
+                            <div class="field"><label>ID</label><input [(ngModel)]="d.identifier" placeholder="e.g. db-01" /></div>
+                            <div class="field"><label>Motor Base de dades</label><input [(ngModel)]="d.engine" placeholder="Oracle 19c" /></div>
+                            <div class="field"><label>Instancia</label><input [(ngModel)]="d.instanceName" placeholder="IPSOPG" /></div>
+                            <div class="field"><label>Host</label><input [(ngModel)]="d.host" placeholder="172.19.208.49" /></div>
+                            <div class="field"><label>Port</label><input [(ngModel)]="d.port" placeholder="1521" /></div>
+                            <div class="field"><label>SID</label><input [(ngModel)]="d.sid" placeholder="IPSOPG19" /></div>
+                            <div class="field"><label>Usuario</label><input [(ngModel)]="d.user" placeholder="dbuser" /></div>
+                            <div class="field"><label>Contraseña</label><input [(ngModel)]="d.password" type="text" placeholder="dbpass" /></div>
+                            <div class="field"><label>Persona contacto</label><input [(ngModel)]="d.contactPerson" placeholder="Nombre contacto" /></div>
+                            <div class="field"><label>Mail contacto</label><input [(ngModel)]="d.contactMail" placeholder="contacto@empresa.com" /></div>
+                          </div>
+                          <div class="form-row">
+                            <label>Connection settings</label>
+                            <textarea [(ngModel)]="d.properties" rows="5" placeholder="spring.datasource.url=...\nspring.datasource.username=...\nspring.datasource.password=..."></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('db', i)">-</button></div>
                     </div>
                   </div>
 
                   <!-- Other tool toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="form-row">
-                    <label>Otra Herramienta</label>
-                    <label class="switch">
-                      <input type="checkbox" [(ngModel)]="m.otherToolEnabled" />
-                      <span class="slider"></span>
-                    </label>
+                  <div class="toggle-row">
+                    <div class="toggle-label"> <label class="inline-label" title="Otra Herramienta">Otra Herramienta</label> </div>
+                    <div class="toggle-controls">
+                      <div class="toggle-switch">
+                        <label class="switch">
+                          <input type="checkbox" [(ngModel)]="m.otherToolEnabled" />
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.otherToolEnabled" (click)="promptRemove('othertool', i)">-</button> </div>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.otherToolEnabled" (click)="addOtherTool(i)">+</button> </div>
+                    </div>
                   </div>
-                  <div *ngIf="m.otherToolEnabled" class="form-row other-tool-config">
-                    <div class="field"><label>Nombre</label><input [(ngModel)]="m.otherTool.name" /></div>
-                    <div class="field"><label>Ruta en la máquina</label><input [(ngModel)]="m.otherTool.path" /></div>
-                    <div class="field"><label>¿En servicio?</label><input type="checkbox" [(ngModel)]="m.otherTool.running" /></div>
+
+                  <div *ngIf="m.otherToolEnabled">
+                    <div *ngFor="let t of (m.otherTools || []); let ti = index" class="repo-duo dev-duo">
+                      <div class="repo-fields">
+                        <div class="form-row other-tool-config">
+                          <div class="other-tool-grid">
+                            <div class="field"><label>ID</label><input [(ngModel)]="t.identifier" placeholder="e.g. tool-01" /></div>
+                            <div class="field"><label>Nombre</label><input [(ngModel)]="t.name" /></div>
+                            <div class="field"><label>Ruta en la máquina</label><input [(ngModel)]="t.path" /></div>
+                            <div class="field"><label>Persona contacto</label><input [(ngModel)]="t.contactPerson" placeholder="Nombre contacto" /></div>
+                            <div class="field"><label>Mail contacto</label><input [(ngModel)]="t.contactMail" placeholder="contacto@empresa.com" /></div>
+                            <div class="field checkbox-field">
+                              <label class="switch">
+                                <input type="checkbox" [(ngModel)]="t.running" />
+                                <span class="slider"></span>
+                              </label>
+                              <label class="inline-label">¿En servicio?</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('othertool', i)">-</button></div>
+                    </div>
                   </div>
 
                 </div>
@@ -442,6 +501,18 @@
         </div>
         <div *ngIf="removeCandidate.type==='member'">
           <strong>{{ proyecto?.equipoMinsait?.[removeCandidate.index]?.nombre }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='openshift'">
+          <strong>Openshift for: {{ devMachines[removeCandidate.index]?.openshifts?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='machine'">
+          <strong>Machine: {{ devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='db'">
+          <strong>Database config for: {{ devMachines[removeCandidate.index]?.dbs?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='othertool'">
+          <strong>Other tool for: {{ devMachines[removeCandidate.index]?.otherTools?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
         </div>
       </div>
     </div>

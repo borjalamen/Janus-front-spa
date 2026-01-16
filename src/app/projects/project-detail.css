@@ -182,6 +182,47 @@
 	.repo-duo .repo-action { justify-content:flex-end }
 }
 
+/* dev-duo: similar to repo-duo but used in Dev section for Openshift/DB/OtherTool */
+.dev-duo { display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.10); padding:10px; border-radius:8px; background: rgba(0,0,0,0.02); margin-bottom:8px }
+.dev-duo .repo-fields { flex:1; display:flex; flex-direction:column; gap:8px }
+.dev-duo .repo-action { flex:0 0 auto; display:flex; align-items:center }
+.dev-duo .repo-action .remove-large { width:38px; height:38px; border-radius:8px; font-size:16px; padding:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none; box-shadow:0 8px 20px rgba(0,0,0,0.3) }
+.dev-duo .repo-action .remove-large:hover { transform:translateY(-2px) }
+
+/* keep space when repo-action is conditionally removed to avoid layout jump on small screens */
+.dev-duo .repo-action[ng-reflect-ng-if="false"], .dev-duo .repo-action.hidden { visibility:hidden; pointer-events:none }
+
+/* Make sure DB and OtherTool switches use the same sizing and appearance as Openshift */
+.repo-duo .checkbox-row .switch, .repo-duo .checkbox-field .switch, .openshift-row .switch, .openshift-toggle .switch {
+	width:46px; height:24px; flex:0 0 auto;
+}
+.repo-duo .checkbox-row .slider, .repo-duo .checkbox-field .slider, .openshift-row .slider, .openshift-toggle .slider {
+	border-radius:24px;
+}
+.repo-duo .checkbox-row .slider:before, .repo-duo .checkbox-field .slider:before, .openshift-row .slider:before, .openshift-toggle .slider:before {
+	height:20px; width:20px;
+}
+
+@media (max-width: 720px) {
+  .dev-duo { flex-direction:column; align-items:stretch }
+  .dev-duo .repo-action { justify-content:flex-end }
+}
+
+/* Force full width for dev machine card and duo blocks */
+.dev-machine-card, .dev-machine-card .dev-duo, .dev-machine-card .repo-duo, .dev-duo, .repo-duo {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.dev-machine-card .dev-duo .repo-fields, .dev-machine-card .repo-duo .repo-fields, .dev-duo .repo-fields {
+	width: 100%;
+}
+
+/* Ensure the delete button stays visually right-aligned while fields use full width */
+.dev-duo { justify-content: space-between }
+.dev-duo .repo-action { margin-left: 12px }
+
+
 /* Colored separators (dotted lines) */
 .mind-separator { height:1px; border-top: 1px dotted rgba(255,255,255,0.06); margin:12px 0 }
 .mind-sep-code { border-color: rgba(95,198,255,0.25) }
@@ -225,7 +266,19 @@
 .db-config .db-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:8px }
 .db-config .field input, .db-config textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
 .other-tool-config .field { margin-bottom:8px }
-.other-tool-config input[type="checkbox"] { transform: scale(1.2); margin-left:8px }
+.other-tool-config input[type="checkbox"] { transform: none !important; margin-left:8px }
+
+/* Layout for OtherTool: 3-column grid on wide screens, stacked on small screens */
+.other-tool-config .other-tool-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; align-items:start }
+.other-tool-config .other-tool-grid .field { display:flex; flex-direction:column }
+.other-tool-config .other-tool-grid .field input[type="checkbox"] { width:auto; margin-left:0 }
+
+@media (max-width: 900px) {
+	.other-tool-config .other-tool-grid { grid-template-columns: 1fr }
+}
+
+/* Ensure default checkboxes in project detail keep native size */
+.project-detail-root input[type="checkbox"] { transform: none !important; width: auto !important; height: auto !important; }
 
 @media (max-width: 720px) {
 	.db-config .db-grid { grid-template-columns: 1fr }
@@ -280,6 +333,39 @@
 .switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) }
 .switch input:checked + .slider:before { transform: translateX(18px) }
 .switch-label { color: #cfcfcf; margin-left:6px; font-size:13px }
+
+/* Inline checkbox rows: label + switch on one line, fixed switch size */
+.checkbox-row { display:flex; align-items:flex-start; gap:12px }
+.checkbox-row .inline-label { margin:0; font-size:13px; color: rgba(255,255,255,0.95); margin-left:8px; flex:1; white-space:normal; overflow:visible; text-overflow:unset }
+.checkbox-field { display:flex; align-items:flex-start; gap:12px }
+.checkbox-field .inline-label { margin:0; margin-left:8px; flex:1; white-space:normal; overflow:visible; text-overflow:unset }
+/* smaller unified switch */
+.switch { width:36px; height:18px; flex:0 0 auto }
+.switch input { width:0; height:0; opacity:0 }
+.switch .slider { border-radius:18px }
+.switch .slider:before { height:14px; width:14px; left:2px; bottom:2px }
+.switch input:checked + .slider:before { transform: translateX(18px) }
+
+/* allow labels to wrap and occupy remaining space so full text is visible */
+.checkbox-row .inline-label, .checkbox-field .inline-label, .openshift-toggle .inline-label {
+	white-space: normal; overflow: visible; text-overflow: unset; max-width: none; display:block;
+}
+
+/* on very small screens allow a little more space by shrinking the max-width calculation */
+@media (max-width: 480px) {
+	.checkbox-row .inline-label, .checkbox-field .inline-label, .openshift-toggle .inline-label {
+		max-width: calc(100% - 46px);
+	}
+	.switch { width:32px; height:16px }
+	.switch .slider:before { height:12px; width:12px; transform: none }
+	.switch input:checked + .slider:before { transform: translateX(16px) }
+}
+
+/* Prevent the switch and label from wrapping or resizing on small screens */
+@media (max-width: 900px) {
+	.checkbox-row { flex-wrap:wrap }
+	.checkbox-row .inline-label { white-space:normal }
+}
 
 /* Inputs styled to match the section (subtle tints + accent borders) */
 .section-general input, .section-general textarea, .section-general .dev-fields input {
@@ -343,6 +429,176 @@
 	border-radius:12px;
 }
 .section-mind textarea { min-height: 60px }
+
+/* Final override: enforce uniform small switches and non-wrapping labels inside project-detail-root */
+.project-detail-root .switch {
+	width:34px !important;
+	height:18px !important;
+	flex:0 0 auto !important;
+}
+.project-detail-root .switch .slider { border-radius:18px !important }
+.project-detail-root .switch .slider:before { height:14px !important; width:14px !important; left:2px !important; bottom:2px !important; border-radius:50% !important }
+.project-detail-root .switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) !important }
+.project-detail-root .switch input:checked + .slider:before { transform: translateX(16px) !important }
+
+.project-detail-root .checkbox-row .inline-label,
+.project-detail-root .checkbox-field .inline-label,
+.project-detail-root .openshift-toggle .inline-label {
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	max-width: calc(100% - 56px) !important;
+}
+
+@media (max-width: 480px) {
+	.project-detail-root .switch { width:32px !important; height:16px !important }
+	.project-detail-root .switch .slider:before { height:12px !important; width:12px !important }
+	.project-detail-root .switch input:checked + .slider:before { transform: translateX(16px) !important }
+	.project-detail-root .checkbox-row .inline-label,
+	.project-detail-root .checkbox-field .inline-label,
+	.project-detail-root .openshift-toggle .inline-label { max-width: calc(100% - 50px) !important }
+}
+
+/* Ensure switches do not expand to full width and labels are visible above backgrounds */
+.project-detail-root .checkbox-row .switch,
+.project-detail-root .checkbox-field .switch,
+.project-detail-root .openshift-toggle .switch {
+	display: inline-block !important;
+	width: 36px !important;
+	height: 18px !important;
+	flex: 0 0 auto !important;
+}
+.project-detail-root .inline-label {
+	color: #e8eef0 !important;
+	margin-left: 8px !important;
+	z-index: 3 !important;
+	position: relative !important;
+}
+.project-detail-root .switch .slider {
+	z-index: 1 !important;
+}
+
+/* New toggle-row layout: switch | label | action */
+.toggle-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; margin: 8px 0 }
+.toggle-switch { display:flex; align-items:center; justify-self: end }
+.toggle-label { display:flex; align-items:center; justify-self: start }
+.toggle-label .inline-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; color: #e8eef0 }
+.toggle-action { display:flex; align-items:center; justify-self: end }
+
+/* New layout: label on top, controls (switch + action) below aligned right */
+.toggle-row { grid-template-columns: 1fr }
+.toggle-label { margin-bottom:6px }
+.toggle-controls { display:flex; gap:8px; justify-content:flex-start; align-items:center; width:100% }
+.toggle-controls .toggle-switch { order:1; justify-self:start }
+.toggle-controls .toggle-action { order:2; margin-left:auto }
+
+/* Compact modern switches specifically for the Dev section */
+.section-dev .toggle-row { display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center; margin:6px 0 }
+.section-dev .toggle-label { margin:0; font-size:13px; font-weight:600; color: #e8eef0; align-items:center }
+.section-dev .toggle-controls { display:flex; gap:8px; align-items:center }
+.section-dev .toggle-controls .toggle-switch { margin-right:6px }
+.section-dev .toggle-controls .toggle-action { margin-left:8px }
+
+/* Modern compact chip-style switch */
+.section-dev label.switch {
+	width:46px !important;
+	height:22px !important;
+	display:inline-block !important;
+	background: transparent !important;
+}
+.section-dev label.switch .slider {
+	position: relative !important;
+	display:block !important;
+	width:100% !important;
+	height:100% !important;
+	border-radius: 999px !important;
+	background: rgba(255,255,255,0.04) !important;
+	border: 1px solid rgba(255,255,255,0.03) !important;
+	transition: background .18s ease, box-shadow .18s ease;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+.section-dev label.switch .slider:before {
+	content: '' !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: 4px !important;
+	transform: translateY(-50%) !important;
+	width: 14px !important;
+	height: 14px !important;
+	background:#fff !important;
+	border-radius: 50% !important;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.35) !important;
+	transition: transform .18s ease, box-shadow .18s ease, left .18s ease !important;
+}
+.section-dev label.switch input:checked + .slider {
+	background: linear-gradient(90deg,#20d0c8,#0f8fa8) !important;
+	box-shadow: 0 6px 18px rgba(15,143,168,0.12) !important;
+}
+.section-dev label.switch input:checked + .slider:before {
+	left: calc(100% - 18px) !important;
+}
+
+/* small, subtle action button */
+.section-dev .toggle-action .remove-large {
+	width:30px; height:30px; padding:0; font-size:14px; border-radius:8px; box-shadow:none;
+	background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%);
+}
+
+/* compact repo-duo */
+.section-dev .repo-duo { padding:8px 10px; margin-bottom:8px }
+
+/* Reduce vertical space consumed by repo-duo blocks when toggle row is compact */
+.section-dev .repo-duo { padding:8px; margin-bottom:8px }
+.section-dev .repo-duo .repo-action .remove-large { width:34px; height:34px }
+
+/* Make labels slightly smaller to save vertical space */
+.section-dev .inline-label { font-size:13px }
+
+/* If label is too long, reduce font-size slightly to try keep one-line */
+@media (max-width: 1100px) {
+	.toggle-label .inline-label { font-size: 13px }
+}
+@media (max-width: 720px) {
+	.toggle-label .inline-label { font-size: 12px }
+}
+
+/* Strong override: make every label.switch render like the small in-grid switch */
+.project-detail-root label.switch {
+	display: inline-block !important;
+	position: relative !important;
+	width: 34px !important;
+	height: 18px !important;
+	vertical-align: middle !important;
+}
+.project-detail-root label.switch .slider {
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: #4b4b4b !important;
+	border-radius: 18px !important;
+	transition: .18s !important;
+}
+.project-detail-root label.switch .slider:before {
+	position: absolute !important;
+	content: "" !important;
+	height: 14px !important;
+	width: 14px !important;
+	left: 2px !important;
+	bottom: 2px !important;
+	background: white !important;
+	border-radius: 50% !important;
+	transition: .18s !important;
+}
+.project-detail-root label.switch input { opacity: 0 !important; width: 0 !important; height: 0 !important }
+.project-detail-root label.switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) !important }
+.project-detail-root label.switch input:checked + .slider:before { transform: translateX(16px) !important }
+
+/* ensure switches inside other-tool-grid align properly */
+.other-tool-config .checkbox-field label.switch, .repo-duo .checkbox-row label.switch {
+	margin: 0 !important;
+}
 .section-mind .mind-card .mind-readonly-textarea {
 	background: rgba(15,143,168,0.08) !important;
 	border: 1px solid rgba(15,143,168,0.14) !important;
@@ -609,5 +865,74 @@
 .member-fields .member-input { min-width: 0 }
 @media (max-width: 900px) {
 	.member-fields { flex-direction: column }
+}
+
+
+/* === High-specificity overrides to beat global/important rules === */
+/* Some other global files use !important; these selectors use higher specificity and !important to ensure correct layout */
+.project-section .project-form-grid .project-form-grid, .project-detail-root .section-dev, .project-detail-root .section-minsait, .project-detail-root .section-mind {
+	box-sizing: border-box !important;
+}
+
+/* Force form row and field to be stacked and inputs full width inside project-detail scope */
+.project-detail-root .section-dev .form-row,
+.project-detail-root .section-minsait .form-row,
+.project-detail-root .section-mind .form-row,
+.project-detail-root .dev-machine-card .form-row,
+.project-detail-root .dev-machine-card .field {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: stretch !important;
+}
+
+.project-detail-root .form-row label,
+.project-detail-root .field label {
+	display: block !important;
+	width: 100% !important;
+	margin-bottom: 6px !important;
+}
+
+.project-detail-root .form-row input,
+.project-detail-root .form-row textarea,
+.project-detail-root .field input,
+.project-detail-root .field textarea,
+.project-detail-root .repo-duo .repo-fields input,
+.project-detail-root .dev-duo .repo-fields input {
+	width: 100% !important;
+	min-width: 0 !important;
+	box-sizing: border-box !important;
+}
+
+/* Force duo blocks full width */
+.project-detail-root .dev-machine-card,
+.project-detail-root .dev-duo,
+.project-detail-root .repo-duo,
+.project-detail-root .repo-duo .repo-fields {
+	width: 100% !important;
+}
+
+/* Keep remove button aligned right but not overlapping fields */
+.project-detail-root .dev-duo { justify-content: space-between !important }
+.project-detail-root .dev-duo .repo-action { margin-left: 12px !important }
+
+/* Members: ensure inputs stack on narrow screens and labels above on wide too */
+.project-detail-root .members-grid .member-row,
+.project-detail-root .members-grid .member-fields { align-items: stretch !important }
+
+/* Force sections to use full available width: single-column layout for section form grids */
+.project-section .project-form-grid {
+	grid-template-columns: 1fr !important;
+	width: 100% !important;
+}
+.project-detail-root .sections-container,
+.project-detail-root .section {
+	width: 100% !important;
+	box-sizing: border-box !important;
+}
+
+/* Ensure form columns inside sections expand to full width */
+.project-section .project-form-grid .form-col {
+	width: 100% !important;
+	grid-column: 1 / -1 !important;
 }
 
