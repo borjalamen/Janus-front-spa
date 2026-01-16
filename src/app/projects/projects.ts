@@ -44,7 +44,6 @@ export interface Proyecto {
   urlEntornoPreproduccion?: string | null;
   urlEntornoProduccion?: string | null;
   horaDaily?: string | null;
-  dailyAccessPerson?: string | null;
   ip?: string[];
   lote?: string | null;
   departamento?: string | null;

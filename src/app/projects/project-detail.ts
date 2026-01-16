@@ -26,6 +26,14 @@ export class ProjectDetailComponent {
   activeTab: 'info' | 'minsait' | 'dev' | 'mind' | 'docs' = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
+  // dynamic lists for MIND tools
+  codeRepos: Array<{name?:string; url?:string}> = [];
+  artifactRepos: Array<{name?:string; url?:string}> = [];
+  jenkinsList: Array<{name?:string; url?:string}> = [];
+  crontabList: Array<{expr?:string; desc?:string}> = [];
+  sonarList: Array<{prefix?:string; url?:string; tokenUser?:string; tokenValue?:string}> = [];
+  // removal workflow
+  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar' , index: number } | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
@@ -57,7 +65,23 @@ export class ProjectDetailComponent {
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
           h.nexus = h.nexus || [];
+          h.codeRepos = h.codeRepos || [];
+          h.artifactRepos = h.artifactRepos || [];
+          h.jenkins = h.jenkins || [];
+          h.crontabs = h.crontabs || [];
+          this.codeRepos = (h.codeRepos||[]).slice();
+          this.artifactRepos = (h.artifactRepos||[]).slice();
+          this.jenkinsList = (h.jenkins||[]).slice();
+          this.crontabList = (h.crontabs||[]).slice();
           h.sonar = h.sonar || {} as any;
+          // sonar may be stored as object (legacy) or as a list
+          if (Array.isArray(h.sonarList) && h.sonarList.length) {
+            this.sonarList = (h.sonarList||[]).slice();
+          } else if (h.sonar && (h.sonar.prefix || h.sonar.url || h.sonar.tokenUser || h.sonar.tokenValue)) {
+            this.sonarList = [{ prefix: h.sonar.prefix||'', url: h.sonar.url||'', tokenUser: h.sonar.tokenUser||'', tokenValue: h.sonar.tokenValue||'' }];
+          } else {
+            this.sonarList = [];
+          }
           this.nexusString = (h.nexus || []).join('\n');
           (p as any).documentacion = (p as any).documentacion || '';
           this.docsString = (p as any).documentacion || '';
@@ -104,13 +128,19 @@ export class ProjectDetailComponent {
       // sync nexus textarea -> proyecto.herramientasMind.nexus
       const hm = p.herramientasMind = p.herramientasMind || {} as any;
       hm.nexus = (this.nexusString||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      // persist dynamic lists
+      hm.codeRepos = (this.codeRepos||[]).map(c => ({ name: c.name||'', url: c.url||'' }));
+      hm.artifactRepos = (this.artifactRepos||[]).map(a => ({ name: a.name||'', url: a.url||'' }));
+      hm.jenkins = (this.jenkinsList||[]).map(j => ({ name: j.name||'', url: j.url||'' }));
+      hm.crontabs = (this.crontabList||[]).map(c => ({ expr: c.expr||'', desc: c.desc||'' }));
+      // persist sonar list
+      hm.sonarList = (this.sonarList||[]).map(s => ({ prefix: s.prefix||'', url: s.url||'', tokenUser: s.tokenUser||'', tokenValue: s.tokenValue||'' }));
       // sync documentation
       (p as any).documentacion = this.docsString || '';
     
       // Asegurar que los campos de equipo Minsait estén definidos y persistir la lista
       p.equipoMinsait = p.equipoMinsait || [];
       p.horaDaily = p.horaDaily || null;
-      p.dailyAccessPerson = p.dailyAccessPerson || null;
     } catch(e) { /* ignore */ }
     try {
       const raw = localStorage.getItem('projects_v1');
@@ -131,6 +161,43 @@ export class ProjectDetailComponent {
   addDevMachine() {
     this.devMachines.push({ ip: '', user: '', password: '', openshiftEnabled: false, openshift: { user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] } });
   }
+
+  // code repos
+  addCodeRepo() { this.codeRepos.push({ name: '', url: '' }); }
+  removeCodeRepo(i:number) { if (i>=0 && i < this.codeRepos.length) this.codeRepos.splice(i,1); }
+
+  // artifact repos
+  addArtifactRepo() { this.artifactRepos.push({ name: '', url: '' }); }
+  removeArtifactRepo(i:number) { if (i>=0 && i < this.artifactRepos.length) this.artifactRepos.splice(i,1); }
+
+  // jenkins
+  addJenkins() { this.jenkinsList.push({ name: '', url: '' }); }
+  removeJenkins(i:number) { if (i>=0 && i < this.jenkinsList.length) this.jenkinsList.splice(i,1); }
+
+  // crontab
+  addCrontab() { this.crontabList.push({ expr: '', desc: '' }); }
+  removeCrontab(i:number) { if (i>=0 && i < this.crontabList.length) this.crontabList.splice(i,1); }
+
+  // sonar dynamic entries
+  addSonar() { this.sonarList.push({ prefix:'', url:'', tokenUser:'', tokenValue:'' }); }
+  removeSonar(i:number) { if (i>=0 && i < this.sonarList.length) this.sonarList.splice(i,1); }
+
+  // confirm remove generic
+  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar', index:number) {
+    this.removeCandidate = { type, index };
+  }
+  confirmRemove() {
+    if (!this.removeCandidate) return;
+    const { type, index } = this.removeCandidate;
+    if (type === 'code') this.removeCodeRepo(index);
+    else if (type === 'artifact') this.removeArtifactRepo(index);
+    else if (type === 'jenkins') this.removeJenkins(index);
+    else if (type === 'crontab') this.removeCrontab(index);
+    else if (type === 'sonar') this.removeSonar(index);
+    else if (type === 'member') this.removeMember(index);
+    this.removeCandidate = null;
+  }
+  cancelRemove() { this.removeCandidate = null; }
 
   addMember() {
     if (!this.proyecto) return;

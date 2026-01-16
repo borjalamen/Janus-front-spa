@@ -138,6 +138,10 @@
     "PLACEHOLDER_SONAR_URL": "Sonar URL",
     "PLACEHOLDER_SONAR_USER": "Sonar user",
     "PLACEHOLDER_SONAR_TOKEN": "Sonar token"
+    ,"PLACEHOLDER_NAME": "Name"
+    ,"PLACEHOLDER_URL_SIMPLE": "URL"
+    ,"PLACEHOLDER_CRONTAB_EXPR": "* * * * *"
+    ,"PLACEHOLDER_DESCRIPTION": "Description"
     ,
     "TAB_INFO": "General information",
     "TAB_DOCS": "Documentation",
@@ -164,6 +168,7 @@
     ,
     "NOTES": "Notes",
     "NOTES_PLACEHOLDER": "Optional notes about the development environment",
+    "PLACEHOLDER_OTHER_NOTES": "Notes or observations about other tools",
     "DEV_IP": "IP",
     "DEV_USER": "User",
     "DEV_PASSWORD": "Password",
@@ -204,10 +209,23 @@
   "PROJECTS_MIND": {
     "TITLE": "MIND tools",
     "BITBUCKET": "Bitbucket",
+    "CODE_REPOS": "Code repositories",
     "NEXUS": "Nexus (Release / Snapshot / Npm / Group)",
     "SONAR": "Sonar (prefix / url / token user / token)",
     "JENKINS": "Jenkins",
-    "CRONTAB": "Crontab"
+    "CRONTAB": "Crontab",
+    "PIPELINES": "IC pipelines",
+    "QUALITY": "Quality tools",
+    "OTHERS": "Others"
+  },
+  "PROJECTS_MIND_EXTRA": {
+    "ARTIFACT_REPOS": "Artifact repositories"
+  },
+  "PROJECTS_ACTIONS": {
+    "ADD_REPO": "Add repository",
+    "ADD_ARTIFACT": "Add artifact repository",
+    "ADD_JENKINS": "Add Jenkins",
+    "ADD_CRONTAB": "Add Crontab"
   },
   "PROCEDURES_SECTION": {
     "TITLE": "Procedures",

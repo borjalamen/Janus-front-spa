@@ -83,14 +83,26 @@
 /* Ensure the persona responsable input fills the available space and matches other inputs */
 .section-minsait .daily-access-row .form-row input {
 	display: block;
-	width: 100%;
+	width: 100% !important;
 	box-sizing: border-box;
 	padding: 10px;
 	border-radius: 8px;
 	background: rgba(255,255,255,0.03);
 	color: #fff;
 	border: 1px solid rgba(0,0,0,0.06);
+	min-width: 0 !important;
+	max-width: 100% !important;
 }
+
+/* More specific: target the second column form-row (persona responsable) to ensure full width */
+.section-minsait .daily-access-row > .form-row:nth-child(2) input {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* persona responsable removed: layout preserved */
 
 @media (max-width: 900px) {
 	.daily-access-row { grid-template-columns: 1fr; }
@@ -129,11 +141,64 @@
 .modal-actions { display:flex; gap:8px; justify-content:flex-end }
 .modal-actions .btn.small { padding:6px 10px }
 
+/* Ensure jh-btn inside modal matches global primary button styling */
+.jh-modal .jh-btn {
+	background: linear-gradient(180deg, #0fb1c0 0%, #0f8fa8 100%) !important;
+	color: #fff !important;
+	border: none !important;
+	padding: 8px 12px !important;
+	border-radius: 6px !important;
+	box-shadow: 0 8px 20px rgba(15,143,168,0.12) !important;
+	cursor: pointer !important;
+}
+.jh-modal .jh-btn:hover { transform: translateY(-2px) !important; filter:brightness(1.04) !important }
+.jh-modal .jh-btn + .jh-btn { margin-left: 8px !important }
+.jh-modal .jh-btn[disabled] { opacity: 0.6 !important; cursor: not-allowed !important }
+
 /* Herramientas MIND - suave turquesa (mantener tarjeta) */
 .section-mind { background: transparent; padding:0 }
 .section-mind .mind-card { background: rgba(15,143,168,0.07); border:1px solid rgba(15,143,168,0.12); color:#06282b; margin-top:8px }
 .section-mind .mind-card-header h3 { color: #ffd166 }
 .section-mind .mind-card-body { padding:10px }
+
+/* MIND blocks layout */
+.mind-block { padding:12px; border-radius:8px; margin-bottom:8px }
+.mind-block-title { font-weight:700; color:#cfe8ff; margin-bottom:8px }
+.mind-block-body input, .mind-block-body textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
+.mind-block-body.two-cols { display:flex; gap:12px }
+.mind-block-body.two-cols .col { flex:1 }
+
+/* Repo duo: white-ish border around name+url and remove button aligned right */
+.repo-item { margin-bottom: 8px }
+.repo-duo { display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.14); padding:10px; border-radius:8px; background: rgba(0,0,0,0.02) }
+.repo-duo .repo-fields { flex:1; display:flex; flex-direction:column; gap:8px }
+.repo-duo .repo-fields input { background: rgba(15,143,168,0.03); border:1px solid rgba(255,255,255,0.06); color: #e8eef0; padding:8px; border-radius:6px }
+.repo-duo .repo-action { flex:0 0 auto; display:flex; align-items:center }
+.repo-duo .repo-action .remove-large { width:40px; height:40px; border-radius:8px; font-size:18px; padding:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none; box-shadow:0 8px 20px rgba(0,0,0,0.3) }
+.repo-duo .repo-action .remove-large:hover { transform:translateY(-2px) }
+
+@media (max-width: 720px) {
+	.repo-duo { flex-direction:column; align-items:stretch }
+	.repo-duo .repo-action { justify-content:flex-end }
+}
+
+/* Colored separators (dotted lines) */
+.mind-separator { height:1px; border-top: 1px dotted rgba(255,255,255,0.06); margin:12px 0 }
+.mind-sep-code { border-color: rgba(95,198,255,0.25) }
+.mind-sep-artifacts { border-color: rgba(72,206,160,0.25) }
+.mind-sep-pipelines { border-color: rgba(255,175,78,0.25) }
+.mind-sep-quality { border-color: rgba(255,110,110,0.25) }
+
+/* Block background variants: subtle color tints for readability */
+.mind-block-code { background: rgba(95,198,255,0.03); border:1px solid rgba(95,198,255,0.06) }
+.mind-block-artifacts { background: rgba(72,206,160,0.03); border:1px solid rgba(72,206,160,0.06) }
+.mind-block-pipelines { background: rgba(255,175,78,0.03); border:1px solid rgba(255,175,78,0.06) }
+.mind-block-quality { background: rgba(255,110,110,0.03); border:1px solid rgba(255,110,110,0.06) }
+.mind-block-others { background: rgba(200,200,200,0.01); border:1px solid rgba(255,255,255,0.03) }
+
+@media (max-width: 720px) {
+	.mind-block-body.two-cols { flex-direction:column }
+}
 
 /* Section title */
 .section-title { font-family: 'Roboto', Arial, sans-serif; font-weight:700; color:#ffd166 !important; margin-bottom:6px; font-size:16px; line-height:1.2 }

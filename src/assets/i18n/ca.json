@@ -137,6 +137,10 @@
     "PLACEHOLDER_SONAR_URL": "URL Sonar",
     "PLACEHOLDER_SONAR_USER": "Usuari Sonar",
     "PLACEHOLDER_SONAR_TOKEN": "Token Sonar",
+      "PLACEHOLDER_NAME": "Nom",
+      "PLACEHOLDER_URL_SIMPLE": "URL",
+      "PLACEHOLDER_CRONTAB_EXPR": "* * * * *",
+      "PLACEHOLDER_DESCRIPTION": "Descripció"
     "TAB_INFO": "Informació general",
     "TAB_DOCS": "Documentació",
     "TAB_MINSAIT": "Equip Minsait",
@@ -185,7 +189,8 @@
     "VOLUMES": "Volums",
     "ADD_VOLUME": "+ Afegir volum",
     "NOTES": "Notes",
-    "NOTES_PLACEHOLDER": "Notes opcionals sobre l'entorn de desenvolupament"
+    "NOTES_PLACEHOLDER": "Notes opcionals sobre l'entorn de desenvolupament",
+    "PLACEHOLDER_OTHER_NOTES": "Notes o observacions sobre altres eines"
   },
   "PLACEHOLDERS": {
     "DEV_RAM": "e.g. 4GB",
@@ -196,10 +201,23 @@
   "PROJECTS_MIND": {
     "TITLE": "Eines MIND",
     "BITBUCKET": "Bitbucket",
+    "CODE_REPOS": "Repositoris de codi",
     "NEXUS": "Nexus (Release / Snapshot / Npm / Group)",
     "SONAR": "Sonar (prefix / url / token user / token)",
     "JENKINS": "Jenkins",
-    "CRONTAB": "Crontab"
+    "CRONTAB": "Crontab",
+    "PIPELINES": "Pipelines de IC",
+    "QUALITY": "Eines de qualitat",
+    "OTHERS": "Altres"
+  },
+  "PROJECTS_MIND_EXTRA": {
+    "ARTIFACT_REPOS": "Repositoris d'artefactes"
+  },
+  "PROJECTS_ACTIONS": {
+    "ADD_REPO": "Afegir repositori",
+    "ADD_ARTIFACT": "Afegir repositori d'artefactes",
+    "ADD_JENKINS": "Afegir Jenkins",
+    "ADD_CRONTAB": "Afegir Crontab"
   },
 "PROCEDURES_SECTION": {
   "TITLE": "Procediments",

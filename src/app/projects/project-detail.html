@@ -93,9 +93,6 @@
                   <div class="form-row"><label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
                     <input type="time" [(ngModel)]="proyecto.horaDaily" [disabled]="!editing" />
                   </div>
-                  <div class="form-row"><label>{{ 'PROJECTS.DAILY_ACCESS_PERSON' | translate }}</label>
-                    <input [(ngModel)]="proyecto.dailyAccessPerson" placeholder="{{ 'PROJECTS.DAILY_ACCESS_PERSON_PLACEHOLDER' | translate }}" [disabled]="!editing" />
-                  </div>
                 </div>
 
                 <div class="divider-dots" aria-hidden="true"></div>
@@ -117,24 +114,8 @@
                           <input class="member-input email" [(ngModel)]="m.email" placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}" [disabled]="!editing" />
                         </div>
                         <div class="member-actions">
-                          <button class="btn small" (click)="promptRemoveMember(mi)">-</button>
+                          <button type="button" class="btn small" (click)="promptRemove('member', mi)">-</button>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="modal-backdrop" *ngIf="removeCandidateIndex !== null">
-                    <div class="modal">
-                      <div class="modal-header">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}</div>
-                      <div class="modal-body">
-                        <div>{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
-                        <div *ngIf="proyecto?.equipoMinsait?.length">
-                          <strong>{{ proyecto?.equipoMinsait?.[removeCandidateIndex]?.nombre || ( 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate ) }}</strong>
-                        </div>
-                      </div>
-                      <div class="modal-actions">
-                        <button class="btn small" (click)="confirmRemoveMember()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
-                        <button class="btn small" (click)="cancelRemoveMember()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
                       </div>
                     </div>
                   </div>
@@ -235,43 +216,143 @@
               <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
             </div>
             <div class="mind-card-body">
-              <div class="mind-grid">
-                <div class="mind-col">
-                  <label>{{ 'PROJECTS_MIND.BITBUCKET' | translate }}</label>
-                  <ng-container *ngIf="editing">
-                    <input [(ngModel)]="hm.bitbucket" />
-                  </ng-container>
-                  <ng-container *ngIf="!editing">
-                    <a *ngIf="isValidUrl(hm.bitbucket)" (click)="openUrl(hm.bitbucket)" class="mind-link">{{ hm.bitbucket }}</a>
-                    <span *ngIf="!isValidUrl(hm.bitbucket)">{{ hm.bitbucket }}</span>
-                  </ng-container>
-                </div>
-
-                <div class="mind-col">
-                  <label>{{ 'PROJECTS_MIND.NEXUS' | translate }}</label>
-                  <ng-container *ngIf="editing">
-                    <textarea class="nexus-edit-textarea" [(ngModel)]="nexusString" rows="3" placeholder="{{ 'PROJECTS.PLACEHOLDER_NEXUS' | translate }}"></textarea>
-                  </ng-container>
-                  <ng-container *ngIf="!editing">
-                    <textarea readonly rows="3" [value]="(hm.nexus || []).join('\n')" class="mind-readonly-textarea"></textarea>
-                  </ng-container>
-                </div>
-
-                <div class="mind-col">
-                  <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
-                  <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="hm.sonar.prefix" [readonly]="!editing" />
-                  <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="hm.sonar.url" [readonly]="!editing" />
-                  <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="hm.sonar.tokenUser" [readonly]="!editing" />
-                  <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="hm.sonar.tokenValue" [readonly]="!editing" />
-                </div>
-
-                <div class="mind-col">
-                  <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
-                  <input [(ngModel)]="hm.jenkins" [readonly]="!editing" />
-                  <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
-                  <input [(ngModel)]="hm.crontab" [readonly]="!editing" />
+              <!-- Repositorios de código -->
+              <div class="mind-block mind-block-code">
+                <div class="mind-block-title">{{ 'PROJECTS_MIND.CODE_REPOS' | translate }}</div>
+                <div class="mind-block-body">
+                    <div *ngIf="editing">
+                      <div class="list-controls"><button class="btn small" (click)="addCodeRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}</button></div>
+                      <div class="repo-list">
+                          <div class="repo-item" *ngFor="let r of codeRepos; let i = index">
+                            <div class="repo-duo">
+                              <div class="repo-fields">
+                                <input [(ngModel)]="r.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                                <input [(ngModel)]="r.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
+                              </div>
+                              <div class="repo-action">
+                                <button type="button" class="btn remove-large" (click)="promptRemove('code', i)">-</button>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    <div *ngIf="!editing">
+                      <div *ngFor="let r of codeRepos"> 
+                        <a *ngIf="isValidUrl(r.url)" (click)="openUrl(r.url)" class="mind-link">{{ r.name || r.url }}</a>
+                        <span *ngIf="!isValidUrl(r.url)">{{ r.name || r.url }}</span>
+                      </div>
+                    </div>
                 </div>
               </div>
+
+              <div class="mind-separator mind-sep-code"></div>
+
+              <!-- Repositorios de artefactos -->
+              <div class="mind-block mind-block-artifacts">
+                <div class="mind-block-title">{{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}</div>
+                <div class="mind-block-body">
+                    <div *ngIf="editing">
+                      <div class="list-controls"><button class="btn small" (click)="addArtifactRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}</button></div>
+                      <div *ngFor="let a of artifactRepos; let ai = index" class="repo-item">
+                        <div class="repo-duo">
+                          <div class="repo-fields">
+                            <input [(ngModel)]="a.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                            <input [(ngModel)]="a.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
+                          </div>
+                          <div class="repo-action">
+                            <button type="button" class="btn remove-large" (click)="promptRemove('artifact', ai)">-</button>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div *ngIf="!editing">
+                    <div *ngFor="let a of artifactRepos"> <a *ngIf="isValidUrl(a.url)" (click)="openUrl(a.url)">{{ a.name||a.url }}</a><span *ngIf="!isValidUrl(a.url)">{{ a.name||a.url }}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mind-separator mind-sep-artifacts"></div>
+
+              <!-- Pipelines de IC -->
+              <div class="mind-block mind-block-pipelines">
+                <div class="mind-block-title">{{ 'PROJECTS_MIND.PIPELINES' | translate }}</div>
+                <div class="mind-block-body two-cols">
+                  <div class="col">
+                    <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
+                    <div *ngIf="editing">
+                      <div class="list-controls"><button class="btn small" (click)="addJenkins()">+ {{ 'PROJECTS_MIND.JENKINS' | translate }}</button></div>
+                      <div *ngFor="let j of jenkinsList; let ji = index" class="repo-item">
+                        <div class="repo-duo">
+                          <div class="repo-fields">
+                            <input [(ngModel)]="j.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                            <input [(ngModel)]="j.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
+                          </div>
+                          <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('jenkins', ji)">-</button></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="!editing">
+                      <div *ngFor="let j of jenkinsList"> <a *ngIf="isValidUrl(j.url)" (click)="openUrl(j.url)">{{ j.name||j.url }}</a><span *ngIf="!isValidUrl(j.url)">{{ j.name||j.url }}</span> </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
+                    <div *ngIf="editing">
+                      <div class="list-controls"><button class="btn small" (click)="addCrontab()">+ Crontab</button></div>
+                      <div *ngFor="let c of crontabList; let ci = index" class="repo-item">
+                        <div class="repo-duo">
+                          <div class="repo-fields">
+                            <input [(ngModel)]="c.expr" placeholder="{{ 'PROJECTS.PLACEHOLDER_CRONTAB_EXPR' | translate }}" />
+                            <input [(ngModel)]="c.desc" placeholder="{{ 'PROJECTS.PLACEHOLDER_DESCRIPTION' | translate }}" />
+                          </div>
+                          <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('crontab', ci)">-</button></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="!editing">
+                      <div *ngFor="let c of crontabList"> <span>{{ c.expr }} - {{ c.desc }}</span> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mind-separator mind-sep-pipelines"></div>
+
+              <!-- Herramientas de calidad -->
+              <div class="mind-block mind-block-quality">
+                <div class="mind-block-title">{{ 'PROJECTS_MIND.QUALITY' | translate }}</div>
+                <div class="mind-block-body">
+                  <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
+                  <div *ngIf="editing">
+                    <div class="list-controls"><button class="btn small" (click)="addSonar()">+ Sonar</button></div>
+                    <div *ngFor="let s of sonarList; let si = index" class="repo-item">
+                      <div class="repo-duo">
+                        <div class="repo-fields">
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="s.prefix" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="s.url" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="s.tokenUser" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="s.tokenValue" />
+                        </div>
+                        <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('sonar', si)">-</button></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="!editing">
+                    <div *ngFor="let s of sonarList"> <span>{{ s.prefix }} - {{ s.url }}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mind-separator mind-sep-quality"></div>
+
+              <!-- Otros -->
+              <div class="mind-block mind-block-others">
+                <div class="mind-block-title">{{ 'PROJECTS_MIND.OTHERS' | translate }}</div>
+                <div class="mind-block-body">
+                  <textarea [(ngModel)]="hm.otherNotes" rows="6" placeholder="{{ 'PROJECTS.PLACEHOLDER_OTHER_NOTES' | translate }}" [readonly]="!editing"></textarea>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -296,6 +377,37 @@
     <div class="actions">
       <button class="jh-btn" *ngIf="!editing && routeMode==='edit'" (click)="editing=true">{{ 'PROJECTS.EDIT' | translate }}</button>
       <button class="jh-btn jh-btn-full" *ngIf="editing" (click)="save()">{{ 'PROJECTS.SAVE' | translate }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Global confirm modal -->
+<div class="modal-backdrop jh-modal-backdrop" *ngIf="removeCandidate !== null">
+  <div class="modal jh-modal">
+    <div class="modal-header">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}</div>
+    <div class="modal-body">
+      <div>{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
+      <div *ngIf="removeCandidate">
+        <div *ngIf="removeCandidate.type==='code'">
+          <strong>{{ codeRepos[removeCandidate.index]?.name || codeRepos[removeCandidate.index]?.url }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='artifact'">
+          <strong>{{ artifactRepos[removeCandidate.index]?.name || artifactRepos[removeCandidate.index]?.url }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='jenkins'">
+          <strong>{{ jenkinsList[removeCandidate.index]?.name || jenkinsList[removeCandidate.index]?.url }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='crontab'">
+          <strong>{{ crontabList[removeCandidate.index]?.expr }} - {{ crontabList[removeCandidate.index]?.desc }}</strong>
+        </div>
+        <div *ngIf="removeCandidate.type==='member'">
+          <strong>{{ proyecto?.equipoMinsait?.[removeCandidate.index]?.nombre }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="jh-btn" (click)="confirmRemove()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
+      <button type="button" class="jh-btn" (click)="cancelRemove()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
     </div>
   </div>
 </div>
