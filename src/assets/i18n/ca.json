@@ -140,7 +140,7 @@
       "PLACEHOLDER_NAME": "Nom",
       "PLACEHOLDER_URL_SIMPLE": "URL",
       "PLACEHOLDER_CRONTAB_EXPR": "* * * * *",
-      "PLACEHOLDER_DESCRIPTION": "Descripció"
+      "PLACEHOLDER_DESCRIPTION": "Descripció",
     "TAB_INFO": "Informació general",
     "TAB_DOCS": "Documentació",
     "TAB_MINSAIT": "Equip Minsait",

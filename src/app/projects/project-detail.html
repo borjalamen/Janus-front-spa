@@ -133,13 +133,20 @@
     <div *ngIf="activeTab==='dev'">
       <div class="sections-container">
         <section class="section section-dev">
-          <div class="section-title">{{ 'PROJECTS.SECTION_DEV' | translate }}</div>
+          <div class="section-title">
+            {{ 'PROJECTS.SECTION_DEV' | translate }}
+            <button class="btn small add-dev-title" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+          </div>
           <div class="project-form-grid full-width">
-            <div class="form-row">
+              <div class="form-row">
               <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
                 <div class="dev-machines-list">
-                <div class="dev-machine-card" *ngFor="let m of devMachines; let i = index">
-                  <div class="dev-card-top">
+                  <div class="dev-machine-tabs">
+                    <button *ngFor="let m of devMachines; let i = index" class="tab small" [class.active]="i===selectedDevMachineIndex" (click)="selectedDevMachineIndex = i">{{ m.identifier || ('#'+(i+1)) }}</button>
+                  </div>
+                  <div class="dev-machine-card" *ngIf="devMachines && devMachines.length && selectedDevMachineIndex >= 0" >
+                    <ng-container *ngIf="devMachines[selectedDevMachineIndex] as m">
+                      <div class="dev-card-top">
                       <div class="dev-fields grid-3">
                       <div class="field"><label>ID</label><input [(ngModel)]="m.identifier" placeholder="e.g. dev-01" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
@@ -148,7 +155,7 @@
                     <div class="dev-fields grid-3" style="margin-top:6px">
                       <div class="field"><label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label><input [(ngModel)]="m.password" type="text" /></div>
                     </div>
-                    <div class="dev-actions"><button class="btn small danger" (click)="promptRemove('machine', i)">-</button></div>
+                    <div class="dev-actions"><button class="btn small danger" (click)="promptRemove('machine', selectedDevMachineIndex)">-</button></div>
                   </div>
 
                   <div class="dev-resources grid-3 compact">
@@ -157,17 +164,13 @@
                     <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                   </div>
 
-                  <div class="toggle-row">
-                    <div class="toggle-label"> <label class="inline-label" [attr.title]="'PROJECTS.OPENSHIFT' | translate">{{ 'PROJECTS.OPENSHIFT' | translate }}</label> </div>
+                  <div class="toggle-row toggle-inline">
                     <div class="toggle-controls">
-                      <div class="toggle-switch">
-                        <label class="switch">
-                          <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
-                          <span class="slider"></span>
-                        </label>
-                      </div>
-                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.openshiftEnabled" (click)="promptRemove('openshift', i)">-</button> </div>
-                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.openshiftEnabled" (click)="addOpenshift(i)">+</button> </div>
+                      <label class="toggle-inline-control">
+                        <input type="checkbox" [(ngModel)]="m.openshiftEnabled" />
+                        <span class="toggle-label-text">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
+                      </label>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.openshiftEnabled" (click)="addOpenshift(selectedDevMachineIndex)">+</button> </div>
                     </div>
                   </div>
 
@@ -195,32 +198,25 @@
                                   <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
                                   <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
                                 </div>
-                                <button class="btn small danger" (click)="removeVolume(i, vi)">-</button>
-                              </div>
-                              <div>
-                                <button class="btn small" (click)="addVolume(i)">+ {{ 'PROJECTS.ADD_VOLUME' | translate }}</button>
+                                <button class="btn small danger" (click)="removeVolume(selectedDevMachineIndex, vi)">-</button>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('openshift', i)">-</button></div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('openshift', selectedDevMachineIndex)">-</button></div>
                     </div>
                   </div>
 
                   <!-- Database toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="toggle-row">
-                    <div class="toggle-label"> <label class="inline-label" title="Base de datos">Base de datos</label> </div>
+                  <div class="toggle-row toggle-inline">
                     <div class="toggle-controls">
-                      <div class="toggle-switch">
-                        <label class="switch">
-                          <input type="checkbox" [(ngModel)]="m.dbEnabled" />
-                          <span class="slider"></span>
-                        </label>
-                      </div>
-                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.dbEnabled" (click)="promptRemove('db', i)">-</button> </div>
-                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.dbEnabled" (click)="addDb(i)">+</button> </div>
+                      <label class="toggle-inline-control">
+                        <input type="checkbox" [(ngModel)]="m.dbEnabled" />
+                        <span class="toggle-label-text">Base de datos</span>
+                      </label>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.dbEnabled" (click)="addDb(selectedDevMachineIndex)">+</button> </div>
                     </div>
                   </div>
 
@@ -246,23 +242,19 @@
                           </div>
                         </div>
                       </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('db', i)">-</button></div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('db', selectedDevMachineIndex)">-</button></div>
                     </div>
                   </div>
 
                   <!-- Other tool toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="toggle-row">
-                    <div class="toggle-label"> <label class="inline-label" title="Otra Herramienta">Otra Herramienta</label> </div>
+                  <div class="toggle-row toggle-inline">
                     <div class="toggle-controls">
-                      <div class="toggle-switch">
-                        <label class="switch">
-                          <input type="checkbox" [(ngModel)]="m.otherToolEnabled" />
-                          <span class="slider"></span>
-                        </label>
-                      </div>
-                      <div class="toggle-action"> <button type="button" class="btn remove-large" *ngIf="m.otherToolEnabled" (click)="promptRemove('othertool', i)">-</button> </div>
-                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.otherToolEnabled" (click)="addOtherTool(i)">+</button> </div>
+                      <label class="toggle-inline-control">
+                        <input type="checkbox" [(ngModel)]="m.otherToolEnabled" />
+                        <span class="toggle-label-text">Otra Herramienta</span>
+                      </label>
+                      <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.otherToolEnabled" (click)="addOtherTool(selectedDevMachineIndex)">+</button> </div>
                     </div>
                   </div>
 
@@ -277,19 +269,21 @@
                             <div class="field"><label>Persona contacto</label><input [(ngModel)]="t.contactPerson" placeholder="Nombre contacto" /></div>
                             <div class="field"><label>Mail contacto</label><input [(ngModel)]="t.contactMail" placeholder="contacto@empresa.com" /></div>
                             <div class="field checkbox-field">
-                              <label class="switch">
-                                <input type="checkbox" [(ngModel)]="t.running" />
-                                <span class="slider"></span>
-                              </label>
-                              <label class="inline-label">¿En servicio?</label>
+                              <label class="inline-label service-label">¿En servicio?</label>
+                              <div class="service-control">
+                                <label class="checkbox-container">
+                                  <input type="checkbox" [(ngModel)]="t.running" aria-label="En servicio" />
+                                  <span class="checkmark"></span>
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('othertool', i)">-</button></div>
+                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('othertool', selectedDevMachineIndex)">-</button></div>
                     </div>
                   </div>
-
+                    </ng-container>
                 </div>
               </div>
               <!-- The DB and Other Tool blocks were moved inside each dev-machine-card to keep 'm' in scope. -->

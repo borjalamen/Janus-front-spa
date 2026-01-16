@@ -28,6 +28,7 @@ export class ProjectDetailComponent {
   activeTab: 'info' | 'minsait' | 'dev' | 'mind' | 'docs' = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
+  selectedDevMachineIndex: number = -1;
   // dynamic lists for MIND tools
   codeRepos: Array<{name?:string; url?:string}> = [];
   artifactRepos: Array<{name?:string; url?:string}> = [];
@@ -68,6 +69,8 @@ export class ProjectDetailComponent {
             otherToolEnabled: !!(m as any).otherToolEnabled,
             otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools) ? (m as any).otherTools.map((t: any) => Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, t || {})) : ((m as any).otherTool ? [ Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, (m as any).otherTool || {}) ] : [])
           } as DevMachine));
+          // initialize selected index to first machine if any
+          this.selectedDevMachineIndex = this.devMachines.length ? 0 : -1;
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
           h.nexus = h.nexus || [];
@@ -170,7 +173,9 @@ export class ProjectDetailComponent {
   }
 
   addDevMachine() {
+    const newIndex = this.devMachines.length;
     this.devMachines.push({ ip: '', user: '', password: '', identifier: '', openshiftEnabled: false, openshifts: [], ram: '', dbEnabled: false, dbs: [], otherToolEnabled: false, otherTools: [] });
+    this.selectedDevMachineIndex = newIndex;
   }
 
   // code repos
@@ -242,7 +247,12 @@ export class ProjectDetailComponent {
   }
 
   removeDevMachine(index: number) {
-    if (index >= 0 && index < this.devMachines.length) this.devMachines.splice(index, 1);
+    if (index >= 0 && index < this.devMachines.length) {
+      this.devMachines.splice(index, 1);
+      // adjust selection
+      if (this.devMachines.length === 0) this.selectedDevMachineIndex = -1;
+      else if (this.selectedDevMachineIndex >= this.devMachines.length) this.selectedDevMachineIndex = this.devMachines.length - 1;
+    }
   }
 
   addVolume(machineIndex: number) {
