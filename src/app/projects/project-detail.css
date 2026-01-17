@@ -11,6 +11,10 @@
 .form-row input { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:8px }
 .form-row textarea { background:#141516; color:#eee; border:1px solid #2e3236; padding:8px; border-radius:8px }
 .actions { display:flex; gap:8px }
+/* Icon buttons: ensure svg aligns and has proper color/size */
+.btn.small svg, .jh-btn svg { vertical-align:middle; display:inline-block; color:inherit }
+.btn.small svg { margin:0; }
+.jh-btn svg { margin-right:6px }
 
 /* Responsive grid for project detail form */
 .project-form-grid { display:grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 12px; align-items:start; width:100% }
@@ -381,6 +385,22 @@
 	padding:10px;
 	border-radius:14px;
 }
+
+/* Document list (descargables-style) */
+.descargables-root { padding: 8px 0 }
+.desc-search { margin: 8px 0 }
+.desc-search input[type=search]{ width:100%; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff }
+.doc-row{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04) }
+.doc-info{ flex:1 }
+.doc-desc{ color: #bdbdbd; font-size:0.9em }
+.doc-actions{ margin-left:12px; display:flex; gap:8px }
+.doc-title-row{ display:flex; gap:12px; align-items:center }
+.doc-size{ background:#0a7f7f; color:#fff; padding:2px 8px; border-radius:12px; font-size:0.8em }
+.doc-name{ font-weight:600 }
+.doc-modified{ color:#999; font-size:0.85em; margin-top:6px }
+
+/* Buttons hover style similar to descargables */
+.doc-actions .btn.small:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(10,127,127,0.08) }
 .section-general input::placeholder, .section-general textarea::placeholder { color: rgba(255,255,255,0.6) }
 .section-general input:focus, .section-general textarea:focus { outline: none; box-shadow: 0 6px 18px rgba(255,159,67,0.09); border-color: rgba(255,159,67,0.28) }
 
@@ -551,7 +571,7 @@
 }
 
 /* Inline checkbox to the left of label for toggle-inline rows */
-.toggle-inline .toggle-controls { display:flex; align-items:center; gap:10px }
+.toggle-inline .toggle-controls { display:flex; align-items:center; gap:6px; justify-content:flex-start }
 .toggle-inline-control { display:inline-flex; align-items:center; gap:8px; cursor:pointer }
 .toggle-inline-control input[type="checkbox"] { width:18px; height:18px; margin:0; accent-color: #0f8fa8 }
 .toggle-inline-control .toggle-label-text { color: #e8eef0; font-weight:600 }
@@ -559,6 +579,48 @@
 
 /* Ensure previous switch styles don't override inline checkbox appearance */
 .toggle-inline label.switch, .toggle-inline .switch { display:none !important }
+
+/* Strong overrides to ensure checkbox is flush left next to label text */
+.project-detail-root .toggle-inline .toggle-controls { justify-content: flex-start !important; width: 100% !important }
+.project-detail-root .toggle-inline-control { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:12px !important; width:auto !important }
+.project-detail-root .toggle-inline-control input[type="checkbox"] { margin:0 8px 0 0 !important; transform: none !important }
+.project-detail-root .toggle-inline-control .toggle-label-text { display:inline-block !important; color:#e8eef0 !important; font-weight:600 !important }
+.project-detail-root .toggle-inline .toggle-action { margin-left:auto !important }
+
+/* Fallback: if parent centers children, ensure this control still aligns left */
+.project-detail-root .toggle-inline { text-align: left !important }
+
+/* Absolute-position override: ensure checkbox+label sit at the extreme left of the toggle row
+	 and the action (+) sits at the extreme right. This avoids inherited centering. */
+.project-detail-root .toggle-inline { position: relative !important; padding-left: 0 !important; }
+.project-detail-root .toggle-inline .toggle-controls {
+	position: absolute !important;
+	left: 12px !important;
+	top: 8px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	gap: 8px !important;
+}
+.project-detail-root .toggle-inline .toggle-action {
+	position: absolute !important;
+	right: 12px !important;
+	top: 6px !important;
+}
+
+/* Ensure the row has enough height for absolute items */
+.project-detail-root .toggle-inline { min-height: 36px !important; padding-right: 56px !important }
+
+/* Robust 3-column grid for toggles: checkbox | label | action */
+.toggle-row.toggle-inline { display: grid !important; grid-template-columns: 36px 1fr auto !important; align-items: center !important; gap: 8px !important; }
+.toggle-row.toggle-inline .toggle-checkbox { display:flex; align-items:center; justify-content:flex-start }
+.toggle-row.toggle-inline .toggle-checkbox input[type="checkbox"] { margin:0; width:18px; height:18px }
+.toggle-row.toggle-inline .toggle-text { display:flex; align-items:center }
+.toggle-row.toggle-inline .toggle-action { display:flex; align-items:center; justify-content:flex-end }
+
+/* Remove previous absolute overrides that can interfere */
+.project-detail-root .toggle-inline .toggle-controls { position: static !important; left: auto !important; top: auto !important; }
+.project-detail-root .toggle-inline .toggle-action { position: static !important; right: auto !important; top: auto !important }
 
 /* Modern compact chip-style switch */
 .section-dev label.switch {

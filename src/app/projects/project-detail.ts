@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { DocumentService, BackendDocument } from '../document.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Proyecto, Task } from './projects';
 
@@ -21,7 +23,24 @@ type DevMachine = { ip: string; user: string; password: string; identifier?: str
 })
 export class ProjectDetailComponent {
   proyecto?: Proyecto;
-  editing = false;
+  private _editing = false;
+  get editing() { return this._editing; }
+  set editing(v: boolean) {
+    const prev = this._editing;
+    this._editing = !!v;
+    // if we just entered editing mode, refresh document list to pick latest changes
+    if (!prev && this._editing) {
+      try { this.loadProjectDocuments(); } catch(e) { /* noop */ }
+    }
+  }
+  projectDocs: BackendDocument[] = [];
+  selectedDocFile?: File;
+  loadingDocs = false;
+  docsSearch = '';
+  projectDocMeta: Array<{ name: string; size?: number; contentType?:string; lastModified?:string }> = [];
+  // máximo permitido por el cliente antes de intentar subir (por defecto 20MB)
+  readonly MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+  uploadError: string | null = null;
   ipString = '';
   nexusString = '';
   docsString = '';
@@ -36,9 +55,10 @@ export class ProjectDetailComponent {
   crontabList: Array<{expr?:string; desc?:string}> = [];
   sonarList: Array<{prefix?:string; url?:string; tokenUser?:string; tokenValue?:string}> = [];
   // removal workflow
-  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine' , index: number } | null = null;
+  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine'|'document' , index: number } | null = null;
+  removeDocCandidate: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private documentService: DocumentService, private translate: TranslateService) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
     const mode = this.route.snapshot.queryParamMap.get('mode') || 'view';
     this.routeMode = mode;
@@ -94,11 +114,210 @@ export class ProjectDetailComponent {
           this.nexusString = (h.nexus || []).join('\n');
           (p as any).documentacion = (p as any).documentacion || '';
           this.docsString = (p as any).documentacion || '';
-          // ensure equipoMinsait exists
+            // ensure equipoMinsait exists
           (p as any).equipoMinsait = (p as any).equipoMinsait || [];
+            // load project documents for this project (if any)
+            try { this.loadProjectDocuments(); } catch(e) { /* noop */ }
         }
       }
     } catch (e) { this.proyecto = undefined; }
+  }
+
+  // helper to determine idProyecto for document service
+  private getDocsProjectId(): string | number | undefined {
+    if (!this.proyecto) return undefined;
+    // prefer explicit numeric id if present, otherwise use project code
+    // backend accepts either numeric or string ids; use codigoProyecto by default
+    return (this.proyecto as any).id || this.proyecto.codigoProyecto;
+  }
+
+  // load files for current project
+  loadProjectDocuments() {
+    const pid = this.getDocsProjectId();
+    if (!pid) { this.projectDocs = []; return; }
+    this.loadingDocs = true;
+    // try to load metadata first (more informative)
+    this.documentService.getFolderInfo(pid).subscribe({
+      next: (meta:any[]) => {
+        if (Array.isArray(meta) && meta.length) {
+          // normalize meta entries
+          this.projectDocMeta = meta.map(m => ({ name: (m.name||m.nombre||'').toString(), size: m.size, contentType: m.contentType, lastModified: m.lastModified }));
+          this.projectDocs = this.projectDocMeta.map(m => m.name as any);
+          this.loadingDocs = false;
+        } else {
+          // fallback to filenames only
+          this.documentService.getAllFiles(pid).subscribe({
+            next: (files: BackendDocument[]) => { this.projectDocs = files || []; this.projectDocMeta = (files||[]).map(f => ({ name: f })); this.loadingDocs = false; },
+            error: (err: any) => { console.error('Error cargando documentos proyecto', err); this.projectDocs = []; this.projectDocMeta = []; this.loadingDocs = false; }
+          });
+        }
+      },
+      error: (err: any) => {
+        console.warn('No se pudo obtener metadata de carpeta', err);
+        // fallback to filenames only
+        this.documentService.getAllFiles(pid).subscribe({
+          next: (files: BackendDocument[]) => { this.projectDocs = files || []; this.projectDocMeta = (files||[]).map(f => ({ name: f })); this.loadingDocs = false; },
+          error: (err2: any) => { console.error('Error cargando documentos proyecto', err2); this.projectDocs = []; this.projectDocMeta = []; this.loadingDocs = false; }
+        });
+      }
+    });
+  }
+
+  onDocFileSelected(event: any) {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      this.selectedDocFile = file;
+    }
+  }
+
+  uploadProjectDocument() {
+    const pid = this.getDocsProjectId();
+    if (!pid || !this.selectedDocFile) return;
+    const fileRef = this.selectedDocFile;
+    // reset any previous error
+    this.uploadError = null;
+    // client-side size check to avoid 413 errors
+    if (fileRef.size != null && fileRef.size > this.MAX_UPLOAD_BYTES) {
+      const msg = this.translate.instant('PROJECTS.UPLOAD_ERROR_TOO_LARGE');
+      this.uploadError = `${msg} (${this.formatBytes(fileRef.size)} > ${this.formatBytes(this.MAX_UPLOAD_BYTES)})`;
+      return;
+    }
+    this.documentService.uploadDocument(pid, this.selectedDocFile).subscribe({
+      next: () => {
+        // capture filename then clear selection and file input UI
+        const uploadedName = fileRef ? fileRef.name : '';
+        this.selectedDocFile = undefined;
+        try {
+          const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
+          if (el) el.value = '';
+        } catch (e) {}
+        // try an immediate refresh then start polling to be robust against backend delays
+        this.loadingDocs = true;
+        // immediate refresh (may show it already)
+        try { this.loadProjectDocuments(); } catch(e) {}
+        // start polling for new file to appear (more tolerant matching)
+        console.debug('[ProjectDetail] uploaded filename=', uploadedName, 'projectId=', pid);
+        this.pollForFile(pid, uploadedName || '', 8, 300)
+          .then(found => {
+            // refresh list regardless
+            this.loadProjectDocuments();
+            this.loadingDocs = false;
+          })
+          .catch(() => {
+            // if polling failed, still try to reload once
+            this.loadProjectDocuments();
+            this.loadingDocs = false;
+          });
+      },
+      error: (err: any) => {
+        console.error('Error subiendo documento', err);
+        try {
+          if (err && err.status === 413) this.uploadError = this.translate.instant('PROJECTS.UPLOAD_ERROR_TOO_LARGE');
+          else this.uploadError = this.translate.instant('PROJECTS.UPLOAD_GENERIC_ERROR');
+        } catch(e) { this.uploadError = this.translate.instant('PROJECTS.UPLOAD_GENERIC_ERROR'); }
+      }
+    });
+  }
+
+  formatBytes(bytes: number): string {
+    if (!bytes) return '0 B';
+    const units = ['B','KB','MB','GB','TB'];
+    let i = 0;
+    let val = bytes;
+    while (val >= 1024 && i < units.length-1) { val = val/1024; i++; }
+    return `${Math.round(val*10)/10} ${units[i]}`;
+  }
+
+  private async pollForFile(projectId: string | number, fileName: string, attempts = 5, initialDelay = 300): Promise<boolean> {
+    if (!fileName) return Promise.resolve(true);
+    const target = (fileName || '').toLowerCase().trim();
+    let delay = initialDelay;
+    for (let i = 0; i < attempts; i++) {
+      console.debug(`[ProjectDetail] poll attempt ${i+1}/${attempts} for '${fileName}' on project ${projectId}`);
+      try {
+        // First try folder info (metadata with name)
+        try {
+          const meta = await this.documentService.getFolderInfo(projectId).toPromise();
+          console.debug('[ProjectDetail] folderInfo=', meta);
+          if (Array.isArray(meta)) {
+            const found = meta.some((m: any) => {
+              const n = (m && (m.name || m.nombre) || '').toString().toLowerCase();
+              return n === target || n.endsWith(target) || n.indexOf(target) >= 0;
+            });
+            if (found) return true;
+          }
+        } catch (e) {
+          console.debug('[ProjectDetail] folderInfo error', e);
+        }
+
+        // Fallback to getAllFiles which may return simple names
+        try {
+          const files = await this.documentService.getAllFiles(projectId).toPromise();
+          console.debug('[ProjectDetail] getAllFiles=', files);
+          if (Array.isArray(files)) {
+            const found = files.some((f: any) => {
+              const n = (f || '').toString().toLowerCase();
+              return n === target || n.endsWith(target) || n.indexOf(target) >= 0;
+            });
+            if (found) return true;
+          }
+        } catch (e) {
+          console.debug('[ProjectDetail] getAllFiles error', e);
+        }
+      } catch (e) {
+        // ignore and retry
+      }
+      await new Promise(res => setTimeout(res, delay));
+      delay = Math.min(3000, Math.round(delay * 1.8));
+    }
+    return false;
+  }
+
+  downloadProjectDocument(fileName: string) {
+    const pid = this.getDocsProjectId();
+    if (!pid) return;
+    this.documentService.downloadFile(pid, fileName).subscribe({
+      next: (blob: Blob) => {
+        try {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        } catch (e) {
+          console.error('Error descargando fichero', e);
+        }
+      },
+      error: (err: any) => console.error('Error solicitando fichero', err)
+    });
+  }
+
+  get filteredProjectDocs() {
+    const q = (this.docsSearch || '').trim().toLowerCase();
+    if (!q) return this.projectDocMeta.length ? this.projectDocMeta : this.projectDocs.map(n => ({ name: n } as any));
+    // search across name, lastModified, size
+    const all = this.projectDocMeta.length ? this.projectDocMeta : this.projectDocs.map(n => ({ name: n } as any));
+    return all.filter(d => {
+      const parts: string[] = [];
+      parts.push(d.name || '');
+      if (d.lastModified) parts.push(d.lastModified);
+      if (d.size != null) parts.push(String(d.size));
+      return parts.join(' ').toLowerCase().includes(q);
+    });
+  }
+
+  confirmDeleteProjectDocument(fileName: string) {
+    if (!fileName) return;
+    if (!confirm('¿Desea eliminar el fichero "' + fileName + '"?')) return;
+    const pid = this.getDocsProjectId();
+    if (!pid) return;
+    this.documentService.deleteDocument(pid, fileName).subscribe({
+      next: () => this.loadProjectDocuments(),
+      error: (err: any) => console.error('Error eliminando documento', err)
+    });
   }
 
   // safe helper to use in templates: always returns an object
@@ -199,7 +418,7 @@ export class ProjectDetailComponent {
   removeSonar(i:number) { if (i>=0 && i < this.sonarList.length) this.sonarList.splice(i,1); }
 
   // confirm remove generic
-  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine', index:number) {
+  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine'|'document', index:number) {
     this.removeCandidate = { type, index };
   }
   confirmRemove() {
@@ -215,6 +434,17 @@ export class ProjectDetailComponent {
     else if (type === 'db') this.removeDb(index);
     else if (type === 'othertool') this.removeOtherTool(index);
     else if (type === 'machine') this.removeDevMachine(index);
+    else if (type === 'document') {
+      const fileName = this.removeDocCandidate;
+      const pid = this.getDocsProjectId();
+      if (fileName && pid) {
+        this.documentService.deleteDocument(pid, fileName).subscribe({
+          next: () => { this.loadProjectDocuments(); },
+          error: (err: any) => console.error('Error eliminando documento', err)
+        });
+      }
+      this.removeDocCandidate = null;
+    }
     this.removeCandidate = null;
   }
   cancelRemove() { this.removeCandidate = null; }

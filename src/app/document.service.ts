@@ -48,6 +48,15 @@ export class DocumentService {
     });
   }
 
+  // GET /getFile?idProyecto=...&nombreArchivo=...
+  // returns file blob for download/preview
+  downloadFile(projectId: string | number, fileName: string) {
+    const params = new HttpParams()
+      .set('idProyecto', String(projectId))
+      .set('nombreArchivo', fileName);
+    return this.http.get(`${this.baseUrl}\/getFile`, { params, responseType: 'blob' });
+  }
+
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
     const params = new HttpParams().set('idProyecto', String(projectId));
@@ -55,5 +64,12 @@ export class DocumentService {
       params,
       responseType: 'text'
     });
+  }
+
+  // GET /getFolderInfo?idProyecto=...
+  // returns array of file metadata: { name, size, contentType, lastModified }
+  getFolderInfo(projectId: string | number): Observable<any[]> {
+    const params = new HttpParams().set('idProyecto', String(projectId));
+    return this.http.get<any[]>(`${this.baseUrl}\/getFolderInfo`, { params });
   }
 }
