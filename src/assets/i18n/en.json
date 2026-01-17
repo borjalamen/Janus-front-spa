@@ -4,239 +4,6 @@
     "PROJECTS": "Projects",
     "PROCEDURES": "Procedures",
     "DOCUMENTS": "Documents",
-    "TRAINING": "Training",
-    "PLANNING": "Planning",
-    "MULTIMEDIA": "Multimedia",
-    "ADMIN": "Administration",
-    "LOGBOOK": "Logbook",
-    "INFRASTRUCTURE": "Infrastructure",
-    "TOOLS": "Tools",
-    "DESCARGABLES": "Downloads",
-    "SCRUM": "Scrum",
-    "ESTIMATION": "Estimation"
-  },
-  "DESCARGABLES": {
-    "TITLE": "Downloads",
-    "LAST_MODIFIED": "Last modified",
-    "DOWNLOAD": "Download",
-    "DOWNLOADING": "Downloading...",
-    "NO_FILES": "No files available for download.",
-    "LOADING": "Loading files...",
-    "ERROR": "Error loading file list. Check browser console.",
-    "SEARCH_PLACEHOLDER": "Search by name, description, date...",
-    "NO_RESULTS": "No results found for your search.",
-    "CLEAR": "Clear"
-  },
-  "DOCS": {
-    "ACORD_DGP": "Confidentiality agreement (DGP)",
-    "DUO": "Quick DUO guide for multi-factor authentication",
-    "FORMULARIO_HOJA_DESPLIEGUE": "Deployment sheet form for the DevOps team"
-    ,"FORMULARIO_ACCESO_BD_CPD_V1_2": "Database access request form - CPD v1.2",
-    "GUIA_PRIMEROSAUXILIOS_SAMUR": "First Aid Guide (SAMUR)",
-    "GUIA_VPAYMENT": "VPayment Guide",
-    "PLN_GSEG_EXCEPCIO": "Excel to send for managing a security exception"
-  },
-  "USER": {
-    "PROFILE": "Profile",
-    "LOGOUT": "Log out",
-    "USERNAME": "User"
-  },
-  "FOOTER": {
-    "COPYRIGHT": "Copyright"
-  },
-  "HOME": {
-    "TITLE": "Welcome to JanusHUB.v0",
-    "WHO_WE_ARE": "Who we are",
-    "WHAT_WE_DO": "What we do",
-    "MISSION": "Our mission",
-    "CONTACT": "Contact",
-    "INTRO": "JanusHub is named after the Roman god Janus, symbolized by two faces looking to the past and the future. It represents a strategic vision that learns from experience while anticipating and building tomorrow. From this philosophy, JanusHub is born as a technological convergence point where tradition and innovation combine to drive teams towards a continuous, efficient and high‑quality delivery model.",
-    "WHO_WE_ARE_TEXT": "We are a cross-functional team of DevOps experts focused on enabling, evolving and consolidating modern software development and operations practices. We focus on accelerating value delivery through automation, continuous integration and continuous deployment, ensuring quality, security and observability at every stage of the software lifecycle.",
-    "WHAT_WE_DO_DEVOPS": "Cross-cutting DevOps",
-    "WHAT_WE_DO_DEVOPS_ITEMS": {
-      "CULTURE": "Implementation of DevOps culture and collaborative operating models",
-      "ADVICE": "Consulting and support on CI/CD best practices"
-    },
-    "WHAT_WE_DO_CICD": "Continuous Integration and Continuous Deployment (CI/CD)",
-    "WHAT_WE_DO_CICD_ITEMS": {
-      "PIPELINES": "Creation, maintenance and optimization of CI/CD pipelines",
-      "AUTOMATION": "Automation of build, testing and code analysis",
-      "SONARQUBE": "Integration of quality tools such as SonarQube"
-    },
-    "WHAT_WE_DO_ENVIRONMENTS": "Multi-environment deployment and operations",
-    "WHAT_WE_DO_ENVIRONMENTS_ITEMS": {
-      "CLOUD": "Cloud: OpenShift, Azure",
-      "ON_PREM": "On-premise: Nginx, Apache, WebLogic"
-    },
-    "WHAT_WE_DO_DATABASES": "Database architecture and management",
-    "WHAT_WE_DO_DATABASES_ITEMS": {
-      "SQL": "SQL: PostgreSQL, MySQL",
-      "NOSQL": "NoSQL: MongoDB"
-    },
-    "WHAT_WE_DO_GOVERNANCE": "Governance and standards",
-    "WHAT_WE_DO_GOVERNANCE_ITEMS": {
-      "TEMPLATES": "Definition of templates, reusable components and best practices",
-      "TRAINING": "Training, continuous support and knowledge transfer"
-    },
-    "MISSION_INTRO": "Enable development teams to deliver software:",
-    "MISSION_ITEMS": {
-      "FASTER": "Faster",
-      "QUALITY": "With higher quality",
-      "STANDARDIZED": "With standardized and automated processes",
-      "TECH_AGNOSTIC": "Regardless of technology or platform"
-    },
-    "CONTACT_LIST": {
-      "RAUL": "Raúl Gallego García",
-      "RUBEN": "Rubén Planté Félix",
-      "FERNANDO": "Fernando Silvano Gil Pérez",
-      "BORJA": "Borja Lara Menéndez"
-    }
-  },
-  "USER_SECTION": {
-    "TITLE": "User section",
-    "LABEL_USER": "User",
-    "LABEL_ROLE": "Role"
-  },
-  "PROJECTS": {
-    "TITLE": "Projects",
-    "DESCRIPTION": "List of projects, client and status.",
-    "CLIENT": "Client",
-    "STATUS": "Status",
-    "NEW": "New project",
-    "EDIT": "Edit project",
-    "VIEW": "View project",
-    "SAVE": "Save",
-    "CLOSE": "Close",
-    "NAME": "Name",
-    "CODE": "Code",
-    "RESPONSABLE": "Owner",
-    "RESPONSABLE_TEC": "Technical owner",
-    "UNTITLED": "(Untitled)",
-    "CONFIRM_TITLE": "Confirm action",
-    "CONFIRM_OK": "OK",
-    "CONFIRM_CANCEL": "Cancel",
-    "CONFIRM_DELETE_MEMBER_TITLE": "Confirm deletion",
-    "CONFIRM_DELETE_MEMBER_MSG": "Are you sure you want to remove this member?",
-    "IPS_LABEL": "IPs",
-    "IPS_PLACEHOLDER": "ip1, ip2, ...",
-    "TASKS_LABEL": "Tasks",
-    "TASKS_PLACEHOLDER": "title|priority|status|percent|notes (one per line)",
-    "DELETE": "Delete",
-    "DELETE_CONFIRM": "Are you sure you want to delete project \"{{name}}\"?",
-    "NAME_PLACEHOLDER": "Project name",
-    "CODE_PLACEHOLDER": "Code",
-    "LOTE": "Batch",
-    "DEPARTMENT": "Department",
-    "LOTE_PLACEHOLDER": "Project batch",
-    "DEPARTMENT_PLACEHOLDER": "Assigned department",
-    "NOT_FOUND": "Project not found",
-    "DEV_MACHINES": "Development machines",
-    "ADD_DEV_MACHINE": "Add development machine",
-    "PLACEHOLDER_IP": "IP (e.g. 172.19.208.1)",
-    "PLACEHOLDER_USER": "User",
-    "PLACEHOLDER_PASSWORD": "Password",
-    "PLACEHOLDER_NEXUS": "https://... (one URL per line)",
-    "PLACEHOLDER_SONAR_PREFIX": "Prefix",
-    "PLACEHOLDER_SONAR_URL": "Sonar URL",
-    "PLACEHOLDER_SONAR_USER": "Sonar user",
-    "PLACEHOLDER_SONAR_TOKEN": "Sonar token"
-    ,"PLACEHOLDER_NAME": "Name"
-    ,"PLACEHOLDER_URL_SIMPLE": "URL"
-    ,"PLACEHOLDER_CRONTAB_EXPR": "* * * * *"
-    ,"PLACEHOLDER_DESCRIPTION": "Description"
-    ,
-    "TAB_INFO": "General information",
-    "TAB_DOCS": "Documentation",
-    "UPLOAD": "Upload",
-    "NO_DOCUMENTS_MESSAGE": "There are no documents in this project.",
-    "UPLOAD_LIMIT_HINT": "Client limit: {{size}}",
-    "UPLOAD_ERROR_TOO_LARGE": "File too large. Reduce its size or adjust the server limit.",
-    "UPLOAD_GENERIC_ERROR": "Error uploading file. Check the console for details.",
-    "TAB_MINSAIT": "Minsait Team",
-    "TAB_DEV": "Development environment",
-    "TAB_MIND": "MIND tools",
-    "SECTION_MINSAIT": "Minsait Team",
-    "TABS_ARIA": "Project detail tabs",
-    "DOCUMENTATION_LABEL": "Documentation",
-    "PLACEHOLDER_DOCUMENTATION": "Write or paste project documentation here",
-    "SECTION_GENERAL": "General information",
-    "SECTION_DEV": "Development environment",
-    "DEV_RAM": "RAM",
-    "DEV_CPU": "CPU",
-    "DEV_DISK": "Disk",
-    "DEV_RAM_PLACEHOLDER": "e.g. 4GB",
-    "DEV_CPU_PLACEHOLDER": "e.g. 2",
-    "DEV_DISK_PLACEHOLDER": "e.g. 40GB",
-    "OPENSHIFT": "Openshift",
-    "OPENSHIFT_USER": "Openshift user",
-    "OPENSHIFT_PASSWORD": "Openshift password",
-    "VOLUMES": "Volumes",
-    "ADD_VOLUME": "Add volume"
-    ,
-    "NOTES": "Notes",
-    "NOTES_PLACEHOLDER": "Optional notes about the development environment",
-    "PLACEHOLDER_OTHER_NOTES": "Notes or observations about other tools",
-    "DEV_IP": "IP",
-    "DEV_USER": "User",
-    "DEV_PASSWORD": "Password",
-    "FIELD_ID": "ID",
-    "DB_ENGINE": "Database engine",
-    "DB_INSTANCE": "Instance",
-    "DB_HOST": "Host",
-    "DB_PORT": "Port",
-    "DB_SID": "SID",
-    "DB_USER": "User",
-    "DB_PASSWORD": "Password",
-    "DB_CONTACT_PERSON": "Contact person",
-    "DB_CONTACT_MAIL": "Contact email",
-    "DB_CONNECTION_SETTINGS": "Connection settings",
-    "OTH_TOOL_NAME": "Name",
-    "OTH_TOOL_PATH": "Path on machine",
-    "IN_SERVICE": "In service?",
-    "VOLUME_NAME": "Name",
-    "VOLUME_NAME_PLACEHOLDER": "Name",
-    "VOLUME_CAPACITY": "Capacity",
-    "VOLUME_CAPACITY_PLACEHOLDER": "Capacity (e.g. 10Gi)",
-    "CODIGO_IMPUTACION": "Accounting code",
-    "URL_ENTORNO_DESARROLLO": "Dev environment URL",
-    "URL_ENTORNO_INTEGRACION": "Integration environment URL",
-    "URL_ENTORNO_PREPROD": "Pre-production environment URL",
-    "URL_ENTORNO_PRODUCCION": "Production environment URL",
-    "HORA_DAILY": "Daily standup time",
-    "PLACEHOLDER_URL": "https://...",
-      "MINSAIT_MEMBERS": "Minsait Team",
-      "ADD_MEMBER": "Add member",
-      "MEMBER_NAME_PLACEHOLDER": "Name",
-      "MEMBER_ROLE_PLACEHOLDER": "Role",
-      "MEMBER_EMAIL_PLACEHOLDER": "Email",
-    "MINSAIT_MEMBERS": "Minsait Team",
-    "ADD_MEMBER": "Add member",
-    "MEMBER_NAME_PLACEHOLDER": "Name",
-    "MEMBER_ROLE_PLACEHOLDER": "Role",
-    "MEMBER_EMAIL_PLACEHOLDER": "Email"
-  },
-  "PROJECTS_CONFIRM": {
-    "CONFIRM_DELETE_MEMBER_TITLE": "Confirm deletion",
-    "CONFIRM_DELETE_MEMBER_MSG": "Are you sure you want to remove this member?"
-  },
-    "DAILY_ACCESS_PERSON": "Person responsible",
-    "DAILY_ACCESS_PERSON_PLACEHOLDER": "Name of person",
-  "PLACEHOLDERS": {
-    "DEV_RAM": "e.g. 4GB",
-    "DEV_CPU": "e.g. 2",
-    "DEV_DISK": "e.g. 40GB"
-  },
-  
-  "PROJECTS_MIND": {
-    "TITLE": "MIND tools",
-    "BITBUCKET": "Bitbucket",
-    "CODE_REPOS": "Code repositories",
-    "NEXUS": "Nexus (Release / Snapshot / Npm / Group)",
-    "SONAR": "Sonar (prefix / url / token user / token)",
-    "JENKINS": "Jenkins",
-    "CRONTAB": "Crontab",
-    "PIPELINES": "IC pipelines",
-    "QUALITY": "Quality tools",
     "OTHERS": "Others"
   },
   "PROJECTS_MIND_EXTRA": {
@@ -314,25 +81,25 @@
     "ITEM_NAME": "Name",
     "ITEM_LINK": "Link",
     "ITEM_DESC": "Description",
-    "ITEM_TAGS": "Tags"
-    ,"DELETE_PATH_TITLE": "Delete training path"
-    ,"DELETE_PATH_QUESTION": "Are you sure you want to delete the training path \"{{name}}\"?"
-    ,"DELETE_ITEM_TITLE": "Delete training"
-    ,"DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?"
-    ,"EXPORT": "Export to CSV"
-    ,"TABS": {
+    "ITEM_TAGS": "Tags",
+    "DELETE_PATH_TITLE": "Delete training path",
+    "DELETE_PATH_QUESTION": "Are you sure you want to delete the training path \"{{name}}\"?",
+    "DELETE_ITEM_TITLE": "Delete training",
+    "DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?",
+    "EXPORT": "Export to CSV",
+    "TABS": {
       "ALL": "All courses",
       "PATHS": "Training paths"
     },
-    "ALL_COURSES": "All courses"
-    ,"VIEW": "View"
-    ,"NEW_COURSE": "New course"
-    ,"COPY": "Copy link"
-    ,"BACK": "Back"
-    ,"NO_LINK": "No link to copy"
-    ,"LINK_COPIED": "Link copied"
-    ,"COPY_FAILED": "Failed to copy link"
-  ,"SELECT_COURSE": "Select a course to add"
+    "ALL_COURSES": "All courses",
+    "VIEW": "View",
+    "NEW_COURSE": "New course",
+    "COPY": "Copy link",
+    "BACK": "Back",
+    "NO_LINK": "No link to copy",
+    "LINK_COPIED": "Link copied",
+    "COPY_FAILED": "Failed to copy link",
+    "SELECT_COURSE": "Select a course to add"
   },
   "HERRAMIENTAS": {
     "NEW_TOOL": "New tool",
@@ -392,34 +159,43 @@
     "DELETE_PROJECT_QUESTION": "Are you sure you want to delete the project \"{{name}}\" and its documents?",
     "DELETE": "Delete"
   },
-  "SEARCH": {
-    "PLACEHOLDER": "Type to search..."
+  "ESTIMATION": {
+    "TITLE": "Estimation",
+    "TAB_DO": "Do Estimation",
+    "TAB_LIST": "Estimations List",
+    "TASK": "Task",
+    "WEEK": "Week",
+    "TOTAL": "Total",
+    "NEW_TASK": "New task",
+    "ADD_TASK": "Add task",
+    "ADD_WEEK": "Add week",
+    "REMOVE_TASK": "Remove task",
+    "NAME": "Name",
+    "PROJECT": "Project",
+    "REQUESTER": "Requester",
+    "CREATED": "Created",
+    "LIST_SEARCH": "Search estimations",
+    "LIST_REFRESH": "Refresh",
+    "LIST_LOAD": "Load",
+    "LIST_DELETE": "Delete"
   },
-  "ERRORS": {
-    "TITLE": "Errors",
-    "DESCRIPTION": "Error and solution wiki for the DevOps team.",
-    "RESOLVED": "Resolved",
-    "CATEGORY": "Category",
-    "DESCRIPTION_LABEL": "Description",
-    "MARK_PENDING": "Mark as pending",
-    "MARK_RESOLVED": "Mark as resolved"
+  "ESTIMATION_META": {
+    "META_NAME": "Estimation name",
+    "META_PROJECT_CODE": "Project code",
+    "META_PROJECT_NAME": "Project name",
+    "META_REQUESTER": "Requester",
+    "META_REQUESTER_EMAIL": "Requester email",
+    "META_NOTES": "Notes/Comments",
+    "START": "Start estimation",
+    "EDIT_METADATA": "Edit metadata",
+    "SEARCH": {
+      "PLACEHOLDER": "Type to search..."
+    }
   },
-  "USERS": {
-    "TITLE": "Users",
-    "TOGGLE_LIST_SHOW": "User list",
-    "TOGGLE_LIST_HIDE": "Hide user list",
-    "ADD_BUTTON": "Add user",
-    "ADD_POPUP_TITLE": "Add new user",
-    "FIELD_NAME": "Name:",
-    "FIELD_PASSWORD": "Password:",
-    "FIELD_EMAIL": "Email:",
-    "ROLE_ADMIN": "Admin",
-    "ROLE_CONSULTOR": "Consultant",
-    "ROLE_DEVOPS": "DevOps",
-    "CANCEL": "Cancel",
-    "SAVE": "Save"
+  "ESTIMATION_EXPORT": {
+    "EXPORT_CSV": "Export CSV",
+    "EXPORT_PDF": "Export PDF"
   },
-
   "CLIP": {
     "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",
     "SEND": "Send",
@@ -428,12 +204,10 @@
     "USER": "You:",
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error querying AI"
-  }
-  ,
+  },
   "SPINNER": {
     "LOADING": "Loading..."
-  }
-  ,
+  },
   "PLANNING": {
     "TITLE": "Weekly planning",
     "TYPE": "Type",
@@ -470,8 +244,7 @@
     "DELETE": "Delete",
     "ERROR_REQUIRED": "Please fill project, start time, end time and environment",
     "DELETE_CONFIRM": "Delete event?"
-  }
-  ,
+  },
   "MULTIMEDIA": {
     "SEARCH_PLACEHOLDER": "Search videos by title or description...",
     "SEARCH": "Search",
@@ -480,30 +253,5 @@
     "NO_RESULTS": "No videos found.",
     "CLOSE": "Close"
   }
-  ,
-  "ESTIMATION": {
-    "TITLE": "Estimation",
-    "NEW_TASK": "New task",
-    "ADD_TASK": "Add task",
-    "ADD_WEEK": "Add week",
-    "TASK": "Task",
-    "WEEK": "Week",
-    "TOTAL": "Total",
-    "REMOVE_TASK": "Remove task"
-  }
-
-  ,"ESTIMATION_META":{
-    "META_NAME":"Estimation name",
-    "META_PROJECT_CODE":"Project code",
-    "META_PROJECT_NAME":"Project name",
-    "META_REQUESTER":"Requester",
-    "META_REQUESTER_EMAIL":"Requester email",
-    "META_NOTES":"Notes",
-    "START":"Start estimation",
-    "EDIT_METADATA":"Edit metadata"
-  }
-  ,"ESTIMATION_EXPORT":{
-    "EXPORT_CSV":"Export CSV",
-    "EXPORT_PDF":"Export PDF"
-  }
 }
+

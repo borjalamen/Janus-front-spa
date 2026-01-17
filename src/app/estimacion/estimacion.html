@@ -1,6 +1,8 @@
 <div class="estimacion-root">
   <h2>{{ 'ESTIMATION.TITLE' | translate }}</h2>
 
+  <mat-tab-group [(selectedIndex)]="selectedTab">
+    <mat-tab label="{{ 'ESTIMATION.TAB_DO' | translate }}">
   <!-- Metadata form (fill before starting the estimation) -->
   <div *ngIf="!started" class="metadata-form">
     <div class="row">
@@ -84,4 +86,33 @@
       </tfoot>
     </table>
   </div>
+    </mat-tab>
+
+    <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
+      <div class="list-controls" style="padding:12px">
+        <input matInput placeholder="{{ 'ESTIMATION.LIST_SEARCH' | translate }}" [(ngModel)]="searchQuery" />
+        <button mat-stroked-button (click)="loadSavedEstimations()">{{ 'ESTIMATION.LIST_REFRESH' | translate }}</button>
+      </div>
+
+      <div class="list-table">
+        <table class="est-table">
+          <thead>
+            <tr><th>{{ 'ESTIMATION.NAME' | translate }}</th><th>{{ 'ESTIMATION.PROJECT' | translate }}</th><th>{{ 'ESTIMATION.REQUESTER' | translate }}</th><th>{{ 'ESTIMATION.CREATED' | translate }}</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of filteredSavedEstimations">
+              <td>{{ s.estimationName }}</td>
+              <td>{{ s.projectCode }} - {{ s.projectName }}</td>
+              <td>{{ s.requester }} ({{ s.requesterEmail }})</td>
+              <td>{{ s.createdAt | date:'short' }}</td>
+              <td>
+                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">{{ 'ESTIMATION.LIST_LOAD' | translate }}</button>
+                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">{{ 'ESTIMATION.LIST_DELETE' | translate }}</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

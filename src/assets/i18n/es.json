@@ -256,33 +256,6 @@
     "RESPONSIBLE": "Responsable",
     "STATUS": "Estado"
   },
-  "LOGIN": {
-    "TITLE": "Iniciar sesión",
-    "USERNAME_LABEL": "Usuario",
-    "USERNAME_TITLE": "Usuario",
-    "PASSWORD_LABEL": "Contraseña",
-    "PASSWORD_TITLE": "Contraseña",
-    "BUTTON": "Acceder",
-    "ERROR": "Usuario o contraseña incorrectos"
-  },
-  "JENKINS": {
-    "TITLE": "Múltiples Jenkins",
-    "ADD_BUTTON": "+ Añadir Jenkins",
-    "DELETE_BUTTON_ON": "Cancelar eliminar",
-    "DELETE_BUTTON_OFF": "🗑️ Eliminar Jenkins",
-    "POPUP_ADD_TITLE": "Añadir Jenkins",
-    "POPUP_EDIT_TITLE": "Editar Jenkins",
-    "FIELD_NAME_LABEL": "Nombre:",
-    "FIELD_NAME_PLACEHOLDER": "Nombre del Jenkins",
-    "FIELD_URL_LABEL": "URL:",
-    "FIELD_URL_PLACEHOLDER": "https://...",
-    "CANCEL": "Cancelar",
-    "SAVE": "Guardar",
-    "UPDATE": "Actualizar",
-    "DELETE_TITLE": "Eliminar Jenkins",
-    "DELETE_MESSAGE": "¿Estas seguro que quieres eliminar?",
-    "DELETE_ACTION": "Eliminar"
-  },
   "INFRA": {
     "TITLE": "Estado de Proyectos",
     "STATUS_UP": "UP",
@@ -390,6 +363,42 @@
     "DELETE_PROJECT_QUESTION": "¿Estás seguro que deseas eliminar el proyecto \"{{name}}\" y sus documentos?",
     "DELETE": "Eliminar"
   },
+  "ESTIMATION": {
+    "TITLE": "Estimación",
+    "TAB_DO": "Realizar Estimación",
+    "TAB_LIST": "Listado de Estimaciones",
+    "TASK": "Tarea",
+    "WEEK": "Semana",
+    "TOTAL": "Total",
+    "NEW_TASK": "Nueva tarea",
+    "ADD_TASK": "Añadir tarea",
+    "ADD_WEEK": "Añadir semana",
+    "REMOVE_TASK": "Eliminar tarea",
+    "NAME": "Nombre",
+    "PROJECT": "Proyecto",
+    "REQUESTER": "Peticionario",
+    "CREATED": "Creado",
+    "LIST_SEARCH": "Buscar estimaciones",
+    "LIST_REFRESH": "Refrescar",
+    "LIST_LOAD": "Cargar",
+    "LIST_DELETE": "Borrar"
+  },
+  "ESTIMATION_META": {
+    "META_NAME": "Nombre de la estimación",
+    "META_PROJECT_CODE": "Código del proyecto",
+    "META_PROJECT_NAME": "Nombre del proyecto",
+    "META_REQUESTER": "Peticionario",
+    "META_REQUESTER_EMAIL": "Email del peticionario",
+    "META_NOTES": "Notas/Comentarios",
+    "START": "Iniciar estimación",
+    "EDIT_METADATA": "Editar metadatos"
+  },
+  
+  "ESTIMATION_META":{
+    "LIST_DELETE": "Borrar",
+    "LIST_REFRESH": "Refrescar"
+  },
+  
   "SEARCH": {
     "PLACEHOLDER": "Escribe para buscar..."
   },

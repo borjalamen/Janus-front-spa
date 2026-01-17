@@ -421,6 +421,44 @@
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error consultant la IA"
   },
+  "ESTIMATION": {
+    "TITLE": "Estimació",
+    "TAB_DO": "Realitzar estimació",
+    "TAB_LIST": "Llistat d'estimacions",
+    "TASK": "Tasca",
+    "WEEK": "Setmana",
+    "TOTAL": "Total",
+    "NEW_TASK": "Nova tasca",
+    "ADD_TASK": "Afegir tasca",
+    "ADD_WEEK": "Afegir setmana",
+    "REMOVE_TASK": "Eliminar tasca",
+    "NAME": "Nom",
+    "PROJECT": "Projecte",
+    "REQUESTER": "Peticionari",
+    "CREATED": "Creat",
+    "LIST_SEARCH": "Cerca estimacions",
+    "LIST_REFRESH": "Refrescar",
+    "LIST_LOAD": "Carregar",
+    "LIST_DELETE": "Esborrar"
+  },
+  "ESTIMATION_META": {
+    "META_NAME": "Nom de l'estimació",
+    "META_PROJECT_CODE": "Codi del projecte",
+    "META_PROJECT_NAME": "Nom del projecte",
+    "META_REQUESTER": "Peticionari",
+    "META_REQUESTER_EMAIL": "Email del peticionari",
+    "META_NOTES": "Notes/Comentaris",
+    "START": "Iniciar estimació",
+    "EDIT_METADATA": "Editar metadades",
+    "LIST_DELETE": "Esborrar",
+    "LIST_REFRESH": "Refrescar"
+  },
+  "ESTIMATION": {
+    "LIST_SEARCH": "Cerca estimacions",
+    "LIST_REFRESH": "Refrescar",
+    "LIST_LOAD": "Carregar",
+    "LIST_DELETE": "Esborrar"
+  },
     "SPINNER": {
       "LOADING": "Carregant..."
     }
@@ -482,19 +520,6 @@
     "TOTAL": "Total",
     "REMOVE_TASK": "Eliminar tasca"
   }
-
-  ,"ESTIMATION_META":{
-    "META_NAME":"Nom de l'estimació",
-    "META_PROJECT_CODE":"Codi del projecte",
-    "META_PROJECT_NAME":"Nom del projecte",
-    "META_REQUESTER":"Sol·licitant",
-    "META_REQUESTER_EMAIL":"Email del sol·licitant",
-    "META_NOTES":"Notes",
-    "START":"Començar estimació",
-    "EDIT_METADATA":"Editar metadades"
-  }
-  ,"ESTIMATION_EXPORT":{
-    "EXPORT_CSV":"Exportar CSV",
-    "EXPORT_PDF":"Exportar PDF"
-  }
+  
+  
 }
