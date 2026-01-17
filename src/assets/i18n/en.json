@@ -491,4 +491,19 @@
     "TOTAL": "Total",
     "REMOVE_TASK": "Remove task"
   }
+
+  ,"ESTIMATION_META":{
+    "META_NAME":"Estimation name",
+    "META_PROJECT_CODE":"Project code",
+    "META_PROJECT_NAME":"Project name",
+    "META_REQUESTER":"Requester",
+    "META_REQUESTER_EMAIL":"Requester email",
+    "META_NOTES":"Notes",
+    "START":"Start estimation",
+    "EDIT_METADATA":"Edit metadata"
+  }
+  ,"ESTIMATION_EXPORT":{
+    "EXPORT_CSV":"Export CSV",
+    "EXPORT_PDF":"Export PDF"
+  }
 }

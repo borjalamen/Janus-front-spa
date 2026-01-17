@@ -7,3 +7,12 @@
 .task-title{font-weight:600}
 .col-total{text-align:right;padding-right:16px}
 .small-link{background:transparent;border:0;color:#fff;cursor:pointer;margin-left:8px}
+
+/* metadata form */
+.metadata-form{margin-bottom:16px}
+.metadata-form .row{display:flex;gap:12px;margin-bottom:8px}
+.metadata-form .row .full{flex:1 1 100%}
+.metadata-form .row mat-form-field{flex:1}
+.metadata-form .actions{justify-content:flex-start}
+
+.export-btn{margin-left:8px}

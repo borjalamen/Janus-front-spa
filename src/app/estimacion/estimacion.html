@@ -1,10 +1,48 @@
 <div class="estimacion-root">
   <h2>{{ 'ESTIMATION.TITLE' | translate }}</h2>
 
-  <div class="controls">
+  <!-- Metadata form (fill before starting the estimation) -->
+  <div *ngIf="!started" class="metadata-form">
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="{{ 'ESTIMATION_META.META_NAME' | translate }}" [(ngModel)]="estimationName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="{{ 'ESTIMATION_META.META_PROJECT_CODE' | translate }}" [(ngModel)]="projectCode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="{{ 'ESTIMATION_META.META_PROJECT_NAME' | translate }}" [(ngModel)]="projectName" />
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="{{ 'ESTIMATION_META.META_REQUESTER' | translate }}" [(ngModel)]="requester" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="{{ 'ESTIMATION_META.META_REQUESTER_EMAIL' | translate }}" [(ngModel)]="requesterEmail" />
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="full">
+        <textarea matInput rows="4" placeholder="{{ 'ESTIMATION_META.META_NOTES' | translate }}" [(ngModel)]="notes"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="row actions">
+      <button mat-flat-button color="primary" (click)="started = true">{{ 'ESTIMATION_META.START' | translate }}</button>
+    </div>
+  </div>
+
+  <div *ngIf="started" class="controls">
     <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" />
     <button mat-flat-button color="primary" (click)="addTask()">{{ 'ESTIMATION.ADD_TASK' | translate }}</button>
     <button mat-stroked-button (click)="addWeek()">{{ 'ESTIMATION.ADD_WEEK' | translate }}</button>
+    <button mat-stroked-button color="accent" (click)="started=false">{{ 'ESTIMATION_META.EDIT_METADATA' | translate }}</button>
+    <span style="flex:1 1 auto"></span>
+    <button mat-stroked-button class="export-btn" (click)="exportCsv()">{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}</button>
+    <button mat-stroked-button class="export-btn" (click)="exportPdf()">{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}</button>
   </div>
 
   <div class="table-wrap">
