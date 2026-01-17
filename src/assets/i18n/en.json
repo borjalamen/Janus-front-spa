@@ -11,7 +11,9 @@
     "LOGBOOK": "Logbook",
     "INFRASTRUCTURE": "Infrastructure",
     "TOOLS": "Tools",
-    "DESCARGABLES": "Downloads"
+    "DESCARGABLES": "Downloads",
+    "SCRUM": "Scrum",
+    "ESTIMATION": "Estimation"
   },
   "DESCARGABLES": {
     "TITLE": "Downloads",
@@ -477,5 +479,16 @@
     "DOWNLOAD": "Download",
     "NO_RESULTS": "No videos found.",
     "CLOSE": "Close"
+  }
+  ,
+  "ESTIMATION": {
+    "TITLE": "Estimation",
+    "NEW_TASK": "New task",
+    "ADD_TASK": "Add task",
+    "ADD_WEEK": "Add week",
+    "TASK": "Task",
+    "WEEK": "Week",
+    "TOTAL": "Total",
+    "REMOVE_TASK": "Remove task"
   }
 }

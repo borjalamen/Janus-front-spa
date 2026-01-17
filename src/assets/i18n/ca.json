@@ -11,7 +11,9 @@
     "LOGBOOK": "Bitàcola",
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Eines",
-    "DESCARGABLES": "Descarregables"
+    "DESCARGABLES": "Descarregables",
+    "SCRUM": "Scrum",
+    "ESTIMATION": "Estimació"
   },
   "DESCARGABLES": {
     "TITLE": "Descarregables",
@@ -468,5 +470,16 @@
     "DOWNLOAD": "Descarregar",
     "NO_RESULTS": "No s'han trobat vídeos.",
     "CLOSE": "Tancar"
+  }
+,
+  "ESTIMATION": {
+    "TITLE": "Estimació",
+    "NEW_TASK": "Nova tasca",
+    "ADD_TASK": "Afegir tasca",
+    "ADD_WEEK": "Afegir setmana",
+    "TASK": "Tasca",
+    "WEEK": "Setmana",
+    "TOTAL": "Total",
+    "REMOVE_TASK": "Eliminar tasca"
   }
 }

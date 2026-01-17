@@ -1,0 +1,69 @@
+<div class="scrum-root">
+  <h2>Scrum</h2>
+  <p class="lead">Tablón diario para compartir tareas, estimaciones y prioridades.</p>
+
+  <div class="scrum-controls">
+    <input [(ngModel)]="newTitle" placeholder="Título tarea" />
+    <input [(ngModel)]="newEstimate" placeholder="Estimación (h)" style="width:120px" />
+    <select [(ngModel)]="newPriority">
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+    <button class="btn" (click)="addTask()">Add</button>
+  </div>
+
+  <div class="board">
+    <div class="col">
+      <div class="col-title">To Do</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('todo')" class="card">
+          <div class="card-head">
+            <strong>{{ t.title }}</strong>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+          </div>
+          <div class="card-actions">
+            <button (click)="moveTask(t.id,'doing')">→ Doing</button>
+            <button (click)="moveTask(t.id,'done')">✓ Done</button>
+            <button class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">Doing</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('doing')" class="card">
+          <div class="card-head">
+            <strong>{{ t.title }}</strong>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+          </div>
+          <div class="card-actions">
+            <button (click)="moveTask(t.id,'todo')">← ToDo</button>
+            <button (click)="moveTask(t.id,'done')">✓ Done</button>
+            <button class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">Done</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('done')" class="card done">
+          <div class="card-head">
+            <strong>{{ t.title }}</strong>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+          </div>
+          <div class="card-actions">
+            <button (click)="moveTask(t.id,'todo')">← ToDo</button>
+            <button (click)="moveTask(t.id,'doing')">→ Doing</button>
+            <button class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

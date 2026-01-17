@@ -1,0 +1,49 @@
+<div class="estimacion-root">
+  <h2>{{ 'ESTIMATION.TITLE' | translate }}</h2>
+
+  <div class="controls">
+    <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" />
+    <button mat-flat-button color="primary" (click)="addTask()">{{ 'ESTIMATION.ADD_TASK' | translate }}</button>
+    <button mat-stroked-button (click)="addWeek()">{{ 'ESTIMATION.ADD_WEEK' | translate }}</button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>{{ 'ESTIMATION.TASK' | translate }}</th>
+          <th *ngFor="let w of weeks; let i = index">
+            {{ 'ESTIMATION.WEEK' | translate }} {{ w }}
+            <button class="small-link" (click)="removeWeek(i)">x</button>
+          </th>
+          <th>{{ 'ESTIMATION.TOTAL' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let t of tasks">
+          <td class="task-title">{{ t.title }}</td>
+          <td *ngFor="let w of weeks; let i = index">
+            <input matInput type="number" min="0" step="0.5" [value]="t.estimates[i]" (input)="setEstimate(t, i, $any($event.target).value)" />
+          </td>
+          <td class="col-total">{{ totalForTask(t) | number:'1.2-2' }}</td>
+          <td>
+            <button mat-icon-button color="warn" (click)="removeTask(t.id)" title="{{ 'ESTIMATION.REMOVE_TASK' | translate }}">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td><strong>{{ 'ESTIMATION.TOTAL' | translate }}</strong></td>
+          <td *ngFor="let w of weeks; let i = index"><strong>{{ totalForWeek(i) | number:'1.2-2' }}</strong></td>
+          <td><strong>{{ grandTotal() | number:'1.2-2' }}</strong></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

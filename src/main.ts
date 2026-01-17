@@ -64,6 +64,8 @@ bootstrapApplication(AppComponent, {
       {path: 'usuario', component: UsuarioComponent},
       {path: 'infraestructura', component: Infraestructura},
       {path: 'herramientas', component: Herramientas}
+      ,{ path: 'scrum', loadComponent: () => import('./app/scrum/scrum').then(m => m.ScrumComponent) }
+      ,{ path: 'estimacion', loadComponent: () => import('./app/estimacion/estimacion').then(m => m.EstimacionComponent) }
     ]),
 
     provideHttpClient(withInterceptors([spinnerInterceptor]))

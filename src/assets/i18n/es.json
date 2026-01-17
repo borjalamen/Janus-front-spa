@@ -11,7 +11,9 @@
     "LOGBOOK": "Bitácora",
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Herramientas",
-    "DESCARGABLES": "Descargables"
+    "DESCARGABLES": "Descargables",
+    "SCRUM": "Scrum",
+    "ESTIMATION": "Estimación"
   },
   "DESCARGABLES": {
     "TITLE": "Descargables",
@@ -479,5 +481,16 @@
     "DOWNLOAD": "Descargar",
     "NO_RESULTS": "No se encontraron vídeos.",
     "CLOSE": "Cerrar"
+  }
+  ,
+  "ESTIMATION": {
+    "TITLE": "Estimación",
+    "NEW_TASK": "Nueva tarea",
+    "ADD_TASK": "Añadir tarea",
+    "ADD_WEEK": "Añadir semana",
+    "TASK": "Tarea",
+    "WEEK": "Semana",
+    "TOTAL": "Total",
+    "REMOVE_TASK": "Eliminar tarea"
   }
 }

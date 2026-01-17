@@ -23,6 +23,16 @@
         <mat-icon>folder_open</mat-icon>
         <span class="menu-text"><strong>{{ 'MENU.PROJECTS' | translate }}</strong></span>
       </a>
+      <!-- Scrum -->
+      <a mat-list-item routerLink="/scrum">
+        <mat-icon>view_week</mat-icon>
+        <span class="menu-text"><strong>{{ 'MENU.SCRUM' | translate }}</strong></span>
+      </a>
+      <!-- Estimación -->
+      <a mat-list-item routerLink="/estimacion">
+        <mat-icon>timeline</mat-icon>
+        <span class="menu-text"><strong>{{ 'MENU.ESTIMATION' | translate }}</strong></span>
+      </a>
       <!-- Procedimientos -->
       <a *ngIf="canShow('procedimientos')" mat-list-item routerLink="/procedimientos">
         <mat-icon>assignment</mat-icon>

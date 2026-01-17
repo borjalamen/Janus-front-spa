@@ -1,0 +1,9 @@
+.estimacion-root{padding:16px}
+.controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.table-wrap{overflow:auto}
+.est-table{width:100%;border-collapse:collapse}
+.est-table th{background:#163f6b;color:white;padding:8px;text-align:left}
+.est-table td{border:1px solid #ddd;padding:6px}
+.task-title{font-weight:600}
+.col-total{text-align:right;padding-right:16px}
+.small-link{background:transparent;border:0;color:#fff;cursor:pointer;margin-left:8px}
