@@ -148,7 +148,7 @@
                     <ng-container *ngIf="devMachines[selectedDevMachineIndex] as m">
                       <div class="dev-card-top">
                       <div class="dev-fields grid-3">
-                      <div class="field"><label>ID</label><input [(ngModel)]="m.identifier" placeholder="e.g. dev-01" /></div>
+                      <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="m.identifier" placeholder="e.g. dev-01" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_USER' | translate }}</label><input [(ngModel)]="m.user" /></div>
                     </div>
@@ -179,7 +179,7 @@
                       <div class="repo-fields">
                         <div class="openshift-section">
                           <div class="openshift-grid">
-                            <div class="field"><label>ID</label><input [(ngModel)]="o.identifier" placeholder="e.g. ocp-01" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="o.identifier" placeholder="e.g. ocp-01" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="o.user" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="o.password" type="text" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="o.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
@@ -225,19 +225,19 @@
                       <div class="repo-fields">
                         <div class="form-row db-config">
                           <div class="db-grid">
-                            <div class="field"><label>ID</label><input [(ngModel)]="d.identifier" placeholder="e.g. db-01" /></div>
-                            <div class="field"><label>Motor Base de dades</label><input [(ngModel)]="d.engine" placeholder="Oracle 19c" /></div>
-                            <div class="field"><label>Instancia</label><input [(ngModel)]="d.instanceName" placeholder="IPSOPG" /></div>
-                            <div class="field"><label>Host</label><input [(ngModel)]="d.host" placeholder="172.19.208.49" /></div>
-                            <div class="field"><label>Port</label><input [(ngModel)]="d.port" placeholder="1521" /></div>
-                            <div class="field"><label>SID</label><input [(ngModel)]="d.sid" placeholder="IPSOPG19" /></div>
-                            <div class="field"><label>Usuario</label><input [(ngModel)]="d.user" placeholder="dbuser" /></div>
-                            <div class="field"><label>Contraseña</label><input [(ngModel)]="d.password" type="text" placeholder="dbpass" /></div>
-                            <div class="field"><label>Persona contacto</label><input [(ngModel)]="d.contactPerson" placeholder="Nombre contacto" /></div>
-                            <div class="field"><label>Mail contacto</label><input [(ngModel)]="d.contactMail" placeholder="contacto@empresa.com" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="d.identifier" placeholder="e.g. db-01" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label><input [(ngModel)]="d.engine" placeholder="Oracle 19c" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label><input [(ngModel)]="d.instanceName" placeholder="IPSOPG" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_HOST' | translate }}</label><input [(ngModel)]="d.host" placeholder="172.19.208.49" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_PORT' | translate }}</label><input [(ngModel)]="d.port" placeholder="1521" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_SID' | translate }}</label><input [(ngModel)]="d.sid" placeholder="IPSOPG19" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_USER' | translate }}</label><input [(ngModel)]="d.user" placeholder="dbuser" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label><input [(ngModel)]="d.password" type="text" placeholder="dbpass" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="d.contactPerson" placeholder="Nombre contacto" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="d.contactMail" placeholder="contacto@empresa.com" /></div>
                           </div>
                           <div class="form-row">
-                            <label>Connection settings</label>
+                            <label>{{ 'PROJECTS.DB_CONNECTION_SETTINGS' | translate }}</label>
                             <textarea [(ngModel)]="d.properties" rows="5" placeholder="spring.datasource.url=...\nspring.datasource.username=...\nspring.datasource.password=..."></textarea>
                           </div>
                         </div>
@@ -263,16 +263,16 @@
                       <div class="repo-fields">
                         <div class="form-row other-tool-config">
                           <div class="other-tool-grid">
-                            <div class="field"><label>ID</label><input [(ngModel)]="t.identifier" placeholder="e.g. tool-01" /></div>
-                            <div class="field"><label>Nombre</label><input [(ngModel)]="t.name" /></div>
-                            <div class="field"><label>Ruta en la máquina</label><input [(ngModel)]="t.path" /></div>
-                            <div class="field"><label>Persona contacto</label><input [(ngModel)]="t.contactPerson" placeholder="Nombre contacto" /></div>
-                            <div class="field"><label>Mail contacto</label><input [(ngModel)]="t.contactMail" placeholder="contacto@empresa.com" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="t.identifier" placeholder="e.g. tool-01" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</label><input [(ngModel)]="t.name" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label><input [(ngModel)]="t.path" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="t.contactPerson" placeholder="Nombre contacto" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="t.contactMail" placeholder="contacto@empresa.com" /></div>
                             <div class="field checkbox-field">
-                              <label class="inline-label service-label">¿En servicio?</label>
+                              <label class="inline-label service-label">{{ 'PROJECTS.IN_SERVICE' | translate }}</label>
                               <div class="service-control">
                                 <label class="checkbox-container">
-                                  <input type="checkbox" [(ngModel)]="t.running" aria-label="En servicio" />
+                                  <input type="checkbox" [(ngModel)]="t.running" aria-label="{{ 'PROJECTS.IN_SERVICE' | translate }}" />
                                   <span class="checkmark"></span>
                                 </label>
                               </div>
