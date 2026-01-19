@@ -1,6 +1,16 @@
 .estimacion-root{padding:16px}
 .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.controls .task-field{min-width:320px;flex:0 1 420px}
+.controls input[matInput]{padding:8px}
 .table-wrap{overflow:auto}
+
+/* Reuse the exact search styles from descargables for consistent look */
+.desc-search{margin:12px 0}
+.desc-search input[type=search]{width:100%;padding:8px;border-radius:6px;border:1px solid #ccc}
+.search-field{width:100%}
+.search-field .mat-form-field-outline{border-color:rgba(255,255,255,0.05)}
+.search-field .mat-form-field-infix{background:rgba(255,255,255,0.02);padding-left:8px}
+.search-field.mat-form-field-appearance-outline .mat-form-field-outline-thick{border-color:#0a7f7f}
 .est-table{width:100%;border-collapse:collapse}
 .est-table th{background:#163f6b;color:white;padding:8px;text-align:left}
 .est-table td{border:1px solid #ddd;padding:6px}

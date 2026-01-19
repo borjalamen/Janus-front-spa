@@ -119,7 +119,6 @@
     "CONFIRM_DELETE_MEMBER_MSG": "¿Estás seguro que deseas eliminar este miembro?",
     "IPS_LABEL": "IPs",
     "IPS_PLACEHOLDER": "ip1, ip2, ...",
-          "PLACEHOLDER_URL": "https://...",
           "MINSAIT_MEMBERS": "Equipo Minsait",
           "ADD_MEMBER": "Añadir miembro",
           "MEMBER_NAME_PLACEHOLDER": "Nombre",
@@ -154,8 +153,7 @@
     ,"PLACEHOLDER_NAME": "Nombre"
     ,"PLACEHOLDER_URL_SIMPLE": "URL"
     ,"PLACEHOLDER_CRONTAB_EXPR": "* * * * *"
-    ,"PLACEHOLDER_DESCRIPTION": "Descripción"
-    ,
+    ,"PLACEHOLDER_DESCRIPTION": "Descripción",
     "TAB_INFO": "Información General",
     "TAB_DOCS": "Documentación",
     "UPLOAD": "Subir",
@@ -391,10 +389,7 @@
     "META_REQUESTER_EMAIL": "Email del peticionario",
     "META_NOTES": "Notas/Comentarios",
     "START": "Iniciar estimación",
-    "EDIT_METADATA": "Editar metadatos"
-  },
-  
-  "ESTIMATION_META":{
+    "EDIT_METADATA": "Editar metadatos",
     "LIST_DELETE": "Borrar",
     "LIST_REFRESH": "Refrescar"
   },
@@ -490,28 +485,6 @@
     "DOWNLOAD": "Descargar",
     "NO_RESULTS": "No se encontraron vídeos.",
     "CLOSE": "Cerrar"
-  }
-  ,
-  "ESTIMATION": {
-    "TITLE": "Estimación",
-    "NEW_TASK": "Nueva tarea",
-    "ADD_TASK": "Añadir tarea",
-    "ADD_WEEK": "Añadir semana",
-    "TASK": "Tarea",
-    "WEEK": "Semana",
-    "TOTAL": "Total",
-    "REMOVE_TASK": "Eliminar tarea"
-  }
-
-  ,"ESTIMATION_META":{
-    "META_NAME":"Nombre de la estimación",
-    "META_PROJECT_CODE":"Código de proyecto",
-    "META_PROJECT_NAME":"Nombre del proyecto",
-    "META_REQUESTER":"Peticionario",
-    "META_REQUESTER_EMAIL":"Email del peticionario",
-    "META_NOTES":"Notas",
-    "START":"Comenzar estimación",
-    "EDIT_METADATA":"Editar metadatos"
   }
   ,"ESTIMATION_EXPORT":{
     "EXPORT_CSV":"Exportar CSV",

@@ -38,7 +38,10 @@
   </div>
 
   <div *ngIf="started" class="controls">
-    <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" />
+    <mat-form-field appearance="outline" class="task-field">
+      <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" maxlength="200" />
+      <mat-hint align="end">{{ (newTaskTitle.length || 0) + '/200' }}</mat-hint>
+    </mat-form-field>
     <button mat-flat-button color="primary" (click)="addTask()">{{ 'ESTIMATION.ADD_TASK' | translate }}</button>
     <button mat-stroked-button (click)="addWeek()">{{ 'ESTIMATION.ADD_WEEK' | translate }}</button>
     <button mat-stroked-button color="accent" (click)="started=false">{{ 'ESTIMATION_META.EDIT_METADATA' | translate }}</button>
@@ -89,10 +92,15 @@
     </mat-tab>
 
     <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
-      <div class="list-controls" style="padding:12px">
-        <input matInput placeholder="{{ 'ESTIMATION.LIST_SEARCH' | translate }}" [(ngModel)]="searchQuery" />
-        <button mat-stroked-button (click)="loadSavedEstimations()">{{ 'ESTIMATION.LIST_REFRESH' | translate }}</button>
-      </div>
+        <div class="desc-search">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="search" [(ngModel)]="searchQuery" [placeholder]="'ESTIMATION.LIST_SEARCH' | translate" [attr.aria-label]="'ESTIMATION.LIST_SEARCH' | translate" />
+            <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="searchQuery='';" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
 
       <div class="list-table">
         <table class="est-table">

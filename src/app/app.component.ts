@@ -74,9 +74,12 @@ export class AppComponent implements OnDestroy {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = localStorage.getItem('lang');
     const browserLang = this.translate.getBrowserLang();
-    const defaultLang = saved ?? browserLang ?? 'es';
+    const defaultLang = (saved ?? browserLang ?? 'es').toString();
     this.translate.setDefaultLang('es');
-    this.translate.use(defaultLang.match(/en|es|ca/) ? defaultLang : 'es');
+    // Ensure we pass the short code ('en'|'es'|'ca') to the loader — avoid full tags like 'es-ES'
+    const matched = defaultLang.match(/en|es|ca/);
+    const initial = (matched && matched[0]) ? matched[0] : 'es';
+    this.translate.use(initial);
 
     // ⬅ Subscriu-te als canvis d'usuari
     this.authSubscription = this.authService.currentUser$.subscribe(user => {

@@ -453,11 +453,9 @@
     "LIST_DELETE": "Esborrar",
     "LIST_REFRESH": "Refrescar"
   },
-  "ESTIMATION": {
-    "LIST_SEARCH": "Cerca estimacions",
-    "LIST_REFRESH": "Refrescar",
-    "LIST_LOAD": "Carregar",
-    "LIST_DELETE": "Esborrar"
+  "ESTIMATION_EXPORT": {
+    "EXPORT_CSV": "Exportar CSV",
+    "EXPORT_PDF": "Exportar PDF"
   },
     "SPINNER": {
       "LOADING": "Carregant..."
@@ -509,17 +507,5 @@
     "NO_RESULTS": "No s'han trobat vídeos.",
     "CLOSE": "Tancar"
   }
-,
-  "ESTIMATION": {
-    "TITLE": "Estimació",
-    "NEW_TASK": "Nova tasca",
-    "ADD_TASK": "Afegir tasca",
-    "ADD_WEEK": "Afegir setmana",
-    "TASK": "Tasca",
-    "WEEK": "Setmana",
-    "TOTAL": "Total",
-    "REMOVE_TASK": "Eliminar tasca"
-  }
-  
   
 }
