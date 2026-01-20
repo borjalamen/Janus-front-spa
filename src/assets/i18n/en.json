@@ -40,6 +40,10 @@
     "TITLE": "Sign in",
     "USERNAME_LABEL": "Username",
     "USERNAME_TITLE": "Username",
+    "PLACEHOLDER_DEV_ID": "e.g. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "e.g. ocp-01",
+    "PLACEHOLDER_DB_ID": "e.g. db-01",
+    "PLACEHOLDER_TOOL_ID": "e.g. tool-01",
     "PASSWORD_LABEL": "Password",
     "PASSWORD_TITLE": "Password",
     "BUTTON": "Log in",
@@ -206,6 +210,18 @@
     "EXPORT_PDF": "Export PDF",
     "EXPORT_PDF_EMAIL": "Export PDF and Send by Email"
   },
+  "DESCARGABLES": {
+    "TITLE": "Downloads",
+    "LAST_MODIFIED": "Last modified",
+    "DOWNLOAD": "Download",
+    "DOWNLOADING": "Downloading...",
+    "NO_FILES": "No files available for download.",
+    "LOADING": "Loading files...",
+    "ERROR": "Error loading file list. Check browser console.",
+    "SEARCH_PLACEHOLDER": "Search by name, description, date...",
+    "NO_RESULTS": "No results found for your search.",
+    "CLEAR": "Clear"
+  },
   "CLIP": {
     "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",
     "SEND": "Send",
@@ -214,6 +230,28 @@
     "USER": "You:",
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error querying AI"
+  },
+  "PROJECTS": {
+    "PLACEHOLDER_DEV_ID": "e.g. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "e.g. ocp-01",
+    "PLACEHOLDER_DB_ID": "e.g. db-01",
+    "PLACEHOLDER_TOOL_ID": "e.g. tool-01",
+    "DB_LABEL": "Database",
+    "OTHER_TOOL": "Other Tool",
+    "PLACEHOLDER_DB_ENGINE": "e.g. Oracle 19c",
+    "PLACEHOLDER_DB_INSTANCE": "e.g. IPSOPG",
+    "PLACEHOLDER_DB_HOST": "e.g. 172.19.208.49",
+    "PLACEHOLDER_DB_USER": "e.g. dbuser",
+    "PLACEHOLDER_DB_PASSWORD": "e.g. dbpass",
+    "PLACEHOLDER_CONTACT_NAME": "e.g. John Doe",
+    "PLACEHOLDER_CONTACT_MAIL": "e.g. contact@company.com"
+  },
+  "PROJECTS_REMOVE": {
+    "OPENSHIFT_FOR": "Openshift for",
+    "MACHINE": "Machine",
+    "DB_FOR": "Database config for",
+    "OTHER_TOOL_FOR": "Other tool for",
+    "DOCUMENT": "Document"
   },
   "SPINNER": {
     "LOADING": "Loading..."

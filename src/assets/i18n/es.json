@@ -491,4 +491,27 @@
     "EXPORT_PDF":"Exportar PDF",
     "EXPORT_PDF_EMAIL": "Exportar PDF y enviar por email"
   }
+,
+  "PROJECTS": {
+    "PLACEHOLDER_DEV_ID": "ej. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "ej. ocp-01",
+    "PLACEHOLDER_DB_ID": "ej. db-01",
+    "PLACEHOLDER_TOOL_ID": "ej. tool-01",
+    "DB_LABEL": "Base de datos",
+    "OTHER_TOOL": "Otra herramienta",
+    "PLACEHOLDER_DB_ENGINE": "ej. Oracle 19c",
+    "PLACEHOLDER_DB_INSTANCE": "ej. IPSOPG",
+    "PLACEHOLDER_DB_HOST": "ej. 172.19.208.49",
+    "PLACEHOLDER_DB_USER": "ej. dbuser",
+    "PLACEHOLDER_DB_PASSWORD": "ej. dbpass",
+    "PLACEHOLDER_CONTACT_NAME": "ej. Nombre Apellido",
+    "PLACEHOLDER_CONTACT_MAIL": "ej. contacto@empresa.com"
+  }
+  ,"PROJECTS_REMOVE": {
+    "OPENSHIFT_FOR": "Openshift para",
+    "MACHINE": "Máquina",
+    "DB_FOR": "Configuración BD para",
+    "OTHER_TOOL_FOR": "Otra herramienta para",
+    "DOCUMENT": "Documento"
+  }
 }

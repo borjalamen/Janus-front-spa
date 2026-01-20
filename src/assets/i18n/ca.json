@@ -143,7 +143,7 @@
       "PLACEHOLDER_URL_SIMPLE": "URL",
       "PLACEHOLDER_CRONTAB_EXPR": "* * * * *",
       "PLACEHOLDER_DESCRIPTION": "Descripció",
-    "TAB_INFO": "Informació general",
+      "TAB_INFO": "Informació general",
     "TAB_DOCS": "Documentació",
     "UPLOAD": "Pujar",
     "NO_DOCUMENTS_MESSAGE": "No hi ha documents en aquest projecte.",
@@ -185,6 +185,27 @@
     "URL_ENTORNO_PRODUCCION": "URL entorn de producció",
     "HORA_DAILY": "Hora de la daily",
     "PLACEHOLDER_URL": "https://...",
+    "PLACEHOLDER_DEV_ID": "e.g. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "e.g. ocp-01",
+    "PLACEHOLDER_DB_ID": "e.g. db-01",
+    "PLACEHOLDER_TOOL_ID": "e.g. tool-01",
+    "DB_LABEL": "Base de dades",
+    "OTHER_TOOL": "Altres eines",
+    "PLACEHOLDER_DB_ENGINE": "e.g. Oracle 19c",
+    "PLACEHOLDER_DB_INSTANCE": "e.g. IPSOPG",
+    "PLACEHOLDER_DB_HOST": "e.g. 172.19.208.49",
+    "PLACEHOLDER_DB_USER": "e.g. dbuser",
+    "PLACEHOLDER_DB_PASSWORD": "e.g. dbpass",
+    "PLACEHOLDER_CONTACT_NAME": "e.g. Nom Cognom",
+    "PLACEHOLDER_CONTACT_MAIL": "e.g. contacte@empresa.com",
+    "PROJECTS_REMOVE": {
+      "OPENSHIFT_FOR": "Openshift per",
+      "MACHINE": "Màquina",
+      "DB_FOR": "Configuració BD per",
+      "OTHER_TOOL_FOR": "Altres eines per",
+      "DOCUMENT": "Document"
+    },
+    
     "MINSAIT_MEMBERS": "Equip Minsait",
     "ADD_MEMBER": "Afegir membre",
     "MEMBER_NAME_PLACEHOLDER": "Nom",
@@ -457,6 +478,12 @@
     "EXPORT_CSV": "Exportar CSV",
     "EXPORT_PDF": "Exportar PDF",
     "EXPORT_PDF_EMAIL": "Exportar PDF i enviar per email"
+  },
+  "PROJECTS": {
+    "PLACEHOLDER_DEV_ID": "p.ex. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "p.ex. ocp-01",
+    "PLACEHOLDER_DB_ID": "p.ex. db-01",
+    "PLACEHOLDER_TOOL_ID": "p.ex. tool-01"
   },
     "SPINNER": {
       "LOADING": "Carregant..."

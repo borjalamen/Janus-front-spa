@@ -148,7 +148,7 @@
                     <ng-container *ngIf="devMachines[selectedDevMachineIndex] as m">
                       <div class="dev-card-top">
                       <div class="dev-fields grid-3">
-                      <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="m.identifier" placeholder="e.g. dev-01" /></div>
+                          <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="m.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
                       <div class="field"><label>{{ 'PROJECTS.DEV_USER' | translate }}</label><input [(ngModel)]="m.user" /></div>
                     </div>
@@ -179,7 +179,7 @@
                       <div class="repo-fields">
                         <div class="openshift-section">
                           <div class="openshift-grid">
-                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="o.identifier" placeholder="e.g. ocp-01" /></div>
+                                  <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="o.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_OPENSHIFT_ID' | translate }}" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="o.user" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="o.password" type="text" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="o.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
@@ -215,7 +215,7 @@
                       <input id="db-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.dbEnabled" aria-label="Database enabled" />
                     </div>
                     <div class="toggle-text">
-                      <label for="db-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">Base de datos</label>
+                      <label for="db-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.DB_LABEL' | translate }}</label>
                     </div>
                     <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.dbEnabled" (click)="addDb(selectedDevMachineIndex)">+</button> </div>
                   </div>
@@ -225,16 +225,16 @@
                       <div class="repo-fields">
                         <div class="form-row db-config">
                           <div class="db-grid">
-                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="d.identifier" placeholder="e.g. db-01" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label><input [(ngModel)]="d.engine" placeholder="Oracle 19c" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label><input [(ngModel)]="d.instanceName" placeholder="IPSOPG" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_HOST' | translate }}</label><input [(ngModel)]="d.host" placeholder="172.19.208.49" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="d.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ID' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label><input [(ngModel)]="d.engine" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ENGINE' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label><input [(ngModel)]="d.instanceName" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_INSTANCE' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_HOST' | translate }}</label><input [(ngModel)]="d.host" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_HOST' | translate }}" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DB_PORT' | translate }}</label><input [(ngModel)]="d.port" placeholder="1521" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DB_SID' | translate }}</label><input [(ngModel)]="d.sid" placeholder="IPSOPG19" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_USER' | translate }}</label><input [(ngModel)]="d.user" placeholder="dbuser" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label><input [(ngModel)]="d.password" type="text" placeholder="dbpass" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="d.contactPerson" placeholder="Nombre contacto" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="d.contactMail" placeholder="contacto@empresa.com" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_USER' | translate }}</label><input [(ngModel)]="d.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_USER' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label><input [(ngModel)]="d.password" type="text" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_PASSWORD' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="d.contactPerson" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="d.contactMail" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" /></div>
                           </div>
                           <div class="form-row">
                             <label>{{ 'PROJECTS.DB_CONNECTION_SETTINGS' | translate }}</label>
@@ -253,7 +253,7 @@
                       <input id="othertool-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.otherToolEnabled" aria-label="Other tool enabled" />
                     </div>
                     <div class="toggle-text">
-                      <label for="othertool-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">Otra Herramienta</label>
+                      <label for="othertool-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.OTHER_TOOL' | translate }}</label>
                     </div>
                     <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.otherToolEnabled" (click)="addOtherTool(selectedDevMachineIndex)">+</button> </div>
                   </div>
@@ -263,11 +263,11 @@
                       <div class="repo-fields">
                         <div class="form-row other-tool-config">
                           <div class="other-tool-grid">
-                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="t.identifier" placeholder="e.g. tool-01" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="t.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_TOOL_ID' | translate }}" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</label><input [(ngModel)]="t.name" /></div>
                             <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label><input [(ngModel)]="t.path" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="t.contactPerson" placeholder="Nombre contacto" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="t.contactMail" placeholder="contacto@empresa.com" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="t.contactPerson" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" /></div>
+                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="t.contactMail" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" /></div>
                             <div class="field checkbox-field">
                               <label class="inline-label service-label">{{ 'PROJECTS.IN_SERVICE' | translate }}</label>
                               <div class="service-control">
@@ -391,7 +391,7 @@
                   <div class="col">
                     <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
                     <div *ngIf="editing">
-                      <div class="list-controls"><button class="btn small" (click)="addCrontab()">+ Crontab</button></div>
+                      <div class="list-controls"><button class="btn small" (click)="addCrontab()">+ {{ 'PROJECTS_ACTIONS.ADD_CRONTAB' | translate }}</button></div>
                       <div *ngFor="let c of crontabList; let ci = index" class="repo-item">
                         <div class="repo-duo">
                           <div class="repo-fields">
@@ -486,17 +486,17 @@
                         <span *ngIf="doc.size" class="doc-size">{{ doc.size | number }} B</span>
                       </div>
                       <div class="doc-desc">{{ doc.contentType || '' }}</div>
-                      <div class="doc-modified">Última modificación: <strong>{{ doc.lastModified }}</strong></div>
+                      <div class="doc-modified">{{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: <strong>{{ doc.lastModified }}</strong></div>
                     </div>
                       <div class="doc-actions">
-                        <button class="btn small" (click)="downloadProjectDocument(doc.name)" title="Descargar" aria-label="Descargar">
+                        <button class="btn small" (click)="downloadProjectDocument(doc.name)" title="{{ 'DESCARGABLES.DOWNLOAD' | translate }}" aria-label="{{ 'DESCARGABLES.DOWNLOAD' | translate }}">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M21 21H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </button>
-                        <button class="btn small" *ngIf="editing" (click)="(removeDocCandidate = doc.name); promptRemove('document', -1)" title="Eliminar" aria-label="Eliminar">
+                        <button class="btn small" *ngIf="editing" (click)="(removeDocCandidate = doc.name); promptRemove('document', -1)" title="{{ 'DOCUMENTS.DELETE' | translate }}" aria-label="{{ 'DOCUMENTS.DELETE' | translate }}">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -555,19 +555,19 @@
           <strong>{{ proyecto?.equipoMinsait?.[removeCandidate.index]?.nombre }}</strong>
         </div>
         <div *ngIf="removeCandidate.type==='openshift'">
-          <strong>Openshift for: {{ devMachines[removeCandidate.index]?.openshifts?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>{{ 'PROJECTS_REMOVE.OPENSHIFT_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.openshifts?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
         </div>
         <div *ngIf="removeCandidate.type==='machine'">
-          <strong>Machine: {{ devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>{{ 'PROJECTS_REMOVE.MACHINE' | translate }}: {{ devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
         </div>
         <div *ngIf="removeCandidate.type==='db'">
-          <strong>Database config for: {{ devMachines[removeCandidate.index]?.dbs?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>{{ 'PROJECTS_REMOVE.DB_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.dbs?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
         </div>
         <div *ngIf="removeCandidate.type==='othertool'">
-          <strong>Other tool for: {{ devMachines[removeCandidate.index]?.otherTools?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>{{ 'PROJECTS_REMOVE.OTHER_TOOL_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.otherTools?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
         </div>
         <div *ngIf="removeCandidate.type==='document'">
-          <strong>Documento: {{ removeDocCandidate }}</strong>
+          <strong>{{ 'PROJECTS_REMOVE.DOCUMENT' | translate }}: {{ removeDocCandidate }}</strong>
         </div>
       </div>
     </div>
