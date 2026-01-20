@@ -33,21 +33,43 @@
     </div>
 
     <div class="row actions">
-      <button mat-flat-button color="primary" (click)="started = true">{{ 'ESTIMATION_META.START' | translate }}</button>
+      <button type="button" class="start-btn" (click)="started = true" aria-label="{{ 'ESTIMATION_META.START' | translate }}">
+        <mat-icon>play_arrow</mat-icon>
+        {{ 'ESTIMATION_META.START' | translate }}
+      </button>
     </div>
   </div>
 
-  <div *ngIf="started" class="controls">
+    <div *ngIf="started" class="controls">
     <mat-form-field appearance="outline" class="task-field">
       <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" maxlength="200" />
       <mat-hint align="end">{{ (newTaskTitle.length || 0) + '/200' }}</mat-hint>
     </mat-form-field>
-    <button mat-flat-button color="primary" (click)="addTask()">{{ 'ESTIMATION.ADD_TASK' | translate }}</button>
-    <button mat-stroked-button (click)="addWeek()">{{ 'ESTIMATION.ADD_WEEK' | translate }}</button>
-    <button mat-stroked-button color="accent" (click)="started=false">{{ 'ESTIMATION_META.EDIT_METADATA' | translate }}</button>
+    <button type="button" class="action-btn" (click)="addTask()" aria-label="{{ 'ESTIMATION.ADD_TASK' | translate }}">
+      <mat-icon>add</mat-icon>
+      {{ 'ESTIMATION.ADD_TASK' | translate }}
+    </button>
+    <button type="button" class="action-btn" (click)="addWeek()" aria-label="{{ 'ESTIMATION.ADD_WEEK' | translate }}">
+      <mat-icon>calendar_today</mat-icon>
+      {{ 'ESTIMATION.ADD_WEEK' | translate }}
+    </button>
+    <button type="button" class="action-btn" (click)="started=false" aria-label="{{ 'ESTIMATION_META.EDIT_METADATA' | translate }}">
+      <mat-icon>edit</mat-icon>
+      {{ 'ESTIMATION_META.EDIT_METADATA' | translate }}
+    </button>
     <span style="flex:1 1 auto"></span>
-    <button mat-stroked-button class="export-btn" (click)="exportCsv()">{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}</button>
-    <button mat-stroked-button class="export-btn" (click)="exportPdf()">{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}</button>
+    <button type="button" class="export-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
+      <mat-icon>file_download</mat-icon>
+      {{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}
+    </button>
+    <button type="button" class="export-btn" (click)="exportPdf()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}">
+      <mat-icon>picture_as_pdf</mat-icon>
+      {{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}
+    </button>
+    <button type="button" class="mail-btn" (click)="exportPdfAndMail()" [disabled]="!requesterEmail" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}">
+      <mat-icon>mail_outline</mat-icon>
+      {{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}
+    </button>
   </div>
 
   <div class="table-wrap">

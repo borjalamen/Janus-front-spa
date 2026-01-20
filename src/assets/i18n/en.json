@@ -4,7 +4,16 @@
     "PROJECTS": "Projects",
     "PROCEDURES": "Procedures",
     "DOCUMENTS": "Documents",
-    "OTHERS": "Others"
+    "TRAINING": "Training",
+    "PLANNING": "Planning",
+    "MULTIMEDIA": "Multimedia",
+    "ADMIN": "Administration",
+    "LOGBOOK": "Logbook",
+    "INFRASTRUCTURE": "Infrastructure",
+    "TOOLS": "Tools",
+    "DESCARGABLES": "Downloads",
+    "SCRUM": "Scrum",
+    "ESTIMATION": "Estimation"
   },
   "PROJECTS_MIND_EXTRA": {
     "ARTIFACT_REPOS": "Artifact repositories"
@@ -161,40 +170,41 @@
   },
   "ESTIMATION": {
     "TITLE": "Estimation",
-    "TAB_DO": "Do Estimation",
-    "TAB_LIST": "Estimations List",
+    "TAB_DO": "New Estimation",
+    "TAB_LIST": "Estimations",
     "TASK": "Task",
     "WEEK": "Week",
     "TOTAL": "Total",
-    "NEW_TASK": "New task",
-    "ADD_TASK": "Add task",
-    "ADD_WEEK": "Add week",
-    "REMOVE_TASK": "Remove task",
+    "NEW_TASK": "New Task",
+    "ADD_TASK": "Add Task",
+    "ADD_WEEK": "Add Week",
+    "REMOVE_TASK": "Remove Task",
     "NAME": "Name",
     "PROJECT": "Project",
     "REQUESTER": "Requester",
     "CREATED": "Created",
-    "LIST_SEARCH": "Search estimations",
+    "LIST_SEARCH": "Search Estimations",
     "LIST_REFRESH": "Refresh",
     "LIST_LOAD": "Load",
     "LIST_DELETE": "Delete"
   },
   "ESTIMATION_META": {
-    "META_NAME": "Estimation name",
-    "META_PROJECT_CODE": "Project code",
-    "META_PROJECT_NAME": "Project name",
+    "META_NAME": "Estimation Name",
+    "META_PROJECT_CODE": "Project Code",
+    "META_PROJECT_NAME": "Project Name",
     "META_REQUESTER": "Requester",
-    "META_REQUESTER_EMAIL": "Requester email",
+    "META_REQUESTER_EMAIL": "Requester Email",
     "META_NOTES": "Notes/Comments",
-    "START": "Start estimation",
-    "EDIT_METADATA": "Edit metadata",
+    "START": "Start Estimation",
+    "EDIT_METADATA": "Edit Metadata",
     "SEARCH": {
       "PLACEHOLDER": "Type to search..."
     }
   },
   "ESTIMATION_EXPORT": {
     "EXPORT_CSV": "Export CSV",
-    "EXPORT_PDF": "Export PDF"
+    "EXPORT_PDF": "Export PDF",
+    "EXPORT_PDF_EMAIL": "Export PDF and Send by Email"
   },
   "CLIP": {
     "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",

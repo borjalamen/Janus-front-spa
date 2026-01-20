@@ -1,3 +1,100 @@
+.start-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: linear-gradient(90deg, #ff7a18 0%, #af002d 100%);
+	color: #fff;
+	border: none;
+	padding: 12px 20px;
+	font-size: 16px;
+	font-weight: 600;
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(175,0,45,0.25), inset 0 -2px 0 rgba(0,0,0,0.15);
+	cursor: pointer;
+	transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+.start-btn mat-icon {
+	font-size: 18px;
+}
+.start-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 24px rgba(175,0,45,0.32), inset 0 -2px 0 rgba(0,0,0,0.12);
+}
+.start-btn:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+.start-btn[disabled] {
+	opacity: 0.6;
+	pointer-events: none;
+	filter: grayscale(0.2) brightness(0.9);
+}
+
+/* Secondary action buttons (Add task, Add week, Edit metadata) */
+.action-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+	border-radius: 6px;
+	border: 1px solid rgba(255,255,255,0.08);
+	background: transparent;
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 120ms ease, transform 120ms ease;
+}
+.action-btn:hover {
+	background: rgba(255,255,255,0.02);
+	transform: translateY(-1px);
+}
+
+/* Export buttons style */
+.export-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+	border-radius: 6px;
+	border: 1px solid rgba(255,255,255,0.12);
+	background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+}
+.export-btn:hover {
+	filter: brightness(1.06);
+}
+
+.mail-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+	border-radius: 6px;
+	border: 1px solid rgba(255,255,255,0.12);
+	background: linear-gradient(90deg,#2b6cb0,#2c5282);
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+}
+.mail-btn mat-icon { font-size:16px }
+.mail-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.28); }
+/* Ensure icons inside buttons are vertically centered and scaled */
+.action-btn mat-icon, .export-btn mat-icon, .start-btn mat-icon {
+	font-size: 18px;
+	display: inline-flex;
+	vertical-align: middle;
+}
+/* Responsive: wrap controls on small screens */
+.controls {
+	display:flex;
+	flex-wrap:wrap;
+	gap:10px;
+	align-items:center;
+}
+.controls .task-field { flex: 1 1 320px; }
+.controls .action-btn, .controls .export-btn, .controls .mail-btn { flex: 0 0 auto; }
 .estimacion-root{padding:16px}
 .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
 .controls .task-field{min-width:320px;flex:0 1 420px}

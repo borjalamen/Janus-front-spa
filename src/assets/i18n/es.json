@@ -488,6 +488,7 @@
   }
   ,"ESTIMATION_EXPORT":{
     "EXPORT_CSV":"Exportar CSV",
-    "EXPORT_PDF":"Exportar PDF"
+    "EXPORT_PDF":"Exportar PDF",
+    "EXPORT_PDF_EMAIL": "Exportar PDF y enviar por email"
   }
 }

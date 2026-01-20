@@ -193,7 +193,34 @@ export class EstimacionComponent implements OnInit {
   }
 
   exportPdf() {
-    // Build a printable HTML
+    // Try generating a real PDF and opening it in new window; fallback to printable HTML
+    this.createPdfBlob().then(blob => {
+      const url = URL.createObjectURL(blob);
+      const w = window.open(url, '_blank');
+      if (!w) {
+        // fallback: printable HTML
+        const html = this.buildPrintableHtml();
+        const newWin = window.open('', '_blank', 'width=900,height=700');
+        if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+        newWin.document.open();
+        newWin.document.write(html);
+        newWin.document.close();
+        setTimeout(() => { newWin.print(); }, 300);
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }).catch(_ => {
+      // fallback to printable HTML
+      const html = this.buildPrintableHtml();
+      const newWin = window.open('', '_blank', 'width=900,height=700');
+      if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+      newWin.document.open();
+      newWin.document.write(html);
+      newWin.document.close();
+      setTimeout(() => { newWin.print(); }, 300);
+    });
+  }
+
+  buildPrintableHtml() {
     const style = `
       <style>
         body{font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff}
@@ -202,13 +229,11 @@ export class EstimacionComponent implements OnInit {
         th{background:#163f6b;color:#fff}
       </style>
     `;
-
     let html = '<html><head><title>Estimation</title>' + style + '</head><body>';
     html += `<h2>${this.escapeHtml(this.estimationName || 'Estimation')}</h2>`;
     html += `<p><strong>Project:</strong> ${this.escapeHtml(this.projectCode)} - ${this.escapeHtml(this.projectName)}<br/>`;
     html += `<strong>Requester:</strong> ${this.escapeHtml(this.requester)} (${this.escapeHtml(this.requesterEmail)})</p>`;
     if (this.notes) html += `<p><strong>Notes:</strong><br/>${this.escapeHtml(this.notes).replace(/\n/g,'<br/>')}</p>`;
-
     html += '<table><thead><tr>';
     html += `<th>Task</th>`;
     this.weeks.forEach(w => html += `<th>Week ${w}</th>`);
@@ -221,16 +246,120 @@ export class EstimacionComponent implements OnInit {
     html += `</tbody><tfoot><tr><td><strong>Total</strong></td>`;
     this.weeks.forEach((_, i) => html += `<td><strong>${this.totalForWeek(i)}</strong></td>`);
     html += `<td><strong>${this.grandTotal()}</strong></td></tr></tfoot></table>`;
-
     html += '</body></html>';
+    return html;
+  }
 
-    const newWin = window.open('', '_blank', 'width=900,height=700');
-    if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
-    newWin.document.open();
-    newWin.document.write(html);
-    newWin.document.close();
-    // Give browser a moment then print
-    setTimeout(() => { newWin.print(); }, 300);
+  async createPdfBlob(): Promise<Blob> {
+    // Lazy import jsPDF to avoid build issues when library missing
+    const { jsPDF } = await import('jspdf');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const margin = 40;
+    let y = 40;
+    const lineHeight = 14;
+
+    doc.setFontSize(16);
+    doc.text(this.estimationName || 'Estimation', margin, y);
+    y += 24;
+
+    doc.setFontSize(11);
+    doc.text(`Project: ${this.projectCode} - ${this.projectName}`, margin, y);
+    y += lineHeight;
+    doc.text(`Requester: ${this.requester} (${this.requesterEmail})`, margin, y);
+    y += lineHeight + 6;
+
+    if (this.notes) {
+      doc.text('Notes:', margin, y);
+      y += lineHeight;
+      const split = doc.splitTextToSize(this.notes, 520);
+      doc.text(split, margin, y);
+      y += split.length * lineHeight + 6;
+    }
+
+    // Table header
+    const colWidths = [220, ...this.weeks.map(() => 60), 60];
+    let x = margin;
+    doc.setFillColor(22, 63, 107);
+    doc.setTextColor(255, 255, 255);
+    doc.rect(x, y, colWidths.reduce((a,b)=>a+b,0), 18, 'F');
+    doc.setFontSize(11);
+    let cx = x + 6;
+    doc.text('Task', cx, y + 13);
+    cx += colWidths[0];
+    this.weeks.forEach((w, i) => { doc.text(`W${w}`, cx + 6, y + 13); cx += colWidths[i+1]; });
+    doc.text('Total', cx + 6, y + 13);
+    y += 22;
+    doc.setTextColor(0,0,0);
+
+    // Rows
+    this.tasks.forEach(t => {
+      if (y > 760) { doc.addPage(); y = 40; }
+      let cx2 = x + 6;
+      doc.text(t.title, cx2, y + 12);
+      cx2 += colWidths[0];
+      t.estimates.forEach((e, idx) => { doc.text(String(e), cx2 + 4, y + 12); cx2 += colWidths[idx+1]; });
+      doc.text(String(this.totalForTask(t)), cx2 + 4, y + 12);
+      y += 18;
+    });
+
+    // Footer totals
+    y += 8;
+    if (y > 760) { doc.addPage(); y = 40; }
+    doc.setFontSize(11);
+    doc.text('Total', x + 6, y + 12);
+    let cx3 = x + colWidths[0];
+    this.weeks.forEach((_, i) => { doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 12); cx3 += colWidths[i+1]; });
+    doc.text(String(this.grandTotal()), cx3 + 6, y + 12);
+
+    const pdfBlob = doc.output('blob');
+    return pdfBlob;
+  }
+
+  async exportPdfAndMail() {
+    try {
+      const pdfBlob = await this.createPdfBlob();
+      const fileName = (this.estimationName && this.estimationName.trim()) ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.pdf' : 'estimation.pdf';
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      // Try Web Share with files
+      // @ts-ignore
+      if (navigator && (navigator as any).canShare && (navigator as any).canShare({ files: [file] })) {
+        try {
+          // @ts-ignore
+          await (navigator as any).share({ files: [file], title: this.estimationName || 'Estimation', text: '' });
+          return;
+        } catch (err) {
+          // if sharing failed, continue to fallback
+        }
+      }
+
+      // Fallback: trigger download and open mailto with instructions to attach
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+      const subject = encodeURIComponent((this.estimationName || 'Estimation') + ' - Estimation');
+      const bodyLines = [];
+      bodyLines.push('Hi ' + (this.requester || 'Requester') + ',');
+      bodyLines.push('');
+      bodyLines.push('I have attached the estimation. If your mail client does not auto-attach the file, please attach the downloaded PDF: ' + fileName);
+      bodyLines.push('');
+      bodyLines.push('Regards,');
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      const mailto = `mailto:${encodeURIComponent(this.requesterEmail || '')}?subject=${subject}&body=${body}`;
+      window.location.href = mailto;
+    } catch (e) {
+      // severe fallback: open printable HTML
+      const html = this.buildPrintableHtml();
+      const newWin = window.open('', '_blank', 'width=900,height=700');
+      if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+      newWin.document.open();
+      newWin.document.write(html);
+      newWin.document.close();
+      setTimeout(() => { newWin.print(); }, 300);
+    }
   }
 
   escapeHtml(s: string) {
