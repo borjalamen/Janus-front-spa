@@ -198,6 +198,11 @@
     "PLACEHOLDER_DB_PASSWORD": "e.g. dbpass",
     "PLACEHOLDER_CONTACT_NAME": "e.g. Nom Cognom",
     "PLACEHOLDER_CONTACT_MAIL": "e.g. contacte@empresa.com",
+    "PROJECTS_ARIA": {
+      "OPENSHIFT_ENABLED": "Openshift habilitat",
+      "DB_ENABLED": "Base de dades habilitada",
+      "OTHER_TOOL_ENABLED": "Altres eines habilitades"
+    },
     "PROJECTS_REMOVE": {
       "OPENSHIFT_FOR": "Openshift per",
       "MACHINE": "Màquina",

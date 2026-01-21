@@ -507,6 +507,11 @@
     "PLACEHOLDER_CONTACT_NAME": "ej. Nombre Apellido",
     "PLACEHOLDER_CONTACT_MAIL": "ej. contacto@empresa.com"
   }
+  ,"PROJECTS_ARIA": {
+    "OPENSHIFT_ENABLED": "Openshift habilitado",
+    "DB_ENABLED": "Base de datos habilitada",
+    "OTHER_TOOL_ENABLED": "Otra herramienta habilitada"
+  }
   ,"PROJECTS_REMOVE": {
     "OPENSHIFT_FOR": "Openshift para",
     "MACHINE": "Máquina",

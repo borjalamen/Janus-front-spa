@@ -166,7 +166,7 @@
 
                   <div class="toggle-row toggle-inline">
                     <div class="toggle-checkbox">
-                      <input id="openshift-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.openshiftEnabled" aria-label="Openshift enabled" />
+                      <input id="openshift-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.openshiftEnabled" aria-label="{{ 'PROJECTS.OPENSHIFT_ENABLED' | translate }}" />
                     </div>
                     <div class="toggle-text">
                       <label for="openshift-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.OPENSHIFT' | translate }}</label>
@@ -212,7 +212,7 @@
                   <div class="divider-dots" style="margin-top:12px"></div>
                   <div class="toggle-row toggle-inline">
                     <div class="toggle-checkbox">
-                      <input id="db-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.dbEnabled" aria-label="Database enabled" />
+                      <input id="db-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.dbEnabled" aria-label="{{ 'PROJECTS.DB_ENABLED' | translate }}" />
                     </div>
                     <div class="toggle-text">
                       <label for="db-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.DB_LABEL' | translate }}</label>
@@ -250,7 +250,7 @@
                   <div class="divider-dots" style="margin-top:12px"></div>
                   <div class="toggle-row toggle-inline">
                     <div class="toggle-checkbox">
-                      <input id="othertool-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.otherToolEnabled" aria-label="Other tool enabled" />
+                      <input id="othertool-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.otherToolEnabled" aria-label="{{ 'PROJECTS.OTHER_TOOL_ENABLED' | translate }}" />
                     </div>
                     <div class="toggle-text">
                       <label for="othertool-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.OTHER_TOOL' | translate }}</label>
