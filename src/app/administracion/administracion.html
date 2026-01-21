@@ -1,148 +1,219 @@
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
-
-<div class="section-container documents-wrapper">
-  <div class="documents-header">
-    <h2>{{ 'USERS.TITLE' | translate }}</h2>
-
-    <div style="display: flex; gap: 12px;">
-      <!-- Afegir usuari només per admin/devops -->
-      <button
-        class="jenkins-add-btn"
-        *ngIf="canEdit"
-        (click)="obrirPopupCrear()">
-        <mat-icon inline="true">add</mat-icon>
-        <span>{{ 'USERS.ADD_BUTTON' | translate }}</span>
-      </button>
-    </div>
+<div class="section-container admin-layout">
+  
+  <div class="admin-sidebar">
+    <h2 class="sidebar-title">Admin Panel</h2>
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'USERS'" 
+            (click)="cambiarTab('USERS')">
+      <mat-icon>people</mat-icon> Usuarios
+    </button>
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'APP'" 
+            (click)="cambiarTab('APP')">
+      <mat-icon>settings_applications</mat-icon> Aplicación
+    </button>
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'PARAM'" 
+            (click)="cambiarTab('PARAM')">
+      <mat-icon>tune</mat-icon> Parametrización
+    </button>
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'DB'" 
+            (click)="cambiarTab('DB')">
+      <mat-icon>storage</mat-icon> BBDD
+    </button>
   </div>
 
-  <div>
-    <div
-      *ngFor="let usuari of usuarisFiltrats"
-      class="usuari-item"
-      style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+  <div class="admin-content">
 
-      <div>
-        <div class="usuari-nom">
-          <b>{{ usuari.fullName }}</b>
-          <span class="usuari-rol">
-            ({{ usuari.roles.join(', ') }})
-          </span>
+    <div *ngIf="activeTab === 'USERS'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Administrar Usuarios</h2>
+        <button class="jenkins-add-btn" *ngIf="canEdit" (click)="obrirPopupCrear()">
+          <mat-icon>add</mat-icon> Añadir usuario
+        </button>
+      </div>
+
+      <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+
+      <div class="users-list">
+        <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
+          <div>
+            <div class="usuari-nom">
+              <b>{{ usuari.fullName }}</b>
+              <span class="usuari-rol">({{ usuari.roles.join(', ') }})</span>
+            </div>
+            <div class="usuari-email">{{ usuari.email }}</div>
+          </div>
+
+          <div class="actions" *ngIf="canEdit">
+            <button class="icon-btn edit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="icon-btn delete" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
+              <mat-icon>block</mat-icon> </button>
+          </div>
         </div>
-        <div class="usuari-email">{{ usuari.email }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'APP'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Administrar Aplicación</h2>
+      </div>
+      
+      <div class="admin-card">
+        <h3>Inhabilitar por roles</h3>
+        <p>Seleccione un rol para restringir el acceso temporalmente a la aplicación.</p>
+        
+        <div class="form-field">
+            <label>Seleccionar Rol:</label>
+            <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
+                <option value="" disabled selected>-- Elegir --</option>
+                <option value="CONSULTOR">Consultor</option>
+                <option value="DEV">DevOps</option>
+            </select>
+        </div>
+        
+        <div style="margin-top: 16px; text-align: right;">
+            <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
+                Inhabilitar Acceso
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'PARAM'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Parametrización</h2>
       </div>
 
-      <!-- Accions CRUD només si canEdit -->
-      <div style="display:flex; gap:8px;" *ngIf="canEdit">
-        <button
-          class="jenkins-add-btn"
-          (click)="obrirPopupEditar(usuari)"
-          title="Editar usuari">
-          ✏️
-        </button>
-        <button
-          class="jenkins-add-btn cancel-btn"
-          (click)="confirmarEsborrar(usuari)"
-          title="Eliminar usuari">
-          🗑️
-        </button>
+      <div class="admin-card">
+        <h3>Cambio de versión</h3>
+        <p>Gestión de la versión actual del despliegue.</p>
+        
+        <div class="form-field">
+            <label>Versión del Sistema:</label>
+            <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0">
+        </div>
+
+        <div style="margin-top: 16px; text-align: right;">
+            <button class="jenkins-add-btn" (click)="cambiarVersion()">
+                <mat-icon>update</mat-icon> Actualizar Versión
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'DB'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Administración de la BBDD</h2>
+      </div>
+
+      <div class="db-grid">
+        <div class="admin-card db-card">
+            <mat-icon class="big-icon warn">delete_forever</mat-icon>
+            <h3>Borrado Físico</h3>
+            <p>Elimina permanentemente registros marcados.</p>
+            <button class="popup-btn" (click)="accionBBDD('borrado')">Ejecutar</button>
+        </div>
+
+        <div class="admin-card db-card">
+            <mat-icon class="big-icon">restore</mat-icon>
+            <h3>Restore</h3>
+            <p>Restaura la base de datos a un punto anterior.</p>
+            <button class="popup-btn" (click)="accionBBDD('restore')">Restaurar</button>
+        </div>
+
+        <div class="admin-card db-card">
+            <mat-icon class="big-icon">backup</mat-icon>
+            <h3>Backup</h3>
+            <p>Genera una copia de seguridad actual.</p>
+            <button class="popup-btn" (click)="accionBBDD('backup')">Crear Backup</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="modal-overlay" *ngIf="mostrarPopup">
+  <div class="auth-card">
+    <h2 class="form-title">{{ usuariEditant ? 'Modificar Usuario' : 'Nuevo Usuario' }}</h2>
+    <hr class="divider">
+
+    <div class="form-content">
+      <div class="input-field">
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez">
+      </div>
+
+      <div class="input-field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="nouUsuari.email" placeholder="jlopez@minsait.com">
+      </div>
+
+      <div class="input-field">
+        <label>Contraseña</label>
+        <input type="password" [(ngModel)]="nouUsuari.contrasenya" placeholder="{{ usuariEditant ? 'Dejar vacío para mantener' : 'Introduce contraseña' }}">
+      </div>
+
+      <hr class="divider">
+
+      <label class="section-label">Roles del Usuario:</label>
+      
+      <div class="roles-grid">
+        <div class="switch-item">
+          <label class="custom-switch">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin">
+            <span class="custom-slider"></span>
+          </label>
+          <span class="role-text">Administrador</span>
+        </div>
+
+        <div class="switch-item">
+          <label class="custom-switch">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor">
+            <span class="custom-slider"></span>
+          </label>
+          <span class="role-text">Consultor</span>
+        </div>
+
+        <div class="switch-item">
+          <label class="custom-switch">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops">
+            <span class="custom-slider"></span>
+          </label>
+          <span class="role-text">DevOps</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="tancarPopup()">Cancelar</button>
+        <button class="btn-round btn-blue" (click)="guardarUsuari()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Popup crear / editar -->
-<div class="popup-fons" *ngIf="mostrarPopup">
-  <div class="popup-container">
-    <h3>
-      {{
-        usuariEditant
-          ? ('USERS.EDIT_POPUP_TITLE' | translate)
-          : ('USERS.ADD_POPUP_TITLE' | translate)
-      }}
-    </h3>
-
-    <div class="form-field">
-      <label>{{ 'USERS.FIELD_NAME' | translate }}</label>
-      <input
-        type="text"
-        [(ngModel)]="nouUsuari.nombre"
-        title="Nombre de usuario" />
-    </div>
-
-    <div class="form-field">
-      <label>{{ 'USERS.FIELD_PASSWORD' | translate }}</label>
-      <input
-        type="password"
-        [(ngModel)]="nouUsuari.contrasenya"
-        title="Contraseña del usuario" />
-    </div>
-
-    <div class="form-field">
-      <label>{{ 'USERS.FIELD_EMAIL' | translate }}</label>
-      <input
-        type="email"
-        [(ngModel)]="nouUsuari.email"
-        title="Correo electrónico" />
-    </div>
-
-    <div class="form-field">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="nouUsuari.rols.admin"
-          title="Rol administrador" />
-        {{ 'USERS.ROLE_ADMIN' | translate }}
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="nouUsuari.rols.consultor"
-          title="Rol consultor" />
-        {{ 'USERS.ROLE_CONSULTOR' | translate }}
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="nouUsuari.rols.devops"
-          title="Rol DevOps" />
-        {{ 'USERS.ROLE_DEVOPS' | translate }}
-      </label>
-    </div>
-
-    <div class="popup-actions" style="margin-top: 12px;">
-      <button class="jenkins-add-btn cancel-btn" (click)="tancarPopup()">
-        {{ 'USERS.CANCEL' | translate }}
-      </button>
-      <button class="jenkins-add-btn" (click)="guardarUsuari()">
-        {{
-          usuariEditant
-            ? ('USERS.UPDATE' | translate)
-            : ('USERS.SAVE' | translate)
-        }}
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Popup confirmar esborrat -->
-<div class="popup-fons" *ngIf="mostrarPopupDelete && usuariAEsborrar">
-  <div class="popup-container">
-    <h3>{{ 'USERS.DELETE_TITLE' | translate }}</h3>
-    <p>
-      {{
-        'USERS.DELETE_MESSAGE'
-          | translate:{ name: usuariAEsborrar.fullName }
-      }}
-    </p>
-
-    <div class="popup-actions" style="margin-top: 12px;">
-      <button class="jenkins-add-btn cancel-btn" (click)="cancelarEsborrar()">
-        {{ 'USERS.CANCEL' | translate }}
-      </button>
-      <button class="jenkins-add-btn" (click)="esborrarUsuari()">
-        {{ 'USERS.DELETE_ACTION' | translate }}
-      </button>
+<!-- Popup confirmación eliminar usuario -->
+<div class="modal-overlay" *ngIf="mostrarPopupDelete">
+  <div class="auth-card">
+    <h2 class="form-title">Eliminar Usuario</h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p>¿Estás seguro de que quieres eliminar al usuario <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
+      <p style="color: #ff6b6b; font-size: 0.9em;">Esta acción no se puede deshacer.</p>
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="cancelarInhabilitar()">Cancelar</button>
+        <button class="btn-round btn-blue" style="background-color: #ff6b6b;" (click)="inhabilitarUsuari()">Eliminar</button>
+      </div>
     </div>
   </div>
 </div>
