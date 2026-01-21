@@ -213,7 +213,20 @@
     "URL_ENTORNO_PREPROD": "URL entorno de preproducción",
     "URL_ENTORNO_PRODUCCION": "URL entorno de producción",
     "HORA_DAILY": "Hora de la daily",
-    "PLACEHOLDER_URL": "https://..."
+    "PLACEHOLDER_URL": "https://...",
+    "PLACEHOLDER_DEV_ID": "ej. dev-01",
+    "PLACEHOLDER_OPENSHIFT_ID": "ej. ocp-01",
+    "PLACEHOLDER_DB_ID": "ej. db-01",
+    "PLACEHOLDER_TOOL_ID": "ej. tool-01",
+    "DB_LABEL": "Base de datos",
+    "OTHER_TOOL": "Otra herramienta",
+    "PLACEHOLDER_DB_ENGINE": "ej. Oracle 19c",
+    "PLACEHOLDER_DB_INSTANCE": "ej. IPSOPG",
+    "PLACEHOLDER_DB_HOST": "ej. 172.19.208.49",
+    "PLACEHOLDER_DB_USER": "ej. dbuser",
+    "PLACEHOLDER_DB_PASSWORD": "ej. dbpass",
+    "PLACEHOLDER_CONTACT_NAME": "ej. Nombre Apellido",
+    "PLACEHOLDER_CONTACT_MAIL": "ej. contacto@empresa.com"
   },
   "PLACEHOLDERS": {
     "DEV_RAM": "e.g. 4GB",
@@ -490,22 +503,6 @@
     "EXPORT_CSV":"Exportar CSV",
     "EXPORT_PDF":"Exportar PDF",
     "EXPORT_PDF_EMAIL": "Exportar PDF y enviar por email"
-  }
-,
-  "PROJECTS": {
-    "PLACEHOLDER_DEV_ID": "ej. dev-01",
-    "PLACEHOLDER_OPENSHIFT_ID": "ej. ocp-01",
-    "PLACEHOLDER_DB_ID": "ej. db-01",
-    "PLACEHOLDER_TOOL_ID": "ej. tool-01",
-    "DB_LABEL": "Base de datos",
-    "OTHER_TOOL": "Otra herramienta",
-    "PLACEHOLDER_DB_ENGINE": "ej. Oracle 19c",
-    "PLACEHOLDER_DB_INSTANCE": "ej. IPSOPG",
-    "PLACEHOLDER_DB_HOST": "ej. 172.19.208.49",
-    "PLACEHOLDER_DB_USER": "ej. dbuser",
-    "PLACEHOLDER_DB_PASSWORD": "ej. dbpass",
-    "PLACEHOLDER_CONTACT_NAME": "ej. Nombre Apellido",
-    "PLACEHOLDER_CONTACT_MAIL": "ej. contacto@empresa.com"
   }
   ,"PROJECTS_ARIA": {
     "OPENSHIFT_ENABLED": "Openshift habilitado",

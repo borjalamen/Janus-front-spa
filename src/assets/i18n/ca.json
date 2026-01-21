@@ -484,12 +484,6 @@
     "EXPORT_PDF": "Exportar PDF",
     "EXPORT_PDF_EMAIL": "Exportar PDF i enviar per email"
   },
-  "PROJECTS": {
-    "PLACEHOLDER_DEV_ID": "p.ex. dev-01",
-    "PLACEHOLDER_OPENSHIFT_ID": "p.ex. ocp-01",
-    "PLACEHOLDER_DB_ID": "p.ex. db-01",
-    "PLACEHOLDER_TOOL_ID": "p.ex. tool-01"
-  },
     "SPINNER": {
       "LOADING": "Carregant..."
     }
