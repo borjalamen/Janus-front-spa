@@ -252,7 +252,8 @@ export class EstimacionComponent implements OnInit {
 
   async createPdfBlob(): Promise<Blob> {
     // Lazy import jsPDF to avoid build issues when library missing
-    const { jsPDF } = await import('jspdf');
+    const jsPDFModule = await import('jspdf');
+    const jsPDF = jsPDFModule.default;
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const margin = 40;
     let y = 40;
