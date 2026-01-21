@@ -400,5 +400,21 @@
     "NO_RESULTS": "No videos found.",
     "CLOSE": "Close"
   }
+  ,"SCRUM": {
+    "TITLE": "Scrum",
+    "DESCRIPTION": "Daily board to share tasks, estimates and priorities.",
+    "PLACEHOLDER_TITLE": "Task title",
+    "PLACEHOLDER_ESTIMATE": "Estimate (h)",
+    "PRIORITY_LOW": "Low",
+    "PRIORITY_MEDIUM": "Medium",
+    "PRIORITY_HIGH": "High",
+    "ADD_BUTTON": "Add",
+    "COL_TODO": "To Do",
+    "COL_DOING": "Doing",
+    "COL_DONE": "Done",
+    "PRI_LOW": "Low",
+    "PRI_MEDIUM": "Medium",
+    "PRI_HIGH": "High"
+  }
 }
 

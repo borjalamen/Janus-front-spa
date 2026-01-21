@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 type ScrumTask = {
   id: string;
@@ -13,7 +14,7 @@ type ScrumTask = {
 @Component({
   selector: 'app-scrum',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './scrum.html',
   styleUrls: ['./scrum.css']
 })
@@ -22,6 +23,11 @@ export class ScrumComponent {
   newTitle = '';
   newEstimate = '';
   newPriority: 'Low'|'Medium'|'High' = 'Medium';
+
+  getPriorityKey(p?: 'Low'|'Medium'|'High') {
+    if (!p) return '';
+    return `SCRUM.PRI_${p.toUpperCase()}`;
+  }
 
   constructor() {
     try {

@@ -1,30 +1,30 @@
 <div class="scrum-root">
-  <h2>Scrum</h2>
-  <p class="lead">Tablón diario para compartir tareas, estimaciones y prioridades.</p>
+  <h2>{{ 'SCRUM.TITLE' | translate }}</h2>
+  <p class="lead">{{ 'SCRUM.DESCRIPTION' | translate }}</p>
 
   <div class="scrum-controls">
-    <input [(ngModel)]="newTitle" placeholder="Título tarea" />
-    <input [(ngModel)]="newEstimate" placeholder="Estimación (h)" style="width:120px" />
+    <input [(ngModel)]="newTitle" placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}" />
+    <input [(ngModel)]="newEstimate" placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}" style="width:120px" />
     <select [(ngModel)]="newPriority">
-      <option value="Low">Low</option>
-      <option value="Medium">Medium</option>
-      <option value="High">High</option>
+      <option value="Low">{{ 'SCRUM.PRIORITY_LOW' | translate }}</option>
+      <option value="Medium">{{ 'SCRUM.PRIORITY_MEDIUM' | translate }}</option>
+      <option value="High">{{ 'SCRUM.PRIORITY_HIGH' | translate }}</option>
     </select>
-    <button class="btn" (click)="addTask()">Add</button>
+    <button class="btn" (click)="addTask()">{{ 'SCRUM.ADD_BUTTON' | translate }}</button>
   </div>
 
   <div class="board">
     <div class="col">
-      <div class="col-title">To Do</div>
+      <div class="col-title">{{ 'SCRUM.COL_TODO' | translate }}</div>
       <div class="col-body">
         <div *ngFor="let t of tasksBy('todo')" class="card">
           <div class="card-head">
             <strong>{{ t.title }}</strong>
-            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + ( getPriorityKey(t.priority) | translate )) : '' }}</span>
           </div>
           <div class="card-actions">
-            <button (click)="moveTask(t.id,'doing')">→ Doing</button>
-            <button (click)="moveTask(t.id,'done')">✓ Done</button>
+            <button (click)="moveTask(t.id,'doing')">→ {{ 'SCRUM.COL_DOING' | translate }}</button>
+            <button (click)="moveTask(t.id,'done')">✓ {{ 'SCRUM.COL_DONE' | translate }}</button>
             <button class="danger" (click)="removeTask(t.id)">✕</button>
           </div>
         </div>
@@ -32,16 +32,16 @@
     </div>
 
     <div class="col">
-      <div class="col-title">Doing</div>
+      <div class="col-title">{{ 'SCRUM.COL_DOING' | translate }}</div>
       <div class="col-body">
         <div *ngFor="let t of tasksBy('doing')" class="card">
           <div class="card-head">
             <strong>{{ t.title }}</strong>
-            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + ( getPriorityKey(t.priority) | translate )) : '' }}</span>
           </div>
           <div class="card-actions">
-            <button (click)="moveTask(t.id,'todo')">← ToDo</button>
-            <button (click)="moveTask(t.id,'done')">✓ Done</button>
+            <button (click)="moveTask(t.id,'todo')">← {{ 'SCRUM.COL_TODO' | translate }}</button>
+            <button (click)="moveTask(t.id,'done')">✓ {{ 'SCRUM.COL_DONE' | translate }}</button>
             <button class="danger" (click)="removeTask(t.id)">✕</button>
           </div>
         </div>
@@ -49,16 +49,16 @@
     </div>
 
     <div class="col">
-      <div class="col-title">Done</div>
+      <div class="col-title">{{ 'SCRUM.COL_DONE' | translate }}</div>
       <div class="col-body">
         <div *ngFor="let t of tasksBy('done')" class="card done">
           <div class="card-head">
             <strong>{{ t.title }}</strong>
-            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + t.priority) : '' }}</span>
+            <span class="meta">{{ t.estimate ? (t.estimate + 'h') : '' }} {{ t.priority ? (' · ' + ( getPriorityKey(t.priority) | translate )) : '' }}</span>
           </div>
           <div class="card-actions">
-            <button (click)="moveTask(t.id,'todo')">← ToDo</button>
-            <button (click)="moveTask(t.id,'doing')">→ Doing</button>
+            <button (click)="moveTask(t.id,'todo')">← {{ 'SCRUM.COL_TODO' | translate }}</button>
+            <button (click)="moveTask(t.id,'doing')">→ {{ 'SCRUM.COL_DOING' | translate }}</button>
             <button class="danger" (click)="removeTask(t.id)">✕</button>
           </div>
         </div>
