@@ -41,22 +41,32 @@
     "USERNAME": "Usuari"
   },
   "FOOTER": {
-    "COPYRIGHT": "Copyright"
-  },
-  "HOME": {
-    "TITLE": "Benvingut a JanusHUB.v0",
-    "WHO_WE_ARE": "Qui som",
-    "WHAT_WE_DO": "Què fem",
-    "MISSION": "La nostra missió",
-    "CONTACT": "Contacte",
-    "INTRO": "JanusHub rep el seu nom del déu romà Janus, simbolitzat per dues cares que miren al passat i al futur. Representa una visió estratègica capaç d'aprendre de l'experiència i, alhora, anticipar i construir el demà. Des d'aquesta filosofia, JanusHub neix com un punt de convergència tecnològica, on tradició i innovació es combinen per impulsar els equips cap a un model de lliurament continu, eficient i de màxima qualitat.",
-    "WHO_WE_ARE_TEXT": "Som un equip transversal d'experts DevOps especialitzat a habilitar, evolucionar i consolidar pràctiques modernes de desenvolupament i operació de programari. Ens centrem a accelerar el lliurament de valor mitjançant l'automatització, la integració contínua i el desplegament continu, garantint qualitat, seguretat i observabilitat en cada fase del cicle de vida del programari.",
-    "WHAT_WE_DO_DEVOPS": "DevOps transversal",
-    "WHAT_WE_DO_DEVOPS_ITEMS": {
-      "CULTURE": "Implantació de cultura DevOps i models operatius col·laboratius",
-      "ADVICE": "Assessorament i suport en bones pràctiques de CI/CD"
-    },
-    "WHAT_WE_DO_CICD": "Integració Contínua i Desplegament Continu (CI/CD)",
+    "TITLE": "Scrum",
+    "LEAD": "Tauló diari per compartir tasques, estimacions i prioritats.",
+    "DESCRIPTION": "Tauló diari per compartir tasques, estimacions i prioritats.",
+    "TASK_TITLE": "Títol tasca",
+    "PLACEHOLDER_TITLE": "Títol tasca",
+    "ESTIMATE": "Estimació (h)",
+    "PLACEHOLDER_ESTIMATE": "Estimació (h)",
+    "PRIORITY": "Prioritat",
+    "PRIORITY_LOW": "Baixa",
+    "PRIORITY_MEDIUM": "Mitjana",
+    "PRIORITY_HIGH": "Alta",
+    "PRI_LOW": "Baixa",
+    "PRI_MEDIUM": "Mitjana",
+    "PRI_HIGH": "Alta",
+    "ADD": "Afegeix",
+    "ADD_BUTTON": "Afegeix",
+    "TODO": "Per fer",
+    "COL_TODO": "Per fer",
+    "DOING": "Fent",
+    "COL_DOING": "En procés",
+    "DONE": "Fet",
+    "COL_DONE": "Fet",
+    "MOVE_DOING": "→ Fent",
+    "MOVE_DONE": "✓ Fet",
+    "MOVE_TODO": "← Per fer",
+    "REMOVE": "✕",
     "WHAT_WE_DO_CICD_ITEMS": {
       "PIPELINES": "Creació, manteniment i optimització de pipelines de CI/CD",
       "SONARQUBE": "Integració d'eines de qualitat com SonarQube"
