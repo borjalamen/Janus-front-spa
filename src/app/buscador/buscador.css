@@ -4,67 +4,159 @@
   margin-bottom: 24px;
 }
 
-/* ===== MARC EXTERN (sense contorn) ===== */
+/* ===== WRAPPER FLEXIBLE (sin borde exterior) ===== */
 .buscador-wrapper {
   width: 100%;
-  border: none;                  /* contorn eliminat */
-  border-radius: 0;              /* sense arrodoniment */
-  padding: 6px 10px;
-  background: transparent;       /* fons transparent */
-  transition: border-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ===== MAT-FORM-FIELD ===== */
 .buscador-field {
-  width: 100%;
+  flex: 1;
 }
 
-/* Elimina fons intern i quadrat blanc */
-.mat-mdc-text-field-wrapper {
+/* Alinear los iconos en el sufijo */
+.buscador-field .mat-mdc-form-field-icon-suffix {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+/* Estilo del mat-form-field: sin fondo, cuadrado, bordes blancos */
+::ng-deep .buscador-field .mat-mdc-text-field-wrapper {
   background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  padding: 0 12px !important;
+  border-radius: 0 !important;
+  height: 65px !important;
 }
 
-/* Input */
+::ng-deep .buscador-field .mdc-notched-outline__leading,
+::ng-deep .buscador-field .mdc-notched-outline__notch,
+::ng-deep .buscador-field .mdc-notched-outline__trailing {
+  border-color: #ffffff !important;
+  border-width: 2px !important;
+  border-radius: 0 !important;
+}
+
+::ng-deep .buscador-field .mdc-notched-outline__leading {
+  border-radius: 0 !important;
+}
+
+::ng-deep .buscador-field .mdc-notched-outline__trailing {
+  border-radius: 0 !important;
+}
+
+::ng-deep .buscador-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .buscador-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .buscador-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #ffffff !important;
+}
+
+/* Input con texto blanco sobre fondo transparente */
 input.mat-mdc-input-element {
   color: #ffd740 !important;      
   caret-color: #ffd740 !important;
   padding: 10px 14px !important;
 }
 
-/* Placeholder groc */
-.mdc-text-field__input::placeholder {
-  color: #fbc02d !important;
+/* Placeholder blanco */
+::ng-deep .buscador-field .mat-mdc-input-element::placeholder {
+  color: #ffffff !important;
+  opacity: 0.7 !important;
+}
+
+/* ===== CONTENEDOR ICONOS BUSCADOR (dentro del mat-form-field) ===== */
+.buscador-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 1px;
+}
+
+/* ===== BOTONES DEL BUSCADOR (estilo común) ===== */
+.buscador-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease;
+  box-shadow: none;
   opacity: 1 !important;
 }
 
-/* ===== ICONA LUPA ===== */
-.icono-lupa {
-  color: #fbc02d !important;
-  transition: color 0.2s ease, transform 0.2s ease;
-  font-size: 24px !important;
+.buscador-btn mat-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
 }
 
-/* Hover: lupa groga + zoom */
-.icono-lupa:hover {
-  color: #ffd740 !important;
-  transform: scale(1.25);
-  cursor: pointer;
+.buscador-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #555, #333) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-/* En focus del camp: lupa més brillant */
-.buscador-wrapper:has(input:focus) .icono-lupa {
-  color: #ffd740 !important;
+.buscador-btn:focus {
+  outline: 2px solid rgba(30, 136, 229, 0.35) !important;
 }
 
-/* ===== BOTÓ CLEAR (X) ===== */
-button.mat-icon-button {
-  color: #fbc02d !important;
-  transition: transform 0.2s ease;
+.buscador-btn:active {
+  transform: scale(0.95);
 }
 
-button.mat-icon-button:hover {
-  color: #ffd740 !important;
-  transform: scale(1.2);
+/* ===== BOTÓN LUPA (AMARILLO) ===== */
+.btn-lupa {
+  color: #FBC02D !important;
+}
+
+.btn-lupa mat-icon {
+  color: #FBC02D !important;
+}
+
+.btn-lupa:hover {
+  background: linear-gradient(145deg, #FBC02D, #F9A825) !important;
+  box-shadow: 0 6px 16px rgba(251, 192, 45, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(251, 192, 45, 0.5) !important;
+  border: 1px solid rgba(251, 192, 45, 0.5) !important;
+}
+
+.btn-lupa:hover mat-icon {
+  color: #fff !important;
+}
+
+/* ===== BOTÓN CROSS (X) - ROJO ===== */
+.btn-cross {
+  color: #E53935 !important;
+  font-size: 28px !important;
+}
+
+.btn-cross:hover {
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
 }

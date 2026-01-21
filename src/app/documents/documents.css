@@ -5,12 +5,12 @@ body {
   margin: 0;
 }
 
-/* Section general */
+/* Section general con GLOW ROJO */
 .section-container {
   padding: 24px;
   background: #16181c;
   border-radius: 10px;
-  box-shadow: 0 2px 8px #E53935;
+  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
   margin: 20px;
 }
 
@@ -28,303 +28,410 @@ body {
   margin: 0;
 }
 
-/* Botó estil Jenkins per documents */
+/* Botó estil Jenkins */
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 2px solid #FBC02D;
+  border: 0;
   background: transparent;
-  color: #FBC02D;
+  color: #E0E0E0;
   font-weight: bold;
   letter-spacing: 0.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-size: 20px;
   transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, box-shadow 0.2s ease;
+              transform 0.2s ease, border-color 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
-  background: #FBC02D;
-  color: #0F1115;
-  transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  transform: translateY(-2px);
 }
 
-.jenkins-add-btn mat-icon {
-  font-size: 20px;
+/* Estilo específico para el botón principal de añadir */
+.documents-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
 }
 
-/* Backdrop per tancar en fer clic fora */
-.add-document-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fadeBackdrop 0.25s ease-out;
-}
-@keyframes fadeBackdrop {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.documents-header .jenkins-add-btn:hover {
+  border-color: #ffd54f;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* Popup afegir document */
-.add-document-popup {
-  background: rgba(22, 24, 28, 0.92);
-  backdrop-filter: blur(6px);
-  border-radius: 10px;
-  border: 2px solid #FBC02D;
-  box-shadow: 0 2px 15px #E5393530;
-  padding: 24px;
-  width: 320px;
-  box-shadow: 0 4px 28px #000a;
-  animation: fadePopup 0.25s ease-out;
-  color: #E0E0E0;
-}
+/* ========================= */
+/*   LISTA DE PROJECTES      */
+/* ========================= */
 
-@keyframes fadePopup {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.add-document-popup h3 {
-  color: #FBC02D;
-  margin: 0 0 15px 0;
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-.popup-field {
-  margin-bottom: 16px;
+.projects-list {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-.popup-field label {
-  margin-bottom: 4px;
-  color: #FBC02D;
-  font-weight: 600;
+/* Project card como lista */
+.project-container {
+  background: #0f1113;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.popup-field input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #1e84a3;
-  outline: none;
-  font-size: 1em;
-  color: #0F1115;
-  background: #000000;
+.project-container:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Botons del popup: Examinar / Guardar / Cancel·lar */
-.examinar-btn,
-.popup-btn {
-  width: 100%;
-  display: inline-flex;
+/* Icono carpeta a la izquierda */
+.project-icon {
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 12px !important;
-  border: 1px solid #FBC02D;
-  background: #0F1115 !important;
-  color: #1e84a3 !important;
-  font-weight: 600 !important;
-  font-size: 0.95rem;
-  text-transform: none;
-  cursor: pointer;
-  box-shadow: 0 1px 3px #0008;
-  transition: background 0.18s ease, color 0.18s ease,
-              transform 0.18s ease, box-shadow 0.18s ease;
-  margin-top: 10px;
-  
-}
-
-/* Hover genèric */
-.examinar-btn:hover,
-.popup-btn:hover {
-  background: #FBC02D !important;
-  border: 1px solid #FBC02D;
-  color: #0F1115 !important;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px #000c;
-  
-}
-
-.guardar-btn,
-.cancelar-btn
- {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Diferenciar Guardar / Cancel·lar (opcional) */
-.guardar-btn {
-  background: #1e84a3;
-  color: #1e84a3;
-}
-
-.guardar-btn:hover {
-  background: #1e84a3;
-  color: #16181c;
-  
-}
-
-.cancelar-btn {
-  border-color: #E53935;
-  color: #1e84a3 !important;
-  border: 1px solid #555;
-}
-
-.cancelar-btn:hover {
-  background: #333 !important;
- 
-}
-
-/* Botons container */
-.popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-/* Llista projectes */
-.project-container {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 12px;
-  background: #0F1115;
+  width: 64px;
+  height: 64px;
+  background: transparent;
   border-radius: 8px;
-  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
-.project-folder {
-  color: #FBC02D;
-  font-size: 40px;
+.project-icon .folder-img {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: contain;
+  display: block;
 }
 
-.project-info .project-id,
-.project-info .project-name,
-.project-info .project-date {
-  margin: 2px 0;
-}
-
-/* Llista documents dins del projecte */
-.document-item {
+/* Info del proyecto */
+.project-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  margin-left: 28px;
-  margin-bottom: 10px;
-  background: #1a1c20;
-  border-radius: 6px;
-  border: 1px solid #333;
-}
-
-.doc-left {
-margin-right: 16px;
-display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
 }
 
-.delete-doc-btn {
-  border: 2px solid #E53935;
-  color: #E53935;
-  border-radius: 50%;
-  padding: 4px;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.project-header-line {
   display: flex;
   align-items: center;
-  justify-content: center;  
-  height: 28px;             
-  width: 28px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.delete-doc-btn:hover {
-  background: #E53935;
-  color: #0F1115;
-  transform: translateY(-1px);
-  box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
-}
-
-.delete-doc-btn mat-icon {
-  font-size: 18px;
-}
-.delete-doc-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+.project-details {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.delete-doc-popup {
-  background: #16181c;
-  border-radius: 10px;
-  padding: 24px;
-  width: 300px;
-  border: 3px solid #E53935;
-  box-shadow: 0 2px 15px #E5393530;
+.project-id-label {
+  color: #888;
+  font-size: 12px;
+}
+
+.project-id-value {
+  color: #FBC02D;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.project-name-label {
+  color: #888;
+  font-size: 12px;
+}
+
+.project-name-value {
+  color: #ffd54f;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Lista de documentos */
+.documents-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  text-align: center;
+  gap: 6px;
 }
 
-.delete-doc-popup h3 {
-  color: #E53935;
-  margin: 0;
+.document-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.15s ease;
 }
 
-.delete-doc-popup p {
+.document-row:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.doc-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-info .file-img {
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+.doc-name {
   color: #E0E0E0;
-  font-size: 0.95rem;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.delete-doc-popup .popup-actions {
+.doc-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Botones de acción (estilo procedimientos) */
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
+  color: #E0E0E0;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.view-btn:hover {
+  color: #4fc3f7;
+}
+
+.edit-btn:hover {
+  color: #ffd54f;
+}
+
+.delete-btn:hover {
+  color: #ff5252;
+}
+
+/* No docs / no results */
+.no-docs {
+  color: #666;
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.no-results mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #444 !important;
+  margin-bottom: 16px;
+}
+
+.no-results p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* ========================= */
+/*           POPUPS          */
+/* ========================= */
+
+.popup-fons {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85) !important;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  z-index: 2147483000 !important;
+}
+
+.popup-container {
+  background: #0f1113 !important;
+  color: #eee !important;
+  padding: 22px !important;
+  border-radius: 8px !important;
+  width: 480px !important;
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.8) !important;
+}
+
+.popup-container h3 {
+  color: #ffd54f;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.popup-container p {
+  text-align: center;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  color: #cfcfcf;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  background: #141516 !important;
+  color: #eee !important;
+  border: 1px solid #2e3236 !important;
+  padding: 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #FBC02D !important;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #7c8084 !important;
+}
+
+/* Botón examinar archivo */
+.file-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.file-btn img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+.file-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+  background: linear-gradient(145deg, #1e84a3, #155f7a) !important;
+  box-shadow: 0 6px 16px rgba(30, 132, 163, 0.6), 0 0 20px rgba(30, 132, 163, 0.5) !important;
+}
+
+.file-btn:active {
+  transform: scale(0.95);
+}
+
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popup-actions-right {
+  display: flex;
   gap: 12px;
 }
 
-.delete-doc-popup .cancelar-btn {
-  border-color: #E53935;
-  color: #FBC02D !important;
+.cancelar-btn,
+.guardar-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
 }
 
-.delete-doc-popup .guardar-btn {
-  border-color: #E53935;
-  color: #FBC02D !important;
+.cancelar-btn:hover,
+.guardar-btn:hover {
+  transform: scale(1.15) translateY(-2px);
 }
 
-.delete-doc-popup .guardar-btn:hover {
-  background: #E53935 !important;
-  color: #0F1115 !important;
+.cancelar-btn:active,
+.guardar-btn:active {
+  transform: scale(0.95);
 }
 
-.delete-doc-popup .cancelar-btn:hover {
-  background: #1e84a3 !important;
-  color: #0F1115 !important;
+.guardar-btn {
+  color: #4CAF50 !important;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.cancelar-btn {
+  color: #E53935 !important;
+}
+
+.cancelar-btn:hover {
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
 }

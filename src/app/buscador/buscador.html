@@ -7,12 +7,14 @@
         (input)="onBuscar()"
         [placeholder]="'SEARCH.PLACEHOLDER' | translate"
       >
-
-      <button matSuffix mat-icon-button *ngIf="valorBusqueda" (click)="clearBusqueda()">
-        <mat-icon>close</mat-icon>
-      </button>
-
-      <mat-icon matSuffix class="icono-lupa">search</mat-icon>
+      <div matSuffix class="buscador-icons">
+        <button class="buscador-btn btn-cross" *ngIf="valorBusqueda" (click)="clearBusqueda()" title="Limpiar">
+          ✗
+        </button>
+        <button class="buscador-btn btn-lupa" title="Buscar">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
     </mat-form-field>
   </div>
 </div>

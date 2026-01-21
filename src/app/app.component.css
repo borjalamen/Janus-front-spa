@@ -138,6 +138,46 @@ mat-toolbar.main-toolbar {
 }
 
 /* ─────────────────────────────────────────── */
+/* BOTONES DE IDIOMA */
+/* ─────────────────────────────────────────── */
+.lang-buttons {
+  display: flex;
+  gap: 8px;
+  margin-right: 20px;
+}
+
+.lang-btn {
+  padding: 6px 14px;
+  border: 2px solid #06516a;
+  border-radius: 6px;
+  background: transparent;
+  color: #FBC02D;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 50px;
+}
+
+.lang-btn:hover {
+  background: rgba(6, 81, 106, 0.3);
+  box-shadow: 0 0 8px rgba(6, 81, 106, 0.5);
+  transform: translateY(-2px);
+}
+
+.lang-btn.active {
+  background: linear-gradient(135deg, #004d63, #006f80);
+  color: #FBC02D;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 77, 99, 0.6);
+}
+
+.lang-btn.active:hover {
+  background: linear-gradient(135deg, #006f80, #004d63);
+  transform: translateY(-2px);
+}
+
+/* ─────────────────────────────────────────── */
 /* DROPDOWN DEL USUARIO */
 /* ─────────────────────────────────────────── */
 .user-dropdown-container {
@@ -147,7 +187,7 @@ mat-toolbar.main-toolbar {
 
 .user-icon {
   width: 50px;
-  height: 40px;
+  height: 50px;
   border-radius: 50%;
   background: #16181c;
   display: flex;

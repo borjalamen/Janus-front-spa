@@ -1,27 +1,107 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container">
-  <h2>{{ 'ERRORS.TITLE' | translate }}</h2>
+  <div class="documents-header">
+    <h2>{{ 'ERRORS.TITLE' | translate }}</h2>
+    <button class="jenkins-add-btn" (click)="abrirPopupCrear()">
+      <mat-icon inline="true">add</mat-icon>
+      <span>{{ 'ERRORS.ADD_BUTTON' | translate }}</span>
+    </button>
+  </div>
   <p>{{ 'ERRORS.DESCRIPTION' | translate }}</p>
 
-  <ul>
-    <li *ngFor="let e of erroresFiltrados" class="error-item">
-      <strong>{{ e.titulo }}</strong>
-      <span *ngIf="e.resuelto" class="check-green">
-        ✓ {{ 'ERRORS.RESOLVED' | translate }}
-      </span>
-      <br>
+  <div class="bitacora-list" *ngIf="erroresFiltrados.length > 0">
+    <div *ngFor="let e of erroresFiltrados" class="bitacora-row">
+      <div class="bitacora-icon">
+        <mat-icon>bug_report</mat-icon>
+      </div>
+      
+      <div class="bitacora-info">
+        <div class="bitacora-title-row">
+          <strong class="bitacora-contexto">{{ e.contexto || '(Sin contexto)' }}</strong>
+          <span class="bitacora-fecha">{{ e.fecha }}</span>
+        </div>
+        <div class="bitacora-error">{{ e.error }}</div>
+        <div class="bitacora-solucion" *ngIf="e.solucion">
+          <mat-icon class="solution-icon">lightbulb</mat-icon>
+          {{ e.solucion }}
+        </div>
+        <div class="bitacora-tags" *ngIf="e.tags && e.tags.length > 0">
+          <span class="tag" *ngFor="let tag of e.tags">{{ tag }}</span>
+        </div>
+        
+        <div class="bitacora-actions">
+          <button class="action-btn edit-btn" (click)="abrirPopupEditar(e)" title="Editar">
+            ✏️
+          </button>
+          <button class="action-btn delete-btn" (click)="confirmarEliminar(e)" title="Eliminar">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <strong>{{ 'ERRORS.CATEGORY' | translate }}:</strong> {{ e.categoria }}<br>
-      <strong>{{ 'ERRORS.DESCRIPTION_LABEL' | translate }}:</strong> {{ e.descripcion }}<br>
+  <div *ngIf="erroresFiltrados.length === 0" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <p>{{ 'ERRORS.NO_RESULTS' | translate }}</p>
+  </div>
+</div>
 
-      <button mat-raised-button (click)="toggleResuelto(e)" style="margin-top: 6px;">
-        {{
-          e.resuelto
-            ? ('ERRORS.MARK_PENDING' | translate)
-            : ('ERRORS.MARK_RESOLVED' | translate)
-        }}
+<!-- Popup crear / editar -->
+<div class="popup-fons" *ngIf="mostrarPopup" (click)="cerrarPopup()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>{{ (editando ? 'ERRORS.EDIT_TITLE' : 'ERRORS.NEW_TITLE') | translate }}</h3>
+
+    <div class="form-field">
+      <label>{{ 'ERRORS.FIELD_CONTEXT' | translate }}</label>
+      <input type="text" [(ngModel)]="formBitacora.contexto" placeholder="Contexto del error" />
+    </div>
+
+    <div class="form-field">
+      <label>{{ 'ERRORS.FIELD_ERROR' | translate }}</label>
+      <textarea rows="3" [(ngModel)]="formBitacora.error" placeholder="Descripción del error"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>{{ 'ERRORS.FIELD_SOLUTION' | translate }}</label>
+      <textarea rows="3" [(ngModel)]="formBitacora.solucion" placeholder="Solución aplicada"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>{{ 'ERRORS.FIELD_DATE' | translate }}</label>
+      <input type="text" [(ngModel)]="formBitacora.fecha" placeholder="DDMMYYYY" />
+    </div>
+
+    <div class="form-field">
+      <label>{{ 'ERRORS.FIELD_TAGS' | translate }}</label>
+      <input type="text" [(ngModel)]="tagsInput" placeholder="Tags separados por coma" />
+    </div>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="cerrarPopup()" title="Cancelar">
+        ✗
       </button>
-    </li>
-  </ul>
+      <button class="guardar-btn" (click)="guardarBitacora()" [title]="editando ? 'Actualizar' : 'Guardar'">
+        ✓
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup eliminar -->
+<div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>{{ 'ERRORS.DELETE_TITLE' | translate }}</h3>
+    <p>{{ 'ERRORS.DELETE_CONFIRM' | translate }}</p>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="cancelarEliminar()" title="Cancelar">
+        ✗
+      </button>
+      <button class="guardar-btn" (click)="eliminarBitacora()" title="Eliminar">
+        ✓
+      </button>
+    </div>
+  </div>
 </div>
