@@ -3,6 +3,7 @@ import { BuscadorComponent } from '../buscador/buscador';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -22,13 +23,25 @@ interface UsuariBackend {
   templateUrl: './administracion.html',
   styleUrls: ['./administracion.css'],
   standalone: true,
-  imports: [BuscadorComponent, CommonModule, MatIconModule, FormsModule, TranslateModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    TranslateModule,
+    BuscadorComponent,
+    MatSlideToggleModule
+  ]
 })
 export class AdministracionComponent implements OnInit {
   title = 'Administración';
 
+  // CONTROL DE PESTAÑAS (SCENARIOS)
+  // Options: 'USERS', 'APP', 'PARAM', 'DB'
+  activeTab: string = 'USERS';
+
+  // ESTADOS POPUPS USUARIOS
   mostrarPopup = false;
-  mostrarPopupDelete = false;
+  mostrarPopupDelete = false; // Ahora actuará como "Inhabilitar"
 
   nouUsuari = {
     nombre: '',
@@ -43,9 +56,12 @@ export class AdministracionComponent implements OnInit {
 
   usuaris: UsuariBackend[] = [];
   usuarisFiltrats: UsuariBackend[] = [];
-
   usuariEditant: UsuariBackend | null = null;
   usuariAEsborrar: UsuariBackend | null = null;
+
+  // ESTADOS NUEVAS SECCIONES
+  selectedRoleToDisable: string = '';
+  appVersion: string = '1.0.2'; // Ejemplo
 
   private baseUrl = `${environment.baseUrl}users`;
 
@@ -56,15 +72,19 @@ export class AdministracionComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarUsuaris();
+    this.cargarVersion();
   }
 
-  // ===== ROLES FRONT =====
   get canEdit(): boolean {
-    return this.authService.canEdit; // admin o devops
+    return this.authService.canEdit; 
   }
 
-  // ===== BACKEND =====
+  // ===== NAVEGACIÓN =====
+  cambiarTab(tab: string) {
+    this.activeTab = tab;
+  }
 
+  // ===== LOGICA USUARIOS (Scenario 1) =====
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: data => {
@@ -99,23 +119,21 @@ export class AdministracionComponent implements OnInit {
     };
 
     if (this.usuariEditant && this.usuariEditant.id) {
-      // UPDATE
       this.http.put<UsuariBackend>(`${this.baseUrl}/update/${this.usuariEditant.id}`, body)
         .subscribe({
           next: updated => {
             const idx = this.usuaris.findIndex(u => u.id === updated.id);
             if (idx !== -1) this.usuaris[idx] = updated;
-            this.usuarisFiltrats = [...this.usuaris];
+            this.filtrar(''); 
             this.tancarPopup();
           },
           error: err => console.error('Error actualitzant usuari', err)
         });
     } else {
-      // CREATE
       this.http.post<UsuariBackend>(`${this.baseUrl}/create`, body).subscribe({
         next: created => {
           this.usuaris.push(created);
-          this.usuarisFiltrats = [...this.usuaris];
+          this.filtrar('');
           this.tancarPopup();
         },
         error: err => console.error('Error creant usuari', err)
@@ -123,30 +141,33 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  esborrarUsuari() {
+  // Scenario 1: "Inhabilitar usuario" (Reutilizamos la lógica de borrar o hacemos update status)
+  inhabilitarUsuari() {
     if (!this.usuariAEsborrar || !this.usuariAEsborrar.id) {
       this.mostrarPopupDelete = false;
       return;
     }
-
+    // NOTA: Aquí podrías llamar a un endpoint /disable en vez de /delete si existiera.
+    // Mantenemos delete como pedía tu lógica original, pero la UI dirá "Inhabilitar".
     this.http.delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`).subscribe({
       next: () => {
         this.usuaris = this.usuaris.filter(u => u.id !== this.usuariAEsborrar!.id);
-        this.usuarisFiltrats = [...this.usuaris];
+        this.filtrar('');
         this.mostrarPopupDelete = false;
         this.usuariAEsborrar = null;
       },
-      error: err => console.error('Error esborrant usuari', err)
+      error: err => console.error('Error inhabilitando usuari', err)
     });
   }
 
-  // ===== FRONT =====
-
   filtrar(valor: string) {
-    if (!valor) {
+    // Si valor viene de un evento, asegúrate de capturarlo, si viene directo es string
+    // Ajuste simple:
+    const v = typeof valor === 'string' ? valor.toLowerCase() : ''; 
+    
+    if (!v) {
       this.usuarisFiltrats = [...this.usuaris];
     } else {
-      const v = valor.toLowerCase();
       this.usuarisFiltrats = this.usuaris.filter(u =>
         u.fullName.toLowerCase().includes(v) ||
         u.roles.join(', ').toLowerCase().includes(v) ||
@@ -181,18 +202,112 @@ export class AdministracionComponent implements OnInit {
     this.mostrarPopup = true;
   }
 
+  confirmarInhabilitar(usuari: UsuariBackend) {
+    this.usuariAEsborrar = usuari;
+    this.mostrarPopupDelete = true;
+  }
+
   tancarPopup() {
     this.mostrarPopup = false;
     this.usuariEditant = null;
   }
 
-  confirmarEsborrar(usuari: UsuariBackend) {
-    this.usuariAEsborrar = usuari;
-    this.mostrarPopupDelete = true;
-  }
-
-  cancelarEsborrar() {
+  cancelarInhabilitar() {
     this.mostrarPopupDelete = false;
     this.usuariAEsborrar = null;
+  }
+
+  // ===== NUEVAS FUNCIONES =====
+  
+  // Scenario 2: App - Quitar rol de los usuarios
+  inhabilitarPorRol() {
+    if (!this.selectedRoleToDisable) {
+      alert('Por favor, selecciona un rol para inhabilitar');
+      return;
+    }
+
+    const usuariosConRol = this.usuaris.filter(u => u.roles.includes(this.selectedRoleToDisable));
+    
+    if (usuariosConRol.length === 0) {
+      alert(`No hay usuarios con el rol ${this.selectedRoleToDisable}`);
+      return;
+    }
+
+    const confirmacion = confirm(`¿Estás seguro de quitar el rol ${this.selectedRoleToDisable} a ${usuariosConRol.length} usuario(s)?`);
+    if (!confirmacion) return;
+
+    let completados = 0;
+    let errores = 0;
+
+    usuariosConRol.forEach(usuari => {
+      const nuevosRoles = usuari.roles.filter(r => r !== this.selectedRoleToDisable);
+      
+      const body = {
+        username: usuari.username,
+        fullName: usuari.fullName,
+        email: usuari.email,
+        roles: nuevosRoles.length > 0 ? nuevosRoles : ['CONSULTOR'], // Si queda sin roles, asignar CONSULTOR
+        status: usuari.status
+      };
+
+      this.http.put<UsuariBackend>(`${this.baseUrl}/update/${usuari.id}`, body)
+        .subscribe({
+          next: updated => {
+            const idx = this.usuaris.findIndex(u => u.id === updated.id);
+            if (idx !== -1) this.usuaris[idx] = updated;
+            completados++;
+            if (completados + errores === usuariosConRol.length) {
+              this.filtrar('');
+              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ''}`);
+              this.selectedRoleToDisable = '';
+            }
+          },
+          error: err => {
+            console.error('Error actualizando usuario', err);
+            errores++;
+            if (completados + errores === usuariosConRol.length) {
+              this.filtrar('');
+              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`);
+            }
+          }
+        });
+    });
+  }
+
+  // Scenario 3: Parametrización
+  cambiarVersion() {
+    if (!this.appVersion || this.appVersion.trim() === '') {
+      alert('Por favor, introduce una versión válida');
+      return;
+    }
+
+    const body = { version: this.appVersion.trim() };
+    
+    this.http.put<any>(`${environment.baseUrl}config/version`, body)
+      .subscribe({
+        next: () => {
+          alert(`Versión actualizada exitosamente a: ${this.appVersion}`);
+        },
+        error: err => {
+          console.error('Error actualizando versión', err);
+          alert('Error al actualizar la versión');
+        }
+      });
+  }
+
+  // Cargar la versión actual desde el backend
+  cargarVersion() {
+    this.http.get<string>(`${environment.baseUrl}config/parametrization/version`, { responseType: 'text' as 'json' })
+      .subscribe({
+        next: version => {
+          this.appVersion = version;
+        },
+        error: err => console.error('Error cargando versión', err)
+      });
+  }
+
+  // Scenario 4: BBDD (Visual Only)
+  accionBBDD(tipo: string) {
+    console.log(`Acción de BBDD solicitada: ${tipo}`);
   }
 }

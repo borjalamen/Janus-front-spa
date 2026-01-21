@@ -1,141 +1,135 @@
-<section class="jenkins-section">
-  <div class="jenkins-container">
-    <div class="jenkins-header">
-      <h2 class="jenkins-title">{{ 'JENKINS.TITLE' | translate }}</h2>
-      <div class="jenkins-buttons">
-        <button
-          class="jenkins-add-btn"
-          type="button"
-          (click)="openPopupForCreate()"
-          *ngIf="canEditJenkins">
-          {{ 'JENKINS.ADD_BUTTON' | translate }}
-        </button>
-        <button
-          class="jenkins-add-btn"
-          type="button"
-          (click)="toggleDeleteMode()"
-          *ngIf="canEditJenkins">
-          {{
-            deleteMode
-              ? ('JENKINS.DELETE_BUTTON_ON' | translate)
-              : ('JENKINS.DELETE_BUTTON_OFF' | translate)
-          }}
-        </button>
-      </div>
-    </div>
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-    <input
-      type="file"
-      #fileInput
-      accept=".xml,.json,.txt"
-      style="display: none"
-      (change)="onJenkinsSelected($event)" />
+<div class="section-container">
+  <div class="documents-header">
+    <h2>{{ 'JENKINS.TITLE' | translate }}</h2>
+
+    <button
+      class="jenkins-add-btn"
+      *ngIf="canEditJenkins"
+      (click)="openPopupForCreate()">
+      <span>{{ 'JENKINS.ADD_BUTTON' | translate }}</span>
+    </button>
   </div>
 
+  <input
+    type="file"
+    #fileInput
+    accept=".xml,.json,.txt"
+    style="display: none"
+    (change)="onJenkinsSelected($event)" />
+
+  <!-- Grid de Jenkins como cards -->
   <div class="jenkins-grid">
-    <div
-      class="jenkins-card"
-      *ngFor="let jk of customJenkins"
-      [ngClass]="{ 'selected': jk.selected }"
-      (click)="deleteMode ? confirmDelete(jk) : openJenkins(jk, $event)">
+    <div *ngFor="let jk of filteredJenkins" class="jenkins-card">
 
-      <div class="jenkins-info">
-        <div class="jenkins-name">
-          <strong>{{ jk.name }}</strong>
-        </div>
+      <!-- Header de la card -->
+      <div class="jenkins-header-card">
+        <h3 class="jenkins-name">
+          {{ jk.name || '(Sin nombre)' }}
+        </h3>
+      </div>
 
-        <a [href]="jk.url" target="_blank" rel="noopener noreferrer">
-          <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" />
+      <!-- Imagen de Jenkins -->
+      <div class="jenkins-image-container">
+        <a [href]="jk.url" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">
+          <img src="https://imgur.com/69aimFa.png" alt="{{ jk.name }}" class="jenkins-image" />
         </a>
       </div>
 
-      <!-- Botó editar (només si es pot editar i no estem en deleteMode) -->
-      <button
-  title="Editar Jenkins"
-  class="edit-icon"
-  *ngIf="canEditJenkins && !deleteMode"
-  (click)="openPopupForEdit(jk, $event)">
-  <img src="assets/images/llapis.png" alt="Editar" class="edit-icon-img" />
-</button>
-
-      <div
-        class="delete-icon"
-        *ngIf="deleteMode"
-        (click)="confirmDelete(jk); $event.stopPropagation()">
-        🗑️
+      <!-- URL -->
+      <div class="jenkins-url">
+        <a [href]="jk.url" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">
+          {{ jk.url }}
+        </a>
       </div>
-    </div>
-  </div>
 
-  <!-- Popup afegir / editar Jenkins -->
-  <div class="popup-overlay" *ngIf="popupOpen" (click)="closePopup()">
-    <div
-  class="popup-box"
-  (click)="$event.stopPropagation()"
-  (keyup.enter)="newName && newUrl && savePopup()"
-  tabindex="0">
-      <h3>
-        {{
-          editingJenkins
-            ? ('JENKINS.POPUP_EDIT_TITLE' | translate)
-            : ('JENKINS.POPUP_ADD_TITLE' | translate)
-        }}
-      </h3>
-
-      <label>{{ 'JENKINS.FIELD_NAME_LABEL' | translate }}</label>
-      <input
-        title="text"
-        type="text"
-        [(ngModel)]="newName"
-        class="popup-input"
-        [placeholder]="'JENKINS.FIELD_NAME_PLACEHOLDER' | translate" />
-
-      <label>{{ 'JENKINS.FIELD_URL_LABEL' | translate }}</label>
-      <input
-        title="text"
-        type="text"
-        [(ngModel)]="newUrl"
-        class="popup-input"
-        [placeholder]="'JENKINS.FIELD_URL_PLACEHOLDER' | translate" />
-
-      <div class="popup-buttons">
-        <button class="cancel-btn" (click)="closePopup()">
-          {{ 'JENKINS.CANCEL' | translate }}
+      <!-- Acciones CRUD dentro de la card -->
+      <div class="jenkins-actions" *ngIf="canEditJenkins">
+        <button
+          class="jenkins-add-btn"
+          (click)="openPopupForEdit(jk, $event)"
+          title="Editar Jenkins">
+          ✏️
         </button>
         <button
-          class="save-btn"
-          (click)="savePopup()"
-          [disabled]="!newName || !newUrl">
-          {{
-            editingJenkins
-              ? ('JENKINS.UPDATE' | translate)
-              : ('JENKINS.SAVE' | translate)
-          }}
+          class="jenkins-add-btn cancel-btn"
+          (click)="confirmDelete(jk)"
+          title="Eliminar Jenkins">
+          🗑️
         </button>
       </div>
+
     </div>
   </div>
+</div>
 
-  <!-- Popup eliminar Jenkins -->
-  <div class="popup-overlay" *ngIf="deletePopupOpen" (click)="cancelDelete()">
-    <div
-      class="popup-box"
-      (click)="$event.stopPropagation()"
-      (keyup.enter)="newName && newUrl && savePopup()"
-      tabindex="0">
+<!-- Popup afegir / editar Jenkins -->
+<div class="popup-fons" *ngIf="popupOpen" (click)="closePopup()">
+  <div
+    class="popup-container"
+    (click)="$event.stopPropagation()"
+    (keyup.enter)="newName && newUrl && savePopup()"
+    tabindex="0">
+    <h3>
+      {{
+        editingJenkins
+          ? ('JENKINS.POPUP_EDIT_TITLE' | translate)
+          : ('JENKINS.POPUP_ADD_TITLE' | translate)
+      }}
+    </h3>
 
-      <h3>{{ 'JENKINS.DELETE_TITLE' | translate }}</h3>
+    <div class="form-field">
+      <label>{{ 'JENKINS.FIELD_NAME_LABEL' | translate }}</label>
+      <input
+        type="text"
+        [(ngModel)]="newName"
+        [placeholder]="'JENKINS.FIELD_NAME_PLACEHOLDER' | translate"
+        title="Nombre del Jenkins" />
+    </div>
 
-      <p>{{ 'JENKINS.DELETE_MESSAGE' | translate }}</p>
+    <div class="form-field">
+      <label>{{ 'JENKINS.FIELD_URL_LABEL' | translate }}</label>
+      <input
+        type="text"
+        [(ngModel)]="newUrl"
+        [placeholder]="'JENKINS.FIELD_URL_PLACEHOLDER' | translate"
+        title="URL del Jenkins" />
+    </div>
 
-      <div class="popup-buttons">
-        <button class="cancel-btn" (click)="cancelDelete()">
-          {{ 'JENKINS.CANCEL' | translate }}
-        </button>
-        <button class="save-btn" (click)="deleteJenkins()">
-          {{ 'JENKINS.DELETE_ACTION' | translate }}
-        </button>
-      </div>
+    <div class="popup-buttons">
+      <button class="cancelar-btn" (click)="closePopup()" title="Cancelar">
+        ✗
+      </button>
+      <button
+        class="guardar-btn"
+        (click)="savePopup()"
+        [disabled]="!newName || !newUrl"
+        [title]="editingJenkins ? 'Actualizar' : 'Guardar'">
+        ✓
+      </button>
     </div>
   </div>
-</section>
+</div>
+
+<!-- Popup eliminar Jenkins -->
+<div class="popup-fons" *ngIf="deletePopupOpen" (click)="cancelDelete()">
+  <div
+    class="popup-container"
+    (click)="$event.stopPropagation()"
+    tabindex="0">
+
+    <h3>{{ 'JENKINS.DELETE_TITLE' | translate }}</h3>
+
+    <p>{{ 'JENKINS.DELETE_MESSAGE' | translate }}</p>
+
+    <div class="popup-buttons">
+      <button class="cancelar-btn" (click)="cancelDelete()" title="Cancelar">
+        ✗
+      </button>
+      <button class="guardar-btn" (click)="deleteJenkins()" title="Eliminar">
+        ✓
+      </button>
+    </div>
+  </div>
+</div>

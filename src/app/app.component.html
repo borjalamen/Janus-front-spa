@@ -179,14 +179,28 @@
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
-      <mat-form-field appearance="fill" class="lang-ff">
-        <mat-select [value]="translate.currentLang" (selectionChange)="translateLanguage($event.value)"
-          panelClass="lang-panel">
-          <mat-option value="es">ES</mat-option>
-          <mat-option value="ca">CA</mat-option>
-          <mat-option value="en">EN</mat-option>
-        </mat-select>
-      </mat-form-field>
+      
+      <!-- Botones de idioma -->
+      <div class="lang-buttons">
+        <button 
+          class="lang-btn" 
+          [class.active]="translate.currentLang === 'es'"
+          (click)="translateLanguage('es')">
+          ES
+        </button>
+        <button 
+          class="lang-btn" 
+          [class.active]="translate.currentLang === 'ca'"
+          (click)="translateLanguage('ca')">
+          CA
+        </button>
+        <button 
+          class="lang-btn" 
+          [class.active]="translate.currentLang === 'en'"
+          (click)="translateLanguage('en')">
+          EN
+        </button>
+      </div>
 
       <!-- ICONA ÚNICA -->
       <div class="user-dropdown-container">

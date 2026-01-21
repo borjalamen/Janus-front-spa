@@ -1,440 +1,340 @@
-/* Secció general */
-.jenkins-section {
-  min-height: 100vh;
-  background: #05070d;
+/* Container general con GLOW ROJO */
+.section-container {
+  padding: 24px;
+  background: #16181c;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
+  margin: 20px;
+  color: #E0E0E0;
+}
+
+/* Header + botó afegir */
+.documents-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-start;
-  padding: 40px 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f5f5f5;
+  margin-bottom: 20px;
 }
 
-/* Wrapper interior (ample màxim) */
-.jenkins-container {
-  width: 100%;
-  max-width: 1200px;
-}
-
-/* Header: títol + botó al mateix nivell */
-.jenkins-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;   /* títol esquerra, botó dreta */
-  width: 100%;
-  margin-bottom: 30px;
-}
-
-/* Títol principal */
-.jenkins-title {
-  font-size: 32px;
-  letter-spacing: 1px;
-  margin: 0;                        /* eliminem margin-bottom antic */
-  text-align: left;
+.documents-header h2 {
   color: #FBC02D;
+  font-weight: bold;
+  margin: 0 0 8px 0;
 }
 
-/* Botó "Afegir Jenkins" */
+/* Botó estil Jenkins */
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 2px solid #FBC02D;
+  border: 0;
   background: transparent;
-  color: #FBC02D;
-  font-weight: 600;
+  color: #E0E0E0;
+  font-weight: bold;
   letter-spacing: 0.5px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
   transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, box-shadow 0.2s ease;
+              transform 0.2s ease, border-color 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
-  background: #FBC02D;
-  color: #000;
-  transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  transform: translateY(-2px);
 }
 
-/* Grid de Jenkins (cards com taula) */
+/* Estilo específico para el botón principal de añadir */
+.documents-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+}
+
+.documents-header .jenkins-add-btn:hover {
+  border-color: #ffd54f;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* ========================= */
+/*   GRID DE JENKINS CARDS   */
+/* ========================= */
+
 .jenkins-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 28px;
-  width: 100%;
-  justify-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 /* Card de cada Jenkins */
 .jenkins-card {
-  text-align: center;
-  transition: transform 0.2s ease, filter 0.2s ease,
-              border-color 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid #ff1744;      /* vermell per defecte */
+  background: #0f1113;
   border-radius: 10px;
-  padding: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  padding: 16px 20px;
   box-sizing: border-box;
-  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
 }
 
-/* Hover: resalta el borde i glow */
 .jenkins-card:hover {
-  transform: translateY(-4px) scale(1.03);
-  border-color: #ff5252;
-  box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.25);
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* Imatge del Jenkins */
-.jenkins-card img {
+/* Capçalera dins la card */
+.jenkins-header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.jenkins-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffd54f;
+  letter-spacing: 0.6px;
+}
+
+/* Imagen de Jenkins */
+.jenkins-image-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.jenkins-image {
   width: 110px;
   height: auto;
   filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+  transition: filter 0.2s ease;
 }
 
-.jenkins-card:hover img {
+.jenkins-card:hover .jenkins-image {
   filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
 }
 
-/* Nom sota el logo */
-.jenkins-name {
-  margin-top: 10px;
+/* URL del Jenkins */
+.jenkins-url {
+  margin: 10px 0;
   font-size: 14px;
-  color: #b8c4ff;
-  letter-spacing: 0.5px;
+  color: #90a4ae;
+  word-break: break-all;
 }
 
-.popup-overlay {
+.jenkins-url a {
+  color: #90a4ae;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.jenkins-url a:hover {
+  color: #ffd54f;
+}
+
+/* Botons CRUD dins la card */
+.jenkins-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.jenkins-actions .jenkins-add-btn {
+  padding: 8px 12px;
+  font-size: 20px;
+  border-radius: 6px;
+}
+
+.jenkins-actions .edit-btn,
+.jenkins-actions .delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.jenkins-actions .edit-btn:hover,
+.jenkins-actions .delete-btn:hover {
+  background: rgba(255, 213, 79, 0.1);
+}
+
+.jenkins-actions .edit-btn mat-icon,
+.jenkins-actions .delete-btn mat-icon {
+  color: #ffd54f;
+}
+
+/* ========================= */
+/*        POPUPS             */
+/* ========================= */
+
+.popup-fons {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 500;
+  justify-content: center;
+  z-index: 9999;
 }
 
-/* ───────────── POPUP BOX ───────────── */
-.popup-box {
-  background: #16181c;
-  padding: 28px 24px;
-  border-radius: 12px;
-  border: 2px solid #FBC02D;
-  width: 380px;
+.popup-container {
+  background: #0f1113 !important;
+  border-radius: 8px !important;
+  padding: 22px !important;
+  width: 720px !important;
   max-width: 90%;
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+
+.popup-container h3 {
+  color: #ffd54f;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.form-field {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-  animation: fadeInPopup 0.2s ease-out;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
-/* ───────────── TITOL ───────────── */
-.popup-box h3 {
-  margin: 0;
-  font-size: 22px;
-  color: #FBC02D;
-  text-align: center;
-}
-
-/* ───────────── INPUTS ───────────── */
-.popup-input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #1e84a3;
-  background: #0F1115;
-  color: #E0E0E0;
-  font-size: 14px;
-}
-
-.popup-input:focus {
-  outline: none;
-  border-color: #FBC02D;
-  box-shadow: 0 0 6px #FBC02D70;
-}
-
-/* ───────────── BOTONS ───────────── */
-.popup-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.cancel-btn,
-.save-btn {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn {
-  background: #1e1e1e;
-  color: #E0E0E0;
-  border: 1px solid #555;
-}
-
-.cancel-btn:hover {
-  background: #333;
-}
-
-.save-btn {
-  background: #1e84a3;
-  color: #FBC02D;
-}
-
-.save-btn:hover {
-  background: #FBC02D;
-  color: #16181c;
-}
-
-/* Secció general */
-.jenkins-section {
-  min-height: 100vh;
-  background: #05070d;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 40px 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f5f5f5;
-}
-
-/* Wrapper interior (ample màxim) */
-.jenkins-container {
-  width: 100%;
-  max-width: 1200px;
-}
-
-/* Header: títol + botó al mateix nivell */
-.jenkins-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;   /* títol esquerra, botó dreta */
-  width: 100%;
-  margin-bottom: 30px;
-}
-
-.jenkins-buttons {
-  display: flex;
-  gap: 8px; 
-}
-
-/* Títol principal */
-.jenkins-title {
-  font-size: 32px;
-  letter-spacing: 1px;
-  margin: 0;                        /* eliminem margin-bottom antic */
-  text-align: left;
-  color: #FBC02D;
-}
-
-/* Botó "Afegir Jenkins" */
-.jenkins-add-btn {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 2px solid #FBC02D;
-  background: transparent;
-  color: #FBC02D;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.jenkins-add-btn:hover {
-  background: #FBC02D;
-  color: #05070d;
-  transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(251, 192, 45, 0.6);
-}
-
-/* Grid de Jenkins (cards com taula) */
-.jenkins-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 28px;
-  width: 100%;
-  justify-items: stretch;
-}
-
-/* Card de cada Jenkins */
-.jenkins-card {
-  text-align: center;
-  transition: transform 0.2s ease, filter 0.2s ease,
-              border-color 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid #ff1744;      /* vermell per defecte */
-  border-radius: 10px;
-  padding: 12px;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Hover: resalta el borde i glow */
-.jenkins-card:hover {
-  transform: translateY(-4px) scale(1.03);
-  border-color: #ff5252;
-  box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.25);
-}
-
-/* Imatge del Jenkins */
-.jenkins-card img {
-  width: 110px;
-  height: auto;
-  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
-}
-
-.jenkins-card:hover img {
-  filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
-}
-
-/* Nom sota el logo */
-.jenkins-name {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #b8c4ff;
-  letter-spacing: 0.5px;
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 500;
-}
-
-/* ───────────── POPUP BOX ───────────── */
-.popup-box {
-  background: #16181c;
-  padding: 28px 24px;
-  border-radius: 12px;
-  border: 2px solid #FBC02D;
-  width: 380px;
-  max-width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-  animation: fadeInPopup 0.2s ease-out;
-}
-
-/* ───────────── TITOL ───────────── */
-.popup-box h3 {
-  margin: 0;
-  font-size: 22px;
-  color: #FBC02D;
-  text-align: center;
-}
-
-/* ───────────── INPUTS ───────────── */
-.popup-input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #1e84a3;
-  background: #0F1115;
-  color: #E0E0E0;
-  font-size: 14px;
-}
-
-.popup-input:focus {
-  outline: none;
-  border-color: #FBC02D;
-  box-shadow: 0 0 6px #FBC02D70;
-}
-
-/* ───────────── BOTONS ───────────── */
-.popup-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.cancel-btn,
-.save-btn {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn {
-  background: #1e1e1e;
-  color: #E0E0E0;
-  border: 1px solid #555;
-}
-
-.cancel-btn:hover {
-  background: #333;
-}
-
-.save-btn {
-  background: #1e84a3;
-  color: #FBC02D;
-}
-
-.save-btn:hover {
-  background: #1e84a3;
-  color: #16181c;
-}
-
-.delete-icon {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: #d32f2f;
-  color: white;
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 15px;
-  transition: 0.2s;
-}
-
-.delete-icon:hover {
-  background: #b71c1c;
-  color: #000;
-  transform: scale(1.1);
-}
-
-.jenkins-card.selected {
-  border-color: #FBC02D;        
-  box-shadow: 0 0 12px #FBC02D80; 
-  transform: scale(1.05);         
-}
-.edit-icon {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  margin-top: 8px;
-  padding: 0;
-  line-height: 0;          /* important per no afegir espai extra */
-}
-
-.edit-icon img {
-  width: 50px !important;  /* força la mida */
-  height: 50px !important;
-  object-fit: contain;
+.form-field label {
   display: block;
+  margin-bottom: 8px;
+  color: #cfcfcf;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid #2e3236 !important;
+  background: #141516 !important;
+  color: #eee !important;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-field input::placeholder {
+  color: #7c8084 !important;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #ffd54f;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.cancelar-btn,
+.guardar-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.cancelar-btn:hover,
+.guardar-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #555, #333) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.cancelar-btn:focus,
+.guardar-btn:focus {
+  outline: 2px solid rgba(30, 136, 229, 0.35) !important;
+}
+
+.cancelar-btn:active,
+.guardar-btn:active {
+  transform: scale(0.95);
+}
+
+.cancelar-btn {
+  color: #E53935 !important;
+}
+
+.cancelar-btn:hover {
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
+}
+
+.guardar-btn {
+  color: #4CAF50 !important;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(76, 175, 80, 0.5) !important;
+  border: 1px solid rgba(76, 175, 80, 0.5) !important;
+}
+
+.guardar-btn:disabled {
+  background: #616161 !important;
+  color: #9e9e9e !important;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.guardar-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border: 0 !important;
+}
+
+.popup-container p {
+  color: #E0E0E0;
+  margin: 16px 0;
 }

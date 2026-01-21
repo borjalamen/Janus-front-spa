@@ -9,7 +9,7 @@
       *ngIf="canEdit"
       (click)="obrirPopupCrear()">
       <mat-icon inline="true">add</mat-icon>
-      <span>Afegir procediment</span>
+      <span>{{ 'PROCEDURES_SECTION.ADD_BUTTON' | translate }}</span>
     </button>
   </div>
 
@@ -64,47 +64,51 @@
 <!-- Popup crear / editar -->
 <div class="popup-fons" *ngIf="mostrarPopup" (click)="tancarPopup()">
   <div class="popup-container" (click)="$event.stopPropagation()">
-    <h3>{{ editando ? 'Editar procedimiento' : 'Nuevo procedimiento' }}</h3>
+    <h3>{{ (editando ? 'PROCEDURES_SECTION.EDIT_TITLE' : 'PROCEDURES_SECTION.NEW_TITLE') | translate }}</h3>
 
     <div class="form-field">
-      <label>Título</label>
+      <label>{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}</label>
       <input
         type="text"
         [(ngModel)]="procForm.titulo"
+        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate"
         title="Título del procedimiento" />
     </div>
 
     <div class="form-field">
-      <label>Departamento (Estat)</label>
+      <label>{{ 'PROCEDURES_SECTION.FIELD_DEPARTMENT' | translate }}</label>
       <input
         type="text"
         [(ngModel)]="procForm.departamento"
+        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DEPARTMENT' | translate"
         title="Departamento / Estado" />
     </div>
 
     <div class="form-field">
-      <label>Responsable (primer pas)</label>
+      <label>{{ 'PROCEDURES_SECTION.FIELD_RESPONSIBLE' | translate }}</label>
       <input
         type="text"
         [(ngModel)]="primerResponsable"
+        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate"
         title="Responsable principal" />
     </div>
 
     <div class="form-field">
-      <label>Descripción</label>
+      <label>{{ 'PROCEDURES_SECTION.FIELD_DESCRIPTION' | translate }}</label>
       <textarea
         rows="3"
         [(ngModel)]="procForm.descripcion"
+        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate"
         title="Descripción del procedimiento">
       </textarea>
     </div>
 
     <div class="popup-actions">
-      <button class="cancelar-btn" (click)="tancarPopup()">
-        Cancelar
+      <button class="cancelar-btn" (click)="tancarPopup()" title="Cancelar">
+        ✗
       </button>
-      <button class="guardar-btn" (click)="guardarProcedimiento()">
-        {{ editando ? 'Actualizar' : 'Guardar' }}
+      <button class="guardar-btn" (click)="guardarProcedimiento()" [title]="editando ? 'Actualizar' : 'Guardar'">
+        ✓
       </button>
     </div>
   </div>
@@ -113,15 +117,15 @@
 <!-- Popup eliminar -->
 <div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
   <div class="popup-container" (click)="$event.stopPropagation()">
-    <h3>Eliminar procedimiento</h3>
-    <p>¿Seguro que quieres eliminar "{{ (procAEliminar && procAEliminar.titulo) || '(Sense títol)' }}"?</p>
+    <h3>{{ 'PROCEDURES_SECTION.DELETE_TITLE' | translate }}</h3>
+    <p>{{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{ title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)' } }}</p>
 
     <div class="popup-actions">
-      <button class="cancelar-btn" (click)="cancelarEliminar()">
-        Cancelar
+      <button class="cancelar-btn" (click)="cancelarEliminar()" title="Cancelar">
+        ✗
       </button>
-      <button class="guardar-btn" (click)="eliminarProcedimiento()">
-        Eliminar
+      <button class="guardar-btn" (click)="eliminarProcedimiento()" title="Eliminar">
+        ✓
       </button>
     </div>
   </div>

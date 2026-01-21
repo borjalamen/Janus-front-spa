@@ -66,6 +66,28 @@ h2 {
   color: #FBC02D;
   font-weight: bold;
   margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #2a2d33;
+  margin: 28px 0;
+}
+
+ul.no-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.no-list > li,
+ul.no-list > *:not(ul) {
+  margin-bottom: 28px;
+}
+
+ul.no-list ul {
+  margin-top: 8px;
+  margin-bottom: 12px;
 }
 :host {
   color: #E0E0E0 !important;

@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../auth.service';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
+import { BuscadorComponent } from '../buscador/buscador';
 
 interface JenkinsItem {
   id?: string;
@@ -17,7 +19,7 @@ interface JenkinsItem {
 
 @Component({
   selector: 'app-jenkins',
-  imports: [FormsModule, CommonModule, TranslateModule],
+  imports: [FormsModule, CommonModule, TranslateModule, MatIconModule, BuscadorComponent],
   standalone: true,
   templateUrl: './jenkins.html',
   styleUrls: ['./jenkins.css'],
@@ -27,6 +29,7 @@ export class Jenkins implements OnInit, OnDestroy {
   newName = '';
   newUrl = '';
   customJenkins: JenkinsItem[] = [];
+  filteredJenkins: JenkinsItem[] = [];
   deletePopupOpen = false;
   jenkinsToDelete: JenkinsItem | null = null;
   deleteMode = false;
@@ -74,9 +77,23 @@ export class Jenkins implements OnInit, OnDestroy {
           url: d.url,
           selected: false
         }));
+        this.filteredJenkins = [...this.customJenkins];
       },
       error: (err) => console.error('Error cargando Jenkins', err)
     });
+  }
+
+  // FILTRAR
+  filtrar(query: string) {
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      this.filteredJenkins = [...this.customJenkins];
+    } else {
+      this.filteredJenkins = this.customJenkins.filter(jk =>
+        jk.name.toLowerCase().includes(q) ||
+        jk.url.toLowerCase().includes(q)
+      );
+    }
   }
 
   // CREATE + UPDATE
@@ -103,12 +120,14 @@ export class Jenkins implements OnInit, OnDestroy {
       // CREATE
       this.http.post<any>(`${this.baseUrl}/create`, body).subscribe({
         next: (created) => {
-          this.customJenkins.push({
+          const newItem = {
             id: created.id,
             name: created.nombre,
             url: created.url,
             selected: false
-          });
+          };
+          this.customJenkins.push(newItem);
+          this.filteredJenkins.push(newItem);
           this.closePopup();
         },
         error: (err) => console.error('Error creando Jenkins', err)
@@ -124,6 +143,7 @@ export class Jenkins implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.customJenkins = this.customJenkins.filter(j => j !== this.jenkinsToDelete);
+            this.filteredJenkins = this.filteredJenkins.filter(j => j !== this.jenkinsToDelete);
             this.deletePopupOpen = false;
             this.jenkinsToDelete = null;
             this.deleteMode = false;
@@ -139,6 +159,7 @@ export class Jenkins implements OnInit, OnDestroy {
       this.http.delete(`${this.baseUrl}/delete/${jk.id}`).subscribe({
         next: () => {
           this.customJenkins = this.customJenkins.filter(j => j.id !== jk.id);
+          this.filteredJenkins = this.filteredJenkins.filter(j => j.id !== jk.id);
         },
         error: (err) => console.error('Error borrando Jenkins', err)
       });
