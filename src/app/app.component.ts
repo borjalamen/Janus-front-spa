@@ -194,10 +194,10 @@ export class AppComponent implements OnDestroy {
 
   loadVersion() {
     console.log('CRIDANT /api/config/all');
-    this.http.get<any>(`${environment.baseUrl}/config/all`).subscribe({
+    this.http.get<any>(`${environment.baseUrl}config/all`).subscribe({
       next: (data) => {
         console.log('RESPUESTA VERSION:', data);
-        this.appVersion = data[0]; 
+        this.appVersion = data[0]?.version || 'sin versión'; 
       },
       error: (err) => {
         console.error('ERROR VERSION:', err);

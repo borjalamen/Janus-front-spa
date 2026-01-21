@@ -74,7 +74,6 @@
             <label>Seleccionar Rol:</label>
             <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
                 <option value="" disabled selected>-- Elegir --</option>
-                <option value="ADMIN">Administrador</option>
                 <option value="CONSULTOR">Consultor</option>
                 <option value="DEV">DevOps</option>
             </select>
@@ -197,6 +196,23 @@
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="tancarPopup()">Cancelar</button>
         <button class="btn-round btn-blue" (click)="guardarUsuari()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup confirmación eliminar usuario -->
+<div class="modal-overlay" *ngIf="mostrarPopupDelete">
+  <div class="auth-card">
+    <h2 class="form-title">Eliminar Usuario</h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p>¿Estás seguro de que quieres eliminar al usuario <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
+      <p style="color: #ff6b6b; font-size: 0.9em;">Esta acción no se puede deshacer.</p>
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="cancelarInhabilitar()">Cancelar</button>
+        <button class="btn-round btn-blue" style="background-color: #ff6b6b;" (click)="inhabilitarUsuari()">Eliminar</button>
       </div>
     </div>
   </div>

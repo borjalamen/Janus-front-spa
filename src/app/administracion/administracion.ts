@@ -63,7 +63,7 @@ export class AdministracionComponent implements OnInit {
   selectedRoleToDisable: string = '';
   appVersion: string = '1.0.2'; // Ejemplo
 
-  private baseUrl = `${environment.baseUrl}/users`;
+  private baseUrl = `${environment.baseUrl}users`;
 
   constructor(
     private http: HttpClient,
@@ -72,6 +72,7 @@ export class AdministracionComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarUsuaris();
+    this.cargarVersion();
   }
 
   get canEdit(): boolean {
@@ -216,16 +217,93 @@ export class AdministracionComponent implements OnInit {
     this.usuariAEsborrar = null;
   }
 
-  // ===== NUEVAS FUNCIONES (DUMMY) =====
+  // ===== NUEVAS FUNCIONES =====
   
-  // Scenario 2: App
+  // Scenario 2: App - Quitar rol de los usuarios
   inhabilitarPorRol() {
-    alert(`Inhabilitando acceso para el rol: ${this.selectedRoleToDisable}`);
+    if (!this.selectedRoleToDisable) {
+      alert('Por favor, selecciona un rol para inhabilitar');
+      return;
+    }
+
+    const usuariosConRol = this.usuaris.filter(u => u.roles.includes(this.selectedRoleToDisable));
+    
+    if (usuariosConRol.length === 0) {
+      alert(`No hay usuarios con el rol ${this.selectedRoleToDisable}`);
+      return;
+    }
+
+    const confirmacion = confirm(`¿Estás seguro de quitar el rol ${this.selectedRoleToDisable} a ${usuariosConRol.length} usuario(s)?`);
+    if (!confirmacion) return;
+
+    let completados = 0;
+    let errores = 0;
+
+    usuariosConRol.forEach(usuari => {
+      const nuevosRoles = usuari.roles.filter(r => r !== this.selectedRoleToDisable);
+      
+      const body = {
+        username: usuari.username,
+        fullName: usuari.fullName,
+        email: usuari.email,
+        roles: nuevosRoles.length > 0 ? nuevosRoles : ['CONSULTOR'], // Si queda sin roles, asignar CONSULTOR
+        status: usuari.status
+      };
+
+      this.http.put<UsuariBackend>(`${this.baseUrl}/update/${usuari.id}`, body)
+        .subscribe({
+          next: updated => {
+            const idx = this.usuaris.findIndex(u => u.id === updated.id);
+            if (idx !== -1) this.usuaris[idx] = updated;
+            completados++;
+            if (completados + errores === usuariosConRol.length) {
+              this.filtrar('');
+              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ''}`);
+              this.selectedRoleToDisable = '';
+            }
+          },
+          error: err => {
+            console.error('Error actualizando usuario', err);
+            errores++;
+            if (completados + errores === usuariosConRol.length) {
+              this.filtrar('');
+              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`);
+            }
+          }
+        });
+    });
   }
 
   // Scenario 3: Parametrización
   cambiarVersion() {
-    alert(`Versión cambiada exitosamente a: ${this.appVersion}`);
+    if (!this.appVersion || this.appVersion.trim() === '') {
+      alert('Por favor, introduce una versión válida');
+      return;
+    }
+
+    const body = { version: this.appVersion.trim() };
+    
+    this.http.put<any>(`${environment.baseUrl}config/version`, body)
+      .subscribe({
+        next: () => {
+          alert(`Versión actualizada exitosamente a: ${this.appVersion}`);
+        },
+        error: err => {
+          console.error('Error actualizando versión', err);
+          alert('Error al actualizar la versión');
+        }
+      });
+  }
+
+  // Cargar la versión actual desde el backend
+  cargarVersion() {
+    this.http.get<string>(`${environment.baseUrl}config/parametrization/version`, { responseType: 'text' as 'json' })
+      .subscribe({
+        next: version => {
+          this.appVersion = version;
+        },
+        error: err => console.error('Error cargando versión', err)
+      });
   }
 
   // Scenario 4: BBDD (Visual Only)
