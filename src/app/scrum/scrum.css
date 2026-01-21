@@ -1,16 +1,73 @@
-.scrum-root{padding:16px}
-.scrum-root h2{margin:0 0 8px}
-.scrum-root .lead{color:var(--muted,#aaa);margin-bottom:12px}
-.scrum-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
-.scrum-controls input, .scrum-controls select{padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-.btn{background:#0b84ff;color:#fff;padding:6px 10px;border-radius:6px;border:none}
-.board{display:flex;gap:12px}
-.col{flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:6px}
-.col-title{font-weight:700;margin-bottom:8px}
-.card{background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin-bottom:8px}
-.card.done{opacity:0.7;text-decoration:line-through}
-.card-head{display:flex;justify-content:space-between;align-items:center}
-.card-actions{display:flex;gap:6px;margin-top:8px}
-.card-actions button{padding:4px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-.card-actions .danger{color:#ff4d4f;border-color:rgba(255,77,79,0.2)}
-.meta{color:var(--muted,#aaa);font-size:12px;margin-left:8px}
+.scrum-root{padding:20px 24px}
+.scrum-root h2{margin:0 0 10px;font-size:1.6rem;color:var(--accent,#ffd166)}
+.scrum-root .lead{color:var(--muted,#cfcfcf);margin-bottom:14px;font-size:0.98rem}
+
+.scrum-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.035)}
+.scrum-controls input, .scrum-controls select, .scrum-controls textarea{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:0.95rem}
+.scrum-controls input[type=number]{width:110px}
+.scrum-controls textarea{resize:vertical;min-height:40px}
+.scrum-controls .priority-hint{color:var(--muted,#bdbdbd);font-size:0.9rem;margin-left:6px}
+.btn{background:#0b84ff;color:#fff;padding:8px 12px;border-radius:8px;border:none;box-shadow:0 2px 6px rgba(11,132,255,0.12)}
+
+.board{display:flex;gap:16px}
+.col{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.col-title{font-weight:700;margin-bottom:12px;font-size:1.05rem}
+
+.card{background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35));padding:12px;border-radius:8px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.45);transition:transform .12s ease,box-shadow .12s ease;color:#fff}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 26px rgba(0,0,0,0.55)}
+.card.done{opacity:0.8}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+
+.card-title{display:flex;flex-direction:column}
+.card-id{font-size:0.75rem;color:var(--muted,#9a9a9a);margin-top:6px}
+.card .desc{margin-top:8px;color:var(--muted,#bdbdbd);font-style:italic}
+
+.card-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.card-actions button{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:0.9rem}
+.card-actions button:hover{background:rgba(255,255,255,0.03)}
+.card-actions .danger{color:#ff6b6b;border-color:rgba(255,107,107,0.18)}
+
+.meta{color:var(--muted,#bdbdbd);font-size:13px;margin-left:8px}
+.card input[type=text], .card input[type=number], .card textarea, .card select{background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.06);padding:6px;border-radius:6px;color:#fff}
+.scrum-root input::placeholder, .scrum-root textarea::placeholder, .scrum-root select::placeholder{color:rgba(255,255,255,0.55)}
+.card input::placeholder, .card textarea::placeholder{color:rgba(255,255,255,0.55)}
+
+/* Force dark inputs across the scrum area to avoid white native backgrounds */
+.scrum-root input, .scrum-root select, .scrum-root textarea {
+	background: rgba(0,0,0,0.14) !important;
+	color: #fff !important;
+	border: 1px solid rgba(255,255,255,0.06) !important;
+	box-shadow: none !important;
+	-webkit-appearance: none !important;
+	appearance: none !important;
+}
+
+.scrum-root select {
+	padding-right: 22px !important;
+}
+
+.scrum-root select option {
+	background: rgba(0,0,0,0.18) !important;
+	color: #fff !important;
+}
+
+.scrum-root input:focus, .scrum-root textarea:focus, .scrum-root select:focus {
+	outline: none !important;
+	border-color: rgba(11,132,255,0.6) !important;
+	box-shadow: 0 0 0 4px rgba(11,132,255,0.06) !important;
+}
+
+/* Autofill background override for WebKit */
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0.14) inset !important;
+	box-shadow: 0 0 0px 1000px rgba(0,0,0,0.14) inset !important;
+	-webkit-text-fill-color: #fff !important;
+}
+.card .card-id{word-break:break-all}
+
+/* responsive tweaks */
+@media (max-width:900px){
+	.board{flex-direction:column}
+	.scrum-controls{gap:8px}
+	.scrum-controls textarea{width:100%}
+}

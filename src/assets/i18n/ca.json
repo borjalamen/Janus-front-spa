@@ -52,6 +52,9 @@
     "PRIORITY_LOW": "Baixa",
     "PRIORITY_MEDIUM": "Mitjana",
     "PRIORITY_HIGH": "Alta",
+    "PRI_LABEL_OPT": "Opcional",
+    "PRI_LABEL_NOW": "Fes-ho ja!",
+    "PRI_SCALE_HINT": "Prioritat 0–150. Menys de 25 són opcionals; 100–150: Fes-ho ja!",
     "PRI_LOW": "Baixa",
     "PRI_MEDIUM": "Mitjana",
     "PRI_HIGH": "Alta",
@@ -516,6 +519,7 @@
     "TASK_TITLE": "Títol tasca",
     "ESTIMATE": "Estimació (h)",
     "PRIORITY": "Prioritat",
+    "PLACEHOLDER_PRIORITY": "Prioritat (0-150)",
     "PRIORITY_LOW": "Baixa",
     "PRIORITY_MEDIUM": "Mitjana",
     "PRIORITY_HIGH": "Alta",
@@ -526,7 +530,12 @@
     "MOVE_DOING": "→ Fent",
     "MOVE_DONE": "✓ Fet",
     "MOVE_TODO": "← Per fer",
-    "REMOVE": "✕"
+    "REMOVE": "✕",
+    "PLACEHOLDER_DESC": "Descripció de la tasca",
+    "ASSIGNEE_PLACEHOLDER": "Assignar a...",
+    "EDIT": "Editar",
+    "SAVE": "Desar",
+    "CANCEL": "Cancel·lar"
   },
   "PROJECTS_MIND": {
     "TITLE": "MIND",

@@ -32,9 +32,13 @@
     "DUO": "Quick DUO guide for multi-factor authentication",
     "FORMULARIO_HOJA_DESPLIEGUE": "Deployment sheet form for the DevOps team"
     ,"FORMULARIO_ACCESO_BD_CPD_V1_2": "Database access request form - CPD v1.2",
-    "GUIA_PRIMEROSAUXILIOS_SAMUR": "First Aid Guide (SAMUR)",
-    "GUIA_VPAYMENT": "VPayment Guide"
-  },
+    "PLACEHOLDER_PRIORITY": "Priority (0-150)",
+    "PRIORITY_LOW": "Low",
+    "PRIORITY_MEDIUM": "Medium",
+    "PRIORITY_HIGH": "High",
+    "PRI_LABEL_OPT": "Optional",
+    "PRI_LABEL_NOW": "Do it now!",
+    "PRI_SCALE_HINT": "Priority 0–150. Less than 25 = optional; 100–150 = Do it now!",
   "USER": {
     "PROFILE": "Profile",
     "LOGOUT": "Log out",
@@ -551,6 +555,9 @@
     "DESCRIPTION": "Daily board to share tasks, estimates and priorities.",
     "PLACEHOLDER_TITLE": "Task title",
     "PLACEHOLDER_ESTIMATE": "Estimate (h)",
+    "PLACEHOLDER_PRIORITY": "Priority (0-150)",
+    "PLACEHOLDER_DESC": "Task description",
+    "ASSIGNEE_PLACEHOLDER": "Assign to...",
     "PRIORITY_LOW": "Low",
     "PRIORITY_MEDIUM": "Medium",
     "PRIORITY_HIGH": "High",
@@ -560,6 +567,12 @@
     "COL_DONE": "Done",
     "PRI_LOW": "Low",
     "PRI_MEDIUM": "Medium",
-    "PRI_HIGH": "High"
+    "PRI_HIGH": "High",
+    "PRI_LABEL_OPT": "Optional",
+    "PRI_LABEL_NOW": "Do it now!",
+    "PRI_SCALE_HINT": "Priority 0–150. Less than 25 = optional; 100–150 = Do it now!",
+    "EDIT": "Edit",
+    "SAVE": "Save",
+    "CANCEL": "Cancel"
   }
 }
