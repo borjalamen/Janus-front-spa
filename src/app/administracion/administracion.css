@@ -479,3 +479,170 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 .btn-blue:hover {
   background: #005a94;
 }
+
+/* ===== ESTILOS PARA ICONO VER CV ===== */
+.icon-btn.view-cv {
+  color: #4CAF50;
+}
+
+.icon-btn.view-cv:hover {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+/* ===== ESTILOS POPUPS BBDD ===== */
+.db-popup {
+  max-width: 450px;
+}
+
+.db-popup .form-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #1e84a3;
+}
+
+.title-icon.warn {
+  color: #E53935;
+}
+
+/* Lista de checkboxes */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 10px 12px;
+  background: #0F1115;
+  border-radius: 8px;
+  border: 1px solid #333;
+  transition: all 0.2s;
+  color: #E0E0E0;
+}
+
+.checkbox-item:hover {
+  border-color: #1e84a3;
+  background: rgba(30, 132, 163, 0.1);
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #1e84a3;
+  cursor: pointer;
+}
+
+/* Lista de versiones para restore */
+.version-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.version-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px;
+  background: #0F1115;
+  border-radius: 8px;
+  border: 2px solid #333;
+  transition: all 0.2s;
+}
+
+.version-item:hover {
+  border-color: #1e84a3;
+}
+
+.version-item.selected {
+  border-color: #FBC02D;
+  background: rgba(251, 192, 45, 0.1);
+}
+
+.version-item input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #FBC02D;
+  cursor: pointer;
+}
+
+.version-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.version-fecha {
+  color: #FBC02D;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.version-desc {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* Textos de advertencia e información */
+.warning-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin-top: 16px;
+  padding: 10px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 6px;
+}
+
+.warning-text mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.info-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4CAF50;
+  font-size: 0.9em;
+  margin-top: 16px;
+  padding: 10px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 6px;
+}
+
+.info-text mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Botón de peligro */
+.btn-round.btn-danger {
+  background: #E53935;
+  color: white;
+  border: none;
+}
+
+.btn-round.btn-danger:hover {
+  background: #c62828;
+}

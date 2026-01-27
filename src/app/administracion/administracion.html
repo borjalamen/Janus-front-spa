@@ -50,12 +50,16 @@
             <div class="usuari-email">{{ usuari.email }}</div>
           </div>
 
-          <div class="actions" *ngIf="canEdit">
-            <button class="icon-btn edit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
+          <div class="actions">
+            <button class="icon-btn view-cv" *ngIf="usuari.cvPath" (click)="verCV(usuari)" title="Ver CV">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
               <mat-icon>edit</mat-icon>
             </button>
-            <button class="icon-btn delete" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
-              <mat-icon>block</mat-icon> </button>
+            <button class="icon-btn delete" *ngIf="canEdit" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
+              <mat-icon>block</mat-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -119,21 +123,21 @@
             <mat-icon class="big-icon warn">delete_forever</mat-icon>
             <h3>Borrado Físico</h3>
             <p>Elimina permanentemente registros marcados.</p>
-            <button class="popup-btn" (click)="accionBBDD('borrado')">Ejecutar</button>
+            <button class="popup-btn" (click)="accionBBDD('borrado')">Seleccionar y Ejecutar</button>
         </div>
 
         <div class="admin-card db-card">
             <mat-icon class="big-icon">restore</mat-icon>
             <h3>Restore</h3>
             <p>Restaura la base de datos a un punto anterior.</p>
-            <button class="popup-btn" (click)="accionBBDD('restore')">Restaurar</button>
+            <button class="popup-btn" (click)="accionBBDD('restore')">Elegir Versión</button>
         </div>
 
         <div class="admin-card db-card">
             <mat-icon class="big-icon">backup</mat-icon>
             <h3>Backup</h3>
             <p>Genera una copia de seguridad actual.</p>
-            <button class="popup-btn" (click)="accionBBDD('backup')">Crear Backup</button>
+            <button class="popup-btn" (click)="accionBBDD('backup')">Seleccionar y Generar</button>
         </div>
       </div>
     </div>
@@ -213,6 +217,115 @@
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="cancelarInhabilitar()">Cancelar</button>
         <button class="btn-round btn-blue" style="background-color: #ff6b6b;" (click)="inhabilitarUsuari()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Borrado Físico -->
+<div class="modal-overlay" *ngIf="mostrarPopupBorrado">
+  <div class="auth-card db-popup">
+    <h2 class="form-title">
+      <mat-icon class="title-icon warn">delete_forever</mat-icon>
+      Borrado Físico
+    </h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p>Selecciona qué registros deseas eliminar permanentemente:</p>
+      
+      <div class="checkbox-list">
+        <label *ngFor="let opcion of opcionesBorrado" class="checkbox-item">
+          <input type="checkbox" 
+                 [checked]="selectedBorrado.includes(opcion.value)"
+                 (change)="toggleSeleccionBorrado(opcion.value)">
+          <span class="checkmark"></span>
+          {{ opcion.label }}
+        </label>
+      </div>
+
+      <p class="warning-text">
+        <mat-icon>warning</mat-icon>
+        Esta acción es irreversible
+      </p>
+
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
+        <button class="btn-round btn-danger" (click)="ejecutarBorrado()">Eliminar Seleccionados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Restore -->
+<div class="modal-overlay" *ngIf="mostrarPopupRestore">
+  <div class="auth-card db-popup">
+    <h2 class="form-title">
+      <mat-icon class="title-icon">restore</mat-icon>
+      Restaurar Base de Datos
+    </h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p>Selecciona la versión a la que deseas restaurar:</p>
+      
+      <div class="version-list">
+        <label *ngFor="let version of versionesRestore" class="version-item" 
+               [class.selected]="selectedRestore === version.id">
+          <input type="radio" 
+                 name="restoreVersion" 
+                 [value]="version.id"
+                 [(ngModel)]="selectedRestore">
+          <div class="version-info">
+            <span class="version-fecha">{{ version.fecha }}</span>
+            <span class="version-desc">{{ version.descripcion }}</span>
+          </div>
+        </label>
+      </div>
+
+      <p class="warning-text" *ngIf="selectedRestore">
+        <mat-icon>info</mat-icon>
+        Se restaurará la base de datos al estado del {{ fechaRestoreSeleccionada }}
+      </p>
+
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
+        <button class="btn-round btn-blue" (click)="ejecutarRestore()">Restaurar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Backup -->
+<div class="modal-overlay" *ngIf="mostrarPopupBackup">
+  <div class="auth-card db-popup">
+    <h2 class="form-title">
+      <mat-icon class="title-icon">backup</mat-icon>
+      Generar Backup
+    </h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p>Selecciona qué elementos incluir en el backup:</p>
+      
+      <div class="checkbox-list">
+        <label *ngFor="let opcion of opcionesBackup" class="checkbox-item">
+          <input type="checkbox" 
+                 [checked]="selectedBackup.includes(opcion.value)"
+                 (change)="toggleSeleccionBackup(opcion.value)">
+          <span class="checkmark"></span>
+          {{ opcion.label }}
+        </label>
+      </div>
+
+      <p class="info-text" *ngIf="selectedBackup.length > 0">
+        <mat-icon>check_circle</mat-icon>
+        Se generará backup de: {{ selectedBackup.join(', ') }}
+      </p>
+
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
+        <button class="btn-round btn-blue" (click)="ejecutarBackup()">Generar Backup</button>
       </div>
     </div>
   </div>

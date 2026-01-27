@@ -16,6 +16,13 @@ interface UsuariBackend {
   email: string;
   roles: string[];
   status: string;
+  cvPath?: string;
+}
+
+interface BackupVersion {
+  id: string;
+  fecha: string;
+  descripcion: string;
 }
 
 @Component({
@@ -62,6 +69,31 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS NUEVAS SECCIONES
   selectedRoleToDisable: string = '';
   appVersion: string = '1.0.2'; // Ejemplo
+
+  // ESTADOS BBDD
+  mostrarPopupBorrado = false;
+  mostrarPopupRestore = false;
+  mostrarPopupBackup = false;
+  
+  opcionesBorrado = [
+    { value: 'usuarios', label: 'Usuarios inactivos' },
+    { value: 'documentos', label: 'Documentos huérfanos' },
+    { value: 'logs', label: 'Logs antiguos' },
+    { value: 'sesiones', label: 'Sesiones expiradas' },
+    { value: 'todos', label: 'Todos los registros marcados' }
+  ];
+  selectedBorrado: string[] = [];
+
+  opcionesBackup = [
+    { value: 'usuarios', label: 'Usuarios' },
+    { value: 'documentos', label: 'Documentos' },
+    { value: 'configuracion', label: 'Configuración' },
+    { value: 'completo', label: 'Backup completo' }
+  ];
+  selectedBackup: string[] = [];
+
+  versionesRestore: BackupVersion[] = [];
+  selectedRestore: string = '';
 
   private baseUrl = `${environment.baseUrl}users`;
 
@@ -306,8 +338,132 @@ export class AdministracionComponent implements OnInit {
       });
   }
 
-  // Scenario 4: BBDD (Visual Only)
+  // Scenario 4: BBDD
   accionBBDD(tipo: string) {
     console.log(`Acción de BBDD solicitada: ${tipo}`);
+    if (tipo === 'borrado') {
+      this.selectedBorrado = [];
+      this.mostrarPopupBorrado = true;
+    } else if (tipo === 'restore') {
+      this.cargarVersionesRestore();
+      this.selectedRestore = '';
+      this.mostrarPopupRestore = true;
+    } else if (tipo === 'backup') {
+      this.selectedBackup = [];
+      this.mostrarPopupBackup = true;
+    }
+  }
+
+  cargarVersionesRestore() {
+    // Simular carga de versiones desde el backend
+    this.http.get<BackupVersion[]>(`${environment.baseUrl}db/backups`).subscribe({
+      next: versions => {
+        this.versionesRestore = versions;
+      },
+      error: () => {
+        // Si falla, mostrar versiones de ejemplo
+        this.versionesRestore = [
+          { id: 'bk_001', fecha: '2026-01-27 10:30', descripcion: 'Backup automático' },
+          { id: 'bk_002', fecha: '2026-01-26 18:00', descripcion: 'Backup pre-actualización' },
+          { id: 'bk_003', fecha: '2026-01-25 12:00', descripcion: 'Backup completo semanal' }
+        ];
+      }
+    });
+  }
+
+  ejecutarBorrado() {
+    if (this.selectedBorrado.length === 0) {
+      alert('Selecciona al menos un tipo de registro para borrar');
+      return;
+    }
+    const confirmacion = confirm(`¿Estás seguro de eliminar permanentemente: ${this.selectedBorrado.join(', ')}?`);
+    if (!confirmacion) return;
+
+    this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: this.selectedBorrado }).subscribe({
+      next: () => {
+        alert('Borrado físico ejecutado correctamente');
+        this.mostrarPopupBorrado = false;
+      },
+      error: err => {
+        console.error('Error en borrado físico', err);
+        alert('Error al ejecutar el borrado físico');
+      }
+    });
+  }
+
+  ejecutarRestore() {
+    if (!this.selectedRestore) {
+      alert('Selecciona una versión para restaurar');
+      return;
+    }
+    const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
+    const confirmacion = confirm(`¿Estás seguro de restaurar a la versión: ${version?.fecha}?`);
+    if (!confirmacion) return;
+
+    this.http.post(`${environment.baseUrl}db/restore`, { backupId: this.selectedRestore }).subscribe({
+      next: () => {
+        alert('Base de datos restaurada correctamente');
+        this.mostrarPopupRestore = false;
+      },
+      error: err => {
+        console.error('Error en restore', err);
+        alert('Error al restaurar la base de datos');
+      }
+    });
+  }
+
+  ejecutarBackup() {
+    if (this.selectedBackup.length === 0) {
+      alert('Selecciona al menos un elemento para incluir en el backup');
+      return;
+    }
+
+    this.http.post(`${environment.baseUrl}db/backup`, { elementos: this.selectedBackup }).subscribe({
+      next: () => {
+        alert('Backup generado correctamente');
+        this.mostrarPopupBackup = false;
+      },
+      error: err => {
+        console.error('Error generando backup', err);
+        alert('Error al generar el backup');
+      }
+    });
+  }
+
+  cerrarPopupBBDD() {
+    this.mostrarPopupBorrado = false;
+    this.mostrarPopupRestore = false;
+    this.mostrarPopupBackup = false;
+  }
+
+  toggleSeleccionBorrado(valor: string) {
+    const idx = this.selectedBorrado.indexOf(valor);
+    if (idx > -1) {
+      this.selectedBorrado.splice(idx, 1);
+    } else {
+      this.selectedBorrado.push(valor);
+    }
+  }
+
+  toggleSeleccionBackup(valor: string) {
+    const idx = this.selectedBackup.indexOf(valor);
+    if (idx > -1) {
+      this.selectedBackup.splice(idx, 1);
+    } else {
+      this.selectedBackup.push(valor);
+    }
+  }
+
+  // Obtener fecha de la versión seleccionada
+  get fechaRestoreSeleccionada(): string {
+    const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
+    return version?.fecha || '';
+  }
+
+  // Ver CV del usuario
+  verCV(usuari: UsuariBackend) {
+    if (usuari.cvPath) {
+      window.open(`${environment.baseUrl}files/cv/${usuari.id}`, '_blank');
+    }
   }
 }
