@@ -139,6 +139,8 @@ body {
   border-radius: 4px;
   transition: background 0.2s;
 }
+.icon-btn.view-profile { color: #FBC02D; }
+.icon-btn.download-cv { color: #4caf50; }
 .icon-btn.edit { color: #1e84a3; }
 .icon-btn.delete { color: #E53935; }
 .icon-btn:hover { background: rgba(255,255,255,0.1); }
@@ -645,4 +647,360 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 
 .btn-round.btn-danger:hover {
   background: #c62828;
+}
+
+/* ========================================
+   ESTILOS PARA TARJETAS DE CV USUARIOS
+   ======================================== */
+
+.usuari-card-cv {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 16px;
+  background: linear-gradient(145deg, #0F1115 0%, #16181c 100%);
+  border: 1px solid #2a2d33;
+  transition: all 0.3s ease;
+}
+
+.usuari-card-cv:hover {
+  border-color: #FBC02D;
+  box-shadow: 0 4px 20px rgba(251, 192, 45, 0.15);
+  transform: translateY(-2px);
+}
+
+.usuari-info-main {
+  flex: 1;
+}
+
+.usuari-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.usuari-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FBC02D 0%, #f9a825 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.usuari-avatar mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #0F1115;
+}
+
+.usuari-datos {
+  flex: 1;
+}
+
+.usuari-puesto {
+  color: #1e84a3;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mini-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  opacity: 0.7;
+}
+
+.usuari-card-cv .usuari-email {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+/* Sección de información del CV */
+.cv-info-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2d33;
+}
+
+.cv-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.cv-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.cv-stat mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #1e84a3;
+}
+
+.cv-stat strong {
+  color: #FBC02D;
+}
+
+/* Tags de tecnologías */
+.cv-techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tech-tag {
+  background: rgba(30, 132, 163, 0.2);
+  color: #1e84a3;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid rgba(30, 132, 163, 0.3);
+}
+
+.tech-more {
+  color: #666;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+}
+
+/* Certificaciones */
+.cv-certs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4caf50;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.cert-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Actions en la tarjeta CV */
+.usuari-card-cv .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2d33;
+}
+
+/* ========================================
+   POPUP PERFIL CV
+   ======================================== */
+
+.cv-popup {
+  width: 500px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.cv-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  padding-right: 40px;
+}
+
+.cv-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FBC02D 0%, #f9a825 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cv-avatar mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #0F1115;
+}
+
+.cv-header-info {
+  flex: 1;
+}
+
+.cv-nombre {
+  margin: 0 0 4px 0;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.cv-puesto {
+  margin: 0 0 4px 0;
+  color: #1e84a3;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.cv-email {
+  margin: 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.cv-body {
+  padding: 10px 0;
+}
+
+.cv-section {
+  margin-bottom: 20px;
+}
+
+.cv-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #FBC02D;
+  margin: 0 0 12px 0;
+  font-size: 0.95rem;
+}
+
+.cv-section h4 mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.cv-roles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.role-tag {
+  background: rgba(251, 192, 45, 0.15);
+  color: #FBC02D;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(251, 192, 45, 0.3);
+}
+
+.cv-stats-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.cv-stat-box {
+  background: #0F1115;
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2d33;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  display: block;
+  color: #FBC02D;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.cv-popup .cv-techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cv-popup .tech-tag {
+  padding: 5px 12px;
+  font-size: 0.8rem;
+}
+
+.cv-certs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cv-certs-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+}
+
+.cv-certs-list li:last-child {
+  border-bottom: none;
+}
+
+.cert-check {
+  color: #4caf50;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.cv-popup .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cv-popup .btn-round.btn-blue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cv-popup .btn-round.btn-blue mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }

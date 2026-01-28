@@ -12,6 +12,7 @@ import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { MultimediaComponent } from './app/multimedia/multimedia';
 import { AdministracionComponent } from './app/administracion/administracion';
+import { UserProfileComponent } from './app/user-profile/user-profile';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -58,6 +59,7 @@ bootstrapApplication(AppComponent, {
       {path: 'planificacion', component: PlanificacionComponent },
       {path: 'multimedia', component: MultimediaComponent },
       { path: 'administracion', component: AdministracionComponent },
+      { path: 'user-profile/:id', component: UserProfileComponent },
       { path: 'descargables', component: DescargablesComponent },
       { path: 'bitacora', component: Bitacora},
       {path: 'jenkins', component: Jenkins},

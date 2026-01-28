@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 interface UsuariBackend {
   id?: string;
@@ -17,6 +18,12 @@ interface UsuariBackend {
   roles: string[];
   status: string;
   cvPath?: string;
+  // Campos adicionales para mostrar info del CV
+  puesto?: string;
+  experiencia?: string;
+  tecnologias?: string[];
+  certificaciones?: string[];
+  proyectos?: number;
 }
 
 interface BackupVersion {
@@ -49,6 +56,8 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS POPUPS USUARIOS
   mostrarPopup = false;
   mostrarPopupDelete = false; // Ahora actuará como "Inhabilitar"
+  mostrarPopupPerfil = false; // Popup para ver perfil CV
+  usuariPerfil: UsuariBackend | null = null; // Usuario seleccionado para ver perfil
 
   nouUsuari = {
     nombre: '',
@@ -65,6 +74,94 @@ export class AdministracionComponent implements OnInit {
   usuarisFiltrats: UsuariBackend[] = [];
   usuariEditant: UsuariBackend | null = null;
   usuariAEsborrar: UsuariBackend | null = null;
+
+  // Datos de demostración hardcodeados para la presentación
+  private usuariosDemoCV: UsuariBackend[] = [
+    {
+      id: 'demo-001',
+      username: 'agarcia',
+      fullName: 'Ana García López',
+      email: 'agarcia@minsait.com',
+      roles: ['ADMIN', 'DEV'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/agarcia_cv.pdf',
+      puesto: 'Tech Lead Senior',
+      experiencia: '8 años',
+      tecnologias: ['Angular', 'Java', 'Spring Boot', 'AWS', 'Docker', 'Kubernetes'],
+      certificaciones: ['AWS Solutions Architect', 'Scrum Master'],
+      proyectos: 12
+    },
+    {
+      id: 'demo-002',
+      username: 'cmartinez',
+      fullName: 'Carlos Martínez Ruiz',
+      email: 'cmartinez@minsait.com',
+      roles: ['DEV'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/cmartinez_cv.pdf',
+      puesto: 'Full Stack Developer',
+      experiencia: '5 años',
+      tecnologias: ['React', 'Node.js', 'TypeScript', 'MongoDB', 'Azure'],
+      certificaciones: ['Azure Developer Associate'],
+      proyectos: 8
+    },
+    {
+      id: 'demo-003',
+      username: 'lrodriguez',
+      fullName: 'Laura Rodríguez Sánchez',
+      email: 'lrodriguez@minsait.com',
+      roles: ['CONSULTOR'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/lrodriguez_cv.pdf',
+      puesto: 'Consultora IT Senior',
+      experiencia: '10 años',
+      tecnologias: ['SAP', 'Oracle', 'Power BI', 'SQL Server', 'Tableau'],
+      certificaciones: ['ITIL v4', 'PMP', 'SAP Certified'],
+      proyectos: 25
+    },
+    {
+      id: 'demo-004',
+      username: 'jfernandez',
+      fullName: 'Javier Fernández Torres',
+      email: 'jfernandez@minsait.com',
+      roles: ['DEV'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/jfernandez_cv.pdf',
+      puesto: 'DevOps Engineer',
+      experiencia: '6 años',
+      tecnologias: ['Jenkins', 'Terraform', 'Ansible', 'Python', 'Kubernetes', 'ArgoCD'],
+      certificaciones: ['CKA', 'AWS DevOps Professional'],
+      proyectos: 15
+    },
+    {
+      id: 'demo-005',
+      username: 'mlopez',
+      fullName: 'María López Gómez',
+      email: 'mlopez@minsait.com',
+      roles: ['CONSULTOR', 'DEV'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/mlopez_cv.pdf',
+      puesto: 'Data Engineer',
+      experiencia: '4 años',
+      tecnologias: ['Python', 'Spark', 'Databricks', 'Azure Data Factory', 'SQL'],
+      certificaciones: ['Azure Data Engineer', 'Databricks Certified'],
+      proyectos: 7
+    },
+    {
+      id: 'demo-006',
+      username: 'pnavarro',
+      fullName: 'Pedro Navarro Díaz',
+      email: 'pnavarro@minsait.com',
+      roles: ['DEV'],
+      status: 'ACTIVE',
+      cvPath: '/cvs/pnavarro_cv.pdf',
+      puesto: 'Backend Developer',
+      experiencia: '3 años',
+      tecnologias: ['Java', 'Spring Boot', 'PostgreSQL', 'RabbitMQ', 'Redis'],
+      certificaciones: ['Oracle Java SE 11'],
+      proyectos: 5
+    }
+  ];
 
   // ESTADOS NUEVAS SECCIONES
   selectedRoleToDisable: string = '';
@@ -99,7 +196,8 @@ export class AdministracionComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -120,10 +218,16 @@ export class AdministracionComponent implements OnInit {
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: data => {
-        this.usuaris = data;
+        // Combinar datos del backend con datos de demo para la presentación
+        this.usuaris = [...data, ...this.usuariosDemoCV];
         this.usuarisFiltrats = [...this.usuaris];
       },
-      error: err => console.error('Error carregant usuaris', err)
+      error: err => {
+        console.error('Error carregant usuaris, usando datos de demo', err);
+        // Si falla el backend, usar datos hardcodeados para la demo
+        this.usuaris = [...this.usuariosDemoCV];
+        this.usuarisFiltrats = [...this.usuaris];
+      }
     });
   }
 
@@ -464,6 +568,25 @@ export class AdministracionComponent implements OnInit {
   verCV(usuari: UsuariBackend) {
     if (usuari.cvPath) {
       window.open(`${environment.baseUrl}files/cv/${usuari.id}`, '_blank');
+    }
+  }
+
+  // Abrir popup con perfil/CV del usuario
+  abrirPerfilCV(usuari: UsuariBackend) {
+    this.usuariPerfil = usuari;
+    this.mostrarPopupPerfil = true;
+  }
+
+  // Cerrar popup de perfil
+  cerrarPopupPerfil() {
+    this.mostrarPopupPerfil = false;
+    this.usuariPerfil = null;
+  }
+
+  // Ver perfil completo del usuario (curriculum) - navega a otra página
+  verPerfil(usuari: UsuariBackend) {
+    if (usuari.id) {
+      this.router.navigate(['/user-profile', usuari.id]);
     }
   }
 }

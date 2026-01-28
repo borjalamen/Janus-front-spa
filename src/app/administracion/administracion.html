@@ -51,7 +51,7 @@
           </div>
 
           <div class="actions">
-            <button class="icon-btn view-cv" *ngIf="usuari.cvPath" (click)="verCV(usuari)" title="Ver CV">
+            <button class="icon-btn view-profile" (click)="verPerfil(usuari)" title="Ver perfil completo">
               <mat-icon>visibility</mat-icon>
             </button>
             <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
