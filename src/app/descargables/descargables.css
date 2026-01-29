@@ -2,6 +2,10 @@
   padding: 24px;
   background: #16181c;
   border-radius: 10px;
+<<<<<<< Updated upstream
+=======
+  box-shadow: 0 2px 8px #E53935;
+>>>>>>> Stashed changes
   margin: 20px;
   color: #E0E0E0;
 }
@@ -12,6 +16,7 @@
   margin: 0 0 20px 0;
 }
 
+<<<<<<< Updated upstream
 /* Grid de descargables */
 .descargables-grid {
   display: grid;
@@ -149,4 +154,67 @@
 
 .search-field.mat-form-field-appearance-outline .mat-form-field-outline-thick {
   border-color: #0a7f7f;
+=======
+.doc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #0f1113;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.doc-row:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+.doc-info { flex: 1; }
+.doc-desc { color: #aaa; font-size: 0.9em; margin-top: 4px; }
+.doc-actions { margin-left: 12px; }
+.download-link { text-decoration: none; }
+
+.doc-title-row { display: flex; gap: 12px; align-items: center; }
+.doc-size { background: #417966; color: #0F1115; padding: 4px 12px; border-radius: 12px; font-size: 0.8em; font-weight: bold; }
+.doc-name { font-weight: 600; color: #E0E0E0; font-size: 1.05rem; }
+
+.doc-modified { color: #999; font-size: 0.85em; margin-top: 6px; }
+
+/* Hover effect consistent with other icon buttons */
+.doc-actions button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: #E0E0E0;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+}
+
+.doc-actions button:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  border-color: #ffd54f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+}
+
+.doc-actions button:active {
+  transform: translateY(0);
+}
+
+.doc-actions button mat-icon {
+  font-size: 18px;
+>>>>>>> Stashed changes
 }

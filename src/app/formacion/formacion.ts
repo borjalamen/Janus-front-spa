@@ -4,6 +4,7 @@ import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
 
 type TrainingItem = {
   id: string;
@@ -33,7 +34,7 @@ const STORAGE_KEY = 'training_paths_v1';
   templateUrl: './formacion.html',
   styleUrls: ['./formacion.css'],
   standalone: true,
-  imports: [CommonModule, NgIf, NgForOf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
+  imports: [CommonModule, NgIf, NgForOf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule, MatIconModule],
 })
 export class FormacionComponent {
   title = '';

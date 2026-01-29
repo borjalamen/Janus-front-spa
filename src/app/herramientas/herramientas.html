@@ -4,7 +4,10 @@
   <div class="tools-header">
     <h2>{{ 'MENU.TOOLS' | translate }}</h2>
     <div>
-      <button class="btn" (click)="newTool()">{{ 'TRAINING.NEW_ITEM' | translate }}</button>
+      <button class="jenkins-add-btn" (click)="newTool()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'TRAINING.NEW_ITEM' | translate }}</span>
+      </button>
     </div>
   </div>
 

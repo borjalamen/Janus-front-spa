@@ -124,6 +124,24 @@
   border: 2px solid #FBC02D;
   width: 380px;
   max-width: 90%;
+<<<<<<< Updated upstream
+=======
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
+  border: 2px solid #FBC02D !important;
+}
+
+.popup-container h3 {
+  color: #ffd54f;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.form-field {
+>>>>>>> Stashed changes
   display: flex;
   flex-direction: column;
   gap: 16px;

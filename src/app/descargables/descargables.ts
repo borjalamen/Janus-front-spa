@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { BuscadorComponent } from '../buscador/buscador';
 
 interface DocumentoIndexItem {
   name: string;
@@ -22,7 +23,7 @@ interface DocumentoIndexItem {
   standalone: true,
   templateUrl: './descargables.html',
   styleUrls: ['./descargables.css'],
-  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule]
+  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, BuscadorComponent]
 })
 export class DescargablesComponent implements OnInit {
   searchText = '';
@@ -91,6 +92,10 @@ export class DescargablesComponent implements OnInit {
     } catch (e) {
       return iso;
     }
+  }
+
+  onSearch(query: string): void {
+    this.searchText = query;
   }
 
   get filteredDocuments(): DocumentoIndexItem[] {

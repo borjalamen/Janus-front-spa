@@ -13,6 +13,68 @@ body {
   margin: 20px;
 }
 
+<<<<<<< Updated upstream
+=======
+/* SIDEBAR */
+.admin-sidebar {
+  width: 220px;
+  background: #0b0c0e;
+  padding: 20px;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-title {
+  color: #FBC02D;
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #FBC02D;
+  padding-bottom: 10px;
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: 2px solid transparent;
+  color: #aaa;
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FBC02D;
+  border-color: rgba(251, 192, 45, 0.2);
+  transform: translateX(4px);
+}
+
+.menu-btn.active {
+  background: linear-gradient(135deg, #FBC02D 0%, #F9A825 100%);
+  color: #0F1115;
+  font-weight: bold;
+  border-color: #FBC02D;
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+}
+
+/* CONTENIDO DERECHA */
+.admin-content {
+  flex: 1;
+  padding: 24px;
+  background: #16181c;
+  overflow-y: auto;
+}
+
+>>>>>>> Stashed changes
 .documents-header {
   display: flex;
   justify-content: space-between;
@@ -24,6 +86,7 @@ body {
 .documents-header h2 {
   color: #FBC02D;
   font-weight: bold;
+<<<<<<< Updated upstream
   margin-bottom: 16px;
 }
 
@@ -31,17 +94,364 @@ p {
   color: #E0E0E0;
 }
 
+=======
+  margin: 0;
+}
+
+/* CARTAS DE SECCIÓN */
+.admin-card {
+  background: #0F1115;
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.admin-card:hover {
+  border-color: rgba(251, 192, 45, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-card h3 {
+  color: #FBC02D;
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.admin-card p {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ESTILOS DE USUARIOS */
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.usuari-item {
+  padding: 16px 20px;
+  border-radius: 10px;
+  background: #0f1113;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.usuari-item:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+.usuari-nom {
+  color: #fff;
+}
+.usuari-rol {
+  color: #FBC02D;
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+.usuari-email {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* ACCIONES */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ESTILOS DE FORMS Y INPUTS */
+.custom-select, input[type="text"], input[type="password"], input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #1e84a3;
+  background: #000;
+  color: #fff;
+  outline: none;
+  box-sizing: border-box; /* Importante para que no se salgan */
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.form-field label {
+  color: #cfcfcf;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  background: #141516 !important;
+  color: #eee !important;
+  border: 1px solid #2e3236 !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #7c8084 !important;
+}
+
+.roles-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.role-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #aaa;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.role-btn:hover {
+  border-color: rgba(251, 192, 45, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+  color: #E0E0E0;
+  transform: translateY(-2px);
+}
+
+.role-btn.active {
+  background: linear-gradient(135deg, #FBC02D 0%, #F9A825 100%);
+  color: #0F1115;
+  border-color: #FBC02D;
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+  font-weight: bold;
+}
+
+.role-btn.active:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(251, 192, 45, 0.4);
+}
+
+/* ESTILOS MODERNOS PARA INPUTS Y SELECTS */
+.form-field-modern {
+  margin-bottom: 16px;
+}
+
+.form-field-modern label {
+  display: block;
+  margin-bottom: 10px;
+  color: #FBC02D;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.modern-select,
+.modern-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #0b0c0e;
+  color: #E0E0E0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.modern-select:focus,
+.modern-input:focus {
+  border-color: #FBC02D;
+  background: #141516;
+  box-shadow: 0 0 0 3px rgba(251, 192, 45, 0.1);
+}
+
+.modern-select:hover,
+.modern-input:hover {
+  border-color: rgba(251, 192, 45, 0.4);
+}
+
+.modern-select option {
+  background: #0b0c0e;
+  color: #E0E0E0;
+  padding: 10px;
+}
+
+.modern-input::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+/* GRID BBDD */
+.db-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.db-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.big-icon {
+  font-size: 48px;
+  color: #1e84a3;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.big-icon.warn { color: #E53935; }
+
+/* POPUP GLOBAL (Overlay) */
+.popup-fons {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-container {
+  background: #0f1113 !important;
+  color: #eee !important;
+  padding: 22px !important;
+  border-radius: 8px !important;
+  width: 720px !important;
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
+  border: 2px solid #FBC02D !important;
+}
+
+.popup-container h3 {
+  color: #ffd54f;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.popup-container p {
+  color: #ccc;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.cancelar-btn,
+.guardar-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.cancelar-btn:hover,
+.guardar-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #555, #333) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.cancelar-btn:focus,
+.guardar-btn:focus {
+  outline: 2px solid rgba(30, 136, 229, 0.35) !important;
+}
+
+.cancelar-btn:active,
+.guardar-btn:active {
+  transform: scale(0.95);
+}
+
+.guardar-btn {
+  color: #4CAF50 !important;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(76, 175, 80, 0.5) !important;
+  border: 1px solid rgba(76, 175, 80, 0.5) !important;
+}
+
+.cancelar-btn {
+  color: #E53935 !important;
+}
+
+.cancelar-btn:hover {
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
+}
+
+/* BOTONES GENERALES */
+>>>>>>> Stashed changes
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 2px solid #FBC02D;
+  border: 0;
   background: transparent;
-  color: #FBC02D;
+  color: #E0E0E0;
   font-weight: bold;
   letter-spacing: 0.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+<<<<<<< Updated upstream
   gap: 6px;
   transition: background 0.2s ease, color 0.2s ease,
               transform 0.2s ease, box-shadow 0.2s ease;
@@ -56,6 +466,55 @@ p {
 
 .jenkins-add-btn mat-icon {
   font-size: 20px;
+=======
+  gap: 8px;
+  font-size: 20px;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, border-color 0.2s ease;
+}
+
+.jenkins-add-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  transform: translateY(-2px);
+}
+
+/* Estilo específico para el botón principal de añadir */
+.documents-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+}
+
+.documents-header .jenkins-add-btn:hover {
+  border-color: #ffd54f;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Botón de cancelar/eliminar */
+.jenkins-add-btn.cancel-btn:hover {
+  color: #E53935;
+}
+
+.popup-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #1e84a3;
+  background: transparent;
+  color: #1e84a3;
+  cursor: pointer;
+  width: 100%;
+}
+.popup-btn:hover { background: #1e84a3; color: #fff; }
+
+/* ANIMACION FADE */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+>>>>>>> Stashed changes
 }
 
 .add-document-backdrop,
@@ -69,6 +528,7 @@ p {
   z-index: 999;
 }
 
+<<<<<<< Updated upstream
 .add-document-popup,
 .popup-container {
   background: #16181c;
@@ -77,6 +537,36 @@ p {
   padding: 24px;
   width: 360px;
   border: 3px solid #FBC02D;
+=======
+/* CAPA PARA OSCURECER EL FONDO Y SUBIR EL FORMULARIO */
+/* EL OVERLAY: Esto bloquea el resto de la pantalla */
+.modal-overlay {
+  position: fixed; /* IMPORTANTE: Fijo respecto a la ventana del navegador */
+  top: 0;
+  left: 0;
+  width: 100vw;   /* 100% del ancho de pantalla */
+  height: 100vh;  /* 100% del alto de pantalla */
+  background: rgba(0, 0, 0, 0.7); /* Oscurece la tabla de fondo */
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  z-index: 99999; /* Valor muy alto para que nada lo tape */
+}
+
+/* LA TARJETA (Copiada del estilo de tu imagen) */
+.auth-card {
+  background-color: #0b1118;
+  padding: 32px 40px;
+  border-radius: 20px;
+  width: 420px;
+  max-width: 90vw;
+  color: white;
+  border: 2px solid #FBC02D;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2);
+}
+
+.form-content {
+>>>>>>> Stashed changes
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -146,6 +636,7 @@ p {
   box-shadow: 0 3px 8px #000c;
 }
 
+<<<<<<< Updated upstream
 .guardar-btn,
 .cancelar-btn
  {
@@ -201,4 +692,55 @@ p {
   font-size: 0.9rem;
   color: #E0E0E0;
   margin-top: 2px;
+=======
+input:checked + .custom-slider { background-color: #0074BD; }
+input:checked + .custom-slider:before { transform: translateX(24px); }
+
+/* Botones Píldora */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.btn-round {
+  flex: 1;
+  max-width: 160px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.btn-white { 
+  background: transparent;
+  color: #E0E0E0;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-white:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffd54f;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-blue { 
+  background: transparent;
+  color: #FBC02D;
+  border-color: #FBC02D;
+}
+
+.btn-blue:hover {
+  background: #FBC02D;
+  color: #0F1115;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+>>>>>>> Stashed changes
 }

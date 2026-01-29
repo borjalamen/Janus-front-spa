@@ -9,7 +9,10 @@
     <div class="left" *ngIf="isTab('paths')">
     <div class="left-header">
       <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-      <button class="btn" (click)="newPath()">{{ 'TRAINING.NEW_PATH' | translate }}</button>
+      <button class="jenkins-add-btn" (click)="newPath()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
+      </button>
     </div>
 
     <ul class="paths-list">
@@ -41,7 +44,10 @@
 
       <div class="items-header">
         <h4>{{ 'TRAINING.ITEMS' | translate }}</h4>
-        <button class="btn" (click)="addItem()">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
+        <button class="jenkins-add-btn" (click)="addItem()">
+          <mat-icon inline="true">add</mat-icon>
+          <span>{{ 'TRAINING.ADD_ITEM' | translate }}</span>
+        </button>
       </div>
 
       <ul class="items-list" cdkDropList (cdkDropListDropped)="dropItem($event)" *ngIf="selectedPath">

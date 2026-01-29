@@ -1,0 +1,112 @@
+<div class="scrum-root">
+  <h2>{{ 'SCRUM.TITLE' | translate }}</h2>
+  <p class="lead">{{ 'SCRUM.DESCRIPTION' | translate }}</p>
+
+  <div class="scrum-controls">
+    <input [(ngModel)]="newTitle" placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}" />
+    <input [(ngModel)]="newEstimate" placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}" style="width:120px" />
+    <input type="number" min="0" max="150" [(ngModel)]="newPriority" placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}" style="width:120px" />
+    <select [(ngModel)]="newAssignee">
+      <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
+      <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
+    </select>
+    <textarea [(ngModel)]="newDescription" placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}" rows="2" style="width:320px"></textarea>
+    <div class="priority-hint">{{ 'SCRUM.PRI_SCALE_HINT' | translate }}</div>
+    <button class="jenkins-add-btn" (click)="addTask()">
+      <mat-icon inline="true">add</mat-icon>
+      <span>{{ 'SCRUM.ADD_BUTTON' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="board">
+    <div class="col">
+      <div class="col-title">{{ 'SCRUM.COL_TODO' | translate }}</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('todo')" class="card" [style.background]="t.color || ''">
+          <div class="card-head">
+            <div class="card-title">
+              <strong *ngIf="editingId !== t.id">{{ t.title }}</strong>
+              <input *ngIf="editingId === t.id" [(ngModel)]="editBuffer.title" />
+              <div class="card-id">{{ t.id }}</div>
+            </div>
+            <span class="meta">
+              <ng-container *ngIf="editingId !== t.id">
+                {{ t.estimate ? (t.estimate + 'h') : '' }}
+                <ng-container *ngIf="t.priority !== undefined && t.priority !== null">
+                  {{ ' · ' + t.priority }}
+                  <span *ngIf="getPriorityLabelKey(t.priority)"> ({{ getPriorityLabelKey(t.priority) | translate }})</span>
+                </ng-container>
+                <ng-container *ngIf="t.assignee"> · {{ t.assignee }}</ng-container>
+                <div class="desc" *ngIf="t.description">{{ t.description }}</div>
+              </ng-container>
+              <ng-container *ngIf="editingId === t.id">
+                <input [(ngModel)]="editBuffer.estimate" style="width:80px" /> h
+                <input type="number" min="0" max="150" [(ngModel)]="editBuffer.priority" style="width:80px" />
+                <select [(ngModel)]="editBuffer.assignee">
+                  <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
+                  <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
+                </select>
+                <textarea [(ngModel)]="editBuffer.description" rows="2" style="width:320px"></textarea>
+              </ng-container>
+            </span>
+          </div>
+          <div class="card-actions">
+            <button *ngIf="editingId !== t.id" (click)="startEdit(t)">✎ {{ 'SCRUM.EDIT' | translate }}</button>
+            <button *ngIf="editingId === t.id" (click)="saveEdit(t.id)">{{ 'SCRUM.SAVE' | translate }}</button>
+            <button *ngIf="editingId === t.id" (click)="cancelEdit()">{{ 'SCRUM.CANCEL' | translate }}</button>
+            <button *ngIf="editingId !== t.id" (click)="moveTask(t.id,'doing')">→ {{ 'SCRUM.COL_DOING' | translate }}</button>
+            <button *ngIf="editingId !== t.id" (click)="moveTask(t.id,'done')">✓ {{ 'SCRUM.COL_DONE' | translate }}</button>
+            <button *ngIf="editingId !== t.id" class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">{{ 'SCRUM.COL_DOING' | translate }}</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('doing')" class="card" [style.background]="t.color || ''">
+          <div class="card-head">
+            <strong>{{ t.title }}</strong>
+            <span class="meta">
+              {{ t.estimate ? (t.estimate + 'h') : '' }}
+              <ng-container *ngIf="t.priority !== undefined && t.priority !== null">
+                {{ ' · ' + t.priority }}
+                <span *ngIf="getPriorityLabelKey(t.priority)"> ({{ getPriorityLabelKey(t.priority) | translate }})</span>
+              </ng-container>
+            </span>
+          </div>
+          <div class="card-actions">
+            <button (click)="moveTask(t.id,'todo')">← {{ 'SCRUM.COL_TODO' | translate }}</button>
+            <button (click)="moveTask(t.id,'done')">✓ {{ 'SCRUM.COL_DONE' | translate }}</button>
+            <button class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">{{ 'SCRUM.COL_DONE' | translate }}</div>
+      <div class="col-body">
+        <div *ngFor="let t of tasksBy('done')" class="card done" [style.background]="t.color || ''">
+          <div class="card-head">
+            <strong>{{ t.title }}</strong>
+            <span class="meta">
+              {{ t.estimate ? (t.estimate + 'h') : '' }}
+              <ng-container *ngIf="t.priority !== undefined && t.priority !== null">
+                {{ ' · ' + t.priority }}
+                <span *ngIf="getPriorityLabelKey(t.priority)"> ({{ getPriorityLabelKey(t.priority) | translate }})</span>
+              </ng-container>
+            </span>
+          </div>
+          <div class="card-actions">
+            <button (click)="moveTask(t.id,'todo')">← {{ 'SCRUM.COL_TODO' | translate }}</button>
+            <button (click)="moveTask(t.id,'doing')">→ {{ 'SCRUM.COL_DOING' | translate }}</button>
+            <button class="danger" (click)="removeTask(t.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,291 @@
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #FBC02D 0%, #F9A825 100%);
+  color: #0F1115;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.start-btn mat-icon {
+  font-size: 20px;
+}
+
+.start-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(251, 192, 45, 0.4);
+}
+
+.start-btn:active {
+  transform: translateY(-2px);
+}
+
+.start-btn[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(0.2) brightness(0.9);
+}
+
+/* Secondary action buttons (Add task, Add week, Edit metadata) */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #E0E0E0;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  border-color: rgba(251, 192, 45, 0.4);
+  transform: translateY(-2px);
+}
+.action-btn mat-icon {
+  font-size: 18px;
+}
+
+/* Export buttons style */
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid #FBC02D;
+  background: transparent;
+  color: #FBC02D;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.export-btn:hover {
+  background: #FBC02D;
+  color: #0F1115;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+}
+.export-btn mat-icon {
+  font-size: 18px;
+}
+
+.mail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid #1e88e5;
+  background: transparent;
+  color: #1e88e5;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mail-btn mat-icon {
+  font-size: 18px;
+}
+.mail-btn:hover {
+  background: #1e88e5;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+}
+.mail-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Ensure icons inside buttons are vertically centered and scaled */
+.action-btn mat-icon, .export-btn mat-icon, .start-btn mat-icon {
+  font-size: 18px;
+  display: inline-flex;
+  vertical-align: middle;
+}
+.estimacion-root {
+  padding: 24px;
+  background: #16181c;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #E53935;
+  margin: 20px;
+  color: #E0E0E0;
+}
+
+.estimacion-root h2 {
+  color: #FBC02D;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #0f1113;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+.controls .task-field {
+  flex: 1 1 320px;
+  min-width: 320px;
+}
+
+.controls .action-btn, .controls .export-btn, .controls .mail-btn {
+  flex: 0 0 auto;
+}
+
+.controls input[matInput] {
+  padding: 8px;
+}
+
+.table-wrap {
+  overflow: auto;
+  background: #0f1113;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  padding: 16px;
+}
+.est-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.est-table th {
+  background: linear-gradient(135deg, #FBC02D 0%, #F9A825 100%);
+  color: #0F1115;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+  border: none;
+}
+
+.est-table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.est-table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.est-table td {
+  border: none;
+  padding: 12px 14px;
+  background: #16181c;
+  border-top: 2px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.04);
+}
+
+.est-table td:first-child {
+  border-left: 2px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px 0 0 8px;
+}
+
+.est-table td:last-child {
+  border-right: 2px solid rgba(255, 255, 255, 0.04);
+  border-radius: 0 8px 8px 0;
+}
+
+.est-table tbody tr:hover td {
+  background: rgba(251, 192, 45, 0.08);
+  border-color: rgba(251, 192, 45, 0.2);
+}
+
+.est-table input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: #0f1113;
+  color: #E0E0E0;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.est-table input[type="number"]:focus {
+  outline: none;
+  border-color: #FBC02D;
+  background: #141516;
+  box-shadow: 0 0 0 3px rgba(251, 192, 45, 0.15);
+}
+
+.est-table input[type="number"]:hover {
+  border-color: rgba(251, 192, 45, 0.3);
+  background: #141516;
+}
+
+.task-title {
+  font-weight: 600;
+  color: #FBC02D;
+  font-size: 1.05rem;
+}
+
+.col-total {
+  text-align: right;
+  padding-right: 16px;
+  font-weight: bold;
+  color: #FBC02D;
+}
+
+.small-link {
+  background: transparent;
+  border: 0;
+  color: #E53935;
+  cursor: pointer;
+  margin-left: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.small-link:hover {
+  background: rgba(229, 57, 53, 0.2);
+  transform: scale(1.15);
+}
+
+/* metadata form */
+.metadata-form {
+  margin-bottom: 20px;
+  padding: 24px;
+  background: #0f1113;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+.metadata-form .row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.metadata-form .row .full {
+  flex: 1 1 100%;
+}
+
+.metadata-form .row mat-form-field {
+  flex: 1;
+}
+
+.metadata-form .actions {
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.export-btn{margin-left:8px}

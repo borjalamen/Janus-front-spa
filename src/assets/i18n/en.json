@@ -30,8 +30,18 @@
     "DUO": "Quick DUO guide for multi-factor authentication",
     "FORMULARIO_HOJA_DESPLIEGUE": "Deployment sheet form for the DevOps team"
     ,"FORMULARIO_ACCESO_BD_CPD_V1_2": "Database access request form - CPD v1.2",
+<<<<<<< Updated upstream
     "GUIA_PRIMEROSAUXILIOS_SAMUR": "First Aid Guide (SAMUR)",
     "GUIA_VPAYMENT": "VPayment Guide"
+=======
+    "PLACEHOLDER_PRIORITY": "Priority (0-150)",
+    "PRIORITY_LOW": "Low",
+    "PRIORITY_MEDIUM": "Medium",
+    "PRIORITY_HIGH": "High",
+    "PRI_LABEL_OPT": "Optional",
+    "PRI_LABEL_NOW": "Do it now!",
+    "PRI_SCALE_HINT": "Priority 0–150. Less than 25 = optional; 100–150 = Do it now!"
+>>>>>>> Stashed changes
   },
   "USER": {
     "PROFILE": "Profile",

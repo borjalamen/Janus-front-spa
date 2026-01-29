@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 type Tool = {
   id: string;
@@ -120,7 +121,7 @@ const STORAGE_KEY = 'tools_v1';
     .toast { position:fixed; right:20px; bottom:20px; background:#222; color:white; padding:10px; border-radius:6px }
     `
   ],
-  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule]
+  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule, MatIconModule]
 })
 export class Herramientas {
   title = '';

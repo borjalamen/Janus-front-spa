@@ -87,7 +87,7 @@ body {
 
 /* modal */
 .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000 }
-.modal { width:min(720px,95%); background:var(--panel-bg,#071018); padding:18px; border-radius:8px }
+.modal { width:min(720px,95%); background:var(--panel-bg,#071018); padding:18px; border-radius:8px; border: 2px solid #FBC02D; box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) }
 .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:10px }
 .form-row input, .form-row textarea { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--muted) }
 .modal-actions { display:flex; gap:8px; justify-content:flex-end }

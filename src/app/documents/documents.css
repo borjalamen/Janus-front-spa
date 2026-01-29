@@ -73,6 +73,7 @@ body {
   to { opacity: 1; }
 }
 
+<<<<<<< Updated upstream
 /* Popup afegir document */
 .add-document-popup {
   background: rgba(22, 24, 28, 0.92);
@@ -85,6 +86,18 @@ body {
   box-shadow: 0 4px 28px #000a;
   animation: fadePopup 0.25s ease-out;
   color: #E0E0E0;
+=======
+.popup-container {
+  background: #0f1113 !important;
+  color: #eee !important;
+  padding: 22px !important;
+  border-radius: 8px !important;
+  width: 480px !important;
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
+  border: 2px solid #FBC02D !important;
+>>>>>>> Stashed changes
 }
 
 @keyframes fadePopup {

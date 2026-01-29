@@ -47,10 +47,168 @@
           🗑️
         </button>
       </div>
+<<<<<<< Updated upstream
+=======
+
+      <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+
+      <div class="users-list">
+        <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
+          <div>
+            <div class="usuari-nom">
+              <b>{{ usuari.fullName }}</b>
+              <span class="usuari-rol">({{ usuari.roles.join(', ') }})</span>
+            </div>
+            <div class="usuari-email">{{ usuari.email }}</div>
+          </div>
+
+          <div class="actions" *ngIf="canEdit">
+            <button class="jenkins-add-btn" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
+              ✏️
+            </button>
+            <button class="jenkins-add-btn cancel-btn" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'APP'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Administrar Aplicación</h2>
+      </div>
+      
+      <div class="admin-card">
+        <h3>🚫 Inhabilitar por roles</h3>
+        <p>Seleccione un rol para restringir el acceso temporalmente a la aplicación.</p>
+        
+        <div class="form-field-modern">
+            <label>Seleccionar Rol:</label>
+            <select [(ngModel)]="selectedRoleToDisable" class="modern-select">
+                <option value="" disabled selected>-- Elegir --</option>
+                <option value="CONSULTOR">👔 Consultor</option>
+                <option value="DEV">⚙️ DevOps</option>
+            </select>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
+                🔒 Inhabilitar Acceso
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'PARAM'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Parametrización</h2>
+      </div>
+
+      <div class="admin-card">
+        <h3>📦 Cambio de versión</h3>
+        <p>Gestión de la versión actual del despliegue.</p>
+        
+        <div class="form-field-modern">
+            <label>Versión del Sistema:</label>
+            <input type="text" [(ngModel)]="appVersion" class="modern-input" placeholder="Ej: 1.0.0">
+        </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="jenkins-add-btn" (click)="cambiarVersion()">
+                🔄 Actualizar Versión
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'DB'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>Administración de la BBDD</h2>
+      </div>
+
+      <div class="db-grid">
+        <div class="admin-card db-card">
+            <div class="big-icon warn">🗑️</div>
+            <h3>Borrado Físico</h3>
+            <p>Elimina permanentemente registros marcados.</p>
+            <button class="jenkins-add-btn cancel-btn" (click)="accionBBDD('borrado')">Ejecutar</button>
+        </div>
+
+        <div class="admin-card db-card">
+            <div class="big-icon">♻️</div>
+            <h3>Restore</h3>
+            <p>Restaura la base de datos a un punto anterior.</p>
+            <button class="jenkins-add-btn" (click)="accionBBDD('restore')">Restaurar</button>
+        </div>
+
+        <div class="admin-card db-card">
+            <div class="big-icon">💾</div>
+            <h3>Backup</h3>
+            <p>Genera una copia de seguridad actual.</p>
+            <button class="jenkins-add-btn" (click)="accionBBDD('backup')">Crear Backup</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="popup-fons" *ngIf="mostrarPopup" (click)="tancarPopup()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>{{ usuariEditant ? 'Modificar Usuario' : 'Nuevo Usuario' }}</h3>
+
+    <div class="form-field">
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez">
+    </div>
+
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="nouUsuari.email" placeholder="jlopez@minsait.com">
+    </div>
+
+    <div class="form-field">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="nouUsuari.contrasenya" placeholder="{{ usuariEditant ? 'Dejar vacío para mantener' : 'Introduce contraseña' }}">
+    </div>
+
+    <div class="form-field">
+      <label>Roles del Usuario:</label>
+      <div class="roles-buttons">
+        <button type="button" 
+                class="role-btn" 
+                [class.active]="nouUsuari.rols.admin" 
+                (click)="nouUsuari.rols.admin = !nouUsuari.rols.admin">
+          👑 Administrador
+        </button>
+        <button type="button" 
+                class="role-btn" 
+                [class.active]="nouUsuari.rols.consultor" 
+                (click)="nouUsuari.rols.consultor = !nouUsuari.rols.consultor">
+          👔 Consultor
+        </button>
+        <button type="button" 
+                class="role-btn" 
+                [class.active]="nouUsuari.rols.devops" 
+                (click)="nouUsuari.rols.devops = !nouUsuari.rols.devops">
+          ⚙️ DevOps
+        </button>
+      </div>
+    </div>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="tancarPopup()" title="Cancelar">
+        ✗
+      </button>
+      <button class="guardar-btn" (click)="guardarUsuari()" [title]="usuariEditant ? 'Actualizar' : 'Guardar'">
+        ✓
+      </button>
+>>>>>>> Stashed changes
     </div>
   </div>
 </div>
 
+<<<<<<< Updated upstream
 <!-- Popup crear / editar -->
 <div class="popup-fons" *ngIf="mostrarPopup">
   <div class="popup-container">
@@ -120,6 +278,21 @@
             ? ('USERS.UPDATE' | translate)
             : ('USERS.SAVE' | translate)
         }}
+=======
+<!-- Popup confirmación eliminar usuario -->
+<div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarInhabilitar()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>Eliminar Usuario</h3>
+    <p>¿Estás seguro de que quieres eliminar al usuario <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
+    <p style="color: #ff6b6b; font-size: 0.9em;">Esta acción no se puede deshacer.</p>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="cancelarInhabilitar()" title="Cancelar">
+        ✗
+      </button>
+      <button class="guardar-btn" (click)="inhabilitarUsuari()" title="Eliminar">
+        ✓
+>>>>>>> Stashed changes
       </button>
     </div>
   </div>

@@ -11,6 +11,789 @@
 .project-form-grid .form-col { display:flex; flex-direction:column }
 .project-form-grid .form-col.wide { grid-column: 1 / -1 }
 
+<<<<<<< Updated upstream
+=======
+/* New section container styles */
+.sections-container { display:flex; flex-direction:column; gap:10px }
+.section { border-radius:8px; padding:10px; border:1px solid rgba(0,0,0,0.06) }
+
+/* Datos generales - naranja tenue */
+.section-general { background: rgba(255,159,67,0.04); border-color: rgba(255,159,67,0.12) }
+.section-general .form-row label { color: #6b4a1f }
+.section-general input, .section-general textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+/* General three-column grid inside Datos generales */
+.general-grid.three-col { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items:start }
+.general-grid.three-col { display:grid; grid-template-columns: repeat(3, minmax(220px, 1fr)); gap: 20px; align-items:start }
+.general-grid.three-col .form-row { display:flex; flex-direction:column; justify-content:flex-start }
+.general-grid.three-col .form-row input { width:100%; min-width:120px }
+
+/* Divider and URLs grid */
+.divider { border-top: 1px dotted rgba(255,255,255,0.06); margin: 14px 0 }
+.urls-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top:8px }
+.urls-grid .form-row { display:flex; flex-direction:column }
+.urls-grid .form-row input { padding: 10px; width:100% }
+
+@media (max-width: 1100px) {
+	.general-grid.three-col { grid-template-columns: repeat(2, minmax(200px, 1fr)); }
+	.urls-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+	.general-grid.three-col { grid-template-columns: 1fr }
+	.urls-grid { grid-template-columns: 1fr }
+}
+
+@media (max-width: 1100px) {
+	.general-grid.three-col { grid-template-columns: 1fr 1fr }
+}
+@media (max-width: 720px) {
+	.general-grid.three-col { grid-template-columns: 1fr }
+}
+
+/* Entorno de desarrollo - verde tenue */
+.section-dev { background: rgba(102,187,106,0.04); border-color: rgba(102,187,106,0.12) }
+.section-dev .form-row label { color: #244f2a }
+.section-dev input, .section-dev textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+/* Equipo Minsait - morado tenue */
+.section-minsait { background: rgba(123,63,191,0.04); border-color: rgba(123,63,191,0.12) }
+.section-minsait .form-row label { color: #4b2a6b }
+.section-minsait input, .section-minsait textarea { background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06) }
+
+.members-grid { display:flex; flex-direction:column; gap:12px; margin-top:12px }
+.member-card { background: rgba(0,0,0,0.02); padding:10px; border-radius:8px }
+.member-row { display:flex; align-items:center; gap:12px }
+.member-fields { display:flex; gap:12px; flex:1; align-items:center }
+.member-input { padding:10px; border-radius:8px; background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06); }
+.member-input.name { flex: 2 1 220px }
+.member-input.role { flex: 1 1 160px }
+.member-input.email { flex: 2 1 260px }
+.member-actions { display:flex; align-items:center; margin-left:6px }
+.member-controls .members-actions { margin-top:6px }
+
+/* daily access row layout: keep time and person on separate columns on wide screens */
+.daily-access-row { display:grid; grid-template-columns: 200px 1fr; gap:12px; align-items:center; margin-top:12px }
+.daily-access-row .form-row { margin:0 }
+
+/* Ensure the persona responsable input fills the available space and matches other inputs */
+.section-minsait .daily-access-row .form-row input {
+	display: block;
+	width: 100% !important;
+	box-sizing: border-box;
+	padding: 10px;
+	border-radius: 8px;
+	background: rgba(255,255,255,0.03);
+	color: #fff;
+	border: 1px solid rgba(0,0,0,0.06);
+	min-width: 0 !important;
+	max-width: 100% !important;
+}
+
+/* More specific: target the second column form-row (persona responsable) to ensure full width */
+.section-minsait .daily-access-row > .form-row:nth-child(2) input {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* persona responsable removed: layout preserved */
+
+@media (max-width: 900px) {
+	.daily-access-row { grid-template-columns: 1fr; }
+	.member-row { flex-direction:column; align-items:stretch }
+	.member-fields { flex-direction:column }
+	.member-input { width:100% }
+	.member-actions { justify-content:flex-end }
+}
+
+/* dotted divider between daily and members */
+.divider-dots { border-top: 1px dotted rgba(255,255,255,0.06); margin: 12px 0 }
+
+/* Members layout: make each member a full-width row with horizontal inputs on wide screens */
+.members-grid { display:flex; flex-direction:column; gap:12px; margin-top:12px }
+.member-card { width:100%; background: rgba(0,0,0,0.02); padding:10px; border-radius:8px; }
+.member-row { display:flex; align-items:center; gap:12px }
+.member-fields { display:flex; gap:12px; flex:1; align-items:center }
+.member-input { padding:10px; border-radius:8px; background: rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(0,0,0,0.06); }
+.member-input.name { flex: 2 1 220px }
+.member-input.role { flex: 1 1 160px }
+.member-input.email { flex: 2 1 260px }
+.member-actions { margin-left:8px; display:flex; align-items:center }
+
+@media (max-width: 900px) {
+	.member-row { flex-direction:column; align-items:stretch }
+	.member-fields { flex-direction:column }
+	.member-input { width:100% }
+	.member-actions { justify-content:flex-end }
+}
+
+/* Modal styles for confirm delete */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000 }
+.modal { background: #0f1112; padding:16px; border-radius:8px; width:320px; border: 2px solid #FBC02D; box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) }
+.modal-header { font-weight:700; color:#ffd166; margin-bottom:8px }
+.modal-body { color:#cfcfcf; margin-bottom:12px }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end }
+.modal-actions .btn.small { padding:6px 10px }
+
+/* Ensure jh-btn inside modal matches global primary button styling */
+.jh-modal .jh-btn {
+	background: linear-gradient(180deg, #0fb1c0 0%, #0f8fa8 100%) !important;
+	color: #fff !important;
+	border: none !important;
+	padding: 8px 12px !important;
+	border-radius: 6px !important;
+	box-shadow: 0 8px 20px rgba(15,143,168,0.12) !important;
+	cursor: pointer !important;
+}
+.jh-modal .jh-btn:hover { transform: translateY(-2px) !important; filter:brightness(1.04) !important }
+.jh-modal .jh-btn + .jh-btn { margin-left: 8px !important }
+.jh-modal .jh-btn[disabled] { opacity: 0.6 !important; cursor: not-allowed !important }
+
+/* Herramientas MIND - suave turquesa (mantener tarjeta) */
+.section-mind { background: transparent; padding:0 }
+.section-mind .mind-card { background: rgba(15,143,168,0.07); border:1px solid rgba(15,143,168,0.12); color:#06282b; margin-top:8px }
+.section-mind .mind-card-header h3 { color: #ffd166 }
+.section-mind .mind-card-body { padding:10px }
+
+/* MIND blocks layout */
+.mind-block { padding:12px; border-radius:8px; margin-bottom:8px }
+.mind-block-title { font-weight:700; color:#cfe8ff; margin-bottom:8px }
+.mind-block-body input, .mind-block-body textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
+.mind-block-body.two-cols { display:flex; gap:12px }
+.mind-block-body.two-cols .col { flex:1 }
+
+/* Repo duo: white-ish border around name+url and remove button aligned right */
+.repo-item { margin-bottom: 8px }
+.repo-duo { display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.14); padding:10px; border-radius:8px; background: rgba(0,0,0,0.02) }
+.repo-duo .repo-fields { flex:1; display:flex; flex-direction:column; gap:8px }
+.repo-duo .repo-fields input { background: rgba(15,143,168,0.03); border:1px solid rgba(255,255,255,0.06); color: #e8eef0; padding:8px; border-radius:6px }
+.repo-duo .repo-action { flex:0 0 auto; display:flex; align-items:center }
+.repo-duo .repo-action .remove-large { width:40px; height:40px; border-radius:8px; font-size:18px; padding:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none; box-shadow:0 8px 20px rgba(0,0,0,0.3) }
+.repo-duo .repo-action .remove-large:hover { transform:translateY(-2px) }
+
+@media (max-width: 720px) {
+	.repo-duo { flex-direction:column; align-items:stretch }
+	.repo-duo .repo-action { justify-content:flex-end }
+}
+
+/* dev-duo: similar to repo-duo but used in Dev section for Openshift/DB/OtherTool */
+.dev-duo { display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.10); padding:10px; border-radius:8px; background: rgba(0,0,0,0.02); margin-bottom:8px }
+.dev-duo .repo-fields { flex:1; display:flex; flex-direction:column; gap:8px }
+.dev-duo .repo-action { flex:0 0 auto; display:flex; align-items:center }
+.dev-duo .repo-action .remove-large { width:38px; height:38px; border-radius:8px; font-size:16px; padding:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none; box-shadow:0 8px 20px rgba(0,0,0,0.3) }
+.dev-duo .repo-action .remove-large:hover { transform:translateY(-2px) }
+
+/* keep space when repo-action is conditionally removed to avoid layout jump on small screens */
+.dev-duo .repo-action[ng-reflect-ng-if="false"], .dev-duo .repo-action.hidden { visibility:hidden; pointer-events:none }
+
+/* Make sure DB and OtherTool switches use the same sizing and appearance as Openshift */
+.repo-duo .checkbox-row .switch, .repo-duo .checkbox-field .switch, .openshift-row .switch, .openshift-toggle .switch {
+	width:46px; height:24px; flex:0 0 auto;
+}
+.repo-duo .checkbox-row .slider, .repo-duo .checkbox-field .slider, .openshift-row .slider, .openshift-toggle .slider {
+	border-radius:24px;
+}
+.repo-duo .checkbox-row .slider:before, .repo-duo .checkbox-field .slider:before, .openshift-row .slider:before, .openshift-toggle .slider:before {
+	height:20px; width:20px;
+}
+
+@media (max-width: 720px) {
+  .dev-duo { flex-direction:column; align-items:stretch }
+  .dev-duo .repo-action { justify-content:flex-end }
+}
+
+/* Force full width for dev machine card and duo blocks */
+.dev-machine-card, .dev-machine-card .dev-duo, .dev-machine-card .repo-duo, .dev-duo, .repo-duo {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.dev-machine-card .dev-duo .repo-fields, .dev-machine-card .repo-duo .repo-fields, .dev-duo .repo-fields {
+	width: 100%;
+}
+
+/* Ensure the delete button stays visually right-aligned while fields use full width */
+.dev-duo { justify-content: space-between }
+.dev-duo .repo-action { margin-left: 12px }
+
+
+/* Colored separators (dotted lines) */
+.mind-separator { height:1px; border-top: 1px dotted rgba(255,255,255,0.06); margin:12px 0 }
+.mind-sep-code { border-color: rgba(95,198,255,0.25) }
+.mind-sep-artifacts { border-color: rgba(72,206,160,0.25) }
+.mind-sep-pipelines { border-color: rgba(255,175,78,0.25) }
+.mind-sep-quality { border-color: rgba(255,110,110,0.25) }
+
+/* Block background variants: subtle color tints for readability */
+.mind-block-code { background: rgba(95,198,255,0.03); border:1px solid rgba(95,198,255,0.06) }
+.mind-block-artifacts { background: rgba(72,206,160,0.03); border:1px solid rgba(72,206,160,0.06) }
+.mind-block-pipelines { background: rgba(255,175,78,0.03); border:1px solid rgba(255,175,78,0.06) }
+.mind-block-quality { background: rgba(255,110,110,0.03); border:1px solid rgba(255,110,110,0.06) }
+.mind-block-others { background: rgba(200,200,200,0.01); border:1px solid rgba(255,255,255,0.03) }
+
+@media (max-width: 720px) {
+	.mind-block-body.two-cols { flex-direction:column }
+}
+
+/* Section title */
+.section-title { font-family: 'Roboto', Arial, sans-serif; font-weight:700; color:#ffd166 !important; margin-bottom:6px; font-size:16px; line-height:1.2 }
+.section-title .add-dev-title{ margin-left:12px; vertical-align:middle }
+
+/* Asegurar que cada sección use la misma apariencia (aplicar explícitamente) */
+.section-general .section-title, .section-dev .section-title, .section-mind .section-title {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-weight:700;
+	color:#ffd166 !important;
+	font-size:16px;
+	line-height:1.2;
+}
+
+/* Alinear el título del card MIND con el resto */
+.section-mind .mind-card-header h3 { font-family: 'Roboto', Arial, sans-serif; font-size:16px; font-weight:700; color:#ffd166 }
+
+/* Openshift subsection styling */
+.openshift-toggle { margin-top:8px; margin-bottom:8px }
+.openshift-section { background: rgba(0,0,0,0.02); padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); margin-top:6px }
+.openshift-section .form-row { margin-bottom:6px }
+.openshift-section .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap:8px }
+.volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
+.volumes-list .volume input { flex:1; padding:6px; border-radius:8px }
+.db-config .db-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:8px }
+.db-config .field input, .db-config textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
+.other-tool-config .field { margin-bottom:8px }
+/* Machine tabs */
+.dev-machines-list{ display:block }
+.dev-machine-tabs{ display:flex; gap:6px; margin:8px 0 12px 0; overflow-x:auto; padding-bottom:6px }
+.dev-machine-tabs .tab{ white-space:nowrap }
+.dev-machine-tabs .tab.active{ background:linear-gradient(90deg,#06b6d4,#06a6ff); color:white }
+.other-tool-config input[type="checkbox"] { transform: none !important; margin-left:8px }
+
+/* Layout for OtherTool: 3-column grid on wide screens, stacked on small screens */
+.other-tool-config .other-tool-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; align-items:start }
+.other-tool-config .other-tool-grid .field { display:flex; flex-direction:column }
+.other-tool-config .other-tool-grid .field input[type="checkbox"] { width:auto; margin-left:0 }
+
+@media (max-width: 900px) {
+	.other-tool-config .other-tool-grid { grid-template-columns: 1fr }
+}
+
+/* Ensure default checkboxes in project detail keep native size */
+.project-detail-root input[type="checkbox"] { transform: none !important; width: auto !important; height: auto !important; }
+
+@media (max-width: 720px) {
+	.db-config .db-grid { grid-template-columns: 1fr }
+}
+.volumes-list .volume .field { display:flex; flex-direction:column }
+.volumes-list .volume .field label { margin-bottom:6px }
+
+/* Dev machine resources layout */
+.dev-resources { margin-top:6px }
+.dev-resources .grid-3 { display:grid; grid-template-columns: repeat(3, minmax(80px, 1fr)); gap:8px }
+
+/* Compact card for each dev machine */
+.dev-machine-card { background: rgba(0,0,0,0.02); border:1px solid rgba(255,255,255,0.02); border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px }
+.dev-card-top { display:flex; justify-content:space-between; gap:8px; align-items:center }
+.dev-fields.grid-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; align-items:center }
+.dev-fields.grid-3 .field input { width:100% }
+.dev-resources.grid-3.compact { display:grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap:10px; margin-top:4px }
+.dev-resources.grid-3.compact .field { display:flex; flex-direction:column }
+.dev-resources.grid-3.compact .field label { font-size:12px; color: rgba(207,207,207,0.9); margin-bottom:6px }
+.dev-resources.grid-3.compact .field input { padding:8px; border-radius:10px }
+.dev-actions { display:flex; align-items:flex-start }
+
+/* Openshift layout inside card */
+.openshift-row { display:flex; align-items:center; justify-content:flex-start }
+.openshift-grid { display:grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap:12px }
+.openshift-grid .field { display:flex; flex-direction:column }
+.openshift-grid .field label { margin-bottom:6px }
+.openshift-grid .field input { width:100% }
+.volumes-row .volumes-list { display:flex; flex-direction:column; gap:8px; margin-top:6px }
+.volumes-list .volume { display:flex; gap:8px; align-items:center; margin-bottom:6px }
+.volumes-list .volume .field { display:flex; flex-direction:column }
+.volumes-list .volume .field label { margin-bottom:6px }
+.volumes-list .volume input { flex:1; border-radius:8px; padding:6px }
+
+.add-dev-row { margin-top:8px }
+
+/* Tweak small button spacing inside cards */
+.dev-machine-card .btn.small { padding:6px 8px; font-size:13px }
+
+@media (max-width: 900px) {
+	.openshift-grid { grid-template-columns: 1fr 1fr }
+	.dev-fields.grid-3 { grid-template-columns: 1fr }
+	.dev-resources.grid-3.compact { grid-template-columns: 1fr 1fr 1fr }
+}
+
+/* Modern switch */
+.openshift-toggle { display:flex; align-items:center; gap:8px; margin-top:8px }
+.switch { position: relative; display:inline-block; width:40px; height:22px }
+.switch input { opacity:0; width:0; height:0 }
+.slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#4b4b4b; transition:.18s; border-radius:22px }
+.slider:before { position:absolute; content:""; height:18px; width:18px; left:2px; bottom:2px; background:white; transition:.18s; border-radius:50% }
+.switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) }
+.switch input:checked + .slider:before { transform: translateX(18px) }
+.switch-label { color: #cfcfcf; margin-left:6px; font-size:13px }
+
+/* Inline checkbox rows: label + switch on one line, fixed switch size */
+.checkbox-row { display:flex; align-items:flex-start; gap:12px }
+.checkbox-row .inline-label { margin:0; font-size:13px; color: rgba(255,255,255,0.95); margin-left:8px; flex:1; white-space:normal; overflow:visible; text-overflow:unset }
+.checkbox-field { display:flex; align-items:flex-start; gap:12px }
+.checkbox-field .inline-label { margin:0; margin-left:8px; flex:1; white-space:normal; overflow:visible; text-overflow:unset }
+/* smaller unified switch */
+.switch { width:36px; height:18px; flex:0 0 auto }
+.switch input { width:0; height:0; opacity:0 }
+.switch .slider { border-radius:18px }
+.switch .slider:before { height:14px; width:14px; left:2px; bottom:2px }
+.switch input:checked + .slider:before { transform: translateX(18px) }
+
+/* allow labels to wrap and occupy remaining space so full text is visible */
+.checkbox-row .inline-label, .checkbox-field .inline-label, .openshift-toggle .inline-label {
+	white-space: normal; overflow: visible; text-overflow: unset; max-width: none; display:block;
+}
+
+/* on very small screens allow a little more space by shrinking the max-width calculation */
+@media (max-width: 480px) {
+	.checkbox-row .inline-label, .checkbox-field .inline-label, .openshift-toggle .inline-label {
+		max-width: calc(100% - 46px);
+	}
+	.switch { width:32px; height:16px }
+	.switch .slider:before { height:12px; width:12px; transform: none }
+	.switch input:checked + .slider:before { transform: translateX(16px) }
+}
+
+/* Prevent the switch and label from wrapping or resizing on small screens */
+@media (max-width: 900px) {
+	.checkbox-row { flex-wrap:wrap }
+	.checkbox-row .inline-label { white-space:normal }
+}
+
+/* Inputs styled to match the section (subtle tints + accent borders) */
+.section-general input, .section-general textarea, .section-general .dev-fields input {
+	background: rgba(255,159,67,0.06);
+	border: 1px solid rgba(255,159,67,0.16);
+	color: #fff;
+	padding:10px;
+	border-radius:14px;
+}
+
+/* Document list (descargables-style) */
+.descargables-root { padding: 8px 0 }
+.desc-search { margin: 8px 0 }
+.desc-search input[type=search]{ width:100%; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#fff }
+.doc-row{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04) }
+.doc-info{ flex:1 }
+.doc-desc{ color: #bdbdbd; font-size:0.9em }
+.doc-actions{ margin-left:12px; display:flex; gap:8px }
+.doc-title-row{ display:flex; gap:12px; align-items:center }
+.doc-size{ background:#0a7f7f; color:#fff; padding:2px 8px; border-radius:12px; font-size:0.8em }
+.doc-name{ font-weight:600 }
+.doc-modified{ color:#999; font-size:0.85em; margin-top:6px }
+
+/* Buttons hover style similar to descargables */
+.doc-actions .btn.small:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(10,127,127,0.08) }
+.section-general input::placeholder, .section-general textarea::placeholder { color: rgba(255,255,255,0.6) }
+.section-general input:focus, .section-general textarea:focus { outline: none; box-shadow: 0 6px 18px rgba(255,159,67,0.09); border-color: rgba(255,159,67,0.28) }
+
+.section-dev input, .section-dev textarea, .section-dev .dev-fields input {
+	background: rgba(102,187,106,0.06);
+	border: 1px solid rgba(102,187,106,0.14);
+	color: #fff;
+	padding:10px;
+	border-radius:14px;
+}
+.section-dev input, .section-dev textarea, .section-dev .dev-fields input {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 14px;
+}
+
+/* Unified label / placeholder styling for the development section */
+.section-dev .form-row label,
+.section-dev .dev-fields .field label,
+.section-dev .volumes-row label,
+.section-dev .switch-label {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	color: rgba(255,255,255,0.90);
+	margin-bottom: 6px;
+}
+.section-dev input::placeholder, .section-dev textarea::placeholder {
+	color: rgba(255,255,255,0.70);
+	opacity: 1; /* ensure consistent opacity across browsers */
+}
+
+/* Small visual polish: keep inputs and labels aligned */
+.section-dev .dev-fields .field { display:flex; flex-direction:column }
+.section-dev textarea { min-height: 80px; resize:vertical }
+.section-dev input::placeholder, .section-dev textarea::placeholder { color: rgba(255,255,255,0.6) }
+.section-dev input:focus, .section-dev textarea:focus { outline:none; box-shadow: 0 6px 18px rgba(102,187,106,0.09); border-color: rgba(102,187,106,0.26) }
+
+/* Ensure stacked fields (compact rows) act as column only on small screens */
+@media (max-width: 900px) {
+	.section-dev .stacked { display:flex; flex-direction:column; gap:6px }
+	.section-dev .stacked label { display:block; margin-bottom:6px; font-size:13px; color: rgba(255,255,255,0.9) }
+	.section-dev .stacked input { width:100%; box-sizing:border-box }
+	.dev-resources.grid-3.compact.stacked { align-items:start; grid-template-columns: 1fr }
+	.openshift-grid .stacked { grid-column: 1 / -1 }
+}
+
+.section-mind input, .section-mind textarea, .section-mind .mind-grid input {
+	background: rgba(15,143,168,0.08);
+	border: 1px solid rgba(15,143,168,0.14);
+	color: #03292a;
+	padding:10px;
+	border-radius:12px;
+}
+.section-mind textarea { min-height: 60px }
+
+/* Final override: enforce uniform small switches and non-wrapping labels inside project-detail-root */
+.project-detail-root .switch {
+	width:34px !important;
+	height:18px !important;
+	flex:0 0 auto !important;
+}
+.project-detail-root .switch .slider { border-radius:18px !important }
+.project-detail-root .switch .slider:before { height:14px !important; width:14px !important; left:2px !important; bottom:2px !important; border-radius:50% !important }
+.project-detail-root .switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) !important }
+.project-detail-root .switch input:checked + .slider:before { transform: translateX(16px) !important }
+
+.project-detail-root .checkbox-row .inline-label,
+.project-detail-root .checkbox-field .inline-label,
+.project-detail-root .openshift-toggle .inline-label {
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	max-width: calc(100% - 56px) !important;
+}
+
+@media (max-width: 480px) {
+	.project-detail-root .switch { width:32px !important; height:16px !important }
+	.project-detail-root .switch .slider:before { height:12px !important; width:12px !important }
+	.project-detail-root .switch input:checked + .slider:before { transform: translateX(16px) !important }
+	.project-detail-root .checkbox-row .inline-label,
+	.project-detail-root .checkbox-field .inline-label,
+	.project-detail-root .openshift-toggle .inline-label { max-width: calc(100% - 50px) !important }
+}
+
+/* Ensure switches do not expand to full width and labels are visible above backgrounds */
+.project-detail-root .checkbox-row .switch,
+.project-detail-root .checkbox-field .switch,
+.project-detail-root .openshift-toggle .switch {
+	display: inline-block !important;
+	width: 36px !important;
+	height: 18px !important;
+	flex: 0 0 auto !important;
+}
+.project-detail-root .inline-label {
+	color: #e8eef0 !important;
+	margin-left: 8px !important;
+	z-index: 3 !important;
+	position: relative !important;
+}
+.project-detail-root .switch .slider {
+	z-index: 1 !important;
+}
+
+/* New toggle-row layout: switch | label | action */
+.toggle-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; margin: 8px 0 }
+.toggle-switch { display:flex; align-items:center; justify-self: end }
+.toggle-label { display:flex; align-items:center; justify-self: start }
+.toggle-label .inline-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; color: #e8eef0 }
+.toggle-action { display:flex; align-items:center; justify-self: end }
+
+/* New layout: label on top, controls (switch + action) below aligned right */
+.toggle-row { grid-template-columns: 1fr }
+.toggle-label { margin-bottom:6px }
+.toggle-controls { display:flex; gap:8px; justify-content:flex-start; align-items:center; width:100% }
+.toggle-controls .toggle-switch { order:1; justify-self:start }
+.toggle-controls .toggle-action { order:2; margin-left:auto }
+
+/* Compact modern switches specifically for the Dev section */
+.section-dev .toggle-row { display:grid; grid-template-columns: 1fr; gap:6px; align-items:start; margin:6px 0 }
+.section-dev .toggle-label { margin:0; font-size:13px; font-weight:600; color: #e8eef0; align-items:flex-start }
+.section-dev .toggle-controls { display:flex; gap:8px; align-items:center; justify-content:flex-start }
+.section-dev .toggle-controls .toggle-switch { margin-right:8px; justify-self:start; order:0 }
+.section-dev .toggle-controls .toggle-action { margin-left: auto }
+
+/* Stronger override to ensure the switch/control does not float to the far right */
+.project-detail-root .section-dev .toggle-switch { justify-self: start !important; margin:0 8px 0 0 !important }
+.project-detail-root .section-dev .toggle-controls { width:100% !important }
+
+/* Strong overrides to keep switches next to their labels (not pushed to the far right) */
+.project-detail-root .toggle-row .toggle-controls { justify-content: flex-start !important; width: auto !important }
+.project-detail-root .toggle-row .toggle-switch { justify-self: start !important; margin: 0 8px 0 0 !important; order: 0 !important }
+.project-detail-root .toggle-row .toggle-action { margin-left: auto !important }
+
+/* Ensure the control block sits directly under the label with minimal horizontal gap */
+.project-detail-root .toggle-row { gap:6px !important }
+.project-detail-root .section-dev .toggle-controls { gap:8px !important; align-items:center !important }
+
+/* Strongest overrides: ensure toggles sit directly under their labels and are left-aligned */
+.project-detail-root .toggle-row, .project-detail-root .section-dev .toggle-row {
+	display: grid !important;
+	grid-template-columns: 1fr !important;
+	align-items: start !important;
+}
+.project-detail-root .toggle-row > .toggle-label {
+	margin-bottom: 6px !important;
+}
+.project-detail-root .toggle-row > .toggle-controls {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	width: 100% !important;
+	gap: 8px !important;
+}
+.project-detail-root .toggle-row .toggle-switch {
+	margin: 0 !important;
+	justify-self: start !important;
+	order: 0 !important;
+	align-self: center !important;
+}
+.project-detail-root .toggle-row .toggle-action {
+	margin-left: auto !important;
+}
+
+/* Specific fix for the small slider variant to avoid being pushed right by other layout rules */
+.project-detail-root label.switch, .project-detail-root .checkbox-container {
+	display: inline-block !important;
+	margin-left: 0 !important;
+}
+
+/* Inline checkbox to the left of label for toggle-inline rows */
+.toggle-inline .toggle-controls { display:flex; align-items:center; gap:6px; justify-content:flex-start }
+.toggle-inline-control { display:inline-flex; align-items:center; gap:8px; cursor:pointer }
+.toggle-inline-control input[type="checkbox"] { width:18px; height:18px; margin:0; accent-color: #0f8fa8 }
+.toggle-inline-control .toggle-label-text { color: #e8eef0; font-weight:600 }
+.toggle-inline .toggle-action { margin-left: auto }
+
+/* Ensure previous switch styles don't override inline checkbox appearance */
+.toggle-inline label.switch, .toggle-inline .switch { display:none !important }
+
+/* Strong overrides to ensure checkbox is flush left next to label text */
+.project-detail-root .toggle-inline .toggle-controls { justify-content: flex-start !important; width: 100% !important }
+.project-detail-root .toggle-inline-control { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:12px !important; width:auto !important }
+.project-detail-root .toggle-inline-control input[type="checkbox"] { margin:0 8px 0 0 !important; transform: none !important }
+.project-detail-root .toggle-inline-control .toggle-label-text { display:inline-block !important; color:#e8eef0 !important; font-weight:600 !important }
+.project-detail-root .toggle-inline .toggle-action { margin-left:auto !important }
+
+/* Fallback: if parent centers children, ensure this control still aligns left */
+.project-detail-root .toggle-inline { text-align: left !important }
+
+/* Absolute-position override: ensure checkbox+label sit at the extreme left of the toggle row
+	 and the action (+) sits at the extreme right. This avoids inherited centering. */
+.project-detail-root .toggle-inline { position: relative !important; padding-left: 0 !important; }
+.project-detail-root .toggle-inline .toggle-controls {
+	position: absolute !important;
+	left: 12px !important;
+	top: 8px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	gap: 8px !important;
+}
+.project-detail-root .toggle-inline .toggle-action {
+	position: absolute !important;
+	right: 12px !important;
+	top: 6px !important;
+}
+
+/* Ensure the row has enough height for absolute items */
+.project-detail-root .toggle-inline { min-height: 36px !important; padding-right: 56px !important }
+
+/* Robust 3-column grid for toggles: checkbox | label | action */
+.toggle-row.toggle-inline { display: grid !important; grid-template-columns: 36px 1fr auto !important; align-items: center !important; gap: 8px !important; }
+.toggle-row.toggle-inline .toggle-checkbox { display:flex; align-items:center; justify-content:flex-start }
+.toggle-row.toggle-inline .toggle-checkbox input[type="checkbox"] { margin:0; width:18px; height:18px }
+.toggle-row.toggle-inline .toggle-text { display:flex; align-items:center }
+.toggle-row.toggle-inline .toggle-action { display:flex; align-items:center; justify-content:flex-end }
+
+/* Remove previous absolute overrides that can interfere */
+.project-detail-root .toggle-inline .toggle-controls { position: static !important; left: auto !important; top: auto !important; }
+.project-detail-root .toggle-inline .toggle-action { position: static !important; right: auto !important; top: auto !important }
+
+/* Modern compact chip-style switch */
+.section-dev label.switch {
+	width:46px !important;
+	height:22px !important;
+	display:inline-block !important;
+	background: transparent !important;
+}
+.section-dev label.switch .slider {
+	position: relative !important;
+	display:block !important;
+	width:100% !important;
+	height:100% !important;
+	border-radius: 999px !important;
+	background: rgba(255,255,255,0.04) !important;
+	border: 1px solid rgba(255,255,255,0.03) !important;
+	transition: background .18s ease, box-shadow .18s ease;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+.section-dev label.switch .slider:before {
+	content: '' !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: 4px !important;
+	transform: translateY(-50%) !important;
+	width: 14px !important;
+	height: 14px !important;
+	background:#fff !important;
+	border-radius: 50% !important;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.35) !important;
+	transition: transform .18s ease, box-shadow .18s ease, left .18s ease !important;
+}
+.section-dev label.switch input:checked + .slider {
+	background: linear-gradient(90deg,#20d0c8,#0f8fa8) !important;
+	box-shadow: 0 6px 18px rgba(15,143,168,0.12) !important;
+}
+.section-dev label.switch input:checked + .slider:before {
+	left: calc(100% - 18px) !important;
+}
+
+/* small, subtle action button */
+.section-dev .toggle-action .remove-large {
+	width:30px; height:30px; padding:0; font-size:14px; border-radius:8px; box-shadow:none;
+	background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%);
+}
+
+/* compact repo-duo */
+.section-dev .repo-duo { padding:8px 10px; margin-bottom:8px }
+
+/* Reduce vertical space consumed by repo-duo blocks when toggle row is compact */
+.section-dev .repo-duo { padding:8px; margin-bottom:8px }
+.section-dev .repo-duo .repo-action .remove-large { width:34px; height:34px }
+
+/* Make labels slightly smaller to save vertical space */
+.section-dev .inline-label { font-size:13px }
+
+/* If label is too long, reduce font-size slightly to try keep one-line */
+@media (max-width: 1100px) {
+	.toggle-label .inline-label { font-size: 13px }
+}
+@media (max-width: 720px) {
+	.toggle-label .inline-label { font-size: 12px }
+}
+
+/* Strong override: make every label.switch render like the small in-grid switch */
+.project-detail-root label.switch {
+	display: inline-block !important;
+	position: relative !important;
+	width: 34px !important;
+	height: 18px !important;
+	vertical-align: middle !important;
+}
+.project-detail-root label.switch .slider {
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: #4b4b4b !important;
+	border-radius: 18px !important;
+	transition: .18s !important;
+}
+.project-detail-root label.switch .slider:before {
+	position: absolute !important;
+	content: "" !important;
+	height: 14px !important;
+	width: 14px !important;
+	left: 2px !important;
+	bottom: 2px !important;
+	background: white !important;
+	border-radius: 50% !important;
+	transition: .18s !important;
+}
+.project-detail-root label.switch input { opacity: 0 !important; width: 0 !important; height: 0 !important }
+.project-detail-root label.switch input:checked + .slider { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%) !important }
+.project-detail-root label.switch input:checked + .slider:before { transform: translateX(16px) !important }
+
+/* ensure switches inside other-tool-grid align properly */
+.other-tool-config .checkbox-field label.switch, .repo-duo .checkbox-row label.switch {
+	margin: 0 !important;
+}
+.section-mind .mind-card .mind-readonly-textarea {
+	background: rgba(15,143,168,0.08) !important;
+	border: 1px solid rgba(15,143,168,0.14) !important;
+	color: #03292a !important;
+	padding: 8px !important;
+	border-radius: 8px !important;
+	width: 100% !important;
+	resize: vertical !important;
+}
+.project-section .section-mind .mind-card .mind-card-body .mind-readonly-textarea[readonly] {
+	background-color: rgba(15,143,168,0.08) !important;
+	background-image: none !important;
+	border-color: rgba(15,143,168,0.14) !important;
+	color: #03292a !important;
+	-webkit-text-fill-color: #03292a !important;
+	box-shadow: none !important;
+	outline: none !important;
+	caret-color: transparent !important;
+}
+.project-section .section-mind .mind-card .mind-card-body .mind-readonly-textarea::placeholder { color: rgba(3,41,42,0.45) !important }
+.mind-grid input[readonly], .mind-grid textarea[readonly], .section-mind .mind-card .mind-readonly-textarea[readonly] { opacity:1; color:#03292a }
+.mind-grid input[readonly] { background: rgba(15,143,168,0.08); border:1px solid rgba(15,143,168,0.14) }
+.section-mind input::placeholder, .section-mind textarea::placeholder { color: rgba(3,41,42,0.45) }
+.section-mind input:focus, .section-mind textarea:focus { outline:none; box-shadow: 0 8px 26px rgba(15,143,168,0.08); border-color: rgba(15,143,168,0.26) }
+.mind-readonly-textarea::placeholder { color: rgba(3,41,42,0.45) }
+
+/* Button styling: primary app-style and per-section accents */
+.project-detail-root .jh-btn, .project-detail-root .btn.primary {
+	background: linear-gradient(180deg, #0fb1c0 0%, #0f8fa8 100%);
+	color: #fff;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 6px;
+	box-shadow: 0 8px 20px rgba(15,143,168,0.12);
+	cursor: pointer;
+	transition: transform .08s ease, box-shadow .12s ease, filter .08s ease;
+}
+.project-detail-root .jh-btn:hover { transform: translateY(-2px); filter:brightness(1.04) }
+
+.section-general .jh-btn, .section-general .btn.primary { background: linear-gradient(180deg,#ffb86b 0%,#ff9240 100%); box-shadow: 0 8px 20px rgba(255,159,67,0.12) }
+.section-dev .jh-btn, .section-dev .btn.primary { background: linear-gradient(180deg,#8fe896 0%,#45b05a 100%); box-shadow: 0 8px 20px rgba(102,187,106,0.12); color:#04260f }
+.section-mind .jh-btn, .section-mind .btn.primary { background: linear-gradient(180deg,#5fd3db 0%,#0f8fa8 100%); box-shadow: 0 8px 20px rgba(15,143,168,0.12); color:#042b2b }
+
+/* Small buttons and danger variant */
+.project-detail-root .btn.small { background: rgba(255,255,255,0.04); color:#fff; border:1px solid rgba(255,255,255,0.04); padding:6px 8px; border-radius:6px }
+.project-detail-root .btn.small.danger { background: linear-gradient(180deg,#e25b5b 0%,#c83a3a 100%); color:#fff; border:none }
+.project-detail-root .btn.small:hover { filter:brightness(1.06) }
+
+/* Ensure action buttons are readable on dark backgrounds */
+.project-detail-root .actions { margin-top:16px }
+.project-detail-root .actions .jh-btn[disabled] { opacity:0.6; cursor:not-allowed }
+
+/* Make primary action button span full width and larger for project detail footer */
+.project-detail-root .actions {
+	display:flex;
+	width:100%;
+}
+.project-detail-root .actions .jh-btn {
+	flex: 1 1 auto;
+	padding: 12px 16px;
+	font-size: 16px;
+	border-radius: 8px;
+}
+.project-detail-root .actions .jh-btn + .jh-btn {
+	margin-left: 12px;
+	flex: 0 0 auto;
+	width: auto;
+}
+
+@media (max-width: 720px) {
+	.project-detail-root .actions { flex-direction: column; gap:8px }
+	.project-detail-root .actions .jh-btn + .jh-btn { margin-left: 0; }
+}
+
+/* Project title centered and prominent */
+.project-title { text-align:center; margin:8px 0 18px 0; display:flex; justify-content:center; align-items:baseline; gap:10px }
+.project-title .project-code { font-weight:700; color:#ffd166; font-size:20px }
+.project-title .sep { color:#cfcfcf; opacity:0.9 }
+.project-title .project-name { font-weight:700; color:#ffffff; font-size:20px }
+
+>>>>>>> Stashed changes
 @media (max-width: 1100px) {
 	.project-form-grid { grid-template-columns: 1fr 1fr }
 	.project-form-grid .form-col.wide { grid-column: 1 / -1 }
