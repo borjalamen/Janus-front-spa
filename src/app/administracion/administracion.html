@@ -1,35 +1,35 @@
 <div class="section-container admin-layout">
- 
+  
   <div class="admin-sidebar">
     <h2 class="sidebar-title">Admin Panel</h2>
-   
-    <button class="menu-btn"
-            [class.active]="activeTab === 'USERS'"
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'USERS'" 
             (click)="cambiarTab('USERS')">
       <mat-icon>people</mat-icon> Usuarios
     </button>
-   
-    <button class="menu-btn"
-            [class.active]="activeTab === 'APP'"
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'APP'" 
             (click)="cambiarTab('APP')">
       <mat-icon>settings_applications</mat-icon> Aplicación
     </button>
-   
-    <button class="menu-btn"
-            [class.active]="activeTab === 'PARAM'"
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'PARAM'" 
             (click)="cambiarTab('PARAM')">
       <mat-icon>tune</mat-icon> Parametrización
     </button>
-   
-    <button class="menu-btn"
-            [class.active]="activeTab === 'DB'"
+    
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'DB'" 
             (click)="cambiarTab('DB')">
       <mat-icon>storage</mat-icon> BBDD
     </button>
   </div>
- 
+
   <div class="admin-content">
- 
+
     <div *ngIf="activeTab === 'USERS'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>Administrar Usuarios</h2>
@@ -37,9 +37,9 @@
           <mat-icon>add</mat-icon> Añadir usuario
         </button>
       </div>
- 
+
       <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
- 
+
       <div class="users-list">
         <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
           <div>
@@ -49,7 +49,7 @@
             </div>
             <div class="usuari-email">{{ usuari.email }}</div>
           </div>
- 
+
           <div class="actions">
             <button class="icon-btn view-profile" (click)="verPerfil(usuari)" title="Ver perfil completo">
               <mat-icon>visibility</mat-icon>
@@ -64,16 +64,16 @@
         </div>
       </div>
     </div>
- 
+
     <div *ngIf="activeTab === 'APP'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>Administrar Aplicación</h2>
       </div>
-     
+      
       <div class="admin-card">
         <h3>Inhabilitar por roles</h3>
         <p>Seleccione un rol para restringir el acceso temporalmente a la aplicación.</p>
-       
+        
         <div class="form-field">
             <label>Seleccionar Rol:</label>
             <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
@@ -82,7 +82,7 @@
                 <option value="DEV">DevOps</option>
             </select>
         </div>
-       
+        
         <div style="margin-top: 16px; text-align: right;">
             <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
                 Inhabilitar Acceso
@@ -90,21 +90,21 @@
         </div>
       </div>
     </div>
- 
+
     <div *ngIf="activeTab === 'PARAM'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>Parametrización</h2>
       </div>
- 
+
       <div class="admin-card">
         <h3>Cambio de versión</h3>
         <p>Gestión de la versión actual del despliegue.</p>
-       
+        
         <div class="form-field">
             <label>Versión del Sistema:</label>
             <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0">
         </div>
- 
+
         <div style="margin-top: 16px; text-align: right;">
             <button class="jenkins-add-btn" (click)="cambiarVersion()">
                 <mat-icon>update</mat-icon> Actualizar Versión
@@ -112,12 +112,12 @@
         </div>
       </div>
     </div>
- 
+
     <div *ngIf="activeTab === 'DB'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>Administración de la BBDD</h2>
       </div>
- 
+
       <div class="db-grid">
         <div class="admin-card db-card">
             <mat-icon class="big-icon warn">delete_forever</mat-icon>
@@ -125,14 +125,14 @@
             <p>Elimina permanentemente registros marcados.</p>
             <button class="popup-btn" (click)="accionBBDD('borrado')">Seleccionar y Ejecutar</button>
         </div>
- 
+
         <div class="admin-card db-card">
             <mat-icon class="big-icon">restore</mat-icon>
             <h3>Restore</h3>
             <p>Restaura la base de datos a un punto anterior.</p>
             <button class="popup-btn" (click)="accionBBDD('restore')">Elegir Versión</button>
         </div>
- 
+
         <div class="admin-card db-card">
             <mat-icon class="big-icon">backup</mat-icon>
             <h3>Backup</h3>
@@ -141,34 +141,34 @@
         </div>
       </div>
     </div>
- 
+
   </div>
 </div>
 <div class="modal-overlay" *ngIf="mostrarPopup">
   <div class="auth-card">
     <h2 class="form-title">{{ usuariEditant ? 'Modificar Usuario' : 'Nuevo Usuario' }}</h2>
     <hr class="divider">
- 
+
     <div class="form-content">
       <div class="input-field">
         <label>Nombre</label>
         <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez">
       </div>
- 
+
       <div class="input-field">
         <label>Email</label>
         <input type="email" [(ngModel)]="nouUsuari.email" placeholder="jlopez@minsait.com">
       </div>
- 
+
       <div class="input-field">
         <label>Contraseña</label>
         <input type="password" [(ngModel)]="nouUsuari.contrasenya" placeholder="{{ usuariEditant ? 'Dejar vacío para mantener' : 'Introduce contraseña' }}">
       </div>
- 
+
       <hr class="divider">
- 
+
       <label class="section-label">Roles del Usuario:</label>
-     
+      
       <div class="roles-grid">
         <div class="switch-item">
           <label class="custom-switch">
@@ -177,7 +177,7 @@
           </label>
           <span class="role-text">Administrador</span>
         </div>
- 
+
         <div class="switch-item">
           <label class="custom-switch">
             <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor">
@@ -185,7 +185,7 @@
           </label>
           <span class="role-text">Consultor</span>
         </div>
- 
+
         <div class="switch-item">
           <label class="custom-switch">
             <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops">
@@ -194,9 +194,9 @@
           <span class="role-text">DevOps</span>
         </div>
       </div>
- 
+
       <hr class="divider">
- 
+
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="tancarPopup()">Cancelar</button>
         <button class="btn-round btn-blue" (click)="guardarUsuari()">Guardar</button>
@@ -204,7 +204,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Popup confirmación eliminar usuario -->
 <div class="modal-overlay" *ngIf="mostrarPopupDelete">
   <div class="auth-card">
@@ -221,7 +221,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Popup Borrado Físico -->
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
   <div class="auth-card db-popup">
@@ -232,22 +232,22 @@
     <hr class="divider">
     <div class="form-content">
       <p>Selecciona qué registros deseas eliminar permanentemente:</p>
-     
+      
       <div class="checkbox-list">
         <label *ngFor="let opcion of opcionesBorrado" class="checkbox-item">
-          <input type="checkbox"
+          <input type="checkbox" 
                  [checked]="selectedBorrado.includes(opcion.value)"
                  (change)="toggleSeleccionBorrado(opcion.value)">
           <span class="checkmark"></span>
           {{ opcion.label }}
         </label>
       </div>
- 
+
       <p class="warning-text">
         <mat-icon>warning</mat-icon>
         Esta acción es irreversible
       </p>
- 
+
       <hr class="divider">
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
@@ -256,7 +256,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Popup Restore -->
 <div class="modal-overlay" *ngIf="mostrarPopupRestore">
   <div class="auth-card db-popup">
@@ -267,12 +267,12 @@
     <hr class="divider">
     <div class="form-content">
       <p>Selecciona la versión a la que deseas restaurar:</p>
-     
+      
       <div class="version-list">
-        <label *ngFor="let version of versionesRestore" class="version-item"
+        <label *ngFor="let version of versionesRestore" class="version-item" 
                [class.selected]="selectedRestore === version.id">
-          <input type="radio"
-                 name="restoreVersion"
+          <input type="radio" 
+                 name="restoreVersion" 
                  [value]="version.id"
                  [(ngModel)]="selectedRestore">
           <div class="version-info">
@@ -281,12 +281,12 @@
           </div>
         </label>
       </div>
- 
+
       <p class="warning-text" *ngIf="selectedRestore">
         <mat-icon>info</mat-icon>
         Se restaurará la base de datos al estado del {{ fechaRestoreSeleccionada }}
       </p>
- 
+
       <hr class="divider">
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
@@ -295,7 +295,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Popup Backup -->
 <div class="modal-overlay" *ngIf="mostrarPopupBackup">
   <div class="auth-card db-popup">
@@ -306,22 +306,22 @@
     <hr class="divider">
     <div class="form-content">
       <p>Selecciona qué elementos incluir en el backup:</p>
-     
+      
       <div class="checkbox-list">
         <label *ngFor="let opcion of opcionesBackup" class="checkbox-item">
-          <input type="checkbox"
+          <input type="checkbox" 
                  [checked]="selectedBackup.includes(opcion.value)"
                  (change)="toggleSeleccionBackup(opcion.value)">
           <span class="checkmark"></span>
           {{ opcion.label }}
         </label>
       </div>
- 
+
       <p class="info-text" *ngIf="selectedBackup.length > 0">
         <mat-icon>check_circle</mat-icon>
         Se generará backup de: {{ selectedBackup.join(', ') }}
       </p>
- 
+
       <hr class="divider">
       <div class="action-buttons">
         <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
