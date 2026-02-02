@@ -25,3 +25,38 @@
 /* Dark theme button overrides for this module */
 .jh-btn { background:#1e88e5 !important; color:#fff !important; border:0 !important; padding:6px 10px !important; border-radius:4px !important; cursor:pointer !important; font-size:13px !important }
 .tools-root .btn { background:#1e88e5 !important; color:#fff !important }
+/* Botón estilo Jenkins reutilizado */
+.jenkins-add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: #E0E0E0;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, border-color 0.2s ease;
+}
+
+.jenkins-add-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  transform: translateY(-2px);
+}
+
+/* Estilo específico para el botón principal de añadir */
+.tools-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+}
+
+.tools-header .jenkins-add-btn:hover {
+  border-color: #ffd54f;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}

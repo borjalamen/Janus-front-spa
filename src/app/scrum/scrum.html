@@ -3,16 +3,28 @@
   <p class="lead">{{ 'SCRUM.DESCRIPTION' | translate }}</p>
 
   <div class="scrum-controls">
-    <input [(ngModel)]="newTitle" placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}" />
-    <input [(ngModel)]="newEstimate" placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}" style="width:120px" />
-    <input type="number" min="0" max="150" [(ngModel)]="newPriority" placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}" style="width:120px" />
-    <select [(ngModel)]="newAssignee">
-      <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
-      <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
-    </select>
-    <textarea [(ngModel)]="newDescription" placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}" rows="2" style="width:320px"></textarea>
+    <div class="controls-header">
+      <div class="main-inputs">
+        <input class="input-large" [(ngModel)]="newTitle" placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}" />
+        <input class="input-medium" [(ngModel)]="newEstimate" placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}" />
+      </div>
+      <button class="jenkins-add-btn" (click)="addTask()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'SCRUM.ADD_BUTTON' | translate }}</span>
+      </button>
+    </div>
+    
+    <div class="secondary-inputs">
+      <input class="input-medium" type="number" min="0" max="150" [(ngModel)]="newPriority" placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}" />
+      <select class="input-medium" [(ngModel)]="newAssignee">
+        <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
+        <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
+      </select>
+    </div>
+    
+    <textarea class="input-full" [(ngModel)]="newDescription" placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}" rows="3"></textarea>
+    
     <div class="priority-hint">{{ 'SCRUM.PRI_SCALE_HINT' | translate }}</div>
-    <button class="btn" (click)="addTask()">{{ 'SCRUM.ADD_BUTTON' | translate }}</button>
   </div>
 
   <div class="board">
@@ -23,7 +35,7 @@
           <div class="card-head">
             <div class="card-title">
               <strong *ngIf="editingId !== t.id">{{ t.title }}</strong>
-              <input *ngIf="editingId === t.id" [(ngModel)]="editBuffer.title" />
+              <input class="edit-title-input" *ngIf="editingId === t.id" [(ngModel)]="editBuffer.title" placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}" />
               <div class="card-id">{{ t.id }}</div>
             </div>
             <span class="meta">
@@ -37,20 +49,24 @@
                 <div class="desc" *ngIf="t.description">{{ t.description }}</div>
               </ng-container>
               <ng-container *ngIf="editingId === t.id">
-                <input [(ngModel)]="editBuffer.estimate" style="width:80px" /> h
-                <input type="number" min="0" max="150" [(ngModel)]="editBuffer.priority" style="width:80px" />
-                <select [(ngModel)]="editBuffer.assignee">
-                  <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
-                  <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
-                </select>
-                <textarea [(ngModel)]="editBuffer.description" rows="2" style="width:320px"></textarea>
+                <div class="edit-fields">
+                  <div class="edit-row">
+                    <input class="edit-estimate" [(ngModel)]="editBuffer.estimate" placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}" /> 
+                    <input class="edit-priority" type="number" min="0" max="150" [(ngModel)]="editBuffer.priority" placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}" />
+                    <select class="edit-assignee" [(ngModel)]="editBuffer.assignee">
+                      <option [ngValue]="null">{{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}</option>
+                      <option *ngFor="let a of assignees" [value]="a">{{ a }}</option>
+                    </select>
+                  </div>
+                  <textarea [(ngModel)]="editBuffer.description" rows="2" placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}"></textarea>
+                </div>
               </ng-container>
             </span>
           </div>
           <div class="card-actions">
-            <button *ngIf="editingId !== t.id" (click)="startEdit(t)">✎ {{ 'SCRUM.EDIT' | translate }}</button>
-            <button *ngIf="editingId === t.id" (click)="saveEdit(t.id)">{{ 'SCRUM.SAVE' | translate }}</button>
-            <button *ngIf="editingId === t.id" (click)="cancelEdit()">{{ 'SCRUM.CANCEL' | translate }}</button>
+            <button *ngIf="editingId !== t.id" (click)="startEdit(t)" title="{{ 'SCRUM.EDIT' | translate }}">✏️</button>
+            <button *ngIf="editingId === t.id" class="btn-save" (click)="saveEdit(t.id)" title="{{ 'SCRUM.SAVE' | translate }}">✓</button>
+            <button *ngIf="editingId === t.id" class="btn-cancel" (click)="cancelEdit()" title="{{ 'SCRUM.CANCEL' | translate }}">✗</button>
             <button *ngIf="editingId !== t.id" (click)="moveTask(t.id,'doing')">→ {{ 'SCRUM.COL_DOING' | translate }}</button>
             <button *ngIf="editingId !== t.id" (click)="moveTask(t.id,'done')">✓ {{ 'SCRUM.COL_DONE' | translate }}</button>
             <button *ngIf="editingId !== t.id" class="danger" (click)="removeTask(t.id)">✕</button>

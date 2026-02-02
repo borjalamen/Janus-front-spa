@@ -4,7 +4,10 @@
   <div class="tools-header">
     <h2>{{ 'MENU.TOOLS' | translate }}</h2>
     <div>
-      <button class="btn" (click)="newTool()">{{ 'TRAINING.NEW_ITEM' | translate }}</button>
+      <button class="jenkins-add-btn" (click)="newTool()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'TRAINING.NEW_ITEM' | translate }}</span>
+      </button>
     </div>
   </div>
 
@@ -46,23 +49,13 @@
       <div class="form-row"><label>Tags (coma separadas)</label><input [(ngModel)]="editingTool.tagsString" [readonly]="editingTool.readonly" /></div>
       <div class="form-row"><label>Pasos de instalación</label><textarea rows="4" [(ngModel)]="editingTool.installSteps" [readonly]="editingTool.readonly"></textarea></div>
       <div class="form-row"><label>Proyectos (coma separadas)</label><input [(ngModel)]="editingTool.projectsString" [readonly]="editingTool.readonly" /></div>
-      <div class="modal-actions">
-        <button class="btn" *ngIf="!editingTool.readonly" (click)="saveTool()">Guardar</button>
-        <button class="btn" (click)="showToolModal=false">Cerrar</button>
+      <div class="modal-actions" *ngIf="!editingTool.readonly">
+        <button class="cancelar-btn" (click)="showToolModal=false" title="Cancelar">✖️</button>
+        <button class="guardar-btn" (click)="saveTool()" title="Guardar">✔️</button>
+      </div>
+      <div class="modal-actions" *ngIf="editingTool.readonly">
+        <button class="cancelar-btn" (click)="showToolModal=false" title="Cerrar">✖️</button>
       </div>
     </div>
   </div>
-
-  <!-- Confirm modal -->
-  <div class="modal-backdrop" *ngIf="showConfirm">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <h3>Confirmar</h3>
-      <div class="modal-body">{{ confirmMessage }}</div>
-      <div class="modal-actions">
-        <button class="btn" (click)="confirmOk()">OK</button>
-        <button class="btn" (click)="confirmCancel()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
 </div>

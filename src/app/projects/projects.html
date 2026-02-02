@@ -4,7 +4,10 @@
   <div class="tools-header">
     <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
     <div>
-      <button class="jh-btn" (click)="newProject()">{{ 'PROJECTS.NEW' | translate }}</button>
+      <button class="jenkins-add-btn" (click)="newProject()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'PROJECTS.NEW' | translate }}</span>
+      </button>
     </div>
   </div>
 
@@ -40,9 +43,12 @@
       <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label><input [(ngModel)]="editingProject.ipString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.IPS_PLACEHOLDER' | translate }}"/></div>
       <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label><textarea rows="6" [(ngModel)]="editingProject.tareasString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.TASKS_PLACEHOLDER' | translate }}"></textarea></div>
 
-      <div class="jh-modal-actions">
-        <button class="jh-btn" *ngIf="!editingProject.readonly" (click)="saveProject()">{{ 'PROJECTS.SAVE' | translate }}</button>
-        <button class="jh-btn" (click)="showProjectModal=false">{{ 'PROJECTS.CLOSE' | translate }}</button>
+      <div class="jh-modal-actions" *ngIf="!editingProject.readonly">
+        <button class="cancelar-btn" (click)="showProjectModal=false" title="{{ 'PROJECTS.CLOSE' | translate }}">✗</button>
+        <button class="guardar-btn" (click)="saveProject()" title="{{ 'PROJECTS.SAVE' | translate }}">✓</button>
+      </div>
+      <div class="jh-modal-actions" *ngIf="editingProject.readonly">
+        <button class="cancelar-btn" (click)="showProjectModal=false" title="{{ 'PROJECTS.CLOSE' | translate }}">✗</button>
       </div>
     </div>
   </div>

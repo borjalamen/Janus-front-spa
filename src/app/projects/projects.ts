@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -75,7 +76,7 @@ export interface Proyecto {
   templateUrl: './projects.html',
   styleUrls: ['./projects.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, RouterLink]
+  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, RouterLink, MatIconModule]
 })
 export class ProjectsComponent {
   title = '';

@@ -105,9 +105,19 @@ export class AppComponent implements OnDestroy {
   }
 
   translateLanguage(lang: string) {
+    console.log('Cambiando idioma a:', lang);
+    console.log('Idioma actual antes:', this.translate.currentLang);
     if (!lang) return;
-    this.translate.use(lang);
-    localStorage.setItem('lang', lang);
+    this.translate.use(lang).subscribe({
+      next: () => {
+        console.log('✅ Idioma cambiado exitosamente a:', lang);
+        console.log('Idioma actual después:', this.translate.currentLang);
+        localStorage.setItem('lang', lang);
+      },
+      error: (err) => {
+        console.error('❌ Error al cambiar idioma:', err);
+      }
+    });
   }
 
   toggleClip(): void {

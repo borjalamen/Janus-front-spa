@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule, NgIf, NgForOf } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +34,7 @@ const STORAGE_KEY = 'training_paths_v1';
   templateUrl: './formacion.html',
   styleUrls: ['./formacion.css'],
   standalone: true,
-  imports: [CommonModule, NgIf, NgForOf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule],
+  imports: [CommonModule, NgIf, NgForOf, FormsModule, BuscadorComponent, TranslateModule, DragDropModule, MatIconModule],
 })
 export class FormacionComponent {
   title = '';

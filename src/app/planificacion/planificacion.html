@@ -130,9 +130,9 @@
     <div *ngIf="validationError" class="modal-error">{{ validationError }}</div>
 
     <div class="modal-actions">
-      <button class="btn" (click)="saveModal()">{{ 'PLANNING.SAVE' | translate }}</button>
-      <button class="btn" (click)="closeModal()">{{ 'PLANNING.CANCEL' | translate }}</button>
-      <button *ngIf="editing" class="btn warning" (click)="removeFromModal()">{{ 'PLANNING.DELETE' | translate }}</button>
+      <button class="cancelar-btn" (click)="closeModal()" title="{{ 'PLANNING.CANCEL' | translate }}">✖️</button>
+      <button class="guardar-btn" (click)="saveModal()" title="{{ 'PLANNING.SAVE' | translate }}">✔️</button>
+      <button *ngIf="editing" class="guardar-btn" style="background: #E53935 !important;" (click)="removeFromModal()" title="{{ 'PLANNING.DELETE' | translate }}">🗑️</button>
     </div>
   </div>
 </div>
@@ -142,8 +142,8 @@
     <h3>{{ 'PLANNING.DELETE' | translate }}</h3>
     <div class="modal-body">{{ confirmMessage }}</div>
     <div class="modal-actions">
-      <button class="btn" (click)="confirmOk()">OK</button>
-      <button class="btn" (click)="confirmCancel()">{{ 'PLANNING.CANCEL' | translate }}</button>
+      <button class="cancelar-btn" (click)="confirmCancel()" title="{{ 'PLANNING.CANCEL' | translate }}">✖️</button>
+      <button class="guardar-btn" (click)="confirmOk()" title="Confirmar">✔️</button>
     </div>
   </div>
 </div>

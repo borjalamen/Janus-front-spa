@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 
 type ScrumTask = {
   id: string;
@@ -17,7 +18,7 @@ type ScrumTask = {
 @Component({
   selector: 'app-scrum',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, MatIconModule],
   templateUrl: './scrum.html',
   styleUrls: ['./scrum.css']
 })

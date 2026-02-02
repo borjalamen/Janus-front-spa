@@ -9,7 +9,10 @@
     <div class="left" *ngIf="isTab('paths')">
     <div class="left-header">
       <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-      <button class="btn" (click)="newPath()">{{ 'TRAINING.NEW_PATH' | translate }}</button>
+      <button class="jenkins-add-btn" (click)="newPath()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
+      </button>
     </div>
 
     <ul class="paths-list">
@@ -29,8 +32,9 @@
     <div *ngIf="selectedPath; else noSelection">
       <div class="path-header">
         <h3>{{ selectedPath.name }}</h3>
-        <button class="btn csv-btn" (click)="exportPathToCsv()" title="{{ 'TRAINING.EXPORT' | translate }}">
-          <span class="csv-icon">CSV</span>
+        <button class="jenkins-add-btn csv-btn-small" (click)="exportPathToCsv()" title="{{ 'TRAINING.EXPORT' | translate }}">
+          <mat-icon inline="true" style="font-size: 16px; width: 16px; height: 16px;">download</mat-icon>
+          <span>CSV</span>
         </button>
       </div>
       <div class="path-meta">
@@ -41,7 +45,10 @@
 
       <div class="items-header">
         <h4>{{ 'TRAINING.ITEMS' | translate }}</h4>
-        <button class="btn" (click)="addItem()">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
+        <button class="jenkins-add-btn" (click)="addItem()">
+          <mat-icon inline="true">add</mat-icon>
+          <span>{{ 'TRAINING.ADD_ITEM' | translate }}</span>
+        </button>
       </div>
 
       <ul class="items-list" cdkDropList (cdkDropListDropped)="dropItem($event)" *ngIf="selectedPath">
@@ -77,8 +84,8 @@
             </ul>
           </div>
           <div class="modal-actions">
-            <button type="button" class="btn" (click)="confirmAddSelectedCourse()" [disabled]="!selectedCandidate">{{ 'TRAINING.ADD_ITEM' | translate }}</button>
-            <button type="button" class="btn" (click)="showCourseSelector=false">{{ 'TRAINING.CANCEL' | translate }}</button>
+            <button type="button" class="cancelar-btn" (click)="showCourseSelector=false" title="{{ 'TRAINING.CANCEL' | translate }}">✖️</button>
+            <button type="button" class="guardar-btn" (click)="confirmAddSelectedCourse()" [disabled]="!selectedCandidate" title="{{ 'TRAINING.ADD_ITEM' | translate }}">✔️</button>
           </div>
         </div>
       </div>
@@ -94,7 +101,10 @@
                   <div class="left-header">
                     <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
                     <div>
-                      <button type="button" class="btn" (click)="addCourseFromAll()">{{ 'TRAINING.NEW_COURSE' | translate }}</button>
+                      <button type="button" class="jenkins-add-btn" (click)="addCourseFromAll()">
+                        <mat-icon inline="true">add</mat-icon>
+                        <span>{{ 'TRAINING.NEW_COURSE' | translate }}</span>
+                      </button>
                     </div>
                   </div>
 
@@ -128,8 +138,11 @@
               <div class="form-row"><label>{{ 'TRAINING.AUDIENCE' | translate }}</label><input [(ngModel)]="editingPath.audience" [readonly]="editingPath.readonly" /></div>
               <div class="form-row"><label>{{ 'TRAINING.OBJECTIVES' | translate }}</label><textarea rows="3" [(ngModel)]="editingPath.objectives" [readonly]="editingPath.readonly"></textarea></div>
               <div class="form-row"><label>{{ 'TRAINING.PREREQUISITES' | translate }}</label><input [(ngModel)]="editingPath.prerequisites" [readonly]="editingPath.readonly" /></div>
-              <div class="modal-actions" *ngIf="!editingPath.readonly"><button type="button" class="btn" (click)="savePath()">{{ 'TRAINING.SAVE' | translate }}</button><button type="button" class="btn" (click)="showPathModal=false">{{ 'TRAINING.CANCEL' | translate }}</button></div>
-              <div class="modal-actions" *ngIf="editingPath.readonly"><button type="button" class="btn" (click)="editingPath.readonly=false; showPathModal=false">{{ 'TRAINING.BACK' | translate }}</button></div>
+              <div class="modal-actions" *ngIf="!editingPath.readonly">
+                <button type="button" class="guardar-btn" (click)="savePath()" title="{{ 'TRAINING.SAVE' | translate }}">✓</button>
+                <button type="button" class="cancelar-btn" (click)="showPathModal=false" title="{{ 'TRAINING.CANCEL' | translate }}">✗</button>
+              </div>
+              <div class="modal-actions" *ngIf="editingPath.readonly"><button type="button" class="cancelar-btn" (click)="editingPath.readonly=false; showPathModal=false" title="{{ 'TRAINING.BACK' | translate }}">✖️</button></div>
             </div>
           </div>
 
@@ -142,17 +155,20 @@
               <div class="form-row"><label>{{ 'TRAINING.ITEM_LINK' | translate }}</label>
                 <div style="display:flex;gap:8px;align-items:center">
                   <input style="flex:1" [(ngModel)]="editingItem.link" [readonly]="editingItem.readonly" />
-                  <button type="button" class="btn small" title="{{ 'TRAINING.COPY' | translate }}" (click)="copyToClipboard(editingItem.link); $event.stopPropagation()" [disabled]="!(editingItem.link && (editingItem.link+'').trim())">{{ 'TRAINING.COPY' | translate }}</button>
+                  <button type="button" class="jenkins-add-btn csv-btn-small" title="{{ 'TRAINING.COPY' | translate }}" (click)="copyToClipboard(editingItem.link); $event.stopPropagation()" [disabled]="!(editingItem.link && (editingItem.link+'').trim())">
+                    <mat-icon inline="true" style="font-size: 16px; width: 16px; height: 16px;">content_copy</mat-icon>
+                    <span>{{ 'TRAINING.COPY' | translate }}</span>
+                  </button>
                 </div>
               </div>
               <div class="form-row"><label>{{ 'TRAINING.ITEM_DESC' | translate }}</label><textarea rows="3" [(ngModel)]="editingItem.description" [readonly]="editingItem.readonly"></textarea></div>
               <div class="form-row"><label>{{ 'TRAINING.ITEM_TAGS' | translate }}</label><input placeholder="Java,Spring" [(ngModel)]="editingItem.tagsString" [readonly]="editingItem.readonly" /></div>
               <div class="modal-actions" *ngIf="!editingItem.readonly">
-                <button type="button" class="btn" (click)="saveItem()">{{ 'TRAINING.SAVE' | translate }}</button>
-                <button type="button" class="btn" (click)="showItemModal=false">{{ 'TRAINING.CANCEL' | translate }}</button>
+                <button type="button" class="guardar-btn" (click)="saveItem()" title="{{ 'TRAINING.SAVE' | translate }}">✓</button>
+                <button type="button" class="cancelar-btn" (click)="showItemModal=false" title="{{ 'TRAINING.CANCEL' | translate }}">✗</button>
               </div>
               <div class="modal-actions" *ngIf="editingItem.readonly">
-                <button type="button" class="btn" (click)="closeView()">{{ 'TRAINING.BACK' | translate }}</button>
+                <button type="button" class="cancelar-btn" (click)="closeView()" title="{{ 'TRAINING.BACK' | translate }}">✗</button>
               </div>
             </div>
           </div>
@@ -163,8 +179,8 @@
                 <h3>{{ 'TRAINING.DELETE' | translate }}</h3>
                 <div class="modal-body">{{ confirmMessage }}</div>
                 <div class="modal-actions">
-                  <button class="btn" (click)="confirmOk()">OK</button>
-                  <button class="btn" (click)="confirmCancel()">{{ 'TRAINING.CANCEL' | translate }}</button>
+                  <button class="cancelar-btn" (click)="confirmCancel()" title="{{ 'TRAINING.CANCEL' | translate }}">✖️</button>
+                  <button class="guardar-btn" (click)="confirmOk()" title="Confirmar">✔️</button>
                 </div>
               </div>
 

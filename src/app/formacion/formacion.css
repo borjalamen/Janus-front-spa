@@ -17,7 +17,7 @@ body {
 .course-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .course-number{width:36px;height:36px;border-radius:6px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)}
 .course-content .meta{font-size:12px;color:var(--muted)}
-.training-root .left { width:320px; }
+.training-root .left { width:280px; }
 .training-root .right { flex:1; background:var(--panel-bg, #0b0f12); padding:12px; border-radius:8px }
 
 /* Make the 'All courses' panel occupy the full width when visible */
@@ -27,7 +27,8 @@ body {
 /* Hide numbering for course cards in the All Courses tab */
 .all-courses .course-number { display: none; }
 .all-courses .course-card { padding-left: 12px; }
-.left-header{display:flex;justify-content:space-between;align-items:center}
+.left-header{display:flex;flex-direction:column;gap:12px;align-items:flex-start;margin-bottom:12px}
+.left-header h2{margin:0}
 .left-header .add-course-btn{background:#0066ff;color:#fff;border-radius:8px;padding:6px 10px;border:none;cursor:pointer;transition:box-shadow 160ms ease, transform 120ms ease}
 .left-header .add-course-btn:hover{box-shadow:0 10px 30px rgba(0,102,255,0.18);transform:translateY(-2px)}
 .path-header{display:flex;align-items:center;gap:12px}
@@ -52,6 +53,21 @@ body {
   outline: none;
 }
 .csv-btn:active{ transform: translateY(0); }
+
+/* CSV button pequeño estilo jenkins */
+.csv-btn-small {
+  padding: 4px 10px !important;
+  font-size: 14px !important;
+  border: 2px solid rgba(255, 255, 255, 0.04) !important;
+  background: #0f1113 !important;
+}
+
+.csv-btn-small:hover {
+  border-color: #ffd54f !important;
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
 .paths-list { list-style:none; padding:0; margin-top:12px }
 .paths-list li { background:rgba(255,255,255,0.02); padding:10px; margin-bottom:8px; border-radius:6px; cursor:pointer }
 .paths-list li.selected { border:1px solid rgba(255,255,255,0.06); box-shadow:0 4px 8px rgba(0,0,0,0.6) }
@@ -85,12 +101,132 @@ body {
 
 .no-selection{padding:20px;color:var(--muted)}
 
-/* modal */
-.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000 }
-.modal { width:min(720px,95%); background:var(--panel-bg,#071018); padding:18px; border-radius:8px }
-.form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:10px }
-.form-row input, .form-row textarea { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--muted) }
-.modal-actions { display:flex; gap:8px; justify-content:flex-end }
+/* modal - estilo igual que el resto de la app */
+.modal-backdrop { 
+  position: fixed; 
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85) !important; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 2147483000 !important;
+}
+
+.modal { 
+  background: #0f1113 !important;
+  color: #eee !important;
+  padding: 22px !important;
+  border-radius: 8px !important;
+  width: 720px !important;
+  max-width: 95% !important;
+  max-height: 80vh !important;
+  overflow: auto !important;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
+  border: 2px solid #FBC02D !important;
+}
+
+.modal h3 {
+  color: #ffd54f;
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.form-row { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 6px; 
+  margin-bottom: 16px;
+}
+
+.form-row label {
+  color: #cfcfcf;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-row input, 
+.form-row textarea { 
+  background: #141516 !important;
+  color: #eee !important;
+  border: 1px solid #2e3236 !important;
+  padding: 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  border-color: #FBC02D !important;
+}
+
+.form-row input::placeholder,
+.form-row textarea::placeholder {
+  color: #7c8084 !important;
+}
+
+.modal-actions { 
+  display: flex; 
+  gap: 12px; 
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Botones de guardar y cancelar igual que el resto de la app */
+.cancelar-btn,
+.guardar-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.cancelar-btn:hover,
+.guardar-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+}
+
+.cancelar-btn:active,
+.guardar-btn:active {
+  transform: scale(0.95);
+}
+
+.guardar-btn {
+  color: #4CAF50 !important;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.cancelar-btn {
+  color: #E53935 !important;
+}
+
+.cancelar-btn:hover {
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
 
 .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer;transition:box-shadow 140ms ease, transform 120ms ease, background-color 120ms ease, color 120ms ease}
 .btn.small{padding:6px 8px;font-size:13px}
@@ -99,6 +235,44 @@ body {
 /* toast */
 .toast { position: fixed; right: 20px; bottom: 20px; background: rgba(0,0,0,0.7); color: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 2000; max-width: 380px }
 .toast .toast-link { color:#aee9ff; word-break:break-all }
+
+/* Botón estilo Jenkins reutilizado */
+.jenkins-add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: #E0E0E0;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, border-color 0.2s ease;
+}
+
+.jenkins-add-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffd54f;
+  transform: translateY(-2px);
+}
+
+/* Estilo específico para el botón principal de añadir */
+.left-header .jenkins-add-btn,
+.items-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04) !important;
+  background: #0f1113 !important;
+}
+
+.left-header .jenkins-add-btn:hover,
+.items-header .jenkins-add-btn:hover {
+  border-color: #ffd54f !important;
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important;
+}
 
 /* Visual style for readonly inputs to look non-editable */
 .form-row input[readonly], .form-row textarea[readonly] {

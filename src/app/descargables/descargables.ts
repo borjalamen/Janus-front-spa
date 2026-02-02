@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +23,7 @@ interface DocumentoIndexItem {
   standalone: true,
   templateUrl: './descargables.html',
   styleUrls: ['./descargables.css'],
-  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule]
+  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, BuscadorComponent]
 })
 export class DescargablesComponent implements OnInit {
   searchText = '';

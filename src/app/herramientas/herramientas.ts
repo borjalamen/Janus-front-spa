@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +27,10 @@ const STORAGE_KEY = 'tools_v1';
         <div class="tools-header">
           <h2>{{ 'MENU.TOOLS' | translate }}</h2>
           <div>
-            <button class="jh-btn" style="padding:6px 10px; font-size:13px" (click)="newTool()">{{ 'HERRAMIENTAS.NEW_TOOL' | translate }}</button>
+            <button class="jenkins-add-btn" (click)="newTool()">
+              <mat-icon inline="true">add</mat-icon>
+              <span>{{ 'HERRAMIENTAS.NEW_TOOL' | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -94,6 +98,41 @@ const STORAGE_KEY = 'tools_v1';
     .tools-root { padding: 12px; }
     .tools-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
     .tools-list { display:flex; }
+    
+    /* Botón estilo Jenkins */
+    .jenkins-add-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: #E0E0E0;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+    
+    .jenkins-add-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffd54f;
+      transform: translateY(-2px);
+    }
+    
+    .tools-header .jenkins-add-btn {
+      border: 2px solid rgba(255, 255, 255, 0.04);
+      background: #0f1113;
+    }
+    
+    .tools-header .jenkins-add-btn:hover {
+      border-color: #ffd54f;
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+    
     .paths-list { list-style:none; padding:0; margin:0; width:360px }
     .paths-list li { padding:8px; border-bottom:1px solid rgba(255,255,255,0.04); display:flex; justify-content:space-between; align-items:center; background: transparent; color: #ddd }
     .paths-list li .tool-main { flex:1 }
@@ -107,20 +146,78 @@ const STORAGE_KEY = 'tools_v1';
     .install-steps { background:#0b0c0d; border:1px solid rgba(255,255,255,0.03); padding:8px; border-radius:4px; white-space:pre-wrap; color:#dcdcdc }
 
     .jh-modal-backdrop { position:fixed; left:0; right:0; top:0; bottom:0; background:rgba(0,0,0,0.85) !important; display:flex; align-items:center; justify-content:center; z-index:2147483000 !important }
-    .jh-modal { background:#0f1113 !important; color:#eee !important; padding:22px !important; border-radius:8px !important; width:720px !important; max-height:80vh !important; overflow:auto !important; box-shadow: 0 18px 60px rgba(0,0,0,0.8) !important; border: 1px solid rgba(255,255,255,0.04) !important }
-    .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:8px }
-    .form-row label { color: #cfcfcf; font-size:13px }
-    .form-row input, .form-row textarea { background: #141516 !important; color: #eee !important; border: 1px solid #2e3236 !important; padding:8px !important; border-radius:4px !important }
+    .jh-modal { background:#0f1113 !important; color:#eee !important; padding:22px !important; border-radius:8px !important; width:720px !important; max-width:95% !important; max-height:80vh !important; overflow:auto !important; box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important; border: 2px solid #FBC02D !important }
+    .modal { background:#0f1113 !important; color:#eee !important; padding:22px !important; border-radius:8px !important; width:720px !important; max-width:95% !important; max-height:80vh !important; overflow:auto !important; box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important; border: 2px solid #FBC02D !important }
+    .modal-backdrop { position:fixed; left:0; right:0; top:0; bottom:0; background:rgba(0,0,0,0.85) !important; display:flex; align-items:center; justify-content:center; z-index:2147483000 !important }
+    .modal h3, .jh-modal h3 { color:#ffd54f; margin:0 0 15px 0; text-align:center; font-size:1.3rem; font-weight:bold }
+    .modal-body { text-align:center; color:#ccc; margin-bottom:20px; padding:10px 0 }
+    .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:16px }
+    .form-row label { color: #cfcfcf; font-size:13px; font-weight:600 }
+    .form-row input, .form-row textarea { background: #141516 !important; color: #eee !important; border: 1px solid #2e3236 !important; padding:10px !important; border-radius:6px !important; font-size:0.95rem; outline:none; transition:border-color 0.2s ease }
+    .form-row input:focus, .form-row textarea:focus { border-color: #FBC02D !important }
     .form-row input::placeholder, .form-row textarea::placeholder { color: #7c8084 !important }
+    .modal-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:20px }
     .jh-modal-actions { display:flex; gap:8px; justify-content:flex-end }
     .jh-btn { background:#1e88e5 !important; color:#fff !important; border:0 !important; padding:6px 10px !important; border-radius:4px !important; cursor:pointer }
     .jh-btn:focus { outline: 2px solid rgba(30,136,229,0.35) !important }
     .btn.small { padding:4px 8px }
     .csv-btn { background:#4caf50 }
     .toast { position:fixed; right:20px; bottom:20px; background:#222; color:white; padding:10px; border-radius:6px }
+
+    /* Botones guardar/cancelar */
+    .cancelar-btn,
+    .guardar-btn {
+      background: transparent !important;
+      color: #999 !important;
+      border: 0 !important;
+      padding: 8px !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      font-weight: 600 !important;
+      font-size: 28px !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.3s ease !important;
+      box-shadow: none !important;
+      line-height: 1 !important;
+      text-indent: 0 !important;
+    }
+
+    .cancelar-btn:hover,
+    .guardar-btn:hover {
+      transform: scale(1.15) translateY(-2px) !important;
+    }
+
+    .cancelar-btn:active,
+    .guardar-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    .guardar-btn {
+      color: #4CAF50 !important;
+    }
+
+    .guardar-btn:hover {
+      background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+      color: #fff !important;
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+    }
+
+    .cancelar-btn {
+      color: #E53935 !important;
+    }
+
+    .cancelar-btn:hover {
+      background: linear-gradient(145deg, #E53935, #c62828) !important;
+      color: #fff !important;
+      box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+    }
     `
   ],
-  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule]
+  imports: [CommonModule, FormsModule, BuscadorComponent, TranslateModule, MatIconModule]
 })
 export class Herramientas {
   title = '';
