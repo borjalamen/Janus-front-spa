@@ -14,6 +14,16 @@
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Herramientas",
     "DESCARGABLES": "Descargables"
+    ,
+    "GROUPS": {
+      "INICIO": "Inicio",
+      "GESTION_PROYECTOS": "Gestión de proyectos",
+      "OPERACION_PROCESOS": "Operación y procesos",
+      "INFRA_HERRAMIENTAS": "Infraestructura y herramientas",
+      "CONOCIMIENTO_FORMACION": "Conocimiento y formación",
+      "RECURSOS": "Recursos",
+      "ADMINISTRACION": "Administración"
+    }
   },
   "DESCARGABLES": {
     "TITLE": "Descargables",

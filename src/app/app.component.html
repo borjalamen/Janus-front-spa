@@ -12,84 +12,100 @@
 
     <mat-nav-list class="scroll-nat-nav-list">
 
-      <!-- Bienvenida (sempre visible) -->
-      <a mat-list-item routerLink="/home">
-        <mat-icon>home</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.WELCOME' | translate }}</strong></span>
-      </a>
+      <ng-container *ngFor="let group of menuGroups">
+        <div class="menu-group-header" (click)="toggleGroup(group.id)" role="button" tabindex="0">
+            <span class="menu-group-title">{{ group.titleKey | translate }}</span>
+          <mat-icon class="chev" [class.open]="isGroupOpen(group.id)">expand_more</mat-icon>
+        </div>
 
-      <!-- Proyectos -->
-      <a *ngIf="canShow('proyectos')" mat-list-item routerLink="/projects">
-        <mat-icon>folder_open</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.PROJECTS' | translate }}</strong></span>
-      </a>
-      <!-- Scrum -->
-      <a mat-list-item routerLink="/scrum">
-        <mat-icon>view_week</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.SCRUM' | translate }}</strong></span>
-      </a>
-      <!-- Estimación -->
-      <a mat-list-item routerLink="/estimacion">
-        <mat-icon>timeline</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.ESTIMATION' | translate }}</strong></span>
-      </a>
-      <!-- Procedimientos -->
-      <a *ngIf="canShow('procedimientos')" mat-list-item routerLink="/procedimientos">
-        <mat-icon>assignment</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.PROCEDURES' | translate }}</strong></span>
-      </a>
+        <div class="menu-group-items" *ngIf="isGroupOpen(group.id)">
+          <!-- Bienvenida (sempre visible) -->
+          <a *ngIf="group.items.includes('Bienvenida')" mat-list-item routerLink="/home">
+            <mat-icon>home</mat-icon>
+            <span class="menu-text"><strong>{{ 'MENU.WELCOME' | translate }}</strong></span>
+          </a>
 
-      <!-- Bitácora -->
-      <a *ngIf="canShow('bitacora')" mat-list-item routerLink="/bitacora">
-        <mat-icon>bug_report</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.LOGBOOK' | translate }}</strong></span>
-      </a>
-      <!-- Infraestructura -->
-      <a *ngIf="canShow('infraestructura')" mat-list-item routerLink="/infraestructura">
-        <mat-icon>storage</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.INFRASTRUCTURE' | translate }}</strong></span>
-      </a>
-      <!-- Herramientas -->
-      <a *ngIf="canShow('herramientas')" mat-list-item routerLink="/herramientas">
-        <mat-icon>build</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.TOOLS' | translate }}</strong></span>
-      </a>
-      <!-- Documentos -->
-      <a *ngIf="canShow('documentos')" mat-list-item routerLink="/documents">
-        <mat-icon>upload_file</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.DOCUMENTS' | translate }}</strong></span>
-      </a>
+        <!-- Proyectos -->
+        <a *ngIf="group.items.includes('Proyectos') && canShow('proyectos')" mat-list-item routerLink="/projects">
+          <mat-icon>folder_open</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.PROJECTS' | translate }}</strong></span>
+        </a>
 
-      <!-- Formación -->
-      <a *ngIf="canShow('formacion')" mat-list-item routerLink="/formacion">
-        <mat-icon>school</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.TRAINING' | translate }}</strong></span>
-      </a>
+        <!-- Scrum -->
+        <a *ngIf="group.items.includes('Scrum')" mat-list-item routerLink="/scrum">
+          <mat-icon>view_week</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.SCRUM' | translate }}</strong></span>
+        </a>
 
-      <!-- Planificación -->
-      <a *ngIf="canShow('planificacion')" mat-list-item routerLink="/planificacion">
-        <mat-icon>event_note</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.PLANNING' | translate }}</strong></span>
-      </a>
+        <!-- Estimación -->
+        <a *ngIf="group.items.includes('Estimación')" mat-list-item routerLink="/estimacion">
+          <mat-icon>timeline</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.ESTIMATION' | translate }}</strong></span>
+        </a>
 
-      <!-- Multimedia -->
-      <a *ngIf="canShow('multimedia')" mat-list-item routerLink="/multimedia">
-        <mat-icon>perm_media</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.MULTIMEDIA' | translate }}</strong></span>
-      </a>
+        <!-- Procedimientos -->
+        <a *ngIf="group.items.includes('Procedimientos') && canShow('procedimientos')" mat-list-item routerLink="/procedimientos">
+          <mat-icon>assignment</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.PROCEDURES' | translate }}</strong></span>
+        </a>
 
-      <!-- Administración -->
-      <a *ngIf="canShow('administracion')" mat-list-item routerLink="/administracion">
-        <mat-icon>admin_panel_settings</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.ADMIN' | translate }}</strong></span>
-      </a>
+        <!-- Bitácora -->
+        <a *ngIf="group.items.includes('Bitácora') && canShow('bitacora')" mat-list-item routerLink="/bitacora">
+          <mat-icon>bug_report</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.LOGBOOK' | translate }}</strong></span>
+        </a>
 
-      <!-- Descargables (siempre visible, internacionalizado) -->
-      <a mat-list-item routerLink="/descargables">
-        <mat-icon>download</mat-icon>
-        <span class="menu-text"><strong>{{ 'MENU.DESCARGABLES' | translate }}</strong></span>
-      </a>
+        <!-- Infraestructura -->
+        <a *ngIf="group.items.includes('Infraestructura') && canShow('infraestructura')" mat-list-item routerLink="/infraestructura">
+          <mat-icon>storage</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.INFRASTRUCTURE' | translate }}</strong></span>
+        </a>
 
+        <!-- Herramientas -->
+        <a *ngIf="group.items.includes('Herramientas') && canShow('herramientas')" mat-list-item routerLink="/herramientas">
+          <mat-icon>build</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.TOOLS' | translate }}</strong></span>
+        </a>
+
+        <!-- Documentos -->
+        <a *ngIf="group.items.includes('Documentos') && canShow('documentos')" mat-list-item routerLink="/documents">
+          <mat-icon>upload_file</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.DOCUMENTS' | translate }}</strong></span>
+        </a>
+
+        <!-- Formación -->
+        <a *ngIf="group.items.includes('Formación') && canShow('formacion')" mat-list-item routerLink="/formacion">
+          <mat-icon>school</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.TRAINING' | translate }}</strong></span>
+        </a>
+
+        <!-- Planificación -->
+        <a *ngIf="group.items.includes('Planificación') && canShow('planificacion')" mat-list-item routerLink="/planificacion">
+          <mat-icon>event_note</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.PLANNING' | translate }}</strong></span>
+        </a>
+
+        <!-- Multimedia -->
+        <a *ngIf="group.items.includes('Multimedia') && canShow('multimedia')" mat-list-item routerLink="/multimedia">
+          <mat-icon>perm_media</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.MULTIMEDIA' | translate }}</strong></span>
+        </a>
+
+        <!-- Administración -->
+        <a *ngIf="group.items.includes('Administración') && canShow('administracion')" mat-list-item routerLink="/administracion">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.ADMIN' | translate }}</strong></span>
+        </a>
+
+        <!-- Descargables (siempre visible, internacionalizado) -->
+        <a *ngIf="group.items.includes('Descargables')" mat-list-item routerLink="/descargables">
+          <mat-icon>download</mat-icon>
+          <span class="menu-text"><strong>{{ 'MENU.DESCARGABLES' | translate }}</strong></span>
+        </a>
+
+        </div>
+
+      </ng-container>
 
     </mat-nav-list>
   </mat-sidenav>

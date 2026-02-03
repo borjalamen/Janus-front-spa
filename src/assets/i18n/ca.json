@@ -14,6 +14,16 @@
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Eines",
     "DESCARGABLES": "Descarregables"
+    ,
+    "GROUPS": {
+      "INICIO": "Inici",
+      "GESTION_PROYECTOS": "Gestió de projectes",
+      "OPERACION_PROCESOS": "Operació i processos",
+      "INFRA_HERRAMIENTAS": "Infraestructura i eines",
+      "CONOCIMIENTO_FORMACION": "Coneixement i formació",
+      "RECURSOS": "Recursos",
+      "ADMINISTRACION": "Administració"
+    }
   },
   "DESCARGABLES": {
     "TITLE": "Descarregables",

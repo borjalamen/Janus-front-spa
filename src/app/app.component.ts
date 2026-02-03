@@ -26,6 +26,8 @@ import { FormsModule } from '@angular/forms';
 import { AiService } from './ai.service';
 import { SpinnerComponent } from './spinner.component';
 import { SpinnerService } from './spinner.service';
+import { MENU_GROUPS } from './menu.groups';
+import { OnInit } from '@angular/core';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -52,7 +54,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnDestroy, OnInit {
   clipOpen = false;
   username: string = '';
   rol: Rol = 'invitado';
@@ -93,6 +95,25 @@ export class AppComponent implements OnDestroy {
     });
 
     this.loadVersion();
+  }
+  // menu grouping (visual only)
+  public menuGroups = MENU_GROUPS;
+  // track expanded/collapsed state per group (false = collapsed)
+  public expandedGroups: { [id: string]: boolean } = {};
+
+  ngOnInit(): void {
+    // initialize all groups collapsed by default
+    for (const g of this.menuGroups) {
+      this.expandedGroups[g.id] = false;
+    }
+  }
+
+  isGroupOpen(id: string): boolean {
+    return !!this.expandedGroups[id];
+  }
+
+  toggleGroup(id: string): void {
+    this.expandedGroups[id] = !this.expandedGroups[id];
   }
     // Chat state
     aiMessages: { from: 'user'|'ai', text: string }[] = [];

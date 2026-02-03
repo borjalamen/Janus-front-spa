@@ -379,6 +379,45 @@ body {
   padding-bottom: 12px;
 }
 
+/* Grupo de menú (encabezados de sección) */
+.menu-group-title {
+  color: #FBC02D;
+  font-size: 0.85rem;
+  margin: 8px 6px 6px 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.03);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* header clickable */
+.menu-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.menu-group-header:focus {
+  outline: 2px solid rgba(123, 201, 227, 0.2);
+}
+.menu-group-items {
+  margin-bottom: 8px;
+}
+.menu-group-title {
+  font-weight: 700;
+}
+.chev {
+  transition: transform 0.18s ease;
+  color: #E0E0E0;
+}
+.chev.open {
+  transform: rotate(180deg);
+  color: #FBC02D;
+}
+
 /* give extra breathing room below the 'Descargables' menu item */
 mat-nav-list a[routerLink="/descargables"] {
   margin-bottom: 28px;
