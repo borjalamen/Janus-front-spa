@@ -17,10 +17,10 @@
     ,
     "GROUPS": {
       "INICIO": "Inici",
-      "GESTION_PROYECTOS": "Gestió de projectes",
-      "OPERACION_PROCESOS": "Operació i processos",
-      "INFRA_HERRAMIENTAS": "Infraestructura i eines",
-      "CONOCIMIENTO_FORMACION": "Coneixement i formació",
+      "GESTION": "Gestió",
+      "OPERACIONES": "Operacions",
+      "INFRAESTRUCTURA": "Infraestructura",
+      "CONOCIMIENTO": "Coneixement",
       "RECURSOS": "Recursos",
       "ADMINISTRACION": "Administració"
     }

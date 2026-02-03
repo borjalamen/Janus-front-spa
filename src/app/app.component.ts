@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,6 +42,9 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    // Material expansion for collapsible groups
+    MatExpansionModule,
+    MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
     TranslateModule,
@@ -102,9 +107,18 @@ export class AppComponent implements OnDestroy, OnInit {
   public expandedGroups: { [id: string]: boolean } = {};
 
   ngOnInit(): void {
-    // initialize all groups collapsed by default
+    // load persisted state if present
+    try {
+      const raw = localStorage.getItem('menu.expanded');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') this.expandedGroups = parsed;
+      }
+    } catch (e) { /* ignore parse errors */ }
+
+    // ensure all groups have an explicit boolean value
     for (const g of this.menuGroups) {
-      this.expandedGroups[g.id] = false;
+      if (this.expandedGroups[g.id] === undefined) this.expandedGroups[g.id] = false;
     }
   }
 
@@ -114,6 +128,25 @@ export class AppComponent implements OnDestroy, OnInit {
 
   toggleGroup(id: string): void {
     this.expandedGroups[id] = !this.expandedGroups[id];
+    // persist
+    try { localStorage.setItem('menu.expanded', JSON.stringify(this.expandedGroups)); } catch (e) { /* ignore */ }
+  }
+  
+  setGroupOpen(id: string, open: boolean) {
+    this.expandedGroups[id] = open;
+    try { localStorage.setItem('menu.expanded', JSON.stringify(this.expandedGroups)); } catch (e) { }
+  }
+
+  // return visible items after applying canShow rules
+  getVisibleItems(group: any) {
+    return group.items.filter((it: any) => {
+      if (it.requiresCheck) return this.canShow(it.id);
+      return true;
+    });
+  }
+
+  getVisibleCount(group: any): number {
+    return this.getVisibleItems(group).length;
   }
     // Chat state
     aiMessages: { from: 'user'|'ai', text: string }[] = [];

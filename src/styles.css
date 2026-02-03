@@ -72,3 +72,35 @@ mat-nav-list *,
 .lang-panel .mat-mdc-option:hover {
   background-color: rgba(255, 230, 109, 0.12);
 }
+
+/* Tooltip custom style: rounded yellow background, dark text, slightly larger */
+.cdk-overlay-container .mat-tooltip,
+.cdk-overlay-container .mat-mdc-tooltip,
+.cdk-overlay-container [role="tooltip"],
+body .mat-tooltip,
+.mat-tooltip,
+.mat-mdc-tooltip,
+[role="tooltip"] {
+  background: #FBC02D !important;
+  color: #0F1115 !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5) !important;
+  transform-origin: center top !important;
+  font-size: 0.95rem !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  z-index: 99999 !important;
+  display: inline-block !important;
+  pointer-events: auto !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* Fallback highly-specific rule for overlayed tooltip elements */
+.cdk-overlay-container .mat-tooltip.mat-mdc-tooltip,
+.cdk-overlay-container .mat-mdc-tooltip.mat-tooltip,
+.cdk-overlay-container [class*="mat-tooltip"] {
+  background: #FBC02D !important;
+  color: #0F1115 !important;
+}
