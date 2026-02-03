@@ -492,6 +492,7 @@
   "ESTIMATION": {
     "TITLE": "Estimació de tasques",
     "TAB_DO": "Fer estimació",
+    "TAB_LIVE": "Estimació En Viu",
     "TAB_LIST": "Llistat desades",
     "NEW_TASK": "Nova tasca",
     "ADD_TASK": "Afegir tasca",
@@ -506,7 +507,19 @@
     "CREATED": "Creat",
     "LIST_SEARCH": "Cercar per nom, projecte, sol·licitant...",
     "LIST_LOAD": "Carregar",
-    "LIST_DELETE": "Eliminar"
+    "LIST_DELETE": "Eliminar",
+    "LIVE": {
+      "NEW_TASK": "Descripció de la tasca...",
+      "START": "Crear sessió en viu",
+      "JOIN": "Unir-se a sessió",
+      "HINT": "Les sessions en viu usen BroadcastChannel per proves locals. Per multiusuari real cal un servidor WebSocket configurat.",
+      "OWNER": "Propietari",
+      "YOU": "Tu",
+      "YOU_VOTED": "Has votat",
+      "REVEAL": "Revelar vots",
+      "ACCEPT": "Acceptar estimació",
+      "ABORT": "Cancelar sessió"
+    }
   },
   "ESTIMATION_META": {
     "META_NAME": "Nom d'estimació",

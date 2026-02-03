@@ -416,3 +416,14 @@
 ::ng-deep .mdc-tab-indicator__content--underline {
   border-color: #17a2b8 !important;
 }
+
+.live-root { padding: 12px; }
+.live-root .live-setup { display:flex; flex-direction:column; gap:12px; max-width:720px }
+.live-root .muted { color:#9aa6ab; font-size:0.9rem }
+.live-session h3 { margin: 6px 0 12px 0; color:#FBC02D }
+.live-session .spacer { flex:1 1 auto }
+.live-session .cards { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 }
+.live-session .cards button { min-width:52px; border-radius:8px; background:#16181c; color:#FBC02D; border:1px solid rgba(255,255,255,0.03) }
+.live-session .cards button.selected { background:#FBC02D; color:#0F1115 }
+.vote-cell { min-width:56px; text-align:right; font-weight:700; color:#FBC02D }
+

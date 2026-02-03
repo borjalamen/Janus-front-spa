@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -6,7 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 
 interface Task {
   id: string;
@@ -19,9 +23,10 @@ interface Task {
   templateUrl: './estimacion.html',
   styleUrls: ['./estimacion.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, MatCardModule, MatListModule, TranslateModule],
 })
-export class EstimacionComponent implements OnInit {
+export class EstimacionComponent implements OnInit, OnDestroy {
+  constructor(public liveService: LiveEstimationService) {}
   weeks: string[] = ['1'];
   tasks: Task[] = [];
   newTaskTitle = '';
@@ -38,6 +43,14 @@ export class EstimacionComponent implements OnInit {
   savedEstimations: any[] = [];
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
+  // --- Live estimation state ---
+  liveTaskInput = '';
+  liveSession: LiveSession | null = null;
+  myId = 'u' + Math.random().toString(36).slice(2,8);
+  myName = (localStorage.getItem('username') as string) || ('User-' + this.myId.slice(-4));
+  myVote: string | number | null = null;
+  liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
+  private liveSub: Subscription | null = null;
 
   addWeek() {
     const next = this.weeks.length + 1;
@@ -62,6 +75,79 @@ export class EstimacionComponent implements OnInit {
     };
     this.tasks.push(t);
     this.newTaskTitle = '';
+  }
+
+  // Live estimation helpers
+  startLiveEstimation() {
+    if (!this.liveTaskInput || !this.liveTaskInput.trim()) return;
+    const s = this.liveService.createSession(this.liveTaskInput.trim(), this.myId, this.myName);
+    this.liveTaskInput = '';
+    this.selectedTab = 0; // stay on realizar
+  }
+
+  joinCurrentSession() {
+    const s = this.liveService['\u005fsession$']?.getValue?.();
+    if (!s) return;
+    this.liveService.joinSession(s as LiveSession, { id: this.myId, name: this.myName });
+  }
+
+  castVote(card: string | number) {
+    const s = this.liveSession;
+    if (!s) return;
+    this.myVote = card;
+    this.liveService.vote(s, this.myId, card as any);
+    // automatically reveal if everyone voted
+    setTimeout(() => this.tryAutoReveal(), 200);
+  }
+
+  tryAutoReveal() {
+    const s = this.liveSession;
+    if (!s) return;
+    const total = s.participants.length;
+    const voted = s.participants.filter(p => p.vote !== null && p.vote !== undefined).length;
+    if (voted >= total && total > 0 && !s.revealed) {
+      this.liveService.reveal(s);
+    }
+  }
+
+  revealNow() {
+    if (!this.liveSession) return;
+    this.liveService.reveal(this.liveSession);
+  }
+
+  computeResultFromSession(session: LiveSession) {
+    // compute weighted average ignoring non-numeric votes ('?')
+    const vals: number[] = [];
+    session.participants.forEach(p => {
+      const v = this.parseCardValue(p.vote);
+      if (v !== null && !isNaN(v)) vals.push(v);
+    });
+    if (vals.length === 0) return 0;
+    const sum = vals.reduce((a,b) => a + b, 0);
+    return sum / vals.length;
+  }
+
+  acceptSessionResult() {
+    const s = this.liveSession;
+    if (!s) return;
+    const result = this.computeResultFromSession(s);
+    this.liveService.accept(s, result);
+    // add to current estimation grid as an editable row
+    const t = {
+      id: Date.now().toString(36),
+      title: s.task + ' (live)',
+      estimates: this.weeks.map((_, i) => i === 0 ? Number(result) : 0)
+    } as Task;
+    this.tasks.push(t);
+  }
+
+  parseCardValue(v: any): number | null {
+    if (v === null || v === undefined) return null;
+    if (typeof v === 'number') return v;
+    const s = String(v).replace('½', '0.5').replace(',', '.').trim();
+    if (s === '?' || s.toLowerCase() === 'coffee') return null;
+    const n = parseFloat(s);
+    return isNaN(n) ? null : n;
   }
 
   // Persistence methods
@@ -96,6 +182,12 @@ export class EstimacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSavedEstimations();
+    // subscribe live session
+    this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
+  }
+
+  ngOnDestroy(): void {
+    if (this.liveSub) this.liveSub.unsubscribe();
   }
 
   get filteredSavedEstimations() {

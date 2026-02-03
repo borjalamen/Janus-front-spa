@@ -487,6 +487,7 @@
   "ESTIMATION": {
     "TITLE": "Estimación de tareas",
     "TAB_DO": "Hacer estimación",
+    "TAB_LIVE": "Estimación En Vivo",
     "TAB_LIST": "Listado guardadas",
     "NEW_TASK": "Nueva tarea",
     "ADD_TASK": "Añadir tarea",
@@ -502,6 +503,19 @@
     "LIST_SEARCH": "Buscar por nombre, proyecto, solicitante...",
     "LIST_LOAD": "Cargar",
     "LIST_DELETE": "Eliminar"
+    ,
+    "LIVE": {
+      "NEW_TASK": "Descripción de la tarea...",
+      "START": "Crear sesión en vivo",
+      "JOIN": "Unirse a sesión",
+      "HINT": "Las sesiones en vivo usan BroadcastChannel para pruebas locales. Para multiusuario real necesitas un servidor WebSocket configurado.",
+      "OWNER": "Propietario",
+      "YOU": "Tú",
+      "YOU_VOTED": "Has votado",
+      "REVEAL": "Revelar votos",
+      "ACCEPT": "Aceptar estimación",
+      "ABORT": "Cancelar sesión"
+    }
   },
   "ESTIMATION_META": {
     "META_NAME": "Nombre de estimación",

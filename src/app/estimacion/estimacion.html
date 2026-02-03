@@ -113,6 +113,51 @@
   </div>
     </mat-tab>
 
+    <mat-tab label="{{ 'ESTIMATION.TAB_LIVE' | translate }}">
+      <div class="live-root">
+        <div *ngIf="!liveSession" class="live-setup">
+          <mat-form-field appearance="outline" class="full">
+            <input matInput placeholder="{{ 'ESTIMATION.LIVE.NEW_TASK' | translate }}" [(ngModel)]="liveTaskInput" />
+          </mat-form-field>
+          <div class="row actions">
+            <button mat-stroked-button color="primary" (click)="startLiveEstimation()">{{ 'ESTIMATION.LIVE.START' | translate }}</button>
+            <button mat-stroked-button (click)="joinCurrentSession()">{{ 'ESTIMATION.LIVE.JOIN' | translate }}</button>
+          </div>
+          <p class="muted">{{ 'ESTIMATION.LIVE.HINT' | translate }}</p>
+        </div>
+
+        <div *ngIf="liveSession" class="live-session">
+          <h3>{{ liveSession.task }}</h3>
+          <p>{{ 'ESTIMATION.LIVE.OWNER' | translate }}: <strong>{{ liveSession.ownerId === myId ? ('ESTIMATION.LIVE.YOU' | translate) : liveSession.ownerId }}</strong></p>
+
+          <mat-card>
+            <mat-card-content>
+              <mat-list>
+                <mat-list-item *ngFor="let p of liveSession.participants">
+                  <div>{{ p.name }}</div>
+                  <div class="spacer"></div>
+                  <div class="vote-cell">
+                    <span *ngIf="!liveSession.revealed">{{ p.id === myId && p.vote ? ('ESTIMATION.LIVE.YOU_VOTED' | translate) : (p.vote ? '•' : '-') }}</span>
+                    <span *ngIf="liveSession.revealed">{{ p.vote }}</span>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="cards">
+            <button mat-flat-button *ngFor="let c of liveCards" (click)="castVote(c)" [class.selected]="myVote==c">{{ c }}</button>
+          </div>
+
+          <div class="row actions">
+            <button mat-stroked-button color="primary" (click)="revealNow()" *ngIf="liveSession.ownerId===myId && !liveSession.revealed">{{ 'ESTIMATION.LIVE.REVEAL' | translate }}</button>
+            <button mat-stroked-button color="primary" (click)="acceptSessionResult()" *ngIf="liveSession.revealed && !liveSession.accepted">{{ 'ESTIMATION.LIVE.ACCEPT' | translate }}</button>
+            <button mat-stroked-button color="warn" (click)="liveService.abort(liveSession)">{{ 'ESTIMATION.LIVE.ABORT' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
     <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
         <div class="desc-search">
           <mat-form-field appearance="outline" class="search-field">

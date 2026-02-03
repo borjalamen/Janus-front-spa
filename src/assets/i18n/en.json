@@ -486,6 +486,7 @@
   "ESTIMATION": {
     "TITLE": "Task Estimation",
     "TAB_DO": "Make Estimation",
+    "TAB_LIVE": "Live Estimation",
     "TAB_LIST": "Saved List",
     "NEW_TASK": "New task",
     "ADD_TASK": "Add task",
@@ -501,6 +502,19 @@
     "LIST_SEARCH": "Search by name, project, requester...",
     "LIST_LOAD": "Load",
     "LIST_DELETE": "Delete"
+    ,
+    "LIVE": {
+      "NEW_TASK": "Task description...",
+      "START": "Create live session",
+      "JOIN": "Join session",
+      "HINT": "Live sessions use BroadcastChannel for local testing. For real multi-user you need a WebSocket server configured.",
+      "OWNER": "Owner",
+      "YOU": "You",
+      "YOU_VOTED": "You voted",
+      "REVEAL": "Reveal votes",
+      "ACCEPT": "Accept estimate",
+      "ABORT": "Abort session"
+    }
   },
   "ESTIMATION_META": {
     "META_NAME": "Estimation name",

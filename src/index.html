@@ -10,5 +10,15 @@
 </head>
 <body>
   <app-root></app-root>
+    <script>
+      // Auto-detect backend WebSocket endpoint on same host
+      (function(){
+        try{
+              var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+              // keep the path in sync with backend WebSocketConfig
+              window.LIVE_WS_URL = proto + '://' + location.host + '/ws/live-estimation';
+        }catch(e){/*ignore*/}
+      })();
+    </script>
 </body>
 </html>
