@@ -6,25 +6,25 @@
     <button class="menu-btn" 
             [class.active]="activeTab === 'USERS'" 
             (click)="cambiarTab('USERS')">
-      <mat-icon>people</mat-icon> Usuarios
+      <span class="menu-emoji">👥</span> Usuarios
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'APP'" 
             (click)="cambiarTab('APP')">
-      <mat-icon>settings_applications</mat-icon> Aplicación
+      <span class="menu-emoji">⚙️</span> Aplicación
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'PARAM'" 
             (click)="cambiarTab('PARAM')">
-      <mat-icon>tune</mat-icon> Parametrización
+      <span class="menu-emoji">🎛️</span> Parametrización
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'DB'" 
             (click)="cambiarTab('DB')">
-      <mat-icon>storage</mat-icon> BBDD
+      <span class="menu-emoji">🗄️</span> BBDD
     </button>
   </div>
 
@@ -52,13 +52,13 @@
 
           <div class="actions">
             <button class="icon-btn view-profile" (click)="verPerfil(usuari)" title="Ver perfil completo">
-              <mat-icon>visibility</mat-icon>
+              <span class="emoji-icon">👁️</span>
             </button>
             <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
-              <mat-icon>edit</mat-icon>
+              <span class="emoji-icon">✏️</span>
             </button>
             <button class="icon-btn delete" *ngIf="canEdit" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
-              <mat-icon>block</mat-icon>
+              <span class="emoji-icon">🗑️</span>
             </button>
           </div>
         </div>
@@ -120,21 +120,21 @@
 
       <div class="db-grid">
         <div class="admin-card db-card">
-            <mat-icon class="big-icon warn">delete_forever</mat-icon>
+            <span class="big-emoji warn">🗑️</span>
             <h3>Borrado Físico</h3>
             <p>Elimina permanentemente registros marcados.</p>
             <button class="popup-btn" (click)="accionBBDD('borrado')">Seleccionar y Ejecutar</button>
         </div>
 
         <div class="admin-card db-card">
-            <mat-icon class="big-icon">restore</mat-icon>
+            <span class="big-emoji">🔄</span>
             <h3>Restore</h3>
             <p>Restaura la base de datos a un punto anterior.</p>
             <button class="popup-btn" (click)="accionBBDD('restore')">Elegir Versión</button>
         </div>
 
         <div class="admin-card db-card">
-            <mat-icon class="big-icon">backup</mat-icon>
+            <span class="big-emoji">💾</span>
             <h3>Backup</h3>
             <p>Genera una copia de seguridad actual.</p>
             <button class="popup-btn" (click)="accionBBDD('backup')">Seleccionar y Generar</button>
@@ -198,8 +198,8 @@
       <hr class="divider">
 
       <div class="action-buttons">
-        <button class="btn-round btn-white" (click)="tancarPopup()">Cancelar</button>
-        <button class="btn-round btn-blue" (click)="guardarUsuari()">Guardar</button>
+        <button class="btn-emoji cancel" (click)="tancarPopup()" title="Cancelar">✗</button>
+        <button class="btn-emoji confirm" (click)="guardarUsuari()" title="Guardar">✓</button>
       </div>
     </div>
   </div>
@@ -215,8 +215,8 @@
       <p style="color: #ff6b6b; font-size: 0.9em;">Esta acción no se puede deshacer.</p>
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-round btn-white" (click)="cancelarInhabilitar()">Cancelar</button>
-        <button class="btn-round btn-blue" style="background-color: #ff6b6b;" (click)="inhabilitarUsuari()">Eliminar</button>
+        <button class="btn-emoji cancel" (click)="cancelarInhabilitar()" title="Cancelar">✗</button>
+        <button class="btn-emoji confirm" (click)="inhabilitarUsuari()" title="Eliminar">✓</button>
       </div>
     </div>
   </div>
@@ -226,32 +226,45 @@
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
   <div class="auth-card db-popup">
     <h2 class="form-title">
-      <mat-icon class="title-icon warn">delete_forever</mat-icon>
+      <span class="title-emoji">🗑️</span>
       Borrado Físico
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>Selecciona qué registros deseas eliminar permanentemente:</p>
+      <p>Buscar colección y eliminar solo sus registros <strong>inactivos</strong>:</p>
       
-      <div class="checkbox-list">
-        <label *ngFor="let opcion of opcionesBorrado" class="checkbox-item">
-          <input type="checkbox" 
-                 [checked]="selectedBorrado.includes(opcion.value)"
-                 (change)="toggleSeleccionBorrado(opcion.value)">
-          <span class="checkmark"></span>
-          {{ opcion.label }}
-        </label>
+      <div class="collection-search">
+        <div class="input-field">
+          <label>Nombre de la colección:</label>
+          <input type="text" [(ngModel)]="coleccionBorrar" placeholder="Ej: usuarios, documentos, logs" class="collection-input">
+        </div>
+        <button class="btn-round btn-search" (click)="buscarColeccion()" [disabled]="!coleccionBorrar">
+          🔍 Buscar
+        </button>
+      </div>
+
+      <div *ngIf="coleccionEncontrada" class="collection-found">
+        <div>
+          <p>✅ Colección: <strong>{{ coleccionBorrar }}</strong></p>
+          <p class="inactivos-count">🚫 Registros inactivos: <strong>{{ registrosInactivos }}</strong></p>
+        </div>
+        <button class="btn-round btn-danger btn-sm" (click)="borrarInactivosColeccion()" [disabled]="registrosInactivos === 0">
+          🗑️ Borrar Inactivos
+        </button>
+      </div>
+
+      <div *ngIf="coleccionNoEncontrada" class="collection-not-found">
+        <p>❌ No se encontró la colección "{{ coleccionBorrar }}"</p>
       </div>
 
       <p class="warning-text">
         <mat-icon>warning</mat-icon>
-        Esta acción es irreversible
+        Solo se eliminarán los registros marcados como inactivos
       </p>
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
-        <button class="btn-round btn-danger" (click)="ejecutarBorrado()">Eliminar Seleccionados</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cerrar">✗</button>
       </div>
     </div>
   </div>
@@ -289,8 +302,8 @@
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
-        <button class="btn-round btn-blue" (click)="ejecutarRestore()">Restaurar</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cancelar">✗</button>
+        <button class="btn-emoji confirm" (click)="ejecutarRestore()" title="Restaurar">✓</button>
       </div>
     </div>
   </div>
@@ -305,27 +318,30 @@
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>Selecciona qué elementos incluir en el backup:</p>
+      <p>Buscar una colección y generar su backup:</p>
       
-      <div class="checkbox-list">
-        <label *ngFor="let opcion of opcionesBackup" class="checkbox-item">
-          <input type="checkbox" 
-                 [checked]="selectedBackup.includes(opcion.value)"
-                 (change)="toggleSeleccionBackup(opcion.value)">
-          <span class="checkmark"></span>
-          {{ opcion.label }}
-        </label>
+      <div class="collection-search">
+        <div class="input-field">
+          <label>Nombre de la colección:</label>
+          <input type="text" [(ngModel)]="coleccionBackup" placeholder="Ej: usuarios" class="collection-input">
+        </div>
+        <button class="btn-round btn-search" (click)="buscarColeccionBackup()" [disabled]="!coleccionBackup">
+          🔍 Buscar
+        </button>
       </div>
-
-      <p class="info-text" *ngIf="selectedBackup.length > 0">
-        <mat-icon>check_circle</mat-icon>
-        Se generará backup de: {{ selectedBackup.join(', ') }}
-      </p>
+      <div *ngIf="coleccionBackupEncontrada" class="collection-found">
+        <p>✅ Colección encontrada: <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} registros)</p>
+        <button class="btn-round btn-blue btn-sm" (click)="backupColeccion()">
+          💾 Backup Colección
+        </button>
+      </div>
+      <div *ngIf="coleccionBackupNoEncontrada" class="collection-not-found">
+        <p>❌ No se encontró la colección "{{ coleccionBackup }}"</p>
+      </div>
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-round btn-white" (click)="cerrarPopupBBDD()">Cancelar</button>
-        <button class="btn-round btn-blue" (click)="ejecutarBackup()">Generar Backup</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cerrar">✗</button>
       </div>
     </div>
   </div>
