@@ -5,7 +5,15 @@
   },
   "UNETE": {
     "DESCRIPTION": "Uneix-te al nostre equip o comunitat.",
-    "ACTION": "Vull unir-me"
+    "ACTION": "Vull unir-me",
+    "FULLNAME": "Nom complet",
+    "EMAIL": "Email",
+    "ROLE": "Rol suggerit",
+    "PROJECT_CODE": "Codi del projecte",
+    "PROJECT_NAME": "Nom del projecte",
+    "COMMENTS": "Comentaris",
+    "SEND_BY_MAIL": "Enviar per correu",
+    "RESET": "Netejar"
   },
   "MENU": {
     "REQUEST": "Petició",

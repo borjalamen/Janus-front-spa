@@ -5,7 +5,15 @@
   },
   "UNETE": {
     "DESCRIPTION": "Únete a nuestro equipo o comunidad.",
-    "ACTION": "Quiero unirme"
+    "ACTION": "Quiero unirme",
+    "FULLNAME": "Nombre completo",
+    "EMAIL": "Email",
+    "ROLE": "Rol sugerido",
+    "PROJECT_CODE": "Código de proyecto",
+    "PROJECT_NAME": "Nombre del proyecto",
+    "COMMENTS": "Comentarios",
+    "SEND_BY_MAIL": "Enviar por correo",
+    "RESET": "Limpiar"
   },
   "MENU": {
     "REQUEST": "Petición",

@@ -5,7 +5,15 @@
   },
   "UNETE": {
     "DESCRIPTION": "Join our team or community.",
-    "ACTION": "I want to join"
+    "ACTION": "I want to join",
+    "FULLNAME": "Full name",
+    "EMAIL": "Email",
+    "ROLE": "Suggested role",
+    "PROJECT_CODE": "Project code",
+    "PROJECT_NAME": "Project name",
+    "COMMENTS": "Comments",
+    "SEND_BY_MAIL": "Send by mail",
+    "RESET": "Reset"
   },
   "MENU": {
     "REQUEST": "Request",
