@@ -12,26 +12,21 @@
 
     <mat-nav-list class="scroll-nat-nav-list">
 
-      <mat-accordion>
-        <mat-expansion-panel *ngFor="let group of menuGroups" [expanded]="isGroupOpen(group.id)" (opened)="setGroupOpen(group.id, true)" (closed)="setGroupOpen(group.id, false)">
-          <mat-expansion-panel-header [matTooltip]="group.titleKey | translate" matTooltipPosition="below">
-            <mat-panel-title>
-              {{ group.titleKey | translate }}
-            </mat-panel-title>
-            <mat-panel-description>
-              {{ getVisibleCount(group) }}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+      <div class="menu-sections">
+        <div *ngFor="let group of menuGroups" class="menu-section">
+          <button class="btn menu-section-btn" [class.active]="isGroupOpen(group.id)" (click)="toggleGroup(group.id)">
+            <span class="section-title">{{ group.titleKey | translate }}</span>
+            <span class="section-plus" [class.rotated]="isGroupOpen(group.id)">+</span>
+          </button>
 
-          <mat-nav-list>
-            <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route" [matTooltip]="item.labelKey | translate" matTooltipPosition="below">
+          <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
+            <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route">
               <mat-icon>{{ item.icon }}</mat-icon>
               <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
             </a>
           </mat-nav-list>
-
-        </mat-expansion-panel>
-      </mat-accordion>
+        </div>
+      </div>
 
     </mat-nav-list>
   </mat-sidenav>

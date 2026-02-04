@@ -263,29 +263,38 @@ body {
 
 /* BOTONES GENERALES */
 .jenkins-add-btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 999px;
-  border: 2px solid #ffd54f;
-  background: #0f1113;
+  border: 0;
+  background: transparent;
   color: #E0E0E0;
   font-weight: bold;
-  font-size: 15px;
   letter-spacing: 0.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-size: 20px;
   transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, border-color 0.2s ease,
-              box-shadow 0.2s ease;
+              transform 0.2s ease, border-color 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #ffd54f;
+  transform: translateY(-2px);
+}
+
+/* Estilo específico para el botón principal de añadir */
+.documents-header .jenkins-add-btn {
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+}
+
+.documents-header .jenkins-add-btn:hover {
   border-color: #ffd54f;
   transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
 .popup-btn {
@@ -648,45 +657,75 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
   background: #005a94;
 }
 
-/* Botones con emoji para popups (estilo bitacora) */
+/* Botones con emoji para popups (estilo procedimientos) */
 .btn-emoji {
-  background: transparent;
-  border: 0;
-  padding: 12px 16px;
-  border-radius: 8px;
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
   cursor: pointer;
   font-weight: 600;
-  font-size: 24px;
+  font-size: 28px;
   min-width: 48px;
   min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.btn-emoji mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+.btn-emoji:hover {
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #555, #333) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-emoji:focus {
+  outline: 2px solid rgba(30, 136, 229, 0.35) !important;
+}
+
+.btn-emoji:active {
+  transform: scale(0.95);
 }
 
 .btn-emoji.confirm {
-  color: #4CAF50;
+  color: #4CAF50 !important;
 }
 
 .btn-emoji.confirm:hover {
-  background: #4CAF50;
-  color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
-  transform: scale(1.1);
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(76, 175, 80, 0.5) !important;
+  border: 1px solid rgba(76, 175, 80, 0.5) !important;
 }
 
 .btn-emoji.cancel {
-  color: #E53935;
+  color: #E53935 !important;
 }
 
 .btn-emoji.cancel:hover {
-  background: #E53935;
-  color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.5);
-  transform: scale(1.1);
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
 }
 
 /* ===== ESTILOS PARA ICONO VER CV ===== */

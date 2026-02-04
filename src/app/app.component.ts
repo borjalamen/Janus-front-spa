@@ -264,8 +264,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.http.get<any>(`${environment.baseUrl}config/all`).subscribe({
       next: (data) => {
         console.log('RESPUESTA VERSION:', data);
-        // El backend devuelve un array con @JsonValue, así que data[0] ya es la versión directamente
-        this.appVersion = data[0] || 'sin versión';
+        this.appVersion = data[0]?.version || 'sin versión';
         console.log('VERSION ASIGNADA:', this.appVersion);
       },
       error: (err) => {

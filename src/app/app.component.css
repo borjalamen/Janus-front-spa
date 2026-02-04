@@ -419,75 +419,129 @@ body {
   color: #FBC02D;
 }
 
-/* Material expansion adjustments */
-mat-accordion {
-  background: transparent;
-}
-mat-expansion-panel {
-  background: transparent;
-  color: #E0E0E0;
-  border-radius: 6px;
-  margin: 6px 0;
-  box-shadow: none;
-  border: 0;
-}
-mat-expansion-panel::ng-deep .mat-expansion-panel-header {
-  padding: 8px 12px;
-  min-height: 40px;
-}
-mat-expansion-panel::ng-deep .mat-expansion-panel-header.mat-expanded {
-  background: rgba(255,255,255,0.02);
-}
-mat-panel-description {
-  color: #FBC02D;
-  font-weight: 700;
+/* Menu sections with button-style headers */
+.menu-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* Ensure titles fit: no wrap, ellipsis and right-aligned counter */
-.mat-expansion-panel-header {
+.menu-section {
+  margin-bottom: 8px;
+}
+
+.menu-section-btn {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-}
-.mat-expansion-panel-header .mat-expansion-panel-header-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-  font-size: 0.95rem; /* slightly smaller to fit */
-  font-weight: 700;
-}
-.mat-expansion-panel-header .mat-expansion-panel-header-description {
-  flex: 0 0 auto;
-  margin-left: 12px;
-  white-space: nowrap;
-  /* counter inside a yellow circle */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #FBC02D !important;
-  color: #0F1115 !important;
-  min-width: 28px;
-  height: 28px;
-  padding: 0 8px;
-  border-radius: 999px;
-  font-weight: 800;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-  font-size: calc(var(--menu-font-size) - 2px);
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  color: #FBC02D !important;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  min-height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-/* Make nav items also truncate to one line */
-mat-nav-list a .menu-text {
+.menu-section-btn.active {
+  border-radius: 6px 6px 0 0;
+}
+
+.menu-section-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-3px);
+  border-color: #FBC02D;
+  box-shadow: 0 0 8px rgba(251, 192, 45, 0.4);
+  color: #fff !important;
+}
+
+.menu-section-btn:hover .section-title {
+  color: #fff !important;
+}
+
+.menu-section-btn:hover .section-plus {
+  color: #fff !important;
+}
+
+.menu-section-btn.active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff !important;
+}
+
+.menu-section-btn.active .section-title {
+  color: #fff !important;
+}
+
+.menu-section-btn.active .section-plus {
+  color: #E53935 !important;
+}
+
+.menu-section-btn.active:hover {
+  border-color: #E53935;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+}
+
+.section-title {
+  flex: 1;
+  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: #FBC02D;
+  transition: color 0.12s ease;
+}
+
+.section-plus {
+  color: #1e84a3 !important;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.section-plus.rotated {
+  transform: rotate(360deg);
+}
+
+.section-items {
+  margin-top: -1px;
+  padding: 12px 10px 10px 10px;
+  background: #0d0f13;
+  border: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+    padding-top: 12px;
+    padding-bottom: 10px;
+  }
 }
 
 /* Tighter spacing on narrow screens */
 @media (max-width: 420px) {
   mat-sidenav { width: 180px; min-width: 180px; }
-  .mat-expansion-panel-header .mat-expansion-panel-header-title { font-size: 0.88rem; }
+  .menu-section-btn { font-size: 0.88rem; padding: 6px 8px; }
   mat-nav-list a { padding: 8px 10px; }
   .menu-text { font-size: calc(var(--menu-font-size) - 2px); }
 }
