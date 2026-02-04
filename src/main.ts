@@ -12,6 +12,8 @@ import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { MultimediaComponent } from './app/multimedia/multimedia';
 import { AdministracionComponent } from './app/administracion/administracion';
+import { PeticionComponent } from './app/peticion/peticion';
+import { UneteComponent } from './app/unete/unete';
 import { UserProfileComponent } from './app/user-profile/user-profile';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -59,6 +61,8 @@ bootstrapApplication(AppComponent, {
       {path: 'planificacion', component: PlanificacionComponent },
       {path: 'multimedia', component: MultimediaComponent },
       { path: 'administracion', component: AdministracionComponent },
+      { path: 'peticion', component: PeticionComponent },
+      { path: 'unete', component: UneteComponent },
       { path: 'user-profile/:id', component: UserProfileComponent },
       { path: 'descargables', component: DescargablesComponent },
       { path: 'bitacora', component: Bitacora},

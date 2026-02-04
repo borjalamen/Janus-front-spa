@@ -1,5 +1,15 @@
 {
+  "PETICION": {
+    "DESCRIPTION": "Envía tu petición aquí.",
+    "SEND": "Enviar petición"
+  },
+  "UNETE": {
+    "DESCRIPTION": "Únete a nuestro equipo o comunidad.",
+    "ACTION": "Quiero unirme"
+  },
   "MENU": {
+    "REQUEST": "Petición",
+    "JOIN": "Únete",
     "WELCOME": "Bienvenida",
     "PROJECTS": "Proyectos",
     "SCRUM": "Scrum",
@@ -16,6 +26,7 @@
     "DESCARGABLES": "Descargables"
     ,
     "GROUPS": {
+      "CONTACTO": "Contacto",
       "INICIO": "Inicio",
       "GESTION": "Gestión",
       "OPERACIONES": "Operaciones",

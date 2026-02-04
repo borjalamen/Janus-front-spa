@@ -1,5 +1,15 @@
 {
+  "PETICION": {
+    "DESCRIPTION": "Envia la teva petició aquí.",
+    "SEND": "Envia petició"
+  },
+  "UNETE": {
+    "DESCRIPTION": "Uneix-te al nostre equip o comunitat.",
+    "ACTION": "Vull unir-me"
+  },
   "MENU": {
+    "REQUEST": "Petició",
+    "JOIN": "Uneix-te",
     "WELCOME": "Benvinguda",
     "PROJECTS": "Projectes",
     "SCRUM": "Scrum",
@@ -16,6 +26,7 @@
     "DESCARGABLES": "Descarregables"
     ,
     "GROUPS": {
+      "CONTACTO": "Contacte",
       "INICIO": "Inici",
       "GESTION": "Gestió",
       "OPERACIONES": "Operacions",

@@ -72,4 +72,13 @@ export const MENU_GROUPS: MenuGroup[] = [
       { id: 'administracion', labelKey: 'MENU.ADMIN', route: '/administracion', icon: 'admin_panel_settings', requiresCheck: true }
     ]
   }
+  ,
+  {
+    id: 'contacto',
+    titleKey: 'MENU.GROUPS.CONTACTO',
+    items: [
+      { id: 'peticion', labelKey: 'MENU.REQUEST', route: '/peticion', icon: 'send', requiresCheck: true },
+      { id: 'unete', labelKey: 'MENU.JOIN', route: '/unete', icon: 'person_add', requiresCheck: true }
+    ]
+  }
 ];
