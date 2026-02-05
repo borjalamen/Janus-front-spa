@@ -13,7 +13,8 @@
     "PROJECT_NAME": "Nom del projecte",
     "COMMENTS": "Comentaris",
     "SEND_BY_MAIL": "Enviar per correu",
-    "RESET": "Netejar"
+    "RESET": "Netejar",
+    "SENDING": "S'enviant..."
   },
   "MENU": {
     "REQUEST": "Petició",

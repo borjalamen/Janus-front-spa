@@ -13,7 +13,8 @@
     "PROJECT_NAME": "Nombre del proyecto",
     "COMMENTS": "Comentarios",
     "SEND_BY_MAIL": "Enviar por correo",
-    "RESET": "Limpiar"
+    "RESET": "Limpiar",
+    "SENDING": "Enviando..."
   },
   "MENU": {
     "REQUEST": "Petición",

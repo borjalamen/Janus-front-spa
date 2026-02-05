@@ -12,8 +12,7 @@ import { FormacionComponent } from './app/formacion/formacion';
 import { PlanificacionComponent } from './app/planificacion/planificacion';
 import { MultimediaComponent } from './app/multimedia/multimedia';
 import { AdministracionComponent } from './app/administracion/administracion';
-import { PeticionComponent } from './app/peticion/peticion';
-import { UneteComponent } from './app/unete/unete';
+// Peticion and Unete will be lazy-loaded via routes to avoid module resolution issues
 import { UserProfileComponent } from './app/user-profile/user-profile';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -61,8 +60,8 @@ bootstrapApplication(AppComponent, {
       {path: 'planificacion', component: PlanificacionComponent },
       {path: 'multimedia', component: MultimediaComponent },
       { path: 'administracion', component: AdministracionComponent },
-      { path: 'peticion', component: PeticionComponent },
-      { path: 'unete', component: UneteComponent },
+      { path: 'peticion', loadComponent: () => import('./app/peticion/peticion').then(m => m.PeticionComponent) },
+      { path: 'unete', loadComponent: () => import('./app/unete/unete').then(m => m.UneteComponent) },
       { path: 'user-profile/:id', component: UserProfileComponent },
       { path: 'descargables', component: DescargablesComponent },
       { path: 'bitacora', component: Bitacora},

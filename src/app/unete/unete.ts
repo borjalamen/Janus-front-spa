@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatIconModule, TranslateModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
 })
 export class UneteComponent {
+  sending: boolean = false;
   // Cambia este email por el destinatario real si lo deseas
   recipient = 'contacto@janushub.local';
 
@@ -35,26 +36,32 @@ export class UneteComponent {
   ];
 
   sendMail() {
-    // Validación mínima
     if (!this.form.fullName || !this.form.email) {
       alert('Por favor, indica nombre completo y email.');
       return;
     }
 
-    const subject = `Solicitud Únete - ${this.form.projectName || this.form.projectCode || ''}`;
-    const bodyLines = [
-      `Nombre completo: ${this.form.fullName}`,
-      `Email: ${this.form.email}`,
-      `Rol sugerido: ${this.form.role}`,
-      `Código de proyecto: ${this.form.projectCode}`,
-      `Nombre del proyecto: ${this.form.projectName}`,
-      `Comentarios:`,
-      `${this.form.comments}`
-    ];
-    const body = encodeURIComponent(bodyLines.join('\n'));
-    const mailto = `mailto:${encodeURIComponent(this.recipient)}?subject=${encodeURIComponent(subject)}&body=${body}`;
-    // Abrir cliente de correo
-    window.location.href = mailto;
+    (async () => {
+      try {
+        (this as any).sending = true;
+        const resp = await fetch('/api/contact/unete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.form)
+        });
+        if (resp.ok) {
+          alert('Correo enviado correctamente. Gracias.');
+          this.resetForm();
+        } else {
+          const txt = await resp.text();
+          alert('Error enviando correo: ' + txt);
+        }
+      } catch (err: any) {
+        alert('Error en la petición: ' + (err?.message || err));
+      } finally {
+        (this as any).sending = false;
+      }
+    })();
   }
 
   resetForm() {

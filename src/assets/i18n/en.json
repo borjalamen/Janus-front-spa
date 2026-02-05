@@ -13,7 +13,8 @@
     "PROJECT_NAME": "Project name",
     "COMMENTS": "Comments",
     "SEND_BY_MAIL": "Send by mail",
-    "RESET": "Reset"
+    "RESET": "Reset",
+    "SENDING": "Sending..."
   },
   "MENU": {
     "REQUEST": "Request",

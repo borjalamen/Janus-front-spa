@@ -1,2 +1,18 @@
 .unete { padding: 16px; }
 .unete h1 { margin-bottom: 12px; }
+
+.unete-form .actions { display:flex; gap:16px; align-items:center; margin-top:12px }
+.unete-form button[mat-raised-button], .unete-form button[mat-button] {
+	padding: 8px 16px;
+	border-radius: 6px;
+}
+.unete-form button[mat-raised-button] {
+	background: linear-gradient(180deg,#1e88e5,#1976d2);
+	color: white;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+.unete-form button[mat-button] {
+	background: transparent;
+	color: #ddd;
+}
+.unete-form button:disabled { opacity: 0.6 }
