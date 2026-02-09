@@ -243,7 +243,15 @@
     "NO_DOCUMENTS_MESSAGE": "No hay documentos disponibles",
     "DOCUMENTATION_LABEL": "Documentación",
     "UPLOAD": "Subir",
-    "UPLOAD_LIMIT_HINT": "Tamaño máximo: {{size}}"
+    "SELECT_FILE": "Seleccionar archivo",
+    "UPLOAD_LIMIT_HINT": "Tamaño máximo: {{size}}",
+    "UPLOAD_ERROR_TOO_LARGE": "El archivo es demasiado grande",
+    "UPLOAD_GENERIC_ERROR": "Error al subir el archivo",
+    "UPLOAD_VALIDATION_TITLE": "Archivo con problemas",
+    "UPLOAD_VALIDATION_MSG": "El archivo seleccionado no cumple con las validaciones:",
+    "UPLOAD_CONFIRM_QUESTION": "¿Deseas subir el archivo de todos modos?",
+    "UPLOAD_ANYWAY": "Subir de todos modos",
+    "DELETE_FILE": "Borrar archivo"
   },
   "PROCEDURES_SECTION": {
     "TITLE": "Procedimientos",

@@ -255,7 +255,15 @@
     "NO_DOCUMENTS_MESSAGE": "No hi ha documents disponibles",
     "DOCUMENTATION_LABEL": "Documentació",
     "UPLOAD": "Pujar",
-    "UPLOAD_LIMIT_HINT": "Mida màxima: {{size}}"
+    "SELECT_FILE": "Seleccionar fitxer",
+    "UPLOAD_LIMIT_HINT": "Mida màxima: {{size}}",
+    "UPLOAD_ERROR_TOO_LARGE": "El fitxer és massa gran",
+    "UPLOAD_GENERIC_ERROR": "Error en pujar el fitxer",
+    "UPLOAD_VALIDATION_TITLE": "Fitxer amb problemes",
+    "UPLOAD_VALIDATION_MSG": "El fitxer seleccionat no passa les validacions:",
+    "UPLOAD_CONFIRM_QUESTION": "Vols pujar el fitxer de totes maneres?",
+    "UPLOAD_ANYWAY": "Pujar de totes maneres",
+    "DELETE_FILE": "Esborrar fitxer"
   },
 "PROCEDURES_SECTION": {
   "TITLE": "Procediments",

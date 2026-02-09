@@ -1,68 +1,444 @@
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
-
-<div class="tools-root">
-  <div class="tools-header">
-    <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
-    <div>
-      <button class="jenkins-add-btn" (click)="newProject()">
-        <mat-icon inline="true">add</mat-icon>
-        <span>{{ 'PROJECTS.NEW' | translate }}</span>
+<div class="section-container projects-layout projects-top-tabs">
+  
+  <!-- Top Tabs Navigation -->
+  <div class="projects-top-nav">
+    <h2 class="top-title">📁 Proyectos</h2>
+    <div class="top-tabs-bar">
+      <button class="top-tab-btn" 
+              [class.active]="activeTab === 'LIST'" 
+              (click)="cambiarTab('LIST')">
+        <span class="tab-emoji">📋</span> Lista
+      </button>
+      
+      <button class="top-tab-btn" 
+              [class.active]="activeTab === 'NEW'" 
+              (click)="cambiarTab('NEW')">
+        <span class="tab-emoji">➕</span> Nuevo
+      </button>
+      
+      <button class="top-tab-btn" 
+              [class.active]="activeTab === 'IMPORT'" 
+              (click)="cambiarTab('IMPORT')">
+        <span class="tab-emoji">📥</span> Importar
+      </button>
+      
+      <button class="top-tab-btn" 
+              [class.active]="activeTab === 'STATS'" 
+              (click)="cambiarTab('STATS')">
+        <span class="tab-emoji">📊</span> Estadísticas
       </button>
     </div>
   </div>
 
-  <div class="tools-list">
-    <div class="projects-grid jenkins-grid">
-      <div class="project-card" *ngFor="let p of projectesFiltrats">
-        <div class="project-top">
-          <div class="project-title">{{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}</div>
+  <div class="projects-content">
+
+    <!-- TAB: Lista de Proyectos -->
+    <div *ngIf="activeTab === 'LIST'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
+      </div>
+
+      <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+
+      <div class="projects-grid">
+        <div class="project-card" *ngFor="let p of projectesFiltrats">
+          <div class="project-top">
+            <div class="project-title">{{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}</div>
+          </div>
+          <div class="project-meta">{{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp; {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}</div>
+          <div class="project-actions">
+            <button class="icon-btn view" title="{{ 'PROJECTS.VIEW' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'view'}" (click)="$event.stopPropagation()">
+              <span class="emoji-icon">👁️</span>
+            </button>
+            <button class="icon-btn edit" title="{{ 'PROJECTS.EDIT' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'edit'}" (click)="$event.stopPropagation()">
+              <span class="emoji-icon">✏️</span>
+            </button>
+            <button class="icon-btn delete" title="{{ 'PROJECTS.DELETE' | translate }}" (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">
+              <span class="emoji-icon">🗑️</span>
+            </button>
+          </div>
         </div>
-        <div class="project-meta">{{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp; {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}</div>
-        <div class="project-actions">
-          <button class="icon-btn view" title="{{ 'PROJECTS.VIEW' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'view'}" (click)="$event.stopPropagation()">👁️</button>
-          <button class="icon-btn edit" title="{{ 'PROJECTS.EDIT' | translate }}" [routerLink]="['/projects', p.codigoProyecto]" [queryParams]="{mode:'edit'}" (click)="$event.stopPropagation()">✏️</button>
-          <button class="icon-btn delete" title="{{ 'PROJECTS.DELETE' | translate }}" (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">🗑️</button>
+      </div>
+
+      <div *ngIf="projectesFiltrats.length === 0" class="empty-state">
+        <span class="empty-emoji">📂</span>
+        <p>No hay proyectos disponibles</p>
+        <p class="empty-hint">Usa la pestaña "Nuevo" para crear un proyecto</p>
+      </div>
+    </div>
+
+    <!-- TAB: Nuevo Proyecto -->
+    <div *ngIf="activeTab === 'NEW'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>{{ editingProject.codigoProyecto ? ('PROJECTS.EDIT' | translate) : ('PROJECTS.NEW' | translate) }}</h2>
+      </div>
+
+      <!-- Sub-tabs para nuevo proyecto -->
+      <div class="new-project-tabs">
+        <button class="new-project-tab" 
+                [class.active]="newProjectTab === 'info'" 
+                (click)="cambiarNewProjectTab('info')">
+          📋 {{ 'PROJECTS.TAB_INFO' | translate }}
+        </button>
+        <button class="new-project-tab" 
+                [class.active]="newProjectTab === 'minsait'" 
+                (click)="cambiarNewProjectTab('minsait')">
+          👥 {{ 'PROJECTS.TAB_MINSAIT' | translate }}
+        </button>
+        <button class="new-project-tab" 
+                [class.active]="newProjectTab === 'dev'" 
+                (click)="cambiarNewProjectTab('dev')">
+          🖥️ {{ 'PROJECTS.TAB_DEV' | translate }}
+        </button>
+        <button class="new-project-tab" 
+                [class.active]="newProjectTab === 'mind'" 
+                (click)="cambiarNewProjectTab('mind')">
+          🔧 {{ 'PROJECTS.TAB_MIND' | translate }}
+        </button>
+      </div>
+
+      <!-- Sub-tab: Info -->
+      <div *ngIf="newProjectTab === 'info'" class="admin-card new-project-section">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</h3>
+        
+        <div class="form-grid three-col">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.CODE' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.codigoProyecto" placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.NAME' | translate }} *</label>
+            <input type="text" [(ngModel)]="editingProject.nombre" placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.codigoImputacion">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.LOTE' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.lote" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.departamento" placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}">
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <h4 class="subsection-title">URLs de Entornos</h4>
+
+        <div class="form-grid four-col">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.urlEntornoDesarrollo" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.urlEntornoIntegracion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.urlEntornoPreproduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.urlEntornoProduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Equipo Minsait -->
+      <div *ngIf="newProjectTab === 'minsait'" class="admin-card new-project-section section-minsait-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</h3>
+        
+        <div class="form-grid">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.responsableProyecto">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
+            <input type="text" [(ngModel)]="editingProject.responsableTecnico">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+            <input type="time" [(ngModel)]="editingProject.horaDaily">
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="members-header">
+          <h4 class="subsection-title">{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</h4>
+          <button class="btn-round btn-small btn-add" (click)="addNewProjectMember()">+ {{ 'PROJECTS.ADD_MEMBER' | translate }}</button>
+        </div>
+
+        <div class="members-list">
+          <div *ngFor="let member of newProjectMinsaitMembers; let i = index" class="member-row-new">
+            <input type="text" [(ngModel)]="member.nombre" placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}" class="member-input">
+            <input type="text" [(ngModel)]="member.rol" placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}" class="member-input">
+            <input type="email" [(ngModel)]="member.email" placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}" class="member-input">
+            <button class="btn-remove" (click)="removeNewProjectMember(i)">✕</button>
+          </div>
+          <div *ngIf="newProjectMinsaitMembers.length === 0" class="empty-list-msg">
+            No hay miembros añadidos
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Entorno de Desarrollo -->
+      <div *ngIf="newProjectTab === 'dev'" class="admin-card new-project-section section-dev-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_DEV' | translate }}</h3>
+
+        <div class="members-header">
+          <h4 class="subsection-title">{{ 'PROJECTS.DEV_MACHINES' | translate }}</h4>
+          <button class="btn-round btn-small btn-add" (click)="addNewProjectDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+        </div>
+
+        <div class="dev-machines-list">
+          <div *ngFor="let machine of newProjectDevMachines; let i = index" class="dev-machine-card-new">
+            <div class="dev-machine-header">
+              <span class="machine-number">#{{ i + 1 }}</span>
+              <button class="btn-remove" (click)="removeNewProjectDevMachine(i)">✕</button>
+            </div>
+            <div class="form-grid three-col">
+              <div class="input-field">
+                <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.ip">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.user">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.password">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
+                <input type="text" [(ngModel)]="machine.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="newProjectDevMachines.length === 0" class="empty-list-msg">
+            No hay máquinas de desarrollo añadidas
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="input-field full-width">
+          <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+          <textarea rows="4" [(ngModel)]="editingProject.notasGenerales" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+        </div>
+      </div>
+
+      <!-- Sub-tab: MIND (Herramientas) -->
+      <div *ngIf="newProjectTab === 'mind'" class="admin-card new-project-section section-mind-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
+
+        <!-- Repositorios de código -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.CODE_REPOS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add" (click)="addNewProjectCodeRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}</button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let repo of newProjectCodeRepos; let i = index" class="repo-row-new">
+              <input type="text" [(ngModel)]="repo.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" class="repo-input">
+              <input type="text" [(ngModel)]="repo.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" class="repo-input">
+              <button class="btn-remove" (click)="removeNewProjectCodeRepo(i)">✕</button>
+            </div>
+            <div *ngIf="newProjectCodeRepos.length === 0" class="empty-list-msg">Sin repositorios</div>
+          </div>
+        </div>
+
+        <!-- Repositorios de artefactos -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add" (click)="addNewProjectArtifactRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}</button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let repo of newProjectArtifactRepos; let i = index" class="repo-row-new">
+              <input type="text" [(ngModel)]="repo.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" class="repo-input">
+              <input type="text" [(ngModel)]="repo.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" class="repo-input">
+              <button class="btn-remove" (click)="removeNewProjectArtifactRepo(i)">✕</button>
+            </div>
+            <div *ngIf="newProjectArtifactRepos.length === 0" class="empty-list-msg">Sin repositorios de artefactos</div>
+          </div>
+        </div>
+
+        <!-- Jenkins -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.JENKINS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add" (click)="addNewProjectJenkins()">+ Jenkins</button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let jenkins of newProjectJenkinsList; let i = index" class="repo-row-new">
+              <input type="text" [(ngModel)]="jenkins.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" class="repo-input">
+              <input type="text" [(ngModel)]="jenkins.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" class="repo-input">
+              <button class="btn-remove" (click)="removeNewProjectJenkins(i)">✕</button>
+            </div>
+            <div *ngIf="newProjectJenkinsList.length === 0" class="empty-list-msg">Sin Jenkins configurados</div>
+          </div>
+        </div>
+
+        <!-- Sonar -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.SONAR' | translate }}</h4>
+            <button class="btn-round btn-small btn-add" (click)="addNewProjectSonar()">+ Sonar</button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let sonar of newProjectSonarList; let i = index" class="sonar-row-new">
+              <input type="text" [(ngModel)]="sonar.prefix" placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" class="sonar-input">
+              <input type="text" [(ngModel)]="sonar.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" class="sonar-input">
+              <input type="text" [(ngModel)]="sonar.tokenUser" placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" class="sonar-input">
+              <input type="text" [(ngModel)]="sonar.tokenValue" placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" class="sonar-input">
+              <button class="btn-remove" (click)="removeNewProjectSonar(i)">✕</button>
+            </div>
+            <div *ngIf="newProjectSonarList.length === 0" class="empty-list-msg">Sin Sonar configurado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons-right new-project-actions">
+        <button class="btn-round btn-secondary" (click)="limpiarFormulario()">
+          ✕ Limpiar
+        </button>
+        <button class="btn-round btn-primary" (click)="saveProject()">
+          💾 Guardar Proyecto
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: Importar -->
+    <div *ngIf="activeTab === 'IMPORT'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>📥 Importar Proyectos</h2>
+      </div>
+
+      <div class="admin-card">
+        <h3>📄 Importar desde CSV</h3>
+        <p>Sube un archivo CSV con los datos de proyectos para importarlos automáticamente.</p>
+        
+        <div class="import-area">
+          <input type="file" id="csvFile" accept=".csv" (change)="onCsvFileSelected($event)" hidden>
+          <label for="csvFile" class="import-dropzone">
+            <img src="assets/images/Folder.png" alt="Folder" class="import-folder-icon">
+            <span class="import-text">Haz clic o arrastra un archivo CSV</span>
+          </label>
+        </div>
+
+        <div *ngIf="importResult" class="import-result" [class.success]="importResult.success">
+          <p>{{ importResult.message }}</p>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>📋 Importar desde texto</h3>
+        <p>Pega el contenido CSV directamente:</p>
+        
+        <div class="input-field">
+          <textarea rows="10" [(ngModel)]="csvTextImport" placeholder="Pega aquí el contenido del CSV..."></textarea>
+        </div>
+
+        <div class="action-buttons-right">
+          <button class="btn-round btn-primary" (click)="importFromText()" [disabled]="!csvTextImport">
+            📥 Importar
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Detail view removed: project detail opens in its own page via the view/edit buttons -->
-  </div>
-
-  <!-- Project modal -->
-  <div class="jh-modal-backdrop" *ngIf="showProjectModal">
-    <div class="jh-modal" (click)="$event.stopPropagation()">
-      <h3 *ngIf="!editingProject.readonly">{{ editingProject.codigoProyecto ? ('PROJECTS.EDIT' | translate) : ('PROJECTS.NEW' | translate) }}</h3>
-      <h3 *ngIf="editingProject.readonly">{{ 'PROJECTS.VIEW' | translate }}</h3>
-      <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label><input [(ngModel)]="editingProject.nombre" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label><input [(ngModel)]="editingProject.codigoProyecto" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label><input [(ngModel)]="editingProject.responsableProyecto" [readonly]="editingProject.readonly"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label><input [(ngModel)]="editingProject.responsableTecnico" [readonly]="editingProject.readonly"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label><input [(ngModel)]="editingProject.lote" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label><input [(ngModel)]="editingProject.departamento" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.IPS_LABEL' | translate }}</label><input [(ngModel)]="editingProject.ipString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.IPS_PLACEHOLDER' | translate }}"/></div>
-      <div class="form-row"><label>{{ 'PROJECTS.TASKS_LABEL' | translate }}</label><textarea rows="6" [(ngModel)]="editingProject.tareasString" [readonly]="editingProject.readonly" placeholder="{{ 'PROJECTS.TASKS_PLACEHOLDER' | translate }}"></textarea></div>
-
-      <div class="jh-modal-actions" *ngIf="!editingProject.readonly">
-        <button class="cancelar-btn" (click)="showProjectModal=false" title="{{ 'PROJECTS.CLOSE' | translate }}">✗</button>
-        <button class="guardar-btn" (click)="saveProject()" title="{{ 'PROJECTS.SAVE' | translate }}">✓</button>
+    <!-- TAB: Estadísticas -->
+    <div *ngIf="activeTab === 'STATS'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>📊 Estadísticas de Proyectos</h2>
       </div>
-      <div class="jh-modal-actions" *ngIf="editingProject.readonly">
-        <button class="cancelar-btn" (click)="showProjectModal=false" title="{{ 'PROJECTS.CLOSE' | translate }}">✗</button>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <img src="assets/images/Folder.png" alt="Folder" class="stat-folder-icon">
+          <div class="stat-info">
+            <span class="stat-value">{{ projectes.length }}</span>
+            <span class="stat-label">Total Proyectos</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-emoji">🏢</span>
+          <div class="stat-info">
+            <span class="stat-value">{{ getDepartamentosUnicos() }}</span>
+            <span class="stat-label">Departamentos</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-emoji">📦</span>
+          <div class="stat-info">
+            <span class="stat-value">{{ getLotesUnicos() }}</span>
+            <span class="stat-label">Lotes</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-emoji">✅</span>
+          <div class="stat-info">
+            <span class="stat-value">{{ getTotalTareas() }}</span>
+            <span class="stat-label">Total Tareas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card" *ngIf="projectes.length > 0">
+        <h3>📋 Resumen por Departamento</h3>
+        <div class="summary-list">
+          <div *ngFor="let dept of getResumenDepartamentos()" class="summary-item">
+            <span class="summary-name">{{ dept.nombre || 'Sin departamento' }}</span>
+            <span class="summary-count">{{ dept.count }} proyecto(s)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay" *ngIf="showConfirm">
+  <div class="auth-card">
+    <h2 class="form-title">{{ 'PROJECTS.CONFIRM_TITLE' | translate }}</h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p class="modal-body">{{ confirmMessage }}</p>
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-emoji cancel" (click)="confirmCancel()" title="{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}">✗</button>
+        <button class="btn-emoji confirm" (click)="confirmOk()" title="{{ 'PROJECTS.CONFIRM_OK' | translate }}">✓</button>
       </div>
     </div>
   </div>
-
-  <!-- Confirm modal -->
-  <div class="jh-modal-backdrop" *ngIf="showConfirm">
-    <div class="jh-modal" (click)="$event.stopPropagation()">
-      <h3>{{ 'PROJECTS.CONFIRM_TITLE' | translate }}</h3>
-      <div class="modal-body">{{ confirmMessage }}</div>
-      <div class="jh-modal-actions">
-        <button class="jh-btn" (click)="confirmOk()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
-        <button class="jh-btn" (click)="confirmCancel()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
-      </div>
-    </div>
-  </div>
-
 </div>

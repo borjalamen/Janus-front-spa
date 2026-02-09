@@ -1286,3 +1286,296 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 .delete-list li:last-child {
   border-bottom: none;
 }
+
+/* ========================================
+   ESTILOS PARA BORRADO DE USUARIOS Y BACKUP COMPLETO
+   ======================================== */
+
+/* Popup más grande para borrado físico */
+.db-popup-large {
+  max-width: 600px !important;
+  width: 90%;
+}
+
+/* Secciones dentro del popup */
+.borrado-section,
+.backup-completo-section,
+.backup-individual-section {
+  margin-bottom: 16px;
+}
+
+.borrado-section h4,
+.backup-completo-section h4,
+.backup-individual-section h4 {
+  color: #FBC02D;
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Lista de usuarios para borrar */
+.usuarios-borrar-list,
+.registros-inactivos-list {
+  margin-top: 12px;
+  background: #0F1115;
+  border-radius: 8px;
+  border: 1px solid #333;
+  padding: 12px;
+}
+
+.seleccionar-todos {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.usuarios-scroll,
+.registros-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.usuario-borrar-item,
+.registro-inactivo-item {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid #2a2d33;
+  transition: all 0.2s;
+}
+
+.usuario-borrar-item:hover,
+.registro-inactivo-item:hover {
+  border-color: #E53935;
+  background: rgba(229, 57, 53, 0.05);
+}
+
+.usuario-info,
+.registro-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.usuario-nombre,
+.registro-nombre {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.usuario-email,
+.registro-descripcion {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+/* Estilos específicos para registros inactivos */
+.registro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.registro-id {
+  color: #1e84a3;
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: rgba(30, 132, 163, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.registro-fecha {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+/* Header de colección encontrada */
+.collection-found-detail {
+  margin-top: 16px;
+}
+
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.collection-info p {
+  margin: 0 0 4px 0;
+}
+
+.collection-info .stats {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Botón secundario */
+.btn-round.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  border: 1px solid #444;
+}
+
+.btn-round.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #666;
+}
+
+/* Sin registros inactivos */
+.no-inactivos {
+  text-align: center;
+  padding: 20px;
+  color: #4CAF50;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+}
+
+/* Acciones de borrado de registros */
+.borrar-registros-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+
+/* Custom checkbox */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding-left: 28px;
+  user-select: none;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.custom-checkbox .checkmark {
+  position: absolute;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #2a2d33;
+  border: 2px solid #555;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.custom-checkbox:hover .checkmark {
+  border-color: #1e84a3;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #E53935;
+  border-color: #E53935;
+}
+
+.custom-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.custom-checkbox .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Acciones de borrado de usuarios */
+.borrar-usuarios-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+
+.seleccionados-count {
+  color: #E53935;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Botón primario para backup completo */
+.btn-round.btn-primary {
+  background: linear-gradient(135deg, #1e84a3 0%, #1565c0 100%);
+  color: white;
+  border: none;
+  font-weight: bold;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+}
+
+.btn-round.btn-primary:hover {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(30, 132, 163, 0.4);
+}
+
+.btn-round.btn-primary:disabled {
+  background: #555;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-full {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Scrollbar personalizado para listas */
+.usuarios-scroll::-webkit-scrollbar,
+.registros-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.usuarios-scroll::-webkit-scrollbar-track,
+.registros-scroll::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+
+.usuarios-scroll::-webkit-scrollbar-thumb,
+.registros-scroll::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+.usuarios-scroll::-webkit-scrollbar-thumb:hover,
+.registros-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

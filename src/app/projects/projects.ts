@@ -55,8 +55,8 @@ export interface Proyecto {
   herramientasMind?: {
     bitbucket?: string;
     nexus?: string[];
-    sonar?: { prefix?: string; url?: string; tokenUser?: string; tokenValue?: string };
-    jenkins?: string;
+    sonar?: { prefix?: string; url?: string; tokenUser?: string; tokenValue?: string }[];
+    jenkins?: string[];
     crontab?: string;
   };
   jenkinsNodes?: string[];
@@ -69,6 +69,9 @@ export interface Proyecto {
   notasGenerales?: string | null;
   entornoNotas?: string | null;
   equipoMinsait?: { nombre?: string; rol?: string; email?: string }[];
+  devMachines?: { identifier?: string; ip?: string; user?: string; password?: string; ram?: string; cpu?: string; disk?: string }[];
+  codeRepos?: string[];
+  artifactRepos?: string[];
 }
 
 @Component({
@@ -81,6 +84,9 @@ export interface Proyecto {
 export class ProjectsComponent {
   title = '';
 
+  // Control de pestañas
+  activeTab: string = 'LIST';
+
   // Lista de proyectos (ahora instancias de `Proyecto`)
   private STORAGE_KEY = 'projects_v1';
 
@@ -88,7 +94,6 @@ export class ProjectsComponent {
   projectesFiltrats: Proyecto[] = this.projectes;
 
   // UI state
-  // list-only view: do not store selected project here
   showProjectModal = false;
   editingProject: Partial<Proyecto> & { ipString?: string; tareasString?: string; lote?: string; departamento?: string; readonly?: boolean } = {};
 
@@ -96,6 +101,111 @@ export class ProjectsComponent {
   showConfirm = false;
   confirmMessage = '';
   private confirmAction: (() => void) | null = null;
+
+  // Import
+  csvTextImport: string = '';
+  importResult: { success: boolean; message: string } | null = null;
+
+  // New project form - sub-tabs
+  newProjectTab: 'info' | 'minsait' | 'dev' | 'mind' = 'info';
+  
+  // New project form - extended fields
+  newProjectMinsaitMembers: Array<{ nombre: string; rol: string; email: string }> = [];
+  newProjectDevMachines: Array<{
+    identifier: string;
+    ip: string;
+    user: string;
+    password: string;
+    ram: string;
+    cpu: string;
+    disk: string;
+  }> = [];
+  newProjectCodeRepos: Array<{ name: string; url: string }> = [];
+  newProjectArtifactRepos: Array<{ name: string; url: string }> = [];
+  newProjectJenkinsList: Array<{ name: string; url: string }> = [];
+  newProjectSonarList: Array<{ prefix: string; url: string; tokenUser: string; tokenValue: string }> = [];
+
+  cambiarTab(tab: string) {
+    this.activeTab = tab;
+    if (tab === 'NEW') {
+      this.limpiarFormulario();
+      this.newProjectTab = 'info';
+    }
+    this.importResult = null;
+  }
+
+  cambiarNewProjectTab(tab: 'info' | 'minsait' | 'dev' | 'mind') {
+    this.newProjectTab = tab;
+  }
+
+  limpiarFormulario() {
+    this.editingProject = { 
+      nombre: '', 
+      codigoProyecto: '', 
+      codigoImputacion: '',
+      ipString: '', 
+      tareasString: '', 
+      lote: '', 
+      departamento: '',
+      responsableProyecto: '',
+      responsableTecnico: '',
+      urlEntornoDesarrollo: '',
+      urlEntornoIntegracion: '',
+      urlEntornoPreproduccion: '',
+      urlEntornoProduccion: '',
+      horaDaily: '',
+      notasGenerales: ''
+    } as any;
+    this.newProjectMinsaitMembers = [];
+    this.newProjectDevMachines = [];
+    this.newProjectCodeRepos = [];
+    this.newProjectArtifactRepos = [];
+    this.newProjectJenkinsList = [];
+    this.newProjectSonarList = [];
+  }
+
+  // Helper methods for new project form
+  addNewProjectMember() {
+    this.newProjectMinsaitMembers.push({ nombre: '', rol: '', email: '' });
+  }
+  removeNewProjectMember(index: number) {
+    this.newProjectMinsaitMembers.splice(index, 1);
+  }
+
+  addNewProjectDevMachine() {
+    this.newProjectDevMachines.push({ identifier: '', ip: '', user: '', password: '', ram: '', cpu: '', disk: '' });
+  }
+  removeNewProjectDevMachine(index: number) {
+    this.newProjectDevMachines.splice(index, 1);
+  }
+
+  addNewProjectCodeRepo() {
+    this.newProjectCodeRepos.push({ name: '', url: '' });
+  }
+  removeNewProjectCodeRepo(index: number) {
+    this.newProjectCodeRepos.splice(index, 1);
+  }
+
+  addNewProjectArtifactRepo() {
+    this.newProjectArtifactRepos.push({ name: '', url: '' });
+  }
+  removeNewProjectArtifactRepo(index: number) {
+    this.newProjectArtifactRepos.splice(index, 1);
+  }
+
+  addNewProjectJenkins() {
+    this.newProjectJenkinsList.push({ name: '', url: '' });
+  }
+  removeNewProjectJenkins(index: number) {
+    this.newProjectJenkinsList.splice(index, 1);
+  }
+
+  addNewProjectSonar() {
+    this.newProjectSonarList.push({ prefix: '', url: '', tokenUser: '', tokenValue: '' });
+  }
+  removeNewProjectSonar(index: number) {
+    this.newProjectSonarList.splice(index, 1);
+  }
 
   filtrar(valor: string) {
     if (!valor) {
@@ -133,21 +243,30 @@ export class ProjectsComponent {
 
   newProject() {
     this.editingProject = { nombre: '', codigoProyecto: '', ipString: '', tareasString: '', lote: '', departamento: '' } as any;
-    this.showProjectModal = true;
+    this.activeTab = 'NEW';
   }
 
   saveProject() {
     if ((this.editingProject as any).readonly) return;
     const partial = this.editingProject as Partial<Proyecto> & { ipString?: string; tareasString?: string };
-    if (!partial.nombre || !partial.nombre.trim()) return;
+    if (!partial.nombre || !partial.nombre.trim()) {
+      alert('El nombre del proyecto es obligatorio');
+      return;
+    }
     const proyecto: Proyecto = {
       nombre: (partial.nombre||'').trim(),
       codigoProyecto: (partial.codigoProyecto||'').trim(),
+      codigoImputacion: (partial as any).codigoImputacion || null,
       ip: (partial.ipString||'').split(',').map(s=>s.trim()).filter(Boolean),
       lote: partial.lote || null,
       departamento: partial.departamento || null,
       responsableProyecto: partial.responsableProyecto || null,
       responsableTecnico: partial.responsableTecnico || null,
+      urlEntornoDesarrollo: (partial as any).urlEntornoDesarrollo || null,
+      urlEntornoIntegracion: (partial as any).urlEntornoIntegracion || null,
+      urlEntornoPreproduccion: (partial as any).urlEntornoPreproduccion || null,
+      urlEntornoProduccion: (partial as any).urlEntornoProduccion || null,
+      horaDaily: (partial as any).horaDaily || null,
       tareas: this.parseTareasString(partial.tareasString||''),
       herramientas: partial.herramientas || [],
       jenkinsNodes: partial.jenkinsNodes || [],
@@ -158,7 +277,14 @@ export class ProjectsComponent {
       openshift: partial.openshift || [],
       usuarios: partial.usuarios || [],
       notasGenerales: partial.notasGenerales || null,
-      herramientasMind: (partial as any).herramientasMind || undefined
+      equipoMinsait: this.newProjectMinsaitMembers.filter(m => m.nombre || m.rol || m.email),
+      herramientasMind: {
+        codeRepos: this.newProjectCodeRepos.filter(r => r.name || r.url),
+        artifactRepos: this.newProjectArtifactRepos.filter(r => r.name || r.url),
+        jenkins: this.newProjectJenkinsList.filter(j => j.name || j.url),
+        sonarList: this.newProjectSonarList.filter(s => s.prefix || s.url)
+      } as any,
+      devMachines: this.newProjectDevMachines.filter(m => m.ip || m.identifier) as any
     };
 
     if (!proyecto.codigoProyecto) proyecto.codigoProyecto = Math.random().toString(36).slice(2,9);
@@ -170,6 +296,8 @@ export class ProjectsComponent {
     this.save();
     this.showProjectModal = false;
     this.editingProject = {};
+    this.activeTab = 'LIST';
+    alert('✅ Proyecto guardado correctamente');
   }
 
   private parseTareasString(s: string): Task[] {
@@ -354,5 +482,88 @@ export class ProjectsComponent {
     const proys = this.parseCsvToProyectos(csvContent);
     this.projectes = proys;
     this.projectesFiltrats = this.projectes;
+  }
+
+  // ===== MÉTODOS PARA ESTADÍSTICAS =====
+  getDepartamentosUnicos(): number {
+    const depts = new Set(this.projectes.map(p => p.departamento).filter(Boolean));
+    return depts.size;
+  }
+
+  getLotesUnicos(): number {
+    const lotes = new Set(this.projectes.map(p => p.lote).filter(Boolean));
+    return lotes.size;
+  }
+
+  getTotalTareas(): number {
+    return this.projectes.reduce((acc, p) => acc + (p.tareas?.length || 0), 0);
+  }
+
+  getResumenDepartamentos(): { nombre: string; count: number }[] {
+    const map = new Map<string, number>();
+    this.projectes.forEach(p => {
+      const dept = p.departamento || 'Sin departamento';
+      map.set(dept, (map.get(dept) || 0) + 1);
+    });
+    return Array.from(map.entries())
+      .map(([nombre, count]) => ({ nombre, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  // ===== MÉTODOS PARA IMPORTACIÓN =====
+  onCsvFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      this.processCsvImport(content);
+    };
+    
+    reader.onerror = () => {
+      this.importResult = { success: false, message: '❌ Error al leer el archivo' };
+    };
+    
+    reader.readAsText(file);
+  }
+
+  importFromText() {
+    if (!this.csvTextImport.trim()) {
+      this.importResult = { success: false, message: '❌ El texto está vacío' };
+      return;
+    }
+    this.processCsvImport(this.csvTextImport);
+  }
+
+  private processCsvImport(content: string) {
+    try {
+      const proyectos = this.parseCsvToProyectos(content);
+      if (proyectos.length === 0) {
+        this.importResult = { success: false, message: '❌ No se encontraron proyectos en el archivo' };
+        return;
+      }
+
+      // Añadir proyectos importados
+      proyectos.forEach(p => {
+        if (!p.codigoProyecto) {
+          p.codigoProyecto = 'PRJ-' + Math.random().toString(36).slice(2, 9).toUpperCase();
+        }
+        const existingIdx = this.projectes.findIndex(x => x.codigoProyecto === p.codigoProyecto);
+        if (existingIdx === -1) {
+          this.projectes.push(p);
+        } else {
+          this.projectes[existingIdx] = p;
+        }
+      });
+
+      this.save();
+      this.importResult = { success: true, message: `✅ Se importaron ${proyectos.length} proyecto(s) correctamente` };
+      this.csvTextImport = '';
+    } catch (error) {
+      this.importResult = { success: false, message: '❌ Error al procesar el archivo CSV' };
+    }
   }
 }

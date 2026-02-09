@@ -164,17 +164,12 @@
                     <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
                   </div>
 
-                  <div class="toggle-row toggle-inline">
-                    <div class="toggle-checkbox">
-                      <input id="openshift-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.openshiftEnabled" aria-label="{{ 'PROJECTS.OPENSHIFT_ENABLED' | translate }}" />
-                    </div>
-                    <div class="toggle-text">
-                      <label for="openshift-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.OPENSHIFT' | translate }}</label>
-                    </div>
-                    <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.openshiftEnabled" (click)="addOpenshift(selectedDevMachineIndex)">+</button> </div>
+                  <div class="add-section-row">
+                    <span class="add-section-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
+                    <button type="button" class="btn small" (click)="addOpenshift(selectedDevMachineIndex)">+</button>
                   </div>
 
-                  <div *ngIf="m.openshiftEnabled">
+                  <div *ngIf="m.openshiftEnabled || (m.openshifts && m.openshifts.length > 0)">
                     <div *ngFor="let o of (m.openshifts || []); let oi = index" class="repo-duo dev-duo">
                       <div class="repo-fields">
                         <div class="openshift-section">
@@ -210,17 +205,12 @@
 
                   <!-- Database toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="toggle-row toggle-inline">
-                    <div class="toggle-checkbox">
-                      <input id="db-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.dbEnabled" aria-label="{{ 'PROJECTS.DB_ENABLED' | translate }}" />
-                    </div>
-                    <div class="toggle-text">
-                      <label for="db-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.DB_LABEL' | translate }}</label>
-                    </div>
-                    <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.dbEnabled" (click)="addDb(selectedDevMachineIndex)">+</button> </div>
+                  <div class="add-section-row">
+                    <span class="add-section-label">{{ 'PROJECTS.DB_LABEL' | translate }}</span>
+                    <button type="button" class="btn small" (click)="addDb(selectedDevMachineIndex)">+</button>
                   </div>
 
-                  <div *ngIf="m.dbEnabled">
+                  <div *ngIf="m.dbEnabled || (m.dbs && m.dbs.length > 0)">
                     <div *ngFor="let d of (m.dbs || []); let di = index" class="repo-duo dev-duo">
                       <div class="repo-fields">
                         <div class="form-row db-config">
@@ -248,17 +238,12 @@
 
                   <!-- Other tool toggle and form (per machine) -->
                   <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="toggle-row toggle-inline">
-                    <div class="toggle-checkbox">
-                      <input id="othertool-toggle-{{selectedDevMachineIndex}}" type="checkbox" [(ngModel)]="m.otherToolEnabled" aria-label="{{ 'PROJECTS.OTHER_TOOL_ENABLED' | translate }}" />
-                    </div>
-                    <div class="toggle-text">
-                      <label for="othertool-toggle-{{selectedDevMachineIndex}}" class="toggle-label-text">{{ 'PROJECTS.OTHER_TOOL' | translate }}</label>
-                    </div>
-                    <div class="toggle-action"> <button type="button" class="btn small" *ngIf="m.otherToolEnabled" (click)="addOtherTool(selectedDevMachineIndex)">+</button> </div>
+                  <div class="add-section-row">
+                    <span class="add-section-label">{{ 'PROJECTS.OTHER_TOOL' | translate }}</span>
+                    <button type="button" class="btn small" (click)="addOtherTool(selectedDevMachineIndex)">+</button>
                   </div>
 
-                  <div *ngIf="m.otherToolEnabled">
+                  <div *ngIf="m.otherToolEnabled || (m.otherTools && m.otherTools.length > 0)">
                     <div *ngFor="let t of (m.otherTools || []); let ti = index" class="repo-duo dev-duo">
                       <div class="repo-fields">
                         <div class="form-row other-tool-config">
@@ -268,12 +253,12 @@
                             <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label><input [(ngModel)]="t.path" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="t.contactPerson" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" /></div>
                             <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="t.contactMail" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" /></div>
-                            <div class="field checkbox-field">
+                            <div class="field switch-field">
                               <label class="inline-label service-label">{{ 'PROJECTS.IN_SERVICE' | translate }}</label>
-                              <div class="service-control">
-                                <label class="checkbox-container">
+                              <div class="service-control switch-item">
+                                <label class="custom-switch">
                                   <input type="checkbox" [(ngModel)]="t.running" aria-label="{{ 'PROJECTS.IN_SERVICE' | translate }}" />
-                                  <span class="checkmark"></span>
+                                  <span class="custom-slider"></span>
                                 </label>
                               </div>
                             </div>
@@ -461,14 +446,18 @@
             <div class="form-row">
               <label>{{ 'PROJECTS.DOCUMENTATION_LABEL' | translate }}</label>
               <div *ngIf="editing" class="doc-upload">
-                <input id="project-doc-file" type="file" (change)="onDocFileSelected($event)" />
-                <button class="btn small" (click)="uploadProjectDocument()" [disabled]="!selectedDocFile" title="{{ 'PROJECTS.UPLOAD' | translate }}" aria-label="{{ 'PROJECTS.UPLOAD' | translate }}">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8 7l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M21 21H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
+                <div class="file-input-wrapper">
+                  <label for="project-doc-file" class="file-input-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M17 8l-5-5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="file-label-text">{{ 'PROJECTS.SELECT_FILE' | translate }}</span>
+                  </label>
+                  <input id="project-doc-file" type="file" (change)="onDocFileSelected($event)" class="file-input-hidden" />
+                  <span class="file-name" *ngIf="selectedDocFile">{{ selectedDocFile.name }}</span>
+                </div>
                 <div class="upload-hint">{{ 'PROJECTS.UPLOAD_LIMIT_HINT' | translate:{size: formatBytes(MAX_UPLOAD_BYTES)} }}</div>
                 <div class="upload-error" *ngIf="uploadError">{{ uploadError }}</div>
               </div>
@@ -574,6 +563,37 @@
     <div class="modal-actions">
       <button type="button" class="jh-btn" (click)="confirmRemove()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
       <button type="button" class="jh-btn" (click)="cancelRemove()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload validation confirm modal -->
+<div class="modal-backdrop jh-modal-backdrop upload-confirm-modal" *ngIf="showUploadConfirmPopup">
+  <div class="modal jh-modal">
+    <div class="modal-header modal-header-warning">⚠️ {{ 'PROJECTS.UPLOAD_VALIDATION_TITLE' | translate }}</div>
+    <div class="modal-body">
+      <p class="upload-warning-intro">{{ 'PROJECTS.UPLOAD_VALIDATION_MSG' | translate }}</p>
+      <div class="upload-file-info">
+        <strong>{{ pendingUploadFile?.name }}</strong>
+        <span class="file-size-info">({{ formatBytes(pendingUploadFile?.size || 0) }})</span>
+      </div>
+      <div class="validation-errors">
+        <div class="error-item" *ngFor="let error of uploadValidationErrors">
+          <span class="error-icon">❌</span> {{ error }}
+        </div>
+      </div>
+      <p class="upload-confirm-question">{{ 'PROJECTS.UPLOAD_CONFIRM_QUESTION' | translate }}</p>
+    </div>
+    <div class="modal-actions upload-modal-actions">
+      <button type="button" class="jh-btn jh-btn-danger" (click)="deleteUploadedFile()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ 'PROJECTS.DELETE_FILE' | translate }}
+      </button>
+      <button type="button" class="jh-btn jh-btn-secondary" (click)="cancelUpload()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
+      <button type="button" class="jh-btn jh-btn-warning" (click)="confirmUploadAnyway()">{{ 'PROJECTS.UPLOAD_ANYWAY' | translate }}</button>
     </div>
   </div>
 </div>
