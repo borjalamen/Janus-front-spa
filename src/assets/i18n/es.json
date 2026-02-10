@@ -418,6 +418,8 @@
   "ERRORS": {
     "TITLE": "Bitácora de Errores",
     "DESCRIPTION": "Wiki de errores y soluciones del equipo DevOps.",
+    "TAB_CREATE": "Crear",
+    "TAB_LIST": "Listar",
     "ADD_BUTTON": "Añadir registro",
     "NEW_TITLE": "Nuevo registro de error",
     "EDIT_TITLE": "Editar registro",

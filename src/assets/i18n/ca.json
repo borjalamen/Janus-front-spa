@@ -429,6 +429,8 @@
 "ERRORS": {
   "TITLE": "Bitàcola d'Errors",
   "DESCRIPTION": "Wiki d'errors i solucions de l'equip DevOps.",
+  "TAB_CREATE": "Crear",
+  "TAB_LIST": "Llistar",
   "ADD_BUTTON": "Afegir registre",
   "NEW_TITLE": "Nou registre d'error",
   "EDIT_TITLE": "Editar registre",

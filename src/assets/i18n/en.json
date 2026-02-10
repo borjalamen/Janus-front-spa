@@ -421,6 +421,8 @@
   "ERRORS": {
     "TITLE": "Error Logbook",
     "DESCRIPTION": "Error and solution wiki for the DevOps team.",
+    "TAB_CREATE": "Create",
+    "TAB_LIST": "List",
     "ADD_BUTTON": "Add entry",
     "NEW_TITLE": "New error entry",
     "EDIT_TITLE": "Edit entry",
