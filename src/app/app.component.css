@@ -74,6 +74,16 @@ mat-nav-list a:hover .menu-text {
   color: #FBC02D;
 }
 
+/* Ruta activa - mismo estilo que hover */
+mat-nav-list a.active {
+  background: #1e84a3;
+  box-shadow: 2px 2px 12px #FBC02D70;
+}
+
+mat-nav-list a.active .menu-text {
+  color: #FBC02D;
+}
+
 mat-nav-list a mat-icon {
   color: #FBC02D !important;
   font-size: 22px !important;

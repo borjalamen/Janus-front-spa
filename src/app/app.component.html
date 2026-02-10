@@ -20,7 +20,7 @@
           </button>
 
           <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
-            <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route">
+            <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route" [class.active]="isRouteActive(item.route)">
               <mat-icon>{{ item.icon }}</mat-icon>
               <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
             </a>

@@ -127,7 +127,18 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   toggleGroup(id: string): void {
-    this.expandedGroups[id] = !this.expandedGroups[id];
+    const wasOpen = this.expandedGroups[id];
+    
+    // Cerrar todos los grupos
+    for (const key in this.expandedGroups) {
+      this.expandedGroups[key] = false;
+    }
+    
+    // Si el grupo estaba cerrado, abrirlo
+    if (!wasOpen) {
+      this.expandedGroups[id] = true;
+    }
+    
     // persist
     try { localStorage.setItem('menu.expanded', JSON.stringify(this.expandedGroups)); } catch (e) { /* ignore */ }
   }
@@ -147,6 +158,11 @@ export class AppComponent implements OnDestroy, OnInit {
 
   getVisibleCount(group: any): number {
     return this.getVisibleItems(group).length;
+  }
+
+  // Verificar si una ruta está activa
+  isRouteActive(route: string): boolean {
+    return this.router.url === route;
   }
     // Chat state
     aiMessages: { from: 'user'|'ai', text: string }[] = [];
