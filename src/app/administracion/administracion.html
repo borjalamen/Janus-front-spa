@@ -224,43 +224,101 @@
 
 <!-- Popup Borrado Físico -->
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
-  <div class="auth-card db-popup">
+  <div class="auth-card db-popup db-popup-large">
     <h2 class="form-title">
       <span class="title-emoji">🗑️</span>
       Borrado Físico
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>Buscar colección y eliminar solo sus registros <strong>inactivos</strong>:</p>
       
-      <div class="collection-search">
-        <div class="input-field">
-          <label>Nombre de la colección:</label>
-          <input type="text" [(ngModel)]="coleccionBorrar" placeholder="Ej: usuarios, documentos, logs" class="collection-input">
+      <!-- Búsqueda de colección -->
+      <div class="borrado-section">
+        <h4>📂 Buscar Colección</h4>
+        <p>Busca una colección para ver y eliminar sus registros <strong>inactivos</strong>:</p>
+        
+        <div class="collection-search">
+          <div class="input-field">
+            <label>Nombre de la colección:</label>
+            <input type="text" 
+                   [(ngModel)]="coleccionBorrar" 
+                   placeholder="Ej: usuarios, documentos, logs, sesiones"
+                   class="collection-input"
+                   (keyup.enter)="buscarColeccion()">
+          </div>
+          <button class="btn-round btn-search" (click)="buscarColeccion()" [disabled]="!coleccionBorrar || cargandoRegistrosInactivos">
+            <span *ngIf="!cargandoRegistrosInactivos">🔍 Buscar</span>
+            <span *ngIf="cargandoRegistrosInactivos">⏳ Cargando...</span>
+          </button>
         </div>
-        <button class="btn-round btn-search" (click)="buscarColeccion()" [disabled]="!coleccionBorrar">
-          🔍 Buscar
-        </button>
-      </div>
 
-      <div *ngIf="coleccionEncontrada" class="collection-found">
-        <div>
-          <p>✅ Colección: <strong>{{ coleccionBorrar }}</strong></p>
-          <p class="inactivos-count">🚫 Registros inactivos: <strong>{{ registrosInactivos }}</strong></p>
+        <!-- Colección no encontrada -->
+        <div *ngIf="coleccionNoEncontrada" class="collection-not-found">
+          <p>❌ No se encontró la colección "{{ coleccionBorrar }}"</p>
         </div>
-        <button class="btn-round btn-danger btn-sm" (click)="borrarInactivosColeccion()" [disabled]="registrosInactivos === 0">
-          🗑️ Borrar Inactivos
-        </button>
-      </div>
 
-      <div *ngIf="coleccionNoEncontrada" class="collection-not-found">
-        <p>❌ No se encontró la colección "{{ coleccionBorrar }}"</p>
-      </div>
+        <!-- Colección encontrada con registros inactivos -->
+        <div *ngIf="coleccionEncontrada" class="collection-found-detail">
+          <div class="collection-header">
+            <div class="collection-info">
+              <p>✅ Colección: <strong>{{ coleccionBorrar }}</strong></p>
+              <p class="stats">📊 Total: {{ registrosColeccion }} registros | 🚫 Inactivos: <strong>{{ registrosInactivos }}</strong></p>
+            </div>
+            <button class="btn-round btn-secondary btn-sm" (click)="limpiarBusquedaColeccion()">
+              ✕ Limpiar
+            </button>
+          </div>
 
-      <p class="warning-text">
-        <mat-icon>warning</mat-icon>
-        Solo se eliminarán los registros marcados como inactivos
-      </p>
+          <!-- Lista de registros inactivos -->
+          <div *ngIf="registrosInactivosColeccion.length > 0" class="registros-inactivos-list">
+            <div class="seleccionar-todos">
+              <label class="custom-checkbox">
+                <input type="checkbox" 
+                       [checked]="registrosSeleccionadosBorrar.size === registrosInactivosColeccion.length && registrosInactivosColeccion.length > 0"
+                       (change)="seleccionarTodosRegistros()">
+                <span class="checkmark"></span>
+                <span>Seleccionar todos ({{ registrosInactivosColeccion.length }})</span>
+              </label>
+            </div>
+            
+            <div class="registros-scroll">
+              <div *ngFor="let registro of registrosInactivosColeccion" class="registro-inactivo-item">
+                <label class="custom-checkbox">
+                  <input type="checkbox" 
+                         [checked]="registrosSeleccionadosBorrar.has(registro.id)"
+                         (change)="toggleSeleccionRegistro(registro.id)">
+                  <span class="checkmark"></span>
+                  <div class="registro-info">
+                    <div class="registro-header">
+                      <span class="registro-id">{{ registro.id }}</span>
+                      <span class="registro-fecha">📅 {{ registro.fechaInactivacion }}</span>
+                    </div>
+                    <span class="registro-nombre">{{ registro.nombre }}</span>
+                    <span class="registro-descripcion">{{ registro.descripcion }}</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <div class="borrar-registros-actions" *ngIf="registrosSeleccionadosBorrar.size > 0">
+              <span class="seleccionados-count">{{ registrosSeleccionadosBorrar.size }} registro(s) seleccionado(s)</span>
+              <button class="btn-round btn-danger" (click)="borrarRegistrosSeleccionados()">
+                🗑️ Borrar Seleccionados
+              </button>
+            </div>
+          </div>
+
+          <!-- Sin registros inactivos -->
+          <div *ngIf="registrosInactivosColeccion.length === 0" class="no-inactivos">
+            <p>✨ No hay registros inactivos en esta colección</p>
+          </div>
+        </div>
+
+        <p class="warning-text" *ngIf="registrosSeleccionadosBorrar.size > 0">
+          <mat-icon>warning</mat-icon>
+          El borrado físico es permanente y no se puede deshacer
+        </p>
+      </div>
 
       <hr class="divider">
       <div class="action-buttons">
@@ -318,25 +376,44 @@
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>Buscar una colección y generar su backup:</p>
-      
-      <div class="collection-search">
-        <div class="input-field">
-          <label>Nombre de la colección:</label>
-          <input type="text" [(ngModel)]="coleccionBackup" placeholder="Ej: usuarios" class="collection-input">
+
+      <!-- Backup por colección individual -->
+      <div class="backup-individual-section">
+        <h4>📂 Backup Individual</h4>
+        <p>Buscar una colección específica y generar su backup:</p>
+        
+        <div class="collection-search">
+          <div class="input-field">
+            <label>Nombre de la colección:</label>
+            <input type="text" [(ngModel)]="coleccionBackup" placeholder="Ej: usuarios" class="collection-input">
+          </div>
+          <button class="btn-round btn-search" (click)="buscarColeccionBackup()" [disabled]="!coleccionBackup">
+            🔍 Buscar
+          </button>
         </div>
-        <button class="btn-round btn-search" (click)="buscarColeccionBackup()" [disabled]="!coleccionBackup">
-          🔍 Buscar
-        </button>
+        <div *ngIf="coleccionBackupEncontrada" class="collection-found">
+          <p>✅ Colección encontrada: <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} registros)</p>
+          <button class="btn-round btn-blue btn-sm" (click)="backupColeccion()">
+            💾 Backup Colección
+          </button>
+        </div>
+        <div *ngIf="coleccionBackupNoEncontrada" class="collection-not-found">
+          <p>❌ No se encontró la colección "{{ coleccionBackup }}"</p>
+        </div>
       </div>
-      <div *ngIf="coleccionBackupEncontrada" class="collection-found">
-        <p>✅ Colección encontrada: <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} registros)</p>
-        <button class="btn-round btn-blue btn-sm" (click)="backupColeccion()">
-          💾 Backup Colección
+
+      <hr class="divider">
+
+      <!-- Backup Completo -->
+      <div class="backup-completo-section">
+        <h4>📦 Backup Completo</h4>
+        <p>Genera una copia de seguridad de <strong>todas las colecciones</strong> de la base de datos.</p>
+        <button class="btn-round btn-primary btn-full" 
+                (click)="ejecutarBackupCompleto()" 
+                [disabled]="backupCompletoEnProgreso">
+          <span *ngIf="!backupCompletoEnProgreso">💾 Backup</span>
+          <span *ngIf="backupCompletoEnProgreso">⏳ Generando...</span>
         </button>
-      </div>
-      <div *ngIf="coleccionBackupNoEncontrada" class="collection-not-found">
-        <p>❌ No se encontró la colección "{{ coleccionBackup }}"</p>
       </div>
 
       <hr class="divider">

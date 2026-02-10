@@ -290,6 +290,95 @@
 /* Ensure default checkboxes in project detail keep native size */
 .project-detail-root input[type="checkbox"] { transform: none !important; width: auto !important; height: auto !important; }
 
+/* Custom Switch (estilo administración) */
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.custom-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+.custom-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  width: 46px;
+  height: 22px;
+  background-color: #FFC107;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.custom-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .custom-slider { background-color: #0074BD; }
+input:checked + .custom-slider:before { transform: translateX(24px); }
+
+.switch-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.switch-text {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+/* Toggle row layout para switches con botón de acción */
+.toggle-row.toggle-inline.switch-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.toggle-row.toggle-inline.switch-item .toggle-action {
+  margin-left: auto;
+}
+
+/* Add section row - label + botón */
+.add-section-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.add-section-label {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Campo switch dentro de formularios */
+.switch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.switch-field .service-control.switch-item {
+  margin-top: 4px;
+}
+
 @media (max-width: 720px) {
 	.db-config .db-grid { grid-template-columns: 1fr }
 }
@@ -870,6 +959,42 @@
 .tab.active{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));color:#0fb1c0;box-shadow: 0 6px 18px rgba(0,0,0,0.45);transform:translateY(-2px)}
 .tab.active::after{content:'';position:absolute;left:12px;right:12px;bottom:-8px;height:4px;border-radius:4px;background:linear-gradient(90deg,#5fd3db,#0f8fa8);box-shadow:0 6px 20px rgba(15,143,168,0.12)}
 
+/* New project tabs style for detail view */
+.new-project-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.new-project-tab {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: #0f1113;
+  color: #cfcfcf;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-project-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #ffd54f;
+  color: #ffd54f;
+}
+
+.new-project-tab.active {
+  background: linear-gradient(135deg, #FBC02D 0%, #F9A825 100%);
+  color: #0F1115;
+  border-color: #FBC02D;
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
+}
+
 /* Tab panel spacing */
 .project-detail-root .tab-panel { padding-top: 6px }
 
@@ -1128,6 +1253,195 @@
 @media (max-width: 900px) {
 	.checkbox-field { align-items:flex-start }
 	.checkbox-field .service-label { text-align:left }
+}
+
+/* Custom file input styling */
+.doc-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-input-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, #2a2d33 0%, #1a1c20 100%);
+  border: 1px solid #FBC02D;
+  border-radius: 8px;
+  color: #FBC02D;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-input-label:hover {
+  background: linear-gradient(180deg, #3a3d43 0%, #2a2c30 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 192, 45, 0.2);
+}
+
+.file-input-label svg {
+  flex-shrink: 0;
+}
+
+.file-label-text {
+  margin-left: 8px;
+}
+
+.file-name {
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-btn {
+  margin-top: 0 !important;
+}
+
+.upload-hint {
+  width: 100%;
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.upload-error {
+  width: 100%;
+  color: #E53935;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* Upload Validation Confirm Modal */
+.upload-confirm-modal .modal {
+  max-width: 480px;
+}
+
+.modal-header-warning {
+  color: #FBC02D !important;
+  font-size: 1.1rem;
+}
+
+.upload-warning-intro {
+  color: #cfcfcf;
+  margin-bottom: 12px;
+}
+
+.upload-file-info {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-file-info strong {
+  color: #ffd166;
+  word-break: break-all;
+}
+
+.file-size-info {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.validation-errors {
+  background: rgba(229, 57, 53, 0.08);
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.error-item {
+  color: #ff6b6b;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.error-item:last-child {
+  margin-bottom: 0;
+}
+
+.error-icon {
+  flex-shrink: 0;
+}
+
+.upload-confirm-question {
+  color: #cfcfcf;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.upload-modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.jh-btn-danger {
+  background: linear-gradient(180deg, #e25b5b 0%, #c83a3a 100%) !important;
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jh-btn-danger:hover {
+  background: linear-gradient(180deg, #ff6b6b 0%, #d44848 100%) !important;
+  transform: translateY(-2px);
+}
+
+.jh-btn-secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #cfcfcf !important;
+  border: 1px solid #444 !important;
+}
+
+.jh-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #666 !important;
+}
+
+.jh-btn-warning {
+  background: linear-gradient(180deg, #f0ad4e 0%, #ec971f 100%) !important;
+  color: #1a1a1a !important;
+}
+
+.jh-btn-warning:hover {
+  background: linear-gradient(180deg, #ffc107 0%, #f0ad4e 100%) !important;
+  transform: translateY(-2px);
 }
 
 /* Make toggle rows place label above control and left-align the control */

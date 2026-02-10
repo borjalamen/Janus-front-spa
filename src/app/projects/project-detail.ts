@@ -41,6 +41,36 @@ export class ProjectDetailComponent {
   // máximo permitido por el cliente antes de intentar subir (por defecto 20MB)
   readonly MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
   uploadError: string | null = null;
+  
+  // Validación de documentos - popup de confirmación
+  showUploadConfirmPopup = false;
+  pendingUploadFile?: File;
+  uploadValidationErrors: string[] = [];
+  
+  // Tipos de archivo permitidos
+  readonly ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.csv', '.json', '.xml', '.zip', '.rar', '.7z', '.png', '.jpg', '.jpeg', '.gif', '.svg'];
+  readonly ALLOWED_MIME_TYPES = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/plain',
+    'text/csv',
+    'application/json',
+    'application/xml',
+    'text/xml',
+    'application/zip',
+    'application/x-rar-compressed',
+    'application/x-7z-compressed',
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+    'image/svg+xml'
+  ];
+  
   ipString = '';
   nexusString = '';
   docsString = '';
@@ -165,9 +195,88 @@ export class ProjectDetailComponent {
 
   onDocFileSelected(event: any) {
     const file = event.target.files && event.target.files[0];
-    if (file) {
+    if (!file) return;
+    
+    // Validar el archivo
+    const validationErrors = this.validateFile(file);
+    
+    if (validationErrors.length > 0) {
+      // Archivo no pasa validación - mostrar popup de confirmación
+      this.pendingUploadFile = file;
+      this.uploadValidationErrors = validationErrors;
+      this.showUploadConfirmPopup = true;
+      this.selectedDocFile = undefined;
+    } else {
+      // Archivo válido - subir directamente
       this.selectedDocFile = file;
+      this.uploadProjectDocument();
     }
+  }
+
+  validateFile(file: File): string[] {
+    const errors: string[] = [];
+    
+    // Validar tamaño
+    if (file.size > this.MAX_UPLOAD_BYTES) {
+      errors.push(`El archivo excede el tamaño máximo permitido (${this.formatBytes(file.size)} > ${this.formatBytes(this.MAX_UPLOAD_BYTES)})`);
+    }
+    
+    // Validar extensión
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = this.ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(ext));
+    if (!hasValidExtension) {
+      const ext = fileName.includes('.') ? fileName.substring(fileName.lastIndexOf('.')) : 'sin extensión';
+      errors.push(`Tipo de archivo no permitido: ${ext}`);
+    }
+    
+    // Validar MIME type (si está disponible)
+    if (file.type && !this.ALLOWED_MIME_TYPES.includes(file.type)) {
+      // Solo agregar si también falló la extensión o si el MIME es sospechoso
+      if (!hasValidExtension) {
+        errors.push(`Tipo MIME no reconocido: ${file.type}`);
+      }
+    }
+    
+    // Validar nombre de archivo (caracteres especiales problemáticos)
+    if (/[<>:"|?*]/.test(file.name)) {
+      errors.push('El nombre del archivo contiene caracteres no permitidos');
+    }
+    
+    return errors;
+  }
+
+  confirmUploadAnyway() {
+    if (this.pendingUploadFile) {
+      this.selectedDocFile = this.pendingUploadFile;
+      this.showUploadConfirmPopup = false;
+      this.pendingUploadFile = undefined;
+      this.uploadValidationErrors = [];
+      this.uploadProjectDocument();
+    }
+  }
+
+  cancelUpload() {
+    this.showUploadConfirmPopup = false;
+    this.pendingUploadFile = undefined;
+    this.uploadValidationErrors = [];
+    this.selectedDocFile = undefined;
+    // Reset file input
+    try {
+      const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
+      if (el) el.value = '';
+    } catch (e) {}
+  }
+
+  deleteUploadedFile() {
+    this.showUploadConfirmPopup = false;
+    this.pendingUploadFile = undefined;
+    this.uploadValidationErrors = [];
+    this.selectedDocFile = undefined;
+    // Reset file input
+    try {
+      const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
+      if (el) el.value = '';
+    } catch (e) {}
   }
 
   uploadProjectDocument() {
@@ -544,6 +653,7 @@ export class ProjectDetailComponent {
     if (!m) return;
     m.openshifts = m.openshifts || [];
     m.openshifts.push({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
+    m.openshiftEnabled = true;
   }
 
   addDb(machineIndex: number) {
@@ -551,6 +661,7 @@ export class ProjectDetailComponent {
     if (!m) return;
     m.dbs = m.dbs || [];
     m.dbs.push({ identifier: '', engine:'', instanceName:'', host:'', port:'', sid:'', user:'', password:'', description:'', properties:'', contactPerson:'', contactMail:'' });
+    m.dbEnabled = true;
   }
 
   addOtherTool(machineIndex: number) {
@@ -558,5 +669,6 @@ export class ProjectDetailComponent {
     if (!m) return;
     m.otherTools = m.otherTools || [];
     m.otherTools.push({ identifier: '', name:'', path:'', running:false, contactPerson:'', contactMail:'' });
+    m.otherToolEnabled = true;
   }
 }

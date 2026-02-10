@@ -248,7 +248,15 @@
     "NO_DOCUMENTS_MESSAGE": "No documents available",
     "DOCUMENTATION_LABEL": "Documentation",
     "UPLOAD": "Upload",
-    "UPLOAD_LIMIT_HINT": "Maximum size: {{size}}"
+    "SELECT_FILE": "Select file",
+    "UPLOAD_LIMIT_HINT": "Maximum size: {{size}}",
+    "UPLOAD_ERROR_TOO_LARGE": "File is too large",
+    "UPLOAD_GENERIC_ERROR": "Error uploading file",
+    "UPLOAD_VALIDATION_TITLE": "File validation issues",
+    "UPLOAD_VALIDATION_MSG": "The selected file does not pass validation:",
+    "UPLOAD_CONFIRM_QUESTION": "Do you want to upload the file anyway?",
+    "UPLOAD_ANYWAY": "Upload anyway",
+    "DELETE_FILE": "Delete file"
   },
   "PROCEDURES_SECTION": {
     "TITLE": "Procedures",
