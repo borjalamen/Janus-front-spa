@@ -41,6 +41,16 @@
         {{ p.descripcion }}
       </p>
 
+      <!-- Botó per veure els steps -->
+      <div class="procedure-steps">
+        <button
+          class="jenkins-add-btn"
+          (click)="verSteps(p)"
+          title="Veure steps">
+          📋 {{ 'PROCEDURES_SECTION.VIEW_STEPS' | translate }}
+        </button>
+      </div>
+
       <!-- accions CRUD a la dreta -->
       <div class="procedure-actions" *ngIf="canEdit">
         <button
@@ -118,7 +128,11 @@
 <div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>{{ 'PROCEDURES_SECTION.DELETE_TITLE' | translate }}</h3>
-    <p>{{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{ title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)' } }}</p>
+    <p>
+      {{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{
+        title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)'
+      } }}
+    </p>
 
     <div class="popup-actions">
       <button class="cancelar-btn" (click)="cancelarEliminar()" title="Cancelar">
@@ -126,6 +140,32 @@
       </button>
       <button class="guardar-btn" (click)="eliminarProcedimiento()" title="Eliminar">
         ✓
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup veure steps -->
+<div class="popup-fons" *ngIf="mostrarSteps" (click)="tancarSteps()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <h3>
+      {{ 'PROCEDURES_SECTION.STEPS_TITLE' | translate }}:
+      {{ procSeleccionada?.titulo }}
+    </h3>
+
+    <div *ngIf="!procSeleccionada?.steps?.length">
+      {{ 'PROCEDURES_SECTION.NO_STEPS' | translate }}
+    </div>
+
+    <div *ngFor="let step of procSeleccionada?.steps; let i = index" class="step-item">
+      <strong>Step {{ i + 1 }}: {{ step.titulo }}</strong><br>
+      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ step.responsable }}<br>
+      {{ step.descripcion }}
+    </div>
+
+    <div class="popup-actions">
+      <button class="cancelar-btn" (click)="tancarSteps()" title="Tancar">
+        ✗
       </button>
     </div>
   </div>

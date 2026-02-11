@@ -270,8 +270,12 @@
     "PLACEHOLDER_TITLE": "Proceso de deploy a producción",
     "PLACEHOLDER_DEPARTMENT": "IT, RRHH, Finanzas...",
     "PLACEHOLDER_RESPONSIBLE": "Juan Pérez",
-    "PLACEHOLDER_DESCRIPTION": "Procedimiento para realizar el despliegue de aplicaciones en el entorno de producción..."
-  },
+    "PLACEHOLDER_DESCRIPTION": "Procedimiento para realizar el despliegue de aplicaciones en el entorno de producción...",
+    "VIEW_STEPS": "Ver steps",
+    "STEPS_TITLE": "Steps",
+    "NO_STEPS": "No hay steps definidos para este procedimiento"
+},
+  
   "PLANNING_SECTION": {
     "TITLE": "Planificación",
     "DESCRIPTION": "Planificación anual, responsables y estado de los planes.",

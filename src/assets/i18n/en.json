@@ -275,7 +275,10 @@
     "PLACEHOLDER_TITLE": "Production deployment process",
     "PLACEHOLDER_DEPARTMENT": "IT, HR, Finance...",
     "PLACEHOLDER_RESPONSIBLE": "John Doe",
-    "PLACEHOLDER_DESCRIPTION": "Procedure to deploy applications to the production environment..."
+    "PLACEHOLDER_DESCRIPTION": "Procedure to deploy applications to the production environment...",
+    "VIEW_STEPS": "View steps",
+    "STEPS_TITLE": "Steps",
+    "NO_STEPS": "No steps defined for this procedure"
   },
   "PLANNING_SECTION": {
     "TITLE": "Planning",

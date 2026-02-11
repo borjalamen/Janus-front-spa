@@ -282,7 +282,10 @@
   "PLACEHOLDER_TITLE": "Procés de desplegament a producció",
   "PLACEHOLDER_DEPARTMENT": "IT, RRHH, Finances...",
   "PLACEHOLDER_RESPONSIBLE": "Joan Pérez",
-  "PLACEHOLDER_DESCRIPTION": "Procediment per realitzar el desplegament d'aplicacions a l'entorn de producció..."
+  "PLACEHOLDER_DESCRIPTION": "Procediment per realitzar el desplegament d'aplicacions a l'entorn de producció...",
+  "VIEW_STEPS": "Veure steps",
+  "STEPS_TITLE": "Steps",
+  "NO_STEPS": "No hi ha steps definits per aquest procediment"
 },
 "PLANNING_SECTION": {
   "TITLE": "Planificació",

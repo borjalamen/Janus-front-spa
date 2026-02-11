@@ -29,8 +29,8 @@ export class ProcedimientosComponent implements OnInit {
     titulo: '',
     descripcion: '',
     departamento: '',
-    tags: null,
-    steps: null,
+    tags: [],
+    steps: [],
     visible: true,
     deleted: false
   };
@@ -41,6 +41,10 @@ export class ProcedimientosComponent implements OnInit {
   // popup delete
   mostrarPopupDelete = false;
   procAEliminar: Procedure | null = null;
+
+  // Vista de steps
+  mostrarSteps = false;
+  procSeleccionada: Procedure | null = null;
 
   constructor(
     private proceduresService: ProceduresService,
@@ -86,8 +90,8 @@ export class ProcedimientosComponent implements OnInit {
       titulo: '',
       descripcion: '',
       departamento: '',
-      tags: null,
-      steps: null,
+      tags: [],
+      steps: [],
       visible: true,
       deleted: false
     };
@@ -100,13 +104,15 @@ export class ProcedimientosComponent implements OnInit {
     // còpia superficial
     this.procForm = {
       id: proc.id,
-      titulo: proc.titulo,
-      descripcion: proc.descripcion,
-      departamento: proc.departamento,
-      tags: proc.tags || null,
-      steps: proc.steps ? [...proc.steps] : null,
-      visible: proc.visible,
-      deleted: proc.deleted
+      titulo: proc.titulo ?? '',
+      descripcion: proc.descripcion ?? '',
+      departamento: proc.departamento ?? '',
+      tags: proc.tags ?? [],
+      steps: proc.steps ? [...proc.steps] : [],
+      visible: proc.visible ?? true,
+      deleted: proc.deleted ?? false,
+      createdAt: proc.createdAt,
+      updatedAt: proc.updatedAt
     };
     this.primerResponsable = proc.steps?.[0]?.responsable || '';
     this.mostrarPopup = true;
@@ -139,9 +145,20 @@ export class ProcedimientosComponent implements OnInit {
       this.procForm.steps[0].responsable = this.primerResponsable;
     }
 
+    // adaptar body al contracte del back (Postman)
+    const body: any = {
+      titulo: this.procForm.titulo,
+      descripcion: this.procForm.descripcion,
+      departamento: this.procForm.departamento,
+      tags: this.procForm.tags ?? [],
+      steps: this.procForm.steps ?? [],
+      isVisible: this.procForm.visible ?? true
+      // no enviem isDeleted, createdAt, updatedAt: els gestiona el back
+    };
+
     if (this.editando && this.editando.id) {
       // UPDATE
-      this.proceduresService.update(this.editando.id, this.procForm).subscribe({
+      this.proceduresService.update(this.editando.id, body).subscribe({
         next: updated => {
           const idx = this.procedures.findIndex(p => p.id === updated.id);
           if (idx !== -1) this.procedures[idx] = updated;
@@ -152,7 +169,7 @@ export class ProcedimientosComponent implements OnInit {
       });
     } else {
       // CREATE
-      this.proceduresService.create(this.procForm).subscribe({
+      this.proceduresService.create(body).subscribe({
         next: created => {
           this.procedures.push(created);
           this.procedimientosFiltrados = [...this.procedures];
@@ -188,5 +205,16 @@ export class ProcedimientosComponent implements OnInit {
       },
       error: err => console.error('Error eliminant procediment', err)
     });
+  }
+
+  // ===== veure steps =====
+  verSteps(proc: Procedure) {
+    this.procSeleccionada = proc;
+    this.mostrarSteps = true;
+  }
+
+  tancarSteps() {
+    this.mostrarSteps = false;
+    this.procSeleccionada = null;
   }
 }
