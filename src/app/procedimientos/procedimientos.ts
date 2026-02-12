@@ -16,12 +16,14 @@ import { AuthService } from '../auth.service';
 })
 export class ProcedimientosComponent implements OnInit {
   title = 'Procedimientos';
+  
+  activeTab: 'crear' | 'listar' = 'listar';
 
   procedures: Procedure[] = [];
   procedimientosFiltrados: Procedure[] = [];
 
   // popup crear / editar
-  mostrarPopup = false;
+  
   editando: Procedure | null = null;
 
   // formulari basat en el model del backend
@@ -96,7 +98,8 @@ export class ProcedimientosComponent implements OnInit {
       deleted: false
     };
     this.primerResponsable = '';
-    this.mostrarPopup = true;
+    this.activeTab = 'crear';
+   
   }
 
   obrirPopupEditar(proc: Procedure) {
@@ -115,12 +118,13 @@ export class ProcedimientosComponent implements OnInit {
       updatedAt: proc.updatedAt
     };
     this.primerResponsable = proc.steps?.[0]?.responsable || '';
-    this.mostrarPopup = true;
+    this.activeTab = 'crear';
+    
   }
 
   tancarPopup() {
-    this.mostrarPopup = false;
     this.editando = null;
+    this.activeTab = 'listar';
   }
 
   guardarProcedimiento() {

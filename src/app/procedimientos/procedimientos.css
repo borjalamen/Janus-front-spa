@@ -5,220 +5,345 @@ body {
   margin: 0;
 }
 
-/* ========================= */
-/*   CONTENIDOR PRINCIPAL    */
-/* ========================= */
-
-.section-container {
+/* Container general */
+.procedures-section {
   padding: 24px;
   background: #16181c;
   border-radius: 10px;
-  /* glow vermell lleu */
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.8),
-    0 0 16px rgba(229, 57, 53, 0.25);
+  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
   margin: 20px;
   color: #E0E0E0;
 }
 
-.documents-header {
+/* Header */
+.procedures-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
-.documents-header h2 {
+.procedures-header h2 {
   color: #FBC02D;
   font-weight: bold;
   margin: 0;
 }
 
-.section-container > p {
-  margin: 0 0 18px 0;
-  color: #cfd8dc;
-  font-size: 14px;
-}
-
-/* ========================= */
-/*       BOTÓ “AFEGIR”       */
-/* ========================= */
-
-.jenkins-add-btn {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 0;
-  background: transparent;
+.procedures-description {
   color: #E0E0E0;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
+}
+
+/* Pestanyes */
+.procedures-tabs {
+  display: flex;
   gap: 8px;
-  font-size: 14px;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  padding: 16px 0;
+  border-bottom: 2px solid rgba(229, 57, 53, 0.3);
+  margin-bottom: 20px;
 }
 
-.jenkins-add-btn mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-}
-
-.jenkins-add-btn:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffd54f;
-  transform: translateY(-1px);
-}
-
-/* Botó principal d’afegir */
-.documents-header .jenkins-add-btn {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #101216;
-}
-
-.documents-header .jenkins-add-btn:hover {
-  border-color: #ffd54f;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.6),
-    0 0 10px rgba(251, 192, 45, 0.35);
-}
-
-/* ========================= */
-/*   TARGETES DE PROCEDIMENT */
-/* ========================= */
-
-.procedures-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 18px;
-}
-
-/* Card d’un procediment */
-.procedure-card {
-  background: radial-gradient(circle at top left, #20242a 0, #111318 60%);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 16px 18px 14px;
-  box-sizing: border-box;
+.procedures-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: rgba(207, 207, 207, 0.7);
+  cursor: pointer;
   position: relative;
-  overflow: hidden;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
+  font-weight: 600;
+  transition: all 160ms ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.procedure-card::before {
+.procedures-tab mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.procedures-tab:hover {
+  color: #E53935;
+  background: rgba(229, 57, 53, 0.08);
+}
+
+.procedures-tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.15);
+}
+
+.procedures-tab.active {
+  background: linear-gradient(180deg, rgba(229, 57, 53, 0.12), rgba(229, 57, 53, 0.06));
+  color: #E53935;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+}
+
+.procedures-tab.active::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, rgba(229, 57, 53, 0.18), transparent 55%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease;
+  left: 12px;
+  right: 12px;
+  bottom: -2px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #E53935, #c62828);
+  box-shadow: 0 6px 20px rgba(229, 57, 53, 0.3);
 }
 
-.procedure-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: rgba(229, 57, 53, 0.4);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.7),
-    0 0 12px rgba(229, 57, 53, 0.3);
-  background: radial-gradient(circle at top left, #242933 0, #101217 60%);
+.procedures-tab-panel {
+  padding: 10px 0;
+  animation: proceduresFadeIn 0.3s ease-in;
 }
 
-.procedure-card:hover::before {
-  opacity: 1;
+@keyframes proceduresFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Capçalera dins la card */
-.procedure-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  gap: 10px;
+/* Formulari */
+.procedure-form {
+  background: rgba(22, 24, 28, 0.6);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.procedure-name {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: #ffd54f;
-  letter-spacing: 0.6px;
-}
-
-.procedure-status {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(26, 28, 32, 0.95);
+.procedure-form h3 {
   color: #FBC02D;
-  border: 1px solid rgba(251, 192, 45, 0.7);
-  text-transform: uppercase;
-  white-space: nowrap;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4em;
 }
 
-/* Textos de la card */
-.procedure-responsible {
-  margin: 4px 0 2px 0;
-  font-size: 13px;
-  color: #cfd8dc;
-}
-
-.procedure-desc {
-  margin: 2px 0 0 0;
-  font-size: 13px;
-  color: #90a4ae;
-  line-height: 1.5;
-}
-
-/* Botó de steps sota el text */
-.procedure-steps {
-  margin-top: 10px;
+.procedure-field {
   display: flex;
-  justify-content: flex-start;
-}
-
-.procedure-steps .jenkins-add-btn {
-  padding: 6px 12px;
-  font-size: 13px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.procedure-steps .jenkins-add-btn:hover {
-  border-color: rgba(251, 192, 45, 0.8);
-}
-
-/* Botons CRUD dins la card */
-.procedure-actions {
-  margin-top: 12px;
-  display: flex;
+  flex-direction: column;
   gap: 6px;
+  margin-bottom: 10px;
+}
+
+.procedure-field label {
+  color: #cfcfcf;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.procedure-field input,
+.procedure-field textarea {
+  background: #141516 !important;
+  color: #eee !important;
+  border: 1px solid #2e3236 !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.procedure-field input::placeholder,
+.procedure-field textarea::placeholder {
+  color: #7c8084 !important;
+}
+
+.procedure-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
   justify-content: flex-end;
 }
 
-.procedure-actions .jenkins-add-btn {
-  padding: 6px 10px;
-  font-size: 16px;
-  border-radius: 6px;
+/* Llista de procediments (cards tipus fila) */
+.procedures-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* ========================= */
-/*          POPUPS           */
-/* ========================= */
+.procedure-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: #0f1113;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+}
 
-.popup-fons {
+.procedure-row:hover {
+  border-color: rgba(229, 57, 53, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
+              0 0 10px rgba(229, 57, 53, 0.1);
+  transform: translateY(-2px);
+}
+
+.procedure-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.procedure-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.procedure-icon mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.procedure-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.procedure-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.procedure-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffd54f;
+}
+
+.procedure-chip {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(229, 57, 53, 0.15);
+  color: #E53935;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  font-weight: 600;
+}
+
+.procedure-text {
+  color: #cfd8dc;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Resum de steps */
+.procedure-steps-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+  background: rgba(20, 21, 22, 0.3);
+  border-radius: 6px;
+  border-left: 3px solid #FBC02D;
+}
+
+.procedure-steps-summary-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px;
+  background: rgba(10, 11, 12, 0.5);
+  border-radius: 4px;
+}
+
+.procedure-steps-icon {
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  color: #FBC02D;
+}
+
+.procedure-steps-summary-text {
+  flex: 1;
+}
+
+.procedure-steps-summary-text strong {
+  display: block;
+  color: #E0E0E0;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.procedure-steps-summary-text p {
+  margin: 0;
+  color: #cfd8dc;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Accions */
+.procedure-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.procedure-action-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
+  color: #E0E0E0;
+}
+
+.procedure-action-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.procedure-view-btn:hover {
+  color: #66BB6A;
+}
+
+.procedure-edit-btn:hover {
+  color: #ffd54f;
+}
+
+.procedure-delete-btn:hover {
+  color: #ff5252;
+}
+
+/* No results */
+.procedures-no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.procedures-no-results mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+/* Popups */
+.procedures-popup-backdrop {
   position: fixed;
   left: 0;
   right: 0;
@@ -231,68 +356,37 @@ body {
   z-index: 2147483000 !important;
 }
 
-.popup-container {
+.procedures-popup {
   background: #0f1113 !important;
   color: #eee !important;
   padding: 22px !important;
-  border-radius: 10px !important;
-  width: min(720px, 96vw) !important;
+  border-radius: 8px !important;
+  width: 720px !important;
   max-height: 80vh !important;
   overflow: auto !important;
-  box-shadow:
-    0 0 30px rgba(251, 192, 45, 0.4),
-    0 0 50px rgba(251, 192, 45, 0.2) !important;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4),
+              0 0 50px rgba(251, 192, 45, 0.2) !important;
   border: 2px solid #FBC02D !important;
 }
 
-.popup-container h3 {
+.procedures-popup h3 {
   color: #ffd54f;
-  margin: 0 0 16px 0;
+  margin: 0 0 15px 0;
   text-align: center;
   font-size: 1.3rem;
   font-weight: bold;
 }
 
-/* Camps formulari */
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.form-field label {
-  color: #cfcfcf;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.form-field input,
-.form-field textarea {
-  background: #141516 !important;
-  color: #eee !important;
-  border: 1px solid #2e3236 !important;
-  padding: 8px !important;
-  border-radius: 4px !important;
-  font-size: 0.95rem;
-  outline: none;
-}
-
-.form-field input::placeholder,
-.form-field textarea::placeholder {
-  color: #7c8084 !important;
-}
-
-/* Accions del popup */
-.popup-actions {
+.procedures-popup-actions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
   margin-top: 16px;
 }
 
-.cancelar-btn,
-.guardar-btn {
+/* Botons save/cancel reutilitzats */
+.procedure-cancel-btn,
+.procedure-save-btn {
   background: transparent !important;
   color: #999 !important;
   border: 0 !important;
@@ -310,9 +404,9 @@ body {
   box-shadow: none;
 }
 
-.cancelar-btn:hover,
-.guardar-btn:hover {
-  transform: scale(1.12) translateY(-2px);
+.procedure-cancel-btn:hover,
+.procedure-save-btn:hover {
+  transform: scale(1.15) translateY(-2px);
   box-shadow:
     0 6px 16px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -321,47 +415,65 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.guardar-btn {
+.procedure-save-btn {
   color: #4CAF50 !important;
 }
 
-.guardar-btn:hover {
+.procedure-save-btn:hover {
   background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
   color: #fff !important;
   box-shadow:
     0 6px 16px rgba(76, 175, 80, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
     0 0 20px rgba(76, 175, 80, 0.5) !important;
   border: 1px solid rgba(76, 175, 80, 0.5) !important;
 }
 
-.cancelar-btn {
+.procedure-cancel-btn {
   color: #E53935 !important;
 }
 
-.cancelar-btn:hover {
+.procedure-cancel-btn:hover {
   background: linear-gradient(145deg, #E53935, #c62828) !important;
   color: #fff !important;
   box-shadow:
     0 6px 16px rgba(229, 57, 53, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
     0 0 20px rgba(229, 57, 53, 0.4) !important;
   border: 1px solid rgba(229, 57, 53, 0.5) !important;
 }
 
-/* Steps dins del popup de steps */
-.step-item {
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #cfd8dc;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background: rgba(20, 21, 24, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+/* Steps dins popup */
+.procedure-step-item {
+  background: #0f1113;
+  border: 1px solid #2e3236;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
 }
 
-.step-item strong {
+.procedure-step-item:hover {
+  border-color: rgba(251, 192, 45, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.procedure-step-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.procedure-step-title strong {
   color: #FBC02D;
+  font-size: 14px;
+}
+
+.procedure-step-content {
+  color: #cfd8dc;
+  font-size: 14px;
+  line-height: 1.6;
+  background: rgba(10, 11, 12, 0.3);
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 3px solid rgba(251, 192, 45, 0.3);
 }

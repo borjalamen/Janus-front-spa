@@ -1,153 +1,154 @@
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
-<div class="section-container">
-  <div class="documents-header">
+<div class="procedures-section">
+  <div class="procedures-header">
     <h2>{{ 'PROCEDURES_SECTION.TITLE' | translate }}</h2>
+  </div>
 
-    <button
-      class="jenkins-add-btn"
-      *ngIf="canEdit"
-      (click)="obrirPopupCrear()">
+  <!-- Pestanyes -->
+  <div class="procedures-tabs">
+    <button class="procedures-tab" [class.active]="activeTab==='crear'" (click)="activeTab='crear'">
       <mat-icon inline="true">add</mat-icon>
-      <span>{{ 'PROCEDURES_SECTION.ADD_BUTTON' | translate }}</span>
+      {{ 'PROCEDURES_SECTION.TAB_CREATE' | translate }}
+    </button>
+    <button class="procedures-tab" [class.active]="activeTab==='listar'" (click)="activeTab='listar'">
+      <mat-icon inline="true">list</mat-icon>
+      {{ 'PROCEDURES_SECTION.TAB_LIST' | translate }}
     </button>
   </div>
 
-  <p>{{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}</p>
+  <!-- Pestanya: Crear/Editar -->
+  <div *ngIf="activeTab==='crear'" class="procedures-tab-panel">
+    <div class="procedure-form">
+      <h3>{{ (editando ? 'PROCEDURES_SECTION.EDIT_TITLE' : 'PROCEDURES_SECTION.NEW_TITLE') | translate }}</h3>
 
-  <!-- Llista de procediments com a cards -->
-  <div class="procedures-grid">
-    <div *ngFor="let p of procedimientosFiltrados" class="procedure-card">
-
-      <!-- capçalera del bloc -->
-      <div class="procedure-header">
-        <h3 class="procedure-name">
-          {{ p.titulo || '(Sense títol)' }}
-        </h3>
-
-        <span class="procedure-status">
-          {{ 'PROCEDURES_SECTION.STATUS' | translate }}:
-          {{ p.departamento || '-' }}
-        </span>
+      <div class="procedure-field">
+        <label>{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}</label>
+        <input
+          type="text"
+          [(ngModel)]="procForm.titulo"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate"
+          title="Títol del procediment" />
       </div>
 
-      <!-- cos del bloc -->
-      <div class="procedure-responsible">
-        {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
-        {{ (p.steps && p.steps[0] && p.steps[0].responsable) || '-' }}
+      <div class="procedure-field">
+        <label>{{ 'PROCEDURES_SECTION.FIELD_DEPARTMENT' | translate }}</label>
+        <input
+          type="text"
+          [(ngModel)]="procForm.departamento"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DEPARTMENT' | translate"
+          title="Departament / Estat" />
       </div>
 
-      <p class="procedure-desc" *ngIf="p.descripcion">
-        {{ p.descripcion }}
-      </p>
+      <div class="procedure-field">
+        <label>{{ 'PROCEDURES_SECTION.FIELD_RESPONSIBLE' | translate }}</label>
+        <input
+          type="text"
+          [(ngModel)]="primerResponsable"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate"
+          title="Responsable principal" />
+      </div>
 
-      <!-- Botó per veure els steps -->
-      <div class="procedure-steps">
-        <button
-          class="jenkins-add-btn"
-          (click)="verSteps(p)"
-          title="Veure steps">
-          📋 {{ 'PROCEDURES_SECTION.VIEW_STEPS' | translate }}
+      <div class="procedure-field">
+        <label>{{ 'PROCEDURES_SECTION.FIELD_DESCRIPTION' | translate }}</label>
+        <textarea
+          rows="3"
+          [(ngModel)]="procForm.descripcion"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate"
+          title="Descripció del procediment">
+        </textarea>
+      </div>
+
+      <div class="procedure-form-actions">
+        <button class="procedure-cancel-btn" (click)="tancarPopup()" title="Cancel·lar">
+          ✗
+        </button>
+        <button class="procedure-save-btn" (click)="guardarProcedimiento()" [title]="editando ? 'Actualizar' : 'Guardar'">
+          ✓
         </button>
       </div>
-
-      <!-- accions CRUD a la dreta -->
-      <div class="procedure-actions" *ngIf="canEdit">
-        <button
-          class="jenkins-add-btn"
-          (click)="obrirPopupEditar(p)"
-          title="Editar procedimiento">
-          ✏️
-        </button>
-        <button
-          class="jenkins-add-btn cancel-btn"
-          (click)="confirmarEliminar(p)"
-          title="Eliminar procedimiento">
-          🗑️
-        </button>
-      </div>
-
     </div>
   </div>
-</div>
 
-<!-- Popup crear / editar -->
-<div class="popup-fons" *ngIf="mostrarPopup" (click)="tancarPopup()">
-  <div class="popup-container" (click)="$event.stopPropagation()">
-    <h3>{{ (editando ? 'PROCEDURES_SECTION.EDIT_TITLE' : 'PROCEDURES_SECTION.NEW_TITLE') | translate }}</h3>
-
-    <div class="form-field">
-      <label>{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}</label>
-      <input
-        type="text"
-        [(ngModel)]="procForm.titulo"
-        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate"
-        title="Título del procedimiento" />
-    </div>
-
-    <div class="form-field">
-      <label>{{ 'PROCEDURES_SECTION.FIELD_DEPARTMENT' | translate }}</label>
-      <input
-        type="text"
-        [(ngModel)]="procForm.departamento"
-        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DEPARTMENT' | translate"
-        title="Departamento / Estado" />
-    </div>
-
-    <div class="form-field">
-      <label>{{ 'PROCEDURES_SECTION.FIELD_RESPONSIBLE' | translate }}</label>
-      <input
-        type="text"
-        [(ngModel)]="primerResponsable"
-        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate"
-        title="Responsable principal" />
-    </div>
-
-    <div class="form-field">
-      <label>{{ 'PROCEDURES_SECTION.FIELD_DESCRIPTION' | translate }}</label>
-      <textarea
-        rows="3"
-        [(ngModel)]="procForm.descripcion"
-        [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate"
-        title="Descripción del procedimiento">
-      </textarea>
-    </div>
-
-    <div class="popup-actions">
-      <button class="cancelar-btn" (click)="tancarPopup()" title="Cancelar">
-        ✗
-      </button>
-      <button class="guardar-btn" (click)="guardarProcedimiento()" [title]="editando ? 'Actualizar' : 'Guardar'">
-        ✓
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Popup eliminar -->
-<div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
-  <div class="popup-container" (click)="$event.stopPropagation()">
-    <h3>{{ 'PROCEDURES_SECTION.DELETE_TITLE' | translate }}</h3>
-    <p>
-      {{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{
-        title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)'
-      } }}
+  <!-- Pestanya: Llistar -->
+  <div *ngIf="activeTab==='listar'" class="procedures-tab-panel">
+    <p class="procedures-description">
+      {{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}
     </p>
 
-    <div class="popup-actions">
-      <button class="cancelar-btn" (click)="cancelarEliminar()" title="Cancelar">
-        ✗
-      </button>
-      <button class="guardar-btn" (click)="eliminarProcedimiento()" title="Eliminar">
-        ✓
-      </button>
+    <div class="procedures-list" *ngIf="procedimientosFiltrados.length > 0">
+      <div *ngFor="let p of procedimientosFiltrados" class="procedure-row">
+        <!-- Icon esquerra -->
+        <div
+          class="procedure-icon"
+          [style.background]="'linear-gradient(135deg, #E53935, #c62828cc)'">
+          <mat-icon style="color:#fff">rule_folder</mat-icon>
+        </div>
+
+        <div class="procedure-info">
+          <div class="procedure-title-row">
+            <strong class="procedure-title">
+              {{ p.titulo || '(Sense títol)' }}
+            </strong>
+            <span class="procedure-chip">
+              {{ p.departamento || '—' }}
+            </span>
+          </div>
+
+          <div class="procedure-text" *ngIf="p.descripcion">
+            {{ p.descripcion }}
+          </div>
+
+          <div class="procedure-steps-summary" *ngIf="p.steps && p.steps.length > 0">
+            <div class="procedure-steps-summary-item">
+              <mat-icon class="procedure-steps-icon">assignment</mat-icon>
+              <div class="procedure-steps-summary-text">
+                <strong>
+                  {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
+                  {{ p.steps[0]?.responsable || '-' }}
+                </strong>
+                <p>
+                  {{ 'PROCEDURES_SECTION.STEPS_COUNT' | translate:{count: p.steps.length} }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="procedure-actions">
+            <button
+              class="procedure-action-btn procedure-view-btn"
+              (click)="verSteps(p)"
+              title="Veure steps"
+              *ngIf="p.steps && p.steps.length > 0">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              class="procedure-action-btn procedure-edit-btn"
+              (click)="obrirPopupEditar(p); activeTab='crear'"
+              title="Editar">
+              ✏️
+            </button>
+            <button
+              class="procedure-action-btn procedure-delete-btn"
+              (click)="confirmarEliminar(p)"
+              title="Eliminar">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="procedimientosFiltrados.length === 0" class="procedures-no-results">
+      <mat-icon>search_off</mat-icon>
+      <p>{{ 'PROCEDURES_SECTION.NO_RESULTS' | translate }}</p>
     </div>
   </div>
 </div>
 
 <!-- Popup veure steps -->
-<div class="popup-fons" *ngIf="mostrarSteps" (click)="tancarSteps()">
-  <div class="popup-container" (click)="$event.stopPropagation()">
+<div class="procedures-popup-backdrop" *ngIf="mostrarSteps" (click)="tancarSteps()">
+  <div class="procedures-popup" (click)="$event.stopPropagation()">
     <h3>
       {{ 'PROCEDURES_SECTION.STEPS_TITLE' | translate }}:
       {{ procSeleccionada?.titulo }}
@@ -157,15 +158,42 @@
       {{ 'PROCEDURES_SECTION.NO_STEPS' | translate }}
     </div>
 
-    <div *ngFor="let step of procSeleccionada?.steps; let i = index" class="step-item">
-      <strong>Step {{ i + 1 }}: {{ step.titulo }}</strong><br>
-      {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}: {{ step.responsable }}<br>
-      {{ step.descripcion }}
+    <div *ngFor="let step of procSeleccionada?.steps; let i = index" class="procedure-step-item">
+      <div class="procedure-step-header">
+        <div class="procedure-step-title">
+          <strong>Step {{ i + 1 }} - {{ step.titulo }}</strong>
+        </div>
+      </div>
+      <div class="procedure-step-content">
+        <div><b>{{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:</b> {{ step.responsable }}</div>
+        <div *ngIf="step.descripcion">{{ step.descripcion }}</div>
+      </div>
     </div>
 
-    <div class="popup-actions">
-      <button class="cancelar-btn" (click)="tancarSteps()" title="Tancar">
+    <div class="procedures-popup-actions">
+      <button class="procedure-cancel-btn" (click)="tancarSteps()" title="Tancar">
         ✗
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup eliminar -->
+<div class="procedures-popup-backdrop" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
+  <div class="procedures-popup" (click)="$event.stopPropagation()">
+    <h3>{{ 'PROCEDURES_SECTION.DELETE_TITLE' | translate }}</h3>
+    <p>
+      {{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{
+        title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)'
+      } }}
+    </p>
+
+    <div class="procedures-popup-actions">
+      <button class="procedure-cancel-btn" (click)="cancelarEliminar()" title="Cancelar">
+        ✗
+      </button>
+      <button class="procedure-save-btn" (click)="eliminarProcedimiento()" title="Eliminar">
+        ✓
       </button>
     </div>
   </div>
