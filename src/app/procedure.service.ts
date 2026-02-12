@@ -18,6 +18,7 @@ export interface Procedure {
   titulo: string | null;
   descripcion?: string | null;
   departamento?: string | null;
+   entorno?: string | null; 
   tags?: string[] | null;
   steps?: ProcedureStep[] | null;
   createdAt?: string;

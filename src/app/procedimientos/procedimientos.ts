@@ -16,14 +16,14 @@ import { AuthService } from '../auth.service';
 })
 export class ProcedimientosComponent implements OnInit {
   title = 'Procedimientos';
-  
+
   activeTab: 'crear' | 'listar' = 'listar';
 
   procedures: Procedure[] = [];
   procedimientosFiltrados: Procedure[] = [];
 
   // popup crear / editar
-  
+
   editando: Procedure | null = null;
 
   // formulari basat en el model del backend
@@ -31,6 +31,7 @@ export class ProcedimientosComponent implements OnInit {
     titulo: '',
     descripcion: '',
     departamento: '',
+    entorno: 'minsait',
     tags: [],
     steps: [],
     visible: true,
@@ -48,10 +49,29 @@ export class ProcedimientosComponent implements OnInit {
   mostrarSteps = false;
   procSeleccionada: Procedure | null = null;
 
+  coloresEntorno = {
+    minsait: '#1E88E5',
+    preproduccion: '#FBC02D',
+    produccion: '#E53935'
+  };
+
+  getColorEntorno(entorno: string): string {
+    return this.coloresEntorno[entorno as keyof typeof this.coloresEntorno] || '#757575';
+  }
+
+  getNombreEntorno(entorno: string): string {
+    switch (entorno) {
+      case 'minsait': return 'Minsait (Blau)';
+      case 'preproduccion': return 'Preproducció (Groc)';
+      case 'produccion': return 'Producció (Roig)';
+      default: return entorno;
+    }
+  }
+
   constructor(
     private proceduresService: ProceduresService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarProcedimientos();
@@ -92,6 +112,7 @@ export class ProcedimientosComponent implements OnInit {
       titulo: '',
       descripcion: '',
       departamento: '',
+      entorno: 'minsait',
       tags: [],
       steps: [],
       visible: true,
@@ -99,7 +120,7 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = '';
     this.activeTab = 'crear';
-   
+
   }
 
   obrirPopupEditar(proc: Procedure) {
@@ -110,6 +131,7 @@ export class ProcedimientosComponent implements OnInit {
       titulo: proc.titulo ?? '',
       descripcion: proc.descripcion ?? '',
       departamento: proc.departamento ?? '',
+      entorno: proc.entorno ?? '',    
       tags: proc.tags ?? [],
       steps: proc.steps ? [...proc.steps] : [],
       visible: proc.visible ?? true,
@@ -119,7 +141,7 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = proc.steps?.[0]?.responsable || '';
     this.activeTab = 'crear';
-    
+
   }
 
   tancarPopup() {
@@ -133,31 +155,33 @@ export class ProcedimientosComponent implements OnInit {
       return;
     }
 
-    // muntem steps mínimament si l’usuari ha posat responsable
-    if (this.primerResponsable) {
-      this.procForm.steps = this.procForm.steps && this.procForm.steps.length
-        ? this.procForm.steps
-        : [{
-            id: 'step-1',
-            titulo: 'Pas inicial',
-            descripcion: 'Primer pas del procediment',
-            responsable: this.primerResponsable,
-            metodo: '',
-            orden: 1,
-            tags: []
-          }];
+
+    if ((!this.procForm.steps || this.procForm.steps.length === 0) && this.primerResponsable) {
+      this.procForm.steps = [{
+        id: 'step-1',
+        titulo: 'Pas inicial',
+        descripcion: 'Primer pas del procediment',
+        responsable: this.primerResponsable,
+        metodo: '',
+        orden: 1,
+        tags: []
+      }];
+    } else if (this.procForm.steps && this.procForm.steps.length > 0 && this.primerResponsable) {
+
       this.procForm.steps[0].responsable = this.primerResponsable;
     }
 
-    // adaptar body al contracte del back (Postman)
+
+   
     const body: any = {
       titulo: this.procForm.titulo,
       descripcion: this.procForm.descripcion,
       departamento: this.procForm.departamento,
+      entorno: this.procForm.entorno,
       tags: this.procForm.tags ?? [],
       steps: this.procForm.steps ?? [],
       isVisible: this.procForm.visible ?? true
-      // no enviem isDeleted, createdAt, updatedAt: els gestiona el back
+     
     };
 
     if (this.editando && this.editando.id) {
@@ -211,7 +235,7 @@ export class ProcedimientosComponent implements OnInit {
     });
   }
 
-  // ===== veure steps =====
+  // ===== ver steps =====
   verSteps(proc: Procedure) {
     this.procSeleccionada = proc;
     this.mostrarSteps = true;
@@ -221,4 +245,49 @@ export class ProcedimientosComponent implements OnInit {
     this.mostrarSteps = false;
     this.procSeleccionada = null;
   }
+
+  getColorDepartamento(dep?: string): string {
+    switch ((dep || '').toLowerCase()) {
+      case 'minsait': return '#1E88E5';
+      case 'preproduccion': return '#FBC02D';
+      case 'produccion': return '#E53935';
+      default: return '#757575';
+    }
+  }
+  getNombreDepartamento(dep?: string): string {
+    switch ((dep || '').toLowerCase()) {
+      case 'minsait': return 'Minsait';
+      case 'preproduccion': return 'Preproducció';
+      case 'produccion': return 'Producció';
+      default: return dep || 'Otros';
+    }
+  }
+  getNumeroDepartamento(dep?: string): number {
+    switch ((dep || '').toLowerCase()) {
+      case 'minsait': return 1;
+      case 'preproduccion': return 2;
+      case 'produccion': return 3;
+      default: return 0;
+    }
+  }
+  afegirStep() {
+    const nouIndex = (this.procForm.steps?.length || 0) + 1;
+    this.procForm.steps = [
+      ...(this.procForm.steps || []),
+      {
+        id: `step-${nouIndex}`,
+        titulo: `Step ${nouIndex}`,
+        descripcion: '',
+        responsable: this.primerResponsable || '',
+        metodo: '',
+        orden: nouIndex,
+        tags: []
+      }
+    ];
+  }
+  eliminarStep(idx: number) {
+    if (!this.procForm.steps) return;
+    this.procForm.steps.splice(idx, 1);
+  }
 }
+
