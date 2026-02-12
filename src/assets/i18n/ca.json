@@ -285,7 +285,15 @@
   "PLACEHOLDER_DESCRIPTION": "Procediment per realitzar el desplegament d'aplicacions a l'entorn de producció...",
   "VIEW_STEPS": "Veure steps",
   "STEPS_TITLE": "Steps",
-  "NO_STEPS": "No hi ha steps definits per aquest procediment"
+  "NO_STEPS": "No hi ha steps definits per aquest procediment",
+  "TAB_CREATE": "Crear",
+  "TAB_LIST": "Llistar",
+  "FIELD_STEPS": "Steps",
+  "FIELD_TAGS": "Etiquetes",
+  "FIELD_ENV": "Entorn",
+  "STEPS_COUNT": "{{count}} steps",
+  "TAB_CREATE_ARIA": "Pestanya per crear un procediment",
+  "TAB_LIST_ARIA": "Pestanya per llistar procediments"
 },
 "PLANNING_SECTION": {
   "TITLE": "Planificació",

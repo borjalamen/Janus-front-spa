@@ -23,8 +23,10 @@ export class ProcedimientosComponent implements OnInit {
   procedimientosFiltrados: Procedure[] = [];
 
   // popup crear / editar
-
   editando: Procedure | null = null;
+
+  // mode del formulari
+  modoForm: 'crear' | 'editar' = 'crear';
 
   // formulari basat en el model del backend
   procForm: Procedure = {
@@ -49,6 +51,9 @@ export class ProcedimientosComponent implements OnInit {
   mostrarSteps = false;
   procSeleccionada: Procedure | null = null;
 
+  // índex step carrusel
+  currentStepIndex = 0;
+
   coloresEntorno = {
     minsait: '#1E88E5',
     preproduccion: '#FBC02D',
@@ -71,7 +76,7 @@ export class ProcedimientosComponent implements OnInit {
   constructor(
     private proceduresService: ProceduresService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cargarProcedimientos();
@@ -108,6 +113,7 @@ export class ProcedimientosComponent implements OnInit {
   // ===== CREATE / UPDATE =====
   obrirPopupCrear() {
     this.editando = null;
+    this.modoForm = 'crear';
     this.procForm = {
       titulo: '',
       descripcion: '',
@@ -120,18 +126,18 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = '';
     this.activeTab = 'crear';
-
   }
 
   obrirPopupEditar(proc: Procedure) {
     this.editando = proc;
+    this.modoForm = 'editar';
     // còpia superficial
     this.procForm = {
       id: proc.id,
       titulo: proc.titulo ?? '',
       descripcion: proc.descripcion ?? '',
       departamento: proc.departamento ?? '',
-      entorno: proc.entorno ?? '',    
+      entorno: proc.entorno ?? '',
       tags: proc.tags ?? [],
       steps: proc.steps ? [...proc.steps] : [],
       visible: proc.visible ?? true,
@@ -141,11 +147,11 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = proc.steps?.[0]?.responsable || '';
     this.activeTab = 'crear';
-
   }
 
   tancarPopup() {
     this.editando = null;
+    this.modoForm = 'crear';
     this.activeTab = 'listar';
   }
 
@@ -154,7 +160,6 @@ export class ProcedimientosComponent implements OnInit {
       alert('Falta títol o descripció');
       return;
     }
-
 
     if ((!this.procForm.steps || this.procForm.steps.length === 0) && this.primerResponsable) {
       this.procForm.steps = [{
@@ -167,12 +172,9 @@ export class ProcedimientosComponent implements OnInit {
         tags: []
       }];
     } else if (this.procForm.steps && this.procForm.steps.length > 0 && this.primerResponsable) {
-
       this.procForm.steps[0].responsable = this.primerResponsable;
     }
 
-
-   
     const body: any = {
       titulo: this.procForm.titulo,
       descripcion: this.procForm.descripcion,
@@ -181,7 +183,6 @@ export class ProcedimientosComponent implements OnInit {
       tags: this.procForm.tags ?? [],
       steps: this.procForm.steps ?? [],
       isVisible: this.procForm.visible ?? true
-     
     };
 
     if (this.editando && this.editando.id) {
@@ -235,15 +236,28 @@ export class ProcedimientosComponent implements OnInit {
     });
   }
 
-  // ===== ver steps =====
+  // ===== ver steps (carrusel) =====
   verSteps(proc: Procedure) {
     this.procSeleccionada = proc;
     this.mostrarSteps = true;
+    this.currentStepIndex = 0;
   }
 
   tancarSteps() {
     this.mostrarSteps = false;
     this.procSeleccionada = null;
+  }
+
+  nextStep() {
+    if (!this.procSeleccionada?.steps || this.procSeleccionada.steps.length === 0) return;
+    const total = this.procSeleccionada.steps.length;
+    this.currentStepIndex = (this.currentStepIndex + 1) % total;
+  }
+
+  prevStep() {
+    if (!this.procSeleccionada?.steps || this.procSeleccionada.steps.length === 0) return;
+    const total = this.procSeleccionada.steps.length;
+    this.currentStepIndex = (this.currentStepIndex - 1 + total) % total;
   }
 
   getColorDepartamento(dep?: string): string {
@@ -254,6 +268,7 @@ export class ProcedimientosComponent implements OnInit {
       default: return '#757575';
     }
   }
+
   getNombreDepartamento(dep?: string): string {
     switch ((dep || '').toLowerCase()) {
       case 'minsait': return 'Minsait';
@@ -262,6 +277,7 @@ export class ProcedimientosComponent implements OnInit {
       default: return dep || 'Otros';
     }
   }
+
   getNumeroDepartamento(dep?: string): number {
     switch ((dep || '').toLowerCase()) {
       case 'minsait': return 1;
@@ -270,6 +286,7 @@ export class ProcedimientosComponent implements OnInit {
       default: return 0;
     }
   }
+
   afegirStep() {
     const nouIndex = (this.procForm.steps?.length || 0) + 1;
     this.procForm.steps = [
@@ -285,9 +302,9 @@ export class ProcedimientosComponent implements OnInit {
       }
     ];
   }
+
   eliminarStep(idx: number) {
     if (!this.procForm.steps) return;
     this.procForm.steps.splice(idx, 1);
   }
 }
-

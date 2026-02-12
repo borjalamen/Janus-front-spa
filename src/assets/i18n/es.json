@@ -32,8 +32,7 @@
     "LOGBOOK": "Bitácora",
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Herramientas",
-    "DESCARGABLES": "Descargables"
-    ,
+    "DESCARGABLES": "Descargables",
     "GROUPS": {
       "CONTACTO": "Contacto",
       "INICIO": "Inicio",
@@ -273,9 +272,16 @@
     "PLACEHOLDER_DESCRIPTION": "Procedimiento para realizar el despliegue de aplicaciones en el entorno de producción...",
     "VIEW_STEPS": "Ver steps",
     "STEPS_TITLE": "Steps",
-    "NO_STEPS": "No hay steps definidos para este procedimiento"
-},
-  
+    "NO_STEPS": "No hay steps definidos para este procedimiento",
+    "TAB_CREATE": "Crear",
+    "TAB_LIST": "Listar",
+    "FIELD_STEPS": "Steps",
+    "FIELD_TAGS": "Etiquetas",
+    "FIELD_ENV": "Entorno",
+    "STEPS_COUNT": "{{count}} steps",
+    "TAB_CREATE_ARIA": "Pestaña para crear un procedimiento",
+    "TAB_LIST_ARIA": "Pestaña para listar procedimientos"
+  },
   "PLANNING_SECTION": {
     "TITLE": "Planificación",
     "DESCRIPTION": "Planificación anual, responsables y estado de los planes.",
@@ -339,24 +345,24 @@
     "ITEM_NAME": "Nombre",
     "ITEM_LINK": "Enlace",
     "ITEM_DESC": "Descripción",
-    "ITEM_TAGS": "Etiquetas"
-    ,"DELETE_PATH_TITLE": "Eliminar ruta formativa"
-    ,"DELETE_PATH_QUESTION": "¿Estás seguro que deseas eliminar la ruta formativa \"{{name}}\"?"
-    ,"DELETE_ITEM_TITLE": "Eliminar formación"
-    ,"DELETE_ITEM_QUESTION": "¿Estás seguro que deseas eliminar la formación \"{{name}}\"?"
-    ,"EXPORT": "Exportar a CSV",
+    "ITEM_TAGS": "Etiquetas",
+    "DELETE_PATH_TITLE": "Eliminar ruta formativa",
+    "DELETE_PATH_QUESTION": "¿Estás seguro que deseas eliminar la ruta formativa \"{{name}}\"?",
+    "DELETE_ITEM_TITLE": "Eliminar formación",
+    "DELETE_ITEM_QUESTION": "¿Estás seguro que deseas eliminar la formación \"{{name}}\"?",
+    "EXPORT": "Exportar a CSV",
     "TABS": {
       "ALL": "Todos los cursos",
       "PATHS": "Rutas formativas"
     },
-    "ALL_COURSES": "Todos los cursos"
-    ,"VIEW": "Ver"
-    ,"NEW_COURSE": "Nuevo curso"
-    ,"COPY": "Copiar enlace"
-    ,"BACK": "Regresar"
-    ,"NO_LINK": "No hay enlace para copiar"
-    ,"LINK_COPIED": "Link copiado"
-    ,"COPY_FAILED": "No se pudo copiar el enlace"
+    "ALL_COURSES": "Todos los cursos",
+    "VIEW": "Ver",
+    "NEW_COURSE": "Nuevo curso",
+    "COPY": "Copiar enlace",
+    "BACK": "Regresar",
+    "NO_LINK": "No hay enlace para copiar",
+    "LINK_COPIED": "Link copiado",
+    "COPY_FAILED": "No se pudo copiar el enlace"
   },
   "HERRAMIENTAS": {
     "NEW_TOOL": "Nueva herramienta",
@@ -466,22 +472,20 @@
     "USER": "Tú:",
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error al consultar IA"
-  }
-  ,
+  },
   "SPINNER": {
     "LOADING": "Cargando..."
-  }
-  ,
+  },
   "PLANNING": {
     "TITLE": "Planificación semanal",
-      "TYPE": "Tipo",
-      "TYPE_DEPLOY": "Despliegue",
-      "TYPE_TRAIN": "Formación",
-      "TYPE_OTHER": "Otro",
-      "TYPE_ABSENCE": "Ausencia",
-      "LEGEND_TRAIN": "Formación (Morado)",
-      "LEGEND_OTHER": "OTRO (Negro)",
-      "LEGEND_ABSENCE": "Ausencia (Blanco)",
+    "TYPE": "Tipo",
+    "TYPE_DEPLOY": "Despliegue",
+    "TYPE_TRAIN": "Formación",
+    "TYPE_OTHER": "Otro",
+    "TYPE_ABSENCE": "Ausencia",
+    "LEGEND_TRAIN": "Formación (Morado)",
+    "LEGEND_OTHER": "OTRO (Negro)",
+    "LEGEND_ABSENCE": "Ausencia (Blanco)",
     "LEGEND_DEV": "DEV (Verde)",
     "LEGEND_INT": "INT (Azul)",
     "LEGEND_PRE": "PRE (Amarillo)",
@@ -508,8 +512,7 @@
     "DELETE": "Eliminar",
     "ERROR_REQUIRED": "Rellena proyecto, hora inicio, hora fin y entorno",
     "DELETE_CONFIRM": "¿Eliminar evento?"
-  }
-  ,
+  },
   "MULTIMEDIA": {
     "SEARCH_PLACEHOLDER": "Buscar videos por título o descripción...",
     "SEARCH": "Buscar",
@@ -536,8 +539,7 @@
     "CREATED": "Creado",
     "LIST_SEARCH": "Buscar por nombre, proyecto, solicitante...",
     "LIST_LOAD": "Cargar",
-    "LIST_DELETE": "Eliminar"
-    ,
+    "LIST_DELETE": "Eliminar",
     "LIVE": {
       "NEW_TASK": "Descripción de la tarea...",
       "START": "Crear sesión en vivo",

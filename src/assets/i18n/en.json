@@ -32,8 +32,7 @@
     "LOGBOOK": "Logbook",
     "INFRASTRUCTURE": "Infrastructure",
     "TOOLS": "Tools",
-    "DESCARGABLES": "Downloads"
-    ,
+    "DESCARGABLES": "Downloads",
     "GROUPS": {
       "CONTACTO": "Contact",
       "INICIO": "Home",
@@ -278,7 +277,15 @@
     "PLACEHOLDER_DESCRIPTION": "Procedure to deploy applications to the production environment...",
     "VIEW_STEPS": "View steps",
     "STEPS_TITLE": "Steps",
-    "NO_STEPS": "No steps defined for this procedure"
+    "NO_STEPS": "No steps defined for this procedure",
+    "TAB_CREATE": "Create",
+    "TAB_LIST": "List",
+    "FIELD_STEPS": "Steps",
+    "FIELD_TAGS": "Tags",
+    "FIELD_ENV": "Environment",
+    "STEPS_COUNT": "{{count}} steps",
+    "TAB_CREATE_ARIA": "Tab to create a procedure",
+    "TAB_LIST_ARIA": "Tab to list procedures"
   },
   "PLANNING_SECTION": {
     "TITLE": "Planning",
@@ -340,25 +347,25 @@
     "ITEM_NAME": "Name",
     "ITEM_LINK": "Link",
     "ITEM_DESC": "Description",
-    "ITEM_TAGS": "Tags"
-    ,"DELETE_PATH_TITLE": "Delete training path"
-    ,"DELETE_PATH_QUESTION": "Are you sure you want to delete the training path \"{{name}}\"?"
-    ,"DELETE_ITEM_TITLE": "Delete training"
-    ,"DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?"
-    ,"EXPORT": "Export to CSV"
-    ,"TABS": {
+    "ITEM_TAGS": "Tags",
+    "DELETE_PATH_TITLE": "Delete training path",
+    "DELETE_PATH_QUESTION": "Are you sure you want to delete the training path \"{{name}}\"?",
+    "DELETE_ITEM_TITLE": "Delete training",
+    "DELETE_ITEM_QUESTION": "Are you sure you want to delete the training \"{{name}}\"?",
+    "EXPORT": "Export to CSV",
+    "TABS": {
       "ALL": "All courses",
       "PATHS": "Training paths"
     },
-    "ALL_COURSES": "All courses"
-    ,"VIEW": "View"
-    ,"NEW_COURSE": "New course"
-    ,"COPY": "Copy link"
-    ,"BACK": "Back"
-    ,"NO_LINK": "No link to copy"
-    ,"LINK_COPIED": "Link copied"
-    ,"COPY_FAILED": "Failed to copy link"
-  ,"SELECT_COURSE": "Select a course to add"
+    "ALL_COURSES": "All courses",
+    "VIEW": "View",
+    "NEW_COURSE": "New course",
+    "COPY": "Copy link",
+    "BACK": "Back",
+    "NO_LINK": "No link to copy",
+    "LINK_COPIED": "Link copied",
+    "COPY_FAILED": "Failed to copy link",
+    "SELECT_COURSE": "Select a course to add"
   },
   "HERRAMIENTAS": {
     "NEW_TOOL": "New tool",
@@ -455,7 +462,6 @@
     "CANCEL": "Cancel",
     "SAVE": "Save"
   },
-
   "CLIP": {
     "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",
     "SEND": "Send",
@@ -464,12 +470,10 @@
     "USER": "You:",
     "AI": "IAnusHub:",
     "ERROR_QUERY": "Error querying AI"
-  }
-  ,
+  },
   "SPINNER": {
     "LOADING": "Loading..."
-  }
-  ,
+  },
   "PLANNING": {
     "TITLE": "Weekly planning",
     "TYPE": "Type",
@@ -506,8 +510,7 @@
     "DELETE": "Delete",
     "ERROR_REQUIRED": "Please fill project, start time, end time and environment",
     "DELETE_CONFIRM": "Delete event?"
-  }
-  ,
+  },
   "MULTIMEDIA": {
     "SEARCH_PLACEHOLDER": "Search videos by title or description...",
     "SEARCH": "Search",
@@ -534,8 +537,7 @@
     "CREATED": "Created",
     "LIST_SEARCH": "Search by name, project, requester...",
     "LIST_LOAD": "Load",
-    "LIST_DELETE": "Delete"
-    ,
+    "LIST_DELETE": "Delete",
     "LIVE": {
       "NEW_TASK": "Task description...",
       "START": "Create live session",
@@ -607,8 +609,8 @@
     "DB_FOR": "Database for",
     "OTHER_TOOL_FOR": "Other tool for",
     "DOCUMENT": "Document"
-  }
-  ,"SCRUM": {
+  },
+  "SCRUM": {
     "TITLE": "Scrum",
     "DESCRIPTION": "Daily board to share tasks, estimates and priorities.",
     "PLACEHOLDER_TITLE": "Task title",

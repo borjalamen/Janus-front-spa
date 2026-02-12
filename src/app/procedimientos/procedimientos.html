@@ -7,7 +7,7 @@
 
   <!-- Pestanyes -->
   <div class="procedures-tabs">
-    <button class="procedures-tab" [class.active]="activeTab==='crear'" (click)="activeTab='crear'">
+    <button class="procedures-tab" [class.active]="activeTab==='crear'" (click)="obrirPopupCrear()">
       <mat-icon inline="true">add</mat-icon>
       {{ 'PROCEDURES_SECTION.TAB_CREATE' | translate }}
     </button>
@@ -20,45 +20,70 @@
   <!-- Pestanya: Crear/Editar -->
   <div *ngIf="activeTab==='crear'" class="procedures-tab-panel">
     <div class="procedure-form">
-      <h3>{{ (editando ? 'PROCEDURES_SECTION.EDIT_TITLE' : 'PROCEDURES_SECTION.NEW_TITLE') | translate }}</h3>
+      <h3>
+        {{ modoForm === 'editar'
+            ? ('PROCEDURES_SECTION.EDIT_TITLE' | translate)
+            : ('PROCEDURES_SECTION.NEW_TITLE'  | translate) }}
+      </h3>
 
       <div class="procedure-field">
         <label>{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}</label>
-        <input type="text" [(ngModel)]="procForm.titulo"
-          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate" title="Títol del procediment" />
+        <input
+          type="text"
+          [(ngModel)]="procForm.titulo"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate"
+          title="Títol del procediment" />
       </div>
 
       <div class="procedure-field">
         <label>{{ 'PROCEDURES_SECTION.FIELD_DEPARTMENT' | translate }}</label>
-        <input type="text" [(ngModel)]="procForm.departamento"
+        <input
+          type="text"
+          [(ngModel)]="procForm.departamento"
           [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DEPARTMENT' | translate"
           title="Departament (ex: Facturació, Suport...)" />
       </div>
 
-      <!-- Entorn amb botons estil Bitácora -->
+      <!-- Entorn amb botons i preview -->
       <div class="procedure-field">
         <label>Entorn</label>
         <div class="entorno-botones-wrapper">
-          <button type="button" class="entorno-btn" [class.active]="procForm.entorno === 'minsait'"
-            (click)="procForm.entorno = 'minsait'" [style.--color]="'#1E88E5'" title="Minsait">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="procForm.entorno === 'minsait'"
+            (click)="procForm.entorno = 'minsait'"
+            [style.--color]="'#1E88E5'"
+            title="Minsait">
             Minsait
           </button>
-          <button type="button" class="entorno-btn" [class.active]="procForm.entorno === 'preproduccion'"
-            (click)="procForm.entorno = 'preproduccion'" [style.--color]="'#FBC02D'" title="Preproducció">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="procForm.entorno === 'preproduccion'"
+            (click)="procForm.entorno = 'preproduccion'"
+            [style.--color]="'#FBC02D'"
+            title="Preproducció">
             Preproducció
           </button>
-          <button type="button" class="entorno-btn" [class.active]="procForm.entorno === 'produccion'"
-            (click)="procForm.entorno = 'produccion'" [style.--color]="'#E53935'" title="Producció">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="procForm.entorno === 'produccion'"
+            (click)="procForm.entorno = 'produccion'"
+            [style.--color]="'#E53935'"
+            title="Producció">
             Producció
           </button>
 
-          <!-- Preview: icona/número segons entorn -->
-          <div class="entorno-icon-preview" [style.background]="'linear-gradient(135deg, ' 
-    + getColorEntorno(procForm.entorno || '') 
-    + ', ' 
-    + getColorEntorno(procForm.entorno || '') 
-    + 'cc)'">
-
+          <!-- Preview cub entorn -->
+          <div
+            class="entorno-icon-preview"
+            [style.background]="'linear-gradient(135deg, '
+              + getColorEntorno(procForm.entorno || '')
+              + ', '
+              + getColorEntorno(procForm.entorno || '')
+              + 'cc)'">
             <span class="procedure-icon-number">
               {{ getNumeroDepartamento(procForm.entorno || '') }}
             </span>
@@ -68,22 +93,32 @@
 
       <div class="procedure-field">
         <label>{{ 'PROCEDURES_SECTION.FIELD_RESPONSIBLE' | translate }}</label>
-        <input type="text" [(ngModel)]="primerResponsable"
-          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate" title="Responsable principal" />
+        <input
+          type="text"
+          [(ngModel)]="primerResponsable"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate"
+          title="Responsable principal" />
       </div>
 
       <div class="procedure-field">
         <label>{{ 'PROCEDURES_SECTION.FIELD_DESCRIPTION' | translate }}</label>
-        <textarea rows="3" [(ngModel)]="procForm.descripcion"
-          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate" title="Descripció del procediment">
+        <textarea
+          rows="3"
+          [(ngModel)]="procForm.descripcion"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate"
+          title="Descripció del procediment">
         </textarea>
       </div>
 
-      <!-- Editor de múltiples steps -->
+      <!-- Editor múltiples steps -->
       <div class="procedure-field">
         <label>{{ 'PROCEDURES_SECTION.FIELD_STEPS' | translate }}</label>
         <div class="procedure-steps-container">
-          <button type="button" class="procedure-add-step-btn" (click)="afegirStep()" title="Afegir step">
+          <button
+            type="button"
+            class="procedure-add-step-btn"
+            (click)="afegirStep()"
+            title="Afegir step">
             <mat-icon>add</mat-icon>
           </button>
 
@@ -94,17 +129,31 @@
           <div *ngFor="let s of procForm.steps; let i = index" class="procedure-step-edit-item">
             <div class="procedure-step-edit-header">
               <span class="procedure-step-edit-number">Step {{ i + 1 }}</span>
-              <button type="button" class="procedure-step-delete-btn" (click)="eliminarStep(i)" title="Eliminar step">
+              <button
+                type="button"
+                class="procedure-step-delete-btn"
+                (click)="eliminarStep(i)"
+                title="Eliminar step">
                 <mat-icon>close</mat-icon>
               </button>
             </div>
 
-            <input type="text" [(ngModel)]="s.titulo" placeholder="Títol del step" class="procedure-step-edit-input" />
-
-            <input type="text" [(ngModel)]="s.responsable" placeholder="Responsable"
+            <input
+              type="text"
+              [(ngModel)]="s.titulo"
+              placeholder="Títol del step"
               class="procedure-step-edit-input" />
 
-            <textarea rows="2" [(ngModel)]="s.descripcion" placeholder="Descripció del step"
+            <input
+              type="text"
+              [(ngModel)]="s.responsable"
+              placeholder="Responsable"
+              class="procedure-step-edit-input" />
+
+            <textarea
+              rows="2"
+              [(ngModel)]="s.descripcion"
+              placeholder="Descripció del step"
               class="procedure-step-edit-textarea">
             </textarea>
           </div>
@@ -115,9 +164,11 @@
         <button class="procedure-cancel-btn" (click)="tancarPopup()" title="Cancel·lar">
           ✗
         </button>
-        <button class="procedure-save-btn" (click)="guardarProcedimiento()"
-          [title]="editando ? 'Actualizar' : 'Guardar'">
-          ✓
+        <button
+          class="procedure-save-btn"
+          (click)="guardarProcedimiento()"
+          [title]="modoForm === 'editar' ? 'Actualitzar' : 'Crear'">
+          {{ modoForm === 'editar' ? '✎' : '✓' }}
         </button>
       </div>
     </div>
@@ -131,11 +182,14 @@
 
     <div class="procedures-list" *ngIf="procedimientosFiltrados.length > 0">
       <div *ngFor="let p of procedimientosFiltrados" class="procedure-row">
-        <!-- Icona d'entorn amb número -->
-        <div class="procedure-icon" *ngIf="p.entorno" [style.background]="'linear-gradient(135deg, ' 
-            + getColorEntorno(p.entorno) 
+        <!-- Cub d'entorn amb número -->
+        <div
+          class="procedure-icon"
+          *ngIf="p.entorno"
+          [style.background]="'linear-gradient(135deg, '
+            + getColorEntorno(p.entorno || '') 
             + ', ' 
-            + getColorEntorno(p.entorno) 
+            + getColorEntorno(p.entorno || '') 
             + 'cc)'">
           <span class="procedure-icon-number">
             {{ getNumeroDepartamento(p.entorno || '') }}
@@ -148,26 +202,30 @@
               {{ p.titulo || '(Sense títol)' }}
             </strong>
 
-            <!-- Entorn: badge amb número + color -->
-            <span class="procedure-chip" *ngIf="p.entorno" [style.backgroundColor]="getColorEntorno(p.entorno) + '33'"
-              [style.borderColor]="getColorEntorno(p.entorno)">
+            <span class="procedure-dept-pill" *ngIf="p.departamento" >
+              {{ p.departamento }}
+            </span>
+
+            <!-- Data tipus bitàcola, al costat del títol -->
+            <span class="procedure-fecha-pill" *ngIf="p.createdAt">
+              {{ p.createdAt }}
+            </span>
+
+            <!-- Badge entorn -->
+            <span
+              class="procedure-chip"
+              *ngIf="p.entorno"
+              [style.backgroundColor]="getColorEntorno(p.entorno || '') + '33'"
+              [style.borderColor]="getColorEntorno(p.entorno || '')">
               <span class="procedure-chip-number">
                 {{ getNumeroDepartamento(p.entorno || '') }}
               </span>
               <span class="procedure-chip-text">
-                {{ getNombreEntorno(p.entorno) }}
+                {{ getNombreEntorno(p.entorno || '') }}
               </span>
             </span>
 
-            <!-- Departament: text simple -->
-            <span *ngIf="p.departamento" class="procedure-chip-text">
-              {{ p.departamento }}
-            </span>
-          </div>
-
-          <!-- Data de creació, si la tens -->
-          <div class="procedure-meta" *ngIf="p.createdAt">
-            Creat el {{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}
+            
           </div>
 
           <div class="procedure-text" *ngIf="p.descripcion">
@@ -190,14 +248,23 @@
           </div>
 
           <div class="procedure-actions">
-            <button class="procedure-action-btn procedure-view-btn" (click)="verSteps(p)" title="Veure steps"
+            <button
+              class="procedure-action-btn procedure-view-btn"
+              (click)="verSteps(p)"
+              title="Veure steps"
               *ngIf="p.steps && p.steps.length > 0">
               <mat-icon>visibility</mat-icon>
             </button>
-            <button class="procedure-action-btn procedure-edit-btn" (click)="obrirPopupEditar(p)" title="Editar">
+            <button
+              class="procedure-action-btn procedure-edit-btn"
+              (click)="obrirPopupEditar(p)"
+              title="Editar">
               ✏️
             </button>
-            <button class="procedure-action-btn procedure-delete-btn" (click)="confirmarEliminar(p)" title="Eliminar">
+            <button
+              class="procedure-action-btn procedure-delete-btn"
+              (click)="confirmarEliminar(p)"
+              title="Eliminar">
               🗑️
             </button>
           </div>
@@ -212,7 +279,7 @@
   </div>
 </div>
 
-<!-- Popup veure steps -->
+<!-- Popup veure steps (carrusel) -->
 <div class="procedures-popup-backdrop" *ngIf="mostrarSteps" (click)="tancarSteps()">
   <div class="procedures-popup" (click)="$event.stopPropagation()">
     <h3>
@@ -224,16 +291,34 @@
       {{ 'PROCEDURES_SECTION.NO_STEPS' | translate }}
     </div>
 
-    <div *ngFor="let step of procSeleccionada?.steps; let i = index" class="procedure-step-item">
-      <div class="procedure-step-header">
-        <div class="procedure-step-title">
-          <strong>Step {{ i + 1 }} - {{ step.titulo }}</strong>
+    <div *ngIf="procSeleccionada?.steps?.length" class="procedure-step-carousel">
+      <button class="procedure-step-nav-btn" (click)="prevStep()" title="Step anterior">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <div class="procedure-step-item">
+        <div class="procedure-step-header">
+          <div class="procedure-step-title">
+            <strong>
+              Step {{ currentStepIndex + 1 }} -
+              {{ procSeleccionada?.steps?.[currentStepIndex]?.titulo }}
+            </strong>
+          </div>
+        </div>
+        <div class="procedure-step-content">
+          <div>
+            <b>{{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:</b>
+            {{ procSeleccionada?.steps?.[currentStepIndex]?.responsable }}
+          </div>
+          <div *ngIf="procSeleccionada?.steps?.[currentStepIndex]?.descripcion">
+            {{ procSeleccionada?.steps?.[currentStepIndex]?.descripcion }}
+          </div>
         </div>
       </div>
-      <div class="procedure-step-content">
-        <div><b>{{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:</b> {{ step.responsable }}</div>
-        <div *ngIf="step.descripcion">{{ step.descripcion }}</div>
-      </div>
+
+      <button class="procedure-step-nav-btn" (click)="nextStep()" title="Step següent">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
     </div>
 
     <div class="procedures-popup-actions">
@@ -250,7 +335,7 @@
     <h3>{{ 'PROCEDURES_SECTION.DELETE_TITLE' | translate }}</h3>
     <p>
       {{ 'PROCEDURES_SECTION.DELETE_CONFIRM' | translate:{
-      title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)'
+        title: (procAEliminar && procAEliminar.titulo) || '(Sense títol)'
       } }}
     </p>
 
