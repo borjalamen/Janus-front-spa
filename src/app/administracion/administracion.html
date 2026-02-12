@@ -1,30 +1,36 @@
 <div class="section-container admin-layout">
   
   <div class="admin-sidebar">
-    <h2 class="sidebar-title">Admin Panel</h2>
+    <h2 class="sidebar-title">{{ 'ADMIN.PANEL_TITLE' | translate }}</h2>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'USERS'" 
             (click)="cambiarTab('USERS')">
-      <span class="menu-emoji">👥</span> Usuarios
+      <span class="menu-emoji">👥</span> {{ 'ADMIN.TAB_USERS' | translate }}
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'APP'" 
             (click)="cambiarTab('APP')">
-      <span class="menu-emoji">⚙️</span> Aplicación
+      <span class="menu-emoji">⚙️</span> {{ 'ADMIN.TAB_APP' | translate }}
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'PARAM'" 
             (click)="cambiarTab('PARAM')">
-      <span class="menu-emoji">🎛️</span> Parametrización
+      <span class="menu-emoji">🎛️</span> {{ 'ADMIN.TAB_PARAM' | translate }}
     </button>
     
     <button class="menu-btn" 
             [class.active]="activeTab === 'DB'" 
             (click)="cambiarTab('DB')">
-      <span class="menu-emoji">🗄️</span> BBDD
+      <span class="menu-emoji">🗄️</span> {{ 'ADMIN.TAB_DB' | translate }}
+    </button>
+
+    <button class="menu-btn" 
+            [class.active]="activeTab === 'REQUESTS'" 
+            (click)="cambiarTab('REQUESTS')">
+      <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
     </button>
   </div>
 
@@ -32,9 +38,9 @@
 
     <div *ngIf="activeTab === 'USERS'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>Administrar Usuarios</h2>
+        <h2>{{ 'ADMIN.MANAGE_USERS' | translate }}</h2>
         <button class="jenkins-add-btn" *ngIf="canEdit" (click)="obrirPopupCrear()">
-          <mat-icon>add</mat-icon> Añadir usuario
+          <mat-icon>add</mat-icon> {{ 'ADMIN.ADD_USER' | translate }}
         </button>
       </div>
 
@@ -51,13 +57,13 @@
           </div>
 
           <div class="actions">
-            <button class="icon-btn view-profile" (click)="verPerfil(usuari)" title="Ver perfil completo">
+            <button class="icon-btn view-profile" (click)="verPerfil(usuari)" [title]="'ADMIN.VIEW_FULL_PROFILE' | translate">
               <span class="emoji-icon">👁️</span>
             </button>
-            <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" title="Actualizar usuario">
+            <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" [title]="'ADMIN.UPDATE_USER' | translate">
               <span class="emoji-icon">✏️</span>
             </button>
-            <button class="icon-btn delete" *ngIf="canEdit" (click)="confirmarInhabilitar(usuari)" title="Inhabilitar usuario">
+            <button class="icon-btn delete" *ngIf="canEdit" (click)="confirmarInhabilitar(usuari)" [title]="'ADMIN.DISABLE_USER' | translate">
               <span class="emoji-icon">🗑️</span>
             </button>
           </div>
@@ -67,25 +73,25 @@
 
     <div *ngIf="activeTab === 'APP'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>Administrar Aplicación</h2>
+        <h2>{{ 'ADMIN.MANAGE_APP' | translate }}</h2>
       </div>
       
       <div class="admin-card">
-        <h3>Inhabilitar por roles</h3>
-        <p>Seleccione un rol para restringir el acceso temporalmente a la aplicación.</p>
+        <h3>{{ 'ADMIN.DISABLE_BY_ROLES' | translate }}</h3>
+        <p>{{ 'ADMIN.DISABLE_DESCRIPTION' | translate }}</p>
         
         <div class="form-field">
-            <label>Seleccionar Rol:</label>
+            <label>{{ 'ADMIN.SELECT_ROLE' | translate }}</label>
             <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
-                <option value="" disabled selected>-- Elegir --</option>
-                <option value="CONSULTOR">Consultor</option>
-                <option value="DEV">DevOps</option>
+                <option value="" disabled selected>{{ 'ADMIN.CHOOSE' | translate }}</option>
+                <option value="CONSULTOR">{{ 'ADMIN.CONSULTANT' | translate }}</option>
+                <option value="DEV">{{ 'ADMIN.DEVOPS' | translate }}</option>
             </select>
         </div>
         
         <div style="margin-top: 16px; text-align: right;">
             <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
-                Inhabilitar Acceso
+                {{ 'ADMIN.DISABLE_ACCESS' | translate }}
             </button>
         </div>
       </div>
@@ -93,21 +99,21 @@
 
     <div *ngIf="activeTab === 'PARAM'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>Parametrización</h2>
+        <h2>{{ 'ADMIN.PARAMETERIZATION' | translate }}</h2>
       </div>
 
       <div class="admin-card">
-        <h3>Cambio de versión</h3>
-        <p>Gestión de la versión actual del despliegue.</p>
+        <h3>{{ 'ADMIN.VERSION_CHANGE' | translate }}</h3>
+        <p>{{ 'ADMIN.VERSION_MANAGEMENT' | translate }}</p>
         
         <div class="form-field">
-            <label>Versión del Sistema:</label>
+            <label>{{ 'ADMIN.SYSTEM_VERSION' | translate }}</label>
             <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0">
         </div>
 
         <div style="margin-top: 16px; text-align: right;">
             <button class="jenkins-add-btn" (click)="cambiarVersion()">
-                <mat-icon>update</mat-icon> Actualizar Versión
+                <mat-icon>update</mat-icon> {{ 'ADMIN.UPDATE_VERSION' | translate }}
             </button>
         </div>
       </div>
@@ -115,29 +121,92 @@
 
     <div *ngIf="activeTab === 'DB'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>Administración de la BBDD</h2>
+        <h2>{{ 'ADMIN.DB_MANAGEMENT' | translate }}</h2>
       </div>
 
       <div class="db-grid">
         <div class="admin-card db-card">
             <span class="big-emoji warn">🗑️</span>
-            <h3>Borrado Físico</h3>
-            <p>Elimina permanentemente registros marcados.</p>
-            <button class="popup-btn" (click)="accionBBDD('borrado')">Seleccionar y Ejecutar</button>
+            <h3>{{ 'ADMIN.PHYSICAL_DELETE' | translate }}</h3>
+            <p>{{ 'ADMIN.DELETE_DESCRIPTION' | translate }}</p>
+            <button class="popup-btn" (click)="accionBBDD('borrado')">{{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}</button>
         </div>
 
         <div class="admin-card db-card">
             <span class="big-emoji">🔄</span>
-            <h3>Restore</h3>
-            <p>Restaura la base de datos a un punto anterior.</p>
-            <button class="popup-btn" (click)="accionBBDD('restore')">Elegir Versión</button>
+            <h3>{{ 'ADMIN.RESTORE' | translate }}</h3>
+            <p>{{ 'ADMIN.RESTORE_DESCRIPTION' | translate }}</p>
+            <button class="popup-btn" (click)="accionBBDD('restore')">{{ 'ADMIN.CHOOSE_VERSION' | translate }}</button>
         </div>
 
         <div class="admin-card db-card">
             <span class="big-emoji">💾</span>
-            <h3>Backup</h3>
-            <p>Genera una copia de seguridad actual.</p>
-            <button class="popup-btn" (click)="accionBBDD('backup')">Seleccionar y Generar</button>
+            <h3>{{ 'ADMIN.BACKUP' | translate }}</h3>
+            <p>{{ 'ADMIN.BACKUP_DESCRIPTION' | translate }}</p>
+            <button class="popup-btn" (click)="accionBBDD('backup')">{{ 'ADMIN.SELECT_AND_GENERATE' | translate }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'REQUESTS'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>{{ 'ADMIN.REQUESTS' | translate }}</h2>
+        <div class="requests-summary">
+          <span class="status-pill pendiente" 
+                [class.active]="filtroEstadoPeticiones === 'PENDIENTE'"
+                (click)="filtrarPorEstado('PENDIENTE')"
+                style="cursor: pointer;">
+            {{ peticionesPendientes }} {{ 'ADMIN.PENDING' | translate }}
+          </span>
+          <span class="status-pill aprobada" 
+                [class.active]="filtroEstadoPeticiones === 'APROBADA'"
+                (click)="filtrarPorEstado('APROBADA')"
+                style="cursor: pointer;">
+            {{ peticionesAprobadas }} {{ 'ADMIN.APPROVED' | translate }}
+          </span>
+          <span class="status-pill rechazada" 
+                [class.active]="filtroEstadoPeticiones === 'RECHAZADA'"
+                (click)="filtrarPorEstado('RECHAZADA')"
+                style="cursor: pointer;">
+            {{ peticionesRechazadas }} {{ 'ADMIN.REJECTED' | translate }}
+          </span>
+          <span class="status-pill" 
+                [class.active]="filtroEstadoPeticiones === 'TODAS'"
+                (click)="filtrarPorEstado('TODAS')"
+                style="cursor: pointer;">
+            {{ peticiones.length }} {{ 'ADMIN.ALL' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <app-buscador (buscar)="filtrarPeticiones($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+
+      <div class="requests-list">
+        <div *ngFor="let peticion of peticionesFiltradas" class="admin-card request-card">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-id">#{{ peticion.id }}</span>
+              <span class="request-type">{{ peticion.tipo }}</span>
+            </div>
+            <span class="status-pill" [ngClass]="peticion.estado.toLowerCase()">{{ (getStatusTranslation(peticion.estado)) | translate }}</span>
+          </div>
+          <div class="request-meta">
+            <span>👤 {{ peticion.solicitante }}</span>
+            <span>📅 {{ peticion.fecha }}</span>
+          </div>
+          <p class="request-note">{{ peticion.comentario }}</p>
+          <div class="request-actions" *ngIf="peticion.estado === 'PENDIENTE'">
+            <button class="btn-emoji confirm" (click)="aprobarPeticion(peticion)" [disabled]="!canEdit">
+              ✓
+            </button>
+            <button class="btn-emoji cancel" (click)="rechazarPeticion(peticion)" [disabled]="!canEdit">
+              ✗
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="peticionesFiltradas.length === 0" class="empty-state">
+          {{ 'ADMIN.DELETE_CONFIRMATION_MSG' | translate }}
         </div>
       </div>
     </div>
@@ -146,28 +215,28 @@
 </div>
 <div class="modal-overlay" *ngIf="mostrarPopup">
   <div class="auth-card">
-    <h2 class="form-title">{{ usuariEditant ? 'Modificar Usuario' : 'Nuevo Usuario' }}</h2>
+    <h2 class="form-title">{{ usuariEditant ? ('ADMIN.EDIT_USER' | translate) : ('ADMIN.NEW_USER' | translate) }}</h2>
     <hr class="divider">
 
     <div class="form-content">
       <div class="input-field">
-        <label>Nombre</label>
+        <label>{{ 'ADMIN.NAME' | translate }}</label>
         <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez">
       </div>
 
       <div class="input-field">
-        <label>Email</label>
+        <label>{{ 'ADMIN.EMAIL' | translate }}</label>
         <input type="email" [(ngModel)]="nouUsuari.email" placeholder="jlopez@minsait.com">
       </div>
 
       <div class="input-field">
-        <label>Contraseña</label>
-        <input type="password" [(ngModel)]="nouUsuari.contrasenya" placeholder="{{ usuariEditant ? 'Dejar vacío para mantener' : 'Introduce contraseña' }}">
+        <label>{{ 'ADMIN.PASSWORD' | translate }}</label>
+        <input type="password" [(ngModel)]="nouUsuari.contrasenya" [placeholder]="usuariEditant ? ('ADMIN.KEEP_PASSWORD' | translate) : ('ADMIN.ENTER_PASSWORD' | translate)">
       </div>
 
       <hr class="divider">
 
-      <label class="section-label">Roles del Usuario:</label>
+      <label class="section-label">{{ 'ADMIN.USER_ROLES' | translate }}</label>
       
       <div class="roles-grid">
         <div class="switch-item">
@@ -175,7 +244,7 @@
             <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin">
             <span class="custom-slider"></span>
           </label>
-          <span class="role-text">Administrador</span>
+          <span class="role-text">{{ 'ADMIN.ADMINISTRATOR' | translate }}</span>
         </div>
 
         <div class="switch-item">
@@ -183,7 +252,7 @@
             <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor">
             <span class="custom-slider"></span>
           </label>
-          <span class="role-text">Consultor</span>
+          <span class="role-text">{{ 'ADMIN.CONSULTANT' | translate }}</span>
         </div>
 
         <div class="switch-item">
@@ -191,15 +260,15 @@
             <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops">
             <span class="custom-slider"></span>
           </label>
-          <span class="role-text">DevOps</span>
+          <span class="role-text">{{ 'ADMIN.DEVOPS' | translate }}</span>
         </div>
       </div>
 
       <hr class="divider">
 
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="tancarPopup()" title="Cancelar">✗</button>
-        <button class="btn-emoji confirm" (click)="guardarUsuari()" title="Guardar">✓</button>
+        <button class="btn-emoji cancel" (click)="tancarPopup()" [title]="'ADMIN.CANCEL' | translate">✗</button>
+        <button class="btn-emoji confirm" (click)="guardarUsuari()" [title]="'ADMIN.SAVE' | translate">✓</button>
       </div>
     </div>
   </div>
@@ -208,15 +277,15 @@
 <!-- Popup confirmación eliminar usuario -->
 <div class="modal-overlay" *ngIf="mostrarPopupDelete">
   <div class="auth-card">
-    <h2 class="form-title">Eliminar Usuario</h2>
+    <h2 class="form-title">{{ 'ADMIN.DELETE_USER' | translate }}</h2>
     <hr class="divider">
     <div class="form-content">
-      <p>¿Estás seguro de que quieres eliminar al usuario <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
-      <p style="color: #ff6b6b; font-size: 0.9em;">Esta acción no se puede deshacer.</p>
+      <p>{{ 'ADMIN.DELETE_CONFIRMATION' | translate }} <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
+      <p style="color: #ff6b6b; font-size: 0.9em;">{{ 'ADMIN.IRREVERSIBLE_ACTION' | translate }}</p>
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cancelarInhabilitar()" title="Cancelar">✗</button>
-        <button class="btn-emoji confirm" (click)="inhabilitarUsuari()" title="Eliminar">✓</button>
+        <button class="btn-emoji cancel" (click)="cancelarInhabilitar()" [title]="'ADMIN.CANCEL' | translate">✗</button>
+        <button class="btn-emoji confirm" (click)="inhabilitarUsuari()" [title]="'ADMIN.DELETE' | translate">✓</button>
       </div>
     </div>
   </div>
@@ -227,19 +296,19 @@
   <div class="auth-card db-popup db-popup-large">
     <h2 class="form-title">
       <span class="title-emoji">🗑️</span>
-      Borrado Físico
+      {{ 'ADMIN.PHYSICAL_DELETE' | translate }}
     </h2>
     <hr class="divider">
     <div class="form-content">
       
       <!-- Búsqueda de colección -->
       <div class="borrado-section">
-        <h4>📂 Buscar Colección</h4>
-        <p>Busca una colección para ver y eliminar sus registros <strong>inactivos</strong>:</p>
+        <h4>📂 {{ 'ADMIN.COLLECTION_SEARCH' | translate }}</h4>
+        <p>{{ 'ADMIN.SEARCH_COLLECTION_DESC' | translate }}</p>
         
         <div class="collection-search">
           <div class="input-field">
-            <label>Nombre de la colección:</label>
+            <label>{{ 'ADMIN.COLLECTION_NAME' | translate }}</label>
             <input type="text" 
                    [(ngModel)]="coleccionBorrar" 
                    placeholder="Ej: usuarios, documentos, logs, sesiones"
@@ -247,25 +316,25 @@
                    (keyup.enter)="buscarColeccion()">
           </div>
           <button class="btn-round btn-search" (click)="buscarColeccion()" [disabled]="!coleccionBorrar || cargandoRegistrosInactivos">
-            <span *ngIf="!cargandoRegistrosInactivos">🔍 Buscar</span>
-            <span *ngIf="cargandoRegistrosInactivos">⏳ Cargando...</span>
+            <span *ngIf="!cargandoRegistrosInactivos">{{ 'ADMIN.SEARCH' | translate }}</span>
+            <span *ngIf="cargandoRegistrosInactivos">{{ 'ADMIN.LOADING' | translate }}</span>
           </button>
         </div>
 
         <!-- Colección no encontrada -->
         <div *ngIf="coleccionNoEncontrada" class="collection-not-found">
-          <p>❌ No se encontró la colección "{{ coleccionBorrar }}"</p>
+          <p>❌ {{ 'ADMIN.COLLECTION_NOT_FOUND' | translate }} "{{ coleccionBorrar }}"</p>
         </div>
 
         <!-- Colección encontrada con registros inactivos -->
         <div *ngIf="coleccionEncontrada" class="collection-found-detail">
           <div class="collection-header">
             <div class="collection-info">
-              <p>✅ Colección: <strong>{{ coleccionBorrar }}</strong></p>
-              <p class="stats">📊 Total: {{ registrosColeccion }} registros | 🚫 Inactivos: <strong>{{ registrosInactivos }}</strong></p>
+              <p>✅ {{ 'ADMIN.COLLECTION' | translate }} <strong>{{ coleccionBorrar }}</strong></p>
+              <p class="stats">📊 {{ 'ADMIN.TOTAL' | translate }} {{ registrosColeccion }} {{ 'ADMIN.RECORDS' | translate }} | 🚫 {{ 'ADMIN.INACTIVE' | translate }} <strong>{{ registrosInactivos }}</strong></p>
             </div>
             <button class="btn-round btn-secondary btn-sm" (click)="limpiarBusquedaColeccion()">
-              ✕ Limpiar
+              ✕ {{ 'ADMIN.CLEAR' | translate }}
             </button>
           </div>
 
@@ -277,7 +346,7 @@
                        [checked]="registrosSeleccionadosBorrar.size === registrosInactivosColeccion.length && registrosInactivosColeccion.length > 0"
                        (change)="seleccionarTodosRegistros()">
                 <span class="checkmark"></span>
-                <span>Seleccionar todos ({{ registrosInactivosColeccion.length }})</span>
+                <span>{{ 'ADMIN.SELECT_ALL' | translate }} ({{ registrosInactivosColeccion.length }})</span>
               </label>
             </div>
             
@@ -303,26 +372,26 @@
             <div class="borrar-registros-actions" *ngIf="registrosSeleccionadosBorrar.size > 0">
               <span class="seleccionados-count">{{ registrosSeleccionadosBorrar.size }} registro(s) seleccionado(s)</span>
               <button class="btn-round btn-danger" (click)="borrarRegistrosSeleccionados()">
-                🗑️ Borrar Seleccionados
+                🗑️ {{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}
               </button>
             </div>
           </div>
 
           <!-- Sin registros inactivos -->
           <div *ngIf="registrosInactivosColeccion.length === 0" class="no-inactivos">
-            <p>✨ No hay registros inactivos en esta colección</p>
+            <p>✨ {{ 'ADMIN.NO_INACTIVE' | translate }}</p>
           </div>
         </div>
 
         <p class="warning-text" *ngIf="registrosSeleccionadosBorrar.size > 0">
           <mat-icon>warning</mat-icon>
-          El borrado físico es permanente y no se puede deshacer
+          {{ 'ADMIN.PERMANENT_DELETE' | translate }}
         </p>
       </div>
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cerrar">✗</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CLOSE' | translate">✗</button>
       </div>
     </div>
   </div>
@@ -333,11 +402,11 @@
   <div class="auth-card db-popup">
     <h2 class="form-title">
       <mat-icon class="title-icon">restore</mat-icon>
-      Restaurar Base de Datos
+      {{ 'ADMIN.RESTORE_DATABASE' | translate }}
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>Selecciona la versión a la que deseas restaurar:</p>
+      <p>{{ 'ADMIN.SELECT_RESTORE_VERSION' | translate }}</p>
       
       <div class="version-list">
         <label *ngFor="let version of versionesRestore" class="version-item" 
@@ -355,13 +424,13 @@
 
       <p class="warning-text" *ngIf="selectedRestore">
         <mat-icon>info</mat-icon>
-        Se restaurará la base de datos al estado del {{ fechaRestoreSeleccionada }}
+        {{ 'ADMIN.RESTORE_STATE' | translate }} {{ fechaRestoreSeleccionada }}
       </p>
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cancelar">✗</button>
-        <button class="btn-emoji confirm" (click)="ejecutarRestore()" title="Restaurar">✓</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CANCEL' | translate">✗</button>
+        <button class="btn-emoji confirm" (click)="ejecutarRestore()" [title]="'ADMIN.RESTORE_ACTION' | translate">✓</button>
       </div>
     </div>
   </div>
@@ -372,33 +441,33 @@
   <div class="auth-card db-popup">
     <h2 class="form-title">
       <mat-icon class="title-icon">backup</mat-icon>
-      Generar Backup
+      {{ 'ADMIN.GENERATE_BACKUP' | translate }}
     </h2>
     <hr class="divider">
     <div class="form-content">
 
       <!-- Backup por colección individual -->
       <div class="backup-individual-section">
-        <h4>📂 Backup Individual</h4>
-        <p>Buscar una colección específica y generar su backup:</p>
+        <h4>📂 {{ 'ADMIN.INDIVIDUAL_BACKUP' | translate }}</h4>
+        <p>{{ 'ADMIN.SEARCH_SPECIFIC' | translate }}</p>
         
         <div class="collection-search">
           <div class="input-field">
-            <label>Nombre de la colección:</label>
+            <label>{{ 'ADMIN.COLLECTION_NAME' | translate }}</label>
             <input type="text" [(ngModel)]="coleccionBackup" placeholder="Ej: usuarios" class="collection-input">
           </div>
           <button class="btn-round btn-search" (click)="buscarColeccionBackup()" [disabled]="!coleccionBackup">
-            🔍 Buscar
+            {{ 'ADMIN.SEARCH' | translate }}
           </button>
         </div>
         <div *ngIf="coleccionBackupEncontrada" class="collection-found">
-          <p>✅ Colección encontrada: <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} registros)</p>
+          <p>✅ {{ 'ADMIN.COLLECTION_FOUND_INFO' | translate }} <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} {{ 'ADMIN.RECORDS' | translate }})</p>
           <button class="btn-round btn-blue btn-sm" (click)="backupColeccion()">
-            💾 Backup Colección
+            {{ 'ADMIN.BACKUP_BTN' | translate }}
           </button>
         </div>
         <div *ngIf="coleccionBackupNoEncontrada" class="collection-not-found">
-          <p>❌ No se encontró la colección "{{ coleccionBackup }}"</p>
+          <p>❌ {{ 'ADMIN.COLLECTION_NOT_FOUND' | translate }} "{{ coleccionBackup }}"</p>
         </div>
       </div>
 
@@ -406,19 +475,19 @@
 
       <!-- Backup Completo -->
       <div class="backup-completo-section">
-        <h4>📦 Backup Completo</h4>
-        <p>Genera una copia de seguridad de <strong>todas las colecciones</strong> de la base de datos.</p>
+        <h4>📦 {{ 'ADMIN.FULL_BACKUP' | translate }}</h4>
+        <p>{{ 'ADMIN.FULL_BACKUP_DESC' | translate }}</p>
         <button class="btn-round btn-primary btn-full" 
                 (click)="ejecutarBackupCompleto()" 
                 [disabled]="backupCompletoEnProgreso">
-          <span *ngIf="!backupCompletoEnProgreso">💾 Backup</span>
-          <span *ngIf="backupCompletoEnProgreso">⏳ Generando...</span>
+          <span *ngIf="!backupCompletoEnProgreso">{{ 'ADMIN.BACKUP_BTN' | translate }}</span>
+          <span *ngIf="backupCompletoEnProgreso">{{ 'ADMIN.GENERATING' | translate }}</span>
         </button>
       </div>
 
       <hr class="divider">
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" title="Cerrar">✗</button>
+        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CLOSE' | translate">✗</button>
       </div>
     </div>
   </div>

@@ -118,6 +118,148 @@ body {
   margin-top: 0;
 }
 
+/* PETICIONES */
+.requests-summary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.requests-summary .status-pill:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.requests-summary .status-pill.active:hover {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.requests-list {
+  display: grid;
+  gap: 16px;
+}
+
+.request-card {
+  border: 1px solid #2a2d33;
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.request-title {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.request-id {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.request-type {
+  color: #fff;
+  font-weight: 700;
+}
+
+.request-meta {
+  display: flex;
+  gap: 16px;
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.request-note {
+  margin: 10px 0 12px;
+  color: #ccc;
+}
+
+.request-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid #333;
+  background: #0f1113;
+  color: #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+}
+
+.status-pill.pendiente {
+  border-color: #FBC02D;
+  color: #FBC02D;
+}
+
+.status-pill.pendiente.active {
+  background: #FBC02D;
+  color: #0F1115;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(251, 192, 45, 0.4);
+  transform: scale(1.05);
+}
+
+.status-pill.aprobada {
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.status-pill.aprobada.active {
+  background: #4caf50;
+  color: #0F1115;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+  transform: scale(1.05);
+}
+
+.status-pill.rechazada {
+  border-color: #E53935;
+  color: #E53935;
+}
+
+.status-pill.rechazada.active {
+  background: #E53935;
+  color: #ffffff;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.4);
+  transform: scale(1.05);
+}
+
+.status-pill.active {
+  background: #7986cb;
+  color: #0F1115;
+  border-color: #7986cb;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(121, 134, 203, 0.4);
+  transform: scale(1.05);
+  font-weight: 800;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  padding: 18px;
+  border: 1px dashed #333;
+  border-radius: 8px;
+}
+
 /* ESTILOS DE USUARIOS */
 .usuari-item {
   padding: 12px;

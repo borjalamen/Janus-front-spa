@@ -32,6 +32,15 @@ interface BackupVersion {
   descripcion: string;
 }
 
+interface PeticionAdmin {
+  id: string;
+  solicitante: string;
+  tipo: string;
+  fecha: string;
+  comentario: string;
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+}
+
 @Component({
   selector: 'app-administracion',
   templateUrl: './administracion.html',
@@ -50,7 +59,7 @@ export class AdministracionComponent implements OnInit {
   title = 'Administración';
 
   // CONTROL DE PESTAÑAS (SCENARIOS)
-  // Options: 'USERS', 'APP', 'PARAM', 'DB'
+  // Options: 'USERS', 'APP', 'PARAM', 'DB', 'REQUESTS'
   activeTab: string = 'USERS';
 
   // ESTADOS POPUPS USUARIOS
@@ -167,6 +176,28 @@ export class AdministracionComponent implements OnInit {
   selectedRoleToDisable: string = '';
   appVersion: string = '1.0.2'; // Ejemplo
 
+  // ESTADOS PETICIONES
+  peticiones: PeticionAdmin[] = [
+    {
+      id: 'REQ-001',
+      solicitante: 'jlopez',
+      tipo: 'Alta de usuario',
+      fecha: '2026-02-10',
+      comentario: 'Solicita acceso para un nuevo consultor del proyecto Atlas.',
+      estado: 'PENDIENTE'
+    },
+    {
+      id: 'REQ-003',
+      solicitante: 'cmartinez',
+      tipo: 'Baja de usuario',
+      fecha: '2026-02-07',
+      comentario: 'Usuario temporal finalizo el contrato.',
+      estado: 'APROBADA'
+    }
+  ];
+  peticionesFiltradas: PeticionAdmin[] = [];
+  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+
   // ESTADOS BBDD
   mostrarPopupBorrado = false;
   mostrarPopupRestore = false;
@@ -227,15 +258,84 @@ export class AdministracionComponent implements OnInit {
   ngOnInit(): void {
     this.carregarUsuaris();
     this.cargarVersion();
+    this.peticionesFiltradas = [...this.peticiones];
   }
 
   get canEdit(): boolean {
     return this.authService.canEdit; 
   }
 
+  get peticionesPendientes(): number {
+    return this.peticiones.filter(p => p.estado === 'PENDIENTE').length;
+  }
+
+  get peticionesAprobadas(): number {
+    return this.peticiones.filter(p => p.estado === 'APROBADA').length;
+  }
+
+  get peticionesRechazadas(): number {
+    return this.peticiones.filter(p => p.estado === 'RECHAZADA').length;
+  }
+
   // ===== NAVEGACIÓN =====
   cambiarTab(tab: string) {
     this.activeTab = tab;
+  }
+
+  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+    this.filtroEstadoPeticiones = estado;
+    this.aplicarFiltrosPeticiones();
+  }
+
+  filtrarPeticiones(termino: string) {
+    if (!termino.trim()) {
+      this.aplicarFiltrosPeticiones();
+      return;
+    }
+    
+    const terminoLower = termino.toLowerCase();
+    let peticionesFiltradas = this.peticiones.filter(p =>
+      p.solicitante.toLowerCase().includes(terminoLower) ||
+      p.tipo.toLowerCase().includes(terminoLower) ||
+      p.comentario.toLowerCase().includes(terminoLower) ||
+      p.id.toLowerCase().includes(terminoLower)
+    );
+    
+    // Aplicar también el filtro de estado
+    if (this.filtroEstadoPeticiones !== 'TODAS') {
+      peticionesFiltradas = peticionesFiltradas.filter(p => p.estado === this.filtroEstadoPeticiones);
+    }
+    
+    this.peticionesFiltradas = peticionesFiltradas;
+  }
+
+  private aplicarFiltrosPeticiones() {
+    if (this.filtroEstadoPeticiones === 'TODAS') {
+      this.peticionesFiltradas = [...this.peticiones];
+    } else {
+      this.peticionesFiltradas = this.peticiones.filter(p => p.estado === this.filtroEstadoPeticiones);
+    }
+  }
+
+  getStatusTranslation(estado: string): string {
+    const statusMap: { [key: string]: string } = {
+      'PENDIENTE': 'ADMIN.STATUS_PENDING',
+      'APROBADA': 'ADMIN.STATUS_APPROVED',
+      'RECHAZADA': 'ADMIN.STATUS_REJECTED'
+    };
+    return statusMap[estado] || estado;
+  }
+
+  aprobarPeticion(peticion: PeticionAdmin) {
+    this.actualizarEstadoPeticion(peticion, 'APROBADA');
+  }
+
+  rechazarPeticion(peticion: PeticionAdmin) {
+    this.actualizarEstadoPeticion(peticion, 'RECHAZADA');
+  }
+
+  private actualizarEstadoPeticion(peticion: PeticionAdmin, estado: PeticionAdmin['estado']) {
+    peticion.estado = estado;
   }
 
   // ===== LOGICA USUARIOS (Scenario 1) =====
