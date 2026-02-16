@@ -37,7 +37,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   requester = '';
   requesterEmail = '';
   notes = '';
-  started = false; // whether the estimation table is active
+  started = true; // whether the estimation table is active (enabled by default)
   // persistence
   private STORAGE_KEY = 'estimations_v1';
   savedEstimations: any[] = [];
@@ -75,6 +75,12 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     };
     this.tasks.push(t);
     this.newTaskTitle = '';
+  }
+
+  // Start estimation from metadata area but keep metadata visible
+  startFromMetadata() {
+    this.started = true;
+    if (!this.weeks || this.weeks.length === 0) this.weeks = ['1'];
   }
 
   // Live estimation helpers

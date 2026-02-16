@@ -3,8 +3,8 @@
 
   <mat-tab-group [(selectedIndex)]="selectedTab">
     <mat-tab label="{{ 'ESTIMATION.TAB_DO' | translate }}">
-  <!-- Metadata form (fill before starting the estimation) -->
-  <div *ngIf="!started" class="metadata-form">
+  <!-- Metadata form (always visible; starting the estimation shows controls) -->
+  <div class="metadata-form">
     <div class="row">
       <mat-form-field appearance="outline">
         <input matInput placeholder="{{ 'ESTIMATION_META.META_NAME' | translate }}" [(ngModel)]="estimationName" />
@@ -32,12 +32,7 @@
       </mat-form-field>
     </div>
 
-    <div class="row actions">
-      <button type="button" class="start-btn" (click)="started = true" aria-label="{{ 'ESTIMATION_META.START' | translate }}">
-        <mat-icon>play_arrow</mat-icon>
-        {{ 'ESTIMATION_META.START' | translate }}
-      </button>
-    </div>
+    
   </div>
 
     <div *ngIf="started" class="controls">
@@ -53,10 +48,7 @@
       <mat-icon>calendar_today</mat-icon>
       {{ 'ESTIMATION.ADD_WEEK' | translate }}
     </button>
-    <button type="button" class="action-btn" (click)="started=false" aria-label="{{ 'ESTIMATION_META.EDIT_METADATA' | translate }}">
-      <mat-icon>edit</mat-icon>
-      {{ 'ESTIMATION_META.EDIT_METADATA' | translate }}
-    </button>
+    
     <span style="flex:1 1 auto"></span>
     <button type="button" class="export-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
       <mat-icon>file_download</mat-icon>
