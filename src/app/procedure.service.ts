@@ -11,6 +11,8 @@ export interface ProcedureStep {
   metodo: string;
   orden: number;
   tags?: string[];
+  entorno?: 'minsait' | 'preproduccion' | 'produccion';
+  imageUrl?: string;
 }
 
 export interface Procedure {
@@ -18,7 +20,7 @@ export interface Procedure {
   titulo: string | null;
   descripcion?: string | null;
   departamento?: string | null;
-   entorno?: string | null; 
+  entorno?: string | null; 
   tags?: string[] | null;
   steps?: ProcedureStep[] | null;
   createdAt?: string;

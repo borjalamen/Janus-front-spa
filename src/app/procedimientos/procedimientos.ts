@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { BuscadorComponent } from '../buscador/buscador';
-import { ProceduresService, Procedure } from '../procedure.service';
+import { ProceduresService, Procedure, ProcedureStep } from '../procedure.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -22,13 +22,10 @@ export class ProcedimientosComponent implements OnInit {
   procedures: Procedure[] = [];
   procedimientosFiltrados: Procedure[] = [];
 
-  // popup crear / editar
+  // crear / editar
   editando: Procedure | null = null;
-
-  // mode del formulari
   modoForm: 'crear' | 'editar' = 'crear';
 
-  // formulari basat en el model del backend
   procForm: Procedure = {
     titulo: '',
     descripcion: '',
@@ -40,18 +37,17 @@ export class ProcedimientosComponent implements OnInit {
     deleted: false
   };
 
-  // responsable principal (primer pas)
   primerResponsable = '';
 
-  // popup delete
+  // eliminar
   mostrarPopupDelete = false;
   procAEliminar: Procedure | null = null;
 
-  // Vista de steps
-  mostrarSteps = false;
-  procSeleccionada: Procedure | null = null;
+  // vista de steps dins la mateixa pantalla
+  procDetall: Procedure | null = null;
+  mostrarDetallSteps = false;
 
-  // índex step carrusel
+  // carrusel steps
   currentStepIndex = 0;
 
   coloresEntorno = {
@@ -59,19 +55,6 @@ export class ProcedimientosComponent implements OnInit {
     preproduccion: '#FBC02D',
     produccion: '#E53935'
   };
-
-  getColorEntorno(entorno: string): string {
-    return this.coloresEntorno[entorno as keyof typeof this.coloresEntorno] || '#757575';
-  }
-
-  getNombreEntorno(entorno: string): string {
-    switch (entorno) {
-      case 'minsait': return 'Minsait (Blau)';
-      case 'preproduccion': return 'Preproducció (Groc)';
-      case 'produccion': return 'Producció (Roig)';
-      default: return entorno;
-    }
-  }
 
   constructor(
     private proceduresService: ProceduresService,
@@ -86,7 +69,41 @@ export class ProcedimientosComponent implements OnInit {
     return this.authService.canEdit;
   }
 
-  // ===== READ =====
+  // COLORS ENTORN
+  getColorEntorno(entorno: string): string {
+    const key = (entorno || '').toLowerCase().trim();
+    console.log('getColorEntorno key=', key);
+
+    if (key.includes('minsait')) {
+      return '#1E88E5';
+    }
+    if (key.includes('preprod')) { // preproduccion, preproducció, etc.
+      return '#FBC02D';
+    }
+    if (key.includes('produc')) {  // produccion, producción, etc.
+      return '#E53935';
+    }
+    return '#FBC02D';
+  }
+
+  getNombreEntorno(entorno: string): string {
+    switch ((entorno || '').toLowerCase()) {
+      case 'minsait':        return 'Minsait';
+      case 'preproduccion':  return 'Preproducció';
+      case 'produccion':     return 'Producció';
+      default:               return entorno;
+    }
+  }
+
+  getNumeroDepartamento(entorno: string): number {
+    switch ((entorno || '').toLowerCase()) {
+      case 'minsait':        return 1;
+      case 'preproduccion':  return 2;
+      case 'produccion':     return 3;
+      default:               return 0;
+    }
+  }
+
   cargarProcedimientos() {
     this.proceduresService.getAll().subscribe({
       next: data => {
@@ -100,17 +117,18 @@ export class ProcedimientosComponent implements OnInit {
   filtrar(valor: string) {
     if (!valor) {
       this.procedimientosFiltrados = [...this.procedures];
-    } else {
-      const v = valor.toLowerCase();
-      this.procedimientosFiltrados = this.procedures.filter(p =>
-        (p.titulo || '').toLowerCase().includes(v) ||
-        (p.departamento || '').toLowerCase().includes(v) ||
-        (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
-      );
+      return;
     }
+    const v = valor.toLowerCase();
+    this.procedimientosFiltrados = this.procedures.filter(p =>
+      (p.titulo || '').toLowerCase().includes(v) ||
+      (p.departamento || '').toLowerCase().includes(v) ||
+      (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
+    );
   }
 
-  // ===== CREATE / UPDATE =====
+  // ==== CREATE / UPDATE ====
+
   obrirPopupCrear() {
     this.editando = null;
     this.modoForm = 'crear';
@@ -131,15 +149,24 @@ export class ProcedimientosComponent implements OnInit {
   obrirPopupEditar(proc: Procedure) {
     this.editando = proc;
     this.modoForm = 'editar';
-    // còpia superficial
     this.procForm = {
       id: proc.id,
       titulo: proc.titulo ?? '',
       descripcion: proc.descripcion ?? '',
       departamento: proc.departamento ?? '',
-      entorno: proc.entorno ?? '',
+      entorno: (proc.entorno as any) ?? 'minsait',
       tags: proc.tags ?? [],
-      steps: proc.steps ? [...proc.steps] : [],
+      steps: proc.steps ? proc.steps.map((s: any, idx: number): ProcedureStep => ({
+        id: s.id ?? `step-${idx + 1}`,
+        titulo: s.titulo ?? '',
+        descripcion: s.descripcion ?? '',
+        responsable: s.responsable ?? '',
+        metodo: s.metodo ?? '',
+        orden: s.orden ?? (idx + 1),
+        tags: s.tags ?? [],
+        entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
+        imageUrl: s.imageUrl ?? ''
+      })) : [],
       visible: proc.visible ?? true,
       deleted: proc.deleted ?? false,
       createdAt: proc.createdAt,
@@ -161,16 +188,20 @@ export class ProcedimientosComponent implements OnInit {
       return;
     }
 
+    // primer step amb responsable si cal
     if ((!this.procForm.steps || this.procForm.steps.length === 0) && this.primerResponsable) {
-      this.procForm.steps = [{
+      const step: ProcedureStep = {
         id: 'step-1',
         titulo: 'Pas inicial',
         descripcion: 'Primer pas del procediment',
         responsable: this.primerResponsable,
         metodo: '',
         orden: 1,
-        tags: []
-      }];
+        tags: [],
+        entorno: (this.procForm.entorno as any) || 'minsait',
+        imageUrl: ''
+      };
+      this.procForm.steps = [step];
     } else if (this.procForm.steps && this.procForm.steps.length > 0 && this.primerResponsable) {
       this.procForm.steps[0].responsable = this.primerResponsable;
     }
@@ -185,8 +216,9 @@ export class ProcedimientosComponent implements OnInit {
       isVisible: this.procForm.visible ?? true
     };
 
+    console.log('BODY ENVIAT:', body);
+
     if (this.editando && this.editando.id) {
-      // UPDATE
       this.proceduresService.update(this.editando.id, body).subscribe({
         next: updated => {
           const idx = this.procedures.findIndex(p => p.id === updated.id);
@@ -197,7 +229,6 @@ export class ProcedimientosComponent implements OnInit {
         error: err => console.error('Error actualitzant procediment', err)
       });
     } else {
-      // CREATE
       this.proceduresService.create(body).subscribe({
         next: created => {
           this.procedures.push(created);
@@ -209,7 +240,8 @@ export class ProcedimientosComponent implements OnInit {
     }
   }
 
-  // ===== DELETE =====
+  // ==== DELETE ====
+
   confirmarEliminar(proc: Procedure) {
     this.procAEliminar = proc;
     this.mostrarPopupDelete = true;
@@ -236,75 +268,69 @@ export class ProcedimientosComponent implements OnInit {
     });
   }
 
-  // ===== ver steps (carrusel) =====
-  verSteps(proc: Procedure) {
-    this.procSeleccionada = proc;
-    this.mostrarSteps = true;
-    this.currentStepIndex = 0;
-  }
-
-  tancarSteps() {
-    this.mostrarSteps = false;
-    this.procSeleccionada = null;
-  }
-
-  nextStep() {
-    if (!this.procSeleccionada?.steps || this.procSeleccionada.steps.length === 0) return;
-    const total = this.procSeleccionada.steps.length;
-    this.currentStepIndex = (this.currentStepIndex + 1) % total;
-  }
-
-  prevStep() {
-    if (!this.procSeleccionada?.steps || this.procSeleccionada.steps.length === 0) return;
-    const total = this.procSeleccionada.steps.length;
-    this.currentStepIndex = (this.currentStepIndex - 1 + total) % total;
-  }
-
-  getColorDepartamento(dep?: string): string {
-    switch ((dep || '').toLowerCase()) {
-      case 'minsait': return '#1E88E5';
-      case 'preproduccion': return '#FBC02D';
-      case 'produccion': return '#E53935';
-      default: return '#757575';
-    }
-  }
-
-  getNombreDepartamento(dep?: string): string {
-    switch ((dep || '').toLowerCase()) {
-      case 'minsait': return 'Minsait';
-      case 'preproduccion': return 'Preproducció';
-      case 'produccion': return 'Producció';
-      default: return dep || 'Otros';
-    }
-  }
-
-  getNumeroDepartamento(dep?: string): number {
-    switch ((dep || '').toLowerCase()) {
-      case 'minsait': return 1;
-      case 'preproduccion': return 2;
-      case 'produccion': return 3;
-      default: return 0;
-    }
-  }
+  // ==== STEPS (formulari) ====
 
   afegirStep() {
     const nouIndex = (this.procForm.steps?.length || 0) + 1;
-    this.procForm.steps = [
-      ...(this.procForm.steps || []),
-      {
-        id: `step-${nouIndex}`,
-        titulo: `Step ${nouIndex}`,
-        descripcion: '',
-        responsable: this.primerResponsable || '',
-        metodo: '',
-        orden: nouIndex,
-        tags: []
-      }
-    ];
+    const nouStep: ProcedureStep = {
+      id: `step-${nouIndex}`,
+      titulo: `Step ${nouIndex}`,
+      descripcion: '',
+      responsable: this.primerResponsable || '',
+      metodo: '',
+      orden: nouIndex,
+      tags: [],
+      entorno: (this.procForm.entorno as any) || 'minsait',
+      imageUrl: ''
+    };
+    console.log('NOU STEP AFEGIT:', nouStep);
+    this.procForm.steps = [ ...(this.procForm.steps || []), nouStep ];
   }
 
   eliminarStep(idx: number) {
     if (!this.procForm.steps) return;
     this.procForm.steps.splice(idx, 1);
+  }
+
+  obrirImatgeNovaFinestra(url?: string) {
+    if (!url) return;
+    window.open(url, '_blank');
+  }
+
+  // ==== VISTA DE STEPS A LA MATEIXA PANTALLA + CARRUSEL ====
+
+  verSteps(p: Procedure) {
+    this.procDetall = p;
+    console.log('STEPS DETALL:', this.procDetall.steps);
+    this.mostrarDetallSteps = true;
+    this.resetCarousel();
+  }
+
+  tancarDetallSteps() {
+    this.mostrarDetallSteps = false;
+    this.procDetall = null;
+  }
+
+  nextStep() {
+    if (!this.procDetall?.steps) return;
+    if (this.currentStepIndex < this.procDetall.steps.length - 1) {
+      this.currentStepIndex++;
+      const s = this.procDetall.steps[this.currentStepIndex];
+      console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
+    }
+  }
+
+  prevStep() {
+    if (this.currentStepIndex > 0) {
+      this.currentStepIndex--;
+      const s = this.procDetall?.steps?.[this.currentStepIndex];
+      if (s) {
+        console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
+      }
+    }
+  }
+
+  resetCarousel() {
+    this.currentStepIndex = 0;
   }
 }

@@ -1,19 +1,12 @@
-body {
-  background: #0F1115;
-  color: #E0E0E0;
-  font-family: 'Roboto', Arial, sans-serif;
-  margin: 0;
-}
-
 /* ========================= */
-/*   CONTENIDOR PRINCIPAL    */
+/*   CONTENIDOR GENERAL      */
 /* ========================= */
 
 .procedures-section {
   padding: 24px;
-  background: #16181c;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
+  background: #101218;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.7);
   margin: 20px;
   color: #E0E0E0;
 }
@@ -22,294 +15,219 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .procedures-header h2 {
   color: #FBC02D;
-  font-weight: bold;
+  font-weight: 700;
   margin: 0;
 }
 
-.procedures-description {
-  color: #E0E0E0;
-}
-
 /* ========================= */
-/*          PESTANYES        */
+/*        PESTANYES          */
 /* ========================= */
 
 .procedures-tabs {
   display: flex;
   gap: 8px;
-  padding: 16px 0;
-  border-bottom: 2px solid rgba(229, 57, 53, 0.3);
-  margin-bottom: 20px;
-}
-
-.procedures-tab {
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 10px 18px;
-  border-radius: 10px;
-  color: rgba(207, 207, 207, 0.7);
-  cursor: pointer;
-  position: relative;
-  font-weight: 600;
-  transition: all 160ms ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.procedures-tab mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.procedures-tab:hover {
-  color: #E53935;
-  background: rgba(229, 57, 53, 0.08);
-}
-
-.procedures-tab:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.15);
-}
-
-.procedures-tab.active {
-  background: linear-gradient(180deg, rgba(229, 57, 53, 0.12), rgba(229, 57, 53, 0.06));
-  color: #E53935;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.procedures-tab.active::after {
-  content: '';
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: -2px;
-  height: 4px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #E53935, #c62828);
-  box-shadow: 0 6px 20px rgba(229, 57, 53, 0.3);
-}
-
-.procedures-tab-panel {
-  padding: 10px 0;
-  animation: proceduresFadeIn 0.3s ease-in;
-}
-
-@keyframes proceduresFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ========================= */
-/*      FORMULARI CREAR      */
-/* ========================= */
-
-.procedure-form {
-  background: rgba(22, 24, 28, 0.6);
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.procedure-form h3 {
-  color: #FBC02D;
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.4em;
-}
-
-.procedure-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 10px 0 16px;
+  border-bottom: 2px solid rgba(229, 57, 53, 0.4);
   margin-bottom: 10px;
 }
 
-.procedure-field label {
-  color: #cfcfcf;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.procedure-field input,
-.procedure-field textarea {
-  background: #141516 !important;
-  color: #eee !important;
-  border: 1px solid #2e3236 !important;
-  padding: 8px !important;
-  border-radius: 4px !important;
-  font-size: 0.95rem;
-  outline: none;
-  font-family: inherit;
-}
-
-.procedure-field input::placeholder,
-.procedure-field textarea::placeholder {
-  color: #7c8084 !important;
-}
-
-.procedure-form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  justify-content: flex-end;
-}
-
-/* Editor múltiples steps */
-
-.procedure-steps-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(20, 21, 22, 0.5);
-  border-radius: 6px;
-  border: 1px solid #2e3236;
-  position: relative;
-}
-
-.procedure-add-step-btn {
-  min-width: 32px;
-  min-height: 32px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
+.procedures-tab {
+  background: #14161d;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 14px;
   border-radius: 999px;
-  border: 0;
+  color: rgba(220,220,220,0.8);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  color: #FBC02D;
-  transition: transform 0.2s ease, background 0.2s ease;
-  align-self: flex-start;
-}
-
-.procedure-add-step-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-  background: rgba(251, 192, 45, 0.15);
-}
-
-.procedure-no-steps {
-  text-align: center;
-  color: #7c8084;
-  font-style: italic;
-}
-
-.procedure-step-edit-item {
-  background: #0f1113;
-  border: 1px solid #2e3236;
-  border-radius: 6px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.procedure-step-edit-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.procedure-step-edit-number {
+  position: relative;
   font-weight: 600;
-  color: #FBC02D;
-}
-
-.procedure-step-delete-btn {
-  background: rgba(229, 57, 53, 0.2);
-  color: #E53935;
-  border: 1px solid rgba(229, 57, 53, 0.4);
-  padding: 2px 6px;
-  border-radius: 4px;
-  cursor: pointer;
+  transition: all 150ms ease;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
 }
 
-.procedure-step-delete-btn mat-icon {
+.procedures-tab mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
 }
 
-.procedure-step-edit-input,
-.procedure-step-edit-textarea {
-  background: #141516;
+.procedures-tab:hover {
+  color: #FBC02D;
+  border-color: rgba(251,192,45,0.8);
+  box-shadow: 0 0 12px rgba(251,192,45,0.2);
+}
+
+.procedures-tab.active {
+  background: radial-gradient(circle at 20% 0, rgba(251,192,45,0.35), #14161d);
+  color: #FBC02D;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+}
+
+.procedures-tab-panel {
+  padding: 8px 0;
+}
+
+/* ========================= */
+/*   FORMULARI CREAR/EDITAR  */
+/* ========================= */
+
+.procedure-form {
+  background: #14161d;
+  padding: 18px 18px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 18px rgba(0,0,0,0.6);
+}
+
+.procedure-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.procedure-form-title h3 {
+  color: #FBC02D;
+  margin: 0 0 4px 0;
+  font-size: 1.2rem;
+}
+
+.procedure-form-mode-pill {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(129,199,132,0.1);
+  color: #81C784;
+  border: 1px solid rgba(129,199,132,0.4);
+}
+
+.procedure-field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 14px;
+  margin-top: 14px;
+}
+
+.procedure-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.procedure-field label {
+  color: #cfcfcf;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.procedure-field input,
+.procedure-field textarea {
+  background: #0f1116;
   color: #eee;
-  border: 1px solid #2e3236;
-  padding: 6px;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border: 1px solid #282c34;
+  padding: 7px 9px;
+  border-radius: 6px;
+  font-size: 0.95rem;
   outline: none;
   font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.procedure-step-edit-textarea {
-  resize: vertical;
+.procedure-field input:focus,
+.procedure-field textarea:focus {
+  border-color: #FBC02D;
+  box-shadow: 0 0 0 1px rgba(251,192,45,0.4);
+}
+
+.procedure-field input::placeholder,
+.procedure-field textarea::placeholder {
+  color: #7c8084;
 }
 
 /* ========================= */
-/*      LLISTA PROCEDIMENTS  */
+/*    ENTORN BOTONS STEP     */
 /* ========================= */
+
+.entorno-btn {
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #101218;
+  color: #cfd8dc;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.entorno-btn:hover {
+  border-color: var(--color);
+  color: var(--color);
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+
+.entorno-btn.active {
+  background: var(--color);
+  border-color: var(--color);
+  color: #000;
+}
+
+/* ========================= */
+/*   LLISTAT PROCEDIMENTS    */
+/* ========================= */
+
+.procedures-description {
+  color: #cfd8dc;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
 
 .procedures-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .procedure-row {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 16px;
-  background: #0f1113;
+  gap: 14px;
+  padding: 14px;
+  background: #161821;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,0.04);
   transition: all 0.2s ease;
 }
 
 .procedure-row:hover {
-  border-color: rgba(229, 57, 53, 0.3);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
-              0 0 10px rgba(229, 57, 53, 0.1);
-  transform: translateY(-2px);
+  border-color: rgba(251,192,45,0.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+  transform: translateY(-1px);
 }
 
-/* Icona numèrica d'entorn */
+/* Cub entorn procediment */
 
 .procedure-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
-.procedure-icon:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
 }
 
 .procedure-icon-number {
@@ -317,8 +235,6 @@ body {
   font-weight: 700;
   color: #fff;
 }
-
-/* Info de la card */
 
 .procedure-info {
   flex: 1;
@@ -328,108 +244,88 @@ body {
 .procedure-title-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 6px;
   flex-wrap: wrap;
 }
 
 .procedure-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  color: #ffd54f;
+  color: #FFE082;
 }
 
-/* Badge entorn/departament */
+/* Pastilles */
+
+.procedure-fecha-pill,
+.procedure-dept-pill {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.procedure-fecha-pill {
+  background: rgba(229,57,53,0.18);
+  color: #EF5350;
+  border: 1px solid rgba(229,57,53,0.4);
+}
+
+.procedure-dept-pill {
+  background: rgba(158,158,158,0.15);
+  color: #b0bec5;
+  border: 1px solid rgba(158,158,158,0.4);
+}
+
+/* Chip entorn text */
 
 .procedure-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  padding: 3px 10px;
+  gap: 5px;
+  padding: 3px 9px;
   border-radius: 999px;
-  border: 1px solid rgba(229, 57, 53, 0.3);
+  border-width: 1px;
+  border-style: solid;
+  font-size: 11px;
   font-weight: 600;
-  color: #fff;
 }
 
 .procedure-chip-number {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  font-size: 11px;
+  font-weight: 700;
 }
 
 .procedure-chip-text {
-  white-space: nowrap;
+  font-size: 11px;
 }
 
 .procedure-text {
   color: #cfd8dc;
-  font-size: 14px;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
   line-height: 1.5;
 }
 
-/* meta (data de creació) */
-
-.procedure-meta {
-  font-size: 11px;
-  color: #9e9e9e;
-  margin-bottom: 4px;
-}
-
-/* Resum de steps */
+/* Resum steps */
 
 .procedure-steps-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 12px 0;
-  padding: 12px;
-  background: rgba(20, 21, 22, 0.3);
-  border-radius: 6px;
-  border-left: 3px solid #FBC02D;
+  margin-top: 2px;
 }
 
 .procedure-steps-summary-item {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 8px;
-  background: rgba(10, 11, 12, 0.5);
-  border-radius: 4px;
+  align-items: center;
+  gap: 6px;
 }
 
 .procedure-steps-icon {
-  font-size: 24px !important;
-  width: 24px !important;
-  height: 24px !important;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  color: #FBC02D;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .procedure-steps-summary-text {
-  flex: 1;
-}
-
-.procedure-steps-summary-text strong {
-  display: block;
-  color: #E0E0E0;
-  margin-bottom: 4px;
-  font-size: 13px;
-}
-
-.procedure-steps-summary-text p {
-  margin: 0;
-  color: #cfd8dc;
   font-size: 12px;
-  line-height: 1.4;
 }
 
 /* Accions */
@@ -437,56 +333,283 @@ body {
 .procedure-actions {
   display: flex;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 10px;
   justify-content: flex-end;
 }
 
 .procedure-action-btn {
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 7px 10px;
+  border-radius: 7px;
   border: 0;
   background: transparent;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
   color: #E0E0E0;
 }
 
 .procedure-action-btn:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-2px);
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-1px);
 }
 
 .procedure-view-btn:hover {
-  color: #66BB6A;
+  color: #81C784;
 }
 
 .procedure-edit-btn:hover {
-  color: #ffd54f;
+  color: #FFE082;
 }
 
 .procedure-delete-btn:hover {
   color: #ff5252;
 }
 
-/* No results */
+/* Sense resultats */
 
 .procedures-no-results {
   text-align: center;
   padding: 40px 20px;
-  color: #666;
+  color: #888;
 }
 
 .procedures-no-results mat-icon {
-  font-size: 64px;
-  width: 64px;
-  height: 64px;
-  color: #444;
-  margin-bottom: 16px;
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: #555;
+  margin-bottom: 14px;
 }
 
 /* ========================= */
-/*          POPUPS           */
+/*    EDITOR DE STEPS        */
+/* ========================= */
+
+.procedure-steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.procedure-steps-header label {
+  margin: 0;
+}
+
+.procedure-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.procedure-add-step-btn {
+  background: rgba(251,192,45,0.12);
+  border: 1px solid rgba(251,192,45,0.6);
+  color: #FBC02D;
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.procedure-add-step-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.procedure-add-step-btn:hover {
+  background: rgba(251,192,45,0.2);
+  transform: translateY(-1px);
+}
+
+.procedure-no-steps {
+  text-align: center;
+  color: #7c8084;
+  padding: 16px 10px;
+  font-style: italic;
+}
+
+.procedure-no-steps mat-icon {
+  font-size: 28px;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.procedure-step-edit-item {
+  background: #151822;
+  border: 1px solid #2c3140;
+  border-radius: 9px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.procedure-step-edit-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.procedure-step-edit-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.procedure-step-edit-number {
+  font-weight: 700;
+  color: #FBC02D;
+  font-size: 13px;
+}
+
+/* Cub entorn per step */
+
+.procedure-step-env-cube {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.procedure-step-env-number {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.procedure-step-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px;
+}
+
+.procedure-step-edit-input {
+  background: #0f1116;
+  color: #eee;
+  border: 1px solid #282c34;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.procedure-step-edit-textarea {
+  background: #0f1116;
+  color: #eee;
+  border: 1px solid #282c34;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.procedure-step-delete-btn {
+  margin-left: auto;
+  background: transparent;
+  color: #EF5350;
+  border: 1px solid rgba(239,83,80,0.6);
+  padding: 3px 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.procedure-step-delete-btn mat-icon {
+  font-size: 16px;
+}
+
+.procedure-step-delete-btn:hover {
+  background: rgba(239,83,80,0.2);
+}
+
+/* Imatge per step */
+
+.procedure-step-image-field {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.procedure-step-image-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.procedure-step-image-thumb {
+  width: 60px;
+  height: 40px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #2e3236;
+  cursor: pointer;
+}
+
+.procedure-step-image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========================= */
+/*   BOTONS FORMULARI        */
+/* ========================= */
+
+.procedure-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  justify-content: flex-end;
+}
+
+.procedure-cancel-btn,
+.procedure-save-btn {
+  background: #111319;
+  color: #999;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 7px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 22px;
+  min-width: 42px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.procedure-cancel-btn:hover,
+.procedure-save-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.7);
+}
+
+.procedure-save-btn {
+  color: #81C784;
+  border-color: rgba(129,199,132,0.6);
+}
+
+.procedure-cancel-btn {
+  color: #EF5350;
+  border-color: rgba(239,83,80,0.6);
+}
+
+/* ========================= */
+/*    POPUP ELIMINAR         */
 /* ========================= */
 
 .procedures-popup-backdrop {
@@ -495,274 +618,251 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85) !important;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2147483000 !important;
+  z-index: 2147483000;
 }
 
 .procedures-popup {
-  background: #0f1113 !important;
-  color: #eee !important;
-  padding: 22px !important;
-  border-radius: 8px !important;
-  width: 720px !important;
-  max-height: 80vh !important;
-  overflow: auto !important;
-  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4),
-              0 0 50px rgba(251, 192, 45, 0.2) !important;
-  border: 2px solid #FBC02D !important;
+  background: #101218;
+  color: #eee;
+  padding: 20px;
+  border-radius: 10px;
+  width: 380px;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.35), 0 0 50px rgba(251, 192, 45, 0.15);
+  border: 2px solid #FBC02D;
 }
 
 .procedures-popup h3 {
   color: #ffd54f;
-  margin: 0 0 15px 0;
+  margin: 0 0 12px 0;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
 .procedures-popup-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: flex-end;
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
-/* Botons save/cancel reutilitzats */
+/* ========================= */
+/*    DETALL STEPS VISTA     */
+/* ========================= */
 
-.procedure-cancel-btn,
-.procedure-save-btn {
-  background: transparent !important;
-  color: #999 !important;
-  border: 0 !important;
-  padding: 8px !important;
-  border-radius: 8px !important;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 28px;
-  min-width: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: none;
-}
-
-.procedure-cancel-btn:hover,
-.procedure-save-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-  background: linear-gradient(145deg, #555, #333) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.procedure-save-btn {
-  color: #4CAF50 !important;
-}
-
-.procedure-save-btn:hover {
-  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
-  color: #fff !important;
-  box-shadow:
-    0 6px 16px rgba(76, 175, 80, 0.6),
-    0 0 20px rgba(76, 175, 80, 0.5) !important;
-  border: 1px solid rgba(76, 175, 80, 0.5) !important;
-}
-
-.procedure-cancel-btn {
-  color: #E53935 !important;
-}
-
-.procedure-cancel-btn:hover {
-  background: linear-gradient(145deg, #E53935, #c62828) !important;
-  color: #fff !important;
-  box-shadow:
-    0 6px 16px rgba(229, 57, 53, 0.6),
-    0 0 20px rgba(229, 57, 53, 0.4) !important;
-  border: 1px solid rgba(229, 57, 53, 0.5) !important;
-}
-
-/* Steps dins popup + animació, MÉS GRAN */
-
-.procedure-step-item {
-  background: #0f1113;
-  border: 1px solid #2e3236;
+.procedure-steps-detail-container {
+  background: #14161d;
   border-radius: 10px;
-  padding: 20px;
-  transition: all 0.2s ease;
-  margin-bottom: 12px;
-  animation: stepFadeIn 0.25s ease-out;
-
-  /* mes ample */
-  max-width: 800px;
-  width: 100%;
-  margin-inline: auto;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 18px rgba(0,0,0,0.7);
 }
 
-.procedure-step-item:hover {
-  border-color: rgba(251, 192, 45, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.procedure-step-header {
+.procedure-steps-detail-header {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
-.procedure-step-title strong {
+.procedure-detail-back-btn {
+  background: transparent;
+  border: none;
   color: #FBC02D;
-  font-size: 15px;
-}
-
-.procedure-step-content {
-  color: #cfd8dc;
-  font-size: 15px;
-  line-height: 1.7;
-  background: rgba(10, 11, 12, 0.5);
-  padding: 16px;
-  border-radius: 6px;
-  border-left: 3px solid rgba(251, 192, 45, 0.5);
-}
-
-@keyframes stepFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Carrusel de steps (fletxes als costats) */
-
-.procedure-step-carousel {
+  cursor: pointer;
   display: flex;
-  gap: 16px;
   align-items: center;
   justify-content: center;
 }
 
-/* Botons de navegació (fletxes) */
+.procedure-detail-back-btn mat-icon {
+  font-size: 22px;
+}
 
-.procedure-step-nav-btn {
-  background: transparent;
+.procedure-steps-detail-title h3 {
+  margin: 0;
+  color: #FFE082;
+}
+
+.procedure-steps-detail-sub {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #cfd8dc;
+}
+
+.procedure-steps-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+
+.procedure-step-detail-item {
+  background: #151822;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.procedure-step-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.procedure-step-detail-title strong {
+  display: block;
+  color: #FFE082;
+}
+
+.procedure-step-detail-resp {
+  font-size: 12px;
+  color: #b0bec5;
+}
+
+.procedure-step-detail-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.procedure-step-detail-text {
+  flex: 2;
+  font-size: 13px;
+  color: #cfd8dc;
+}
+
+.procedure-step-detail-image img {
+  max-width: 230px;
+  border-radius: 6px;
+  border: 1px solid #2e3236;
+}
+
+/* ========================= */
+/*    CARRUSEL DE STEPS      */
+/* ========================= */
+
+.procedure-steps-carousel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 0 4px;
+}
+
+.procedure-steps-carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.procedure-step-slide {
+  flex: 1;
+  max-width: 700px;
+  transition: all 0.25s ease-in-out;
+}
+
+/* Fletxes grogues rodones */
+
+.carousel-arrow {
+  background: radial-gradient(circle at 30% 30%, rgba(251,192,45,0.35), rgba(16,18,24,1));
   border: 2px solid #FBC02D;
   color: #FBC02D;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
-.procedure-step-nav-btn mat-icon {
+.carousel-arrow mat-icon {
   font-size: 24px;
-  width: 24px;
-  height: 24px;
-  color: #FBC02D;
 }
 
-.procedure-step-nav-btn:hover {
-  background: rgba(251, 192, 45, 0.15);
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(251, 192, 45, 0.4);
+.carousel-arrow:hover:not([disabled]) {
+  background: #FBC02D;
+  color: #000;
+  transform: translateY(-1px) scale(1.07);
+  box-shadow: 0 0 14px rgba(251,192,45,0.9);
 }
 
-/* ─────────────────────────────────────────── */
-/*  ENTORN (botons, preview i badge)          */
-/* ─────────────────────────────────────────── */
+.carousel-arrow[disabled] {
+  opacity: 0.28;
+  cursor: default;
+  box-shadow: none;
+}
 
-.entorno-botones-wrapper {
+/* Indicadors */
+
+.carousel-indicators {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.entorno-btn {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  background: transparent;
-  color: #cfd8dc;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
-}
-
-.entorno-btn:hover {
-  transform: scale(1.05);
-  border-color: var(--color);
-  color: var(--color);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.entorno-btn.active {
-  background: var(--color);
-  border-color: var(--color);
-  color: #fff;
-  transform: scale(1.08);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-}
-
-.entorno-icon-preview {
-  display: flex;
-  align-items: center;
+  gap: 5px;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.entorno-icon-preview:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+.carousel-indicators span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.entorno-icon-preview .procedure-icon-number {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-}
-.procedure-meta {
-  font-size: 11px;
+.carousel-indicators span.active {
+  background: #FBC02D;
+  transform: scale(1.25);
 }
 
-.procedure-fecha-pill {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(229, 57, 53, 0.15);
-  color: #E53935;
-  border: 1px solid rgba(229, 57, 53, 0.3);
-  font-weight: 600;
+/* ========================= */
+/*     RESPONSIVE BÀSIC      */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .procedure-row {
+    flex-direction: column;
+  }
+
+  .procedure-icon {
+    align-self: flex-start;
+  }
+
+  .procedure-step-detail-body {
+    flex-direction: column;
+  }
+
+  .procedure-steps-carousel-wrapper {
+    gap: 6px;
+  }
+
+  .procedure-step-slide {
+    max-width: 100%;
+  }
+  .procedure-text {
+  font-size: 13px;
+  color: #CFD8DC;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
-.procedure-dept-pill {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(158, 158, 158, 0.15);  
-  color: #b0bec5;                         
-  border: 1px solid rgba(158, 158, 158, 0.4);
-  font-weight: 600;
+.procedure-step-detail-text {
+  flex: 1;
+  font-size: 13px;
+  color: #CFD8DC;
+  word-wrap: break-word;      
+  overflow-wrap: break-word;  
+}
 }
