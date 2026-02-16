@@ -538,6 +538,8 @@
     "LIST_SEARCH": "Search by name, project, requester...",
     "LIST_LOAD": "Load",
     "LIST_DELETE": "Delete",
+    "SAVE": "Save estimation",
+    "SAVED": "Estimation saved",
     "LIVE": {
       "NEW_TASK": "Task description...",
       "START": "Create live session",

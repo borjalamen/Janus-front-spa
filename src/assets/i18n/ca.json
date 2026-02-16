@@ -549,6 +549,8 @@
     "LIST_SEARCH": "Cercar per nom, projecte, sol·licitant...",
     "LIST_LOAD": "Carregar",
     "LIST_DELETE": "Eliminar",
+    "SAVE": "Desar estimació",
+    "SAVED": "Estimació desada",
     "LIVE": {
       "NEW_TASK": "Descripció de la tasca...",
       "START": "Crear sessió en viu",

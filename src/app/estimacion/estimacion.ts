@@ -8,7 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 
@@ -23,10 +24,10 @@ interface Task {
   templateUrl: './estimacion.html',
   styleUrls: ['./estimacion.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, MatCardModule, MatListModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, MatCardModule, MatListModule, TranslateModule, MatSnackBarModule],
 })
 export class EstimacionComponent implements OnInit, OnDestroy {
-  constructor(public liveService: LiveEstimationService) {}
+  constructor(public liveService: LiveEstimationService, private snackBar: MatSnackBar, private translate: TranslateService) {}
   weeks: string[] = ['1'];
   tasks: Task[] = [];
   newTaskTitle = '';
@@ -43,6 +44,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   savedEstimations: any[] = [];
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
+  saveButtonText = '';
   // --- Live estimation state ---
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
@@ -182,6 +184,13 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     };
     this.savedEstimations.push(obj);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.savedEstimations));
+    // visual feedback: snackbar + temporary button label change
+    const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
+    this.snackBar.open(savedMsg, undefined, { duration: 2500 });
+    // update button text briefly
+    const prev = this.saveButtonText;
+    this.saveButtonText = savedMsg;
+    setTimeout(() => { this.saveButtonText = prev; }, 2000);
     // go to list
     this.selectedTab = 1;
   }
@@ -190,6 +199,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.loadSavedEstimations();
     // subscribe live session
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
+    // initialize save button label
+    this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Guardar estimación';
   }
 
   ngOnDestroy(): void {

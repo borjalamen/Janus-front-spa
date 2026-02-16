@@ -540,6 +540,8 @@
     "LIST_SEARCH": "Buscar por nombre, proyecto, solicitante...",
     "LIST_LOAD": "Cargar",
     "LIST_DELETE": "Eliminar",
+    "SAVE": "Guardar estimación",
+    "SAVED": "Estimación guardada",
     "LIVE": {
       "NEW_TASK": "Descripción de la tarea...",
       "START": "Crear sesión en vivo",

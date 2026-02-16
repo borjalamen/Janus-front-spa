@@ -48,7 +48,10 @@
       <mat-icon>calendar_today</mat-icon>
       {{ 'ESTIMATION.ADD_WEEK' | translate }}
     </button>
-    
+    <button type="button" class="action-btn" (click)="saveCurrentEstimation()" aria-label="{{ 'ESTIMATION.SAVE' | translate }}">
+      <mat-icon>save</mat-icon>
+      {{ saveButtonText }}
+    </button>
     <span style="flex:1 1 auto"></span>
     <button type="button" class="export-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
       <mat-icon>file_download</mat-icon>
