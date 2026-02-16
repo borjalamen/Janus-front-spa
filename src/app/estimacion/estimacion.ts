@@ -455,6 +455,139 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     }
   }
 
+  // -------------------------
+  // Import PDF (front-end only)
+  // -------------------------
+  async onPdfSelected(event: Event) {
+    const inp = event.target as HTMLInputElement;
+    if (!inp || !inp.files || inp.files.length === 0) return;
+    const file = inp.files[0];
+    try {
+      await this.parsePdf(file);
+      // clear input so selecting same file again triggers change
+      inp.value = '';
+    } catch (e) {
+      console.error('PDF import error', e);
+      alert('Error importando PDF: ' + (e && (e as any).message ? (e as any).message : e));
+    }
+  }
+
+  private async parsePdf(file: File) {
+    // read file bytes
+    const data = await file.arrayBuffer();
+
+    // try to fetch local worker and create blob URL
+    let workerBlobUrl: string | null = null;
+    try {
+      const resp = await fetch('/assets/pdf.worker.min.js');
+      if (resp.ok) {
+        const b = await resp.blob();
+        workerBlobUrl = URL.createObjectURL(b);
+      }
+    } catch (e) {
+      console.warn('Could not fetch local pdf.worker.min.js', e);
+    }
+
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf');
+    try { (pdfjs as any).GlobalWorkerOptions = (pdfjs as any).GlobalWorkerOptions || {}; } catch (e) {}
+    if (workerBlobUrl) {
+      // @ts-ignore
+      (pdfjs as any).GlobalWorkerOptions.workerSrc = workerBlobUrl;
+    }
+
+    const loading = (pdfjs as any).getDocument({ data, disableWorker: true } as any);
+    const doc = await loading.promise;
+
+    // extract text from pages using item coordinates to rebuild lines (more robust)
+    let fullText = '';
+    for (let i = 1; i <= doc.numPages; i++) {
+      const page = await doc.getPage(i);
+      const content = await page.getTextContent();
+      const items: Array<{ str: string; x: number; y: number }> = (content.items || []).map((it: any) => {
+        const tr = it.transform || [];
+        // transform is [a, b, c, d, x, y]
+        const x = (tr[4] !== undefined && !isNaN(tr[4])) ? tr[4] : (it.x || 0);
+        const y = (tr[5] !== undefined && !isNaN(tr[5])) ? tr[5] : (it.y || 0);
+        return { str: it.str || '', x: Number(x), y: Number(y) };
+      });
+
+      // group by approximated y coordinate to create visual lines
+      items.sort((a, b) => (b.y - a.y) || (a.x - b.x));
+      const linesMap = new Map<number, string[]>();
+      for (const it of items) {
+        // round Y to near integer to group same visual line
+        const key = Math.round(it.y * 10); // 0.1 precision
+        const arr = linesMap.get(key) || [];
+        arr.push(it.str);
+        linesMap.set(key, arr);
+      }
+
+      const pageLines: string[] = [];
+      Array.from(linesMap.keys()).sort((a, b) => b - a).forEach(k => {
+        const parts = linesMap.get(k) || [];
+        pageLines.push(parts.join(' ').replace(/\s+/g, ' ').trim());
+      });
+
+      fullText += '\n' + pageLines.join('\n');
+    }
+
+    // Try to extract metadata
+    const projectMatch = fullText.match(/Project:\s*([^\n]+)/i);
+    if (projectMatch) {
+      const pv = projectMatch[1].trim();
+      const parts = pv.split(/\s*-\s*/);
+      if (parts.length >= 2) {
+        this.projectCode = parts[0].trim();
+        this.projectName = parts.slice(1).join(' - ').trim();
+      } else {
+        this.projectName = pv;
+      }
+    }
+    const requesterMatch = fullText.match(/Requester:\s*([^\n(]+)\s*\(?([^\)\n]+)?\)?/i);
+    if (requesterMatch) {
+      this.requester = (requesterMatch[1] || '').trim();
+      const maybeEmail = (requesterMatch[2] || '').trim();
+      if (maybeEmail && maybeEmail.indexOf('@') !== -1) this.requesterEmail = maybeEmail;
+    }
+
+    // parse table-like rows
+    const lines = fullText.split(/\r?\n/).map(l => l.trim()).filter(l => l);
+    let headerIndex = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      if (/Task/i.test(l) && /W\d+/i.test(l) && /Total/i.test(l)) { headerIndex = i; break; }
+    }
+    if (headerIndex === -1) headerIndex = lines.findIndex(l => /Task/i.test(l) || (/W1/i.test(l) && /Total/i.test(l)));
+
+    let weeksCount = 1;
+    if (headerIndex >= 0) {
+      const headerParts = lines[headerIndex].split(/\s{2,}|\t/).map(p => p.trim()).filter(p => p);
+      const wparts = headerParts.filter(p => /W\d+/i.test(p));
+      weeksCount = Math.max(1, wparts.length);
+    }
+
+    const parsedTasks: Task[] = [];
+    for (let i = Math.max(0, headerIndex + 1); i < lines.length; i++) {
+      const line = lines[i];
+      if (/^Total\b/i.test(line)) break;
+      const nums = line.match(/(\d+[\.,]?\d*)/g) || [];
+      if (nums.length === 0) continue;
+      const estimates = nums.map(n => parseFloat(n.replace(',', '.')) || 0);
+      const title = line.replace(/(\s*\d+[\.,]?\d*)+\s*$/,'').trim();
+      const estAligned = new Array(weeksCount).fill(0).map((_, idx) => estimates[idx] !== undefined ? estimates[idx] : 0);
+      parsedTasks.push({ id: Date.now().toString(36) + '_' + parsedTasks.length, title: title || 'Task', estimates: estAligned });
+    }
+
+    if (parsedTasks.length > 0) {
+      this.tasks = parsedTasks;
+      this.weeks = new Array(weeksCount).fill(0).map((_, i) => String(i+1));
+      this.started = true;
+      this.estimationName = this.estimationName || file.name.replace(/\.pdf$/i,'');
+    } else {
+      throw new Error('No se han encontrado filas de tareas en el PDF.');
+    }
+  }
+
   escapeHtml(s: string) {
     return (s ?? '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }

@@ -232,6 +232,30 @@
   font-size: 18px;
 }
 
+/* ===== IMPORT BUTTON ===== */
+.import-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 2px dashed #f6c85f;
+  background: rgba(246, 200, 95, 0.06);
+  color: #f6c85f;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.import-btn:hover {
+  background: #f6c85f;
+  color: #111;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(246,200,95,0.25);
+}
+
+.import-btn mat-icon { font-size: 18px; }
+
 /* ===== MAIL BUTTON ===== */
 .mail-btn {
   display: inline-flex;

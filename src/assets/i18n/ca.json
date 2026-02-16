@@ -577,6 +577,9 @@
     "EXPORT_PDF": "Exportar PDF",
     "EXPORT_PDF_EMAIL": "PDF per email"
   },
+  "ESTIMATION_IMPORT": {
+    "IMPORT_PDF": "Importar PDF"
+  },
   "SCRUM": {
     "TITLE": "Scrum",
     "LEAD": "Tauló diari per compartir tasques, estimacions i prioritats.",

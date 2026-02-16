@@ -66,6 +66,11 @@
       <mat-icon>picture_as_pdf</mat-icon>
       {{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}
     </button>
+    <button type="button" class="import-btn" (click)="fileInput.click()" aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}">
+      <mat-icon>upload_file</mat-icon>
+      {{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}
+    </button>
+    <input type="file" accept="application/pdf" #fileInput style="display:none" (change)="onPdfSelected($event)" />
     <button type="button" class="mail-btn" (click)="exportPdfAndMail()" [disabled]="!requesterEmail" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}">
       <mat-icon>mail_outline</mat-icon>
       {{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}

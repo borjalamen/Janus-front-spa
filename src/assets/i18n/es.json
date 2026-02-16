@@ -568,6 +568,9 @@
     "EXPORT_PDF": "Exportar PDF",
     "EXPORT_PDF_EMAIL": "PDF por email"
   },
+  "ESTIMATION_IMPORT": {
+    "IMPORT_PDF": "Importar PDF"
+  },
   "SCRUM": {
     "TITLE": "Scrum",
     "LEAD": "Tablón diario para compartir tareas, estimaciones y prioridades.",

@@ -36,10 +36,10 @@
     </mat-form-field>
 
     <div class="actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!form.fullName || !form.email || (sending ?? false)">
-        {{ (sending ?? false) ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.fullName || !form.email || sending">
+        {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
       </button>
-      <button mat-button type="button" (click)="resetForm()" [disabled]="(sending ?? false)">{{ 'UNETE.RESET' | translate }}</button>
+      <button mat-button type="button" (click)="resetForm()" [disabled]="sending">{{ 'UNETE.RESET' | translate }}</button>
     </div>
   </form>
 

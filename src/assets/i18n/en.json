@@ -566,6 +566,9 @@
     "EXPORT_PDF": "Export PDF",
     "EXPORT_PDF_EMAIL": "PDF by email"
   },
+  "ESTIMATION_IMPORT": {
+    "IMPORT_PDF": "Import PDF"
+  },
   "SCRUM": {
     "TITLE": "Scrum",
     "LEAD": "Daily board to share tasks, estimates and priorities.",
