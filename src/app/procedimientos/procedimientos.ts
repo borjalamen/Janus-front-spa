@@ -59,7 +59,7 @@ export class ProcedimientosComponent implements OnInit {
   constructor(
     private proceduresService: ProceduresService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarProcedimientos();
@@ -88,19 +88,19 @@ export class ProcedimientosComponent implements OnInit {
 
   getNombreEntorno(entorno: string): string {
     switch ((entorno || '').toLowerCase()) {
-      case 'minsait':        return 'Minsait';
-      case 'preproduccion':  return 'Preproducció';
-      case 'produccion':     return 'Producció';
-      default:               return entorno;
+      case 'minsait': return 'Minsait';
+      case 'preproduccion': return 'Preproducció';
+      case 'produccion': return 'Producció';
+      default: return entorno;
     }
   }
 
   getNumeroDepartamento(entorno: string): number {
     switch ((entorno || '').toLowerCase()) {
-      case 'minsait':        return 1;
-      case 'preproduccion':  return 2;
-      case 'produccion':     return 3;
-      default:               return 0;
+      case 'minsait': return 1;
+      case 'preproduccion': return 2;
+      case 'produccion': return 3;
+      default: return 0;
     }
   }
 
@@ -274,7 +274,7 @@ export class ProcedimientosComponent implements OnInit {
     const nouIndex = (this.procForm.steps?.length || 0) + 1;
     const nouStep: ProcedureStep = {
       id: `step-${nouIndex}`,
-      titulo: `Step ${nouIndex}`,
+      titulo: this.procForm.titulo || '',   // ← títol del procediment com a valor inicial
       descripcion: '',
       responsable: this.primerResponsable || '',
       metodo: '',
@@ -284,7 +284,7 @@ export class ProcedimientosComponent implements OnInit {
       imageUrl: ''
     };
     console.log('NOU STEP AFEGIT:', nouStep);
-    this.procForm.steps = [ ...(this.procForm.steps || []), nouStep ];
+    this.procForm.steps = [...(this.procForm.steps || []), nouStep];
   }
 
   eliminarStep(idx: number) {
@@ -332,5 +332,21 @@ export class ProcedimientosComponent implements OnInit {
 
   resetCarousel() {
     this.currentStepIndex = 0;
+  }
+
+  onProcTagsChange(value: string) {
+    this.procForm.tags = value
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+  }
+
+  onStepTagsChange(value: string, index: number) {
+    if (!this.procForm.steps) return;
+
+    this.procForm.steps[index].tags = value
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
   }
 }
