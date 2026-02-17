@@ -293,7 +293,14 @@
   "FIELD_ENV": "Entorn",
   "STEPS_COUNT": "{{count}} steps",
   "TAB_CREATE_ARIA": "Pestanya per crear un procediment",
-  "TAB_LIST_ARIA": "Pestanya per llistar procediments"
+  "TAB_LIST_ARIA": "Pestanya per llistar procediments",
+  "MODE_CREATE": "Mode creació",
+  "MODE_EDIT": "Mode edició",
+  "ADD_STEP": "Afegir step",
+  "NO_RESULTS": "No s'ha trobat cap procediment",
+  "VIEW": "Veure",
+  "EDIT": "Editar",
+  "DELETE": "Eliminar"
 },
 "PLANNING_SECTION": {
   "TITLE": "Planificació",

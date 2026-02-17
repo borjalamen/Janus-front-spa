@@ -25,7 +25,7 @@
 }
 
 /* ========================= */
-/*        PESTANYES          */
+/*         PESTANYES         */
 /* ========================= */
 
 .procedures-tabs {
@@ -304,28 +304,48 @@
   font-size: 13px;
   margin-bottom: 6px;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-/* Resum steps */
+/* Resum steps: pastilla Responsable / steps */
 
 .procedure-steps-summary {
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 .procedure-steps-summary-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(21, 101, 192, 0.15);
+  border: 1px solid rgba(21, 101, 192, 0.55);
 }
 
 .procedure-steps-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
+  color: #FBC02D;
 }
 
 .procedure-steps-summary-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.procedure-steps-summary-text strong {
+  font-size: 13px;
+  color: #FFFFFF;
+}
+
+.procedure-steps-summary-text p {
+  margin: 2px 0 0;
   font-size: 12px;
+  color: #B0BEC5;
 }
 
 /* Accions */
@@ -382,7 +402,7 @@
 }
 
 /* ========================= */
-/*    EDITOR DE STEPS        */
+/*     EDITOR DE STEPS       */
 /* ========================= */
 
 .procedure-steps-header {
@@ -533,7 +553,7 @@
   background: rgba(239,83,80,0.2);
 }
 
-/* Imatge per step */
+/* Imatge per step al formulari */
 
 .procedure-step-image-field {
   margin-top: 4px;
@@ -564,7 +584,7 @@
 }
 
 /* ========================= */
-/*   BOTONS FORMULARI        */
+/*     BOTONS FORMULARI      */
 /* ========================= */
 
 .procedure-form-actions {
@@ -609,7 +629,7 @@
 }
 
 /* ========================= */
-/*    POPUP ELIMINAR         */
+/*      POPUP ELIMINAR       */
 /* ========================= */
 
 .procedures-popup-backdrop {
@@ -708,6 +728,8 @@
   border-radius: 8px;
   padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.04);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .procedure-step-detail-header {
@@ -726,27 +748,45 @@
   color: #b0bec5;
 }
 
+/* cos del step: text + imatge */
+
 .procedure-step-detail-body {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
   margin-top: 8px;
 }
 
 .procedure-step-detail-text {
-  flex: 2;
+  flex: 1;
   font-size: 13px;
-  color: #cfd8dc;
+  color: #CFD8DC;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.procedure-step-detail-image {
+  display: flex;
+  justify-content: center;
 }
 
 .procedure-step-detail-image img {
-  max-width: 230px;
+  max-width: 100%;
+  width: 240px;
+  height: auto;
   border-radius: 6px;
   border: 1px solid #2e3236;
+  object-fit: cover;
+}
+
+/* Imatge més gran quan no hi ha text */
+
+.procedure-step-detail-image--full img {
+  max-width: 360px;
 }
 
 /* ========================= */
-/*    CARRUSEL DE STEPS      */
+/*      CARRUSEL DE STEPS    */
 /* ========================= */
 
 .procedure-steps-carousel {
@@ -769,7 +809,7 @@
 
 .procedure-step-slide {
   flex: 1;
-  max-width: 700px;
+  max-width: 1000px;
   transition: all 0.25s ease-in-out;
 }
 
@@ -829,7 +869,7 @@
 }
 
 /* ========================= */
-/*     RESPONSIVE BÀSIC      */
+/*       RESPONSIVE BÀSIC    */
 /* ========================= */
 
 @media (max-width: 768px) {
@@ -852,17 +892,4 @@
   .procedure-step-slide {
     max-width: 100%;
   }
-  .procedure-text {
-  font-size: 13px;
-  color: #CFD8DC;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-.procedure-step-detail-text {
-  flex: 1;
-  font-size: 13px;
-  color: #CFD8DC;
-  word-wrap: break-word;      
-  overflow-wrap: break-word;  
-}
 }

@@ -303,11 +303,16 @@
                   </div>
 
                   <div class="procedure-step-detail-body">
-                    <div class="procedure-step-detail-text">
+                    <!-- Text només si hi ha descripció -->
+                    <div class="procedure-step-detail-text" *ngIf="s.descripcion">
                       {{ s.descripcion }}
                     </div>
-                    <div class="procedure-step-detail-image" *ngIf="s.imageUrl">
-                      <img [src]="s.imageUrl" alt="Imatge step {{ currentStepIndex + 1 }}" />
+
+                    <!-- Imatge: més gran quan NO hi ha text -->
+                    <div class="procedure-step-detail-image"
+                      [ngClass]="{'procedure-step-detail-image--full': !s.descripcion}">
+                      <img *ngIf="s.imageUrl" [src]="s.imageUrl" alt="Imatge step {{ currentStepIndex + 1 }}"
+                        (click)="obrirImatgeNovaFinestra(s.imageUrl)" />
                     </div>
                   </div>
                 </div>
