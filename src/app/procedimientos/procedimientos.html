@@ -359,8 +359,8 @@
               <mat-icon>chevron_left</mat-icon>
             </button>
 
-            <!-- Step central -->
-            <div class="procedure-step-slide">
+            <!-- Step central amb animació -->
+            <div class="procedure-step-slide" [ngClass]="slideDirection">
               <ng-container *ngIf="procDetall.steps[currentStepIndex] as s; else noStep">
                 <div class="procedure-step-detail-item">
                   <div class="procedure-step-detail-header">

@@ -49,6 +49,7 @@ export class ProcedimientosComponent implements OnInit {
 
   // carrusel steps
   currentStepIndex = 0;
+  slideDirection: 'left' | 'right' = 'right';
 
   coloresEntorno = {
     minsait: '#1E88E5',
@@ -77,10 +78,10 @@ export class ProcedimientosComponent implements OnInit {
     if (key.includes('minsait')) {
       return '#1E88E5';
     }
-    if (key.includes('preprod')) { // preproduccion, preproducció, etc.
+    if (key.includes('preprod')) {
       return '#FBC02D';
     }
-    if (key.includes('produc')) {  // produccion, producción, etc.
+    if (key.includes('produc')) {
       return '#E53935';
     }
     return '#FBC02D';
@@ -274,7 +275,7 @@ export class ProcedimientosComponent implements OnInit {
     const nouIndex = (this.procForm.steps?.length || 0) + 1;
     const nouStep: ProcedureStep = {
       id: `step-${nouIndex}`,
-      titulo: this.procForm.titulo || '',   // ← títol del procediment com a valor inicial
+      titulo: this.procForm.titulo || '',
       descripcion: '',
       responsable: this.primerResponsable || '',
       metodo: '',
@@ -297,7 +298,7 @@ export class ProcedimientosComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  // ==== VISTA DE STEPS A LA MATEIXA PANTALLA + CARRUSEL ====
+  // ==== VISTA DE STEPS + CARRUSEL ====
 
   verSteps(p: Procedure) {
     this.procDetall = p;
@@ -314,6 +315,7 @@ export class ProcedimientosComponent implements OnInit {
   nextStep() {
     if (!this.procDetall?.steps) return;
     if (this.currentStepIndex < this.procDetall.steps.length - 1) {
+      this.slideDirection = 'right';
       this.currentStepIndex++;
       const s = this.procDetall.steps[this.currentStepIndex];
       console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
@@ -321,17 +323,17 @@ export class ProcedimientosComponent implements OnInit {
   }
 
   prevStep() {
-    if (this.currentStepIndex > 0) {
+    if (this.currentStepIndex > 0 && this.procDetall?.steps) {
+      this.slideDirection = 'left';
       this.currentStepIndex--;
-      const s = this.procDetall?.steps?.[this.currentStepIndex];
-      if (s) {
-        console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
-      }
+      const s = this.procDetall.steps[this.currentStepIndex];
+      console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
     }
   }
 
   resetCarousel() {
     this.currentStepIndex = 0;
+    this.slideDirection = 'right';
   }
 
   onProcTagsChange(value: string) {

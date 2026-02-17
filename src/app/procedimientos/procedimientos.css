@@ -402,7 +402,7 @@
 }
 
 /* ========================= */
-/*     EDITOR DE STEPS       */
+/*       EDITOR DE STEPS     */
 /* ========================= */
 
 .procedure-steps-header {
@@ -629,7 +629,7 @@
 }
 
 /* ========================= */
-/*      POPUP ELIMINAR       */
+/*       POPUP ELIMINAR      */
 /* ========================= */
 
 .procedures-popup-backdrop {
@@ -691,17 +691,15 @@
   margin-bottom: 8px;
 }
 
-
 .procedure-steps-detail-title {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-
 .procedure-steps-detail-title-row {
   display: flex;
-  align-items: center;   
+  align-items: center;
   gap: 8px;
 }
 
@@ -723,8 +721,6 @@
 .procedure-detail-back-btn mat-icon {
   font-size: 22px;
 }
-
-
 
 .procedure-steps-detail-sub {
   margin: 3px 0 0;
@@ -826,7 +822,6 @@
 .procedure-step-slide {
   flex: 1;
   max-width: 1000px;
-  transition: all 0.25s ease-in-out;
 }
 
 /* Fletxes grogues rodones */
@@ -927,7 +922,48 @@
   color: #f5f5f5;
   white-space: nowrap;
 }
+
 .procedure-steps-detail-container .procedure-tags {
   margin-top: 6px;
   margin-left: 44px;   /* mateix desplaçament que la fletxa + espai */
+}
+
+/* ========================= */
+/*    ANIMACIÓ DEL CARRUSEL  */
+/* ========================= */
+
+.procedure-step-detail-item {
+  position: relative;
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+}
+
+.procedure-step-slide.right .procedure-step-detail-item {
+  animation-name: slideInFromRight;
+}
+
+.procedure-step-slide.left .procedure-step-detail-item {
+  animation-name: slideInFromLeft;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
