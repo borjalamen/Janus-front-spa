@@ -549,6 +549,11 @@
     "LIST_DELETE": "Eliminar",
     "SAVE": "Guardar estimación",
     "SAVED": "Estimación guardada",
+    "CLEAR_META": "Limpiar metadata",
+    "CLEAR_ESTIMATION": "Limpiar estimación",
+    "CLEAR_SELECTED": "Limpiar seleccionados",
+    "CLEARED": "Limpieza realizada",
+    "CLEAR_NONE": "Selecciona al menos una opción para limpiar",
     "LIVE": {
       "NEW_TASK": "Descripción de la tarea...",
       "START": "Crear sesión en vivo",

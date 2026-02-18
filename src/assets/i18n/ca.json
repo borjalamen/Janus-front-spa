@@ -558,6 +558,11 @@
     "LIST_DELETE": "Eliminar",
     "SAVE": "Desar estimació",
     "SAVED": "Estimació desada",
+    "CLEAR_META": "Netejar metadata",
+    "CLEAR_ESTIMATION": "Netejar estimació",
+    "CLEAR_SELECTED": "Netejar seleccionats",
+    "CLEARED": "Neteja realitzada",
+    "CLEAR_NONE": "Selecciona almenys una opció per netejar",
     "LIVE": {
       "NEW_TASK": "Descripció de la tasca...",
       "START": "Crear sessió en viu",

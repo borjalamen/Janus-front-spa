@@ -547,6 +547,11 @@
     "LIST_DELETE": "Delete",
     "SAVE": "Save estimation",
     "SAVED": "Estimation saved",
+    "CLEAR_META": "Clear metadata",
+    "CLEAR_ESTIMATION": "Clear estimation",
+    "CLEAR_SELECTED": "Clear selected",
+    "CLEARED": "Cleared",
+    "CLEAR_NONE": "Select at least one option to clear",
     "LIVE": {
       "NEW_TASK": "Task description...",
       "START": "Create live session",

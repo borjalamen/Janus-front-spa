@@ -45,6 +45,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
   saveButtonText = '';
+  // clear controls
+  clearMeta = false;
+  clearEstimation = false;
   // --- Live estimation state ---
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
@@ -201,6 +204,37 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
     // initialize save button label
     this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Guardar estimación';
+  }
+
+  clearSelected() {
+    const cleared: string[] = [];
+    if (this.clearMeta) {
+      this.estimationName = '';
+      this.projectCode = '';
+      this.projectName = '';
+      this.requester = '';
+      this.requesterEmail = '';
+      this.notes = '';
+      cleared.push(this.translate.instant('ESTIMATION.CLEAR_META') || 'metadata');
+    }
+    if (this.clearEstimation) {
+      this.tasks = [];
+      this.weeks = ['1'];
+      this.newTaskTitle = '';
+      cleared.push(this.translate.instant('ESTIMATION.CLEAR_ESTIMATION') || 'estimation');
+    }
+    if (cleared.length === 0) {
+      const msg = this.translate.instant('ESTIMATION.CLEAR_NONE') || 'No hay nada seleccionado para limpiar.';
+      this.snackBar.open(msg, undefined, { duration: 2000 });
+      return;
+    }
+    // reset checkboxes
+    this.clearMeta = false;
+    this.clearEstimation = false;
+    // show confirmation
+    const cfg = { duration: 2200 };
+    const msg = this.translate.instant('ESTIMATION.CLEARED') || 'Limpieza realizada';
+    this.snackBar.open(msg, undefined, cfg);
   }
 
   ngOnDestroy(): void {

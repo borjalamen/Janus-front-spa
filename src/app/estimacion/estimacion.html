@@ -52,6 +52,20 @@
       <mat-icon>save</mat-icon>
       {{ saveButtonText }}
     </button>
+    <div class="clear-controls" style="display:flex;align-items:center;gap:12px;margin-left:12px">
+      <label style="display:flex;align-items:center;gap:6px">
+        <input type="checkbox" [(ngModel)]="clearMeta" />
+        <span>{{ 'ESTIMATION.CLEAR_META' | translate }}</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px">
+        <input type="checkbox" [(ngModel)]="clearEstimation" />
+        <span>{{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}</span>
+      </label>
+      <button type="button" class="action-btn" (click)="clearSelected()" aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}">
+        <mat-icon>delete_sweep</mat-icon>
+        {{ 'ESTIMATION.CLEAR_SELECTED' | translate }}
+      </button>
+    </div>
     <span style="flex:1 1 auto"></span>
     <button type="button" class="export-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
       <mat-icon>file_download</mat-icon>
