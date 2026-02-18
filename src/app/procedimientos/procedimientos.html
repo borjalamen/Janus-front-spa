@@ -161,14 +161,32 @@
                 class="procedure-step-edit-input" />
             </div>
 
+            <!-- Imatge step: URL + arxiu -->
             <div class="procedure-step-image-field">
-              <label>Imatge del step (URL)</label>
+              <label>Imatge del step</label>
               <div class="procedure-step-image-row">
+                <!-- URL directa (opcional) -->
                 <input
                   type="text"
                   [(ngModel)]="s.imageUrl"
-                  placeholder="https://... o /assets/imatges/step.png"
+                  placeholder="URL (opcional)"
                   class="procedure-step-edit-input" />
+
+                <!-- Input ocult per triar arxiu (un per step) -->
+                <input
+                  #fileInput
+                  type="file"
+                  accept="image/*"
+                  (change)="onStepImageSelected($event, i)"
+                  style="display: none" />
+
+                <!-- Botó icona carpeta que dispara el click del file input -->
+                <button
+                  type="button"
+                  class="file-icon-btn"
+                  (click)="onClickFileIcon(fileInput)">
+                  <mat-icon>folder</mat-icon>
+                </button>
 
                 <div class="procedure-step-image-thumb" *ngIf="s.imageUrl">
                   <img

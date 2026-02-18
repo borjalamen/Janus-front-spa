@@ -351,4 +351,26 @@ export class ProcedimientosComponent implements OnInit {
       .map(t => t.trim())
       .filter(t => t.length > 0);
   }
+
+  // ==== IMATGE STEP DES D'ARXIU ====
+
+  onStepImageSelected(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    // URL temporal del navegador per a previsualitzar
+    const objectUrl = URL.createObjectURL(file);
+
+    if (!this.procForm.steps) {
+      this.procForm.steps = [];
+    }
+    this.procForm.steps[index].imageUrl = objectUrl;
+  }
+  onClickFileIcon(fileInput: HTMLInputElement): void {
+  fileInput.click();
+}
 }

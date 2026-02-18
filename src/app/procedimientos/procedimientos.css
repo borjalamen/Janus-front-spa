@@ -185,7 +185,7 @@
 }
 
 /* ========================= */
-/*   LLISTAT PROCEDIMENTS    */
+/*    LLISTAT PROCEDIMENTS   */
 /* ========================= */
 
 .procedures-description {
@@ -583,8 +583,26 @@
   object-fit: cover;
 }
 
+/* Botó icona carpeta */
+
+.file-icon-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: #FBC02D;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-icon-btn:hover {
+  background: rgba(251,192,45,0.15);
+}
+
 /* ========================= */
-/*     BOTONS FORMULARI      */
+/*      BOTONS FORMULARI     */
 /* ========================= */
 
 .procedure-form-actions {
@@ -916,8 +934,8 @@
 .tag-pill {
   padding: 2px 10px;
   border-radius: 999px;
-  background-color: #2b2414;   /* fons fosc */
-  border: 1px solid #c9a94a;   /* contorn daurat */
+  background-color: #2b2414;
+  border: 1px solid #c9a94a;
   font-size: 12px;
   color: #f5f5f5;
   white-space: nowrap;
@@ -925,7 +943,7 @@
 
 .procedure-steps-detail-container .procedure-tags {
   margin-top: 6px;
-  margin-left: 44px;   /* mateix desplaçament que la fletxa + espai */
+  margin-left: 44px;
 }
 
 /* ========================= */
