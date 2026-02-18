@@ -36,55 +36,55 @@
   </div>
 
     <div *ngIf="started" class="controls">
-    <mat-form-field appearance="outline" class="task-field">
-      <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" maxlength="200" />
-      <mat-hint align="end">{{ (newTaskTitle.length || 0) + '/200' }}</mat-hint>
-    </mat-form-field>
-    <button type="button" class="action-btn" (click)="addTask()" aria-label="{{ 'ESTIMATION.ADD_TASK' | translate }}">
-      <mat-icon>add</mat-icon>
-      {{ 'ESTIMATION.ADD_TASK' | translate }}
-    </button>
-    <button type="button" class="action-btn" (click)="addWeek()" aria-label="{{ 'ESTIMATION.ADD_WEEK' | translate }}">
-      <mat-icon>calendar_today</mat-icon>
-      {{ 'ESTIMATION.ADD_WEEK' | translate }}
-    </button>
-    <button type="button" class="action-btn" (click)="saveCurrentEstimation()" aria-label="{{ 'ESTIMATION.SAVE' | translate }}">
-      <mat-icon>save</mat-icon>
-      {{ saveButtonText }}
-    </button>
-    <div class="clear-controls" style="display:flex;align-items:center;gap:12px;margin-left:12px">
-      <label style="display:flex;align-items:center;gap:6px">
-        <input type="checkbox" [(ngModel)]="clearMeta" />
-        <span>{{ 'ESTIMATION.CLEAR_META' | translate }}</span>
-      </label>
-      <label style="display:flex;align-items:center;gap:6px">
-        <input type="checkbox" [(ngModel)]="clearEstimation" />
-        <span>{{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}</span>
-      </label>
-      <button type="button" class="action-btn" (click)="clearSelected()" aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}">
-        <mat-icon>delete_sweep</mat-icon>
-        {{ 'ESTIMATION.CLEAR_SELECTED' | translate }}
-      </button>
+      <div class="controls-left-top">
+        <div class="controls-add">
+          <button type="button" class="action-btn" (click)="addTask()" aria-label="{{ 'ESTIMATION.ADD_TASK' | translate }}">
+            <mat-icon>add</mat-icon>
+            {{ 'ESTIMATION.ADD_TASK' | translate }}
+          </button>
+          <button type="button" class="action-btn" (click)="addWeek()" aria-label="{{ 'ESTIMATION.ADD_WEEK' | translate }}">
+            <mat-icon>calendar_today</mat-icon>
+            {{ 'ESTIMATION.ADD_WEEK' | translate }}
+          </button>
+        </div>
+        <mat-form-field appearance="outline" class="task-field">
+          <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" maxlength="200" />
+          <span matSuffix class="char-limit">{{ (newTaskTitle?.length || 0) + '/200' }}</span>
+        </mat-form-field>
+      </div>
+      <div class="controls-right-top">
+        <button type="button" class="action-btn" (click)="saveCurrentEstimation()" aria-label="{{ 'ESTIMATION.SAVE' | translate }}">
+          <mat-icon>save</mat-icon>
+          {{ saveButtonText }}
+        </button>
+      </div>
+      <div class="controls-left-bottom">
+        <button type="button" class="icon-btn export-icon-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
+          <img class="icon-img" src="assets/icons/csv.png" alt="CSV" />
+        </button>
+        <button type="button" class="icon-btn export-icon-btn" (click)="exportPdf()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}">
+          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+        </button>
+        <button type="button" class="icon-btn import-icon-btn" (click)="fileInput.click()" aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}" title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}">
+          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+        </button>
+        <input type="file" accept="application/pdf" #fileInput style="display:none" (change)="onPdfSelected($event)" />
+        <button type="button" class="icon-btn mail-icon-btn" (click)="exportPdfAndMail()" [disabled]="!requesterEmail" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}">
+          ✉️
+        </button>
+      </div>
+      <div class="controls-right-bottom clear-controls">
+        <button type="button" class="toggle-btn" [class.selected]="clearMeta" (click)="clearMeta = !clearMeta" aria-pressed="{{ clearMeta }}">
+          {{ 'ESTIMATION.CLEAR_META' | translate }}
+        </button>
+        <button type="button" class="toggle-btn" [class.selected]="clearEstimation" (click)="clearEstimation = !clearEstimation" aria-pressed="{{ clearEstimation }}">
+          {{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}
+        </button>
+        <button type="button" class="emoji-btn delete-emoji" (click)="clearSelected()" aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}" title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}">
+          🗑️
+        </button>
+      </div>
     </div>
-    <span style="flex:1 1 auto"></span>
-    <button type="button" class="export-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
-      <mat-icon>file_download</mat-icon>
-      {{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}
-    </button>
-    <button type="button" class="export-btn" (click)="exportPdf()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}">
-      <mat-icon>picture_as_pdf</mat-icon>
-      {{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}
-    </button>
-    <button type="button" class="import-btn" (click)="fileInput.click()" aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}">
-      <mat-icon>upload_file</mat-icon>
-      {{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}
-    </button>
-    <input type="file" accept="application/pdf" #fileInput style="display:none" (change)="onPdfSelected($event)" />
-    <button type="button" class="mail-btn" (click)="exportPdfAndMail()" [disabled]="!requesterEmail" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}">
-      <mat-icon>mail_outline</mat-icon>
-      {{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}
-    </button>
-  </div>
 
   <div class="table-wrap">
     <table class="est-table">

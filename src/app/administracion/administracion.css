@@ -17,6 +17,34 @@ body {
   margin: 20px;
 }
 
+/* LAYOUT CON TABS EN LA PARTE SUPERIOR */
+.section-container.admin-layout.admin-top-tabs {
+  flex-direction: column;
+}
+
+/* TOP NAVIGATION BAR */
+.admin-top-nav {
+  background: #0b0c0e;
+  padding: 16px 24px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-top-title {
+  color: #FBC02D;
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.admin-top-tabs-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* SIDEBAR */
 .admin-sidebar {
   width: 220px;

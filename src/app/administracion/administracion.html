@@ -1,37 +1,38 @@
-<div class="section-container admin-layout">
+<div class="section-container admin-layout admin-top-tabs">
   
-  <div class="admin-sidebar">
-    <h2 class="sidebar-title">{{ 'ADMIN.PANEL_TITLE' | translate }}</h2>
-    
-    <button class="menu-btn" 
-            [class.active]="activeTab === 'USERS'" 
-            (click)="cambiarTab('USERS')">
-      <span class="menu-emoji">👥</span> {{ 'ADMIN.TAB_USERS' | translate }}
-    </button>
-    
-    <button class="menu-btn" 
-            [class.active]="activeTab === 'APP'" 
-            (click)="cambiarTab('APP')">
-      <span class="menu-emoji">⚙️</span> {{ 'ADMIN.TAB_APP' | translate }}
-    </button>
-    
-    <button class="menu-btn" 
-            [class.active]="activeTab === 'PARAM'" 
-            (click)="cambiarTab('PARAM')">
-      <span class="menu-emoji">🎛️</span> {{ 'ADMIN.TAB_PARAM' | translate }}
-    </button>
-    
-    <button class="menu-btn" 
-            [class.active]="activeTab === 'DB'" 
-            (click)="cambiarTab('DB')">
-      <span class="menu-emoji">🗄️</span> {{ 'ADMIN.TAB_DB' | translate }}
-    </button>
+  <div class="admin-top-nav">
+    <h2 class="admin-top-title">{{ 'ADMIN.PANEL_TITLE' | translate }}</h2>
+    <div class="admin-top-tabs-bar">
+      <button class="menu-btn" 
+              [class.active]="activeTab === 'USERS'" 
+              (click)="cambiarTab('USERS')">
+        <span class="menu-emoji">👥</span> {{ 'ADMIN.TAB_USERS' | translate }}
+      </button>
+      
+      <button class="menu-btn" 
+              [class.active]="activeTab === 'APP'" 
+              (click)="cambiarTab('APP')">
+        <span class="menu-emoji">⚙️</span> {{ 'ADMIN.TAB_APP' | translate }}
+      </button>
+      
+      <button class="menu-btn" 
+              [class.active]="activeTab === 'PARAM'" 
+              (click)="cambiarTab('PARAM')">
+        <span class="menu-emoji">🎛️</span> {{ 'ADMIN.TAB_PARAM' | translate }}
+      </button>
+      
+      <button class="menu-btn" 
+              [class.active]="activeTab === 'DB'" 
+              (click)="cambiarTab('DB')">
+        <span class="menu-emoji">🗄️</span> {{ 'ADMIN.TAB_DB' | translate }}
+      </button>
 
-    <button class="menu-btn" 
-            [class.active]="activeTab === 'REQUESTS'" 
-            (click)="cambiarTab('REQUESTS')">
-      <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
-    </button>
+      <button class="menu-btn" 
+              [class.active]="activeTab === 'REQUESTS'" 
+              (click)="cambiarTab('REQUESTS')">
+        <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
+      </button>
+    </div>
   </div>
 
   <div class="admin-content">

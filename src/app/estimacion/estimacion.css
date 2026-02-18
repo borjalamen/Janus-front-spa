@@ -146,10 +146,10 @@
 
 /* ===== CONTROLS SECTION ===== */
 .controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px 16px;
+  align-items: start;
   margin-bottom: 20px;
   padding: 16px;
   background: rgba(23, 162, 184, 0.05);
@@ -158,26 +158,216 @@
 }
 
 .controls .task-field {
-  min-width: 320px;
-  flex: 1 1 400px;
+  min-width: 280px;
+  flex: 1 1 50px;
+}
+
+::ng-deep .controls .mat-mdc-form-field {
+  width: 100%;
 }
 
 ::ng-deep .controls .mat-mdc-text-field-wrapper {
-  background: #1a1d21 !important;
-  border-radius: 20px !important;
-  border: 2px solid #4a5568 !important;
+  background: #141516 !important;
+  border-radius: 6px !important;
 }
 
+::ng-deep .controls .mat-mdc-form-field-flex {
+  background: #141516 !important;
+  border-radius: 6px !important;
+  border: 1px solid #2e3236 !important;
+  padding: 6px 12px !important;
+}
+
+::ng-deep .controls .mat-mdc-form-field-flex:hover {
+  border-color: #3e4246 !important;
+}
+
+::ng-deep .controls .mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex {
+  border-color: #FBC02D !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .controls .mat-mdc-form-field-focus-overlay,
+::ng-deep .controls .mdc-line-ripple,
+::ng-deep .controls .mdc-notched-outline,
 ::ng-deep .controls .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
 ::ng-deep .controls .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
 ::ng-deep .controls .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
-  border-color: #4a5568 !important;
-  border-radius: 20px !important;
+  display: none !important;
 }
 
 ::ng-deep .controls .mat-mdc-input-element {
-  color: #e0e0e0 !important;
-  padding: 12px 16px !important;
+  color: #eee !important;
+  padding: 0 !important;
+  font-size: 0.95rem;
+}
+
+::ng-deep .controls .mat-mdc-input-element::placeholder {
+  color: #7c8084 !important;
+}
+
+.char-limit {
+  color: #7c8084;
+  font-size: 0.8rem;
+  padding-left: 8px;
+}
+
+.controls-left-top {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.controls-add {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.controls-right-top {
+  justify-self: end;
+  align-self: start;
+}
+
+.controls-left-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.controls-right-bottom {
+  justify-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.clear-controls {
+  margin-left: 0;
+}
+
+.clear-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 18px;
+  border: 2px solid #17a2b8;
+  background: transparent;
+  color: #17a2b8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.toggle-btn:hover {
+  background: rgba(23, 162, 184, 0.12);
+}
+
+.toggle-btn.selected {
+  border-color: #66BB6A;
+  background: rgba(102, 187, 106, 0.15);
+  color: #66BB6A;
+}
+
+.emoji-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
+  color: #E0E0E0;
+}
+
+.emoji-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.icon-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  color: #E0E0E0;
+}
+
+.icon-btn mat-icon {
+  font-size: 20px;
+}
+
+.icon-img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.export-icon-btn:hover {
+  color: #17a2b8;
+}
+
+.import-icon-btn {
+  border: 2px dashed #f6c85f;
+  color: #f6c85f;
+}
+
+.import-icon-btn:hover {
+  background: #f6c85f;
+  color: #111;
+}
+
+.mail-icon-btn {
+  border: 2px solid #17a2b8;
+  background: rgba(23, 162, 184, 0.08);
+  color: #17a2b8;
+}
+
+.mail-icon-btn:hover {
+  background: #17a2b8;
+  color: #fff;
+}
+
+.icon-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: transparent;
+}
+
+.delete-emoji:hover {
+  color: #ff5252;
+}
+
+@media (max-width: 960px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-right-top,
+  .controls-right-bottom {
+    justify-self: start;
+  }
 }
 
 /* ===== ACTION BUTTONS ===== */

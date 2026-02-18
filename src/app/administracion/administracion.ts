@@ -41,6 +41,20 @@ interface PeticionAdmin {
   estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
 }
 
+interface PeticionUneteBackend {
+  id?: string;
+  fullName?: string;
+  email?: string;
+  role?: string;
+  projectCode?: string;
+  projectName?: string;
+  comments?: string;
+  estado?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  adminComment?: string;
+}
+
 @Component({
   selector: 'app-administracion',
   templateUrl: './administracion.html',
@@ -84,117 +98,12 @@ export class AdministracionComponent implements OnInit {
   usuariEditant: UsuariBackend | null = null;
   usuariAEsborrar: UsuariBackend | null = null;
 
-  // Datos de demostración hardcodeados para la presentación
-  private usuariosDemoCV: UsuariBackend[] = [
-    {
-      id: 'demo-001',
-      username: 'agarcia',
-      fullName: 'Ana García López',
-      email: 'agarcia@minsait.com',
-      roles: ['ADMIN', 'DEV'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/agarcia_cv.pdf',
-      puesto: 'Tech Lead Senior',
-      experiencia: '8 años',
-      tecnologias: ['Angular', 'Java', 'Spring Boot', 'AWS', 'Docker', 'Kubernetes'],
-      certificaciones: ['AWS Solutions Architect', 'Scrum Master'],
-      proyectos: 12
-    },
-    {
-      id: 'demo-002',
-      username: 'cmartinez',
-      fullName: 'Carlos Martínez Ruiz',
-      email: 'cmartinez@minsait.com',
-      roles: ['DEV'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/cmartinez_cv.pdf',
-      puesto: 'Full Stack Developer',
-      experiencia: '5 años',
-      tecnologias: ['React', 'Node.js', 'TypeScript', 'MongoDB', 'Azure'],
-      certificaciones: ['Azure Developer Associate'],
-      proyectos: 8
-    },
-    {
-      id: 'demo-003',
-      username: 'lrodriguez',
-      fullName: 'Laura Rodríguez Sánchez',
-      email: 'lrodriguez@minsait.com',
-      roles: ['CONSULTOR'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/lrodriguez_cv.pdf',
-      puesto: 'Consultora IT Senior',
-      experiencia: '10 años',
-      tecnologias: ['SAP', 'Oracle', 'Power BI', 'SQL Server', 'Tableau'],
-      certificaciones: ['ITIL v4', 'PMP', 'SAP Certified'],
-      proyectos: 25
-    },
-    {
-      id: 'demo-004',
-      username: 'jfernandez',
-      fullName: 'Javier Fernández Torres',
-      email: 'jfernandez@minsait.com',
-      roles: ['DEV'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/jfernandez_cv.pdf',
-      puesto: 'DevOps Engineer',
-      experiencia: '6 años',
-      tecnologias: ['Jenkins', 'Terraform', 'Ansible', 'Python', 'Kubernetes', 'ArgoCD'],
-      certificaciones: ['CKA', 'AWS DevOps Professional'],
-      proyectos: 15
-    },
-    {
-      id: 'demo-005',
-      username: 'mlopez',
-      fullName: 'María López Gómez',
-      email: 'mlopez@minsait.com',
-      roles: ['CONSULTOR', 'DEV'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/mlopez_cv.pdf',
-      puesto: 'Data Engineer',
-      experiencia: '4 años',
-      tecnologias: ['Python', 'Spark', 'Databricks', 'Azure Data Factory', 'SQL'],
-      certificaciones: ['Azure Data Engineer', 'Databricks Certified'],
-      proyectos: 7
-    },
-    {
-      id: 'demo-006',
-      username: 'pnavarro',
-      fullName: 'Pedro Navarro Díaz',
-      email: 'pnavarro@minsait.com',
-      roles: ['DEV'],
-      status: 'ACTIVE',
-      cvPath: '/cvs/pnavarro_cv.pdf',
-      puesto: 'Backend Developer',
-      experiencia: '3 años',
-      tecnologias: ['Java', 'Spring Boot', 'PostgreSQL', 'RabbitMQ', 'Redis'],
-      certificaciones: ['Oracle Java SE 11'],
-      proyectos: 5
-    }
-  ];
-
   // ESTADOS NUEVAS SECCIONES
   selectedRoleToDisable: string = '';
-  appVersion: string = '1.0.2'; // Ejemplo
+  appVersion: string = '';
 
   // ESTADOS PETICIONES
-  peticiones: PeticionAdmin[] = [
-    {
-      id: 'REQ-001',
-      solicitante: 'jlopez',
-      tipo: 'Alta de usuario',
-      fecha: '2026-02-10',
-      comentario: 'Solicita acceso para un nuevo consultor del proyecto Atlas.',
-      estado: 'PENDIENTE'
-    },
-    {
-      id: 'REQ-003',
-      solicitante: 'cmartinez',
-      tipo: 'Baja de usuario',
-      fecha: '2026-02-07',
-      comentario: 'Usuario temporal finalizo el contrato.',
-      estado: 'APROBADA'
-    }
-  ];
+  peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
   filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
 
@@ -248,6 +157,7 @@ export class AdministracionComponent implements OnInit {
   selectedRestore: string = '';
 
   private baseUrl = `${environment.baseUrl}users`;
+  private joinRequestsUrl = `${environment.baseUrl}join-requests`;
 
   constructor(
     private http: HttpClient,
@@ -258,7 +168,7 @@ export class AdministracionComponent implements OnInit {
   ngOnInit(): void {
     this.carregarUsuaris();
     this.cargarVersion();
-    this.peticionesFiltradas = [...this.peticiones];
+    this.cargarPeticiones();
   }
 
   get canEdit(): boolean {
@@ -335,21 +245,73 @@ export class AdministracionComponent implements OnInit {
   }
 
   private actualizarEstadoPeticion(peticion: PeticionAdmin, estado: PeticionAdmin['estado']) {
-    peticion.estado = estado;
+    const action = estado === 'APROBADA' ? 'approve' : 'reject';
+    this.http.put<PeticionUneteBackend>(`${this.joinRequestsUrl}/${peticion.id}/${action}`, {})
+      .subscribe({
+        next: updated => {
+          const mapped = this.mapJoinRequest(updated);
+          const idx = this.peticiones.findIndex(p => p.id === peticion.id);
+          if (idx !== -1) {
+            this.peticiones[idx] = mapped;
+          }
+          this.aplicarFiltrosPeticiones();
+        },
+        error: err => console.error('Error actualizando petición', err)
+      });
+  }
+
+  private cargarPeticiones() {
+    this.http.get<PeticionUneteBackend[]>(this.joinRequestsUrl).subscribe({
+      next: data => {
+        this.peticiones = data.map(req => this.mapJoinRequest(req));
+        this.aplicarFiltrosPeticiones();
+      },
+      error: err => {
+        console.error('Error cargando peticiones de Unete', err);
+        this.peticiones = [];
+        this.aplicarFiltrosPeticiones();
+      }
+    });
+  }
+
+  private mapJoinRequest(req: PeticionUneteBackend): PeticionAdmin {
+    return {
+      id: req.id ?? '',
+      solicitante: req.fullName?.trim() || req.email?.trim() || '',
+      tipo: req.role?.trim() || req.projectName?.trim() || req.projectCode?.trim() || '',
+      fecha: this.formatFecha(req.createdAt),
+      comentario: req.comments?.trim() || req.adminComment?.trim() || '',
+      estado: this.normalizeEstado(req.estado)
+    };
+  }
+
+  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
+    const normalized = (estado || 'PENDIENTE').toUpperCase();
+    if (normalized === 'APROBADA' || normalized === 'RECHAZADA') {
+      return normalized;
+    }
+    return 'PENDIENTE';
+  }
+
+  private formatFecha(value?: string): string {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      return value;
+    }
+    return parsed.toISOString().slice(0, 10);
   }
 
   // ===== LOGICA USUARIOS (Scenario 1) =====
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: data => {
-        // Combinar datos del backend con datos de demo para la presentación
-        this.usuaris = [...data, ...this.usuariosDemoCV];
+        this.usuaris = [...data];
         this.usuarisFiltrats = [...this.usuaris];
       },
       error: err => {
-        console.error('Error carregant usuaris, usando datos de demo', err);
-        // Si falla el backend, usar datos hardcodeados para la demo
-        this.usuaris = [...this.usuariosDemoCV];
+        console.error('Error carregant usuaris', err);
+        this.usuaris = [];
         this.usuarisFiltrats = [...this.usuaris];
       }
     });
@@ -583,18 +545,13 @@ export class AdministracionComponent implements OnInit {
   }
 
   cargarVersionesRestore() {
-    // Simular carga de versiones desde el backend
     this.http.get<BackupVersion[]>(`${environment.baseUrl}db/backups`).subscribe({
       next: versions => {
         this.versionesRestore = versions;
       },
-      error: () => {
-        // Si falla, mostrar versiones de ejemplo
-        this.versionesRestore = [
-          { id: 'bk_001', fecha: '2026-01-27 10:30', descripcion: 'Backup automático' },
-          { id: 'bk_002', fecha: '2026-01-26 18:00', descripcion: 'Backup pre-actualización' },
-          { id: 'bk_003', fecha: '2026-01-25 12:00', descripcion: 'Backup completo semanal' }
-        ];
+      error: err => {
+        console.error('Error cargando backups', err);
+        this.versionesRestore = [];
       }
     });
   }
