@@ -127,6 +127,38 @@
   </div>
     </mat-tab>
 
+    <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
+        <div class="desc-search">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="search" [(ngModel)]="searchQuery" [placeholder]="'ESTIMATION.LIST_SEARCH' | translate" [attr.aria-label]="'ESTIMATION.LIST_SEARCH' | translate" />
+            <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="searchQuery='';" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+      <div class="list-table">
+        <table class="est-table">
+          <thead>
+            <tr><th>{{ 'ESTIMATION.NAME' | translate }}</th><th>{{ 'ESTIMATION.PROJECT' | translate }}</th><th>{{ 'ESTIMATION.REQUESTER' | translate }}</th><th>{{ 'ESTIMATION.CREATED' | translate }}</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of filteredSavedEstimations">
+              <td>{{ s.estimationName }}</td>
+              <td>{{ s.projectCode }} - {{ s.projectName }}</td>
+              <td>{{ s.requester }} ({{ s.requesterEmail }})</td>
+              <td>{{ s.createdAt | date:'short' }}</td>
+              <td>
+                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">{{ 'ESTIMATION.LIST_LOAD' | translate }}</button>
+                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">{{ 'ESTIMATION.LIST_DELETE' | translate }}</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-tab>
+
     <mat-tab label="{{ 'ESTIMATION.TAB_LIVE' | translate }}">
       <div class="live-root">
         <div *ngIf="!liveSession" class="live-setup">
@@ -169,38 +201,6 @@
             <button mat-stroked-button color="warn" (click)="liveService.abort(liveSession)">{{ 'ESTIMATION.LIVE.ABORT' | translate }}</button>
           </div>
         </div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
-        <div class="desc-search">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput type="search" [(ngModel)]="searchQuery" [placeholder]="'ESTIMATION.LIST_SEARCH' | translate" [attr.aria-label]="'ESTIMATION.LIST_SEARCH' | translate" />
-            <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="searchQuery='';" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </div>
-
-      <div class="list-table">
-        <table class="est-table">
-          <thead>
-            <tr><th>{{ 'ESTIMATION.NAME' | translate }}</th><th>{{ 'ESTIMATION.PROJECT' | translate }}</th><th>{{ 'ESTIMATION.REQUESTER' | translate }}</th><th>{{ 'ESTIMATION.CREATED' | translate }}</th><th></th></tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let s of filteredSavedEstimations">
-              <td>{{ s.estimationName }}</td>
-              <td>{{ s.projectCode }} - {{ s.projectName }}</td>
-              <td>{{ s.requester }} ({{ s.requesterEmail }})</td>
-              <td>{{ s.createdAt | date:'short' }}</td>
-              <td>
-                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">{{ 'ESTIMATION.LIST_LOAD' | translate }}</button>
-                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">{{ 'ESTIMATION.LIST_DELETE' | translate }}</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </mat-tab>
   </mat-tab-group>
