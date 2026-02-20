@@ -3,15 +3,15 @@ import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PlanningService, EventItem, Env, EventType } from './planning.service'; // Asegúrate de importar el servicio
-import { forkJoin } from 'rxjs'; // Necesario para crear múltiples eventos a la vez
+import { PlanningService, EventItem, Env, EventType } from './planning.service';
+import { forkJoin } from 'rxjs';
+import { LocalStorageService } from '../local-storage.service';
 
 @Component({
   selector: 'app-planificacion',
   templateUrl: './planificacion.html',
   styleUrls: ['./planificacion.css'],
   standalone: true,
-  // IMPORTANTE: Asegúrate de que HttpClientModule esté en los providers globales o impórtalo aquí si es necesario
   imports: [CommonModule, NgForOf, NgIf, FormsModule, BuscadorComponent, TranslateModule]
 })
 export class PlanificacionComponent implements OnInit {
@@ -22,8 +22,6 @@ export class PlanificacionComponent implements OnInit {
   envs: Env[] = ['DEV', 'INT', 'PRE', 'PRO'];
 
   events: EventItem[] = [];
-  
-  // Estado de carga para feedback visual
   isLoading = false;
 
   searchTerm = '';
@@ -32,7 +30,7 @@ export class PlanificacionComponent implements OnInit {
   showModal = false;
   editing?: EventItem;
   draft: Partial<EventItem> = {};
-  
+
   // Confirmation dialog state
   showConfirm = false;
   confirmMessage = '';
@@ -41,21 +39,74 @@ export class PlanificacionComponent implements OnInit {
   devOpsList: string[] = [];
   validationError: string | null = null;
 
+  private readonly STORAGE_KEY_WEEK = 'planning_weekStart';
+  private readonly STORAGE_KEY_FILTER = 'planning_searchTerm';
+  private readonly STORAGE_KEY_DRAFT = 'planning_modalDraft';
+
   constructor(
     private translate: TranslateService,
-    private planningService: PlanningService // Inyectamos el servicio
+    private planningService: PlanningService,
+    private storage: LocalStorageService
   ) {}
 
   ngOnInit(): void {
-    const tomorrow = new Date();
-    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-    this.weekStart = this.startOfWeek(tomorrow);
-    
+    this.restoreFromLocalStorage();
+
     this.devOpsList = [ 'PLANNING.UNASSIGNED', 'Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil' ];
-    
-    // Cargar datos del Backend
+
     this.loadEvents();
   }
+
+  // ===== LOCAL STORAGE =====
+
+  private restoreFromLocalStorage(): void {
+    // setmana
+    const savedWeek = this.storage.get(this.STORAGE_KEY_WEEK);
+    if (savedWeek) {
+      const d = new Date(savedWeek);
+      if (!isNaN(d.getTime())) {
+        this.weekStart = this.startOfWeek(d);
+      }
+    }
+    if (!this.weekStart) {
+      const tomorrow = new Date();
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+      this.weekStart = this.startOfWeek(tomorrow);
+    }
+
+    // filtre
+    const savedFilter = this.storage.get(this.STORAGE_KEY_FILTER);
+    if (savedFilter) {
+      this.searchTerm = savedFilter;
+    }
+
+    // draft modal
+    const savedDraft = this.storage.getObject<{ draft: Partial<EventItem>; editingId?: string }>(this.STORAGE_KEY_DRAFT);
+    if (savedDraft && savedDraft.draft) {
+      this.draft = savedDraft.draft;
+      // encara no sabem els events (no podem reconstruir editing), així que només obrim el modal en mode "nou" amb draft
+      this.showModal = true;
+    }
+  }
+
+  private saveUiState(): void {
+    this.storage.set(this.STORAGE_KEY_WEEK, this.weekStart.toISOString());
+    this.storage.set(this.STORAGE_KEY_FILTER, this.searchTerm || '');
+  }
+
+  private saveDraft(): void {
+    const data = {
+      draft: this.draft,
+      editingId: this.editing?.id
+    };
+    this.storage.setObject(this.STORAGE_KEY_DRAFT, data);
+  }
+
+  private clearDraft(): void {
+    this.storage.remove(this.STORAGE_KEY_DRAFT);
+  }
+
+  // ===== NAV / DATES =====
 
   startOfWeek(d: Date) {
     const dt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
@@ -67,10 +118,12 @@ export class PlanificacionComponent implements OnInit {
 
   prevWeek() {
     this.weekStart = new Date(this.weekStart.getTime() - 7 * 24 * 3600 * 1000);
+    this.saveUiState();
   }
 
   nextWeek() {
     this.weekStart = new Date(this.weekStart.getTime() + 7 * 24 * 3600 * 1000);
+    this.saveUiState();
   }
 
   daysOfWeek() {
@@ -92,7 +145,6 @@ export class PlanificacionComponent implements OnInit {
       error: (err) => {
         console.error('Error cargando planificación:', err);
         this.isLoading = false;
-        // Aquí podrías mostrar una notificación de error
       }
     });
   }
@@ -101,17 +153,21 @@ export class PlanificacionComponent implements OnInit {
     return d.toISOString().slice(0, 10);
   }
 
-  // Filtrado en memoria (se mantiene igual ya que tenemos todos los datos)
+  // Filtrado en memoria
   eventsFor(env: Env, day: Date) {
     const k = this.keyDate(day);
-    const list = this.events.filter(e => e.env === env && e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    const list = this.events
+      .filter(e => e.env === env && e.date === k)
+      .sort((a,b) => a.startTime.localeCompare(b.startTime));
     if (!this.searchTerm) return list;
     return this.applyFilter(list);
   }
 
   eventsForDay(day: Date) {
     const k = this.keyDate(day);
-    let list = this.events.filter(e => e.date === k).sort((a,b) => a.startTime.localeCompare(b.startTime));
+    let list = this.events
+      .filter(e => e.date === k)
+      .sort((a,b) => a.startTime.localeCompare(b.startTime));
     if (!this.searchTerm) return list;
     return this.applyFilter(list);
   }
@@ -127,7 +183,10 @@ export class PlanificacionComponent implements OnInit {
 
   filtrar(valor: string) {
     this.searchTerm = (valor || '').trim().toLowerCase();
+    this.saveUiState();
   }
+
+  // --- MODAL / DRAFT ---
 
   createOrEditEvent(existing?: EventItem, env?: Env, day?: Date) {
     if (existing) {
@@ -145,13 +204,14 @@ export class PlanificacionComponent implements OnInit {
         endTime: '10:00',
         devOps: (this.devOpsList && this.devOpsList.length>0) ? this.devOpsList[0] : '',
         jiraUrl: '',
-        responsable: ''
-        ,eventType: 'DEPLOY'
-        ,periodDays: 1
+        responsable: '',
+        eventType: 'DEPLOY',
+        periodDays: 1
       };
     }
     this.validationError = null;
     this.showModal = true;
+    this.saveDraft();
   }
 
   onEventTypeChange(newType: EventType | undefined) {
@@ -161,6 +221,7 @@ export class PlanificacionComponent implements OnInit {
     } else {
       if (!this.draft.env) this.draft.env = 'DEV';
     }
+    this.saveDraft();
   }
 
   // --- CONECTIVIDAD: Guardar (Crear o Editar) ---
@@ -174,15 +235,14 @@ export class PlanificacionComponent implements OnInit {
     this.isLoading = true;
 
     if (this.editing && this.editing.id) {
-      // --- UPDATE (PUT) ---
+      // UPDATE
       const payload = { ...(this.editing), ...(this.draft as EventItem) };
-      
+
       this.planningService.updateEvent(this.editing.id, payload).subscribe({
         next: (updatedEvent) => {
-          // Actualizamos la lista localmente
           const idx = this.events.findIndex(e => e.id === updatedEvent.id);
           if (idx !== -1) this.events[idx] = updatedEvent;
-          
+
           this.isLoading = false;
           this.closeModal();
         },
@@ -194,8 +254,7 @@ export class PlanificacionComponent implements OnInit {
       });
 
     } else {
-      // --- CREATE (POST) ---
-      // Manejo de "Period Days" (Múltiples días)
+      // CREATE
       const days = Math.max(1, Math.min(30, Number(this.draft.periodDays || 1)));
       const requests = [];
 
@@ -204,23 +263,21 @@ export class PlanificacionComponent implements OnInit {
         dt.setUTCDate(dt.getUTCDate() + i);
         const dateStr = dt.toISOString().slice(0,10);
 
-        // Preparamos el objeto para enviar al Back (sin ID, el back lo genera)
         const newItem: EventItem = {
-            env: this.draft.env as Env,
-            project: this.draft.project as string,
-            date: dateStr,
-            startTime: this.draft.startTime as string,
-            endTime: this.draft.endTime as string,
-            devOps: this.draft.devOps as string,
-            notes: this.draft.notes as string,
-            jiraUrl: this.draft.jiraUrl as string,
-            responsable: this.draft.responsable as string,
-            eventType: this.draft.eventType as EventType
+          env: this.draft.env as Env,
+          project: this.draft.project as string,
+          date: dateStr,
+          startTime: this.draft.startTime as string,
+          endTime: this.draft.endTime as string,
+          devOps: this.draft.devOps as string,
+          notes: this.draft.notes as string,
+          jiraUrl: this.draft.jiraUrl as string,
+          responsable: this.draft.responsable as string,
+          eventType: this.draft.eventType as EventType
         };
         requests.push(this.planningService.createEvent(newItem));
       }
 
-      // Ejecutamos todas las peticiones en paralelo y esperamos a que todas terminen
       forkJoin(requests).subscribe({
         next: (newEvents) => {
           this.events.push(...newEvents);
@@ -241,6 +298,7 @@ export class PlanificacionComponent implements OnInit {
     this.editing = undefined;
     this.draft = {};
     this.validationError = null;
+    this.clearDraft();
   }
 
   removeFromModal() {
@@ -263,7 +321,7 @@ export class PlanificacionComponent implements OnInit {
       next: () => {
         this.events = this.events.filter(e => e.id !== id);
         this.isLoading = false;
-        this.closeModal(); // Por si se llamó desde el modal
+        this.closeModal();
       },
       error: (err) => {
         console.error('Error deleting:', err);

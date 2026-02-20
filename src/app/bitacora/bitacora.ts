@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../environments/environment';
+import { LocalStorageService } from '../local-storage.service';
 
 interface Solucion {
   numero: number;
@@ -43,14 +44,20 @@ interface Bitacora {
 export class BitacoraComponent implements OnInit {
 
   title = 'Control de errores';
-  
   private baseUrl = `${environment.baseUrl}bitacora`;
+
+  // claus localStorage
+  private readonly STORAGE_KEY_TAB = 'bitacora_active_tab_v1';
+  private readonly STORAGE_KEY_FILTER = 'bitacora_filter_v1';
 
   errores: Bitacora[] = [];
   erroresFiltrados: Bitacora[] = [];
 
   // Sistema de pestañas
   activeTab: 'crear' | 'listar' | 'solucion' = 'listar';
+
+  // filtre actual (el rep del BuscadorComponent)
+  searchText = '';
 
   // Popup crear/editar
   mostrarPopup = false;
@@ -68,14 +75,27 @@ export class BitacoraComponent implements OnInit {
 
   // Colores por entorno
   coloresEntorno = {
-    minsait: '#1E88E5',     // Azul
+    minsait: '#1E88E5',      // Azul
     preproduccion: '#FBC02D', // Amarillo
-    produccion: '#E53935'   // Rojo
+    produccion: '#E53935'    // Rojo
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private storage: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
+    // restaurar pestanya
+    const savedTab = this.storage.get(this.STORAGE_KEY_TAB) as string | null;
+    if (savedTab === 'crear' || savedTab === 'listar' || savedTab === 'solucion') {
+      this.activeTab = savedTab;
+    }
+
+    // restaurar filtre
+    const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
+    this.searchText = savedFilter || '';
+
     this.cargarBitacoras();
   }
 
@@ -97,14 +117,29 @@ export class BitacoraComponent implements OnInit {
         console.log('✅ Bitácoras cargadas:', data);
         this.errores = data;
         this.erroresFiltrados = [...data];
+
+        // reaplicar filtre guardat si n’hi ha
+        if (this.searchText && this.searchText.trim()) {
+          this.filtrar(this.searchText);
+        }
       },
       error: (err) => console.error('❌ Error cargando bitácoras', err)
     });
   }
 
-  // ===== FILTRAR =====
+  // ===== CANVI DE PESTANYA (amb persistència) =====
+  setActiveTab(tab: 'crear' | 'listar' | 'solucion') {
+    this.activeTab = tab;
+    this.storage.set(this.STORAGE_KEY_TAB, tab);
+  }
+
+  // ===== FILTRAR (rep el valor del buscador) =====
   filtrar(valor: string): void {
-    const v = valor.toLowerCase();
+    this.searchText = (valor || '').toLowerCase();
+    // guardar al localStorage
+    this.storage.set(this.STORAGE_KEY_FILTER, this.searchText);
+
+    const v = this.searchText;
     if (!v) {
       this.erroresFiltrados = [...this.errores];
       return;
@@ -114,13 +149,12 @@ export class BitacoraComponent implements OnInit {
       const contextMatch = e.contexto?.toLowerCase().includes(v);
       const errorMatch = e.error?.toLowerCase().includes(v);
       const tagsMatch = e.tags?.some((tag: string) => tag.toLowerCase().includes(v));
-      
-      // Buscar en las descripciones de soluciones
-      const solucionesMatch = e.soluciones?.some((sol: any) => 
-        sol.descripcion?.toLowerCase().includes(v) || 
+
+      const solucionesMatch = e.soluciones?.some((sol: any) =>
+        sol.descripcion?.toLowerCase().includes(v) ||
         sol.entorno?.toLowerCase().includes(v)
       );
-      
+
       return contextMatch || errorMatch || tagsMatch || solucionesMatch;
     });
   }
@@ -130,19 +164,18 @@ export class BitacoraComponent implements OnInit {
     this.editando = false;
     this.formBitacora = this.getEmptyBitacora();
     this.tagsInput = '';
-    this.activeTab = 'crear';
+    this.setActiveTab('crear');
   }
 
   // ===== POPUP EDITAR =====
   abrirPopupEditar(bitacora: Bitacora) {
     this.editando = true;
     this.formBitacora = { ...bitacora };
-    // Asegurar que soluciones es un array
     if (!this.formBitacora.soluciones) {
       this.formBitacora.soluciones = [];
     }
     this.tagsInput = bitacora.tags ? bitacora.tags.join(', ') : '';
-    this.activeTab = 'crear';
+    this.setActiveTab('crear');
   }
 
   // ===== CERRAR POPUP =====
@@ -151,7 +184,7 @@ export class BitacoraComponent implements OnInit {
     this.formBitacora = this.getEmptyBitacora();
     this.tagsInput = '';
     this.editando = false;
-    this.activeTab = 'listar';
+    this.setActiveTab('listar');
   }
 
   // ===== GUARDAR (CREAR O ACTUALIZAR) =====
@@ -161,7 +194,6 @@ export class BitacoraComponent implements OnInit {
       ? this.tagsInput.split(',').map(t => t.trim()).filter(t => t)
       : [];
 
-    // Validar que hay soluciones
     if (!this.formBitacora.soluciones || this.formBitacora.soluciones.length === 0) {
       alert('Debe agregar al menos una solución');
       return;
@@ -177,7 +209,7 @@ export class BitacoraComponent implements OnInit {
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
             this.editando = false;
-            this.activeTab = 'listar';
+            this.setActiveTab('listar');
           },
           error: (err) => console.error('❌ Error actualizando bitácora', err)
         });
@@ -190,7 +222,7 @@ export class BitacoraComponent implements OnInit {
             this.cargarBitacoras();
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
-            this.activeTab = 'listar';
+            this.setActiveTab('listar');
           },
           error: (err) => console.error('❌ Error creando bitácora', err)
         });
@@ -239,7 +271,6 @@ export class BitacoraComponent implements OnInit {
   eliminarSolucion(index: number) {
     if (this.formBitacora.soluciones) {
       this.formBitacora.soluciones.splice(index, 1);
-      // Renumerar
       this.formBitacora.soluciones.forEach((sol, i) => {
         sol.numero = i + 1;
       });
@@ -267,7 +298,7 @@ export class BitacoraComponent implements OnInit {
   abrirVisualizacion(bitacora: Bitacora) {
     this.bitacoraVisualizacion = { ...bitacora };
     this.mostrarVisualizacion = true;
-    this.activeTab = 'solucion';
+    this.setActiveTab('solucion');
   }
 
   toggleVisualizacion(bitacora: Bitacora) {
@@ -276,11 +307,13 @@ export class BitacoraComponent implements OnInit {
     } else {
       this.bitacoraVisualizacion = { ...bitacora };
       this.mostrarVisualizacion = true;
+      this.setActiveTab('solucion');
     }
   }
 
   cerrarVisualizacion() {
     this.mostrarVisualizacion = false;
     this.bitacoraVisualizacion = null;
+    this.setActiveTab('listar');
   }
 }

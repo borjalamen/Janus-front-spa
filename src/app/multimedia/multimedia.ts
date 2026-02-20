@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { LocalStorageService } from '../local-storage.service';
 
 interface MediaItem {
   id: string;
@@ -21,18 +22,39 @@ interface MediaItem {
   templateUrl: './multimedia.html',
   styleUrls: ['./multimedia.css'],
   standalone: true,
-  imports: [CommonModule, NgForOf, NgIf, FormsModule, TranslateModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatInputModule]
+  imports: [
+    CommonModule,
+    NgForOf,
+    NgIf,
+    FormsModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatInputModule
+  ]
 })
 export class MultimediaComponent implements OnInit {
   query = '';
   all: MediaItem[] = [];
   results: MediaItem[] = [];
 
-  // player modal state
+  
   playing?: MediaItem;
   playerReady = false;
 
+  private readonly STORAGE_KEY_QUERY = 'multimedia_query';
+  private readonly STORAGE_KEY_LAST_PLAYED = 'multimedia_lastPlayedId';
+
+  constructor(private storage: LocalStorageService) {}
+
   ngOnInit(): void {
+    
+    const savedQuery = this.storage.get(this.STORAGE_KEY_QUERY);
+    if (savedQuery) {
+      this.query = savedQuery;
+    }
+
     this.loadManifest();
   }
 
@@ -42,7 +64,21 @@ export class MultimediaComponent implements OnInit {
       if (!resp.ok) return;
       const data = await resp.json();
       this.all = (data || []) as MediaItem[];
-      this.results = [...this.all];
+
+      
+      if (this.query) {
+        this.search(this.query);
+      } else {
+        this.results = [...this.all];
+      }
+ 
+      const lastId = this.storage.get(this.STORAGE_KEY_LAST_PLAYED);
+      if (lastId) {
+        const item = this.all.find(m => m.id === lastId);
+        if (item) {
+          this.openPlayer(item);
+        }
+      }
     } catch (e) {
       console.error('Error loading multimedia manifest', e);
     }
@@ -51,6 +87,8 @@ export class MultimediaComponent implements OnInit {
   search(q?: string) {
     const term = ((q ?? this.query) || '').trim().toLowerCase();
     this.query = term;
+    this.storage.set(this.STORAGE_KEY_QUERY, this.query || '');
+
     if (!term) {
       this.results = [...this.all];
       return;
@@ -64,7 +102,7 @@ export class MultimediaComponent implements OnInit {
   openPlayer(item: MediaItem) {
     this.playing = item;
     this.playerReady = false;
-    // small timeout to let modal render
+    this.storage.set(this.STORAGE_KEY_LAST_PLAYED, item.id);
     setTimeout(() => this.playerReady = true, 50);
   }
 

@@ -9,6 +9,7 @@ import { AuthService } from '../auth.service';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
 import { BuscadorComponent } from '../buscador/buscador';
+import { LocalStorageService } from '../local-storage.service';
 
 interface JenkinsItem {
   id?: string;
@@ -43,9 +44,13 @@ export class Jenkins implements OnInit, OnDestroy {
   userRole: string = 'invitado';
   private authSubscription?: Subscription;
 
+  private readonly STORAGE_KEY_JENKINS = 'jenkins_list';
+  private readonly STORAGE_KEY_FILTER = 'jenkins_filter';
+
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private storage: LocalStorageService
   ) {}
 
   ngOnInit() {
@@ -53,7 +58,20 @@ export class Jenkins implements OnInit, OnDestroy {
       this.userRole = user?.rol || 'invitado';
     });
 
-    this.loadFromBackend();
+    // restaurar filtre i llista de localStorage si existeixen
+    const savedList = this.storage.getObject<JenkinsItem[]>(this.STORAGE_KEY_JENKINS);
+    const savedFilter = this.storage.get(this.STORAGE_KEY_FILTER);
+
+    if (savedList && savedList.length) {
+      this.customJenkins = savedList;
+      this.filteredJenkins = [...this.customJenkins];
+    } else {
+      this.loadFromBackend();
+    }
+
+    if (savedFilter) {
+      this.filtrar(savedFilter);
+    }
   }
 
   ngOnDestroy() {
@@ -78,14 +96,20 @@ export class Jenkins implements OnInit, OnDestroy {
           selected: false
         }));
         this.filteredJenkins = [...this.customJenkins];
+        this.saveListToLocalStorage();
       },
       error: (err) => console.error('Error cargando Jenkins', err)
     });
   }
 
+  private saveListToLocalStorage() {
+    this.storage.setObject(this.STORAGE_KEY_JENKINS, this.customJenkins);
+  }
+
   // FILTRAR
   filtrar(query: string) {
-    const q = query.toLowerCase().trim();
+    const q = (query || '').toLowerCase().trim();
+    this.storage.set(this.STORAGE_KEY_FILTER, q);
     if (!q) {
       this.filteredJenkins = [...this.customJenkins];
     } else {
@@ -111,6 +135,7 @@ export class Jenkins implements OnInit, OnDestroy {
           next: (updated) => {
             this.editingJenkins!.name = updated.nombre;
             this.editingJenkins!.url = updated.url;
+            this.saveListToLocalStorage();
             this.closePopup();
             this.editingJenkins = null;
           },
@@ -120,7 +145,7 @@ export class Jenkins implements OnInit, OnDestroy {
       // CREATE
       this.http.post<any>(`${this.baseUrl}/create`, body).subscribe({
         next: (created) => {
-          const newItem = {
+          const newItem: JenkinsItem = {
             id: created.id,
             name: created.nombre,
             url: created.url,
@@ -128,6 +153,7 @@ export class Jenkins implements OnInit, OnDestroy {
           };
           this.customJenkins.push(newItem);
           this.filteredJenkins.push(newItem);
+          this.saveListToLocalStorage();
           this.closePopup();
         },
         error: (err) => console.error('Error creando Jenkins', err)
@@ -144,6 +170,7 @@ export class Jenkins implements OnInit, OnDestroy {
           next: () => {
             this.customJenkins = this.customJenkins.filter(j => j !== this.jenkinsToDelete);
             this.filteredJenkins = this.filteredJenkins.filter(j => j !== this.jenkinsToDelete);
+            this.saveListToLocalStorage();
             this.deletePopupOpen = false;
             this.jenkinsToDelete = null;
             this.deleteMode = false;
@@ -155,11 +182,14 @@ export class Jenkins implements OnInit, OnDestroy {
 
     // múltiples
     const toDelete = this.customJenkins.filter(jk => jk.selected && jk.id);
+    const idsToDelete = toDelete.map(jk => jk.id);
+
     toDelete.forEach(jk => {
       this.http.delete(`${this.baseUrl}/delete/${jk.id}`).subscribe({
         next: () => {
           this.customJenkins = this.customJenkins.filter(j => j.id !== jk.id);
           this.filteredJenkins = this.filteredJenkins.filter(j => j.id !== jk.id);
+          this.saveListToLocalStorage();
         },
         error: (err) => console.error('Error borrando Jenkins', err)
       });

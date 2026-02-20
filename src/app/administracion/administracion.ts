@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../local-storage.service';
 
 interface UsuariBackend {
   id?: string;
@@ -18,7 +19,6 @@ interface UsuariBackend {
   roles: string[];
   status: string;
   cvPath?: string;
-  // Campos adicionales para mostrar info del CV
   puesto?: string;
   experiencia?: string;
   tecnologias?: string[];
@@ -72,15 +72,24 @@ interface PeticionUneteBackend {
 export class AdministracionComponent implements OnInit {
   title = 'Administración';
 
+  // claus localStorage
+  private readonly STORAGE_KEY_TAB = 'admin_active_tab_v1';
+  private readonly STORAGE_KEY_USER_FILTER = 'admin_users_filter_v1';
+  private readonly STORAGE_KEY_REQ_FILTER = 'admin_requests_filter_v1';
+
   // CONTROL DE PESTAÑAS (SCENARIOS)
   // Options: 'USERS', 'APP', 'PARAM', 'DB', 'REQUESTS'
   activeTab: string = 'USERS';
 
+  // filtres UI
+  searchUsers = '';
+  searchRequests = '';
+
   // ESTADOS POPUPS USUARIOS
   mostrarPopup = false;
-  mostrarPopupDelete = false; // Ahora actuará como "Inhabilitar"
-  mostrarPopupPerfil = false; // Popup para ver perfil CV
-  usuariPerfil: UsuariBackend | null = null; // Usuario seleccionado para ver perfil
+  mostrarPopupDelete = false;
+  mostrarPopupPerfil = false;
+  usuariPerfil: UsuariBackend | null = null;
 
   nouUsuari = {
     nombre: '',
@@ -162,10 +171,22 @@ export class AdministracionComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private storage: LocalStorageService
   ) {}
 
   ngOnInit(): void {
+    // restaurar pestanya
+    const savedTab = this.storage.get(this.STORAGE_KEY_TAB) as string | null;
+    if (savedTab) this.activeTab = savedTab;
+
+    // restaurar filtres
+    const savedUserFilter = (this.storage.get(this.STORAGE_KEY_USER_FILTER) as string) || '';
+    this.searchUsers = savedUserFilter;
+
+    const savedReqFilter = (this.storage.get(this.STORAGE_KEY_REQ_FILTER) as string) || '';
+    this.searchRequests = savedReqFilter;
+
     this.carregarUsuaris();
     this.cargarVersion();
     this.cargarPeticiones();
@@ -190,6 +211,7 @@ export class AdministracionComponent implements OnInit {
   // ===== NAVEGACIÓN =====
   cambiarTab(tab: string) {
     this.activeTab = tab;
+    this.storage.set(this.STORAGE_KEY_TAB, tab);
   }
 
   filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
@@ -198,20 +220,22 @@ export class AdministracionComponent implements OnInit {
   }
 
   filtrarPeticiones(termino: string) {
-    if (!termino.trim()) {
+    const t = (termino || '').toLowerCase().trim();
+    this.searchRequests = t;
+    this.storage.set(this.STORAGE_KEY_REQ_FILTER, this.searchRequests);
+
+    if (!t) {
       this.aplicarFiltrosPeticiones();
       return;
     }
     
-    const terminoLower = termino.toLowerCase();
     let peticionesFiltradas = this.peticiones.filter(p =>
-      p.solicitante.toLowerCase().includes(terminoLower) ||
-      p.tipo.toLowerCase().includes(terminoLower) ||
-      p.comentario.toLowerCase().includes(terminoLower) ||
-      p.id.toLowerCase().includes(terminoLower)
+      p.solicitante.toLowerCase().includes(t) ||
+      p.tipo.toLowerCase().includes(t) ||
+      p.comentario.toLowerCase().includes(t) ||
+      p.id.toLowerCase().includes(t)
     );
     
-    // Aplicar también el filtro de estado
     if (this.filtroEstadoPeticiones !== 'TODAS') {
       peticionesFiltradas = peticionesFiltradas.filter(p => p.estado === this.filtroEstadoPeticiones);
     }
@@ -224,6 +248,10 @@ export class AdministracionComponent implements OnInit {
       this.peticionesFiltradas = [...this.peticiones];
     } else {
       this.peticionesFiltradas = this.peticiones.filter(p => p.estado === this.filtroEstadoPeticiones);
+    }
+
+    if (this.searchRequests) {
+      this.filtrarPeticiones(this.searchRequests);
     }
   }
 
@@ -308,6 +336,10 @@ export class AdministracionComponent implements OnInit {
       next: data => {
         this.usuaris = [...data];
         this.usuarisFiltrats = [...this.usuaris];
+
+        if (this.searchUsers) {
+          this.filtrar(this.searchUsers);
+        }
       },
       error: err => {
         console.error('Error carregant usuaris', err);
@@ -363,14 +395,11 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  // Scenario 1: "Inhabilitar usuario" (Reutilizamos la lógica de borrar o hacemos update status)
   inhabilitarUsuari() {
     if (!this.usuariAEsborrar || !this.usuariAEsborrar.id) {
       this.mostrarPopupDelete = false;
       return;
     }
-    // NOTA: Aquí podrías llamar a un endpoint /disable en vez de /delete si existiera.
-    // Mantenemos delete como pedía tu lógica original, pero la UI dirá "Inhabilitar".
     this.http.delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`).subscribe({
       next: () => {
         this.usuaris = this.usuaris.filter(u => u.id !== this.usuariAEsborrar!.id);
@@ -383,10 +412,10 @@ export class AdministracionComponent implements OnInit {
   }
 
   filtrar(valor: string) {
-    // Si valor viene de un evento, asegúrate de capturarlo, si viene directo es string
-    // Ajuste simple:
-    const v = typeof valor === 'string' ? valor.toLowerCase() : ''; 
-    
+    const v = (valor || '').toLowerCase();
+    this.searchUsers = v;
+    this.storage.set(this.STORAGE_KEY_USER_FILTER, this.searchUsers);
+
     if (!v) {
       this.usuarisFiltrats = [...this.usuaris];
     } else {
@@ -440,8 +469,6 @@ export class AdministracionComponent implements OnInit {
   }
 
   // ===== NUEVAS FUNCIONES =====
-  
-  // Scenario 2: App - Quitar rol de los usuarios
   inhabilitarPorRol() {
     if (!this.selectedRoleToDisable) {
       alert('Por favor, selecciona un rol para inhabilitar');
@@ -468,7 +495,7 @@ export class AdministracionComponent implements OnInit {
         username: usuari.username,
         fullName: usuari.fullName,
         email: usuari.email,
-        roles: nuevosRoles.length > 0 ? nuevosRoles : ['CONSULTOR'], // Si queda sin roles, asignar CONSULTOR
+        roles: nuevosRoles.length > 0 ? nuevosRoles : ['CONSULTOR'],
         status: usuari.status
       };
 
@@ -517,7 +544,6 @@ export class AdministracionComponent implements OnInit {
       });
   }
 
-  // Cargar la versión actual desde el backend
   cargarVersion() {
     this.http.get<string>(`${environment.baseUrl}/config/parametrization/version`, { responseType: 'text' as 'json' })
       .subscribe({
@@ -639,7 +665,6 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  // ===== LOGS ANTIGUOS - BORRADO POR FECHA =====
   borrarLogsAntiguos() {
     if (!this.fechaLimiteLogs) {
       alert('Selecciona una fecha límite');
@@ -660,7 +685,6 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
-  // ===== BUSCAR COLECCIÓN PARA BORRADO =====
   buscarColeccion() {
     if (!this.coleccionBorrar) return;
     
@@ -685,7 +709,6 @@ export class AdministracionComponent implements OnInit {
       },
       error: () => {
         this.cargandoRegistrosInactivos = false;
-        // Demo: simular que la colección existe con registros inactivos
         this.coleccionEncontrada = true;
         this.registrosColeccion = Math.floor(Math.random() * 500) + 50;
         this.registrosInactivosColeccion = this.generarRegistrosInactivosDemo();
@@ -694,7 +717,6 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
-  // Generar datos de demo para registros inactivos
   private generarRegistrosInactivosDemo(): any[] {
     const coleccion = this.coleccionBorrar.toLowerCase();
     const cantidad = Math.floor(Math.random() * 10) + 3;
@@ -741,7 +763,6 @@ export class AdministracionComponent implements OnInit {
     return registros;
   }
 
-  // Toggle selección de registro inactivo
   toggleSeleccionRegistro(registroId: string) {
     if (this.registrosSeleccionadosBorrar.has(registroId)) {
       this.registrosSeleccionadosBorrar.delete(registroId);
@@ -750,7 +771,6 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  // Seleccionar/deseleccionar todos los registros
   seleccionarTodosRegistros() {
     if (this.registrosSeleccionadosBorrar.size === this.registrosInactivosColeccion.length) {
       this.registrosSeleccionadosBorrar.clear();
@@ -761,7 +781,6 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  // Borrar registros seleccionados
   borrarRegistrosSeleccionados() {
     if (this.registrosSeleccionadosBorrar.size === 0) {
       alert('Selecciona al menos un registro para eliminar');
@@ -776,14 +795,12 @@ export class AdministracionComponent implements OnInit {
       next: (res: any) => {
         const eliminados = res?.eliminados || idsABorrar.length;
         alert(`✅ Se eliminaron ${eliminados} registro(s) de "${this.coleccionBorrar}"`);
-        // Actualizar lista local
         this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
         this.registrosInactivos = this.registrosInactivosColeccion.length;
         this.registrosSeleccionadosBorrar.clear();
       },
       error: err => {
         console.error('Error borrando registros', err);
-        // Demo: simular éxito
         alert(`✅ Se eliminaron ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"`);
         this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
         this.registrosInactivos = this.registrosInactivosColeccion.length;
@@ -792,7 +809,6 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
-  // Limpiar búsqueda de colección
   limpiarBusquedaColeccion() {
     this.coleccionBorrar = '';
     this.coleccionEncontrada = false;
@@ -822,7 +838,6 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
-  // ===== BORRAR REGISTROS INACTIVOS =====
   ejecutarBorradoInactivos() {
     const confirmacion = confirm('¿Estás seguro de eliminar TODOS los registros inactivos de la base de datos?\n\nEsta acción es irreversible.');
     if (!confirmacion) return;
@@ -836,15 +851,13 @@ export class AdministracionComponent implements OnInit {
       },
       error: err => {
         console.error('Error borrando inactivos', err);
-        // Demo: simular éxito
         const eliminados = Math.floor(Math.random() * 200) + 20;
-        alert(`✅ Borrado completado\n\nRegistros eliminados: ${eliminados}\n- Usuarios inactivos: ${Math.floor(eliminados * 0.2)}\n- Documentos huérfanos: ${Math.floor(eliminados * 0.3)}\n- Logs antiguos: ${Math.floor(eliminados * 0.25)}\n- Sesiones expiradas: ${Math.floor(eliminados * 0.15)}\n- Otros registros: ${Math.floor(eliminados * 0.1)}`);
+        alert(`✅ Borrado completado\n\nRegistros eliminados: ${eliminados}`);
         this.cerrarPopupBBDD();
       }
     });
   }
 
-  // ===== BUSCAR COLECCIÓN PARA BACKUP =====
   buscarColeccionBackup() {
     if (!this.coleccionBackup) return;
     
@@ -861,7 +874,6 @@ export class AdministracionComponent implements OnInit {
         }
       },
       error: () => {
-        // Demo: simular que la colección existe
         this.coleccionBackupEncontrada = true;
         this.registrosColeccionBackup = Math.floor(Math.random() * 1000) + 50;
       }
@@ -885,7 +897,6 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
-  // ===== BACKUP COMPLETO DE TODAS LAS COLECCIONES =====
   ejecutarBackupCompleto() {
     const confirmacion = confirm('¿Estás seguro de generar un backup COMPLETO de todas las colecciones?\n\nEsto puede tardar varios minutos dependiendo del tamaño de la base de datos.');
     if (!confirmacion) return;
@@ -901,39 +912,33 @@ export class AdministracionComponent implements OnInit {
       error: err => {
         this.backupCompletoEnProgreso = false;
         console.error('Error generando backup completo', err);
-        // Demo: simular éxito
         const colecciones = ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos', 'formaciones', 'multimedia'];
         alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map(c => '• ' + c).join('\n')}\n\nArchivo: backup_completo_${new Date().toISOString().split('T')[0]}.zip`);
       }
     });
   }
 
-  // Obtener fecha de la versión seleccionada
   get fechaRestoreSeleccionada(): string {
     const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
     return version?.fecha || '';
   }
 
-  // Ver CV del usuario
   verCV(usuari: UsuariBackend) {
     if (usuari.cvPath) {
       window.open(`${environment.baseUrl}files/cv/${usuari.id}`, '_blank');
     }
   }
 
-  // Abrir popup con perfil/CV del usuario
   abrirPerfilCV(usuari: UsuariBackend) {
     this.usuariPerfil = usuari;
     this.mostrarPopupPerfil = true;
   }
 
-  // Cerrar popup de perfil
   cerrarPopupPerfil() {
     this.mostrarPopupPerfil = false;
     this.usuariPerfil = null;
   }
 
-  // Ver perfil completo del usuario (curriculum) - navega a otra página
   verPerfil(usuari: UsuariBackend) {
     if (usuari.id) {
       this.router.navigate(['/user-profile', usuari.id]);

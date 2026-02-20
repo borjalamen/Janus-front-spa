@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { LocalStorageService } from '../local-storage.service';
 
 interface UserProfile {
   id: string;
@@ -169,10 +170,15 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private storage: LocalStorageService
   ) {}
 
   ngOnInit(): void {
+    
+    const currentUser = this.storage.getObject<{ id?: string }>('user');
+    console.log('Usuario en localStorage:', currentUser);
+
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
       this.loadUserProfile(userId);

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { LocalStorageService } from '../local-storage.service';
 
 interface DocumentoIndexItem {
   name: string;
@@ -23,18 +24,37 @@ interface DocumentoIndexItem {
   standalone: true,
   templateUrl: './descargables.html',
   styleUrls: ['./descargables.css'],
-  imports: [CommonModule, TranslateModule, MatIconModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, BuscadorComponent]
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatButtonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    BuscadorComponent
+  ]
 })
 export class DescargablesComponent implements OnInit {
+  private readonly STORAGE_KEY_FILTER = 'descargables_filter_v1';
+
   searchText = '';
   documentos: DocumentoIndexItem[] = [];
   loading = true;
   loadError = false;
   downloading: { [path: string]: boolean } = {};
 
-  constructor(private http: HttpClient, private translate: TranslateService) {}
+  constructor(
+    private http: HttpClient,
+    private translate: TranslateService,
+    private storage: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
+    // recuperar filtre guardat
+    const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
+    this.searchText = savedFilter || '';
+
     const url = 'assets/documents/index.json';
     console.debug('Descargables: fetching', url);
     this.http.get<DocumentoIndexItem[]>(url)
@@ -51,6 +71,12 @@ export class DescargablesComponent implements OnInit {
           this.loadError = true;
         }
       });
+  }
+
+  // desar i actualitzar text de cerca
+  setSearchText(value: string) {
+    this.searchText = (value || '').trim();
+    this.storage.set(this.STORAGE_KEY_FILTER, this.searchText);
   }
 
   download(doc: DocumentoIndexItem) {
@@ -101,7 +127,6 @@ export class DescargablesComponent implements OnInit {
       const parts: string[] = [];
       parts.push(doc.name || '');
       parts.push(doc.path || '');
-      // descriptionKey key and translated text
       if (doc.descriptionKey) parts.push(doc.descriptionKey);
       try {
         const trans = this.translate.instant(doc.descriptionKey || '');

@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BuscadorComponent } from '../buscador/buscador';
 import { ProceduresService, Procedure, ProcedureStep } from '../procedure.service';
 import { AuthService } from '../auth.service';
+import { LocalStorageService } from '../local-storage.service';
 
 @Component({
   selector: 'app-procedimientos',
@@ -57,13 +58,61 @@ export class ProcedimientosComponent implements OnInit {
     produccion: '#E53935'
   };
 
+  private readonly STORAGE_KEY_FORM = 'procedimientos_form';
+  private readonly STORAGE_KEY_TAB = 'procedimientos_tab';
+
   constructor(
     private proceduresService: ProceduresService,
-    private authService: AuthService
+    private authService: AuthService,
+    private storage: LocalStorageService
   ) { }
 
   ngOnInit(): void {
+    this.restoreFromLocalStorage();
     this.cargarProcedimientos();
+  }
+
+  // ===== LOCAL STORAGE =====
+
+  private restoreFromLocalStorage(): void {
+    // restaurar tab actiu
+    const savedTab = this.storage.get(this.STORAGE_KEY_TAB);
+    if (savedTab === 'crear' || savedTab === 'listar') {
+      this.activeTab = savedTab as any;
+    }
+
+    // restaurar formulari
+    const savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(this.STORAGE_KEY_FORM);
+    if (savedForm) {
+      this.procForm = {
+        titulo: savedForm.titulo || '',
+        descripcion: savedForm.descripcion || '',
+        departamento: savedForm.departamento || '',
+        entorno: (savedForm.entorno as any) || 'minsait',
+        tags: savedForm.tags || [],
+        steps: savedForm.steps || [],
+        visible: savedForm.visible ?? true,
+        deleted: savedForm.deleted ?? false,
+        id: savedForm.id,
+        createdAt: savedForm.createdAt,
+        updatedAt: savedForm.updatedAt
+      };
+      this.primerResponsable = savedForm.primerResponsable || savedForm.steps?.[0]?.responsable || '';
+      this.modoForm = savedForm.id ? 'editar' : 'crear';
+    }
+  }
+
+  private saveFormToLocalStorage(): void {
+    const data: Procedure & { primerResponsable?: string } = {
+      ...this.procForm,
+      primerResponsable: this.primerResponsable
+    };
+    this.storage.setObject(this.STORAGE_KEY_FORM, data);
+    this.storage.set(this.STORAGE_KEY_TAB, this.activeTab);
+  }
+
+  private clearFormLocalStorage(): void {
+    this.storage.remove(this.STORAGE_KEY_FORM);
   }
 
   get canEdit(): boolean {
@@ -145,6 +194,7 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = '';
     this.activeTab = 'crear';
+    this.saveFormToLocalStorage();
   }
 
   obrirPopupEditar(proc: Procedure) {
@@ -175,12 +225,14 @@ export class ProcedimientosComponent implements OnInit {
     };
     this.primerResponsable = proc.steps?.[0]?.responsable || '';
     this.activeTab = 'crear';
+    this.saveFormToLocalStorage();
   }
 
   tancarPopup() {
     this.editando = null;
     this.modoForm = 'crear';
     this.activeTab = 'listar';
+    this.clearFormLocalStorage();
   }
 
   guardarProcedimiento() {
@@ -286,11 +338,13 @@ export class ProcedimientosComponent implements OnInit {
     };
     console.log('NOU STEP AFEGIT:', nouStep);
     this.procForm.steps = [...(this.procForm.steps || []), nouStep];
+    this.saveFormToLocalStorage();
   }
 
   eliminarStep(idx: number) {
     if (!this.procForm.steps) return;
     this.procForm.steps.splice(idx, 1);
+    this.saveFormToLocalStorage();
   }
 
   obrirImatgeNovaFinestra(url?: string) {
@@ -341,6 +395,7 @@ export class ProcedimientosComponent implements OnInit {
       .split(',')
       .map(t => t.trim())
       .filter(t => t.length > 0);
+    this.saveFormToLocalStorage();
   }
 
   onStepTagsChange(value: string, index: number) {
@@ -350,6 +405,7 @@ export class ProcedimientosComponent implements OnInit {
       .split(',')
       .map(t => t.trim())
       .filter(t => t.length > 0);
+    this.saveFormToLocalStorage();
   }
 
   // ==== IMATGE STEP DES D'ARXIU ====
@@ -369,8 +425,10 @@ export class ProcedimientosComponent implements OnInit {
       this.procForm.steps = [];
     }
     this.procForm.steps[index].imageUrl = objectUrl;
+    this.saveFormToLocalStorage();
   }
+
   onClickFileIcon(fileInput: HTMLInputElement): void {
-  fileInput.click();
-}
+    fileInput.click();
+  }
 }

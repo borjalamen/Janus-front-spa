@@ -365,12 +365,7 @@
           </div>
         </div>
 
-        <!-- Tags del procediment al detall 
-        <div class="procedure-tags" *ngIf="procDetall.tags && procDetall.tags.length > 0">
-          <span class="tag-pill" *ngFor="let tag of procDetall.tags">
-            {{ tag }}
-          </span>
-        </div>-->
+        
 
         <!-- Carrusel de steps -->
         <div class="procedure-steps-carousel" *ngIf="procDetall.steps && procDetall.steps.length > 0">
@@ -399,6 +394,9 @@
                         <ng-container *ngIf="s.titulo; else fallbackTitle">
                           {{ s.titulo }} - {{ currentStepIndex + 1 }}
                         </ng-container>
+                        <span class="tag-pill" *ngFor="let tag of s.tags">
+                      {{ tag }}
+                    </span>
                         <ng-template #fallbackTitle>
                           {{ procDetall.titulo || '(Sense títol)' }} - {{ currentStepIndex + 1 }}
                         </ng-template>
@@ -407,14 +405,8 @@
                         {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
                         {{ s.responsable || '-' }}
                       </span>
+                      
                     </div>
-                  </div>
-
-                  <!-- Tags del step al detall -->
-                  <div class="procedure-step-tags" *ngIf="s.tags && s.tags.length > 0">
-                    <span class="tag-pill" *ngFor="let tag of s.tags">
-                      {{ tag }}
-                    </span>
                   </div>
 
                   <div class="procedure-step-detail-body">

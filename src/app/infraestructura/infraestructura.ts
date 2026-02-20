@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 
 interface ProjectItem {
   id?: string;
@@ -22,8 +23,17 @@ export class Infraestructura {
 
   projects: ProjectItem[] = [];
   private baseUrl = `${environment.baseUrl}infra`;
+  private readonly STORAGE_KEY = 'infra_projects';
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private storage: LocalStorageService
+  ) {
+    // primer intentem carregar del cache
+    const cached = this.storage.getObject<ProjectItem[]>(this.STORAGE_KEY);
+    if (cached && cached.length) {
+      this.projects = cached;
+    }
     this.loadProjects();
   }
 
@@ -31,16 +41,19 @@ export class Infraestructura {
     this.http.get<ProjectItem[]>(`${this.baseUrl}/projects`).subscribe({
       next: (data) => {
         this.projects = data;
+        this.storage.setObject(this.STORAGE_KEY, this.projects);
       },
       error: (err) => {
         console.error('Error loading projects, using fallback', err);
-        // Fallback sample data
-        this.projects = [
-          { name: 'PROY-ALPHA', status: 'UP', url: '#' },
-          { name: 'PROY-BETA', status: 'WARN', url: '#' },
-          { name: 'PROY-GAMMA', status: 'DOWN', url: '#' },
-          { name: 'PROY-DELTA', status: 'UP', url: '#' }
-        ];
+        // si hi ha cache, el mantenim; si no, fem fallback de mostra
+        if (!this.projects || this.projects.length === 0) {
+          this.projects = [
+            { name: 'PROY-ALPHA', status: 'UP', url: '#' },
+            { name: 'PROY-BETA', status: 'WARN', url: '#' },
+            { name: 'PROY-GAMMA', status: 'DOWN', url: '#' },
+            { name: 'PROY-DELTA', status: 'UP', url: '#' }
+          ];
+        }
       }
     });
   }

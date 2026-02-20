@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DocumentService, BackendDocument } from '../document.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { LocalStorageService } from '../local-storage.service';
 
 interface Project {
   projectId: string | number;
@@ -38,6 +39,14 @@ export class DocumentsComponent implements OnInit {
   projects: Project[] = [];
   projectsFiltrats: Project[] = [];
 
+  // estat UI
+  searchQuery = '';
+  selectedProjectId: string | number | null = null;
+
+  // claus localStorage
+  private readonly STORAGE_KEY_FILTER = 'documents_filter_v1';
+  private readonly STORAGE_KEY_SELECTED = 'documents_selected_project_v1';
+
   // popup afegir
   projectId!: string | number;
   name = '';
@@ -53,14 +62,22 @@ export class DocumentsComponent implements OnInit {
   deleteProjectPopupOpen = false;
   projectToDelete: Project | null = null;
 
-  constructor(private documentService: DocumentService) {}
+  constructor(
+    private documentService: DocumentService,
+    private storage: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
-    this.loadProjects();
+    const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
+    const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as string | null;
+
+    this.searchQuery = savedFilter || '';
+
+    this.loadProjectsWithUiState(savedFilter, savedSelected);
   }
 
   // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
-  loadProjects() {
+  private loadProjectsWithUiState(savedFilter: string, savedSelected: string | null) {
     console.log('🔍 Carregant projectes...');
     this.documentService
       .getAllFolders()
@@ -76,6 +93,7 @@ export class DocumentsComponent implements OnInit {
           console.log('⚠️ No hi ha carpetes');
           this.projects = [];
           this.projectsFiltrats = [];
+          this.selectedProjectId = null;
           return;
         }
 
@@ -106,8 +124,34 @@ export class DocumentsComponent implements OnInit {
           console.log('✅ Projectes carregats:', projects);
           this.projects = projects;
           this.projectsFiltrats = [...projects];
+
+          // aplicar filtre guardat, si hi ha
+          if (savedFilter && savedFilter.trim()) {
+            this.filtrar(savedFilter);
+          }
+
+          // restaurar projecte seleccionat, si existeix
+          if (savedSelected != null) {
+            const found = this.projects.find(
+              p => String(p.projectId) === String(savedSelected)
+            );
+            if (found) {
+              this.selectedProjectId = found.projectId;
+            } else {
+              this.selectedProjectId = null;
+              this.storage.set(this.STORAGE_KEY_SELECTED, '');
+            }
+          }
         });
       });
+  }
+
+  // accessible si vols refrescar sense perdre estat UI
+  loadProjects() {
+    this.loadProjectsWithUiState(
+      this.searchQuery || '',
+      this.selectedProjectId ? String(this.selectedProjectId) : null
+    );
   }
 
   // ===== POPUP AFEGIR =====
@@ -130,8 +174,11 @@ export class DocumentsComponent implements OnInit {
     }
   }
 
-  // filtre per id o nom
+  // filtre per id o nom (amb persistència)
   filtrar(valor: string) {
+    this.searchQuery = valor || '';
+    this.storage.set(this.STORAGE_KEY_FILTER, this.searchQuery);
+
     if (!valor) {
       this.projectsFiltrats = [...this.projects];
     } else {
@@ -142,6 +189,12 @@ export class DocumentsComponent implements OnInit {
           p.name.toLowerCase().includes(lower)
       );
     }
+  }
+
+  // seleccionar projecte (per remarcar a la UI, opcional)
+  selectProject(p: Project) {
+    this.selectedProjectId = p.projectId;
+    this.storage.set(this.STORAGE_KEY_SELECTED, String(p.projectId));
   }
 
   // ===== AFEGIR DOCUMENT =====
@@ -201,23 +254,27 @@ export class DocumentsComponent implements OnInit {
   }
 
   deleteProject() {
-  if (!this.projectToDelete) return;
+    if (!this.projectToDelete) return;
 
-  const id = this.projectToDelete.projectId;
+    const id = this.projectToDelete.projectId;
 
-  console.log('DELETE PROJECT', id);
+    console.log('DELETE PROJECT', id);
 
-  this.documentService.deleteProjectFiles(id).subscribe({
-    next: () => {
-      // Treu la carpeta de les llistes del front
-      this.projects = this.projects.filter(p => p.projectId !== id);
-      this.projectsFiltrats = this.projects.filter(p => p.projectId !== id);
+    this.documentService.deleteProjectFiles(id).subscribe({
+      next: () => {
+        this.projects = this.projects.filter(p => p.projectId !== id);
+        this.projectsFiltrats = this.projects.filter(p => p.projectId !== id);
 
-      this.cancelDeleteProject(); 
-    },
-    error: err => console.error('Error esborrant projecte', err)
-  });
-}
+        if (this.selectedProjectId && String(this.selectedProjectId) === String(id)) {
+          this.selectedProjectId = null;
+          this.storage.set(this.STORAGE_KEY_SELECTED, '');
+        }
+
+        this.cancelDeleteProject();
+      },
+      error: err => console.error('Error esborrant projecte', err)
+    });
+  }
 
   // ===== VISUALITZAR DOCUMENT =====
   viewDocument(project: Project, doc: BackendDocument) {
@@ -229,10 +286,11 @@ export class DocumentsComponent implements OnInit {
         const newWindow = window.open(url, '_blank');
         if (!newWindow) {
           console.warn('⚠️ Popup bloquejat. Descarregant arxiu...');
-          // Si el popup está bloqueado, forzar descarga
           const link = document.createElement('a');
           link.href = url;
-          link.download = doc;
+          // adapta això al teu tipus real de BackendDocument
+          // @ts-ignore
+          link.download = typeof doc === 'string' ? doc : (doc.name || 'document');
           link.click();
           URL.revokeObjectURL(url);
         }
