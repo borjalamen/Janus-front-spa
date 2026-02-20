@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 import { FormsModule } from '@angular/forms';
 
 type Tool = {
@@ -235,14 +236,14 @@ export class Herramientas {
   confirmMessage = '';
   private confirmAction: (() => void) | null = null;
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private storage: LocalStorageService) {
     this.load();
     this.title = this.translate.instant('MENU.TOOLS') || 'Herramientas';
   }
 
   private load() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = this.storage.get(STORAGE_KEY);
       if (raw) this.tools = JSON.parse(raw) as Tool[];
     } catch (e) { this.tools = []; }
     this.filteredTools = [...this.tools];
@@ -250,7 +251,7 @@ export class Herramientas {
   }
 
   private save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tools));
+    this.storage.setObject(STORAGE_KEY, this.tools);
     this.filteredTools = [...this.tools];
   }
 

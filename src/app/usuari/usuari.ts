@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 
 @Component({
   selector: 'app-usuario',
@@ -14,8 +15,8 @@ export class UsuarioComponent {
   username: string;
   rol: string;
 
-  constructor() {
-    const savedUser = localStorage.getItem('user');
+  constructor(private storage: LocalStorageService) {
+    const savedUser = this.storage.get('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
       this.username = user.username ?? 'Sin usuario';

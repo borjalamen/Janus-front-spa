@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DocumentService, BackendDocument } from '../document.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 
 import { Proyecto, Task } from './projects';
 
@@ -88,7 +89,7 @@ export class ProjectDetailComponent {
   removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine'|'document' , index: number } | null = null;
   removeDocCandidate: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private documentService: DocumentService, private translate: TranslateService) {
+  constructor(private route: ActivatedRoute, private router: Router, private documentService: DocumentService, private translate: TranslateService, private storage: LocalStorageService) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
     const mode = this.route.snapshot.queryParamMap.get('mode') || 'view';
     this.routeMode = mode;
@@ -96,7 +97,7 @@ export class ProjectDetailComponent {
 
     // Cargar proyecto desde localStorage
     try {
-      const raw = localStorage.getItem('projects_v1');
+      const raw = this.storage.get('projects_v1');
       if (raw) {
         const arr = JSON.parse(raw) as Proyecto[];
         this.proyecto = arr.find(p => p.codigoProyecto === code);
@@ -480,7 +481,7 @@ export class ProjectDetailComponent {
       p.horaDaily = p.horaDaily || null;
     } catch(e) { /* ignore */ }
     try {
-      const raw = localStorage.getItem('projects_v1');
+      const raw = this.storage.get('projects_v1');
       const arr: Proyecto[] = raw ? JSON.parse(raw) : [];
       const code = p.codigoProyecto || '';
       const idx = arr.findIndex(x => x.codigoProyecto === code);
@@ -495,7 +496,7 @@ export class ProjectDetailComponent {
       (p as any).equipoMinsait = p.equipoMinsait || [];
       if (idx === -1) arr.push(p);
       else arr[idx] = p;
-      localStorage.setItem('projects_v1', JSON.stringify(arr));
+      this.storage.setObject('projects_v1', arr);
       this.editing = false;
     } catch (e) { /* noop */ }
   }

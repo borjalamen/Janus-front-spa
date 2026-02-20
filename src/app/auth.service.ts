@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { LocalStorageService } from './local-storage.service';
 
 export type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -15,8 +16,8 @@ export class AuthService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-  constructor(private router: Router) {
-    const userStr = localStorage.getItem('user');
+  constructor(private router: Router, private storage: LocalStorageService) {
+    const userStr = this.storage.get('user');
     if (userStr) {
       try {
         this.currentUserSubject.next(JSON.parse(userStr));
@@ -28,12 +29,12 @@ export class AuthService {
 
   login(username: string, rol: Rol) {
     const user: User = { username, rol };
-    localStorage.setItem('user', JSON.stringify(user));
+    this.storage.setObject('user', user);
     this.currentUserSubject.next(user);
   }
 
   logout() {
-    localStorage.removeItem('user');
+    this.storage.remove('user');
     this.currentUserSubject.next(null);
     this.router.navigate(['/home']);
   }

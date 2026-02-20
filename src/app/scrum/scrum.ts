@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { LocalStorageService } from '../local-storage.service';
 
 type ScrumTask = {
   id: string;
@@ -69,9 +70,9 @@ export class ScrumComponent {
     return `linear-gradient(180deg, ${c1}, ${c2})`;
   }
 
-  constructor() {
+  constructor(private storage: LocalStorageService) {
     try {
-      const raw = localStorage.getItem('janus_scrum_tasks');
+      const raw = this.storage.get('janus_scrum_tasks');
       if (raw) {
         const parsed = JSON.parse(raw) as any[];
         // migrate priority values: old strings -> numeric scale
@@ -108,7 +109,7 @@ export class ScrumComponent {
   }
 
   saveStore() {
-    try { localStorage.setItem('janus_scrum_tasks', JSON.stringify(this.tasks)); } catch(e) {}
+    try { this.storage.setObject('janus_scrum_tasks', this.tasks); } catch(e) {}
   }
 
   addTask() {

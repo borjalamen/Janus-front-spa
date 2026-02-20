@@ -22,6 +22,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { HostListener } from '@angular/core';
 import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
+import { LocalStorageService } from './local-storage.service';
 import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
@@ -76,10 +77,11 @@ export class AppComponent implements OnDestroy, OnInit {
     private ai: AiService,
     public translate: TranslateService,
     private authService: AuthService,  // ⬅ Afegit
+    private storage: LocalStorageService,
     private logger: LoggerService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
-    const saved = localStorage.getItem('lang');
+    const saved = this.storage.get('lang');
     const browserLang = this.translate.getBrowserLang();
     const defaultLang = (saved ?? browserLang ?? 'es').toString();
     this.translate.setDefaultLang('es');
@@ -109,7 +111,7 @@ export class AppComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     // load persisted state if present
     try {
-      const raw = localStorage.getItem('menu.expanded');
+      const raw = this.storage.get('menu.expanded');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') this.expandedGroups = parsed;
@@ -140,12 +142,12 @@ export class AppComponent implements OnDestroy, OnInit {
     }
     
     // persist
-    try { localStorage.setItem('menu.expanded', JSON.stringify(this.expandedGroups)); } catch (e) { /* ignore */ }
+    try { this.storage.setObject('menu.expanded', this.expandedGroups); } catch (e) { /* ignore */ }
   }
   
   setGroupOpen(id: string, open: boolean) {
     this.expandedGroups[id] = open;
-    try { localStorage.setItem('menu.expanded', JSON.stringify(this.expandedGroups)); } catch (e) { }
+    try { this.storage.setObject('menu.expanded', this.expandedGroups); } catch (e) { }
   }
 
   // return visible items after applying canShow rules
@@ -179,10 +181,10 @@ export class AppComponent implements OnDestroy, OnInit {
     console.log('Idioma actual antes:', this.translate.currentLang);
     if (!lang) return;
     this.translate.use(lang).subscribe({
-      next: () => {
+        next: () => {
         console.log('✅ Idioma cambiado exitosamente a:', lang);
         console.log('Idioma actual después:', this.translate.currentLang);
-        localStorage.setItem('lang', lang);
+        this.storage.set('lang', lang);
       },
       error: (err) => {
         console.error('❌ Error al cambiar idioma:', err);

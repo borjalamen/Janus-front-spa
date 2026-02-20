@@ -12,6 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
+import { LocalStorageService } from '../local-storage.service';
 
 interface Task {
   id: string;
@@ -27,7 +28,7 @@ interface Task {
   imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, MatCardModule, MatListModule, TranslateModule, MatSnackBarModule],
 })
 export class EstimacionComponent implements OnInit, OnDestroy {
-  constructor(public liveService: LiveEstimationService, private snackBar: MatSnackBar, private translate: TranslateService) {}
+  constructor(public liveService: LiveEstimationService, private snackBar: MatSnackBar, private translate: TranslateService, private storage: LocalStorageService) {}
   weeks: string[] = ['1'];
   tasks: Task[] = [];
   newTaskTitle = '';
@@ -52,7 +53,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
   myId = 'u' + Math.random().toString(36).slice(2,8);
-  myName = (localStorage.getItem('username') as string) || ('User-' + this.myId.slice(-4));
+  myName = (this.storage.get('username') as string) || ('User-' + this.myId.slice(-4));
   myVote: string | number | null = null;
   liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
   private liveSub: Subscription | null = null;
@@ -164,7 +165,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   // Persistence methods
   loadSavedEstimations() {
     try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
+      const raw = this.storage.get(this.STORAGE_KEY);
       this.savedEstimations = raw ? JSON.parse(raw) : [];
     } catch (e) { this.savedEstimations = []; }
   }
@@ -186,7 +187,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       createdAt: new Date().toISOString()
     };
     this.savedEstimations.push(obj);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.savedEstimations));
+    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
     // visual feedback: snackbar + temporary button label change
     const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
     this.snackBar.open(savedMsg, undefined, { duration: 2500 });
@@ -256,7 +257,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   deleteSavedEstimation(id: string) {
     this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.savedEstimations));
+    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
   }
 
   loadSavedIntoCurrent(id: string) {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -221,21 +222,21 @@ export class ProjectsComponent {
     });
   }
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private storage: LocalStorageService) {
     this.title = this.translate.instant('PROJECTS.TITLE');
     this.load();
   }
 
   private load() {
     try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
+      const raw = this.storage.get(this.STORAGE_KEY);
       if (raw) this.projectes = JSON.parse(raw) as Proyecto[];
     } catch (e) { this.projectes = []; }
     this.projectesFiltrats = [...this.projectes];
   }
 
   private save() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.projectes));
+    this.storage.setObject(this.STORAGE_KEY, this.projectes);
     this.projectesFiltrats = [...this.projectes];
   }
 

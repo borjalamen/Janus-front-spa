@@ -3,6 +3,7 @@ import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../local-storage.service';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -77,14 +78,14 @@ export class FormacionComponent {
     this.filtrar(this.lastSearch || '');
   }
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private storage: LocalStorageService) {
     this.load();
     this.translate.get('TRAINING.TITLE').subscribe(t => this.title = t);
   }
 
   private load() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = this.storage.get(STORAGE_KEY);
       if (raw) this.paths = JSON.parse(raw) as TrainingPath[];
     } catch (e) { this.paths = []; }
     this.filteredPaths = [...this.paths];
@@ -93,7 +94,7 @@ export class FormacionComponent {
   }
 
   private save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.paths));
+    this.storage.setObject(STORAGE_KEY, this.paths);
     this.filteredPaths = [...this.paths];
     this.refreshAllCourses();
   }
