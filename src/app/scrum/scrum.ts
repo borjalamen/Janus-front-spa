@@ -24,6 +24,9 @@ type ScrumTask = {
   styleUrls: ['./scrum.css']
 })
 export class ScrumComponent {
+  private readonly STORAGE_TASKS_KEY = 'janus_scrum_tasks';
+  private readonly STORAGE_DRAFT_KEY = 'janus_scrum_draft';
+
   tasks: ScrumTask[] = [];
   newTitle = '';
   newEstimate = '';
@@ -40,42 +43,12 @@ export class ScrumComponent {
   editingId: string | null = null;
   editBuffer: Partial<ScrumTask> = {};
 
-  getPriorityLabelKey(p?: number) {
-    if (p === undefined || p === null) return '';
-    if (p < 25) return 'SCRUM.PRI_LABEL_OPT';
-    if (p >= 100) return 'SCRUM.PRI_LABEL_NOW';
-    return '';
-  }
-
-  generateReadableId() {
-    // Format: T-YYYYMMDD-HHMM-xxxx (readable and unique enough)
-    const d = new Date();
-    const pad = (n:number, l=2) => String(n).padStart(l, '0');
-    const date = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
-    const time = `${pad(d.getHours())}${pad(d.getMinutes())}`;
-    const suffix = Math.random().toString(36).slice(2,6).toUpperCase();
-    return `T-${date}-${time}-${suffix}`;
-  }
-
-  pickCoolColor() {
-    // pick a cool hue between cyan-blue-purple (180-260)
-    const hue = Math.floor(Math.random() * (260 - 180 + 1)) + 180;
-    const sat = 50 + Math.floor(Math.random() * 16); // 50-65
-    const light = 18 + Math.floor(Math.random() * 8); // 18-25
-    const h2 = (hue + 10) % 360;
-    const sat2 = Math.max(30, sat - 8);
-    const light2 = Math.min(40, light + 8);
-    const c1 = `hsl(${hue} ${sat}% ${light}%)`;
-    const c2 = `hsl(${h2} ${sat2}% ${light2}%)`;
-    return `linear-gradient(180deg, ${c1}, ${c2})`;
-  }
-
   constructor(private storage: LocalStorageService) {
+    // carregar tasques
     try {
-      const raw = this.storage.get('janus_scrum_tasks');
+      const raw = this.storage.get(this.STORAGE_TASKS_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as any[];
-        // migrate priority values: old strings -> numeric scale
         this.tasks = parsed.map(p => {
           const t: any = p;
           if (t && t.priority !== undefined && t.priority !== null) {
@@ -89,28 +62,99 @@ export class ScrumComponent {
                 t.priority = isNaN(n) ? 50 : n;
               }
             } else if (typeof t.priority === 'number') {
-              // clamp to 0-150
               if (t.priority < 0) t.priority = 0;
               if (t.priority > 150) t.priority = 150;
             }
           } else {
             t.priority = 50;
           }
-          // ensure description and assignee exist
           if (t.description === undefined) t.description = '';
           if (t.assignee === undefined) t.assignee = null;
-          // ensure id exists and is readable
           if (!t.id || typeof t.id !== 'string') t.id = this.generateReadableId();
           if (!t.color) t.color = this.pickCoolColor();
           return t as ScrumTask;
         });
       }
-    } catch (e) { this.tasks = []; }
+    } catch (e) {
+      this.tasks = [];
+    }
+
+    // carregar draft del formulari
+    this.restoreDraft();
   }
 
-  saveStore() {
-    try { this.storage.setObject('janus_scrum_tasks', this.tasks); } catch(e) {}
+  // ========== AUTOSAVE FORM DRAFT ==========
+
+  saveDraft(): void {
+    const draft = {
+      newTitle: this.newTitle,
+      newEstimate: this.newEstimate,
+      newDescription: this.newDescription,
+      newPriority: this.newPriority,
+      newAssignee: this.newAssignee
+    };
+    this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
+
+  restoreDraft(): void {
+    const draft = this.storage.getObject<{
+      newTitle: string;
+      newEstimate: string;
+      newDescription: string;
+      newPriority: number;
+      newAssignee: string | null;
+    }>(this.STORAGE_DRAFT_KEY);
+
+    if (draft) {
+      this.newTitle = draft.newTitle || '';
+      this.newEstimate = draft.newEstimate || '';
+      this.newDescription = draft.newDescription || '';
+      this.newPriority = draft.newPriority ?? 50;
+      this.newAssignee = draft.newAssignee ?? null;
+    }
+  }
+
+  clearDraft(): void {
+    this.storage.remove(this.STORAGE_DRAFT_KEY);
+  }
+
+  // ========== PRIORITAT / COLOR / ID ==========
+
+  getPriorityLabelKey(p?: number) {
+    if (p === undefined || p === null) return '';
+    if (p < 25) return 'SCRUM.PRI_LABEL_OPT';
+    if (p >= 100) return 'SCRUM.PRI_LABEL_NOW';
+    return '';
+  }
+
+  generateReadableId() {
+    const d = new Date();
+    const pad = (n:number, l=2) => String(n).padStart(l, '0');
+    const date = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const time = `${pad(d.getHours())}${pad(d.getMinutes())}`;
+    const suffix = Math.random().toString(36).slice(2,6).toUpperCase();
+    return `T-${date}-${time}-${suffix}`;
+  }
+
+  pickCoolColor() {
+    const hue = Math.floor(Math.random() * (260 - 180 + 1)) + 180;
+    const sat = 50 + Math.floor(Math.random() * 16);
+    const light = 18 + Math.floor(Math.random() * 8);
+    const h2 = (hue + 10) % 360;
+    const sat2 = Math.max(30, sat - 8);
+    const light2 = Math.min(40, light + 8);
+    const c1 = `hsl(${hue} ${sat}% ${light}%)`;
+    const c2 = `hsl(${h2} ${sat2}% ${light2}%)`;
+    return `linear-gradient(180deg, ${c1}, ${c2})`;
+  }
+
+  // ========== STORAGE DE TASKS ==========
+
+  saveStore() {
+    try { this.storage.setObject(this.STORAGE_TASKS_KEY, this.tasks); } catch(e) {}
+  }
+
+  // ========== CRUD ==========
 
   addTask() {
     if (!this.newTitle || !this.newTitle.trim()) return;
@@ -131,11 +175,18 @@ export class ScrumComponent {
     this.newDescription = '';
     this.newAssignee = null;
     this.saveStore();
+    this.clearDraft();   // un cop afegida, netegem draft
   }
 
   startEdit(task: ScrumTask) {
     this.editingId = task.id;
-    this.editBuffer = { title: task.title, estimate: task.estimate, priority: task.priority, description: task.description, assignee: task.assignee };
+    this.editBuffer = {
+      title: task.title,
+      estimate: task.estimate,
+      priority: task.priority,
+      description: task.description,
+      assignee: task.assignee
+    };
   }
 
   saveEdit(id: string) {

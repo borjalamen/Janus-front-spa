@@ -48,19 +48,27 @@ export class UneteComponent implements OnInit, OnDestroy {
   constructor(private storage: LocalStorageService) {}
 
   ngOnInit(): void {
+    console.log('UneteComponent ngOnInit');
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
+    console.log('UneteComponent saved draft =', saved);
     if (saved) {
       this.form = saved;
     }
   }
 
   ngOnDestroy(): void {
-    // opcional: guardar quan surts del component
+    console.log('UneteComponent ngOnDestroy');
     this.saveDraft();
   }
 
   private saveDraft(): void {
+    console.log('Guardant draft en localStorage', this.form);
     this.storage.setObject(this.STORAGE_KEY, this.form);
+  }
+
+  // Es crida cada vegada que canvia algun camp del formulari
+  onFormChange(): void {
+    this.saveDraft();
   }
 
   sendMail() {

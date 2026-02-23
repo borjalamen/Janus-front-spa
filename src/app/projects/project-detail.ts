@@ -15,6 +15,29 @@ type DBConfig = { identifier?: string; engine?: string; instanceName?: string; h
 type OtherTool = { identifier?: string; name?: string; path?: string; running?: boolean; contactPerson?: string; contactMail?: string };
 type DevMachine = { ip: string; user: string; password: string; identifier?: string; openshiftEnabled?: boolean; openshifts?: OpenShift[]; ram?: string; cpu?: string; disk?: string; dbEnabled: boolean; dbs?: DBConfig[]; otherToolEnabled: boolean; otherTools?: OtherTool[] };
 
+type ProjectDetailTab = 'info' | 'minsait' | 'dev' | 'mind' | 'docs';
+
+type ProjectDetailDraft = {
+  codigoProyecto: string | null;
+  ipString: string;
+  nexusString: string;
+  docsString: string;
+  activeTab: ProjectDetailTab;
+  selectedDevMachineIndex: number;
+  devMachines: DevMachine[];
+  codeRepos: Array<{ name?: string; url?: string }>;
+  artifactRepos: Array<{ name?: string; url?: string }>;
+  jenkinsList: Array<{ name?: string; url?: string }>;
+  crontabList: Array<{ expr?: string; desc?: string }>;
+  sonarList: Array<{ prefix?: string; url?: string; tokenUser?: string; tokenValue?: string }>;
+  equipoMinsait: Proyecto['equipoMinsait'];
+  responsableProyecto: string;
+  responsableTecnico: string;
+  horaDaily: string | null;
+  entornoNotas: string;
+  notasGenerales: string | null;
+};
+
 @Component({
   selector: 'app-project-detail',
   standalone: true,
@@ -24,30 +47,31 @@ type DevMachine = { ip: string; user: string; password: string; identifier?: str
 })
 export class ProjectDetailComponent {
   proyecto?: Proyecto;
+
   private _editing = false;
   get editing() { return this._editing; }
   set editing(v: boolean) {
     const prev = this._editing;
     this._editing = !!v;
-    // if we just entered editing mode, refresh document list to pick latest changes
     if (!prev && this._editing) {
-      try { this.loadProjectDocuments(); } catch(e) { /* noop */ }
+      try { this.loadProjectDocuments(); } catch (e) { /* noop */ }
+      this.restoreDraft();
     }
   }
+
   projectDocs: BackendDocument[] = [];
   selectedDocFile?: File;
   loadingDocs = false;
   docsSearch = '';
-  projectDocMeta: Array<{ name: string; size?: number; contentType?:string; lastModified?:string }> = [];
-  // máximo permitido por el cliente antes de intentar subir (por defecto 20MB)
+  projectDocMeta: Array<{ name: string; size?: number; contentType?: string; lastModified?: string }> = [];
   readonly MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
   uploadError: string | null = null;
-  
+
   // Validación de documentos - popup de confirmación
   showUploadConfirmPopup = false;
   pendingUploadFile?: File;
   uploadValidationErrors: string[] = [];
-  
+
   // Tipos de archivo permitidos
   readonly ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.csv', '.json', '.xml', '.zip', '.rar', '.7z', '.png', '.jpg', '.jpeg', '.gif', '.svg'];
   readonly ALLOWED_MIME_TYPES = [
@@ -71,31 +95,41 @@ export class ProjectDetailComponent {
     'image/gif',
     'image/svg+xml'
   ];
-  
+
   ipString = '';
   nexusString = '';
   docsString = '';
-  activeTab: 'info' | 'minsait' | 'dev' | 'mind' | 'docs' = 'info';
+  activeTab: ProjectDetailTab = 'info';
   routeMode: string = 'view';
   devMachines: DevMachine[] = [];
   selectedDevMachineIndex: number = -1;
+
   // dynamic lists for MIND tools
-  codeRepos: Array<{name?:string; url?:string}> = [];
-  artifactRepos: Array<{name?:string; url?:string}> = [];
-  jenkinsList: Array<{name?:string; url?:string}> = [];
-  crontabList: Array<{expr?:string; desc?:string}> = [];
-  sonarList: Array<{prefix?:string; url?:string; tokenUser?:string; tokenValue?:string}> = [];
+  codeRepos: Array<{ name?: string; url?: string }> = [];
+  artifactRepos: Array<{ name?: string; url?: string }> = [];
+  jenkinsList: Array<{ name?: string; url?: string }> = [];
+  crontabList: Array<{ expr?: string; desc?: string }> = [];
+  sonarList: Array<{ prefix?: string; url?: string; tokenUser?: string; tokenValue?: string }> = [];
+
   // removal workflow
-  removeCandidate: { type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine'|'document' , index: number } | null = null;
+  removeCandidate: { type: 'code' | 'artifact' | 'jenkins' | 'crontab' | 'member' | 'sonar' | 'openshift' | 'db' | 'othertool' | 'machine' | 'document', index: number } | null = null;
   removeDocCandidate: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private documentService: DocumentService, private translate: TranslateService, private storage: LocalStorageService) {
+  // STORAGE KEY per draft de detall
+  private readonly STORAGE_DRAFT_KEY = 'project_detail_draft';
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private documentService: DocumentService,
+    private translate: TranslateService,
+    private storage: LocalStorageService
+  ) {
     const code = this.route.snapshot.paramMap.get('code') || undefined;
     const mode = this.route.snapshot.queryParamMap.get('mode') || 'view';
     this.routeMode = mode;
-    this.editing = mode === 'edit';
+    this._editing = mode === 'edit';
 
-    // Cargar proyecto desde localStorage
     try {
       const raw = this.storage.get('projects_v1');
       if (raw) {
@@ -103,25 +137,88 @@ export class ProjectDetailComponent {
         this.proyecto = arr.find(p => p.codigoProyecto === code);
         if (this.proyecto) {
           const p = this.proyecto;
-          p.ip = (p.ip||[]);
-          // ensure notes field exists for environment
+          p.ip = (p.ip || []);
           (p as any).entornoNotas = (p as any).entornoNotas || '';
-          this.ipString = (p.ip||[]).join(', ');
-          // cargar máquinas de desarrollo si existen
-          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines) ? (p as any).devMachines as DevMachine[] : [];
-          // garantizar estructura de arrays (openshifts, dbs, otherTools) para cada máquina
+          this.ipString = (p.ip || []).join(', ');
+
+          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines)
+            ? (p as any).devMachines as DevMachine[]
+            : [];
+
           this.devMachines = this.devMachines.map(m => ({
-            ip: m.ip || '', user: m.user || '', password: m.password || '', identifier: (m as any).identifier || '',
+            ip: m.ip || '',
+            user: m.user || '',
+            password: m.password || '',
+            identifier: (m as any).identifier || '',
             openshiftEnabled: !!m.openshiftEnabled,
-            openshifts: (m as any).openshifts && Array.isArray((m as any).openshifts) ? (m as any).openshifts.map((o: any) => Object.assign({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, o || {})) : ((m as any).openshift ? [ Object.assign({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, (m as any).openshift || {}) ] : []),
-            ram: (m as any).ram || '', cpu: (m as any).cpu || '', disk: (m as any).disk || '',
+            openshifts: (m as any).openshifts && Array.isArray((m as any).openshifts)
+              ? (m as any).openshifts.map((o: any) =>
+                  Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, o || {})
+                )
+              : ((m as any).openshift
+                ? [Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, (m as any).openshift || {})]
+                : []),
+            ram: (m as any).ram || '',
+            cpu: (m as any).cpu || '',
+            disk: (m as any).disk || '',
             dbEnabled: !!(m as any).dbEnabled,
-            dbs: (m as any).dbs && Array.isArray((m as any).dbs) ? (m as any).dbs.map((d: any) => Object.assign({ identifier: '', engine: '', instanceName: '', host: '', port: '', sid: '', user: '', password: '', description: '', properties: '', contactPerson: '', contactMail: '' }, d || {})) : ((m as any).dbConfig ? [ Object.assign({ identifier: '', engine: '', instanceName: '', host: '', port: '', sid: '', user: '', password: '', description: '', properties: '', contactPerson: '', contactMail: '' }, (m as any).dbConfig || {}) ] : []),
+            dbs: (m as any).dbs && Array.isArray((m as any).dbs)
+              ? (m as any).dbs.map((d: any) =>
+                  Object.assign(
+                    {
+                      identifier: '',
+                      engine: '',
+                      instanceName: '',
+                      host: '',
+                      port: '',
+                      sid: '',
+                      user: '',
+                      password: '',
+                      description: '',
+                      properties: '',
+                      contactPerson: '',
+                      contactMail: ''
+                    },
+                    d || {}
+                  )
+                )
+              : ((m as any).dbConfig
+                ? [Object.assign(
+                    {
+                      identifier: '',
+                      engine: '',
+                      instanceName: '',
+                      host: '',
+                      port: '',
+                      sid: '',
+                      user: '',
+                      password: '',
+                      description: '',
+                      properties: '',
+                      contactPerson: '',
+                      contactMail: ''
+                    },
+                    (m as any).dbConfig || {}
+                  )]
+                : []),
             otherToolEnabled: !!(m as any).otherToolEnabled,
-            otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools) ? (m as any).otherTools.map((t: any) => Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, t || {})) : ((m as any).otherTool ? [ Object.assign({ identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }, (m as any).otherTool || {}) ] : [])
+            otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools)
+              ? (m as any).otherTools.map((t: any) =>
+                  Object.assign(
+                    { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
+                    t || {}
+                  )
+                )
+              : ((m as any).otherTool
+                ? [Object.assign(
+                    { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
+                    (m as any).otherTool || {}
+                  )]
+                : [])
           } as DevMachine));
-          // initialize selected index to first machine if any
+
           this.selectedDevMachineIndex = this.devMachines.length ? 0 : -1;
+
           p.herramientasMind = p.herramientasMind || {} as any;
           const h = p.herramientasMind as any;
           h.nexus = h.nexus || [];
@@ -129,66 +226,154 @@ export class ProjectDetailComponent {
           h.artifactRepos = h.artifactRepos || [];
           h.jenkins = h.jenkins || [];
           h.crontabs = h.crontabs || [];
-          this.codeRepos = (h.codeRepos||[]).slice();
-          this.artifactRepos = (h.artifactRepos||[]).slice();
-          this.jenkinsList = (h.jenkins||[]).slice();
-          this.crontabList = (h.crontabs||[]).slice();
+
+          this.codeRepos = (h.codeRepos || []).slice();
+          this.artifactRepos = (h.artifactRepos || []).slice();
+          this.jenkinsList = (h.jenkins || []).slice();
+          this.crontabList = (h.crontabs || []).slice();
+
           h.sonar = h.sonar || {} as any;
-          // sonar may be stored as object (legacy) or as a list
           if (Array.isArray(h.sonarList) && h.sonarList.length) {
-            this.sonarList = (h.sonarList||[]).slice();
+            this.sonarList = (h.sonarList || []).slice();
           } else if (h.sonar && (h.sonar.prefix || h.sonar.url || h.sonar.tokenUser || h.sonar.tokenValue)) {
-            this.sonarList = [{ prefix: h.sonar.prefix||'', url: h.sonar.url||'', tokenUser: h.sonar.tokenUser||'', tokenValue: h.sonar.tokenValue||'' }];
+            this.sonarList = [{
+              prefix: h.sonar.prefix || '',
+              url: h.sonar.url || '',
+              tokenUser: h.sonar.tokenUser || '',
+              tokenValue: h.sonar.tokenValue || ''
+            }];
           } else {
             this.sonarList = [];
           }
+
           this.nexusString = (h.nexus || []).join('\n');
           (p as any).documentacion = (p as any).documentacion || '';
           this.docsString = (p as any).documentacion || '';
-            // ensure equipoMinsait exists
           (p as any).equipoMinsait = (p as any).equipoMinsait || [];
-            // load project documents for this project (if any)
-            try { this.loadProjectDocuments(); } catch(e) { /* noop */ }
+
+          if (this._editing) {
+            this.restoreDraft();
+          }
+
+          try { this.loadProjectDocuments(); } catch (e) { /* noop */ }
         }
       }
-    } catch (e) { this.proyecto = undefined; }
+    } catch (e) {
+      this.proyecto = undefined;
+    }
   }
 
-  // helper to determine idProyecto for document service
+  // ===== DRAFT LOCALSTORAGE =====
+  saveDraft(): void {
+    if (!this.proyecto) return;
+    const draft: ProjectDetailDraft = {
+      codigoProyecto: this.proyecto.codigoProyecto || null,
+      ipString: this.ipString,
+      nexusString: this.nexusString,
+      docsString: this.docsString,
+      activeTab: this.activeTab,
+      selectedDevMachineIndex: this.selectedDevMachineIndex,
+      devMachines: this.devMachines,
+      codeRepos: this.codeRepos,
+      artifactRepos: this.artifactRepos,
+      jenkinsList: this.jenkinsList,
+      crontabList: this.crontabList,
+      sonarList: this.sonarList,
+      equipoMinsait: this.proyecto.equipoMinsait || [],
+      responsableProyecto: this.proyecto.responsableProyecto || '',
+      responsableTecnico: this.proyecto.responsableTecnico || '',
+      horaDaily: this.proyecto.horaDaily || null,
+      entornoNotas: (this.proyecto as any).entornoNotas || '',
+      notasGenerales: this.proyecto.notasGenerales || null
+    };
+    this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
+  }
+
+  restoreDraft(): void {
+    if (!this.proyecto) return;
+    const draft = this.storage.getObject<ProjectDetailDraft>(this.STORAGE_DRAFT_KEY);
+    if (!draft) return;
+    if (draft.codigoProyecto && draft.codigoProyecto !== this.proyecto.codigoProyecto) return;
+
+    this.ipString = draft.ipString ?? this.ipString;
+    this.nexusString = draft.nexusString ?? this.nexusString;
+    this.docsString = draft.docsString ?? this.docsString;
+
+    const validTabs: ProjectDetailTab[] = ['info', 'minsait', 'dev', 'mind', 'docs'];
+    if (draft.activeTab && validTabs.includes(draft.activeTab)) {
+      this.activeTab = draft.activeTab;
+    }
+
+    this.selectedDevMachineIndex = draft.selectedDevMachineIndex ?? this.selectedDevMachineIndex;
+    if (Array.isArray(draft.devMachines)) this.devMachines = draft.devMachines;
+    if (Array.isArray(draft.codeRepos)) this.codeRepos = draft.codeRepos;
+    if (Array.isArray(draft.artifactRepos)) this.artifactRepos = draft.artifactRepos;
+    if (Array.isArray(draft.jenkinsList)) this.jenkinsList = draft.jenkinsList;
+    if (Array.isArray(draft.crontabList)) this.crontabList = draft.crontabList;
+    if (Array.isArray(draft.sonarList)) this.sonarList = draft.sonarList;
+
+    this.proyecto.equipoMinsait = draft.equipoMinsait || this.proyecto.equipoMinsait || [];
+    this.proyecto.responsableProyecto = draft.responsableProyecto ?? this.proyecto.responsableProyecto;
+    this.proyecto.responsableTecnico = draft.responsableTecnico ?? this.proyecto.responsableTecnico;
+    this.proyecto.horaDaily = draft.horaDaily ?? this.proyecto.horaDaily;
+    (this.proyecto as any).entornoNotas = draft.entornoNotas ?? (this.proyecto as any).entornoNotas;
+    this.proyecto.notasGenerales = draft.notasGenerales ?? this.proyecto.notasGenerales;
+  }
+
+  clearDraft(): void {
+    this.storage.remove(this.STORAGE_DRAFT_KEY);
+  }
+
   private getDocsProjectId(): string | number | undefined {
     if (!this.proyecto) return undefined;
-    // prefer explicit numeric id if present, otherwise use project code
-    // backend accepts either numeric or string ids; use codigoProyecto by default
     return (this.proyecto as any).id || this.proyecto.codigoProyecto;
   }
 
-  // load files for current project
   loadProjectDocuments() {
     const pid = this.getDocsProjectId();
     if (!pid) { this.projectDocs = []; return; }
     this.loadingDocs = true;
-    // try to load metadata first (more informative)
     this.documentService.getFolderInfo(pid).subscribe({
-      next: (meta:any[]) => {
+      next: (meta: any[]) => {
         if (Array.isArray(meta) && meta.length) {
-          // normalize meta entries
-          this.projectDocMeta = meta.map(m => ({ name: (m.name||m.nombre||'').toString(), size: m.size, contentType: m.contentType, lastModified: m.lastModified }));
+          this.projectDocMeta = meta.map(m => ({
+            name: (m.name || m.nombre || '').toString(),
+            size: m.size,
+            contentType: m.contentType,
+            lastModified: m.lastModified
+          }));
           this.projectDocs = this.projectDocMeta.map(m => m.name as any);
           this.loadingDocs = false;
         } else {
-          // fallback to filenames only
           this.documentService.getAllFiles(pid).subscribe({
-            next: (files: BackendDocument[]) => { this.projectDocs = files || []; this.projectDocMeta = (files||[]).map(f => ({ name: f })); this.loadingDocs = false; },
-            error: (err: any) => { console.error('Error cargando documentos proyecto', err); this.projectDocs = []; this.projectDocMeta = []; this.loadingDocs = false; }
+            next: (files: BackendDocument[]) => {
+              this.projectDocs = files || [];
+              this.projectDocMeta = (files || []).map(f => ({ name: f }));
+              this.loadingDocs = false;
+            },
+            error: (err: any) => {
+              console.error('Error cargando documentos proyecto', err);
+              this.projectDocs = [];
+              this.projectDocMeta = [];
+              this.loadingDocs = false;
+            }
           });
         }
       },
       error: (err: any) => {
         console.warn('No se pudo obtener metadata de carpeta', err);
-        // fallback to filenames only
         this.documentService.getAllFiles(pid).subscribe({
-          next: (files: BackendDocument[]) => { this.projectDocs = files || []; this.projectDocMeta = (files||[]).map(f => ({ name: f })); this.loadingDocs = false; },
-          error: (err2: any) => { console.error('Error cargando documentos proyecto', err2); this.projectDocs = []; this.projectDocMeta = []; this.loadingDocs = false; }
+          next: (files: BackendDocument[]) => {
+            this.projectDocs = files || [];
+            this.projectDocMeta = (files || []).map(f => ({ name: f }));
+            this.loadingDocs = false;
+          },
+          error: (err2: any) => {
+            console.error('Error cargando documentos proyecto', err2);
+            this.projectDocs = [];
+            this.projectDocMeta = [];
+            this.loadingDocs = false;
+          }
         });
       }
     });
@@ -197,18 +382,14 @@ export class ProjectDetailComponent {
   onDocFileSelected(event: any) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
-    
-    // Validar el archivo
+
     const validationErrors = this.validateFile(file);
-    
     if (validationErrors.length > 0) {
-      // Archivo no pasa validación - mostrar popup de confirmación
       this.pendingUploadFile = file;
       this.uploadValidationErrors = validationErrors;
       this.showUploadConfirmPopup = true;
       this.selectedDocFile = undefined;
     } else {
-      // Archivo válido - subir directamente
       this.selectedDocFile = file;
       this.uploadProjectDocument();
     }
@@ -216,33 +397,23 @@ export class ProjectDetailComponent {
 
   validateFile(file: File): string[] {
     const errors: string[] = [];
-    
-    // Validar tamaño
     if (file.size > this.MAX_UPLOAD_BYTES) {
       errors.push(`El archivo excede el tamaño máximo permitido (${this.formatBytes(file.size)} > ${this.formatBytes(this.MAX_UPLOAD_BYTES)})`);
     }
-    
-    // Validar extensión
     const fileName = file.name.toLowerCase();
     const hasValidExtension = this.ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(ext));
     if (!hasValidExtension) {
       const ext = fileName.includes('.') ? fileName.substring(fileName.lastIndexOf('.')) : 'sin extensión';
       errors.push(`Tipo de archivo no permitido: ${ext}`);
     }
-    
-    // Validar MIME type (si está disponible)
     if (file.type && !this.ALLOWED_MIME_TYPES.includes(file.type)) {
-      // Solo agregar si también falló la extensión o si el MIME es sospechoso
       if (!hasValidExtension) {
         errors.push(`Tipo MIME no reconocido: ${file.type}`);
       }
     }
-    
-    // Validar nombre de archivo (caracteres especiales problemáticos)
     if (/[<>:"|?*]/.test(file.name)) {
       errors.push('El nombre del archivo contiene caracteres no permitidos');
     }
-    
     return errors;
   }
 
@@ -261,7 +432,6 @@ export class ProjectDetailComponent {
     this.pendingUploadFile = undefined;
     this.uploadValidationErrors = [];
     this.selectedDocFile = undefined;
-    // Reset file input
     try {
       const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
       if (el) el.value = '';
@@ -273,7 +443,6 @@ export class ProjectDetailComponent {
     this.pendingUploadFile = undefined;
     this.uploadValidationErrors = [];
     this.selectedDocFile = undefined;
-    // Reset file input
     try {
       const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
       if (el) el.value = '';
@@ -284,9 +453,7 @@ export class ProjectDetailComponent {
     const pid = this.getDocsProjectId();
     if (!pid || !this.selectedDocFile) return;
     const fileRef = this.selectedDocFile;
-    // reset any previous error
     this.uploadError = null;
-    // client-side size check to avoid 413 errors
     if (fileRef.size != null && fileRef.size > this.MAX_UPLOAD_BYTES) {
       const msg = this.translate.instant('PROJECTS.UPLOAD_ERROR_TOO_LARGE');
       this.uploadError = `${msg} (${this.formatBytes(fileRef.size)} > ${this.formatBytes(this.MAX_UPLOAD_BYTES)})`;
@@ -294,27 +461,20 @@ export class ProjectDetailComponent {
     }
     this.documentService.uploadDocument(pid, this.selectedDocFile).subscribe({
       next: () => {
-        // capture filename then clear selection and file input UI
         const uploadedName = fileRef ? fileRef.name : '';
         this.selectedDocFile = undefined;
         try {
           const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
           if (el) el.value = '';
         } catch (e) {}
-        // try an immediate refresh then start polling to be robust against backend delays
         this.loadingDocs = true;
-        // immediate refresh (may show it already)
-        try { this.loadProjectDocuments(); } catch(e) {}
-        // start polling for new file to appear (more tolerant matching)
-        console.debug('[ProjectDetail] uploaded filename=', uploadedName, 'projectId=', pid);
+        try { this.loadProjectDocuments(); } catch (e) {}
         this.pollForFile(pid, uploadedName || '', 8, 300)
-          .then(found => {
-            // refresh list regardless
+          .then(() => {
             this.loadProjectDocuments();
             this.loadingDocs = false;
           })
           .catch(() => {
-            // if polling failed, still try to reload once
             this.loadProjectDocuments();
             this.loadingDocs = false;
           });
@@ -324,18 +484,20 @@ export class ProjectDetailComponent {
         try {
           if (err && err.status === 413) this.uploadError = this.translate.instant('PROJECTS.UPLOAD_ERROR_TOO_LARGE');
           else this.uploadError = this.translate.instant('PROJECTS.UPLOAD_GENERIC_ERROR');
-        } catch(e) { this.uploadError = this.translate.instant('PROJECTS.UPLOAD_GENERIC_ERROR'); }
+        } catch (e) {
+          this.uploadError = this.translate.instant('PROJECTS.UPLOAD_GENERIC_ERROR');
+        }
       }
     });
   }
 
   formatBytes(bytes: number): string {
     if (!bytes) return '0 B';
-    const units = ['B','KB','MB','GB','TB'];
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
     let i = 0;
     let val = bytes;
-    while (val >= 1024 && i < units.length-1) { val = val/1024; i++; }
-    return `${Math.round(val*10)/10} ${units[i]}`;
+    while (val >= 1024 && i < units.length - 1) { val = val / 1024; i++; }
+    return `${Math.round(val * 10) / 10} ${units[i]}`;
   }
 
   private async pollForFile(projectId: string | number, fileName: string, attempts = 5, initialDelay = 300): Promise<boolean> {
@@ -343,12 +505,9 @@ export class ProjectDetailComponent {
     const target = (fileName || '').toLowerCase().trim();
     let delay = initialDelay;
     for (let i = 0; i < attempts; i++) {
-      console.debug(`[ProjectDetail] poll attempt ${i+1}/${attempts} for '${fileName}' on project ${projectId}`);
       try {
-        // First try folder info (metadata with name)
         try {
           const meta = await this.documentService.getFolderInfo(projectId).toPromise();
-          console.debug('[ProjectDetail] folderInfo=', meta);
           if (Array.isArray(meta)) {
             const found = meta.some((m: any) => {
               const n = (m && (m.name || m.nombre) || '').toString().toLowerCase();
@@ -356,14 +515,9 @@ export class ProjectDetailComponent {
             });
             if (found) return true;
           }
-        } catch (e) {
-          console.debug('[ProjectDetail] folderInfo error', e);
-        }
-
-        // Fallback to getAllFiles which may return simple names
+        } catch (e) {}
         try {
           const files = await this.documentService.getAllFiles(projectId).toPromise();
-          console.debug('[ProjectDetail] getAllFiles=', files);
           if (Array.isArray(files)) {
             const found = files.some((f: any) => {
               const n = (f || '').toString().toLowerCase();
@@ -371,12 +525,8 @@ export class ProjectDetailComponent {
             });
             if (found) return true;
           }
-        } catch (e) {
-          console.debug('[ProjectDetail] getAllFiles error', e);
-        }
-      } catch (e) {
-        // ignore and retry
-      }
+        } catch (e) {}
+      } catch (e) {}
       await new Promise(res => setTimeout(res, delay));
       delay = Math.min(3000, Math.round(delay * 1.8));
     }
@@ -408,7 +558,6 @@ export class ProjectDetailComponent {
   get filteredProjectDocs() {
     const q = (this.docsSearch || '').trim().toLowerCase();
     if (!q) return this.projectDocMeta.length ? this.projectDocMeta : this.projectDocs.map(n => ({ name: n } as any));
-    // search across name, lastModified, size
     const all = this.projectDocMeta.length ? this.projectDocMeta : this.projectDocs.map(n => ({ name: n } as any));
     return all.filter(d => {
       const parts: string[] = [];
@@ -430,7 +579,6 @@ export class ProjectDetailComponent {
     });
   }
 
-  // safe helper to use in templates: always returns an object
   get hm() {
     if (!this.proyecto) return {} as any;
     const p = this.proyecto;
@@ -450,7 +598,7 @@ export class ProjectDetailComponent {
 
   openUrl(href?: string) {
     if (!href) return;
-    try { window.open(href, '_blank'); } catch(e) { /* noop */ }
+    try { window.open(href, '_blank'); } catch (e) { /* noop */ }
   }
 
   back() {
@@ -460,77 +608,122 @@ export class ProjectDetailComponent {
   save() {
     if (!this.proyecto) return;
     const p = this.proyecto;
-    // sincronizar ipString -> proyecto.ip
     try {
-      p.ip = (this.ipString||'').split(',').map(s=>s.trim()).filter(Boolean);
-      // sync nexus textarea -> proyecto.herramientasMind.nexus
+      p.ip = (this.ipString || '').split(',').map(s => s.trim()).filter(Boolean);
       const hm = p.herramientasMind = p.herramientasMind || {} as any;
-      hm.nexus = (this.nexusString||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-      // persist dynamic lists
-      hm.codeRepos = (this.codeRepos||[]).map(c => ({ name: c.name||'', url: c.url||'' }));
-      hm.artifactRepos = (this.artifactRepos||[]).map(a => ({ name: a.name||'', url: a.url||'' }));
-      hm.jenkins = (this.jenkinsList||[]).map(j => ({ name: j.name||'', url: j.url||'' }));
-      hm.crontabs = (this.crontabList||[]).map(c => ({ expr: c.expr||'', desc: c.desc||'' }));
-      // persist sonar list
-      hm.sonarList = (this.sonarList||[]).map(s => ({ prefix: s.prefix||'', url: s.url||'', tokenUser: s.tokenUser||'', tokenValue: s.tokenValue||'' }));
-      // sync documentation
+      hm.nexus = (this.nexusString || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      hm.codeRepos = (this.codeRepos || []).map(c => ({ name: c.name || '', url: c.url || '' }));
+      hm.artifactRepos = (this.artifactRepos || []).map(a => ({ name: a.name || '', url: a.url || '' }));
+      hm.jenkins = (this.jenkinsList || []).map(j => ({ name: j.name || '', url: j.url || '' }));
+      hm.crontabs = (this.crontabList || []).map(c => ({ expr: c.expr || '', desc: c.desc || '' }));
+      hm.sonarList = (this.sonarList || []).map(s => ({
+        prefix: s.prefix || '',
+        url: s.url || '',
+        tokenUser: s.tokenUser || '',
+        tokenValue: s.tokenValue || ''
+      }));
       (p as any).documentacion = this.docsString || '';
-    
-      // Asegurar que los campos de equipo Minsait estén definidos y persistir la lista
       p.equipoMinsait = p.equipoMinsait || [];
       p.horaDaily = p.horaDaily || null;
-    } catch(e) { /* ignore */ }
+    } catch (e) { /* ignore */ }
+
     try {
       const raw = this.storage.get('projects_v1');
       const arr: Proyecto[] = raw ? JSON.parse(raw) : [];
       const code = p.codigoProyecto || '';
       const idx = arr.findIndex(x => x.codigoProyecto === code);
-      // persistir máquinas de desarrollo
-      // ensure new fields are persisted
       (p as any).devMachines = this.devMachines.map(m => ({
-        ip: m.ip, user: m.user, password: m.password, openshiftEnabled: !!m.openshiftEnabled, openshifts: (m.openshifts||[]).map(o => Object.assign({}, o || { identifier:'', user:'', password:'', ram:'', cpu:'', disk:'', volumes: [] })), ram: m.ram, cpu: m.cpu, disk: m.disk,
-        dbEnabled: !!m.dbEnabled, dbs: (m.dbs||[]).map(d => Object.assign({}, d || { identifier:'', engine:'', instanceName:'', host:'', port:'', sid:'', user:'', password:'', description:'', properties:'', contactPerson:'', contactMail:'' })),
-        otherToolEnabled: !!m.otherToolEnabled, otherTools: (m.otherTools||[]).map(t => Object.assign({}, t || { identifier:'', name:'', path:'', running:false, contactPerson:'', contactMail:'' }))
+        ip: m.ip,
+        user: m.user,
+        password: m.password,
+        openshiftEnabled: !!m.openshiftEnabled,
+        openshifts: (m.openshifts || []).map(o =>
+          Object.assign({}, o || { identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] })
+        ),
+        ram: m.ram,
+        cpu: m.cpu,
+        disk: m.disk,
+        dbEnabled: !!m.dbEnabled,
+        dbs: (m.dbs || []).map(d =>
+          Object.assign(
+            {},
+            d || {
+              identifier: '',
+              engine: '',
+              instanceName: '',
+              host: '',
+              port: '',
+              sid: '',
+              user: '',
+              password: '',
+              description: '',
+              properties: '',
+              contactPerson: '',
+              contactMail: ''
+            }
+          )
+        ),
+        otherToolEnabled: !!m.otherToolEnabled,
+        otherTools: (m.otherTools || []).map(t =>
+          Object.assign(
+            {},
+            t || { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }
+          )
+        )
       }));
-      // persistir equipo minsait
       (p as any).equipoMinsait = p.equipoMinsait || [];
       if (idx === -1) arr.push(p);
       else arr[idx] = p;
       this.storage.setObject('projects_v1', arr);
       this.editing = false;
+      this.clearDraft();
     } catch (e) { /* noop */ }
   }
 
   addDevMachine() {
     const newIndex = this.devMachines.length;
-    this.devMachines.push({ ip: '', user: '', password: '', identifier: '', openshiftEnabled: false, openshifts: [], ram: '', dbEnabled: false, dbs: [], otherToolEnabled: false, otherTools: [] });
+    this.devMachines.push({
+      ip: '',
+      user: '',
+      password: '',
+      identifier: '',
+      openshiftEnabled: false,
+      openshifts: [],
+      ram: '',
+      dbEnabled: false,
+      dbs: [],
+      otherToolEnabled: false,
+      otherTools: []
+    });
     this.selectedDevMachineIndex = newIndex;
+    this.saveDraft();
   }
 
   // code repos
-  addCodeRepo() { this.codeRepos.push({ name: '', url: '' }); }
-  removeCodeRepo(i:number) { if (i>=0 && i < this.codeRepos.length) this.codeRepos.splice(i,1); }
+  addCodeRepo() { this.codeRepos.push({ name: '', url: '' }); this.saveDraft(); }
+  removeCodeRepo(i: number) { if (i >= 0 && i < this.codeRepos.length) this.codeRepos.splice(i, 1); this.saveDraft(); }
 
   // artifact repos
-  addArtifactRepo() { this.artifactRepos.push({ name: '', url: '' }); }
-  removeArtifactRepo(i:number) { if (i>=0 && i < this.artifactRepos.length) this.artifactRepos.splice(i,1); }
+  addArtifactRepo() { this.artifactRepos.push({ name: '', url: '' }); this.saveDraft(); }
+  removeArtifactRepo(i: number) { if (i >= 0 && i < this.artifactRepos.length) this.artifactRepos.splice(i, 1); this.saveDraft(); }
 
   // jenkins
-  addJenkins() { this.jenkinsList.push({ name: '', url: '' }); }
-  removeJenkins(i:number) { if (i>=0 && i < this.jenkinsList.length) this.jenkinsList.splice(i,1); }
+  addJenkins() { this.jenkinsList.push({ name: '', url: '' }); this.saveDraft(); }
+  removeJenkins(i: number) { if (i >= 0 && i < this.jenkinsList.length) this.jenkinsList.splice(i, 1); this.saveDraft(); }
 
   // crontab
-  addCrontab() { this.crontabList.push({ expr: '', desc: '' }); }
-  removeCrontab(i:number) { if (i>=0 && i < this.crontabList.length) this.crontabList.splice(i,1); }
+  addCrontab() { this.crontabList.push({ expr: '', desc: '' }); this.saveDraft(); }
+  removeCrontab(i: number) { if (i >= 0 && i < this.crontabList.length) this.crontabList.splice(i, 1); this.saveDraft(); }
 
   // sonar dynamic entries
-  addSonar() { this.sonarList.push({ prefix:'', url:'', tokenUser:'', tokenValue:'' }); }
-  removeSonar(i:number) { if (i>=0 && i < this.sonarList.length) this.sonarList.splice(i,1); }
+  addSonar() { this.sonarList.push({ prefix: '', url: '', tokenUser: '', tokenValue: '' }); this.saveDraft(); }
+  removeSonar(i: number) { if (i >= 0 && i < this.sonarList.length) this.sonarList.splice(i, 1); this.saveDraft(); }
 
   // confirm remove generic
-  promptRemove(type: 'code'|'artifact'|'jenkins'|'crontab'|'member'|'sonar'|'openshift'|'db'|'othertool'|'machine'|'document', index:number) {
+  promptRemove(type: 'code' | 'artifact' | 'jenkins' | 'crontab' | 'member' | 'sonar' | 'openshift' | 'db' | 'othertool' | 'machine' | 'document', index: number) {
     this.removeCandidate = { type, index };
   }
+
   confirmRemove() {
     if (!this.removeCandidate) return;
     const { type, index } = this.removeCandidate;
@@ -557,20 +750,22 @@ export class ProjectDetailComponent {
     }
     this.removeCandidate = null;
   }
+
   cancelRemove() { this.removeCandidate = null; }
 
   addMember() {
     if (!this.proyecto) return;
     this.proyecto.equipoMinsait = this.proyecto.equipoMinsait || [];
     this.proyecto.equipoMinsait.push({ nombre: '', rol: '', email: '' });
+    this.saveDraft();
   }
 
   removeMember(index: number) {
     if (!this.proyecto || !Array.isArray(this.proyecto.equipoMinsait)) return;
     if (index >= 0 && index < this.proyecto.equipoMinsait.length) this.proyecto.equipoMinsait.splice(index, 1);
+    this.saveDraft();
   }
 
-  // confirm remove flow
   removeCandidateIndex: number | null = null;
   promptRemoveMember(index: number) {
     this.removeCandidateIndex = index;
@@ -589,9 +784,9 @@ export class ProjectDetailComponent {
   removeDevMachine(index: number) {
     if (index >= 0 && index < this.devMachines.length) {
       this.devMachines.splice(index, 1);
-      // adjust selection
       if (this.devMachines.length === 0) this.selectedDevMachineIndex = -1;
       else if (this.selectedDevMachineIndex >= this.devMachines.length) this.selectedDevMachineIndex = this.devMachines.length - 1;
+      this.saveDraft();
     }
   }
 
@@ -600,11 +795,12 @@ export class ProjectDetailComponent {
     if (!m) return;
     m.openshifts = m.openshifts || [];
     if (m.openshifts.length === 0) {
-      m.openshifts.push({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
+      m.openshifts.push({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
     }
     const last = m.openshifts[m.openshifts.length - 1];
     last.volumes = last.volumes || [];
     last.volumes.push({ name: '', capacity: '' });
+    this.saveDraft();
   }
 
   removeVolume(machineIndex: number, volumeIndex: number) {
@@ -613,63 +809,89 @@ export class ProjectDetailComponent {
     const last = m.openshifts[m.openshifts.length - 1];
     if (!last || !Array.isArray(last.volumes)) return;
     if (volumeIndex >= 0 && volumeIndex < last.volumes.length) last.volumes.splice(volumeIndex, 1);
+    this.saveDraft();
   }
 
-  // Clearers used by the small remove buttons in dev-duo blocks
   removeOpenshift(machineIndex: number, openshiftIndex?: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     if (typeof openshiftIndex === 'number' && Array.isArray(m.openshifts)) {
-      if (openshiftIndex >=0 && openshiftIndex < m.openshifts.length) m.openshifts.splice(openshiftIndex, 1);
+      if (openshiftIndex >= 0 && openshiftIndex < m.openshifts.length) m.openshifts.splice(openshiftIndex, 1);
     } else {
       m.openshiftEnabled = false;
       m.openshifts = [];
     }
+    this.saveDraft();
   }
 
   removeDb(machineIndex: number, dbIndex?: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     if (typeof dbIndex === 'number' && Array.isArray(m.dbs)) {
-      if (dbIndex >=0 && dbIndex < m.dbs.length) m.dbs.splice(dbIndex, 1);
+      if (dbIndex >= 0 && dbIndex < m.dbs.length) m.dbs.splice(dbIndex, 1);
     } else {
       m.dbEnabled = false;
       m.dbs = [];
     }
+    this.saveDraft();
   }
 
   removeOtherTool(machineIndex: number, otherIndex?: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     if (typeof otherIndex === 'number' && Array.isArray(m.otherTools)) {
-      if (otherIndex >=0 && otherIndex < m.otherTools.length) m.otherTools.splice(otherIndex, 1);
+      if (otherIndex >= 0 && otherIndex < m.otherTools.length) m.otherTools.splice(otherIndex, 1);
     } else {
       m.otherToolEnabled = false;
       m.otherTools = [];
     }
+    this.saveDraft();
   }
 
   addOpenshift(machineIndex: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     m.openshifts = m.openshifts || [];
-    m.openshifts.push({ identifier:'', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
+    m.openshifts.push({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] });
     m.openshiftEnabled = true;
+    this.saveDraft();
   }
 
   addDb(machineIndex: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     m.dbs = m.dbs || [];
-    m.dbs.push({ identifier: '', engine:'', instanceName:'', host:'', port:'', sid:'', user:'', password:'', description:'', properties:'', contactPerson:'', contactMail:'' });
+    m.dbs.push({
+      identifier: '',
+      engine: '',
+      instanceName: '',
+      host: '',
+      port: '',
+      sid: '',
+      user: '',
+      password: '',
+      description: '',
+      properties: '',
+      contactPerson: '',
+      contactMail: ''
+    });
     m.dbEnabled = true;
+    this.saveDraft();
   }
 
   addOtherTool(machineIndex: number) {
     const m = this.devMachines[machineIndex];
     if (!m) return;
     m.otherTools = m.otherTools || [];
-    m.otherTools.push({ identifier: '', name:'', path:'', running:false, contactPerson:'', contactMail:'' });
+    m.otherTools.push({
+      identifier: '',
+      name: '',
+      path: '',
+      running: false,
+      contactPerson: '',
+      contactMail: ''
+    });
     m.otherToolEnabled = true;
+    this.saveDraft();
   }
 }

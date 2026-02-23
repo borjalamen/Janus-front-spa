@@ -49,6 +49,7 @@ export class BitacoraComponent implements OnInit {
   // claus localStorage
   private readonly STORAGE_KEY_TAB = 'bitacora_active_tab_v1';
   private readonly STORAGE_KEY_FILTER = 'bitacora_filter_v1';
+  private readonly STORAGE_KEY_FORM = 'bitacora_form_v1';          // DRAFT
 
   errores: Bitacora[] = [];
   erroresFiltrados: Bitacora[] = [];
@@ -56,10 +57,10 @@ export class BitacoraComponent implements OnInit {
   // Sistema de pestañas
   activeTab: 'crear' | 'listar' | 'solucion' = 'listar';
 
-  // filtre actual (el rep del BuscadorComponent)
+  // filtre actual
   searchText = '';
 
-  // Popup crear/editar
+  // Crear/editar
   mostrarPopup = false;
   editando = false;
   formBitacora: Bitacora = this.getEmptyBitacora();
@@ -69,15 +70,15 @@ export class BitacoraComponent implements OnInit {
   mostrarPopupDelete = false;
   bitacoraAEliminar: Bitacora | null = null;
 
-  // Popup visualizar
+  // Visualització
   mostrarVisualizacion = false;
   bitacoraVisualizacion: Bitacora | null = null;
 
   // Colores por entorno
   coloresEntorno = {
-    minsait: '#1E88E5',      // Azul
-    preproduccion: '#FBC02D', // Amarillo
-    produccion: '#E53935'    // Rojo
+    minsait: '#1E88E5',
+    preproduccion: '#FBC02D',
+    produccion: '#E53935'
   };
 
   constructor(
@@ -96,6 +97,15 @@ export class BitacoraComponent implements OnInit {
     const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
     this.searchText = savedFilter || '';
 
+    // restaurar esborrany del formulari si estava a "crear"
+    if (this.activeTab === 'crear') {
+      const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
+      if (draft) {
+        this.formBitacora = draft;
+        this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
+      }
+    }
+
     this.cargarBitacoras();
   }
 
@@ -110,6 +120,22 @@ export class BitacoraComponent implements OnInit {
     };
   }
 
+  // ===== DRAFT: guardar formulari =====
+  private saveFormDraft(): void {
+    const draft: Bitacora = {
+      ...this.formBitacora,
+      tags: this.tagsInput
+        ? this.tagsInput.split(',').map(t => t.trim()).filter(t => t)
+        : []
+    };
+    this.storage.setObject(this.STORAGE_KEY_FORM, draft);
+  }
+
+  // cridar des de (ngModelChange)
+  onFormChange(): void {
+    this.saveFormDraft();
+  }
+
   // ===== CARGAR =====
   cargarBitacoras() {
     this.http.get<Bitacora[]>(`${this.baseUrl}/all`).subscribe({
@@ -118,7 +144,6 @@ export class BitacoraComponent implements OnInit {
         this.errores = data;
         this.erroresFiltrados = [...data];
 
-        // reaplicar filtre guardat si n’hi ha
         if (this.searchText && this.searchText.trim()) {
           this.filtrar(this.searchText);
         }
@@ -131,12 +156,19 @@ export class BitacoraComponent implements OnInit {
   setActiveTab(tab: 'crear' | 'listar' | 'solucion') {
     this.activeTab = tab;
     this.storage.set(this.STORAGE_KEY_TAB, tab);
+
+    if (tab === 'crear') {
+      const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
+      if (draft) {
+        this.formBitacora = draft;
+        this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
+      }
+    }
   }
 
-  // ===== FILTRAR (rep el valor del buscador) =====
+  // ===== FILTRAR =====
   filtrar(valor: string): void {
     this.searchText = (valor || '').toLowerCase();
-    // guardar al localStorage
     this.storage.set(this.STORAGE_KEY_FILTER, this.searchText);
 
     const v = this.searchText;
@@ -162,8 +194,14 @@ export class BitacoraComponent implements OnInit {
   // ===== POPUP CREAR =====
   abrirPopupCrear() {
     this.editando = false;
-    this.formBitacora = this.getEmptyBitacora();
-    this.tagsInput = '';
+    const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
+    if (draft) {
+      this.formBitacora = draft;
+      this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
+    } else {
+      this.formBitacora = this.getEmptyBitacora();
+      this.tagsInput = '';
+    }
     this.setActiveTab('crear');
   }
 
@@ -178,7 +216,7 @@ export class BitacoraComponent implements OnInit {
     this.setActiveTab('crear');
   }
 
-  // ===== CERRAR POPUP =====
+  // ===== CERRAR =====
   cerrarPopup() {
     this.mostrarPopup = false;
     this.formBitacora = this.getEmptyBitacora();
@@ -189,7 +227,6 @@ export class BitacoraComponent implements OnInit {
 
   // ===== GUARDAR (CREAR O ACTUALIZAR) =====
   guardarBitacora() {
-    // Parsear tags
     this.formBitacora.tags = this.tagsInput
       ? this.tagsInput.split(',').map(t => t.trim()).filter(t => t)
       : [];
@@ -200,7 +237,6 @@ export class BitacoraComponent implements OnInit {
     }
 
     if (this.editando && this.formBitacora.id) {
-      // ACTUALIZAR
       this.http.put(`${this.baseUrl}/update/${this.formBitacora.id}`, this.formBitacora)
         .subscribe({
           next: () => {
@@ -209,12 +245,15 @@ export class BitacoraComponent implements OnInit {
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
             this.editando = false;
+
+            // esborrem draft quan guardem
+            this.storage.remove(this.STORAGE_KEY_FORM);
+
             this.setActiveTab('listar');
           },
           error: (err) => console.error('❌ Error actualizando bitácora', err)
         });
     } else {
-      // CREAR
       this.http.post(`${this.baseUrl}/create`, this.formBitacora)
         .subscribe({
           next: () => {
@@ -222,6 +261,10 @@ export class BitacoraComponent implements OnInit {
             this.cargarBitacoras();
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
+
+            // esborrem draft quan guardem
+            this.storage.remove(this.STORAGE_KEY_FORM);
+
             this.setActiveTab('listar');
           },
           error: (err) => console.error('❌ Error creando bitácora', err)
@@ -266,6 +309,7 @@ export class BitacoraComponent implements OnInit {
       descripcion: '',
       entorno: 'minsait'
     });
+    this.saveFormDraft(); // si afegeixes solució, també guardem
   }
 
   eliminarSolucion(index: number) {
@@ -274,6 +318,7 @@ export class BitacoraComponent implements OnInit {
       this.formBitacora.soluciones.forEach((sol, i) => {
         sol.numero = i + 1;
       });
+      this.saveFormDraft();
     }
   }
 

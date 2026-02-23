@@ -3,145 +3,286 @@
 
   <mat-tab-group [(selectedIndex)]="selectedTab">
     <mat-tab label="{{ 'ESTIMATION.TAB_DO' | translate }}">
-  <!-- Metadata form (always visible; starting the estimation shows controls) -->
-  <div class="metadata-form">
-    <div class="row">
-      <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'ESTIMATION_META.META_NAME' | translate }}" [(ngModel)]="estimationName" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'ESTIMATION_META.META_PROJECT_CODE' | translate }}" [(ngModel)]="projectCode" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'ESTIMATION_META.META_PROJECT_NAME' | translate }}" [(ngModel)]="projectName" />
-      </mat-form-field>
-    </div>
 
-    <div class="row">
-      <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'ESTIMATION_META.META_REQUESTER' | translate }}" [(ngModel)]="requester" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'ESTIMATION_META.META_REQUESTER_EMAIL' | translate }}" [(ngModel)]="requesterEmail" />
-      </mat-form-field>
-    </div>
-
-    <div class="row">
-      <mat-form-field appearance="outline" class="full">
-        <textarea matInput rows="4" placeholder="{{ 'ESTIMATION_META.META_NOTES' | translate }}" [(ngModel)]="notes"></textarea>
-      </mat-form-field>
-    </div>
-
-    
-  </div>
-
-    <div *ngIf="started" class="controls">
-      <div class="controls-left-top">
-        <div class="controls-add">
-          <button type="button" class="action-btn" (click)="addTask()" aria-label="{{ 'ESTIMATION.ADD_TASK' | translate }}">
-            <mat-icon>add</mat-icon>
-            {{ 'ESTIMATION.ADD_TASK' | translate }}
-          </button>
-          <button type="button" class="action-btn" (click)="addWeek()" aria-label="{{ 'ESTIMATION.ADD_WEEK' | translate }}">
-            <mat-icon>calendar_today</mat-icon>
-            {{ 'ESTIMATION.ADD_WEEK' | translate }}
-          </button>
-        </div>
-        <mat-form-field appearance="outline" class="task-field">
-          <input matInput placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}" [(ngModel)]="newTaskTitle" maxlength="200" />
-          <span matSuffix class="char-limit">{{ (newTaskTitle?.length || 0) + '/200' }}</span>
-        </mat-form-field>
-      </div>
-      <div class="controls-right-top">
-        <button type="button" class="action-btn" (click)="saveCurrentEstimation()" aria-label="{{ 'ESTIMATION.SAVE' | translate }}">
-          <mat-icon>save</mat-icon>
-          {{ saveButtonText }}
-        </button>
-      </div>
-      <div class="controls-left-bottom">
-        <button type="button" class="icon-btn export-icon-btn" (click)="exportCsv()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}">
-          <img class="icon-img" src="assets/icons/csv.png" alt="CSV" />
-        </button>
-        <button type="button" class="icon-btn export-icon-btn" (click)="exportPdf()" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}">
-          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
-        </button>
-        <button type="button" class="icon-btn import-icon-btn" (click)="fileInput.click()" aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}" title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}">
-          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
-        </button>
-        <input type="file" accept="application/pdf" #fileInput style="display:none" (change)="onPdfSelected($event)" />
-        <button type="button" class="icon-btn mail-icon-btn" (click)="exportPdfAndMail()" [disabled]="!requesterEmail" aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}" title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}">
-          ✉️
-        </button>
-      </div>
-      <div class="controls-right-bottom clear-controls">
-        <button type="button" class="toggle-btn" [class.selected]="clearMeta" (click)="clearMeta = !clearMeta" aria-pressed="{{ clearMeta }}">
-          {{ 'ESTIMATION.CLEAR_META' | translate }}
-        </button>
-        <button type="button" class="toggle-btn" [class.selected]="clearEstimation" (click)="clearEstimation = !clearEstimation" aria-pressed="{{ clearEstimation }}">
-          {{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}
-        </button>
-        <button type="button" class="emoji-btn delete-emoji" (click)="clearSelected()" aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}" title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}">
-          🗑️
-        </button>
-      </div>
-    </div>
-
-  <div class="table-wrap">
-    <table class="est-table">
-      <thead>
-        <tr>
-          <th>{{ 'ESTIMATION.TASK' | translate }}</th>
-          <th *ngFor="let w of weeks; let i = index">
-            {{ 'ESTIMATION.WEEK' | translate }} {{ w }}
-            <button class="small-link" (click)="removeWeek(i)">x</button>
-          </th>
-          <th>{{ 'ESTIMATION.TOTAL' | translate }}</th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let t of tasks">
-          <td class="task-title">{{ t.title }}</td>
-          <td *ngFor="let w of weeks; let i = index">
-            <input matInput type="number" min="0" step="0.5" [value]="t.estimates[i]" (input)="setEstimate(t, i, $any($event.target).value)" />
-          </td>
-          <td class="col-total">{{ totalForTask(t) | number:'1.2-2' }}</td>
-          <td>
-            <button mat-icon-button color="warn" (click)="removeTask(t.id)" title="{{ 'ESTIMATION.REMOVE_TASK' | translate }}">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-
-      <tfoot>
-        <tr>
-          <td><strong>{{ 'ESTIMATION.TOTAL' | translate }}</strong></td>
-          <td *ngFor="let w of weeks; let i = index"><strong>{{ totalForWeek(i) | number:'1.2-2' }}</strong></td>
-          <td><strong>{{ grandTotal() | number:'1.2-2' }}</strong></td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-    </mat-tab>
-
-    <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
-        <div class="desc-search">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput type="search" [(ngModel)]="searchQuery" [placeholder]="'ESTIMATION.LIST_SEARCH' | translate" [attr.aria-label]="'ESTIMATION.LIST_SEARCH' | translate" />
-            <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="searchQuery='';" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
-              <mat-icon>close</mat-icon>
-            </button>
+      <!-- Metadata form -->
+      <div class="metadata-form">
+        <div class="row">
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION_META.META_NAME' | translate }}"
+              [(ngModel)]="estimationName"
+              (ngModelChange)="onFormChange()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION_META.META_PROJECT_CODE' | translate }}"
+              [(ngModel)]="projectCode"
+              (ngModelChange)="onFormChange()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION_META.META_PROJECT_NAME' | translate }}"
+              [(ngModel)]="projectName"
+              (ngModelChange)="onFormChange()"
+            />
           </mat-form-field>
         </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION_META.META_REQUESTER' | translate }}"
+              [(ngModel)]="requester"
+              (ngModelChange)="onFormChange()"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION_META.META_REQUESTER_EMAIL' | translate }}"
+              [(ngModel)]="requesterEmail"
+              (ngModelChange)="onFormChange()"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="full">
+            <textarea
+              matInput
+              rows="4"
+              placeholder="{{ 'ESTIMATION_META.META_NOTES' | translate }}"
+              [(ngModel)]="notes"
+              (ngModelChange)="onFormChange()"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div *ngIf="started" class="controls">
+        <div class="controls-left-top">
+          <div class="controls-add">
+            <button
+              type="button"
+              class="action-btn"
+              (click)="addTask()"
+              aria-label="{{ 'ESTIMATION.ADD_TASK' | translate }}"
+            >
+              <mat-icon>add</mat-icon>
+              {{ 'ESTIMATION.ADD_TASK' | translate }}
+            </button>
+            <button
+              type="button"
+              class="action-btn"
+              (click)="addWeek()"
+              aria-label="{{ 'ESTIMATION.ADD_WEEK' | translate }}"
+            >
+              <mat-icon>calendar_today</mat-icon>
+              {{ 'ESTIMATION.ADD_WEEK' | translate }}
+            </button>
+          </div>
+          <mat-form-field appearance="outline" class="task-field">
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION.NEW_TASK' | translate }}"
+              [(ngModel)]="newTaskTitle"
+              (ngModelChange)="onFormChange()"
+              maxlength="200"
+            />
+            <span matSuffix class="char-limit">
+              {{ (newTaskTitle?.length || 0) + '/200' }}
+            </span>
+          </mat-form-field>
+        </div>
+
+        <div class="controls-right-top">
+          <button
+            type="button"
+            class="action-btn"
+            (click)="saveCurrentEstimation()"
+            aria-label="{{ 'ESTIMATION.SAVE' | translate }}"
+          >
+            <mat-icon>save</mat-icon>
+            {{ saveButtonText }}
+          </button>
+        </div>
+
+        <div class="controls-left-bottom">
+          <button
+            type="button"
+            class="icon-btn export-icon-btn"
+            (click)="exportCsv()"
+            aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
+            title="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
+          >
+            <img class="icon-img" src="assets/icons/csv.png" alt="CSV" />
+          </button>
+          <button
+            type="button"
+            class="icon-btn export-icon-btn"
+            (click)="exportPdf()"
+            aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
+            title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
+          >
+            <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+          </button>
+          <button
+            type="button"
+            class="icon-btn import-icon-btn"
+            (click)="fileInput.click()"
+            aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
+            title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
+          >
+            <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+          </button>
+          <input
+            type="file"
+            accept="application/pdf"
+            #fileInput
+            style="display:none"
+            (change)="onPdfSelected($event)"
+          />
+          <button
+            type="button"
+            class="icon-btn mail-icon-btn"
+            (click)="exportPdfAndMail()"
+            [disabled]="!requesterEmail"
+            aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}"
+            title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}"
+          >
+            ✉️
+          </button>
+        </div>
+
+        <div class="controls-right-bottom clear-controls">
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.selected]="clearMeta"
+            (click)="clearMeta = !clearMeta"
+            aria-pressed="{{ clearMeta }}"
+          >
+            {{ 'ESTIMATION.CLEAR_META' | translate }}
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            [class.selected]="clearEstimation"
+            (click)="clearEstimation = !clearEstimation"
+            aria-pressed="{{ clearEstimation }}"
+          >
+            {{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}
+          </button>
+          <button
+            type="button"
+            class="emoji-btn delete-emoji"
+            (click)="clearSelected()"
+            aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
+            title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="est-table">
+          <thead>
+            <tr>
+              <th>{{ 'ESTIMATION.TASK' | translate }}</th>
+              <th *ngFor="let w of weeks; let i = index">
+                {{ 'ESTIMATION.WEEK' | translate }} {{ w }}
+                <button class="small-link" (click)="removeWeek(i)">x</button>
+              </th>
+              <th>{{ 'ESTIMATION.TOTAL' | translate }}</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let t of tasks">
+              <td class="task-title">{{ t.title }}</td>
+              <td *ngFor="let w of weeks; let i = index">
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  [value]="t.estimates[i]"
+                  (input)="setEstimate(t, i, $any($event.target).value)"
+                />
+              </td>
+              <td class="col-total">
+                {{ totalForTask(t) | number:'1.2-2' }}
+              </td>
+              <td>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeTask(t.id)"
+                  title="{{ 'ESTIMATION.REMOVE_TASK' | translate }}"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td><strong>{{ 'ESTIMATION.TOTAL' | translate }}</strong></td>
+              <td *ngFor="let w of weeks; let i = index">
+                <strong>{{ totalForWeek(i) | number:'1.2-2' }}</strong>
+              </td>
+              <td><strong>{{ grandTotal() | number:'1.2-2' }}</strong></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </mat-tab>
+
+    <!-- List tab -->
+    <mat-tab label="{{ 'ESTIMATION.TAB_LIST' | translate }}">
+      <div class="desc-search">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            type="search"
+            [(ngModel)]="searchQuery"
+            [placeholder]="'ESTIMATION.LIST_SEARCH' | translate"
+            [attr.aria-label]="'ESTIMATION.LIST_SEARCH' | translate"
+          />
+          <button
+            *ngIf="searchQuery"
+            mat-icon-button
+            matSuffix
+            (click)="searchQuery='';"
+            [attr.aria-label]="'DESCARGABLES.CLEAR' | translate"
+            title="{{ 'DESCARGABLES.CLEAR' | translate }}"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
 
       <div class="list-table">
         <table class="est-table">
           <thead>
-            <tr><th>{{ 'ESTIMATION.NAME' | translate }}</th><th>{{ 'ESTIMATION.PROJECT' | translate }}</th><th>{{ 'ESTIMATION.REQUESTER' | translate }}</th><th>{{ 'ESTIMATION.CREATED' | translate }}</th><th></th></tr>
+            <tr>
+              <th>{{ 'ESTIMATION.NAME' | translate }}</th>
+              <th>{{ 'ESTIMATION.PROJECT' | translate }}</th>
+              <th>{{ 'ESTIMATION.REQUESTER' | translate }}</th>
+              <th>{{ 'ESTIMATION.CREATED' | translate }}</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             <tr *ngFor="let s of filteredSavedEstimations">
@@ -150,8 +291,12 @@
               <td>{{ s.requester }} ({{ s.requesterEmail }})</td>
               <td>{{ s.createdAt | date:'short' }}</td>
               <td>
-                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">{{ 'ESTIMATION.LIST_LOAD' | translate }}</button>
-                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">{{ 'ESTIMATION.LIST_DELETE' | translate }}</button>
+                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">
+                  {{ 'ESTIMATION.LIST_LOAD' | translate }}
+                </button>
+                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">
+                  {{ 'ESTIMATION.LIST_DELETE' | translate }}
+                </button>
               </td>
             </tr>
           </tbody>
@@ -159,22 +304,40 @@
       </div>
     </mat-tab>
 
+    <!-- Live tab -->
     <mat-tab label="{{ 'ESTIMATION.TAB_LIVE' | translate }}">
       <div class="live-root">
         <div *ngIf="!liveSession" class="live-setup">
           <mat-form-field appearance="outline" class="full">
-            <input matInput placeholder="{{ 'ESTIMATION.LIVE.NEW_TASK' | translate }}" [(ngModel)]="liveTaskInput" />
+            <input
+              matInput
+              placeholder="{{ 'ESTIMATION.LIVE.NEW_TASK' | translate }}"
+              [(ngModel)]="liveTaskInput"
+            />
           </mat-form-field>
           <div class="row actions">
-            <button mat-stroked-button color="primary" (click)="startLiveEstimation()">{{ 'ESTIMATION.LIVE.START' | translate }}</button>
-            <button mat-stroked-button (click)="joinCurrentSession()">{{ 'ESTIMATION.LIVE.JOIN' | translate }}</button>
+            <button mat-stroked-button color="primary" (click)="startLiveEstimation()">
+              {{ 'ESTIMATION.LIVE.START' | translate }}
+            </button>
+            <button mat-stroked-button (click)="joinCurrentSession()">
+              {{ 'ESTIMATION.LIVE.JOIN' | translate }}
+            </button>
           </div>
           <p class="muted">{{ 'ESTIMATION.LIVE.HINT' | translate }}</p>
         </div>
 
         <div *ngIf="liveSession" class="live-session">
           <h3>{{ liveSession.task }}</h3>
-          <p>{{ 'ESTIMATION.LIVE.OWNER' | translate }}: <strong>{{ liveSession.ownerId === myId ? ('ESTIMATION.LIVE.YOU' | translate) : liveSession.ownerId }}</strong></p>
+          <p>
+            {{ 'ESTIMATION.LIVE.OWNER' | translate }}:
+            <strong>
+              {{
+                liveSession.ownerId === myId
+                  ? ('ESTIMATION.LIVE.YOU' | translate)
+                  : liveSession.ownerId
+              }}
+            </strong>
+          </p>
 
           <mat-card>
             <mat-card-content>
@@ -183,7 +346,13 @@
                   <div>{{ p.name }}</div>
                   <div class="spacer"></div>
                   <div class="vote-cell">
-                    <span *ngIf="!liveSession.revealed">{{ p.id === myId && p.vote ? ('ESTIMATION.LIVE.YOU_VOTED' | translate) : (p.vote ? '•' : '-') }}</span>
+                    <span *ngIf="!liveSession.revealed">
+                      {{
+                        p.id === myId && p.vote
+                          ? ('ESTIMATION.LIVE.YOU_VOTED' | translate)
+                          : (p.vote ? '•' : '-')
+                      }}
+                    </span>
                     <span *ngIf="liveSession.revealed">{{ p.vote }}</span>
                   </div>
                 </mat-list-item>
@@ -192,13 +361,40 @@
           </mat-card>
 
           <div class="cards">
-            <button mat-flat-button *ngFor="let c of liveCards" (click)="castVote(c)" [class.selected]="myVote==c">{{ c }}</button>
+            <button
+              mat-flat-button
+              *ngFor="let c of liveCards"
+              (click)="castVote(c)"
+              [class.selected]="myVote==c"
+            >
+              {{ c }}
+            </button>
           </div>
 
           <div class="row actions">
-            <button mat-stroked-button color="primary" (click)="revealNow()" *ngIf="liveSession.ownerId===myId && !liveSession.revealed">{{ 'ESTIMATION.LIVE.REVEAL' | translate }}</button>
-            <button mat-stroked-button color="primary" (click)="acceptSessionResult()" *ngIf="liveSession.revealed && !liveSession.accepted">{{ 'ESTIMATION.LIVE.ACCEPT' | translate }}</button>
-            <button mat-stroked-button color="warn" (click)="liveService.abort(liveSession)">{{ 'ESTIMATION.LIVE.ABORT' | translate }}</button>
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="revealNow()"
+              *ngIf="liveSession.ownerId===myId && !liveSession.revealed"
+            >
+              {{ 'ESTIMATION.LIVE.REVEAL' | translate }}
+            </button>
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="acceptSessionResult()"
+              *ngIf="liveSession.revealed && !liveSession.accepted"
+            >
+              {{ 'ESTIMATION.LIVE.ACCEPT' | translate }}
+            </button>
+            <button
+              mat-stroked-button
+              color="warn"
+              (click)="liveService.abort(liveSession)"
+            >
+              {{ 'ESTIMATION.LIVE.ABORT' | translate }}
+            </button>
           </div>
         </div>
       </div>

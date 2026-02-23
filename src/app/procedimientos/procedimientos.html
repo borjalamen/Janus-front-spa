@@ -192,7 +192,7 @@
                   <img
                     [src]="s.imageUrl"
                     alt="Imatge step {{ i + 1 }}"
-                    (click)="obrirImatgeNovaFinestra(s.imageUrl)" />
+                    (click)="openImagePopup(s.imageUrl)" />
                 </div>
               </div>
             </div>
@@ -421,7 +421,7 @@
                         *ngIf="s.imageUrl"
                         [src]="s.imageUrl"
                         alt="Imatge step {{ currentStepIndex + 1 }}"
-                        (click)="obrirImatgeNovaFinestra(s.imageUrl)" />
+                        (click)="openImagePopup(s.imageUrl)" />
                     </div>
                   </div>
                 </div>
@@ -477,5 +477,22 @@
         ✓
       </button>
     </div>
+  </div>
+</div>
+<div
+  class="image-popup-backdrop"
+  *ngIf="showImagePopup"
+  (click)="closeImagePopup()">
+
+  <div class="image-popup-container" (click)="$event.stopPropagation()">
+    <button class="image-popup-close-btn" (click)="closeImagePopup()" title="Tancar">
+      ✕
+    </button>
+
+    <img
+      *ngIf="imagePopupUrl"
+      [src]="imagePopupUrl"
+      alt="Imatge step gran"
+      class="image-popup-img" />
   </div>
 </div>

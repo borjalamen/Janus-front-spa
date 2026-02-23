@@ -18,132 +18,284 @@
       <div class="corner"></div>
       <div class="days-scroll combined">
         <div class="days-cols header-row">
-          <div *ngFor="let d of daysOfWeek()" [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)" class="day-col">{{ formatDay(d) }} <div class="day-sub">{{ d.toUTCString().slice(0,3) }}</div></div>
+          <div
+            *ngFor="let d of daysOfWeek()"
+            [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)"
+            class="day-col"
+          >
+            {{ formatDay(d) }}
+            <div class="day-sub">{{ d.toUTCString().slice(0,3) }}</div>
+          </div>
         </div>
 
         <div class="days-cols full-width body-row">
-          <div *ngFor="let d of daysOfWeek()" [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)" class="day-col-body">
+          <div
+            *ngFor="let d of daysOfWeek()"
+            [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)"
+            class="day-col-body"
+          >
             <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
               <div class="slot-inner">
-                <div *ngFor="let ev of eventsForDay(d)" class="event event-{{ ev.env }}" [ngClass]="{
+                <div
+                  *ngFor="let ev of eventsForDay(d)"
+                  class="event event-{{ ev.env }}"
+                  [ngClass]="{
                     'event-train': ev.eventType==='TRAIN',
                     'event-other': ev.eventType==='OTHER',
                     'event-absence': ev.eventType==='ABSENCE'
-                  }" (click)="$event.stopPropagation(); createOrEditEvent(ev)">
-                  <button *ngIf="ev.id" class="x" title="{{ 'PLANNING.DELETE' | translate }}" (click)="$event.stopPropagation(); deleteEvent(ev.id!)">✖</button>
+                  }"
+                  (click)="$event.stopPropagation(); createOrEditEvent(ev)"
+                >
+                  <button
+                    *ngIf="ev.id"
+                    class="x"
+                    title="{{ 'PLANNING.DELETE' | translate }}"
+                    (click)="$event.stopPropagation(); deleteEvent(ev.id!)"
+                  >
+                    ✖
+                  </button>
                   <div class="event-top">
                     <strong class="project">{{ ev.project }}</strong>
                   </div>
                   <div class="event-hours">{{ ev.startTime }}-{{ ev.endTime }}</div>
                   <div class="event-devops">
-                    <a *ngIf="ev.jiraUrl" class="jira-link" href="{{ ev.jiraUrl }}" target="_blank" (click)="$event.stopPropagation()">🔗</a>
+                    <a
+                      *ngIf="ev.jiraUrl"
+                      class="jira-link"
+                      href="{{ ev.jiraUrl }}"
+                      target="_blank"
+                      (click)="$event.stopPropagation()"
+                    >
+                      🔗
+                    </a>
                     <span class="dev">
-                      <ng-container *ngIf="ev.devOps && ev.devOps.startsWith('PLANNING.'); else plainDev">{{ ev.devOps | translate }}</ng-container>
+                      <ng-container *ngIf="ev.devOps && ev.devOps.startsWith('PLANNING.'); else plainDev">
+                        {{ ev.devOps | translate }}
+                      </ng-container>
                       <ng-template #plainDev>{{ ev.devOps }}</ng-template>
                     </span>
                   </div>
-                  <div *ngIf="ev.responsable" class="event-responsable">{{ ev.responsable }}</div>
+                  <div *ngIf="ev.responsable" class="event-responsable">
+                    {{ ev.responsable }}
+                  </div>
                 </div>
               </div>
               <div class="add-event-row">
-                <button class="add-event-btn" (click)="$event.stopPropagation(); createOrEditEvent(undefined, 'DEV', d)">{{ 'PLANNING.ADD_EVENT' | translate }}</button>
+                <button
+                  class="add-event-btn"
+                  (click)="$event.stopPropagation(); createOrEditEvent(undefined, 'DEV', d)"
+                >
+                  {{ 'PLANNING.ADD_EVENT' | translate }}
+                </button>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
   <div class="legend-bottom">
-    <div class="legend-item"><span class="legend-box dev"></span> {{ 'PLANNING.LEGEND_DEV' | translate }}</div>
-    <div class="legend-item"><span class="legend-box int"></span> {{ 'PLANNING.LEGEND_INT' | translate }}</div>
-    <div class="legend-item"><span class="legend-box pre"></span> {{ 'PLANNING.LEGEND_PRE' | translate }}</div>
-    <div class="legend-item"><span class="legend-box pro"></span> {{ 'PLANNING.LEGEND_PRO' | translate }}</div>
-    <div class="legend-item"><span class="legend-box train"></span> {{ 'PLANNING.LEGEND_TRAIN' | translate }}</div>
-    <div class="legend-item"><span class="legend-box other"></span> {{ 'PLANNING.LEGEND_OTHER' | translate }}</div>
-    <div class="legend-item"><span class="legend-box vac"></span> {{ 'PLANNING.LEGEND_ABSENCE' | translate }}</div>
+    <div class="legend-item">
+      <span class="legend-box dev"></span> {{ 'PLANNING.LEGEND_DEV' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box int"></span> {{ 'PLANNING.LEGEND_INT' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box pre"></span> {{ 'PLANNING.LEGEND_PRE' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box pro"></span> {{ 'PLANNING.LEGEND_PRO' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box train"></span> {{ 'PLANNING.LEGEND_TRAIN' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box other"></span> {{ 'PLANNING.LEGEND_OTHER' | translate }}
+    </div>
+    <div class="legend-item">
+      <span class="legend-box vac"></span> {{ 'PLANNING.LEGEND_ABSENCE' | translate }}
+    </div>
   </div>
-  </div>
+</div>
 
 <!-- Modal -->
-  <div class="modal-backdrop" *ngIf="showModal">
+<div class="modal-backdrop" *ngIf="showModal">
   <div class="modal" (click)="$event.stopPropagation()">
-    <h3>{{ editing ? ('PLANNING.EDIT_EVENT' | translate) : ('PLANNING.NEW_EVENT' | translate) }}</h3>
+    <h3>
+      {{
+        editing
+          ? ('PLANNING.EDIT_EVENT' | translate)
+          : ('PLANNING.NEW_EVENT' | translate)
+      }}
+    </h3>
+
     <div class="form-row">
       <label>{{ 'PLANNING.PROJECT' | translate }}</label>
-      <input [(ngModel)]="draft.project" />
+      <input [(ngModel)]="draft.project" (ngModelChange)="saveDraft()" />
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.TYPE' | translate }}</label>
-      <select [(ngModel)]="draft.eventType" (ngModelChange)="onEventTypeChange($event)">
-        <option [value]="'DEPLOY'">{{ 'PLANNING.TYPE_DEPLOY' | translate }}</option>
-        <option [value]="'TRAIN'">{{ 'PLANNING.TYPE_TRAIN' | translate }}</option>
-        <option [value]="'OTHER'">{{ 'PLANNING.TYPE_OTHER' | translate }}</option>
-        <option [value]="'ABSENCE'">{{ 'PLANNING.TYPE_ABSENCE' | translate }}</option>
+      <select
+        [(ngModel)]="draft.eventType"
+        (ngModelChange)="onEventTypeChange($event)"
+      >
+        <option [value]="'DEPLOY'">
+          {{ 'PLANNING.TYPE_DEPLOY' | translate }}
+        </option>
+        <option [value]="'TRAIN'">
+          {{ 'PLANNING.TYPE_TRAIN' | translate }}
+        </option>
+        <option [value]="'OTHER'">
+          {{ 'PLANNING.TYPE_OTHER' | translate }}
+        </option>
+        <option [value]="'ABSENCE'">
+          {{ 'PLANNING.TYPE_ABSENCE' | translate }}
+        </option>
       </select>
     </div>
-    <div class="form-row" *ngIf="draft.eventType === 'DEPLOY' || draft.eventType === 'OTHER'">
+
+    <div
+      class="form-row"
+      *ngIf="draft.eventType === 'DEPLOY' || draft.eventType === 'OTHER'"
+    >
       <label>{{ 'PLANNING.ENV' | translate }}</label>
-      <select [(ngModel)]="draft.env">
+      <select [(ngModel)]="draft.env" (ngModelChange)="saveDraft()">
         <option *ngFor="let e of envs" [value]="e">{{ e }}</option>
       </select>
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.DATE' | translate }}</label>
-      <input type="date" [(ngModel)]="draft.date" />
+      <input type="date" [(ngModel)]="draft.date" (ngModelChange)="saveDraft()" />
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.START' | translate }}</label>
-      <input type="time" [(ngModel)]="draft.startTime" />
+      <input
+        type="time"
+        [(ngModel)]="draft.startTime"
+        (ngModelChange)="saveDraft()"
+      />
       <label>{{ 'PLANNING.END' | translate }}</label>
-      <input type="time" [(ngModel)]="draft.endTime" />
+      <input
+        type="time"
+        [(ngModel)]="draft.endTime"
+        (ngModelChange)="saveDraft()"
+      />
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.DEVOPS' | translate }}</label>
-      <select [(ngModel)]="draft.devOps">
-          <option *ngFor="let d of devOpsList" [value]="d">
-          <ng-container *ngIf="d && d.startsWith('PLANNING.'); else plain">{{ d | translate }}</ng-container>
+      <select [(ngModel)]="draft.devOps" (ngModelChange)="saveDraft()">
+        <option *ngFor="let d of devOpsList" [value]="d">
+          <ng-container *ngIf="d && d.startsWith('PLANNING.'); else plain">
+            {{ d | translate }}
+          </ng-container>
           <ng-template #plain>{{ d }}</ng-template>
         </option>
       </select>
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.NOTES' | translate }}</label>
-      <textarea rows="3" [(ngModel)]="draft.notes"></textarea>
+      <textarea
+        rows="3"
+        [(ngModel)]="draft.notes"
+        (ngModelChange)="saveDraft()"
+      ></textarea>
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.PERIOD' | translate }}</label>
-      <input type="number" min="1" max="30" [(ngModel)]="draft.periodDays" />
+      <input
+        type="number"
+        min="1"
+        max="30"
+        [(ngModel)]="draft.periodDays"
+        (ngModelChange)="saveDraft()"
+      />
     </div>
-    
+
     <div class="form-row">
       <label>{{ 'PLANNING.JIRA_TASK' | translate }}</label>
-      <input placeholder="https://..." [(ngModel)]="draft.jiraUrl" />
-      <button class="btn small" title="{{ 'PLANNING.EDIT_URL' | translate }}" (click)="$event.stopPropagation(); void 0">✎</button>
+      <input
+        placeholder="https://..."
+        [(ngModel)]="draft.jiraUrl"
+        (ngModelChange)="saveDraft()"
+      />
+      <button
+        class="btn small"
+        title="{{ 'PLANNING.EDIT_URL' | translate }}"
+        (click)="$event.stopPropagation(); void 0"
+      >
+        ✎
+      </button>
     </div>
+
     <div class="form-row">
       <label>{{ 'PLANNING.RESPONSABLE' | translate }}</label>
-      <input [(ngModel)]="draft.responsable" />
+      <input
+        [(ngModel)]="draft.responsable"
+        (ngModelChange)="saveDraft()"
+      />
     </div>
 
-    <div *ngIf="validationError" class="modal-error">{{ validationError }}</div>
+    <div *ngIf="validationError" class="modal-error">
+      {{ validationError }}
+    </div>
 
     <div class="modal-actions">
-      <button class="cancelar-btn" (click)="closeModal()" title="{{ 'PLANNING.CANCEL' | translate }}">✖️</button>
-      <button class="guardar-btn" (click)="saveModal()" title="{{ 'PLANNING.SAVE' | translate }}">✔️</button>
-      <button *ngIf="editing" class="guardar-btn" style="background: #E53935 !important;" (click)="removeFromModal()" title="{{ 'PLANNING.DELETE' | translate }}">🗑️</button>
+      <button
+        class="cancelar-btn"
+        (click)="closeModal()"
+        title="{{ 'PLANNING.CANCEL' | translate }}"
+      >
+        ✖️
+      </button>
+      <button
+        class="guardar-btn"
+        (click)="saveModal()"
+        title="{{ 'PLANNING.SAVE' | translate }}"
+      >
+        ✔️
+      </button>
+      <button
+        *ngIf="editing"
+        class="guardar-btn"
+        style="background: #E53935 !important;"
+        (click)="removeFromModal()"
+        title="{{ 'PLANNING.DELETE' | translate }}"
+      >
+        🗑️
+      </button>
     </div>
   </div>
 </div>
+
 <!-- Confirmation modal -->
 <div class="modal-backdrop" *ngIf="showConfirm">
   <div class="modal" (click)="$event.stopPropagation()">
     <h3>{{ 'PLANNING.DELETE' | translate }}</h3>
     <div class="modal-body">{{ confirmMessage }}</div>
     <div class="modal-actions">
-      <button class="cancelar-btn" (click)="confirmCancel()" title="{{ 'PLANNING.CANCEL' | translate }}">✖️</button>
-      <button class="guardar-btn" (click)="confirmOk()" title="Confirmar">✔️</button>
+      <button
+        class="cancelar-btn"
+        (click)="confirmCancel()"
+        title="{{ 'PLANNING.CANCEL' | translate }}"
+      >
+        ✖️
+      </button>
+      <button
+        class="guardar-btn"
+        (click)="confirmOk()"
+        title="Confirmar"
+      >
+        ✔️
+      </button>
     </div>
   </div>
 </div>

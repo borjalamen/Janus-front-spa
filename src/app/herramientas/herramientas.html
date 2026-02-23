@@ -6,23 +6,31 @@
     <div>
       <button class="jenkins-add-btn" (click)="newTool()">
         <mat-icon inline="true">add</mat-icon>
-        <span>{{ 'TRAINING.NEW_ITEM' | translate }}</span>
+        <span>{{ 'HERRAMIENTAS.NEW_TOOL' | translate }}</span>
       </button>
     </div>
   </div>
 
   <div class="tools-list">
     <ul class="paths-list">
-      <li *ngFor="let t of filteredTools" (click)="selectTool(t)" [class.selected]="selectedTool?.id===t.id">
+      <li *ngFor="let t of filteredTools"
+          (click)="selectTool(t)"
+          [class.selected]="selectedTool?.id===t.id">
         <div class="tool-main">
           <div class="tool-title"><strong>{{ t.name }}</strong></div>
           <div class="tool-desc">{{ t.description }}</div>
           <div class="tool-tags">{{ (t.tags||[]).join(', ') }}</div>
         </div>
         <div class="actions">
-          <button class="icon-btn view" title="Ver" (click)="viewTool(t); $event.stopPropagation()">👁️</button>
-          <button class="icon-btn edit" title="Editar" (click)="editTool(t); $event.stopPropagation()">✏️</button>
-          <button class="icon-btn delete" title="Eliminar" (click)="confirmDeleteTool(t.id, t.name); $event.stopPropagation()">🗑️</button>
+          <button class="icon-btn view"
+                  title="Ver"
+                  (click)="viewTool(t); $event.stopPropagation()">👁️</button>
+          <button class="icon-btn edit"
+                  title="Editar"
+                  (click)="editTool(t); $event.stopPropagation()">✏️</button>
+          <button class="icon-btn delete"
+                  title="Eliminar"
+                  (click)="confirmDeleteTool(t.id, t.name); $event.stopPropagation()">🗑️</button>
         </div>
       </li>
     </ul>
@@ -41,20 +49,69 @@
   <!-- Tool modal -->
   <div class="modal-backdrop" *ngIf="showToolModal">
     <div class="modal" (click)="$event.stopPropagation()">
-      <h3 *ngIf="!editingTool.readonly">{{ editingTool.id ? 'Editar herramienta' : 'Nueva herramienta' }}</h3>
+      <h3 *ngIf="!editingTool.readonly">
+        {{ editingTool.id ? 'Editar herramienta' : 'Nueva herramienta' }}
+      </h3>
       <h3 *ngIf="editingTool.readonly">Ver herramienta</h3>
-      <div class="form-row"><label>Nombre</label><input [(ngModel)]="editingTool.name" [readonly]="editingTool.readonly" /></div>
-      <div class="form-row"><label>Descripción</label><textarea rows="3" [(ngModel)]="editingTool.description" [readonly]="editingTool.readonly"></textarea></div>
-      <div class="form-row"><label>Funcionalidad</label><textarea rows="3" [(ngModel)]="editingTool.functionality" [readonly]="editingTool.readonly"></textarea></div>
-      <div class="form-row"><label>Tags (coma separadas)</label><input [(ngModel)]="editingTool.tagsString" [readonly]="editingTool.readonly" /></div>
-      <div class="form-row"><label>Pasos de instalación</label><textarea rows="4" [(ngModel)]="editingTool.installSteps" [readonly]="editingTool.readonly"></textarea></div>
-      <div class="form-row"><label>Proyectos (coma separadas)</label><input [(ngModel)]="editingTool.projectsString" [readonly]="editingTool.readonly" /></div>
-      <div class="modal-actions" *ngIf="!editingTool.readonly">
-        <button class="cancelar-btn" (click)="showToolModal=false" title="Cancelar">✖️</button>
-        <button class="guardar-btn" (click)="saveTool()" title="Guardar">✔️</button>
+
+      <div class="form-row">
+        <label>Nombre</label>
+        <input [(ngModel)]="editingTool.name"
+               [readonly]="editingTool.readonly"
+               (ngModelChange)="saveDraft()"/>
       </div>
+
+      <div class="form-row">
+        <label>Descripción</label>
+        <textarea rows="3"
+                  [(ngModel)]="editingTool.description"
+                  [readonly]="editingTool.readonly"
+                  (ngModelChange)="saveDraft()"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Funcionalidad</label>
+        <textarea rows="3"
+                  [(ngModel)]="editingTool.functionality"
+                  [readonly]="editingTool.readonly"
+                  (ngModelChange)="saveDraft()"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Tags (coma separadas)</label>
+        <input [(ngModel)]="editingTool.tagsString"
+               [readonly]="editingTool.readonly"
+               (ngModelChange)="saveDraft()"/>
+      </div>
+
+      <div class="form-row">
+        <label>Pasos de instalación</label>
+        <textarea rows="4"
+                  [(ngModel)]="editingTool.installSteps"
+                  [readonly]="editingTool.readonly"
+                  (ngModelChange)="saveDraft()"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Proyectos (coma separadas)</label>
+        <input [(ngModel)]="editingTool.projectsString"
+               [readonly]="editingTool.readonly"
+               (ngModelChange)="saveDraft()"/>
+      </div>
+
+      <div class="modal-actions" *ngIf="!editingTool.readonly">
+        <button class="cancelar-btn"
+                (click)="closeModal()"
+                title="Cancelar">✖️</button>
+        <button class="guardar-btn"
+                (click)="saveTool()"
+                title="Guardar">✔️</button>
+      </div>
+
       <div class="modal-actions" *ngIf="editingTool.readonly">
-        <button class="cancelar-btn" (click)="showToolModal=false" title="Cerrar">✖️</button>
+        <button class="cancelar-btn"
+                (click)="closeModal()"
+                title="Cerrar">✖️</button>
       </div>
     </div>
   </div>

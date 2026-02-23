@@ -17,8 +17,11 @@ export class UsuarioComponent {
 
   constructor(private storage: LocalStorageService) {
     const savedUser = this.storage.get('user');
+    console.log('UsuarioComponent savedUser =', savedUser);
+
     if (savedUser) {
       const user = JSON.parse(savedUser);
+      console.log('UsuarioComponent user obj =', user);
       this.username = user.username ?? 'Sin usuario';
       this.rol = user.rol ?? 'Sin rol';
     } else {

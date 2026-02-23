@@ -25,13 +25,32 @@ interface Task {
   templateUrl: './estimacion.html',
   styleUrls: ['./estimacion.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatTabsModule, MatCardModule, MatListModule, TranslateModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatTabsModule,
+    MatCardModule,
+    MatListModule,
+    TranslateModule,
+    MatSnackBarModule
+  ],
 })
 export class EstimacionComponent implements OnInit, OnDestroy {
-  constructor(public liveService: LiveEstimationService, private snackBar: MatSnackBar, private translate: TranslateService, private storage: LocalStorageService) {}
+  constructor(
+    public liveService: LiveEstimationService,
+    private snackBar: MatSnackBar,
+    private translate: TranslateService,
+    private storage: LocalStorageService
+  ) {}
+
   weeks: string[] = ['1'];
   tasks: Task[] = [];
   newTaskTitle = '';
+
   // metadata
   estimationName = '';
   projectCode = '';
@@ -39,16 +58,20 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   requester = '';
   requesterEmail = '';
   notes = '';
-  started = true; // whether the estimation table is active (enabled by default)
+  started = true; // enabled by default
+
   // persistence
   private STORAGE_KEY = 'estimations_v1';
+  private STORAGE_KEY_DRAFT = 'estimations_form_draft_v1';
   savedEstimations: any[] = [];
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
   saveButtonText = '';
+
   // clear controls
   clearMeta = false;
   clearEstimation = false;
+
   // --- Live estimation state ---
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
@@ -58,17 +81,72 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
   private liveSub: Subscription | null = null;
 
+  // ===== Draft helpers =====
+
+  private saveFormDraft(): void {
+    const draft = {
+      estimationName: this.estimationName,
+      projectCode: this.projectCode,
+      projectName: this.projectName,
+      requester: this.requester,
+      requesterEmail: this.requesterEmail,
+      notes: this.notes,
+      weeks: this.weeks,
+      tasks: this.tasks,
+      newTaskTitle: this.newTaskTitle
+    };
+    this.storage.setObject(this.STORAGE_KEY_DRAFT, draft);
+  }
+
+  onFormChange(): void {
+    this.saveFormDraft();
+  }
+
+  private restoreFormDraft(): void {
+    const draft = this.storage.getObject<{
+      estimationName: string;
+      projectCode: string;
+      projectName: string;
+      requester: string;
+      requesterEmail: string;
+      notes: string;
+      weeks: string[];
+      tasks: Task[];
+      newTaskTitle: string;
+    }>(this.STORAGE_KEY_DRAFT);
+
+    if (draft) {
+      this.estimationName = draft.estimationName || '';
+      this.projectCode = draft.projectCode || '';
+      this.projectName = draft.projectName || '';
+      this.requester = draft.requester || '';
+      this.requesterEmail = draft.requesterEmail || '';
+      this.notes = draft.notes || '';
+      this.weeks = draft.weeks && draft.weeks.length ? [...draft.weeks] : ['1'];
+      this.tasks = draft.tasks ? JSON.parse(JSON.stringify(draft.tasks)) : [];
+      this.newTaskTitle = draft.newTaskTitle || '';
+      this.started = true;
+    }
+  }
+
+  private clearFormDraft(): void {
+    this.storage.remove(this.STORAGE_KEY_DRAFT);
+  }
+
+  // ===== Weeks & tasks =====
+
   addWeek() {
     const next = this.weeks.length + 1;
     this.weeks.push(String(next));
-    // add 0 to each task estimates
     this.tasks.forEach(t => t.estimates.push(0));
+    this.saveFormDraft();
   }
 
   removeWeek(index: number) {
     if (this.weeks.length <= 1) return;
     this.weeks.splice(index, 1);
     this.tasks.forEach(t => t.estimates.splice(index, 1));
+    this.saveFormDraft();
   }
 
   addTask() {
@@ -81,24 +159,27 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     };
     this.tasks.push(t);
     this.newTaskTitle = '';
+    this.saveFormDraft();
   }
 
-  // Start estimation from metadata area but keep metadata visible
+  // Start estimation from metadata
   startFromMetadata() {
     this.started = true;
     if (!this.weeks || this.weeks.length === 0) this.weeks = ['1'];
+    this.saveFormDraft();
   }
 
-  // Live estimation helpers
+  // ===== Live estimation helpers =====
+
   startLiveEstimation() {
     if (!this.liveTaskInput || !this.liveTaskInput.trim()) return;
     const s = this.liveService.createSession(this.liveTaskInput.trim(), this.myId, this.myName);
     this.liveTaskInput = '';
-    this.selectedTab = 0; // stay on realizar
+    this.selectedTab = 0;
   }
 
   joinCurrentSession() {
-    const s = this.liveService['\u005fsession$']?.getValue?.();
+    const s = (this.liveService as any)['_session$']?.getValue?.();
     if (!s) return;
     this.liveService.joinSession(s as LiveSession, { id: this.myId, name: this.myName });
   }
@@ -108,7 +189,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     if (!s) return;
     this.myVote = card;
     this.liveService.vote(s, this.myId, card as any);
-    // automatically reveal if everyone voted
     setTimeout(() => this.tryAutoReveal(), 200);
   }
 
@@ -128,7 +208,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   computeResultFromSession(session: LiveSession) {
-    // compute weighted average ignoring non-numeric votes ('?')
     const vals: number[] = [];
     session.participants.forEach(p => {
       const v = this.parseCardValue(p.vote);
@@ -144,13 +223,13 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     if (!s) return;
     const result = this.computeResultFromSession(s);
     this.liveService.accept(s, result);
-    // add to current estimation grid as an editable row
     const t = {
       id: Date.now().toString(36),
       title: s.task + ' (live)',
       estimates: this.weeks.map((_, i) => i === 0 ? Number(result) : 0)
     } as Task;
     this.tasks.push(t);
+    this.saveFormDraft();
   }
 
   parseCardValue(v: any): number | null {
@@ -162,7 +241,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     return isNaN(n) ? null : n;
   }
 
-  // Persistence methods
+  // ===== Persistence of saved estimations =====
+
   loadSavedEstimations() {
     try {
       const raw = this.storage.get(this.STORAGE_KEY);
@@ -171,7 +251,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   saveCurrentEstimation() {
-    // load current saved list to avoid overwriting
     this.loadSavedEstimations();
     const id = Date.now().toString(36);
     const obj = {
@@ -188,22 +267,21 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     };
     this.savedEstimations.push(obj);
     this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
-    // visual feedback: snackbar + temporary button label change
+
     const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
     this.snackBar.open(savedMsg, undefined, { duration: 2500 });
-    // update button text briefly
+
     const prev = this.saveButtonText;
     this.saveButtonText = savedMsg;
     setTimeout(() => { this.saveButtonText = prev; }, 2000);
-    // go to list
+
     this.selectedTab = 1;
   }
 
   ngOnInit(): void {
     this.loadSavedEstimations();
-    // subscribe live session
+    this.restoreFormDraft();
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
-    // initialize save button label
     this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Guardar estimación';
   }
 
@@ -229,10 +307,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       this.snackBar.open(msg, undefined, { duration: 2000 });
       return;
     }
-    // reset checkboxes
     this.clearMeta = false;
     this.clearEstimation = false;
-    // show confirmation
+    this.saveFormDraft();
     const cfg = { duration: 2200 };
     const msg = this.translate.instant('ESTIMATION.CLEARED') || 'Limpieza realizada';
     this.snackBar.open(msg, undefined, cfg);
@@ -273,15 +350,18 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.tasks = s.tasks ? JSON.parse(JSON.stringify(s.tasks)) : [];
     this.started = true;
     this.selectedTab = 0;
+    this.saveFormDraft();
   }
 
   removeTask(id: string) {
     this.tasks = this.tasks.filter(t => t.id !== id);
+    this.saveFormDraft();
   }
 
   setEstimate(task: Task, weekIndex: number, value: string) {
     const v = parseFloat(value.replace(',', '.')) || 0;
     task.estimates[weekIndex] = v;
+    this.saveFormDraft();
   }
 
   totalForTask(task: Task) {
@@ -298,7 +378,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   exportCsv() {
     const rows: string[] = [];
-    // metadata
     rows.push(`"${this.escapeCsv('Estimation Name')}","${this.escapeCsv(this.estimationName)}"`);
     rows.push(`"${this.escapeCsv('Project Code')}","${this.escapeCsv(this.projectCode)}"`);
     rows.push(`"${this.escapeCsv('Project Name')}","${this.escapeCsv(this.projectName)}"`);
@@ -307,17 +386,14 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     rows.push(`"${this.escapeCsv('Notes')}","${this.escapeCsv(this.notes)}"`);
     rows.push('');
 
-    // header
     const header = ['Tarea', ...this.weeks.map(w => `Semana ${w}`), 'Total'];
     rows.push(header.map(h => `"${this.escapeCsv(h)}"`).join(','));
 
-    // rows
     this.tasks.forEach(t => {
       const r = [this.escapeCsv(t.title), ...t.estimates.map(e => String(e)), String(this.totalForTask(t))];
       rows.push(r.map(c => `"${this.escapeCsv(c)}"`).join(','));
     });
 
-    // footer totals
     const totals = ['Total', ...this.weeks.map((_, i) => String(this.totalForWeek(i))), String(this.grandTotal())];
     rows.push(totals.map(c => `"${this.escapeCsv(c)}"`).join(','));
 
@@ -326,7 +402,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    const filename = (this.estimationName && this.estimationName.trim()) ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.csv' : 'estimation.csv';
+    const filename = (this.estimationName && this.estimationName.trim())
+      ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.csv'
+      : 'estimation.csv';
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
@@ -337,12 +415,10 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   exportPdf() {
-    // Try generating a real PDF and opening it in new window; fallback to printable HTML
     this.createPdfBlob().then(blob => {
       const url = URL.createObjectURL(blob);
       const w = window.open(url, '_blank');
       if (!w) {
-        // fallback: printable HTML
         const html = this.buildPrintableHtml();
         const newWin = window.open('', '_blank', 'width=900,height=700');
         if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
@@ -353,7 +429,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       }
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     }).catch(_ => {
-      // fallback to printable HTML
       const html = this.buildPrintableHtml();
       const newWin = window.open('', '_blank', 'width=900,height=700');
       if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
@@ -395,7 +470,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   async createPdfBlob(): Promise<Blob> {
-    // Lazy import jsPDF to avoid build issues when library missing
     const jsPDFModule = await import('jspdf');
     const jsPDF = jsPDFModule.default;
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -421,7 +495,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       y += split.length * lineHeight + 6;
     }
 
-    // Table header
     const colWidths = [220, ...this.weeks.map(() => 60), 60];
     let x = margin;
     doc.setFillColor(22, 63, 107);
@@ -436,7 +509,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     y += 22;
     doc.setTextColor(0,0,0);
 
-    // Rows
     this.tasks.forEach(t => {
       if (y > 760) { doc.addPage(); y = 40; }
       let cx2 = x + 6;
@@ -447,7 +519,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       y += 18;
     });
 
-    // Footer totals
     y += 8;
     if (y > 760) { doc.addPage(); y = 40; }
     doc.setFontSize(11);
@@ -463,9 +534,10 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   async exportPdfAndMail() {
     try {
       const pdfBlob = await this.createPdfBlob();
-      const fileName = (this.estimationName && this.estimationName.trim()) ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.pdf' : 'estimation.pdf';
+      const fileName = (this.estimationName && this.estimationName.trim())
+        ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.pdf'
+        : 'estimation.pdf';
       const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-      // Try Web Share with files
       // @ts-ignore
       if (navigator && (navigator as any).canShare && (navigator as any).canShare({ files: [file] })) {
         try {
@@ -473,11 +545,10 @@ export class EstimacionComponent implements OnInit, OnDestroy {
           await (navigator as any).share({ files: [file], title: this.estimationName || 'Estimation', text: '' });
           return;
         } catch (err) {
-          // if sharing failed, continue to fallback
+          // continue to fallback
         }
       }
 
-      // Fallback: trigger download and open mailto with instructions to attach
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
@@ -496,7 +567,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       const mailto = `mailto:${encodeURIComponent(this.requesterEmail || '')}?subject=${subject}&body=${body}`;
       window.location.href = mailto;
     } catch (e) {
-      // severe fallback: open printable HTML
       const html = this.buildPrintableHtml();
       const newWin = window.open('', '_blank', 'width=900,height=700');
       if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
@@ -507,16 +577,12 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     }
   }
 
-  // -------------------------
-  // Import PDF (front-end only)
-  // -------------------------
   async onPdfSelected(event: Event) {
     const inp = event.target as HTMLInputElement;
     if (!inp || !inp.files || inp.files.length === 0) return;
     const file = inp.files[0];
     try {
       await this.parsePdf(file);
-      // clear input so selecting same file again triggers change
       inp.value = '';
     } catch (e) {
       console.error('PDF import error', e);
@@ -525,10 +591,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   private async parsePdf(file: File) {
-    // read file bytes
     const data = await file.arrayBuffer();
 
-    // try to fetch local worker and create blob URL
     let workerBlobUrl: string | null = null;
     try {
       const resp = await fetch('/assets/pdf.worker.min.js');
@@ -550,25 +614,21 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     const loading = (pdfjs as any).getDocument({ data, disableWorker: true } as any);
     const doc = await loading.promise;
 
-    // extract text from pages using item coordinates to rebuild lines (more robust)
     let fullText = '';
     for (let i = 1; i <= doc.numPages; i++) {
       const page = await doc.getPage(i);
       const content = await page.getTextContent();
       const items: Array<{ str: string; x: number; y: number }> = (content.items || []).map((it: any) => {
         const tr = it.transform || [];
-        // transform is [a, b, c, d, x, y]
         const x = (tr[4] !== undefined && !isNaN(tr[4])) ? tr[4] : (it.x || 0);
         const y = (tr[5] !== undefined && !isNaN(tr[5])) ? tr[5] : (it.y || 0);
         return { str: it.str || '', x: Number(x), y: Number(y) };
       });
 
-      // group by approximated y coordinate to create visual lines
       items.sort((a, b) => (b.y - a.y) || (a.x - b.x));
       const linesMap = new Map<number, string[]>();
       for (const it of items) {
-        // round Y to near integer to group same visual line
-        const key = Math.round(it.y * 10); // 0.1 precision
+        const key = Math.round(it.y * 10);
         const arr = linesMap.get(key) || [];
         arr.push(it.str);
         linesMap.set(key, arr);
@@ -583,7 +643,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       fullText += '\n' + pageLines.join('\n');
     }
 
-    // Try to extract metadata
     const projectMatch = fullText.match(/Project:\s*([^\n]+)/i);
     if (projectMatch) {
       const pv = projectMatch[1].trim();
@@ -602,7 +661,6 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       if (maybeEmail && maybeEmail.indexOf('@') !== -1) this.requesterEmail = maybeEmail;
     }
 
-    // parse table-like rows
     const lines = fullText.split(/\r?\n/).map(l => l.trim()).filter(l => l);
     let headerIndex = -1;
     for (let i = 0; i < lines.length; i++) {
@@ -627,7 +685,11 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       const estimates = nums.map(n => parseFloat(n.replace(',', '.')) || 0);
       const title = line.replace(/(\s*\d+[\.,]?\d*)+\s*$/,'').trim();
       const estAligned = new Array(weeksCount).fill(0).map((_, idx) => estimates[idx] !== undefined ? estimates[idx] : 0);
-      parsedTasks.push({ id: Date.now().toString(36) + '_' + parsedTasks.length, title: title || 'Task', estimates: estAligned });
+      parsedTasks.push({
+        id: Date.now().toString(36) + '_' + parsedTasks.length,
+        title: title || 'Task',
+        estimates: estAligned
+      });
     }
 
     if (parsedTasks.length > 0) {
@@ -635,12 +697,17 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       this.weeks = new Array(weeksCount).fill(0).map((_, i) => String(i+1));
       this.started = true;
       this.estimationName = this.estimationName || file.name.replace(/\.pdf$/i,'');
+      this.saveFormDraft();
     } else {
       throw new Error('No se han encontrado filas de tareas en el PDF.');
     }
   }
 
   escapeHtml(s: string) {
-    return (s ?? '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (s ?? '').toString()
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
   }
 }

@@ -431,4 +431,17 @@ export class ProcedimientosComponent implements OnInit {
   onClickFileIcon(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
+  showImagePopup = false;
+  imagePopupUrl: string | null = null;
+
+  openImagePopup(url?: string) {
+    if (!url) return;
+    this.imagePopupUrl = url;
+    this.showImagePopup = true;
+  }
+
+  closeImagePopup() {
+    this.showImagePopup = false;
+    this.imagePopupUrl = null;
+  }
 }

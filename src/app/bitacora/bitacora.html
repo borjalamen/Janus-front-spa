@@ -7,11 +7,19 @@
 
   <!-- Pestañas -->
   <div class="tabs">
-    <button class="tab" [class.active]="activeTab==='crear'" (click)="activeTab='crear'">
+    <button
+      class="tab"
+      [class.active]="activeTab==='crear'"
+      (click)="setActiveTab('crear')"
+    >
       <mat-icon inline="true">add</mat-icon>
       {{ 'ERRORS.TAB_CREATE' | translate }}
     </button>
-    <button class="tab" [class.active]="activeTab==='listar'" (click)="activeTab='listar'; cerrarVisualizacion()">
+    <button
+      class="tab"
+      [class.active]="activeTab==='listar'"
+      (click)="setActiveTab('listar'); cerrarVisualizacion()"
+    >
       <mat-icon inline="true">list</mat-icon>
       {{ 'ERRORS.TAB_LIST' | translate }}
     </button>
@@ -24,28 +32,64 @@
 
       <div class="form-field">
         <label>{{ 'ERRORS.FIELD_CONTEXT' | translate }}</label>
-        <input type="text" [(ngModel)]="formBitacora.contexto" placeholder="Contexto del error" />
+        <input
+          type="text"
+          [(ngModel)]="formBitacora.contexto"
+          (ngModelChange)="onFormChange()"
+          placeholder="Contexto del error"
+        />
       </div>
 
       <div class="form-field">
         <label>{{ 'ERRORS.FIELD_ERROR' | translate }}</label>
-        <textarea rows="3" [(ngModel)]="formBitacora.error" placeholder="Descripción del error"></textarea>
+        <textarea
+          rows="3"
+          [(ngModel)]="formBitacora.error"
+          (ngModelChange)="onFormChange()"
+          placeholder="Descripción del error"
+        ></textarea>
       </div>
 
       <div class="form-field">
         <label>Entorno</label>
         <div class="entorno-botones-wrapper">
-          <button type="button" class="entorno-btn" [class.active]="formBitacora.entorno === 'minsait'" (click)="formBitacora.entorno = 'minsait'" [style.--color]="'#1E88E5'" title="Minsait">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="formBitacora.entorno === 'minsait'"
+            (click)="formBitacora.entorno = 'minsait'; onFormChange()"
+            [style.--color]="'#1E88E5'"
+            title="Minsait"
+          >
             Minsait
           </button>
-          <button type="button" class="entorno-btn" [class.active]="formBitacora.entorno === 'preproduccion'" (click)="formBitacora.entorno = 'preproduccion'" [style.--color]="'#FBC02D'" title="Preproducción">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="formBitacora.entorno === 'preproduccion'"
+            (click)="formBitacora.entorno = 'preproduccion'; onFormChange()"
+            [style.--color]="'#FBC02D'"
+            title="Preproducción"
+          >
             Preproducción
           </button>
-          <button type="button" class="entorno-btn" [class.active]="formBitacora.entorno === 'produccion'" (click)="formBitacora.entorno = 'produccion'" [style.--color]="'#E53935'" title="Producción">
+          <button
+            type="button"
+            class="entorno-btn"
+            [class.active]="formBitacora.entorno === 'produccion'"
+            (click)="formBitacora.entorno = 'produccion'; onFormChange()"
+            [style.--color]="'#E53935'"
+            title="Producción"
+          >
             Producción
           </button>
-          <div class="entorno-icon-preview" [style.background]="'linear-gradient(135deg, ' + getColorEntorno(formBitacora.entorno) + ', ' + getColorEntorno(formBitacora.entorno) + 'cc)'">
-            <mat-icon [style.color]="getColorEntorno(formBitacora.entorno)">bug_report</mat-icon>
+          <div
+            class="entorno-icon-preview"
+            [style.background]="'linear-gradient(135deg, ' + getColorEntorno(formBitacora.entorno) + ', ' + getColorEntorno(formBitacora.entorno) + 'cc)'"
+          >
+            <mat-icon [style.color]="getColorEntorno(formBitacora.entorno)">
+              bug_report
+            </mat-icon>
           </div>
         </div>
       </div>
@@ -55,36 +99,64 @@
           <label>{{ 'ERRORS.FIELD_SOLUTION' | translate }}</label>
         </div>
         <div class="soluciones-container">
-          <button type="button" class="guardar-btn agregar-solucion-btn" (click)="agregarSolucion()" title="Agregar Solución">
+          <button
+            type="button"
+            class="guardar-btn agregar-solucion-btn"
+            (click)="agregarSolucion()"
+            title="Agregar Solución"
+          >
             <mat-icon>add</mat-icon>
           </button>
-          <div *ngIf="!formBitacora.soluciones || formBitacora.soluciones.length === 0" class="no-soluciones">
+
+          <div
+            *ngIf="!formBitacora.soluciones || formBitacora.soluciones.length === 0"
+            class="no-soluciones"
+          >
             <p>No hay soluciones agregadas</p>
           </div>
-          
-          <div *ngFor="let solucion of formBitacora.soluciones; let i = index" class="solucion-item">
+
+          <div
+            *ngFor="let solucion of formBitacora.soluciones; let i = index"
+            class="solucion-item"
+          >
             <div class="solucion-header">
               <span class="solucion-numero">Paso {{ solucion.numero }}</span>
-              <select [(ngModel)]="solucion.entorno" class="solucion-entorno-select" [style.borderColor]="getColorEntorno(solucion.entorno)">
+              <select
+                [(ngModel)]="solucion.entorno"
+                (ngModelChange)="onFormChange()"
+                class="solucion-entorno-select"
+                [style.borderColor]="getColorEntorno(solucion.entorno)"
+              >
                 <option value="minsait">🔵 Minsait</option>
                 <option value="preproduccion">🟡 Preproducción</option>
                 <option value="produccion">🔴 Producción</option>
               </select>
-              <button type="button" class="eliminar-solucion-btn" (click)="eliminarSolucion(i)" title="Eliminar solución">
+              <button
+                type="button"
+                class="eliminar-solucion-btn"
+                (click)="eliminarSolucion(i)"
+                title="Eliminar solución"
+              >
                 <mat-icon>close</mat-icon>
               </button>
             </div>
             <div class="solucion-content-wrapper">
               <input type="file" #fileInput style="display: none;" />
-              <button type="button" class="file-btn" (click)="fileInput.click()" title="Añadir archivo">
-                <img src="assets/images/File.png" alt="Archivo">
+              <button
+                type="button"
+                class="file-btn"
+                (click)="fileInput.click()"
+                title="Añadir archivo"
+              >
+                <img src="assets/images/File.png" alt="Archivo" />
               </button>
-              <textarea 
-                [(ngModel)]="solucion.descripcion" 
-                rows="2" 
+              <textarea
+                [(ngModel)]="solucion.descripcion"
+                (ngModelChange)="onFormChange()"
+                rows="2"
                 placeholder="Descripción de la solución"
-                class="solucion-textarea">
-              </textarea>
+                class="solucion-textarea"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -92,24 +164,55 @@
 
       <div class="form-field fecha-tags-wrapper">
         <div class="fecha-tags-labels">
-          <label class="fecha-label">{{ 'ERRORS.FIELD_DATE' | translate }}</label>
-          <label class="tags-label">{{ 'ERRORS.FIELD_TAGS' | translate }}</label>
+          <label class="fecha-label">
+            {{ 'ERRORS.FIELD_DATE' | translate }}
+          </label>
+          <label class="tags-label">
+            {{ 'ERRORS.FIELD_TAGS' | translate }}
+          </label>
         </div>
         <div class="fecha-tags-input-wrapper">
-          <input type="date" #calendarioInput [(ngModel)]="formBitacora.fecha" class="calendario-input" />
-          <button type="button" class="calendario-btn" (click)="calendarioInput.showPicker()" title="Seleccionar fecha">
+          <input
+            type="date"
+            #calendarioInput
+            [(ngModel)]="formBitacora.fecha"
+            (ngModelChange)="onFormChange()"
+            class="calendario-input"
+          />
+          <button
+            type="button"
+            class="calendario-btn"
+            (click)="calendarioInput.showPicker()"
+            title="Seleccionar fecha"
+          >
             <mat-icon>calendar_today</mat-icon>
           </button>
-          <span class="fecha-display">{{ formBitacora.fecha || 'Sin fecha' }}</span>
-          <input type="text" [(ngModel)]="tagsInput" placeholder="Tags separados por coma" class="tags-input" />
+          <span class="fecha-display">
+            {{ formBitacora.fecha || 'Sin fecha' }}
+          </span>
+          <input
+            type="text"
+            [(ngModel)]="tagsInput"
+            (ngModelChange)="onFormChange()"
+            placeholder="Tags separados por coma"
+            class="tags-input"
+          />
         </div>
       </div>
 
       <div class="form-actions">
-        <button class="cancelar-btn" (click)="cerrarPopup()" title="Cancelar">
+        <button
+          class="cancelar-btn"
+          (click)="cerrarPopup()"
+          title="Cancelar"
+        >
           ✗
         </button>
-        <button class="guardar-btn" (click)="guardarBitacora()" [title]="editando ? 'Actualizar' : 'Guardar'">
+        <button
+          class="guardar-btn"
+          (click)="guardarBitacora()"
+          [title]="editando ? 'Actualizar' : 'Guardar'"
+        >
           ✓
         </button>
       </div>
@@ -122,62 +225,130 @@
 
     <div class="bitacora-list" *ngIf="erroresFiltrados.length > 0">
       <div *ngFor="let e of erroresFiltrados" class="bitacora-row">
-        <div class="bitacora-icon" [style.background]="'linear-gradient(135deg, ' + getColorEntorno(e.entorno) + ', ' + getColorEntorno(e.entorno) + 'cc)'">
-          <mat-icon [style.color]="getColorEntorno(e.entorno)">bug_report</mat-icon>
+        <div
+          class="bitacora-icon"
+          [style.background]="'linear-gradient(135deg, ' + getColorEntorno(e.entorno) + ', ' + getColorEntorno(e.entorno) + 'cc)'"
+        >
+          <mat-icon [style.color]="getColorEntorno(e.entorno)">
+            bug_report
+          </mat-icon>
         </div>
-        
+
         <div class="bitacora-info">
           <div class="bitacora-title-row">
-            <strong class="bitacora-contexto">{{ e.contexto || '(Sin contexto)' }}</strong>
+            <strong class="bitacora-contexto">
+              {{ e.contexto || '(Sin contexto)' }}
+            </strong>
             <span class="bitacora-fecha">{{ e.fecha }}</span>
           </div>
           <div class="bitacora-error">{{ e.error }}</div>
-          
-          <div class="bitacora-soluciones" *ngIf="e.soluciones && e.soluciones.length > 0" [style.borderLeftColor]="getColorEntorno(e.soluciones[0]?.entorno || e.entorno)">
-            <div *ngFor="let solucion of e.soluciones" class="solucion-display">
-              <mat-icon class="bombilla-icon" [style.color]="getColorEntorno(solucion.entorno)">lightbulb</mat-icon>
+
+          <div
+            class="bitacora-soluciones"
+            *ngIf="e.soluciones && e.soluciones.length > 0"
+            [style.borderLeftColor]="getColorEntorno(e.soluciones[0]?.entorno || e.entorno)"
+          >
+            <div
+              *ngFor="let solucion of e.soluciones"
+              class="solucion-display"
+            >
+              <mat-icon
+                class="bombilla-icon"
+                [style.color]="getColorEntorno(solucion.entorno)"
+              >
+                lightbulb
+              </mat-icon>
               <div class="solucion-text">
-                <strong>Paso {{ solucion.numero }} - {{ getNombreEntorno(solucion.entorno) }}</strong>
+                <strong>
+                  Paso {{ solucion.numero }} -
+                  {{ getNombreEntorno(solucion.entorno) }}
+                </strong>
                 <p>{{ solucion.descripcion }}</p>
               </div>
             </div>
           </div>
-          
-          <div class="bitacora-tags" *ngIf="e.tags && e.tags.length > 0">
-            <span class="tag" *ngFor="let tag of e.tags">{{ tag }}</span>
+
+          <div
+            class="bitacora-tags"
+            *ngIf="e.tags && e.tags.length > 0"
+          >
+            <span class="tag" *ngFor="let tag of e.tags">
+              {{ tag }}
+            </span>
           </div>
-          
+
           <div class="bitacora-actions">
-            <button class="action-btn view-btn" (click)="toggleVisualizacion(e)" title="Ver pasos" *ngIf="e.soluciones && e.soluciones.length > 0">
-              <mat-icon>{{ bitacoraVisualizacion?.id === e.id && mostrarVisualizacion ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <button
+              class="action-btn view-btn"
+              (click)="toggleVisualizacion(e)"
+              title="Ver pasos"
+              *ngIf="e.soluciones && e.soluciones.length > 0"
+            >
+              <mat-icon>
+                {{
+                  bitacoraVisualizacion?.id === e.id && mostrarVisualizacion
+                    ? 'visibility_off'
+                    : 'visibility'
+                }}
+              </mat-icon>
             </button>
-            <button class="action-btn edit-btn" (click)="abrirPopupEditar(e)" title="Editar">
+            <button
+              class="action-btn edit-btn"
+              (click)="abrirPopupEditar(e)"
+              title="Editar"
+            >
               ✏️
             </button>
-            <button class="action-btn delete-btn" (click)="confirmarEliminar(e)" title="Eliminar">
+            <button
+              class="action-btn delete-btn"
+              (click)="confirmarEliminar(e)"
+              title="Eliminar"
+            >
               🗑️
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- Visualización de solución inline -->
-      <div class="solution-inline-container" *ngIf="mostrarVisualizacion && bitacoraVisualizacion">
+      <div
+        class="solution-inline-container"
+        *ngIf="mostrarVisualizacion && bitacoraVisualizacion"
+      >
         <div class="solution-inline-header">
           <h3>{{ bitacoraVisualizacion.contexto || '(Sin contexto)' }}</h3>
-          <button class="close-inline-btn" (click)="cerrarVisualizacion()" title="Cerrar">
+          <button
+            class="close-inline-btn"
+            (click)="cerrarVisualizacion()"
+            title="Cerrar"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </div>
-        <p class="solution-inline-error">{{ bitacoraVisualizacion.error }}</p>
-        <div class="solution-entorno-badge" [style.backgroundColor]="getColorEntorno(bitacoraVisualizacion.entorno)" [style.borderColor]="getColorEntorno(bitacoraVisualizacion.entorno)">
+        <p class="solution-inline-error">
+          {{ bitacoraVisualizacion.error }}
+        </p>
+        <div
+          class="solution-entorno-badge"
+          [style.backgroundColor]="getColorEntorno(bitacoraVisualizacion.entorno)"
+          [style.borderColor]="getColorEntorno(bitacoraVisualizacion.entorno)"
+        >
           {{ getNombreEntorno(bitacoraVisualizacion.entorno) }}
         </div>
-        <div class="solution-steps" *ngIf="bitacoraVisualizacion.soluciones && bitacoraVisualizacion.soluciones.length > 0">
-          <div *ngFor="let solucion of bitacoraVisualizacion.soluciones" class="step-item">
+        <div
+          class="solution-steps"
+          *ngIf="bitacoraVisualizacion.soluciones && bitacoraVisualizacion.soluciones.length > 0"
+        >
+          <div
+            *ngFor="let solucion of bitacoraVisualizacion.soluciones"
+            class="step-item"
+          >
             <div class="step-header">
               <div class="step-title">
-                <strong>Paso {{ solucion.numero }} - {{ getNombreEntorno(solucion.entorno) }}</strong>
+                <strong>
+                  Paso {{ solucion.numero }} -
+                  {{ getNombreEntorno(solucion.entorno) }}
+                </strong>
               </div>
             </div>
             <div class="step-content">
@@ -194,28 +365,47 @@
     </div>
   </div>
 
-  <!-- Pestaña: Solución (Animada) - ELIMINADA -->
+  <!-- Pestaña: Solución (animada) desactivada en tu codi original -->
   <div *ngIf="false" class="tab-panel solution-panel">
     <div class="solution-container" *ngIf="bitacoraVisualizacion">
       <div class="solution-header">
-        <button class="close-solution-btn" (click)="activeTab='listar'; cerrarVisualizacion()" title="Cerrar">
+        <button
+          class="close-solution-btn"
+          (click)="activeTab='listar'; cerrarVisualizacion()"
+          title="Cerrar"
+        >
           <mat-icon>close</mat-icon>
         </button>
         <div class="solution-title-info">
           <h3>{{ bitacoraVisualizacion!.contexto || '(Sin contexto)' }}</h3>
-          <p class="solution-error">{{ bitacoraVisualizacion!.error }}</p>
+          <p class="solution-error">
+            {{ bitacoraVisualizacion!.error }}
+          </p>
         </div>
       </div>
 
-      <div class="solution-entorno-badge" [style.backgroundColor]="getColorEntorno(bitacoraVisualizacion!.entorno)" [style.borderColor]="getColorEntorno(bitacoraVisualizacion!.entorno)">
+      <div
+        class="solution-entorno-badge"
+        [style.backgroundColor]="getColorEntorno(bitacoraVisualizacion!.entorno)"
+        [style.borderColor]="getColorEntorno(bitacoraVisualizacion!.entorno)"
+      >
         {{ getNombreEntorno(bitacoraVisualizacion!.entorno) }}
       </div>
 
-      <div class="solution-steps" *ngIf="bitacoraVisualizacion!.soluciones && bitacoraVisualizacion!.soluciones.length > 0">
-        <div *ngFor="let solucion of bitacoraVisualizacion!.soluciones" class="step-item">
+      <div
+        class="solution-steps"
+        *ngIf="bitacoraVisualizacion!.soluciones && bitacoraVisualizacion!.soluciones.length > 0"
+      >
+        <div
+          *ngFor="let solucion of bitacoraVisualizacion!.soluciones"
+          class="step-item"
+        >
           <div class="step-header">
             <div class="step-title">
-              <strong>Paso {{ solucion.numero }} - {{ getNombreEntorno(solucion.entorno) }}</strong>
+              <strong>
+                Paso {{ solucion.numero }} -
+                {{ getNombreEntorno(solucion.entorno) }}
+              </strong>
             </div>
           </div>
           <div class="step-content">
@@ -224,7 +414,10 @@
         </div>
       </div>
 
-      <div class="no-solutions" *ngIf="!bitacoraVisualizacion || !bitacoraVisualizacion!.soluciones || bitacoraVisualizacion!.soluciones.length === 0">
+      <div
+        class="no-solutions"
+        *ngIf="!bitacoraVisualizacion || !bitacoraVisualizacion!.soluciones || bitacoraVisualizacion!.soluciones.length === 0"
+      >
         <mat-icon>lightbulb_outline</mat-icon>
         <p>No hay soluciones agregadas</p>
       </div>
@@ -233,17 +426,29 @@
 </div>
 
 <!-- Popup eliminar -->
-<div class="popup-fons" *ngIf="mostrarPopupDelete" (click)="cancelarEliminar()">
+<div
+  class="popup-fons"
+  *ngIf="mostrarPopupDelete"
+  (click)="cancelarEliminar()"
+>
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>{{ 'ERRORS.DELETE_TITLE' | translate }}</h3>
     <p>{{ 'ERRORS.DELETE_CONFIRM' | translate }}</p>
 
     <div class="popup-actions">
-      <button class="cancelar-btn" (click)="cancelarEliminar()" title="Cancelar">
-      ✗
+      <button
+        class="cancelar-btn"
+        (click)="cancelarEliminar()"
+        title="Cancelar"
+      >
+        ✗
       </button>
-      <button class="guardar-btn" (click)="eliminarBitacora()" title="Eliminar">
-      ✓
+      <button
+        class="guardar-btn"
+        (click)="eliminarBitacora()"
+        title="Eliminar"
+      >
+        ✓
       </button>
     </div>
   </div>

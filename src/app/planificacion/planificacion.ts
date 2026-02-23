@@ -52,7 +52,13 @@ export class PlanificacionComponent implements OnInit {
   ngOnInit(): void {
     this.restoreFromLocalStorage();
 
-    this.devOpsList = [ 'PLANNING.UNASSIGNED', 'Borja Lara', 'Rubén Planté', 'Raúl Gallego', 'Fernando Gil' ];
+    this.devOpsList = [
+      'PLANNING.UNASSIGNED',
+      'Borja Lara',
+      'Rubén Planté',
+      'Raúl Gallego',
+      'Fernando Gil'
+    ];
 
     this.loadEvents();
   }
@@ -84,7 +90,6 @@ export class PlanificacionComponent implements OnInit {
     const savedDraft = this.storage.getObject<{ draft: Partial<EventItem>; editingId?: string }>(this.STORAGE_KEY_DRAFT);
     if (savedDraft && savedDraft.draft) {
       this.draft = savedDraft.draft;
-      // encara no sabem els events (no podem reconstruir editing), així que només obrim el modal en mode "nou" amb draft
       this.showModal = true;
     }
   }
@@ -94,7 +99,7 @@ export class PlanificacionComponent implements OnInit {
     this.storage.set(this.STORAGE_KEY_FILTER, this.searchTerm || '');
   }
 
-  private saveDraft(): void {
+   saveDraft(): void {
     const data = {
       draft: this.draft,
       editingId: this.editing?.id

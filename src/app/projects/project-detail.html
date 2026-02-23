@@ -2,8 +2,11 @@
   <div class="project-detail-header">
     <div class="header-spacer"></div>
     <button class="back-icon top-right" title="{{ 'PROJECTS.CLOSE' | translate }}" (click)="back()">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M15 6L9 12L15 18"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
   </div>
@@ -19,69 +22,133 @@
 
     <!-- Tabs -->
     <div class="new-project-tabs" role="tablist" aria-label="{{ 'PROJECTS.TABS_ARIA' | translate }}">
-      <button class="new-project-tab" [class.active]="activeTab==='info'" (click)="activeTab='info'" role="tab" [attr.aria-selected]="activeTab==='info'">{{ 'PROJECTS.TAB_INFO' | translate }}</button>
-      <button class="new-project-tab" [class.active]="activeTab==='minsait'" (click)="activeTab='minsait'" role="tab" [attr.aria-selected]="activeTab==='minsait'">{{ 'PROJECTS.TAB_MINSAIT' | translate }}</button>
-      <button class="new-project-tab" [class.active]="activeTab==='dev'" (click)="activeTab='dev'" role="tab" [attr.aria-selected]="activeTab==='dev'">{{ 'PROJECTS.TAB_DEV' | translate }}</button>
-      <button class="new-project-tab" [class.active]="activeTab==='mind'" (click)="activeTab='mind'" role="tab" [attr.aria-selected]="activeTab==='mind'">{{ 'PROJECTS.TAB_MIND' | translate }}</button>
-      <button class="new-project-tab" [class.active]="activeTab==='docs'" (click)="activeTab='docs'" role="tab" [attr.aria-selected]="activeTab==='docs'">{{ 'PROJECTS.TAB_DOCS' | translate }}</button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('info')"
+              (click)="activeTab='info'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('info')">
+        {{ 'PROJECTS.TAB_INFO' | translate }}
+      </button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('minsait')"
+              (click)="activeTab='minsait'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('minsait')">
+        {{ 'PROJECTS.TAB_MINSAIT' | translate }}
+      </button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('dev')"
+              (click)="activeTab='dev'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('dev')">
+        {{ 'PROJECTS.TAB_DEV' | translate }}
+      </button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('mind')"
+              (click)="activeTab='mind'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('mind')">
+        {{ 'PROJECTS.TAB_MIND' | translate }}
+      </button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('docs')"
+              (click)="activeTab='docs'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('docs')">
+        {{ 'PROJECTS.TAB_DOCS' | translate }}
+      </button>
     </div>
 
     <!-- Info tab -->
-    <div *ngIf="activeTab==='info'">
+    <div *ngIf="activeTab === $any('info')">
       <div class="sections-container">
 
-        <!-- Datos generales (naranja) -->
+        <!-- Datos generales -->
         <section class="section section-general">
           <div class="section-title">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</div>
           <div class="project-form-grid full-width">
             <div class="general-grid three-col">
-              <div class="form-row"><label>{{ 'PROJECTS.CODE' | translate }}</label>
-                <input [(ngModel)]="proyecto.codigoProyecto" placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}" [readonly]="!editing" />
+              <div class="form-row">
+                <label>{{ 'PROJECTS.CODE' | translate }}</label>
+                <input [(ngModel)]="proyecto.codigoProyecto"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}"
+                       [readonly]="!editing" />
               </div>
 
-              <div class="form-row"><label>{{ 'PROJECTS.NAME' | translate }}</label>
-                <input [(ngModel)]="proyecto.nombre" placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}" [readonly]="!editing" />
+              <div class="form-row">
+                <label>{{ 'PROJECTS.NAME' | translate }}</label>
+                <input [(ngModel)]="proyecto.nombre"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}"
+                       [readonly]="!editing" />
               </div>
 
-              <div class="form-row"><label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
-                <input [(ngModel)]="proyecto.codigoImputacion" placeholder="" [readonly]="!editing" />
+              <div class="form-row">
+                <label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
+                <input [(ngModel)]="proyecto.codigoImputacion"
+                       (ngModelChange)="saveDraft()"
+                       [readonly]="!editing" />
               </div>
 
-              <!-- Responsable fields moved to Equipo Minsait tab -->
-
-              <div class="form-row"><label>{{ 'PROJECTS.LOTE' | translate }}</label>
-                <input [(ngModel)]="proyecto.lote" placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}" [readonly]="!editing" />
+              <div class="form-row">
+                <label>{{ 'PROJECTS.LOTE' | translate }}</label>
+                <input [(ngModel)]="proyecto.lote"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}"
+                       [readonly]="!editing" />
               </div>
 
-              <div class="form-row"><label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
-                <input [(ngModel)]="proyecto.departamento" placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}" [readonly]="!editing" />
+              <div class="form-row">
+                <label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
+                <input [(ngModel)]="proyecto.departamento"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}"
+                       [readonly]="!editing" />
               </div>
 
             </div>
           </div>
+
           <div class="divider" aria-hidden="true"></div>
+
           <div class="urls-grid">
-            <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoDesarrollo" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
+            <div class="form-row">
+              <label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
+              <input [(ngModel)]="proyecto.urlEntornoDesarrollo"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+                     [readonly]="!editing" />
             </div>
-            <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoIntegracion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
+            <div class="form-row">
+              <label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
+              <input [(ngModel)]="proyecto.urlEntornoIntegracion"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+                     [readonly]="!editing" />
             </div>
-            <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoPreproduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
+            <div class="form-row">
+              <label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
+              <input [(ngModel)]="proyecto.urlEntornoPreproduccion"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+                     [readonly]="!editing" />
             </div>
-            <div class="form-row"><label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
-              <input [(ngModel)]="proyecto.urlEntornoProduccion" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}" [readonly]="!editing" />
+            <div class="form-row">
+              <label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
+              <input [(ngModel)]="proyecto.urlEntornoProduccion"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+                     [readonly]="!editing" />
             </div>
           </div>
         </section>
 
-        <!-- Entorno and MIND moved to their own tabs -->
       </div>
     </div>
 
     <!-- Equipo Minsait tab -->
-    <div *ngIf="activeTab==='minsait'">
+    <div *ngIf="activeTab === $any('minsait')">
       <div class="sections-container">
         <section class="section section-minsait">
           <div class="section-title">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</div>
@@ -90,8 +157,12 @@
 
               <div class="minsait-left-col">
                 <div class="daily-access-row">
-                  <div class="form-row"><label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
-                    <input type="time" [(ngModel)]="proyecto.horaDaily" [disabled]="!editing" />
+                  <div class="form-row">
+                    <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+                    <input type="time"
+                           [(ngModel)]="proyecto.horaDaily"
+                           (ngModelChange)="saveDraft()"
+                           [disabled]="!editing" />
                   </div>
                 </div>
 
@@ -101,24 +172,41 @@
                   <div class="member-controls add-member-row">
                     <label>{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</label>
                     <div class="members-actions">
-                      <button class="btn small" (click)="addMember()">+ {{ 'PROJECTS.ADD_MEMBER' | translate }}</button>
+                      <button class="btn small" (click)="addMember()">
+                        + {{ 'PROJECTS.ADD_MEMBER' | translate }}
+                      </button>
                     </div>
                   </div>
 
                   <div class="members-grid">
-                    <div class="member-card" *ngFor="let m of proyecto.equipoMinsait || []; let mi = index">
+                    <div class="member-card"
+                         *ngFor="let m of proyecto.equipoMinsait || []; let mi = index">
                       <div class="member-row">
                         <div class="member-fields">
-                          <input class="member-input name" [(ngModel)]="m.nombre" placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}" [disabled]="!editing" />
-                          <input class="member-input role" [(ngModel)]="m.rol" placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}" [disabled]="!editing" />
-                          <input class="member-input email" [(ngModel)]="m.email" placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}" [disabled]="!editing" />
+                          <input class="member-input name"
+                                 [(ngModel)]="m.nombre"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}"
+                                 [disabled]="!editing" />
+                          <input class="member-input role"
+                                 [(ngModel)]="m.rol"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}"
+                                 [disabled]="!editing" />
+                          <input class="member-input email"
+                                 [(ngModel)]="m.email"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}"
+                                 [disabled]="!editing" />
                         </div>
                         <div class="member-actions">
-                          <button type="button" class="btn small" (click)="promptRemove('member', mi)">-</button>
+                          <button type="button" class="btn small"
+                                  (click)="promptRemove('member', mi)">-</button>
                         </div>
                       </div>
                     </div>
                   </div>
+
                 </div>
 
               </div>
@@ -130,163 +218,358 @@
     </div>
 
     <!-- Dev tab -->
-    <div *ngIf="activeTab==='dev'">
+    <div *ngIf="activeTab === $any('dev')">
       <div class="sections-container">
         <section class="section section-dev">
           <div class="section-title">
             {{ 'PROJECTS.SECTION_DEV' | translate }}
-            <button class="btn small add-dev-title" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+            <button class="btn small add-dev-title" (click)="addDevMachine()">
+              + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
+            </button>
           </div>
+
           <div class="project-form-grid full-width">
-              <div class="form-row">
+            <div class="form-row">
               <label>{{ 'PROJECTS.DEV_MACHINES' | translate }}</label>
-                <div class="dev-machines-list">
-                  <div class="dev-machine-tabs">
-                    <button *ngFor="let m of devMachines; let i = index" class="tab small" [class.active]="i===selectedDevMachineIndex" (click)="selectedDevMachineIndex = i">{{ m.identifier || ('#'+(i+1)) }}</button>
-                  </div>
-                  <div class="dev-machine-card" *ngIf="devMachines && devMachines.length && selectedDevMachineIndex >= 0" >
-                    <ng-container *ngIf="devMachines[selectedDevMachineIndex] as m">
-                      <div class="dev-card-top">
+              <div class="dev-machines-list">
+
+                <div class="dev-machine-tabs">
+                  <button *ngFor="let m of devMachines; let i = index"
+                          class="tab small"
+                          [class.active]="i===selectedDevMachineIndex"
+                          (click)="selectedDevMachineIndex = i; saveDraft()">
+                    {{ m.identifier || ('#'+(i+1)) }}
+                  </button>
+                </div>
+
+                <div class="dev-machine-card"
+                     *ngIf="devMachines && devMachines.length && selectedDevMachineIndex >= 0">
+                  <ng-container *ngIf="devMachines[selectedDevMachineIndex] as m">
+
+                    <div class="dev-card-top">
                       <div class="dev-fields grid-3">
-                          <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="m.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_IP' | translate }}</label><input [(ngModel)]="m.ip" /></div>
-                      <div class="field"><label>{{ 'PROJECTS.DEV_USER' | translate }}</label><input [(ngModel)]="m.user" /></div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                          <input [(ngModel)]="m.identifier"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
+                          <input [(ngModel)]="m.ip"
+                                 (ngModelChange)="saveDraft()" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
+                          <input [(ngModel)]="m.user"
+                                 (ngModelChange)="saveDraft()" />
+                        </div>
+                      </div>
+
+                      <div class="dev-fields grid-3" style="margin-top:6px">
+                        <div class="field">
+                          <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
+                          <input [(ngModel)]="m.password"
+                                 (ngModelChange)="saveDraft()"
+                                 type="text" />
+                        </div>
+                      </div>
+
+                      <div class="dev-actions">
+                        <button class="btn small danger"
+                                (click)="promptRemove('machine', selectedDevMachineIndex)">-</button>
+                      </div>
                     </div>
-                    <div class="dev-fields grid-3" style="margin-top:6px">
-                      <div class="field"><label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label><input [(ngModel)]="m.password" type="text" /></div>
+
+                    <div class="dev-resources grid-3 compact">
+                      <div class="field">
+                        <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
+                        <input [(ngModel)]="m.ram"
+                               (ngModelChange)="saveDraft()"
+                               placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" />
+                      </div>
+                      <div class="field">
+                        <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
+                        <input [(ngModel)]="m.cpu"
+                               (ngModelChange)="saveDraft()"
+                               placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" />
+                      </div>
+                      <div class="field">
+                        <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
+                        <input [(ngModel)]="m.disk"
+                               (ngModelChange)="saveDraft()"
+                               placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" />
+                      </div>
                     </div>
-                    <div class="dev-actions"><button class="btn small danger" (click)="promptRemove('machine', selectedDevMachineIndex)">-</button></div>
-                  </div>
 
-                  <div class="dev-resources grid-3 compact">
-                    <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="m.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
-                    <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="m.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
-                    <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="m.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
-                  </div>
+                    <!-- Openshift -->
+                    <div class="add-section-row">
+                      <span class="add-section-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
+                      <button type="button" class="btn small"
+                              (click)="addOpenshift(selectedDevMachineIndex)">+</button>
+                    </div>
 
-                  <div class="add-section-row">
-                    <span class="add-section-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
-                    <button type="button" class="btn small" (click)="addOpenshift(selectedDevMachineIndex)">+</button>
-                  </div>
+                    <div *ngIf="m.openshiftEnabled || (m.openshifts && m.openshifts.length > 0)">
+                      <div *ngFor="let o of (m.openshifts || []); let oi = index"
+                           class="repo-duo dev-duo">
+                        <div class="repo-fields">
+                          <div class="openshift-section">
+                            <div class="openshift-grid">
+                              <div class="field">
+                                <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                                <input [(ngModel)]="o.identifier"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_OPENSHIFT_ID' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label>
+                                <input [(ngModel)]="o.user"
+                                       (ngModelChange)="saveDraft()" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label>
+                                <input [(ngModel)]="o.password"
+                                       (ngModelChange)="saveDraft()"
+                                       type="text" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
+                                <input [(ngModel)]="o.ram"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
+                                <input [(ngModel)]="o.cpu"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
+                                <input [(ngModel)]="o.disk"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" />
+                              </div>
+                            </div>
 
-                  <div *ngIf="m.openshiftEnabled || (m.openshifts && m.openshifts.length > 0)">
-                    <div *ngFor="let o of (m.openshifts || []); let oi = index" class="repo-duo dev-duo">
-                      <div class="repo-fields">
-                        <div class="openshift-section">
-                          <div class="openshift-grid">
-                                  <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="o.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_OPENSHIFT_ID' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label><input [(ngModel)]="o.user" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label><input [(ngModel)]="o.password" type="text" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DEV_RAM' | translate }}</label><input [(ngModel)]="o.ram" placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DEV_CPU' | translate }}</label><input [(ngModel)]="o.cpu" placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DEV_DISK' | translate }}</label><input [(ngModel)]="o.disk" placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}" /></div>
-                          </div>
-                          <div class="form-row volumes-row">
-                            <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
-                            <div class="volumes-list">
-                              <div class="volume" *ngFor="let v of (o.volumes || []); let vi = index">
-                                <div class="field">
-                                  <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
-                                  <input [(ngModel)]="v.name" placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                            <div class="form-row volumes-row">
+                              <label>{{ 'PROJECTS.VOLUMES' | translate }}</label>
+                              <div class="volumes-list">
+                                <div class="volume"
+                                     *ngFor="let v of (o.volumes || []); let vi = index">
+                                  <div class="field">
+                                    <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
+                                    <input [(ngModel)]="v.name"
+                                           (ngModelChange)="saveDraft()"
+                                           placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                                  </div>
+                                  <div class="field">
+                                    <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
+                                    <input [(ngModel)]="v.capacity"
+                                           (ngModelChange)="saveDraft()"
+                                           placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                                  </div>
+                                  <button class="btn small danger"
+                                          (click)="removeVolume(selectedDevMachineIndex, vi)">-</button>
                                 </div>
-                                <div class="field">
-                                  <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
-                                  <input [(ngModel)]="v.capacity" placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
-                                </div>
-                                <button class="btn small danger" (click)="removeVolume(selectedDevMachineIndex, vi)">-</button>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('openshift', selectedDevMachineIndex)">-</button></div>
-                    </div>
-                  </div>
-
-                  <!-- Database toggle and form (per machine) -->
-                  <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="add-section-row">
-                    <span class="add-section-label">{{ 'PROJECTS.DB_LABEL' | translate }}</span>
-                    <button type="button" class="btn small" (click)="addDb(selectedDevMachineIndex)">+</button>
-                  </div>
-
-                  <div *ngIf="m.dbEnabled || (m.dbs && m.dbs.length > 0)">
-                    <div *ngFor="let d of (m.dbs || []); let di = index" class="repo-duo dev-duo">
-                      <div class="repo-fields">
-                        <div class="form-row db-config">
-                          <div class="db-grid">
-                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="d.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ID' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label><input [(ngModel)]="d.engine" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ENGINE' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label><input [(ngModel)]="d.instanceName" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_INSTANCE' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_HOST' | translate }}</label><input [(ngModel)]="d.host" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_HOST' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_PORT' | translate }}</label><input [(ngModel)]="d.port" placeholder="1521" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_SID' | translate }}</label><input [(ngModel)]="d.sid" placeholder="IPSOPG19" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_USER' | translate }}</label><input [(ngModel)]="d.user" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_USER' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label><input [(ngModel)]="d.password" type="text" placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_PASSWORD' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="d.contactPerson" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="d.contactMail" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" /></div>
-                          </div>
-                          <div class="form-row">
-                            <label>{{ 'PROJECTS.DB_CONNECTION_SETTINGS' | translate }}</label>
-                            <textarea [(ngModel)]="d.properties" rows="5" placeholder="spring.datasource.url=...\nspring.datasource.username=...\nspring.datasource.password=..."></textarea>
-                          </div>
+                        <div class="repo-action">
+                          <button type="button" class="btn remove-large"
+                                  (click)="promptRemove('openshift', selectedDevMachineIndex)">-</button>
                         </div>
                       </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('db', selectedDevMachineIndex)">-</button></div>
                     </div>
-                  </div>
 
-                  <!-- Other tool toggle and form (per machine) -->
-                  <div class="divider-dots" style="margin-top:12px"></div>
-                  <div class="add-section-row">
-                    <span class="add-section-label">{{ 'PROJECTS.OTHER_TOOL' | translate }}</span>
-                    <button type="button" class="btn small" (click)="addOtherTool(selectedDevMachineIndex)">+</button>
-                  </div>
+                    <div class="divider-dots" style="margin-top:12px"></div>
 
-                  <div *ngIf="m.otherToolEnabled || (m.otherTools && m.otherTools.length > 0)">
-                    <div *ngFor="let t of (m.otherTools || []); let ti = index" class="repo-duo dev-duo">
-                      <div class="repo-fields">
-                        <div class="form-row other-tool-config">
-                          <div class="other-tool-grid">
-                            <div class="field"><label>{{ 'PROJECTS.FIELD_ID' | translate }}</label><input [(ngModel)]="t.identifier" placeholder="{{ 'PROJECTS.PLACEHOLDER_TOOL_ID' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</label><input [(ngModel)]="t.name" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label><input [(ngModel)]="t.path" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label><input [(ngModel)]="t.contactPerson" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" /></div>
-                            <div class="field"><label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label><input [(ngModel)]="t.contactMail" placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" /></div>
-                            <div class="field switch-field">
-                              <label class="inline-label service-label">{{ 'PROJECTS.IN_SERVICE' | translate }}</label>
-                              <div class="service-control switch-item">
-                                <label class="custom-switch">
-                                  <input type="checkbox" [(ngModel)]="t.running" aria-label="{{ 'PROJECTS.IN_SERVICE' | translate }}" />
-                                  <span class="custom-slider"></span>
+                    <!-- DB -->
+                    <div class="add-section-row">
+                      <span class="add-section-label">{{ 'PROJECTS.DB_LABEL' | translate }}</span>
+                      <button type="button" class="btn small"
+                              (click)="addDb(selectedDevMachineIndex)">+</button>
+                    </div>
+
+                    <div *ngIf="m.dbEnabled || (m.dbs && m.dbs.length > 0)">
+                      <div *ngFor="let d of (m.dbs || []); let di = index"
+                           class="repo-duo dev-duo">
+                        <div class="repo-fields">
+                          <div class="form-row db-config">
+                            <div class="db-grid">
+                              <div class="field">
+                                <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                                <input [(ngModel)]="d.identifier"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ID' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label>
+                                <input [(ngModel)]="d.engine"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_ENGINE' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label>
+                                <input [(ngModel)]="d.instanceName"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_INSTANCE' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_HOST' | translate }}</label>
+                                <input [(ngModel)]="d.host"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_HOST' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_PORT' | translate }}</label>
+                                <input [(ngModel)]="d.port"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="1521" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_SID' | translate }}</label>
+                                <input [(ngModel)]="d.sid"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="IPSOPG19" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_USER' | translate }}</label>
+                                <input [(ngModel)]="d.user"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_USER' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label>
+                                <input [(ngModel)]="d.password"
+                                       (ngModelChange)="saveDraft()"
+                                       type="text"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_PASSWORD' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label>
+                                <input [(ngModel)]="d.contactPerson"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label>
+                                <input [(ngModel)]="d.contactMail"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" />
+                              </div>
+                            </div>
+                            <div class="form-row">
+                              <label>{{ 'PROJECTS.DB_CONNECTION_SETTINGS' | translate }}</label>
+                              <textarea [(ngModel)]="d.properties"
+                                        (ngModelChange)="saveDraft()"
+                                        rows="5"
+                                        placeholder="spring.datasource.url=...
+spring.datasource.username=...
+spring.datasource.password=..."></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="repo-action">
+                          <button type="button" class="btn remove-large"
+                                  (click)="promptRemove('db', selectedDevMachineIndex)">-</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="divider-dots" style="margin-top:12px"></div>
+
+                    <!-- Other tools -->
+                    <div class="add-section-row">
+                      <span class="add-section-label">{{ 'PROJECTS.OTHER_TOOL' | translate }}</span>
+                      <button type="button" class="btn small"
+                              (click)="addOtherTool(selectedDevMachineIndex)">+</button>
+                    </div>
+
+                    <div *ngIf="m.otherToolEnabled || (m.otherTools && m.otherTools.length > 0)">
+                      <div *ngFor="let t of (m.otherTools || []); let ti = index"
+                           class="repo-duo dev-duo">
+                        <div class="repo-fields">
+                          <div class="form-row other-tool-config">
+                            <div class="other-tool-grid">
+                              <div class="field">
+                                <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                                <input [(ngModel)]="t.identifier"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_TOOL_ID' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</label>
+                                <input [(ngModel)]="t.name"
+                                       (ngModelChange)="saveDraft()" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label>
+                                <input [(ngModel)]="t.path"
+                                       (ngModelChange)="saveDraft()" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label>
+                                <input [(ngModel)]="t.contactPerson"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_NAME' | translate }}" />
+                              </div>
+                              <div class="field">
+                                <label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label>
+                                <input [(ngModel)]="t.contactMail"
+                                       (ngModelChange)="saveDraft()"
+                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_CONTACT_MAIL' | translate }}" />
+                              </div>
+                              <div class="field switch-field">
+                                <label class="inline-label service-label">
+                                  {{ 'PROJECTS.IN_SERVICE' | translate }}
                                 </label>
+                                <div class="service-control switch-item">
+                                  <label class="custom-switch">
+                                    <input type="checkbox"
+                                           [(ngModel)]="t.running"
+                                           (ngModelChange)="saveDraft()"
+                                           aria-label="{{ 'PROJECTS.IN_SERVICE' | translate }}" />
+                                    <span class="custom-slider"></span>
+                                  </label>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <div class="repo-action">
+                          <button type="button" class="btn remove-large"
+                                  (click)="promptRemove('othertool', selectedDevMachineIndex)">-</button>
+                        </div>
                       </div>
-                      <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('othertool', selectedDevMachineIndex)">-</button></div>
                     </div>
-                  </div>
-                    </ng-container>
+
+                  </ng-container>
                 </div>
               </div>
-              <!-- The DB and Other Tool blocks were moved inside each dev-machine-card to keep 'm' in scope. -->
+
               <div class="add-dev-row">
-                <button class="btn small" (click)="addDevMachine()">+ {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}</button>
+                <button class="btn small" (click)="addDevMachine()">
+                  + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
+                </button>
               </div>
             </div>
           </div>
+
           <div class="form-row notes-row">
             <label>{{ 'PROJECTS.NOTES' | translate }}</label>
-            <textarea [(ngModel)]="proyecto.entornoNotas" rows="4" placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+            <textarea [(ngModel)]="proyecto.entornoNotas"
+                      (ngModelChange)="saveDraft()"
+                      rows="4"
+                      placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
           </div>
         </section>
       </div>
     </div>
 
     <!-- MIND tab -->
-    <div *ngIf="activeTab==='mind'">
+    <div *ngIf="activeTab === $any('mind')">
       <div class="sections-container">
         <section class="section section-mind">
           <div class="mind-card">
@@ -294,101 +577,163 @@
               <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
             </div>
             <div class="mind-card-body">
-              <!-- Repositorios de código -->
+
+              <!-- Repos de codi -->
               <div class="mind-block mind-block-code">
                 <div class="mind-block-title">{{ 'PROJECTS_MIND.CODE_REPOS' | translate }}</div>
                 <div class="mind-block-body">
-                    <div *ngIf="editing">
-                      <div class="list-controls"><button class="btn small" (click)="addCodeRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}</button></div>
-                      <div class="repo-list">
-                          <div class="repo-item" *ngFor="let r of codeRepos; let i = index">
-                            <div class="repo-duo">
-                              <div class="repo-fields">
-                                <input [(ngModel)]="r.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
-                                <input [(ngModel)]="r.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
-                              </div>
-                              <div class="repo-action">
-                                <button type="button" class="btn remove-large" (click)="promptRemove('code', i)">-</button>
-                              </div>
-                            </div>
+                  <div *ngIf="editing">
+                    <div class="list-controls">
+                      <button class="btn small" (click)="addCodeRepo()">
+                        + {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}
+                      </button>
+                    </div>
+                    <div class="repo-list">
+                      <div class="repo-item" *ngFor="let r of codeRepos; let i = index">
+                        <div class="repo-duo">
+                          <div class="repo-fields">
+                            <input [(ngModel)]="r.name"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                            <input [(ngModel)]="r.url"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
                           </div>
+                          <div class="repo-action">
+                            <button type="button" class="btn remove-large"
+                                    (click)="promptRemove('code', i)">-</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div *ngIf="!editing">
-                      <div *ngFor="let r of codeRepos"> 
-                        <a *ngIf="isValidUrl(r.url)" (click)="openUrl(r.url)" class="mind-link">{{ r.name || r.url }}</a>
-                        <span *ngIf="!isValidUrl(r.url)">{{ r.name || r.url }}</span>
-                      </div>
+                  </div>
+                  <div *ngIf="!editing">
+                    <div *ngFor="let r of codeRepos">
+                      <a *ngIf="isValidUrl(r.url)"
+                         (click)="openUrl(r.url)" class="mind-link">
+                        {{ r.name || r.url }}
+                      </a>
+                      <span *ngIf="!isValidUrl(r.url)">{{ r.name || r.url }}</span>
                     </div>
+                  </div>
                 </div>
               </div>
 
               <div class="mind-separator mind-sep-code"></div>
 
-              <!-- Repositorios de artefactos -->
+              <!-- Repos d'artefactes -->
               <div class="mind-block mind-block-artifacts">
-                <div class="mind-block-title">{{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}</div>
+                <div class="mind-block-title">
+                  {{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}
+                </div>
                 <div class="mind-block-body">
-                    <div *ngIf="editing">
-                      <div class="list-controls"><button class="btn small" (click)="addArtifactRepo()">+ {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}</button></div>
-                      <div *ngFor="let a of artifactRepos; let ai = index" class="repo-item">
-                        <div class="repo-duo">
-                          <div class="repo-fields">
-                            <input [(ngModel)]="a.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
-                            <input [(ngModel)]="a.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
-                          </div>
-                          <div class="repo-action">
-                            <button type="button" class="btn remove-large" (click)="promptRemove('artifact', ai)">-</button>
-                          </div>
+                  <div *ngIf="editing">
+                    <div class="list-controls">
+                      <button class="btn small" (click)="addArtifactRepo()">
+                        + {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}
+                      </button>
+                    </div>
+                    <div *ngFor="let a of artifactRepos; let ai = index"
+                         class="repo-item">
+                      <div class="repo-duo">
+                        <div class="repo-fields">
+                          <input [(ngModel)]="a.name"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                          <input [(ngModel)]="a.url"
+                                 (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
+                        </div>
+                        <div class="repo-action">
+                          <button type="button" class="btn remove-large"
+                                  (click)="promptRemove('artifact', ai)">-</button>
                         </div>
                       </div>
+                    </div>
                   </div>
                   <div *ngIf="!editing">
-                    <div *ngFor="let a of artifactRepos"> <a *ngIf="isValidUrl(a.url)" (click)="openUrl(a.url)">{{ a.name||a.url }}</a><span *ngIf="!isValidUrl(a.url)">{{ a.name||a.url }}</span></div>
+                    <div *ngFor="let a of artifactRepos">
+                      <a *ngIf="isValidUrl(a.url)" (click)="openUrl(a.url)">
+                        {{ a.name||a.url }}
+                      </a>
+                      <span *ngIf="!isValidUrl(a.url)">{{ a.name||a.url }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="mind-separator mind-sep-artifacts"></div>
 
-              <!-- Pipelines de IC -->
+              <!-- Pipelines (Jenkins + Crontab) -->
               <div class="mind-block mind-block-pipelines">
                 <div class="mind-block-title">{{ 'PROJECTS_MIND.PIPELINES' | translate }}</div>
                 <div class="mind-block-body two-cols">
                   <div class="col">
                     <label>{{ 'PROJECTS_MIND.JENKINS' | translate }}</label>
                     <div *ngIf="editing">
-                      <div class="list-controls"><button class="btn small" (click)="addJenkins()">+ {{ 'PROJECTS_MIND.JENKINS' | translate }}</button></div>
-                      <div *ngFor="let j of jenkinsList; let ji = index" class="repo-item">
+                      <div class="list-controls">
+                        <button class="btn small" (click)="addJenkins()">
+                          + {{ 'PROJECTS_MIND.JENKINS' | translate }}
+                        </button>
+                      </div>
+                      <div *ngFor="let j of jenkinsList; let ji = index"
+                           class="repo-item">
                         <div class="repo-duo">
                           <div class="repo-fields">
-                            <input [(ngModel)]="j.name" placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
-                            <input [(ngModel)]="j.url" placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
+                            <input [(ngModel)]="j.name"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}" />
+                            <input [(ngModel)]="j.url"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}" />
                           </div>
-                          <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('jenkins', ji)">-</button></div>
+                          <div class="repo-action">
+                            <button type="button" class="btn remove-large"
+                                    (click)="promptRemove('jenkins', ji)">-</button>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div *ngIf="!editing">
-                      <div *ngFor="let j of jenkinsList"> <a *ngIf="isValidUrl(j.url)" (click)="openUrl(j.url)">{{ j.name||j.url }}</a><span *ngIf="!isValidUrl(j.url)">{{ j.name||j.url }}</span> </div>
+                      <div *ngFor="let j of jenkinsList">
+                        <a *ngIf="isValidUrl(j.url)" (click)="openUrl(j.url)">
+                          {{ j.name||j.url }}
+                        </a>
+                        <span *ngIf="!isValidUrl(j.url)">{{ j.name||j.url }}</span>
+                      </div>
                     </div>
                   </div>
+
                   <div class="col">
                     <label>{{ 'PROJECTS_MIND.CRONTAB' | translate }}</label>
                     <div *ngIf="editing">
-                      <div class="list-controls"><button class="btn small" (click)="addCrontab()">+ {{ 'PROJECTS_ACTIONS.ADD_CRONTAB' | translate }}</button></div>
-                      <div *ngFor="let c of crontabList; let ci = index" class="repo-item">
+                      <div class="list-controls">
+                        <button class="btn small" (click)="addCrontab()">
+                          + {{ 'PROJECTS_ACTIONS.ADD_CRONTAB' | translate }}
+                        </button>
+                      </div>
+                      <div *ngFor="let c of crontabList; let ci = index"
+                           class="repo-item">
                         <div class="repo-duo">
                           <div class="repo-fields">
-                            <input [(ngModel)]="c.expr" placeholder="{{ 'PROJECTS.PLACEHOLDER_CRONTAB_EXPR' | translate }}" />
-                            <input [(ngModel)]="c.desc" placeholder="{{ 'PROJECTS.PLACEHOLDER_DESCRIPTION' | translate }}" />
+                            <input [(ngModel)]="c.expr"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_CRONTAB_EXPR' | translate }}" />
+                            <input [(ngModel)]="c.desc"
+                                   (ngModelChange)="saveDraft()"
+                                   placeholder="{{ 'PROJECTS.PLACEHOLDER_DESCRIPTION' | translate }}" />
                           </div>
-                          <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('crontab', ci)">-</button></div>
+                          <div class="repo-action">
+                            <button type="button" class="btn remove-large"
+                                    (click)="promptRemove('crontab', ci)">-</button>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div *ngIf="!editing">
-                      <div *ngFor="let c of crontabList"> <span>{{ c.expr }} - {{ c.desc }}</span> </div>
+                      <div *ngFor="let c of crontabList">
+                        <span>{{ c.expr }} - {{ c.desc }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -396,38 +741,58 @@
 
               <div class="mind-separator mind-sep-pipelines"></div>
 
-              <!-- Herramientas de calidad -->
+              <!-- Qualitat (Sonar) -->
               <div class="mind-block mind-block-quality">
                 <div class="mind-block-title">{{ 'PROJECTS_MIND.QUALITY' | translate }}</div>
                 <div class="mind-block-body">
                   <label>{{ 'PROJECTS_MIND.SONAR' | translate }}</label>
                   <div *ngIf="editing">
-                    <div class="list-controls"><button class="btn small" (click)="addSonar()">+ Sonar</button></div>
-                    <div *ngFor="let s of sonarList; let si = index" class="repo-item">
+                    <div class="list-controls">
+                      <button class="btn small" (click)="addSonar()">+ Sonar</button>
+                    </div>
+                    <div *ngFor="let s of sonarList; let si = index"
+                         class="repo-item">
                       <div class="repo-duo">
                         <div class="repo-fields">
-                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}" [(ngModel)]="s.prefix" />
-                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}" [(ngModel)]="s.url" />
-                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}" [(ngModel)]="s.tokenUser" />
-                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}" [(ngModel)]="s.tokenValue" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}"
+                                 [(ngModel)]="s.prefix"
+                                 (ngModelChange)="saveDraft()" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}"
+                                 [(ngModel)]="s.url"
+                                 (ngModelChange)="saveDraft()" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}"
+                                 [(ngModel)]="s.tokenUser"
+                                 (ngModelChange)="saveDraft()" />
+                          <input placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}"
+                                 [(ngModel)]="s.tokenValue"
+                                 (ngModelChange)="saveDraft()" />
                         </div>
-                        <div class="repo-action"><button type="button" class="btn remove-large" (click)="promptRemove('sonar', si)">-</button></div>
+                        <div class="repo-action">
+                          <button type="button" class="btn remove-large"
+                                  (click)="promptRemove('sonar', si)">-</button>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div *ngIf="!editing">
-                    <div *ngFor="let s of sonarList"> <span>{{ s.prefix }} - {{ s.url }}</span></div>
+                    <div *ngFor="let s of sonarList">
+                      <span>{{ s.prefix }} - {{ s.url }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="mind-separator mind-sep-quality"></div>
 
-              <!-- Otros -->
+              <!-- Altres notes -->
               <div class="mind-block mind-block-others">
                 <div class="mind-block-title">{{ 'PROJECTS_MIND.OTHERS' | translate }}</div>
                 <div class="mind-block-body">
-                  <textarea [(ngModel)]="hm.otherNotes" rows="6" placeholder="{{ 'PROJECTS.PLACEHOLDER_OTHER_NOTES' | translate }}" [readonly]="!editing"></textarea>
+                  <textarea [(ngModel)]="hm.otherNotes"
+                            (ngModelChange)="saveDraft()"
+                            rows="6"
+                            placeholder="{{ 'PROJECTS.PLACEHOLDER_OTHER_NOTES' | translate }}"
+                            [readonly]="!editing"></textarea>
                 </div>
               </div>
 
@@ -438,65 +803,124 @@
     </div>
 
     <!-- Docs tab -->
-    <div *ngIf="activeTab==='docs'">
+    <div *ngIf="activeTab === $any('docs')">
       <div class="sections-container">
         <section class="section section-general">
           <div class="section-title">{{ 'PROJECTS.TAB_DOCS' | translate }}</div>
           <div class="project-form-grid full-width">
             <div class="form-row">
               <label>{{ 'PROJECTS.DOCUMENTATION_LABEL' | translate }}</label>
+
               <div *ngIf="editing" class="doc-upload">
                 <div class="file-input-wrapper">
                   <label for="project-doc-file" class="file-input-label">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M17 8l-5-5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M17 8l-5-5-5 5"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 3v12"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <span class="file-label-text">{{ 'PROJECTS.SELECT_FILE' | translate }}</span>
                   </label>
-                  <input id="project-doc-file" type="file" (change)="onDocFileSelected($event)" class="file-input-hidden" />
-                  <span class="file-name" *ngIf="selectedDocFile">{{ selectedDocFile.name }}</span>
+                  <input id="project-doc-file"
+                         type="file"
+                         (change)="onDocFileSelected($event)"
+                         class="file-input-hidden" />
+                  <span class="file-name" *ngIf="selectedDocFile">
+                    {{ selectedDocFile.name }}
+                  </span>
                 </div>
-                <div class="upload-hint">{{ 'PROJECTS.UPLOAD_LIMIT_HINT' | translate:{size: formatBytes(MAX_UPLOAD_BYTES)} }}</div>
-                <div class="upload-error" *ngIf="uploadError">{{ uploadError }}</div>
+                <div class="upload-hint">
+                  {{ 'PROJECTS.UPLOAD_LIMIT_HINT' | translate:{size: formatBytes(MAX_UPLOAD_BYTES)} }}
+                </div>
+                <div class="upload-error" *ngIf="uploadError">
+                  {{ uploadError }}
+                </div>
               </div>
+
               <div class="doc-list descargables-root">
                 <div class="desc-search">
-                  <input type="search" [(ngModel)]="docsSearch" placeholder="{{ 'DESCARGABLES.SEARCH_PLACEHOLDER' | translate }}" />
+                  <input type="search"
+                         [(ngModel)]="docsSearch"
+                         placeholder="{{ 'DESCARGABLES.SEARCH_PLACEHOLDER' | translate }}" />
                 </div>
-                <div *ngIf="loadingDocs">{{ 'DESCARGABLES.LOADING' | translate }}</div>
-                <div *ngIf="!loadingDocs && (!projectDocMeta || (projectDocMeta.length===0 && (!projectDocs || projectDocs.length===0)))">{{ 'PROJECTS.NO_DOCUMENTS_MESSAGE' | translate }}</div>
+
+                <div *ngIf="loadingDocs">
+                  {{ 'DESCARGABLES.LOADING' | translate }}
+                </div>
+
+                <div *ngIf="!loadingDocs && (!projectDocMeta || (projectDocMeta.length===0 && (!projectDocs || projectDocs.length===0)))">
+                  {{ 'PROJECTS.NO_DOCUMENTS_MESSAGE' | translate }}
+                </div>
+
                 <div *ngIf="!loadingDocs && (filteredProjectDocs && filteredProjectDocs.length)">
                   <div *ngFor="let doc of filteredProjectDocs" class="doc-row">
                     <div class="doc-info">
                       <div class="doc-title-row">
                         <strong class="doc-name">{{ doc.name }}</strong>
-                        <span *ngIf="doc.size" class="doc-size">{{ doc.size | number }} B</span>
+                        <span *ngIf="doc.size" class="doc-size">
+                          {{ doc.size | number }} B
+                        </span>
                       </div>
                       <div class="doc-desc">{{ doc.contentType || '' }}</div>
-                      <div class="doc-modified">{{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: <strong>{{ doc.lastModified }}</strong></div>
-                    </div>
-                      <div class="doc-actions">
-                        <button class="btn small" (click)="downloadProjectDocument(doc.name)" title="{{ 'DESCARGABLES.DOWNLOAD' | translate }}" aria-label="{{ 'DESCARGABLES.DOWNLOAD' | translate }}">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M21 21H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
-                        <button class="btn small" *ngIf="editing" (click)="(removeDocCandidate = doc.name); promptRemove('document', -1)" title="{{ 'DOCUMENTS.DELETE' | translate }}" aria-label="{{ 'DOCUMENTS.DELETE' | translate }}">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
+                      <div class="doc-modified">
+                        {{ 'DESCARGABLES.LAST_MODIFIED' | translate }}:
+                        <strong>{{ doc.lastModified }}</strong>
                       </div>
+                    </div>
+                    <div class="doc-actions">
+                      <button class="btn small"
+                              (click)="downloadProjectDocument(doc.name)"
+                              title="{{ 'DESCARGABLES.DOWNLOAD' | translate }}"
+                              aria-label="{{ 'DESCARGABLES.DOWNLOAD' | translate }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <path d="M12 3v12"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M8 11l4 4 4-4"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M21 21H3"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+
+                      <button class="btn small"
+                              *ngIf="editing"
+                              (click)="(removeDocCandidate = doc.name); promptRemove('document', -1)"
+                              title="{{ 'DOCUMENTS.DELETE' | translate }}"
+                              aria-label="{{ 'DOCUMENTS.DELETE' | translate }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <path d="M3 6h18"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M10 11v6"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M14 11v6"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -504,96 +928,188 @@
       </div>
     </div>
 
+    <!-- Botons d'acció -->
     <div class="actions">
-      <button class="jh-btn" *ngIf="!editing && routeMode==='edit'" (click)="editing=true" title="{{ 'PROJECTS.EDIT' | translate }}" aria-label="{{ 'PROJECTS.EDIT' | translate }}">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M3 21v-3.75L14.06 6.19l3.75 3.75L6.75 21H3z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18.37 7.63l-2 2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+      <button class="jh-btn"
+              *ngIf="!editing && routeMode==='edit'"
+              (click)="editing=true; saveDraft()"
+              title="{{ 'PROJECTS.EDIT' | translate }}"
+              aria-label="{{ 'PROJECTS.EDIT' | translate }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 21v-3.75L14.06 6.19l3.75 3.75L6.75 21H3z"
+                stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.37 7.63l-2 2"
+                stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <button class="jh-btn jh-btn-full" *ngIf="editing" (click)="save()" title="{{ 'PROJECTS.SAVE' | translate }}" aria-label="{{ 'PROJECTS.SAVE' | translate }}">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M17 21v-8H7v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <button class="jh-btn jh-btn-full"
+              *ngIf="editing"
+              (click)="save()"
+              title="{{ 'PROJECTS.SAVE' | translate }}"
+              aria-label="{{ 'PROJECTS.SAVE' | translate }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2z"
+                stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17 21v-8H7v8"
+                stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </div>
+
   </div>
 </div>
 
 <!-- Global confirm modal -->
-<div class="modal-backdrop jh-modal-backdrop" *ngIf="removeCandidate !== null">
+<div class="modal-backdrop jh-modal-backdrop"
+     *ngIf="removeCandidate !== null">
   <div class="modal jh-modal">
-    <div class="modal-header">{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}</div>
+    <div class="modal-header">
+      {{ 'PROJECTS.CONFIRM_DELETE_MEMBER_TITLE' | translate }}
+    </div>
     <div class="modal-body">
       <div>{{ 'PROJECTS.CONFIRM_DELETE_MEMBER_MSG' | translate }}</div>
+
       <div *ngIf="removeCandidate">
         <div *ngIf="removeCandidate.type==='code'">
-          <strong>{{ codeRepos[removeCandidate.index]?.name || codeRepos[removeCandidate.index]?.url }}</strong>
+          <strong>
+            {{ codeRepos[removeCandidate.index]?.name ||
+               codeRepos[removeCandidate.index]?.url }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='artifact'">
-          <strong>{{ artifactRepos[removeCandidate.index]?.name || artifactRepos[removeCandidate.index]?.url }}</strong>
+          <strong>
+            {{ artifactRepos[removeCandidate.index]?.name ||
+               artifactRepos[removeCandidate.index]?.url }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='jenkins'">
-          <strong>{{ jenkinsList[removeCandidate.index]?.name || jenkinsList[removeCandidate.index]?.url }}</strong>
+          <strong>
+            {{ jenkinsList[removeCandidate.index]?.name ||
+               jenkinsList[removeCandidate.index]?.url }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='crontab'">
-          <strong>{{ crontabList[removeCandidate.index]?.expr }} - {{ crontabList[removeCandidate.index]?.desc }}</strong>
+          <strong>
+            {{ crontabList[removeCandidate.index]?.expr }} -
+            {{ crontabList[removeCandidate.index]?.desc }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='member'">
-          <strong>{{ proyecto?.equipoMinsait?.[removeCandidate.index]?.nombre }}</strong>
+          <strong>
+            {{ proyecto?.equipoMinsait?.[removeCandidate.index]?.nombre }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='openshift'">
-          <strong>{{ 'PROJECTS_REMOVE.OPENSHIFT_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.openshifts?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>
+            {{ 'PROJECTS_REMOVE.OPENSHIFT_FOR' | translate }}:
+            {{ devMachines[removeCandidate.index]?.openshifts?.[0]?.identifier ||
+               devMachines[removeCandidate.index]?.identifier ||
+               devMachines[removeCandidate.index]?.ip }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='machine'">
-          <strong>{{ 'PROJECTS_REMOVE.MACHINE' | translate }}: {{ devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>
+            {{ 'PROJECTS_REMOVE.MACHINE' | translate }}:
+            {{ devMachines[removeCandidate.index]?.identifier ||
+               devMachines[removeCandidate.index]?.ip }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='db'">
-          <strong>{{ 'PROJECTS_REMOVE.DB_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.dbs?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>
+            {{ 'PROJECTS_REMOVE.DB_FOR' | translate }}:
+            {{ devMachines[removeCandidate.index]?.dbs?.[0]?.identifier ||
+               devMachines[removeCandidate.index]?.identifier ||
+               devMachines[removeCandidate.index]?.ip }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='othertool'">
-          <strong>{{ 'PROJECTS_REMOVE.OTHER_TOOL_FOR' | translate }}: {{ devMachines[removeCandidate.index]?.otherTools?.[0]?.identifier || devMachines[removeCandidate.index]?.identifier || devMachines[removeCandidate.index]?.ip }}</strong>
+          <strong>
+            {{ 'PROJECTS_REMOVE.OTHER_TOOL_FOR' | translate }}:
+            {{ devMachines[removeCandidate.index]?.otherTools?.[0]?.identifier ||
+               devMachines[removeCandidate.index]?.identifier ||
+               devMachines[removeCandidate.index]?.ip }}
+          </strong>
         </div>
         <div *ngIf="removeCandidate.type==='document'">
-          <strong>{{ 'PROJECTS_REMOVE.DOCUMENT' | translate }}: {{ removeDocCandidate }}</strong>
+          <strong>
+            {{ 'PROJECTS_REMOVE.DOCUMENT' | translate }}:
+            {{ removeDocCandidate }}
+          </strong>
         </div>
       </div>
     </div>
     <div class="modal-actions">
-      <button type="button" class="jh-btn" (click)="confirmRemove()">{{ 'PROJECTS.CONFIRM_OK' | translate }}</button>
-      <button type="button" class="jh-btn" (click)="cancelRemove()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
+      <button type="button" class="jh-btn"
+              (click)="confirmRemove()">
+        {{ 'PROJECTS.CONFIRM_OK' | translate }}
+      </button>
+      <button type="button" class="jh-btn"
+              (click)="cancelRemove()">
+        {{ 'PROJECTS.CONFIRM_CANCEL' | translate }}
+      </button>
     </div>
   </div>
 </div>
 
 <!-- Upload validation confirm modal -->
-<div class="modal-backdrop jh-modal-backdrop upload-confirm-modal" *ngIf="showUploadConfirmPopup">
+<div class="modal-backdrop jh-modal-backdrop upload-confirm-modal"
+     *ngIf="showUploadConfirmPopup">
   <div class="modal jh-modal">
-    <div class="modal-header modal-header-warning">⚠️ {{ 'PROJECTS.UPLOAD_VALIDATION_TITLE' | translate }}</div>
+    <div class="modal-header modal-header-warning">
+      ⚠️ {{ 'PROJECTS.UPLOAD_VALIDATION_TITLE' | translate }}
+    </div>
     <div class="modal-body">
-      <p class="upload-warning-intro">{{ 'PROJECTS.UPLOAD_VALIDATION_MSG' | translate }}</p>
+      <p class="upload-warning-intro">
+        {{ 'PROJECTS.UPLOAD_VALIDATION_MSG' | translate }}
+      </p>
       <div class="upload-file-info">
         <strong>{{ pendingUploadFile?.name }}</strong>
-        <span class="file-size-info">({{ formatBytes(pendingUploadFile?.size || 0) }})</span>
+        <span class="file-size-info">
+          ({{ formatBytes(pendingUploadFile?.size || 0) }})
+        </span>
       </div>
       <div class="validation-errors">
-        <div class="error-item" *ngFor="let error of uploadValidationErrors">
+        <div class="error-item"
+             *ngFor="let error of uploadValidationErrors">
           <span class="error-icon">❌</span> {{ error }}
         </div>
       </div>
-      <p class="upload-confirm-question">{{ 'PROJECTS.UPLOAD_CONFIRM_QUESTION' | translate }}</p>
+      <p class="upload-confirm-question">
+        {{ 'PROJECTS.UPLOAD_CONFIRM_QUESTION' | translate }}
+      </p>
     </div>
     <div class="modal-actions upload-modal-actions">
-      <button type="button" class="jh-btn jh-btn-danger" (click)="deleteUploadedFile()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <button type="button"
+              class="jh-btn jh-btn-danger"
+              (click)="deleteUploadedFile()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 6h18"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         {{ 'PROJECTS.DELETE_FILE' | translate }}
       </button>
-      <button type="button" class="jh-btn jh-btn-secondary" (click)="cancelUpload()">{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}</button>
-      <button type="button" class="jh-btn jh-btn-warning" (click)="confirmUploadAnyway()">{{ 'PROJECTS.UPLOAD_ANYWAY' | translate }}</button>
+      <button type="button"
+              class="jh-btn jh-btn-secondary"
+              (click)="cancelUpload()">
+        {{ 'PROJECTS.CONFIRM_CANCEL' | translate }}
+      </button>
+      <button type="button"
+              class="jh-btn jh-btn-warning"
+              (click)="confirmUploadAnyway()">
+        {{ 'PROJECTS.UPLOAD_ANYWAY' | translate }}
+      </button>
     </div>
   </div>
 </div>
