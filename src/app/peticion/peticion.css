@@ -1,2 +1,241 @@
-.peticion { padding: 16px; }
-.peticion h1 { margin-bottom: 12px; }
+.peticion-root {
+	padding: 24px;
+	background: #0f1113;
+	min-height: 100vh;
+	color: #e5e7eb;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.header h2 {
+	margin: 0;
+	color: #FBC02D;
+	font-size: 1.8rem;
+}
+
+.subtitle {
+	margin: 4px 0 0;
+	color: #8ca0b3;
+	font-size: 0.95rem;
+}
+
+.send-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+	color: #fff !important;
+	padding: 10px 18px;
+	border-radius: 20px;
+	box-shadow: 0 4px 12px rgba(23, 162, 184, 0.35);
+}
+
+.send-btn mat-icon {
+	font-size: 18px;
+}
+
+.form-card {
+	background: rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 12px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.row {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.row mat-form-field {
+	flex: 1 1 220px;
+}
+
+.row .full {
+	flex: 1 1 100%;
+}
+
+/* Material fields style similar a Estimación */
+::ng-deep .form-card .mat-mdc-form-field {
+	width: 100%;
+}
+
+::ng-deep .form-card .mat-mdc-text-field-wrapper,
+::ng-deep .form-card .mat-mdc-form-field-flex {
+	background: #1a1d21 !important;
+	border-radius: 20px !important;
+	border: 2px solid #4a5568 !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-flex {
+	padding: 12px 16px !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-flex:hover {
+	border-color: #3e4246 !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex {
+	border-color: #fbc02d !important;
+}
+
+::ng-deep .form-card .mat-mdc-input-element {
+	color: #e5e7eb !important;
+	font-size: 1rem;
+}
+
+::ng-deep .form-card .mat-mdc-input-element::placeholder {
+	color: #7c8084 !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-focus-overlay,
+::ng-deep .form-card .mdc-line-ripple,
+::ng-deep .form-card .mdc-notched-outline {
+	display: none !important;
+}
+
+/* Select panel opaco, similar a Scrum */
+::ng-deep .devops-select-panel {
+	background: #1a1d21 !important;
+	color: #e0e0e0 !important;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+::ng-deep .devops-select-panel .mdc-list-item__primary-text {
+	color: #e0e0e0 !important;
+}
+
+::ng-deep .devops-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+	color: #FBC02D !important;
+}
+
+::ng-deep .devops-select-panel .mat-mdc-option:hover {
+	background: rgba(251, 192, 45, 0.08) !important;
+}
+
+.attachments {
+	align-items: flex-start;
+}
+
+.upload {
+	flex: 1 1 260px;
+}
+
+.upload-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	border: 2px dashed #f6c85f;
+	border-radius: 12px;
+	color: #f6c85f;
+	cursor: pointer;
+	user-select: none;
+	transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.upload-label:hover {
+	background: rgba(246, 200, 95, 0.1);
+	transform: translateY(-2px);
+}
+
+.upload input[type="file"] {
+	display: none;
+}
+
+.muted {
+	color: #8ca0b3;
+	font-size: 0.85rem;
+	margin-top: 6px;
+}
+
+.attach-list {
+	flex: 1 1 260px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.attach-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px 12px;
+	border-radius: 10px;
+	background: #16181b;
+	border: 1px solid #2b2f33;
+}
+
+.attach-item .name {
+	font-weight: 600;
+}
+
+.attach-item .meta {
+	color: #8ca0b3;
+	font-size: 0.85rem;
+}
+
+.actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 4px;
+}
+
+.invalid-field .mat-mdc-form-field-outline {
+	border-color: #f44336;
+}
+
+.invalid-field .mat-mdc-form-field-outline-thick {
+	color: #f44336;
+}
+
+.error-msg {
+	color: #f44336;
+	font-size: 12px;
+	margin-top: 4px;
+}
+
+.helper {
+	color: #8ca0b3;
+	font-size: 0.85rem;
+	margin: 0;
+}
+
+::ng-deep .mat-datepicker-content {
+	background: #1a1d21 !important;
+	color: #e0e0e0 !important;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+::ng-deep .mat-calendar-body-cell-content {
+	color: #e0e0e0 !important;
+}
+
+::ng-deep .mat-calendar-body-active .mat-calendar-body-cell-content,
+::ng-deep .mat-calendar-body-selected .mat-calendar-body-cell-content {
+	background: #FBC02D !important;
+	color: #111 !important;
+}
+
+@media (max-width: 960px) {
+	.header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.send-btn {
+		align-self: stretch;
+		justify-content: center;
+	}
+}

@@ -1,5 +1,146 @@
-<div class="page peticion">
-  <h1>{{ 'MENU.REQUEST' | translate }}</h1>
-  <p>{{ 'PETICION.DESCRIPTION' | translate }}</p>
-  <button mat-raised-button color="primary">{{ 'PETICION.SEND' | translate }}</button>
+<div class="peticion-root">
+  <div class="header">
+    <div>
+      <h2>Petición DevOps</h2>
+      <p class="subtitle">Envía tu petición al equipo DevOps con los detalles clave.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="row">
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.requesterName)">
+        <input
+          matInput
+          placeholder="Nombre del peticionario"
+          [(ngModel)]="form.requesterName"
+          (ngModelChange)="onFormChange()"
+          required
+        />
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterName)">Campo obligatorio</div>
+      </mat-form-field>
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))">
+        <input
+          matInput
+          type="email"
+          placeholder="Email del peticionario"
+          [(ngModel)]="form.requesterEmail"
+          (ngModelChange)="onFormChange()"
+          required
+        />
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterEmail)">Campo obligatorio</div>
+        <div class="error-msg" *ngIf="showErrors && !isEmpty(form.requesterEmail) && !validateEmail(form.requesterEmail)">Email inválido</div>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.projectName)">
+        <input
+          matInput
+          placeholder="Proyecto de la tarea"
+          [(ngModel)]="form.projectName"
+          (ngModelChange)="onFormChange()"
+          required
+        />
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectName)">Campo obligatorio</div>
+      </mat-form-field>
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.projectCode)">
+        <input
+          matInput
+          placeholder="Código del proyecto"
+          [(ngModel)]="form.projectCode"
+          (ngModelChange)="onFormChange()"
+          required
+        />
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectCode)">Campo obligatorio</div>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && (!form.jiraTask || !validateUrl(form.jiraTask))">
+        <input
+          matInput
+          type="url"
+          placeholder="Tarea JIRA"
+          [(ngModel)]="form.jiraTask"
+          (ngModelChange)="onFormChange()"
+          required
+        />
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.jiraTask)">Campo obligatorio</div>
+        <div class="error-msg" *ngIf="showErrors && !isEmpty(form.jiraTask) && !validateUrl(form.jiraTask)">Debe ser una URL válida</div>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-select
+          placeholder="Asignar a DevOps (opcional)"
+          [(ngModel)]="form.devopsAssignee"
+          (ngModelChange)="onFormChange()"
+          [panelClass]="'devops-select-panel'"
+        >
+          <mat-option *ngFor="let opt of devopsOptions" [value]="opt">{{ opt }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="full">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="Fecha límite (opcional)"
+          [(ngModel)]="deadline"
+          (dateChange)="onFormChange()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="full" [class.invalid-field]="showErrors && isEmpty(form.comments)">
+        <textarea
+          matInput
+          rows="4"
+          placeholder="Comentarios de la tarea"
+          [(ngModel)]="form.comments"
+          (ngModelChange)="onFormChange()"
+          required
+        ></textarea>
+        <div class="error-msg" *ngIf="showErrors && isEmpty(form.comments)">Campo obligatorio</div>
+      </mat-form-field>
+    </div>
+
+    <div class="row attachments">
+      <div class="upload">
+        <label class="upload-label" for="fileInput">
+          <mat-icon>attach_file</mat-icon>
+          Añadir anexos
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          multiple
+          (change)="onFilesSelected($event)"
+        />
+        <p class="muted">Imágenes, vídeos o documentos. Opcional.</p>
+      </div>
+      <div class="attach-list" *ngIf="attachments.length">
+        <div class="attach-item" *ngFor="let a of attachments; let i = index">
+          <div class="name">{{ a.name }}</div>
+          <div class="meta">{{ (a.size / 1024) | number:'1.0-1' }} KB · {{ a.type || 'binario' }}</div>
+          <button mat-icon-button color="warn" (click)="removeAttachment(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-stroked-button color="primary" (click)="confirmAndSubmit()" [disabled]="!isValid()">
+        Enviar petición
+      </button>
+      <button mat-stroked-button (click)="resetForm()">
+        Limpiar
+      </button>
+    </div>
+    <p class="helper">Los campos marcados son obligatorios excepto anexos y asignación.</p>
+  </div>
 </div>
