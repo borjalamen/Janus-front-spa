@@ -469,6 +469,23 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     return html;
   }
 
+  private async loadImageDataUrl(url: string): Promise<string> {
+    try {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('Network response was not ok');
+      const blob = await resp.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn('Could not load image for PDF header:', e);
+      return '';
+    }
+  }
+
   async createPdfBlob(): Promise<Blob> {
     const jsPDFModule = await import('jspdf');
     const jsPDF = jsPDFModule.default;
@@ -476,6 +493,10 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     const margin = 40;
     let y = 40;
     const lineHeight = 14;
+
+    // load image from assets (falls back silently if not available)
+    const imagePath = '/assets/images/7dRimV7.png';
+    const imageDataUrl = await this.loadImageDataUrl(imagePath);
 
     doc.setFontSize(16);
     doc.text(this.estimationName || 'Estimation', margin, y);
@@ -526,6 +547,29 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     let cx3 = x + colWidths[0];
     this.weeks.forEach((_, i) => { doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 12); cx3 += colWidths[i+1]; });
     doc.text(String(this.grandTotal()), cx3 + 6, y + 12);
+
+    // Add branding image and footer on every page
+    const pageCount = doc.getNumberOfPages();
+    const footerText = `Estimación realizada por el equipo de Janus a fecha: ${new Date().toLocaleDateString('es-ES')}`;
+    for (let p = 1; p <= pageCount; p++) {
+      doc.setPage(p);
+      const pw = doc.internal.pageSize.getWidth();
+      const ph = doc.internal.pageSize.getHeight();
+      if (imageDataUrl) {
+        const imgW = 60;
+        const imgH = 60;
+        try {
+          // place top-right
+          doc.addImage(imageDataUrl, 'PNG', pw - margin - imgW, 20, imgW, imgH);
+        } catch (e) {
+          // ignore image errors
+          console.warn('addImage failed', e);
+        }
+      }
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+      doc.text(footerText, margin, ph - 30);
+    }
 
     const pdfBlob = doc.output('blob');
     return pdfBlob;
