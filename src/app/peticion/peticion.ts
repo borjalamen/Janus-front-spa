@@ -10,7 +10,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '../local-storage.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-peticion',
@@ -57,7 +59,11 @@ export class PeticionComponent implements OnInit {
 
   showErrors = false;
 
-  constructor(private storage: LocalStorageService, private dialog: MatDialog) {}
+  constructor(
+    private storage: LocalStorageService,
+    private dialog: MatDialog,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
@@ -84,9 +90,8 @@ export class PeticionComponent implements OnInit {
   }
 
   isValid(): boolean {
-    const emailOk = this.validateEmail(this.form.requesterEmail);
-    const jiraOk = this.validateUrl(this.form.jiraTask);
-    const requiredOk = [
+    // Check all required fields have content
+    const allFieldsFilled = [
       this.form.requesterName,
       this.form.requesterEmail,
       this.form.projectName,
@@ -94,7 +99,18 @@ export class PeticionComponent implements OnInit {
       this.form.jiraTask,
       this.form.comments
     ].every(v => !!v && !!String(v).trim());
-    return requiredOk && emailOk && jiraOk;
+
+    if (!allFieldsFilled) {
+      return false;
+    }
+
+    // Validate email format
+    if (!this.validateEmail(this.form.requesterEmail)) {
+      return false;
+    }
+
+    // JIRA task just needs to have content, no strict URL validation
+    return !!this.form.jiraTask.trim();
   }
 
   resetForm(): void {
@@ -135,13 +151,20 @@ export class PeticionComponent implements OnInit {
   private submitInternal(): void {
     const payload = {
       ...this.form,
-      deadline: this.deadline,
-      attachments: this.attachments.map(a => ({ name: a.name, size: a.size, type: a.type }))
+      deadline: this.deadline ? this.deadline.toISOString() : null,
+      attachments: this.attachments.map(a => a.name)
     };
 
-    console.log('Peticion DevOps enviada:', payload);
-    alert('Petición enviada (demo).');
-    this.resetForm();
+    this.http.post(`${environment.baseUrl}peticiones-tareas`, payload).subscribe({
+      next: () => {
+        alert('✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.');
+        this.resetForm();
+      },
+      error: err => {
+        console.error('Error enviando petición', err);
+        alert('❌ Error al enviar la petición. Revisa que el servidor esté disponible.');
+      }
+    });
   }
 
   validateEmail(email: string): boolean {

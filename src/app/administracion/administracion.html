@@ -30,7 +30,15 @@
       <button class="menu-btn" 
               [class.active]="activeTab === 'REQUESTS'" 
               (click)="cambiarTab('REQUESTS')">
-        <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
+        <span class="menu-emoji">📋</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
+        <span class="tab-badge" *ngIf="peticionesPendientes > 0">{{ peticionesPendientes }}</span>
+      </button>
+
+      <button class="menu-btn"
+              [class.active]="activeTab === 'PETICIONES_TAREAS'"
+              (click)="cambiarTab('PETICIONES_TAREAS')">
+        <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_PETICIONES' | translate }}
+        <span class="tab-badge" *ngIf="tareasPendientes > 0">{{ tareasPendientes }}</span>
       </button>
     </div>
   </div>
@@ -106,16 +114,26 @@
       <div class="admin-card">
         <h3>{{ 'ADMIN.VERSION_CHANGE' | translate }}</h3>
         <p>{{ 'ADMIN.VERSION_MANAGEMENT' | translate }}</p>
-        
+
         <div class="form-field">
-            <label>{{ 'ADMIN.SYSTEM_VERSION' | translate }}</label>
-            <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0">
+          <label>{{ 'ADMIN.SYSTEM_VERSION' | translate }}</label>
+          <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0" [disabled]="versionSaving">
+        </div>
+
+        <div class="param-feedback">
+          <div class="param-success" *ngIf="versionSuccess">
+            <mat-icon>check_circle</mat-icon> {{ versionSuccess }}
+          </div>
+          <div class="param-error" *ngIf="versionError">
+            <mat-icon>error_outline</mat-icon> {{ versionError }}
+          </div>
         </div>
 
         <div style="margin-top: 16px; text-align: right;">
-            <button class="jenkins-add-btn" (click)="cambiarVersion()">
-                <mat-icon>update</mat-icon> {{ 'ADMIN.UPDATE_VERSION' | translate }}
-            </button>
+          <button class="jenkins-add-btn" (click)="cambiarVersion()" [disabled]="versionSaving">
+            <mat-icon>{{ versionSaving ? 'hourglass_empty' : 'update' }}</mat-icon>
+            {{ versionSaving ? 'Guardando...' : ('ADMIN.UPDATE_VERSION' | translate) }}
+          </button>
         </div>
       </div>
     </div>
@@ -126,25 +144,37 @@
       </div>
 
       <div class="db-grid">
+        <!-- Borrado Físico -->
         <div class="admin-card db-card">
-            <span class="big-emoji warn">🗑️</span>
-            <h3>{{ 'ADMIN.PHYSICAL_DELETE' | translate }}</h3>
-            <p>{{ 'ADMIN.DELETE_DESCRIPTION' | translate }}</p>
-            <button class="popup-btn" (click)="accionBBDD('borrado')">{{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}</button>
+          <span class="big-emoji">🗑️</span>
+          <h3>{{ 'ADMIN.PHYSICAL_DELETE' | translate }}</h3>
+          <p>{{ 'ADMIN.PHYSICAL_DELETE_DESC' | translate }}</p>
+          <button class="jenkins-add-btn db-danger-btn" (click)="accionBBDD('borrado')">
+            <mat-icon>delete_forever</mat-icon>
+            {{ 'ADMIN.PHYSICAL_DELETE' | translate }}
+          </button>
         </div>
 
+        <!-- Backup -->
         <div class="admin-card db-card">
-            <span class="big-emoji">🔄</span>
-            <h3>{{ 'ADMIN.RESTORE' | translate }}</h3>
-            <p>{{ 'ADMIN.RESTORE_DESCRIPTION' | translate }}</p>
-            <button class="popup-btn" (click)="accionBBDD('restore')">{{ 'ADMIN.CHOOSE_VERSION' | translate }}</button>
+          <span class="big-emoji">💾</span>
+          <h3>{{ 'ADMIN.BACKUP' | translate }}</h3>
+          <p>{{ 'ADMIN.BACKUP_DESC' | translate }}</p>
+          <button class="jenkins-add-btn" (click)="accionBBDD('backup')">
+            <mat-icon>backup</mat-icon>
+            {{ 'ADMIN.BACKUP' | translate }}
+          </button>
         </div>
 
+        <!-- Restore -->
         <div class="admin-card db-card">
-            <span class="big-emoji">💾</span>
-            <h3>{{ 'ADMIN.BACKUP' | translate }}</h3>
-            <p>{{ 'ADMIN.BACKUP_DESCRIPTION' | translate }}</p>
-            <button class="popup-btn" (click)="accionBBDD('backup')">{{ 'ADMIN.SELECT_AND_GENERATE' | translate }}</button>
+          <span class="big-emoji">🔄</span>
+          <h3>{{ 'ADMIN.RESTORE' | translate }}</h3>
+          <p>{{ 'ADMIN.RESTORE_DESC' | translate }}</p>
+          <button class="jenkins-add-btn" (click)="accionBBDD('restore')">
+            <mat-icon>restore</mat-icon>
+            {{ 'ADMIN.RESTORE' | translate }}
+          </button>
         </div>
       </div>
     </div>
@@ -183,7 +213,7 @@
       <app-buscador (buscar)="filtrarPeticiones($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
 
       <div class="requests-list">
-        <div *ngFor="let peticion of peticionesFiltradas" class="admin-card request-card">
+        <div *ngFor="let peticion of peticionesPaginadas" class="admin-card request-card">
           <div class="request-header">
             <div class="request-title">
               <span class="request-id">#{{ peticion.id }}</span>
@@ -207,8 +237,123 @@
         </div>
 
         <div *ngIf="peticionesFiltradas.length === 0" class="empty-state">
-          {{ 'ADMIN.DELETE_CONFIRMATION_MSG' | translate }}
+          {{ 'ADMIN.NO_REQUESTS' | translate }}
         </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="pagination-bar" *ngIf="totalPaginasPeticiones > 1">
+        <button class="page-btn" (click)="cambiarPaginaPeticiones(paginaActualPeticiones - 1)" [disabled]="paginaActualPeticiones === 1">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let p of paginasArray"
+          class="page-btn"
+          [class.active]="p === paginaActualPeticiones"
+          (click)="cambiarPaginaPeticiones(p)">
+          {{ p }}
+        </button>
+        <button class="page-btn" (click)="cambiarPaginaPeticiones(paginaActualPeticiones + 1)" [disabled]="paginaActualPeticiones === totalPaginasPeticiones">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <span class="page-info">{{ paginaActualPeticiones }} / {{ totalPaginasPeticiones }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'PETICIONES_TAREAS'" class="tab-content fade-in">
+      <div class="documents-header">
+        <h2>{{ 'ADMIN.TAB_PETICIONES' | translate }}</h2>
+        <div class="requests-summary">
+          <span class="status-pill pendiente"
+                [class.active]="filtroEstadoTareas === 'PENDIENTE'"
+                (click)="filtrarPorEstadoTareas('PENDIENTE')"
+                style="cursor:pointer">
+            {{ tareasPendientes }} Pendientes
+          </span>
+          <span class="status-pill aprobada"
+                [class.active]="filtroEstadoTareas === 'APROBADA'"
+                (click)="filtrarPorEstadoTareas('APROBADA')"
+                style="cursor:pointer">
+            {{ tareasAprobadas }} Aprobadas
+          </span>
+          <span class="status-pill rechazada"
+                [class.active]="filtroEstadoTareas === 'RECHAZADA'"
+                (click)="filtrarPorEstadoTareas('RECHAZADA')"
+                style="cursor:pointer">
+            {{ tareasRechazadas }} Rechazadas
+          </span>
+          <span class="status-pill"
+                [class.active]="filtroEstadoTareas === 'TODAS'"
+                (click)="filtrarPorEstadoTareas('TODAS')"
+                style="cursor:pointer">
+            {{ peticionsTareas.length }} {{ 'ADMIN.ALL' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <app-buscador (buscar)="filtrarTareas($event)" style="margin-bottom:20px; display:block"></app-buscador>
+
+      <div class="requests-list">
+        <div *ngFor="let tarea of tareasPaginadas" class="admin-card request-card">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-id">#{{ tarea.id.slice(-6) }}</span>
+              <span class="request-type">{{ tarea.proyecto }} <span style="opacity:.6;font-size:11px">({{ tarea.projectCode }})</span></span>
+            </div>
+            <span class="status-pill" [ngClass]="tarea.estado.toLowerCase()">
+              {{ getStatusTranslation(tarea.estado) | translate }}
+            </span>
+          </div>
+
+          <div class="request-meta">
+            <span>👤 {{ tarea.solicitante }}</span>
+            <span>📧 {{ tarea.email }}</span>
+            <span *ngIf="tarea.deadline">📅 {{ tarea.deadline }}</span>
+          </div>
+
+          <div class="tarea-jira-row" *ngIf="tarea.jiraTask">
+            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;color:#64b5f6">link</mat-icon>
+            <a [href]="tarea.jiraTask" target="_blank" rel="noopener" class="jira-link">{{ tarea.jiraTask }}</a>
+          </div>
+
+          <div class="request-meta" *ngIf="tarea.asignado">
+            <span>🔧 Asignado a: <strong>{{ tarea.asignado }}</strong></span>
+            <span *ngIf="tarea.deadline">⏰ Límite: {{ tarea.deadline }}</span>
+          </div>
+
+          <p class="request-note">{{ tarea.comentario }}</p>
+
+          <div class="request-actions" *ngIf="tarea.estado === 'PENDIENTE'">
+            <button class="btn-emoji confirm" (click)="aprobarTarea(tarea)" [disabled]="!canEdit" title="Aprobar">
+              ✓
+            </button>
+            <button class="btn-emoji cancel" (click)="rechazarTarea(tarea)" [disabled]="!canEdit" title="Rechazar">
+              ✗
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="peticionsTareasFiltradas.length === 0" class="empty-state">
+          No hay peticiones de tarea para revisar.
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="pagination-bar" *ngIf="totalPaginasTareas > 1">
+        <button class="page-btn" (click)="cambiarPaginaTareas(paginaActualTareas - 1)" [disabled]="paginaActualTareas === 1">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let p of paginasArrayTareas"
+          class="page-btn"
+          [class.active]="p === paginaActualTareas"
+          (click)="cambiarPaginaTareas(p)">
+          {{ p }}
+        </button>
+        <button class="page-btn" (click)="cambiarPaginaTareas(paginaActualTareas + 1)" [disabled]="paginaActualTareas === totalPaginasTareas">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <span class="page-info">{{ paginaActualTareas }} / {{ totalPaginasTareas }}</span>
       </div>
     </div>
 
@@ -301,93 +446,57 @@
     </h2>
     <hr class="divider">
     <div class="form-content">
-      
-      <!-- Búsqueda de colección -->
-      <div class="borrado-section">
-        <h4>📂 {{ 'ADMIN.COLLECTION_SEARCH' | translate }}</h4>
-        <p>{{ 'ADMIN.SEARCH_COLLECTION_DESC' | translate }}</p>
-        
-        <div class="collection-search">
-          <div class="input-field">
-            <label>{{ 'ADMIN.COLLECTION_NAME' | translate }}</label>
-            <input type="text" 
-                   [(ngModel)]="coleccionBorrar" 
-                   placeholder="Ej: usuarios, documentos, logs, sesiones"
-                   class="collection-input"
-                   (keyup.enter)="buscarColeccion()">
-          </div>
-          <button class="btn-round btn-search" (click)="buscarColeccion()" [disabled]="!coleccionBorrar || cargandoRegistrosInactivos">
-            <span *ngIf="!cargandoRegistrosInactivos">{{ 'ADMIN.SEARCH' | translate }}</span>
-            <span *ngIf="cargandoRegistrosInactivos">{{ 'ADMIN.LOADING' | translate }}</span>
-          </button>
+
+      <!-- Buscador + Seleccionar todas -->
+      <div class="popup-search-row">
+        <app-buscador (buscar)="filtroColeccionesBorrado = $event" style="flex:1; min-width:0"></app-buscador>
+        <button class="jenkins-add-btn" (click)="toggleSeleccionarTodasBorrado()" [disabled]="cargandoColeccionesDB">
+          <mat-icon>{{ selectedCollectionsBorrado.size === listaColeccionesActiva.length ? 'deselect' : 'select_all' }}</mat-icon>
+          {{ selectedCollectionsBorrado.size === listaColeccionesActiva.length ? ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) : ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
+        </button>
+      </div>
+
+      <div *ngIf="cargandoColeccionesDB" class="db-loading-state">
+        <mat-icon class="spin">refresh</mat-icon>
+        <span>Cargando colecciones...</span>
+      </div>
+
+      <div *ngIf="errorColeccionesDB && !cargandoColeccionesDB" class="db-error-state">
+        <mat-icon>error_outline</mat-icon>
+        <span>No se pudo conectar con el servidor. Asegúrate de que el backend está en marcha.</span>
+        <button class="jenkins-add-btn" (click)="cargarColeccionesDB()">
+          <mat-icon>refresh</mat-icon> Reintentar
+        </button>
+      </div>
+
+      <div class="colecciones-grid" *ngIf="!cargandoColeccionesDB && !errorColeccionesDB">
+        <div
+          *ngFor="let col of coleccionesBorradoFiltradas"
+          class="coleccion-card"
+          [class.selected]="selectedCollectionsBorrado.has(col.id)"
+          (click)="toggleColeccionBorrado(col.id)"
+        >
+          <span class="col-check-mark" *ngIf="selectedCollectionsBorrado.has(col.id)">✓</span>
+          <span class="col-icon">{{ col.icon }}</span>
+          <span class="col-label">{{ col.label | translate }}</span>
+          <span class="col-desc">{{ col.descripcion | translate }}</span>
+          <span class="col-count" *ngIf="col.registros > 0">{{ col.registros }} docs</span>
         </div>
+      </div>
 
-        <!-- Colección no encontrada -->
-        <div *ngIf="coleccionNoEncontrada" class="collection-not-found">
-          <p>❌ {{ 'ADMIN.COLLECTION_NOT_FOUND' | translate }} "{{ coleccionBorrar }}"</p>
-        </div>
-
-        <!-- Colección encontrada con registros inactivos -->
-        <div *ngIf="coleccionEncontrada" class="collection-found-detail">
-          <div class="collection-header">
-            <div class="collection-info">
-              <p>✅ {{ 'ADMIN.COLLECTION' | translate }} <strong>{{ coleccionBorrar }}</strong></p>
-              <p class="stats">📊 {{ 'ADMIN.TOTAL' | translate }} {{ registrosColeccion }} {{ 'ADMIN.RECORDS' | translate }} | 🚫 {{ 'ADMIN.INACTIVE' | translate }} <strong>{{ registrosInactivos }}</strong></p>
-            </div>
-            <button class="btn-round btn-secondary btn-sm" (click)="limpiarBusquedaColeccion()">
-              ✕ {{ 'ADMIN.CLEAR' | translate }}
-            </button>
-          </div>
-
-          <!-- Lista de registros inactivos -->
-          <div *ngIf="registrosInactivosColeccion.length > 0" class="registros-inactivos-list">
-            <div class="seleccionar-todos">
-              <label class="custom-checkbox">
-                <input type="checkbox" 
-                       [checked]="registrosSeleccionadosBorrar.size === registrosInactivosColeccion.length && registrosInactivosColeccion.length > 0"
-                       (change)="seleccionarTodosRegistros()">
-                <span class="checkmark"></span>
-                <span>{{ 'ADMIN.SELECT_ALL' | translate }} ({{ registrosInactivosColeccion.length }})</span>
-              </label>
-            </div>
-            
-            <div class="registros-scroll">
-              <div *ngFor="let registro of registrosInactivosColeccion" class="registro-inactivo-item">
-                <label class="custom-checkbox">
-                  <input type="checkbox" 
-                         [checked]="registrosSeleccionadosBorrar.has(registro.id)"
-                         (change)="toggleSeleccionRegistro(registro.id)">
-                  <span class="checkmark"></span>
-                  <div class="registro-info">
-                    <div class="registro-header">
-                      <span class="registro-id">{{ registro.id }}</span>
-                      <span class="registro-fecha">📅 {{ registro.fechaInactivacion }}</span>
-                    </div>
-                    <span class="registro-nombre">{{ registro.nombre }}</span>
-                    <span class="registro-descripcion">{{ registro.descripcion }}</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-            
-            <div class="borrar-registros-actions" *ngIf="registrosSeleccionadosBorrar.size > 0">
-              <span class="seleccionados-count">{{ registrosSeleccionadosBorrar.size }} registro(s) seleccionado(s)</span>
-              <button class="btn-round btn-danger" (click)="borrarRegistrosSeleccionados()">
-                🗑️ {{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Sin registros inactivos -->
-          <div *ngIf="registrosInactivosColeccion.length === 0" class="no-inactivos">
-            <p>✨ {{ 'ADMIN.NO_INACTIVE' | translate }}</p>
-          </div>
-        </div>
-
-        <p class="warning-text" *ngIf="registrosSeleccionadosBorrar.size > 0">
+      <div class="db-action-bar" *ngIf="!errorColeccionesDB">
+        <span class="db-selected-count" *ngIf="selectedCollectionsBorrado.size > 0">
+          {{ selectedCollectionsBorrado.size }} {{ 'ADMIN.COLS_SELECTED' | translate }}
+        </span>
+        <span class="db-selected-count" *ngIf="selectedCollectionsBorrado.size === 0"></span>
+        <p class="warning-text" style="margin:0" *ngIf="selectedCollectionsBorrado.size > 0">
           <mat-icon>warning</mat-icon>
           {{ 'ADMIN.PERMANENT_DELETE' | translate }}
         </p>
+        <button class="jenkins-add-btn db-danger-btn" (click)="ejecutarBorradoFisicoColecciones()" [disabled]="selectedCollectionsBorrado.size === 0">
+          <mat-icon>delete_forever</mat-icon>
+          {{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}
+        </button>
       </div>
 
       <hr class="divider">
@@ -400,38 +509,99 @@
 
 <!-- Popup Restore -->
 <div class="modal-overlay" *ngIf="mostrarPopupRestore">
-  <div class="auth-card db-popup">
+  <div class="auth-card db-popup db-popup-large">
     <h2 class="form-title">
       <mat-icon class="title-icon">restore</mat-icon>
       {{ 'ADMIN.RESTORE_DATABASE' | translate }}
     </h2>
     <hr class="divider">
     <div class="form-content">
-      <p>{{ 'ADMIN.SELECT_RESTORE_VERSION' | translate }}</p>
-      
-      <div class="version-list">
-        <label *ngFor="let version of versionesRestore" class="version-item" 
-               [class.selected]="selectedRestore === version.id">
-          <input type="radio" 
-                 name="restoreVersion" 
-                 [value]="version.id"
-                 [(ngModel)]="selectedRestore">
-          <div class="version-info">
-            <span class="version-fecha">{{ version.fecha }}</span>
-            <span class="version-desc">{{ version.descripcion }}</span>
-          </div>
-        </label>
+
+      <!-- Buscador de versiones -->
+      <div class="popup-search-row">
+        <app-buscador (buscar)="filtroVersionesRestore = $event" style="flex:1; min-width:0"></app-buscador>
       </div>
 
-      <p class="warning-text" *ngIf="selectedRestore">
-        <mat-icon>info</mat-icon>
-        {{ 'ADMIN.RESTORE_STATE' | translate }} {{ fechaRestoreSeleccionada }}
-      </p>
+      <div class="version-cards-list" *ngIf="versionesRestoreFiltradas.length > 0">
+        <div
+          *ngFor="let version of versionesRestoreFiltradas"
+          class="coleccion-card version-card"
+          [class.selected]="selectedRestore === version.id"
+          (click)="selectedRestore = version.id"
+        >
+          <span class="col-check-mark" *ngIf="selectedRestore === version.id">✓</span>
+          <span class="col-icon">💾</span>
+          <span class="col-label">{{ version.fecha }}</span>
+          <span class="col-desc">{{ version.descripcion }}</span>
+        </div>
+      </div>
+
+      <div class="db-empty-state" *ngIf="versionesRestoreFiltradas.length === 0">
+        <mat-icon>cloud_off</mat-icon>
+        <p>{{ 'ADMIN.NO_VERSIONS' | translate }}</p>
+      </div>
+
+      <div class="db-action-bar" *ngIf="selectedRestore">
+        <p class="warning-text" style="margin:0; flex:1">
+          <mat-icon>warning</mat-icon>
+          {{ 'ADMIN.RESTORE_STATE' | translate }} {{ fechaRestoreSeleccionada }}
+        </p>
+        <button class="jenkins-add-btn" (click)="ejecutarRestore()">
+          <mat-icon>restore</mat-icon>
+          {{ 'ADMIN.RESTORE_ACTION' | translate }}
+        </button>
+      </div>
+
+      <!-- Log de backups recientes -->
+      <ng-container *ngIf="logBackups.length > 0">
+        <hr class="divider">
+        <div class="log-backup-header">
+          <mat-icon>history</mat-icon>
+          <span>{{ 'ADMIN.BACKUP_LOG' | translate }}</span>
+          <span style="font-size:11px; color:#78909c; font-weight:400; text-transform:none">&nbsp;— Haz clic en un backup para restaurarlo</span>
+        </div>
+        <div class="log-backup-list">
+          <div *ngFor="let entry of logBackups"
+               class="log-backup-card"
+               [class.selected]="selectedRestoreLogId === entry.id"
+               (click)="selectedRestoreLogId = selectedRestoreLogId === entry.id ? '' : entry.id">
+            <span class="col-check-mark" *ngIf="selectedRestoreLogId === entry.id">✓</span>
+            <div class="log-card-top">
+              <span class="backup-type-badge" [ngClass]="entry.tipo === 'completo' ? 'full' : 'partial'">
+                {{ entry.tipo === 'completo' ? ('ADMIN.BACKUP_COMPLETE' | translate) : ('ADMIN.BACKUP_PARTIAL' | translate) }}
+              </span>
+              <span class="log-card-fecha">📅 {{ entry.fecha }}</span>
+            </div>
+            <div class="log-card-archivo">
+              <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle">folder_zip</mat-icon>
+              {{ entry.descripcion }}
+            </div>
+            <div class="log-card-colecciones" *ngIf="entry.colecciones.length">
+              <span class="log-col-pill" *ngFor="let col of entry.colecciones">{{ col }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-action-bar" *ngIf="selectedRestoreLogId">
+          <p class="warning-text" style="margin:0; flex:1">
+            <mat-icon>warning</mat-icon>
+            <span *ngIf="logEntrySeleccionada?.tipo === 'completo'">
+              Se restaurarán <strong>todas las colecciones</strong> desde "{{ logEntrySeleccionada?.descripcion }}"
+            </span>
+            <span *ngIf="logEntrySeleccionada?.tipo === 'parcial'">
+              Restore parcial: <strong>{{ logEntrySeleccionada?.colecciones?.length }} colección(es)</strong> desde "{{ logEntrySeleccionada?.descripcion }}"
+            </span>
+          </p>
+          <button class="jenkins-add-btn" (click)="ejecutarRestoreLog()">
+            <mat-icon>restore</mat-icon>
+            {{ 'ADMIN.RESTORE_ACTION' | translate }}
+          </button>
+        </div>
+      </ng-container>
 
       <hr class="divider">
       <div class="action-buttons">
         <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CANCEL' | translate">✗</button>
-        <button class="btn-emoji confirm" (click)="ejecutarRestore()" [title]="'ADMIN.RESTORE_ACTION' | translate">✓</button>
       </div>
     </div>
   </div>
@@ -439,7 +609,7 @@
 
 <!-- Popup Backup -->
 <div class="modal-overlay" *ngIf="mostrarPopupBackup">
-  <div class="auth-card db-popup">
+  <div class="auth-card db-popup db-popup-large">
     <h2 class="form-title">
       <mat-icon class="title-icon">backup</mat-icon>
       {{ 'ADMIN.GENERATE_BACKUP' | translate }}
@@ -447,42 +617,74 @@
     <hr class="divider">
     <div class="form-content">
 
-      <!-- Backup por colección individual -->
-      <div class="backup-individual-section">
-        <h4>📂 {{ 'ADMIN.INDIVIDUAL_BACKUP' | translate }}</h4>
-        <p>{{ 'ADMIN.SEARCH_SPECIFIC' | translate }}</p>
-        
-        <div class="collection-search">
-          <div class="input-field">
-            <label>{{ 'ADMIN.COLLECTION_NAME' | translate }}</label>
-            <input type="text" [(ngModel)]="coleccionBackup" placeholder="Ej: usuarios" class="collection-input">
-          </div>
-          <button class="btn-round btn-search" (click)="buscarColeccionBackup()" [disabled]="!coleccionBackup">
-            {{ 'ADMIN.SEARCH' | translate }}
-          </button>
-        </div>
-        <div *ngIf="coleccionBackupEncontrada" class="collection-found">
-          <p>✅ {{ 'ADMIN.COLLECTION_FOUND_INFO' | translate }} <strong>{{ coleccionBackup }}</strong> ({{ registrosColeccionBackup }} {{ 'ADMIN.RECORDS' | translate }})</p>
-          <button class="btn-round btn-blue btn-sm" (click)="backupColeccion()">
-            {{ 'ADMIN.BACKUP_BTN' | translate }}
-          </button>
-        </div>
-        <div *ngIf="coleccionBackupNoEncontrada" class="collection-not-found">
-          <p>❌ {{ 'ADMIN.COLLECTION_NOT_FOUND' | translate }} "{{ coleccionBackup }}"</p>
+      <!-- Buscador + Seleccionar todas -->
+      <div class="popup-search-row">
+        <app-buscador (buscar)="filtroColeccionesBackup = $event" style="flex:1; min-width:0"></app-buscador>
+        <button class="jenkins-add-btn" (click)="toggleSeleccionarTodasBackup()" [disabled]="cargandoColeccionesDB">
+          <mat-icon>{{ selectedCollectionsBackup.size === listaColeccionesActiva.length ? 'deselect' : 'select_all' }}</mat-icon>
+          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length ? ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) : ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
+        </button>
+      </div>
+
+      <!-- Indicador tipo de backup -->
+      <div
+        class="backup-type-badge"
+        [class.full]="selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0"
+        [class.partial]="selectedCollectionsBackup.size > 0 && selectedCollectionsBackup.size < listaColeccionesActiva.length"
+        [class.none]="selectedCollectionsBackup.size === 0"
+      >
+        <mat-icon style="font-size:14px;width:14px;height:14px">
+          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0 ? 'cloud_done' : selectedCollectionsBackup.size > 0 ? 'filter_list' : 'cloud_off' }}
+        </mat-icon>
+        <span *ngIf="selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0">{{ 'ADMIN.BACKUP_TYPE_FULL' | translate }}</span>
+        <span *ngIf="selectedCollectionsBackup.size > 0 && selectedCollectionsBackup.size < listaColeccionesActiva.length">{{ 'ADMIN.BACKUP_TYPE_PARTIAL' | translate }} &mdash; {{ selectedCollectionsBackup.size }}/{{ listaColeccionesActiva.length }}</span>
+        <span *ngIf="selectedCollectionsBackup.size === 0">{{ 'ADMIN.BACKUP_TYPE_NONE' | translate }}</span>
+      </div>
+
+      <div *ngIf="cargandoColeccionesDB" class="db-loading-state">
+        <mat-icon class="spin">refresh</mat-icon>
+        <span>Cargando colecciones...</span>
+      </div>
+
+      <div *ngIf="errorColeccionesDB && !cargandoColeccionesDB" class="db-error-state">
+        <mat-icon>error_outline</mat-icon>
+        <span>No se pudo conectar con el servidor. Asegúrate de que el backend está en marcha.</span>
+        <button class="jenkins-add-btn" (click)="cargarColeccionesDB()">
+          <mat-icon>refresh</mat-icon> Reintentar
+        </button>
+      </div>
+
+      <div class="colecciones-grid" *ngIf="!cargandoColeccionesDB && !errorColeccionesDB">
+        <div
+          *ngFor="let col of coleccionesBackupFiltradas"
+          class="coleccion-card"
+          [class.selected]="selectedCollectionsBackup.has(col.id)"
+          (click)="toggleColeccionBackup(col.id)"
+        >
+          <span class="col-check-mark" *ngIf="selectedCollectionsBackup.has(col.id)">✓</span>
+          <span class="col-icon">{{ col.icon }}</span>
+          <span class="col-label">{{ col.label | translate }}</span>
+          <span class="col-desc">{{ col.descripcion | translate }}</span>
+          <span class="col-count" *ngIf="col.registros > 0">{{ col.registros }} docs</span>
         </div>
       </div>
 
-      <hr class="divider">
-
-      <!-- Backup Completo -->
-      <div class="backup-completo-section">
-        <h4>📦 {{ 'ADMIN.FULL_BACKUP' | translate }}</h4>
-        <p>{{ 'ADMIN.FULL_BACKUP_DESC' | translate }}</p>
-        <button class="btn-round btn-primary btn-full" 
-                (click)="ejecutarBackupCompleto()" 
-                [disabled]="backupCompletoEnProgreso">
-          <span *ngIf="!backupCompletoEnProgreso">{{ 'ADMIN.BACKUP_BTN' | translate }}</span>
-          <span *ngIf="backupCompletoEnProgreso">{{ 'ADMIN.GENERATING' | translate }}</span>
+      <div class="db-action-bar">
+        <span class="db-selected-count" *ngIf="selectedCollectionsBackup.size > 0">
+          {{ selectedCollectionsBackup.size }} {{ 'ADMIN.COLS_SELECTED' | translate }}
+        </span>
+        <span class="db-selected-count" *ngIf="selectedCollectionsBackup.size === 0"></span>
+        <button
+          class="jenkins-add-btn"
+          (click)="ejecutarBackupColecciones()"
+          [disabled]="selectedCollectionsBackup.size === 0 || backupCompletoEnProgreso"
+        >
+          <mat-icon>backup</mat-icon>
+          {{ selectedCollectionsBackup.size === 0 ? ('ADMIN.SELECT_AND_GENERATE' | translate) : ('ADMIN.BACKUP' | translate) + ' (' + selectedCollectionsBackup.size + ')' }}
+        </button>
+        <button class="jenkins-add-btn db-full-backup-btn" (click)="ejecutarBackupCompleto()" [disabled]="backupCompletoEnProgreso">
+          <mat-icon>cloud_download</mat-icon>
+          {{ backupCompletoEnProgreso ? ('ADMIN.GENERATING' | translate) : ('ADMIN.FULL_BACKUP' | translate) }}
         </button>
       </div>
 

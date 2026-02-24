@@ -13,6 +13,9 @@ interface Solucion {
   numero: number;
   descripcion: string;
   entorno: 'minsait' | 'preproduccion' | 'produccion';
+  archivoNombre?: string;
+  archivoBase64?: string;
+  archivoTipo?: string;
 }
 
 interface Bitacora {
@@ -73,6 +76,19 @@ export class BitacoraComponent implements OnInit {
   // Visualització
   mostrarVisualizacion = false;
   bitacoraVisualizacion: Bitacora | null = null;
+
+  // Visualización detalle steps (carrusel)
+  bitacoraDetall: Bitacora | null = null;
+  mostrarDetallSteps = false;
+  currentStepIndex = 0;
+  slideDirection: 'left' | 'right' = 'right';
+
+  // Steps expandidos en listado
+  expandedSteps: Set<string> = new Set();
+
+  // Feedback de operaciones
+  errorMessage = '';
+  successMessage = '';
 
   // Colores por entorno
   coloresEntorno = {
@@ -208,12 +224,17 @@ export class BitacoraComponent implements OnInit {
   // ===== POPUP EDITAR =====
   abrirPopupEditar(bitacora: Bitacora) {
     this.editando = true;
-    this.formBitacora = { ...bitacora };
+    // Deep copy to avoid mutating the list item
+    this.formBitacora = JSON.parse(JSON.stringify(bitacora));
     if (!this.formBitacora.soluciones) {
       this.formBitacora.soluciones = [];
     }
     this.tagsInput = bitacora.tags ? bitacora.tags.join(', ') : '';
-    this.setActiveTab('crear');
+    // Set tab directly — do NOT call setActiveTab() which would overwrite
+    // formBitacora with any saved draft from localStorage
+    this.activeTab = 'crear';
+    this.storage.set(this.STORAGE_KEY_TAB, 'crear');
+    this.mostrarDetallSteps = false;
   }
 
   // ===== CERRAR =====
@@ -222,54 +243,88 @@ export class BitacoraComponent implements OnInit {
     this.formBitacora = this.getEmptyBitacora();
     this.tagsInput = '';
     this.editando = false;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.storage.remove(this.STORAGE_KEY_FORM);
     this.setActiveTab('listar');
   }
 
   // ===== GUARDAR (CREAR O ACTUALIZAR) =====
   guardarBitacora() {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     this.formBitacora.tags = this.tagsInput
       ? this.tagsInput.split(',').map(t => t.trim()).filter(t => t)
       : [];
 
-    if (!this.formBitacora.soluciones || this.formBitacora.soluciones.length === 0) {
-      alert('Debe agregar al menos una solución');
+    if (!this.formBitacora.contexto || !this.formBitacora.contexto.trim()) {
+      this.errorMessage = 'El campo Contexto es obligatorio.';
+      return;
+    }
+    if (!this.formBitacora.error || !this.formBitacora.error.trim()) {
+      this.errorMessage = 'El campo Error es obligatorio.';
       return;
     }
 
+    // Build payload: normalize fecha to ISO datetime and strip archivoBase64
+    // (base64 data is only for in-session preview; backend stores name+type only)
+    const payload: any = {
+      ...this.formBitacora,
+      fecha: this.normalizeFecha(this.formBitacora.fecha),
+      soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
+        numero: s.numero,
+        descripcion: s.descripcion,
+        entorno: s.entorno,
+        archivoNombre: s.archivoNombre || null,
+        archivoTipo: s.archivoTipo || null,
+        archivoBase64: s.archivoBase64 || null
+      }))
+    };
+
     if (this.editando && this.formBitacora.id) {
-      this.http.put(`${this.baseUrl}/update/${this.formBitacora.id}`, this.formBitacora)
+      this.http.put(`${this.baseUrl}/update/${this.formBitacora.id}`, payload)
         .subscribe({
           next: () => {
-            console.log('✅ Bitácora actualizada');
+            this.successMessage = 'Bitácora actualizada correctamente.';
             this.cargarBitacoras();
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
             this.editando = false;
-
-            // esborrem draft quan guardem
             this.storage.remove(this.STORAGE_KEY_FORM);
-
-            this.setActiveTab('listar');
+            setTimeout(() => { this.successMessage = ''; this.setActiveTab('listar'); }, 800);
           },
-          error: (err) => console.error('❌ Error actualizando bitácora', err)
+          error: (err) => {
+            console.error('❌ Error actualizando bitácora', err);
+            this.errorMessage = 'Error al actualizar: ' + (err?.error?.message || err?.message || 'Error del servidor');
+          }
         });
     } else {
-      this.http.post(`${this.baseUrl}/create`, this.formBitacora)
+      this.http.post(`${this.baseUrl}/create`, payload)
         .subscribe({
           next: () => {
-            console.log('✅ Bitácora creada');
+            this.successMessage = 'Bitácora creada correctamente.';
             this.cargarBitacoras();
             this.formBitacora = this.getEmptyBitacora();
             this.tagsInput = '';
-
-            // esborrem draft quan guardem
             this.storage.remove(this.STORAGE_KEY_FORM);
-
-            this.setActiveTab('listar');
+            setTimeout(() => { this.successMessage = ''; this.setActiveTab('listar'); }, 800);
           },
-          error: (err) => console.error('❌ Error creando bitácora', err)
+          error: (err) => {
+            console.error('❌ Error creando bitácora', err);
+            this.errorMessage = 'Error al guardar: ' + (err?.error?.message || err?.message || 'Error del servidor');
+          }
         });
     }
+  }
+
+  // Normalize fecha: input[type=date] returns 'YYYY-MM-DD', backend needs 'YYYY-MM-DDTHH:mm:ss'
+  private normalizeFecha(fecha: string): string {
+    if (!fecha) return new Date().toISOString().split('.')[0];
+    // Already has time component
+    if (fecha.includes('T')) return fecha;
+    // Just a date string - append midnight time
+    return fecha + 'T00:00:00';
   }
 
   // ===== CONFIRMAR ELIMINAR =====
@@ -329,11 +384,11 @@ export class BitacoraComponent implements OnInit {
   getNombreEntorno(entorno: string): string {
     switch (entorno) {
       case 'minsait':
-        return 'Minsait (Azul)';
+        return 'Minsait';
       case 'preproduccion':
-        return 'Preproducción (Amarillo)';
+        return 'Preproducción';
       case 'produccion':
-        return 'Producción (Rojo)';
+        return 'Producción';
       default:
         return entorno;
     }
@@ -361,4 +416,71 @@ export class BitacoraComponent implements OnInit {
     this.bitacoraVisualizacion = null;
     this.setActiveTab('listar');
   }
+
+  // ===== TOGGLE STEPS EN LISTADO =====
+  openDetallSteps(bitacora: Bitacora) {
+    this.bitacoraDetall = { ...bitacora };
+    this.mostrarDetallSteps = true;
+    this.currentStepIndex = 0;
+    this.slideDirection = 'right';
+  }
+
+  closeDetallSteps() {
+    this.mostrarDetallSteps = false;
+    this.bitacoraDetall = null;
+    this.currentStepIndex = 0;
+  }
+
+  nextStep() {
+    if (this.bitacoraDetall && this.bitacoraDetall.soluciones && this.currentStepIndex < this.bitacoraDetall.soluciones.length - 1) {
+      this.slideDirection = 'right';
+      this.currentStepIndex++;
+    }
+  }
+
+  prevStep() {
+    if (this.currentStepIndex > 0) {
+      this.slideDirection = 'left';
+      this.currentStepIndex--;
+    }
+  }
+
+  goToStep(index: number) {
+    if (index > this.currentStepIndex) {
+      this.slideDirection = 'right';
+    } else if (index < this.currentStepIndex) {
+      this.slideDirection = 'left';
+    }
+    this.currentStepIndex = index;
+  }
+
+  onFileSelected(event: Event, solucion: Solucion) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      solucion.archivoNombre = file.name;
+      solucion.archivoTipo = file.type;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        solucion.archivoBase64 = e.target.result;
+        this.onFormChange();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  esImagen(s: Solucion): boolean {
+    return !!s.archivoTipo && s.archivoTipo.startsWith('image/');
+  }
+
+  esPdf(s: Solucion): boolean {
+    return s.archivoTipo === 'application/pdf';
+  }
+
+  getExtension(nombre?: string): string {
+    if (!nombre) return '';
+    return nombre.split('.').pop()?.toUpperCase() || '';
+  }
+
 }

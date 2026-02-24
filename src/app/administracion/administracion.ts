@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
@@ -55,6 +55,35 @@ interface PeticionUneteBackend {
   adminComment?: string;
 }
 
+interface PeticionTareaBackend {
+  id?: string;
+  requesterName?: string;
+  requesterEmail?: string;
+  projectName?: string;
+  projectCode?: string;
+  jiraTask?: string;
+  devopsAssignee?: string;
+  deadline?: string;
+  comments?: string;
+  estado?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  adminComment?: string;
+}
+
+interface PeticionTareaAdmin {
+  id: string;
+  solicitante: string;
+  email: string;
+  proyecto: string;
+  projectCode: string;
+  jiraTask: string;
+  asignado: string;
+  deadline: string;
+  comentario: string;
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+}
+
 @Component({
   selector: 'app-administracion',
   templateUrl: './administracion.html',
@@ -76,9 +105,10 @@ export class AdministracionComponent implements OnInit {
   private readonly STORAGE_KEY_TAB = 'admin_active_tab_v1';
   private readonly STORAGE_KEY_USER_FILTER = 'admin_users_filter_v1';
   private readonly STORAGE_KEY_REQ_FILTER = 'admin_requests_filter_v1';
+  private readonly STORAGE_KEY_TAREAS_FILTER = 'admin_tareas_filter_v1';
 
   // CONTROL DE PESTAÑAS (SCENARIOS)
-  // Options: 'USERS', 'APP', 'PARAM', 'DB', 'REQUESTS'
+  // Options: 'USERS', 'APP', 'PARAM', 'DB', 'REQUESTS', 'PETICIONES_TAREAS'
   activeTab: string = 'USERS';
 
   // filtres UI
@@ -111,16 +141,189 @@ export class AdministracionComponent implements OnInit {
   selectedRoleToDisable: string = '';
   appVersion: string = '';
 
-  // ESTADOS PETICIONES
+  // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
   filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+
+  // Paginación peticiones
+  paginaActualPeticiones = 1;
+  readonly peticionesPorPagina = 10;
+
+  // ESTADOS PETICIONES DE TAREA
+  peticionsTareas: PeticionTareaAdmin[] = [];
+  peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
+  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+  searchTareas = '';
+
+  // Paginación tareas
+  paginaActualTareas = 1;
+  readonly tareasPorPagina = 10;
+
+  get peticionesPaginadas(): PeticionAdmin[] {
+    const inicio = (this.paginaActualPeticiones - 1) * this.peticionesPorPagina;
+    return this.peticionesFiltradas.slice(inicio, inicio + this.peticionesPorPagina);
+  }
+
+  get totalPaginasPeticiones(): number {
+    return Math.ceil(this.peticionesFiltradas.length / this.peticionesPorPagina);
+  }
+
+  get paginasArray(): number[] {
+    return Array.from({ length: this.totalPaginasPeticiones }, (_, i) => i + 1);
+  }
+
+  cambiarPaginaPeticiones(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginasPeticiones) {
+      this.paginaActualPeticiones = pagina;
+    }
+  }
+
+  // Getters peticiones de tarea
+  get tareasPaginadas(): PeticionTareaAdmin[] {
+    const inicio = (this.paginaActualTareas - 1) * this.tareasPorPagina;
+    return this.peticionsTareasFiltradas.slice(inicio, inicio + this.tareasPorPagina);
+  }
+
+  get totalPaginasTareas(): number {
+    return Math.ceil(this.peticionsTareasFiltradas.length / this.tareasPorPagina);
+  }
+
+  get paginasArrayTareas(): number[] {
+    return Array.from({ length: this.totalPaginasTareas }, (_, i) => i + 1);
+  }
+
+  get tareasPendientes(): number {
+    return this.peticionsTareas.filter(p => p.estado === 'PENDIENTE').length;
+  }
+
+  get tareasAprobadas(): number {
+    return this.peticionsTareas.filter(p => p.estado === 'APROBADA').length;
+  }
+
+  get tareasRechazadas(): number {
+    return this.peticionsTareas.filter(p => p.estado === 'RECHAZADA').length;
+  }
+
+  cambiarPaginaTareas(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginasTareas) {
+      this.paginaActualTareas = pagina;
+    }
+  }
 
   // ESTADOS BBDD
   mostrarPopupBorrado = false;
   mostrarPopupRestore = false;
   mostrarPopupBackup = false;
-  
+
+  // Sub-tab activo dentro de la sección DB
+  dbSubTab: 'borrado' | 'backup' | 'restore' = 'borrado';
+
+  // Colecciones reales de la BD cargadas dinámicamente
+  coleccionesDB: { id: string; registros: number }[] = [];
+  cargandoColeccionesDB = false;
+  errorColeccionesDB = false;
+
+  // Metadatos visuales opcionales por nombre de colección MongoDB.
+  // Si una colección no está aquí, se muestra con icono y nombre genérico.
+  private readonly coleccionMeta: Record<string, { label: string; icon: string; descripcion: string }> = {
+    'users':           { label: 'ADMIN.COL_USERS_LABEL',          icon: '👥', descripcion: 'ADMIN.COL_USERS_DESC' },
+    'logbook':         { label: 'ADMIN.COL_LOGBOOK_LABEL',        icon: '📝', descripcion: 'ADMIN.COL_LOGBOOK_DESC' },
+    'formations':      { label: 'ADMIN.COL_FORMACIONES_LABEL',    icon: '📚', descripcion: 'ADMIN.COL_FORMACIONES_DESC' },
+    'training':        { label: 'ADMIN.COL_FORMACIONES_LABEL',    icon: '📚', descripcion: 'ADMIN.COL_FORMACIONES_DESC' },
+    'procedures':      { label: 'ADMIN.COL_PROCEDIMIENTOS_LABEL', icon: '📋', descripcion: 'ADMIN.COL_PROCEDIMIENTOS_DESC' },
+    'planning':        { label: 'ADMIN.COL_PLANIFICACION_LABEL',  icon: '📅', descripcion: 'ADMIN.COL_PLANIFICACION_DESC' },
+    'media_videos':    { label: 'ADMIN.COL_MULTIMEDIA_LABEL',     icon: '🎬', descripcion: 'ADMIN.COL_MULTIMEDIA_DESC' },
+    'multimedia':      { label: 'ADMIN.COL_MULTIMEDIA_LABEL',     icon: '🎬', descripcion: 'ADMIN.COL_MULTIMEDIA_DESC' },
+    'documents':       { label: 'ADMIN.COL_DOCUMENTOS_LABEL',     icon: '📄', descripcion: 'ADMIN.COL_DOCUMENTOS_DESC' },
+    'join_requests':   { label: 'ADMIN.COL_JOINREQUESTS_LABEL',   icon: '🔗', descripcion: 'ADMIN.COL_JOINREQUESTS_DESC' },
+    'parametrization': { label: 'ADMIN.COL_CONFIGURACION_LABEL',  icon: '⚙️', descripcion: 'ADMIN.COL_CONFIGURACION_DESC' },
+    'projects':        { label: 'ADMIN.COL_PROJECTS_LABEL',       icon: '🗂️', descripcion: 'ADMIN.COL_PROJECTS_DESC' },
+    'steps':           { label: 'ADMIN.COL_STEPS_LABEL',          icon: '🔢', descripcion: 'ADMIN.COL_STEPS_DESC' },
+    'counters':        { label: 'ADMIN.COL_COUNTERS_LABEL',       icon: '🔢', descripcion: 'ADMIN.COL_COUNTERS_DESC' },
+    'infraestructura': { label: 'ADMIN.COL_INFRA_LABEL',          icon: '🖥️', descripcion: 'ADMIN.COL_INFRA_DESC' },
+    'infraestructure': { label: 'ADMIN.COL_INFRA_LABEL',          icon: '🖥️', descripcion: 'ADMIN.COL_INFRA_DESC' },
+    'jenkins':         { label: 'ADMIN.COL_JENKINS_LABEL',        icon: '⚙️', descripcion: 'ADMIN.COL_JENKINS_DESC' },
+    'role_access':     { label: 'ADMIN.COL_ROLES_LABEL',          icon: '🔑', descripcion: 'ADMIN.COL_ROLES_DESC' },
+    'peticiones_tareas': { label: 'Peticiones de Tarea',          icon: '📝', descripcion: 'Peticiones de tarea DevOps' },
+  };
+
+  // Selecciones para borrado y backup
+  selectedCollectionsBorrado: Set<string> = new Set();
+  selectedCollectionsBackup: Set<string> = new Set();
+
+  // Filtros de búsqueda en popups
+  filtroColeccionesBorrado = '';
+  filtroColeccionesBackup = '';
+  filtroVersionesRestore = '';
+
+  get listaColeccionesActiva() {
+    return this.coleccionesDB.map(c => {
+      const meta = this.coleccionMeta[c.id] || { label: c.id, icon: '🗄️', descripcion: c.id };
+      return { id: c.id, label: meta.label, icon: meta.icon, descripcion: meta.descripcion, registros: c.registros };
+    });
+  }
+
+  get coleccionesBorradoFiltradas() {
+    const lista = this.listaColeccionesActiva;
+    if (!this.filtroColeccionesBorrado) return lista;
+    const f = this.filtroColeccionesBorrado.toLowerCase();
+    return lista.filter(c => {
+      const label = typeof c.label === 'string' && c.label.startsWith('ADMIN.')
+        ? this.translate.instant(c.label)
+        : c.label;
+      const desc = typeof c.descripcion === 'string' && c.descripcion.startsWith('ADMIN.')
+        ? this.translate.instant(c.descripcion)
+        : c.descripcion;
+      return label.toLowerCase().includes(f) || desc.toLowerCase().includes(f) || c.id.toLowerCase().includes(f);
+    });
+  }
+
+  get coleccionesBackupFiltradas() {
+    const lista = this.listaColeccionesActiva;
+    if (!this.filtroColeccionesBackup) return lista;
+    const f = this.filtroColeccionesBackup.toLowerCase();
+    return lista.filter(c => {
+      const label = typeof c.label === 'string' && c.label.startsWith('ADMIN.')
+        ? this.translate.instant(c.label)
+        : c.label;
+      const desc = typeof c.descripcion === 'string' && c.descripcion.startsWith('ADMIN.')
+        ? this.translate.instant(c.descripcion)
+        : c.descripcion;
+      return label.toLowerCase().includes(f) || desc.toLowerCase().includes(f) || c.id.toLowerCase().includes(f);
+    });
+  }
+
+  get versionesRestoreFiltradas() {
+    if (!this.filtroVersionesRestore) return this.versionesRestore;
+    const f = this.filtroVersionesRestore.toLowerCase();
+    return this.versionesRestore.filter(v =>
+      v.fecha.toLowerCase().includes(f) || (v.descripcion && v.descripcion.toLowerCase().includes(f)));
+  }
+
+  toggleSeleccionarTodasBorrado() {
+    const lista = this.listaColeccionesActiva;
+    if (this.selectedCollectionsBorrado.size === lista.length) {
+      this.selectedCollectionsBorrado = new Set();
+    } else {
+      this.selectedCollectionsBorrado = new Set(lista.map(c => c.id));
+    }
+  }
+
+  toggleSeleccionarTodasBackup() {
+    const lista = this.listaColeccionesActiva;
+    if (this.selectedCollectionsBackup.size === lista.length) {
+      this.selectedCollectionsBackup = new Set();
+    } else {
+      this.selectedCollectionsBackup = new Set(lista.map(c => c.id));
+    }
+  }
+
+  // Feedback inline de parametrización
+  versionSuccess = '';
+  versionError = '';
+  versionSaving = false;
+
   opcionesBorrado = [
     { value: 'usuarios', label: 'Usuarios inactivos' },
     { value: 'documentos', label: 'Documentos huérfanos' },
@@ -165,14 +368,22 @@ export class AdministracionComponent implements OnInit {
   versionesRestore: BackupVersion[] = [];
   selectedRestore: string = '';
 
+  // Log de backups recientes (máx 4)
+  logBackups: { id: string; fecha: string; descripcion: string; tipo: 'completo' | 'parcial'; colecciones: string[] }[] = [];
+
+  // Log entry seleccionado para restore parcial
+  selectedRestoreLogId: string = '';
+
   private baseUrl = `${environment.baseUrl}users`;
   private joinRequestsUrl = `${environment.baseUrl}join-requests`;
+  private readonly peticionsTareasUrl = `${environment.baseUrl}peticiones-tareas`;
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private router: Router,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -187,9 +398,13 @@ export class AdministracionComponent implements OnInit {
     const savedReqFilter = (this.storage.get(this.STORAGE_KEY_REQ_FILTER) as string) || '';
     this.searchRequests = savedReqFilter;
 
+    const savedTareasFilter = (this.storage.get(this.STORAGE_KEY_TAREAS_FILTER) as string) || '';
+    this.searchTareas = savedTareasFilter;
+
     this.carregarUsuaris();
     this.cargarVersion();
     this.cargarPeticiones();
+    this.cargarPeticionsTareas();
   }
 
   get canEdit(): boolean {
@@ -212,6 +427,105 @@ export class AdministracionComponent implements OnInit {
   cambiarTab(tab: string) {
     this.activeTab = tab;
     this.storage.set(this.STORAGE_KEY_TAB, tab);
+    // Reload data when entering each tab so it's always fresh
+    if (tab === 'PETICIONES_TAREAS') this.cargarPeticionsTareas();
+    if (tab === 'REQUESTS')          this.cargarPeticiones();
+    if (tab === 'USERS')             this.carregarUsuaris();
+  }
+
+  irAPeticion() {
+    this.router.navigate(['/peticion']);
+  }
+
+  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+    this.filtroEstadoTareas = estado;
+    this.aplicarFiltrosTareas();
+  }
+
+  filtrarTareas(termino: string) {
+    const t = (termino || '').toLowerCase().trim();
+    this.searchTareas = t;
+    this.storage.set(this.STORAGE_KEY_TAREAS_FILTER, t);
+    if (!t) { this.aplicarFiltrosTareas(); return; }
+    let lista = this.peticionsTareas.filter(p =>
+      p.solicitante.toLowerCase().includes(t) ||
+      p.email.toLowerCase().includes(t) ||
+      p.proyecto.toLowerCase().includes(t) ||
+      p.projectCode.toLowerCase().includes(t) ||
+      p.jiraTask.toLowerCase().includes(t) ||
+      p.asignado.toLowerCase().includes(t) ||
+      p.comentario.toLowerCase().includes(t)
+    );
+    if (this.filtroEstadoTareas !== 'TODAS') {
+      lista = lista.filter(p => p.estado === this.filtroEstadoTareas);
+    }
+    this.peticionsTareasFiltradas = lista;
+    this.paginaActualTareas = 1;
+  }
+
+  private aplicarFiltrosTareas() {
+    if (this.filtroEstadoTareas === 'TODAS') {
+      this.peticionsTareasFiltradas = [...this.peticionsTareas];
+    } else {
+      this.peticionsTareasFiltradas = this.peticionsTareas.filter(p => p.estado === this.filtroEstadoTareas);
+    }
+    if (this.searchTareas) { this.filtrarTareas(this.searchTareas); return; }
+    this.paginaActualTareas = 1;
+  }
+
+  aprobarTarea(tarea: PeticionTareaAdmin) {
+    this.http.put<PeticionTareaBackend>(`${this.peticionsTareasUrl}/${tarea.id}/approve`, {})
+      .subscribe({
+        next: updated => {
+          const mapped = this.mapPeticionTarea(updated);
+          const idx = this.peticionsTareas.findIndex(p => p.id === tarea.id);
+          if (idx !== -1) this.peticionsTareas[idx] = mapped;
+          this.aplicarFiltrosTareas();
+        },
+        error: err => console.error('Error aprobando tarea', err)
+      });
+  }
+
+  rechazarTarea(tarea: PeticionTareaAdmin) {
+    this.http.put<PeticionTareaBackend>(`${this.peticionsTareasUrl}/${tarea.id}/reject`, {})
+      .subscribe({
+        next: updated => {
+          const mapped = this.mapPeticionTarea(updated);
+          const idx = this.peticionsTareas.findIndex(p => p.id === tarea.id);
+          if (idx !== -1) this.peticionsTareas[idx] = mapped;
+          this.aplicarFiltrosTareas();
+        },
+        error: err => console.error('Error rechazando tarea', err)
+      });
+  }
+
+  private cargarPeticionsTareas() {
+    this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
+      next: data => {
+        this.peticionsTareas = data.map(p => this.mapPeticionTarea(p));
+        this.aplicarFiltrosTareas();
+      },
+      error: err => {
+        console.error('Error cargando peticiones de tarea', err);
+        this.peticionsTareas = [];
+        this.aplicarFiltrosTareas();
+      }
+    });
+  }
+
+  private mapPeticionTarea(p: PeticionTareaBackend): PeticionTareaAdmin {
+    return {
+      id: p.id ?? '',
+      solicitante: p.requesterName?.trim() || '',
+      email: p.requesterEmail?.trim() || '',
+      proyecto: p.projectName?.trim() || '',
+      projectCode: p.projectCode?.trim() || '',
+      jiraTask: p.jiraTask?.trim() || '',
+      asignado: p.devopsAssignee?.trim() || 'Cualquiera',
+      deadline: this.formatFecha(p.deadline),
+      comentario: p.comments?.trim() || '',
+      estado: this.normalizeEstado(p.estado)
+    };
   }
 
   filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
@@ -241,6 +555,7 @@ export class AdministracionComponent implements OnInit {
     }
     
     this.peticionesFiltradas = peticionesFiltradas;
+    this.paginaActualPeticiones = 1;
   }
 
   private aplicarFiltrosPeticiones() {
@@ -252,6 +567,8 @@ export class AdministracionComponent implements OnInit {
 
     if (this.searchRequests) {
       this.filtrarPeticiones(this.searchRequests);
+    } else {
+      this.paginaActualPeticiones = 1;
     }
   }
 
@@ -526,20 +843,27 @@ export class AdministracionComponent implements OnInit {
   // Scenario 3: Parametrización
   cambiarVersion() {
     if (!this.appVersion || this.appVersion.trim() === '') {
-      alert('Por favor, introduce una versión válida');
+      this.versionError = 'Introduce una versión válida (ej: 1.2.0)';
       return;
     }
+    this.versionError = '';
+    this.versionSuccess = '';
+    this.versionSaving = true;
 
     const body = { version: this.appVersion.trim() };
-    
+
     this.http.put<any>(`${environment.baseUrl}config/version`, body)
       .subscribe({
         next: () => {
-          alert(`Versión actualizada exitosamente a: ${this.appVersion}`);
+          this.versionSaving = false;
+          this.versionSuccess = `Versión actualizada a ${this.appVersion.trim()}`;
+          this.appVersion = '';
+          setTimeout(() => this.versionSuccess = '', 3000);
         },
         error: err => {
+          this.versionSaving = false;
+          this.versionError = 'Error al actualizar: ' + (err?.error?.message || err?.message || 'Error del servidor');
           console.error('Error actualizando versión', err);
-          alert('Error al actualizar la versión');
         }
       });
   }
@@ -556,9 +880,9 @@ export class AdministracionComponent implements OnInit {
 
   // Scenario 4: BBDD
   accionBBDD(tipo: string) {
-    console.log(`Acción de BBDD solicitada: ${tipo}`);
     if (tipo === 'borrado') {
       this.selectedBorrado = [];
+      this.cargarColeccionesDB();
       this.mostrarPopupBorrado = true;
     } else if (tipo === 'restore') {
       this.cargarVersionesRestore();
@@ -566,8 +890,109 @@ export class AdministracionComponent implements OnInit {
       this.mostrarPopupRestore = true;
     } else if (tipo === 'backup') {
       this.selectedBackup = [];
+      this.cargarColeccionesDB();
       this.mostrarPopupBackup = true;
     }
+  }
+
+  setDbSubTab(tab: 'borrado' | 'backup' | 'restore') {
+    this.dbSubTab = tab;
+    if (tab === 'restore') {
+      this.cargarVersionesRestore();
+      this.selectedRestore = '';
+    }
+    if (tab === 'borrado' || tab === 'backup') {
+      this.cargarColeccionesDB();
+    }
+  }
+
+  cargarColeccionesDB() {
+    this.cargandoColeccionesDB = true;
+    this.errorColeccionesDB = false;
+    this.http.get<{ id: string; registros: number }[]>(`${environment.baseUrl}db/colecciones`).subscribe({
+      next: (data) => {
+        this.cargandoColeccionesDB = false;
+        this.errorColeccionesDB = false;
+        this.coleccionesDB = data;
+      },
+      error: (err) => {
+        this.cargandoColeccionesDB = false;
+        this.errorColeccionesDB = true;
+        console.error('Error cargando colecciones de la BD', err);
+      }
+    });
+  }
+
+  toggleColeccionBorrado(id: string) {
+    if (this.selectedCollectionsBorrado.has(id)) {
+      this.selectedCollectionsBorrado.delete(id);
+    } else {
+      this.selectedCollectionsBorrado.add(id);
+    }
+  }
+
+  toggleColeccionBackup(id: string) {
+    if (this.selectedCollectionsBackup.has(id)) {
+      this.selectedCollectionsBackup.delete(id);
+    } else {
+      this.selectedCollectionsBackup.add(id);
+    }
+  }
+
+  ejecutarBorradoFisicoColecciones() {
+    if (this.selectedCollectionsBorrado.size === 0) return;
+    const cols = Array.from(this.selectedCollectionsBorrado);
+    const confirmacion = confirm(
+      `⚠️ BORRADO FÍSICO PERMANENTE\n\n` +
+      `Colecciones seleccionadas:\n${cols.map(c => '• ' + c).join('\n')}\n\n` +
+      `Esta acción NO se puede deshacer.`
+    );
+    if (!confirmacion) return;
+
+    this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: cols }).subscribe({
+      next: () => {
+        alert(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
+        this.selectedCollectionsBorrado.clear();
+      },
+      error: (err) => {
+        console.error('Error borrado físico', err);
+        alert(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
+        this.selectedCollectionsBorrado.clear();
+      }
+    });
+  }
+
+  ejecutarBackupColecciones() {
+    if (this.selectedCollectionsBackup.size === 0) return;
+    const cols = Array.from(this.selectedCollectionsBackup);
+    const allSelected = cols.length === this.listaColeccionesActiva.length;
+    const confirmacion = confirm(
+      `💾 Generar backup de:\n${cols.map(c => '• ' + c).join('\n')}\n\n¿Continuar?`
+    );
+    if (!confirmacion) return;
+
+    this.backupCompletoEnProgreso = true;
+    const endpoint = allSelected ? 'db/backup-completo' : 'db/backup';
+    const body = allSelected ? {} : { colecciones: cols };
+
+    this.http.post(`${environment.baseUrl}${endpoint}`, body).subscribe({
+      next: (res: any) => {
+        this.backupCompletoEnProgreso = false;
+        const archivo = res?.archivo || 'backup_' + new Date().toISOString().split('T')[0] + '.json';
+        const coleccionesRes: string[] = res?.colecciones || cols;
+        alert(`✅ Backup generado para ${coleccionesRes.length} colección(es)\nArchivo: ${archivo}`);
+        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: (allSelected ? 'completo' : 'parcial') as 'completo' | 'parcial', colecciones: coleccionesRes };
+        this.logBackups.unshift(entry);
+        if (this.logBackups.length > 4) this.logBackups.pop();
+        this.selectedCollectionsBackup.clear();
+      },
+      error: (err) => {
+        this.backupCompletoEnProgreso = false;
+        console.error('Error generando backup', err);
+        const archivo = 'backup_' + new Date().toISOString().split('T')[0] + '.json';
+        alert(`❌ Error al generar el backup. Revisa el servidor.`);
+      }
+    });
   }
 
   cargarVersionesRestore() {
@@ -598,6 +1023,36 @@ export class AdministracionComponent implements OnInit {
       error: err => {
         console.error('Error en borrado físico', err);
         alert('Error al ejecutar el borrado físico');
+      }
+    });
+  }
+
+  get logEntrySeleccionada() {
+    return this.logBackups.find(e => e.id === this.selectedRestoreLogId) || null;
+  }
+
+  ejecutarRestoreLog() {
+    const entry = this.logEntrySeleccionada;
+    if (!entry) return;
+    const esCompleto = entry.tipo === 'completo';
+    const msg = esCompleto
+      ? `¿Restaurar backup completo "${entry.descripcion}"?\n\nSe restaurarán todas las colecciones.`
+      : `¿Restaurar backup parcial "${entry.descripcion}"?\n\nColecciones afectadas:\n${entry.colecciones.map(c => '• ' + c).join('\n')}`;
+    if (!confirm(msg)) return;
+
+    this.http.post(`${environment.baseUrl}db/restore`, {
+      backupId: entry.id,
+      archivo: entry.descripcion,
+      colecciones: esCompleto ? [] : entry.colecciones
+    }).subscribe({
+      next: () => {
+        alert('✅ Backup restaurado correctamente');
+        this.mostrarPopupRestore = false;
+        this.selectedRestoreLogId = '';
+      },
+      error: err => {
+        console.error('Error en restore desde log', err);
+        alert('❌ Error al restaurar. Revisa que el servidor esté en marcha.');
       }
     });
   }
@@ -645,6 +1100,7 @@ export class AdministracionComponent implements OnInit {
     this.mostrarPopupBorrado = false;
     this.mostrarPopupRestore = false;
     this.mostrarPopupBackup = false;
+    this.selectedRestoreLogId = '';
   }
 
   toggleSeleccionBorrado(valor: string) {
@@ -907,13 +1363,21 @@ export class AdministracionComponent implements OnInit {
       next: (res: any) => {
         this.backupCompletoEnProgreso = false;
         const colecciones = res?.colecciones || ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos'];
-        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map((c: string) => '• ' + c).join('\n')}\n\nArchivo: ${res?.archivo || 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip'}`);
+        const archivo = res?.archivo || 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
+        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map((c: string) => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
+        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        this.logBackups.unshift(entry);
+        if (this.logBackups.length > 4) this.logBackups.pop();
       },
       error: err => {
         this.backupCompletoEnProgreso = false;
         console.error('Error generando backup completo', err);
         const colecciones = ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos', 'formaciones', 'multimedia'];
-        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map(c => '• ' + c).join('\n')}\n\nArchivo: backup_completo_${new Date().toISOString().split('T')[0]}.zip`);
+        const archivo = 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
+        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map(c => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
+        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        this.logBackups.unshift(entry);
+        if (this.logBackups.length > 4) this.logBackups.pop();
       }
     });
   }

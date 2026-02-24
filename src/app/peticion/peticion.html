@@ -1,10 +1,5 @@
 <div class="peticion-root">
-  <div class="header">
-    <div>
-      <h2>Petición DevOps</h2>
-      <p class="subtitle">Envía tu petición al equipo DevOps con los detalles clave.</p>
-    </div>
-  </div>
+  <h2>{{ 'PETICION.TITLE' | translate }}</h2>
 
   <div class="form-card">
     <div class="row">
@@ -14,7 +9,6 @@
           placeholder="Nombre del peticionario"
           [(ngModel)]="form.requesterName"
           (ngModelChange)="onFormChange()"
-          required
         />
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterName)">Campo obligatorio</div>
       </mat-form-field>
@@ -25,7 +19,6 @@
           placeholder="Email del peticionario"
           [(ngModel)]="form.requesterEmail"
           (ngModelChange)="onFormChange()"
-          required
         />
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterEmail)">Campo obligatorio</div>
         <div class="error-msg" *ngIf="showErrors && !isEmpty(form.requesterEmail) && !validateEmail(form.requesterEmail)">Email inválido</div>
@@ -39,7 +32,6 @@
           placeholder="Proyecto de la tarea"
           [(ngModel)]="form.projectName"
           (ngModelChange)="onFormChange()"
-          required
         />
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectName)">Campo obligatorio</div>
       </mat-form-field>
@@ -49,24 +41,20 @@
           placeholder="Código del proyecto"
           [(ngModel)]="form.projectCode"
           (ngModelChange)="onFormChange()"
-          required
         />
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectCode)">Campo obligatorio</div>
       </mat-form-field>
     </div>
 
     <div class="row">
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && (!form.jiraTask || !validateUrl(form.jiraTask))">
+      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.jiraTask)">
         <input
           matInput
-          type="url"
           placeholder="Tarea JIRA"
           [(ngModel)]="form.jiraTask"
           (ngModelChange)="onFormChange()"
-          required
         />
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.jiraTask)">Campo obligatorio</div>
-        <div class="error-msg" *ngIf="showErrors && !isEmpty(form.jiraTask) && !validateUrl(form.jiraTask)">Debe ser una URL válida</div>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-select
@@ -102,7 +90,6 @@
           placeholder="Comentarios de la tarea"
           [(ngModel)]="form.comments"
           (ngModelChange)="onFormChange()"
-          required
         ></textarea>
         <div class="error-msg" *ngIf="showErrors && isEmpty(form.comments)">Campo obligatorio</div>
       </mat-form-field>
@@ -134,13 +121,26 @@
     </div>
 
     <div class="actions">
-      <button mat-stroked-button color="primary" (click)="confirmAndSubmit()" [disabled]="!isValid()">
+      <button 
+        type="button"
+        class="action-btn"
+        (click)="confirmAndSubmit()" 
+        [disabled]="!isValid()"
+        aria-label="Enviar petición"
+      >
+        <mat-icon>send</mat-icon>
         Enviar petición
       </button>
-      <button mat-stroked-button (click)="resetForm()">
+      <button 
+        type="button"
+        class="action-btn"
+        (click)="resetForm()"
+        aria-label="Limpiar formulario"
+      >
+        <mat-icon>refresh</mat-icon>
         Limpiar
       </button>
     </div>
-    <p class="helper">Los campos marcados son obligatorios excepto anexos y asignación.</p>
+    <p class="helper">{{ 'PETICION.REQUIRED_FIELDS' | translate }}</p>
   </div>
 </div>

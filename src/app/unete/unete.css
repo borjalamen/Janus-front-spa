@@ -1,18 +1,144 @@
-.unete { padding: 16px; }
-.unete h1 { margin-bottom: 12px; }
+/* ===== UNETE STYLES - CONSISTENT WITH PETICION ===== */
+.unete-root {
+	padding: 24px;
+	background: #0f1113;
+	min-height: 100vh;
+	color: #e5e7eb;
+}
 
-.unete-form .actions { display:flex; gap:16px; align-items:center; margin-top:12px }
-.unete-form button[mat-raised-button], .unete-form button[mat-button] {
+.unete-root h2 {
+	color: #17a2b8;
+	margin-bottom: 24px;
+	font-size: 1.8rem;
+}
+
+.form-card {
+	background: rgba(23, 162, 184, 0.05);
+	border: 1px solid rgba(23, 162, 184, 0.2);
+	border-radius: 12px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.row {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.row mat-form-field {
+	flex: 1 1 220px;
+}
+
+.row .full {
+	flex: 1 1 100%;
+}
+
+/* Material fields style similar a Estimación */
+::ng-deep .form-card .mat-mdc-form-field {
+	width: 100%;
+}
+
+::ng-deep .form-card .mat-mdc-text-field-wrapper {
+	background: #141516 !important;
+	border-radius: 6px !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-flex {
+	background: #141516 !important;
+	border-radius: 6px !important;
+	border: 1px solid #2e3236 !important;
+	padding: 10px 16px !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-flex:hover {
+	border-color: #3e4246 !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex {
+	border-color: #FBC02D !important;
+	box-shadow: none !important;
+}
+
+::ng-deep .form-card .mat-mdc-form-field-focus-overlay,
+::ng-deep .form-card .mdc-line-ripple,
+::ng-deep .form-card .mdc-notched-outline,
+::ng-deep .form-card .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+::ng-deep .form-card .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+::ng-deep .form-card .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+	display: none !important;
+}
+
+::ng-deep .form-card .mat-mdc-input-element {
+	color: #eee !important;
+	padding: 0 !important;
+	font-size: 0.95rem;
+}
+
+::ng-deep .form-card .mat-mdc-input-element::placeholder {
+	color: #7c8084 !important;
+}
+
+::ng-deep .form-card textarea.mat-mdc-input-element {
+	resize: vertical;
+	font-family: 'Roboto Mono', monospace;
+}
+
+/* ===== ACTION BUTTONS (estilo jenkins-add-btn) ===== */
+.action-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
 	padding: 8px 16px;
-	border-radius: 6px;
+	border-radius: 999px;
+	border: 2px solid rgba(255, 255, 255, 0.04);
+	background: #0f1113;
+	color: #E0E0E0;
+	font-weight: bold;
+	font-size: 16px;
+	letter-spacing: 0.5px;
+	cursor: pointer;
+	transition: background 0.2s ease, color 0.2s ease,
+				transform 0.2s ease, border-color 0.2s ease,
+				box-shadow 0.2s ease;
 }
-.unete-form button[mat-raised-button] {
-	background: linear-gradient(180deg,#1e88e5,#1976d2);
-	color: white;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+
+.action-btn:hover {
+	background: rgba(255, 255, 255, 0.04);
+	border-color: #ffd54f;
+	color: #ffd54f;
+	transform: translateY(-6px) scale(1.02);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
-.unete-form button[mat-button] {
-	background: transparent;
-	color: #ddd;
+
+.action-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
 }
-.unete-form button:disabled { opacity: 0.6 }
+
+.action-btn mat-icon {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+}
+
+.actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 8px;
+}
+
+@media (max-width: 960px) {
+	.form-card {
+		padding: 16px;
+	}
+
+	.action-btn {
+		flex: 1 1 auto;
+		justify-content: center;
+	}
+}

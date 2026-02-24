@@ -139,7 +139,7 @@
             aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
             title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
           >
-            <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
           </button>
           <input
             type="file"
@@ -161,24 +161,16 @@
         </div>
 
         <div class="controls-right-bottom clear-controls">
-          <button
-            type="button"
-            class="toggle-btn"
-            [class.selected]="clearMeta"
-            (click)="clearMeta = !clearMeta"
-            aria-pressed="{{ clearMeta }}"
-          >
+          <label class="est-checkbox">
+            <input type="checkbox" [(ngModel)]="clearMeta" />
+            <span class="est-check-mark"></span>
             {{ 'ESTIMATION.CLEAR_META' | translate }}
-          </button>
-          <button
-            type="button"
-            class="toggle-btn"
-            [class.selected]="clearEstimation"
-            (click)="clearEstimation = !clearEstimation"
-            aria-pressed="{{ clearEstimation }}"
-          >
+          </label>
+          <label class="est-checkbox">
+            <input type="checkbox" [(ngModel)]="clearEstimation" />
+            <span class="est-check-mark"></span>
             {{ 'ESTIMATION.CLEAR_ESTIMATION' | translate }}
-          </button>
+          </label>
           <button
             type="button"
             class="emoji-btn delete-emoji"
@@ -186,6 +178,7 @@
             aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
             title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
           >
+          <span class="limpiar-label">Limpiar</span>
             🗑️
           </button>
         </div>

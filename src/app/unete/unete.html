@@ -1,97 +1,64 @@
-<div class="page unete">
-  <h1>{{ 'MENU.JOIN' | translate }}</h1>
-  <p>{{ 'UNETE.DESCRIPTION' | translate }}</p>
+<div class="unete-root">
+  <h2>{{ 'MENU.JOIN' | translate }}</h2>
 
-  <form class="unete-form" (ngSubmit)="sendMail()">
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.FULLNAME' | translate }}</mat-label>
-      <input
-        matInput
-        name="fullName"
-        [(ngModel)]="form.fullName"
-        (ngModelChange)="onFormChange()"
-        required
-      />
-    </mat-form-field>
+  <div class="form-card">
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="{{ 'UNETE.FULLNAME' | translate }}"
+          name="fullName"
+          [(ngModel)]="form.fullName"
+          (ngModelChange)="onFormChange()"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          type="email"
+          placeholder="{{ 'UNETE.EMAIL' | translate }}"
+          name="email"
+          [(ngModel)]="form.email"
+          (ngModelChange)="onFormChange()"
+        />
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.EMAIL' | translate }}</mat-label>
-      <input
-        matInput
-        type="email"
-        name="email"
-        [(ngModel)]="form.email"
-        (ngModelChange)="onFormChange()"
-        required
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.ROLE' | translate }}</mat-label>
-      <mat-select
-        name="role"
-        [(ngModel)]="form.role"
-        (ngModelChange)="onFormChange()"
-      >
-        <mat-option *ngFor="let r of roleOptions" [value]="r.value">
-          {{ r.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.PROJECT_CODE' | translate }}</mat-label>
-      <input
-        matInput
-        name="projectCode"
-        [(ngModel)]="form.projectCode"
-        (ngModelChange)="onFormChange()"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.PROJECT_NAME' | translate }}</mat-label>
-      <input
-        matInput
-        name="projectName"
-        [(ngModel)]="form.projectName"
-        (ngModelChange)="onFormChange()"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="width:100%">
-      <mat-label>{{ 'UNETE.COMMENTS' | translate }}</mat-label>
-      <textarea
-        matInput
-        name="comments"
-        rows="5"
-        [(ngModel)]="form.comments"
-        (ngModelChange)="onFormChange()"
-      ></textarea>
-    </mat-form-field>
+    <div class="row">
+      <mat-form-field appearance="outline" class="full">
+        <textarea
+          matInput
+          rows="5"
+          placeholder="{{ 'UNETE.COMMENTS' | translate }}"
+          name="comments"
+          [(ngModel)]="form.comments"
+          (ngModelChange)="onFormChange()"
+        ></textarea>
+      </mat-form-field>
+    </div>
 
     <div class="actions">
       <button
-        mat-raised-button
-        color="primary"
-        type="submit"
+        type="button"
+        class="action-btn"
+        (click)="sendMail()"
         [disabled]="!form.fullName || !form.email || sending"
+        aria-label="{{ 'UNETE.SEND_BY_MAIL' | translate }}"
       >
-        {{
-          sending
-            ? ('UNETE.SENDING' | translate)
-            : ('UNETE.SEND_BY_MAIL' | translate)
-        }}
+        <mat-icon>{{ sending ? 'hourglass_empty' : 'send' }}</mat-icon>
+        {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
       </button>
 
       <button
-        mat-button
         type="button"
+        class="action-btn"
         (click)="resetForm()"
         [disabled]="sending"
+        aria-label="{{ 'UNETE.RESET' | translate }}"
       >
+        <mat-icon>refresh</mat-icon>
         {{ 'UNETE.RESET' | translate }}
       </button>
     </div>
-  </form>
+  </div>
 </div>

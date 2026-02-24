@@ -257,28 +257,62 @@
   gap: 6px;
 }
 
-.toggle-btn {
+/* ===== CUSTOM CHECKBOXES (clear section) ===== */
+.est-checkbox {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  border-radius: 18px;
-  border: 2px solid #17a2b8;
-  background: transparent;
-  color: #17a2b8;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 120ms ease;
+  color: #b0bec5;
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  transition: color 0.15s ease;
 }
 
-.toggle-btn:hover {
-  background: rgba(23, 162, 184, 0.12);
+.est-checkbox:hover {
+  color: #e0e0e0;
 }
 
-.toggle-btn.selected {
-  border-color: #66BB6A;
-  background: rgba(102, 187, 106, 0.15);
-  color: #66BB6A;
+.est-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.est-check-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #455a64;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.est-checkbox input[type="checkbox"]:checked + .est-check-mark {
+  background: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.est-checkbox input[type="checkbox"]:checked + .est-check-mark::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.limpiar-label {
+  color: #b0bec5;
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: -4px;
 }
 
 .emoji-btn {
@@ -370,30 +404,37 @@
   }
 }
 
-/* ===== ACTION BUTTONS ===== */
+/* ===== ACTION BUTTONS (estilo jenkins-add-btn de Administración) ===== */
 .action-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 20px;
-  border: 2px solid #17a2b8;
-  background: transparent;
-  color: #17a2b8;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+  color: #E0E0E0;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 120ms ease;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, border-color 0.2s ease,
+              box-shadow 0.2s ease;
 }
 
 .action-btn:hover {
-  background: #17a2b8;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #ffd54f;
+  color: #ffd54f;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
 .action-btn mat-icon {
-  font-size: 18px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 /* ===== EXPORT BUTTONS ===== */
