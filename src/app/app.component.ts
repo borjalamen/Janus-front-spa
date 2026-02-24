@@ -31,6 +31,7 @@ import { SpinnerComponent } from './spinner.component';
 import { SpinnerService } from './spinner.service';
 import { MENU_GROUPS } from './menu.groups';
 import { OnInit } from '@angular/core';
+import { ApiService } from './api.service';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -69,6 +70,7 @@ export class AppComponent implements OnDestroy, OnInit {
   appVersion?: string;
 
   private authSubscription?: Subscription;
+  private versionSubscription?: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -78,7 +80,8 @@ export class AppComponent implements OnDestroy, OnInit {
     public translate: TranslateService,
     private authService: AuthService,  // ⬅ Afegit
     private storage: LocalStorageService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private apiService: ApiService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = this.storage.get('lang');
@@ -109,6 +112,11 @@ export class AppComponent implements OnDestroy, OnInit {
   public expandedGroups: { [id: string]: boolean } = {};
 
   ngOnInit(): void {
+    // Suscribirse a cambios de versión en tiempo real
+    this.versionSubscription = this.apiService.version$.subscribe(v => {
+      if (v) this.appVersion = v;
+    });
+
     // load persisted state if present
     try {
       const raw = this.storage.get('menu.expanded');
@@ -174,6 +182,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
+    this.versionSubscription?.unsubscribe();
   }
 
   translateLanguage(lang: string) {
@@ -284,6 +293,7 @@ export class AppComponent implements OnDestroy, OnInit {
         console.log('RESPUESTA VERSION:', data);
         this.appVersion = data[0]?.version || 'sin versión';
         console.log('VERSION ASIGNADA:', this.appVersion);
+        this.apiService.setVersion(this.appVersion ?? '');
       },
       error: (err) => {
         console.error('ERROR VERSION:', err);

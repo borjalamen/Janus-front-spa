@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
+import { ApiService } from '../api.service';
 
 interface UsuariBackend {
   id?: string;
@@ -383,7 +384,8 @@ export class AdministracionComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private storage: LocalStorageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -856,7 +858,9 @@ export class AdministracionComponent implements OnInit {
       .subscribe({
         next: () => {
           this.versionSaving = false;
-          this.versionSuccess = `Versión actualizada a ${this.appVersion.trim()}`;
+          const newVersion = this.appVersion.trim();
+          this.versionSuccess = `Versión actualizada a ${newVersion}`;
+          this.apiService.setVersion(newVersion);
           this.appVersion = '';
           setTimeout(() => this.versionSuccess = '', 3000);
         },
