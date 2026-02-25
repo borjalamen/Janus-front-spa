@@ -7,79 +7,87 @@
       <button class="top-tab-btn" 
               [class.active]="activeTab === 'LIST'" 
               (click)="cambiarTab('LIST')">
-        <span class="tab-emoji">📋</span> Lista
+        <span class="tab-emoji">📋</span> {{ 'PROJECTS.LIST_TAB' | translate }}
       </button>
       
       <button class="top-tab-btn" 
               [class.active]="activeTab === 'NEW'" 
               (click)="cambiarTab('NEW')">
-        <span class="tab-emoji">➕</span> Nuevo
+        <span class="tab-emoji">➕</span> {{ 'PROJECTS.NEW_TAB' | translate }}
       </button>
       
       <button class="top-tab-btn" 
               [class.active]="activeTab === 'IMPORT'" 
               (click)="cambiarTab('IMPORT')">
-        <span class="tab-emoji">📥</span> Importar
+        <span class="tab-emoji">📥</span> {{ 'PROJECTS.IMPORT' | translate }}
       </button>
       
       <button class="top-tab-btn" 
               [class.active]="activeTab === 'STATS'" 
               (click)="cambiarTab('STATS')">
-        <span class="tab-emoji">📊</span> Estadísticas
+        <span class="tab-emoji">📊</span> {{ 'PROJECTS.STATS' | translate }}
       </button>
     </div>
   </div>
 
   <div class="projects-content">
 
-    <!-- TAB: Lista de Proyectos -->
+    <!-- TAB: Lista de Proyectos o Detalle -->
     <div *ngIf="activeTab === 'LIST'" class="tab-content fade-in">
-      <div class="documents-header">
-        <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
-      </div>
+      <!-- VISTA LISTA -->
+      <ng-container *ngIf="!showDetailModal">
+        <div class="documents-header">
+          <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
+        </div>
 
-      <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+        <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
 
-      <div class="projects-grid">
-        <div class="project-card" *ngFor="let p of projectesFiltrats">
-          <div class="project-top">
-            <div class="project-title">
-              {{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}
+        <div class="projects-grid">
+          <div class="project-card" *ngFor="let p of projectesFiltrats">
+            <div class="project-top">
+              <div class="project-title">
+                {{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}
+              </div>
+            </div>
+            <div class="project-meta">
+              {{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp;
+              {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}
+            </div>
+            <div class="project-actions">
+              <button class="icon-btn view"
+                      title="{{ 'PROJECTS.VIEW' | translate }}"
+                      (click)="openProjectDetail(p, 'view'); $event.stopPropagation()">
+                <span class="emoji-icon">👁️</span>
+              </button>
+              <button class="icon-btn edit"
+                      title="{{ 'PROJECTS.EDIT' | translate }}"
+                      (click)="openProjectDetail(p, 'edit'); $event.stopPropagation()">
+                <span class="emoji-icon">✏️</span>
+              </button>
+              <button class="icon-btn delete"
+                      title="{{ 'PROJECTS.DELETE' | translate }}"
+                      (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">
+                <span class="emoji-icon">🗑️</span>
+              </button>
             </div>
           </div>
-          <div class="project-meta">
-            {{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp;
-            {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}
-          </div>
-          <div class="project-actions">
-            <button class="icon-btn view"
-                    title="{{ 'PROJECTS.VIEW' | translate }}"
-                    [routerLink]="['/projects', p.codigoProyecto]"
-                    [queryParams]="{mode:'view'}"
-                    (click)="$event.stopPropagation()">
-              <span class="emoji-icon">👁️</span>
-            </button>
-            <button class="icon-btn edit"
-                    title="{{ 'PROJECTS.EDIT' | translate }}"
-                    [routerLink]="['/projects', p.codigoProyecto]"
-                    [queryParams]="{mode:'edit'}"
-                    (click)="$event.stopPropagation()">
-              <span class="emoji-icon">✏️</span>
-            </button>
-            <button class="icon-btn delete"
-                    title="{{ 'PROJECTS.DELETE' | translate }}"
-                    (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">
-              <span class="emoji-icon">🗑️</span>
-            </button>
-          </div>
         </div>
-      </div>
 
-      <div *ngIf="projectesFiltrats.length === 0" class="empty-state">
-        <span class="empty-emoji">📂</span>
-        <p>No hay proyectos disponibles</p>
-        <p class="empty-hint">Usa la pestaña "Nuevo" para crear un proyecto</p>
-      </div>
+        <div *ngIf="projectesFiltrats.length === 0" class="empty-state">
+          <span class="empty-emoji">📂</span>
+          <p>No hay proyectos disponibles</p>
+          <p class="empty-hint">Usa la pestaña "Nuevo" para crear un proyecto</p>
+        </div>
+      </ng-container>
+
+      <!-- VISTA DETALLE -->
+      <ng-container *ngIf="showDetailModal">
+        <app-project-detail 
+          [proyecto]="selectedProjectForDetail" 
+          [mode]="detailMode"
+          (close)="closeProjectDetail()">
+        </app-project-detail>
+      </ng-container>
     </div>
 
     <!-- TAB: Nuevo Proyecto -->
@@ -496,12 +504,12 @@
     <!-- TAB: Importar -->
     <div *ngIf="activeTab === 'IMPORT'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>📥 Importar Proyectos</h2>
+        <h2>📥 {{ 'PROJECTS.IMPORT_TITLE' | translate }}</h2>
       </div>
 
       <div class="admin-card">
-        <h3>📄 Importar desde CSV</h3>
-        <p>Sube un archivo CSV con los datos de proyectos para importarlos automáticamente.</p>
+        <h3>📄 {{ 'PROJECTS.IMPORT_CSV_TITLE' | translate }}</h3>
+        <p>{{ 'PROJECTS.IMPORT_CSV_DESC' | translate }}</p>
         
         <div class="import-area">
           <input type="file"
@@ -511,7 +519,7 @@
                  hidden>
           <label for="csvFile" class="import-dropzone">
             <img src="assets/images/Folder.png" alt="Folder" class="import-folder-icon">
-            <span class="import-text">Haz clic o arrastra un archivo CSV</span>
+            <span class="import-text">{{ 'PROJECTS.IMPORT_DRAG_DROP' | translate }}</span>
           </label>
         </div>
 
@@ -523,20 +531,20 @@
       </div>
 
       <div class="admin-card">
-        <h3>📋 Importar desde texto</h3>
-        <p>Pega el contenido CSV directamente:</p>
+        <h3>📋 {{ 'PROJECTS.IMPORT_TEXT_TITLE' | translate }}</h3>
+        <p>{{ 'PROJECTS.IMPORT_TEXT_DESC' | translate }}</p>
         
         <div class="input-field">
           <textarea rows="10"
                     [(ngModel)]="csvTextImport"
-                    placeholder="Pega aquí el contenido del CSV..."></textarea>
+                    [placeholder]="'PROJECTS.IMPORT_PASTE_PLACEHOLDER' | translate"></textarea>
         </div>
 
         <div class="action-buttons-right">
           <button class="btn-round btn-primary"
                   (click)="importFromText()"
                   [disabled]="!csvTextImport">
-            📥 Importar
+            📥 {{ 'PROJECTS.IMPORT_BTN' | translate }}
           </button>
         </div>
       </div>
@@ -545,7 +553,7 @@
     <!-- TAB: Estadísticas -->
     <div *ngIf="activeTab === 'STATS'" class="tab-content fade-in">
       <div class="documents-header">
-        <h2>📊 Estadísticas de Proyectos</h2>
+        <h2>📊 {{ 'PROJECTS.STATS_TITLE' | translate }}</h2>
       </div>
 
       <div class="stats-grid">
@@ -553,7 +561,7 @@
           <img src="assets/images/Folder.png" alt="Folder" class="stat-folder-icon">
           <div class="stat-info">
             <span class="stat-value">{{ projectes.length }}</span>
-            <span class="stat-label">Total Proyectos</span>
+            <span class="stat-label">{{ 'PROJECTS.STATS_TOTAL_PROJECTS' | translate }}</span>
           </div>
         </div>
 
@@ -561,7 +569,7 @@
           <span class="stat-emoji">🏢</span>
           <div class="stat-info">
             <span class="stat-value">{{ getDepartamentosUnicos() }}</span>
-            <span class="stat-label">Departamentos</span>
+            <span class="stat-label">{{ 'PROJECTS.STATS_DEPARTMENTS' | translate }}</span>
           </div>
         </div>
 
@@ -569,7 +577,7 @@
           <span class="stat-emoji">📦</span>
           <div class="stat-info">
             <span class="stat-value">{{ getLotesUnicos() }}</span>
-            <span class="stat-label">Lotes</span>
+            <span class="stat-label">{{ 'PROJECTS.STATS_LOTS' | translate }}</span>
           </div>
         </div>
 
@@ -577,17 +585,17 @@
           <span class="stat-emoji">✅</span>
           <div class="stat-info">
             <span class="stat-value">{{ getTotalTareas() }}</span>
-            <span class="stat-label">Total Tareas</span>
+            <span class="stat-label">{{ 'PROJECTS.STATS_TOTAL_TASKS' | translate }}</span>
           </div>
         </div>
       </div>
 
       <div class="admin-card" *ngIf="projectes.length > 0">
-        <h3>📋 Resumen por Departamento</h3>
+        <h3>📋 {{ 'PROJECTS.STATS_SUMMARY' | translate }}</h3>
         <div class="summary-list">
           <div *ngFor="let dept of getResumenDepartamentos()" class="summary-item">
-            <span class="summary-name">{{ dept.nombre || 'Sin departamento' }}</span>
-            <span class="summary-count">{{ dept.count }} proyecto(s)</span>
+            <span class="summary-name">{{ dept.nombre || ('PROJECTS.STATS_NO_DEPT' | translate) }}</span>
+            <span class="summary-count">{{ dept.count }} {{ 'PROJECTS.STATS_PROJECT_UNIT' | translate }}</span>
           </div>
         </div>
       </div>

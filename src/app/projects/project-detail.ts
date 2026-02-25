@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -45,8 +45,10 @@ type ProjectDetailDraft = {
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']
 })
-export class ProjectDetailComponent {
-  proyecto?: Proyecto;
+export class ProjectDetailComponent implements OnInit {
+  @Input() proyecto?: Proyecto;
+  @Input() mode: 'view' | 'edit' = 'view';
+  @Output() close = new EventEmitter<void>();
 
   private _editing = false;
   get editing() { return this._editing; }
@@ -125,142 +127,141 @@ export class ProjectDetailComponent {
     private translate: TranslateService,
     private storage: LocalStorageService
   ) {
-    const code = this.route.snapshot.paramMap.get('code') || undefined;
-    const mode = this.route.snapshot.queryParamMap.get('mode') || 'view';
-    this.routeMode = mode;
-    this._editing = mode === 'edit';
+    // Inicializar propiedades básicas
+    this.routeMode = this.mode === 'edit' ? 'edit' : 'view';
+    this._editing = this.mode === 'edit';
+  }
 
-    try {
-      const raw = this.storage.get('projects_v1');
-      if (raw) {
-        const arr = JSON.parse(raw) as Proyecto[];
-        this.proyecto = arr.find(p => p.codigoProyecto === code);
-        if (this.proyecto) {
-          const p = this.proyecto;
-          p.ip = (p.ip || []);
-          (p as any).entornoNotas = (p as any).entornoNotas || '';
-          this.ipString = (p.ip || []).join(', ');
-
-          this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines)
-            ? (p as any).devMachines as DevMachine[]
-            : [];
-
-          this.devMachines = this.devMachines.map(m => ({
-            ip: m.ip || '',
-            user: m.user || '',
-            password: m.password || '',
-            identifier: (m as any).identifier || '',
-            openshiftEnabled: !!m.openshiftEnabled,
-            openshifts: (m as any).openshifts && Array.isArray((m as any).openshifts)
-              ? (m as any).openshifts.map((o: any) =>
-                  Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, o || {})
-                )
-              : ((m as any).openshift
-                ? [Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, (m as any).openshift || {})]
-                : []),
-            ram: (m as any).ram || '',
-            cpu: (m as any).cpu || '',
-            disk: (m as any).disk || '',
-            dbEnabled: !!(m as any).dbEnabled,
-            dbs: (m as any).dbs && Array.isArray((m as any).dbs)
-              ? (m as any).dbs.map((d: any) =>
-                  Object.assign(
-                    {
-                      identifier: '',
-                      engine: '',
-                      instanceName: '',
-                      host: '',
-                      port: '',
-                      sid: '',
-                      user: '',
-                      password: '',
-                      description: '',
-                      properties: '',
-                      contactPerson: '',
-                      contactMail: ''
-                    },
-                    d || {}
-                  )
-                )
-              : ((m as any).dbConfig
-                ? [Object.assign(
-                    {
-                      identifier: '',
-                      engine: '',
-                      instanceName: '',
-                      host: '',
-                      port: '',
-                      sid: '',
-                      user: '',
-                      password: '',
-                      description: '',
-                      properties: '',
-                      contactPerson: '',
-                      contactMail: ''
-                    },
-                    (m as any).dbConfig || {}
-                  )]
-                : []),
-            otherToolEnabled: !!(m as any).otherToolEnabled,
-            otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools)
-              ? (m as any).otherTools.map((t: any) =>
-                  Object.assign(
-                    { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
-                    t || {}
-                  )
-                )
-              : ((m as any).otherTool
-                ? [Object.assign(
-                    { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
-                    (m as any).otherTool || {}
-                  )]
-                : [])
-          } as DevMachine));
-
-          this.selectedDevMachineIndex = this.devMachines.length ? 0 : -1;
-
-          p.herramientasMind = p.herramientasMind || {} as any;
-          const h = p.herramientasMind as any;
-          h.nexus = h.nexus || [];
-          h.codeRepos = h.codeRepos || [];
-          h.artifactRepos = h.artifactRepos || [];
-          h.jenkins = h.jenkins || [];
-          h.crontabs = h.crontabs || [];
-
-          this.codeRepos = (h.codeRepos || []).slice();
-          this.artifactRepos = (h.artifactRepos || []).slice();
-          this.jenkinsList = (h.jenkins || []).slice();
-          this.crontabList = (h.crontabs || []).slice();
-
-          h.sonar = h.sonar || {} as any;
-          if (Array.isArray(h.sonarList) && h.sonarList.length) {
-            this.sonarList = (h.sonarList || []).slice();
-          } else if (h.sonar && (h.sonar.prefix || h.sonar.url || h.sonar.tokenUser || h.sonar.tokenValue)) {
-            this.sonarList = [{
-              prefix: h.sonar.prefix || '',
-              url: h.sonar.url || '',
-              tokenUser: h.sonar.tokenUser || '',
-              tokenValue: h.sonar.tokenValue || ''
-            }];
-          } else {
-            this.sonarList = [];
-          }
-
-          this.nexusString = (h.nexus || []).join('\n');
-          (p as any).documentacion = (p as any).documentacion || '';
-          this.docsString = (p as any).documentacion || '';
-          (p as any).equipoMinsait = (p as any).equipoMinsait || [];
-
-          if (this._editing) {
-            this.restoreDraft();
-          }
-
-          try { this.loadProjectDocuments(); } catch (e) { /* noop */ }
-        }
-      }
-    } catch (e) {
-      this.proyecto = undefined;
+  ngOnInit() {
+    // Inicializar datos cuando el proyecto esté disponible
+    if (this.proyecto) {
+      this.initializeProjectData();
     }
+  }
+
+  private initializeProjectData() {
+    if (!this.proyecto) return;
+
+    const p = this.proyecto;
+    p.ip = (p.ip || []);
+    (p as any).entornoNotas = (p as any).entornoNotas || '';
+    this.ipString = (p.ip || []).join(', ');
+
+    this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines)
+      ? (p as any).devMachines as DevMachine[]
+      : [];
+
+    this.devMachines = this.devMachines.map(m => ({
+      ip: m.ip || '',
+      user: m.user || '',
+      password: m.password || '',
+      identifier: (m as any).identifier || '',
+      openshiftEnabled: !!m.openshiftEnabled,
+      openshifts: (m as any).openshifts && Array.isArray((m as any).openshifts)
+        ? (m as any).openshifts.map((o: any) =>
+            Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, o || {})
+          )
+        : ((m as any).openshift
+          ? [Object.assign({ identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] }, (m as any).openshift || {})]
+          : []),
+      ram: (m as any).ram || '',
+      cpu: (m as any).cpu || '',
+      disk: (m as any).disk || '',
+      dbEnabled: !!(m as any).dbEnabled,
+      dbs: (m as any).dbs && Array.isArray((m as any).dbs)
+        ? (m as any).dbs.map((d: any) =>
+            Object.assign(
+              {
+                identifier: '',
+                engine: '',
+                instanceName: '',
+                host: '',
+                port: '',
+                sid: '',
+                user: '',
+                password: '',
+                description: '',
+                properties: '',
+                contactPerson: '',
+                contactMail: ''
+              },
+              d || {}
+            )
+          )
+        : ((m as any).dbConfig
+          ? [Object.assign(
+              {
+                identifier: '',
+                engine: '',
+                instanceName: '',
+                host: '',
+                port: '',
+                sid: '',
+                user: '',
+                password: '',
+                description: '',
+                properties: '',
+                contactPerson: '',
+                contactMail: ''
+              },
+              (m as any).dbConfig || {}
+            )]
+          : []),
+      otherToolEnabled: !!(m as any).otherToolEnabled,
+      otherTools: (m as any).otherTools && Array.isArray((m as any).otherTools)
+        ? (m as any).otherTools.map((t: any) =>
+            Object.assign(
+              { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
+              t || {}
+            )
+          )
+        : ((m as any).otherTool
+          ? [Object.assign(
+              { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' },
+              (m as any).otherTool || {}
+            )]
+          : [])
+    } as DevMachine));
+
+    this.selectedDevMachineIndex = this.devMachines.length ? 0 : -1;
+
+    p.herramientasMind = p.herramientasMind || {} as any;
+    const h = p.herramientasMind as any;
+    h.nexus = h.nexus || [];
+    h.codeRepos = h.codeRepos || [];
+    h.artifactRepos = h.artifactRepos || [];
+    h.jenkins = h.jenkins || [];
+    h.crontabs = h.crontabs || [];
+
+    this.codeRepos = (h.codeRepos || []).slice();
+    this.artifactRepos = (h.artifactRepos || []).slice();
+    this.jenkinsList = (h.jenkins || []).slice();
+    this.crontabList = (h.crontabs || []).slice();
+
+    h.sonar = h.sonar || {} as any;
+    if (Array.isArray(h.sonarList) && h.sonarList.length) {
+      this.sonarList = (h.sonarList || []).slice();
+    } else if (h.sonar && (h.sonar.prefix || h.sonar.url || h.sonar.tokenUser || h.sonar.tokenValue)) {
+      this.sonarList = [{
+        prefix: h.sonar.prefix || '',
+        url: h.sonar.url || '',
+        tokenUser: h.sonar.tokenUser || '',
+        tokenValue: h.sonar.tokenValue || ''
+      }];
+    } else {
+      this.sonarList = [];
+    }
+
+    this.nexusString = (h.nexus || []).join('\n');
+    (p as any).documentacion = (p as any).documentacion || '';
+    this.docsString = (p as any).documentacion || '';
+    (p as any).equipoMinsait = (p as any).equipoMinsait || [];
+
+    if (this._editing) {
+      this.restoreDraft();
+    }
+
+    try { this.loadProjectDocuments(); } catch (e) { /* noop */ }
   }
 
   // ===== DRAFT LOCALSTORAGE =====
@@ -602,7 +603,7 @@ export class ProjectDetailComponent {
   }
 
   back() {
-    this.router.navigate(['/projects']);
+    this.close.emit();
   }
 
   save() {

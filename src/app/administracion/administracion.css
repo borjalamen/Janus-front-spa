@@ -1931,22 +1931,150 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 /* Restore: version cards */
 .version-cards-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
   margin-bottom: 20px;
 }
 
 .version-card {
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   text-align: left;
-  padding: 14px;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
 }
 
-.version-card .col-icon { font-size: 22px; }
-.version-card .col-label { font-size: 12px; font-weight: 700; color: #ffd54f; }
-.version-card .col-desc { font-size: 11px; color: #90a4ae; }
+.version-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.version-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  min-height: 70px;
+}
+
+.version-card-footer {
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.version-tipo-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 12px;
+  flex: 1;
+}
+.tipo-completo { 
+  background: linear-gradient(135deg, rgba(76,175,80,0.25) 0%, rgba(56,142,60,0.2) 100%); 
+  color: #a5d6a7; 
+  border: 1px solid rgba(76,175,80,0.3);
+}
+.tipo-parcial { 
+  background: linear-gradient(135deg, rgba(255,152,0,0.25) 0%, rgba(245,124,0,0.2) 100%); 
+  color: #ffcc80; 
+  border: 1px solid rgba(255,152,0,0.3);
+}
+.tipo-coleccion { 
+  background: linear-gradient(135deg, rgba(33,150,243,0.25) 0%, rgba(25,118,210,0.2) 100%); 
+  color: #90caf9; 
+  border: 1px solid rgba(33,150,243,0.3);
+}
+.tipo-desconocido { 
+  background: rgba(150,150,150,0.2); 
+  color: #90a4ae; 
+}
+
+.version-fecha {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.version-tamano {
+  font-size: 11px;
+  font-weight: 600;
+  color: #b0bec5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.version-colecciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin-top: 3px;
+}
+
+.version-col-title {
+  font-size: 9px;
+  color: #78909c;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.version-col-tag {
+  font-size: 9px;
+  font-weight: 600;
+  background: rgba(100,181,246,0.18);
+  color: #90caf9;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(100,181,246,0.3);
+  white-space: nowrap;
+}
+
+.version-col-all {
+  background: rgba(76,175,80,0.18);
+  color: #a5d6a7;
+  border-color: rgba(76,175,80,0.35);
+  font-weight: 700;
+}
+
+.version-filename {
+  font-size: 9px;
+  color: #546e7a;
+  font-family: 'Consolas', 'Monaco', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.version-card .col-icon { 
+  font-size: 18px; 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.version-card.selected {
+  box-shadow: 0 0 0 2px #ffd54f, 0 4px 12px rgba(255,213,79,0.25);
+}
+
+.version-card.selected .version-card-header {
+  background: linear-gradient(135deg, rgba(255,213,79,0.15) 0%, rgba(255,213,79,0.08) 100%);
+}
 
 .db-empty-state {
   display: flex;

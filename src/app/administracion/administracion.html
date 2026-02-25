@@ -274,7 +274,7 @@
                 [class.active]="filtroEstadoTareas === 'APROBADA'"
                 (click)="filtrarPorEstadoTareas('APROBADA')"
                 style="cursor:pointer">
-            {{ tareasAprobadas }} Aprobadas
+            {{ tareasAprobadas }} Completadas
           </span>
           <span class="status-pill rechazada"
                 [class.active]="filtroEstadoTareas === 'RECHAZADA'"
@@ -324,7 +324,7 @@
           <p class="request-note">{{ tarea.comentario }}</p>
 
           <div class="request-actions" *ngIf="tarea.estado === 'PENDIENTE'">
-            <button class="btn-emoji confirm" (click)="aprobarTarea(tarea)" [disabled]="!canEdit" title="Aprobar">
+            <button class="btn-emoji confirm" (click)="aprobarTarea(tarea)" [disabled]="!canEdit" title="Completar">
               ✓
             </button>
             <button class="btn-emoji cancel" (click)="rechazarTarea(tarea)" [disabled]="!canEdit" title="Rechazar">
@@ -529,10 +529,28 @@
           [class.selected]="selectedRestore === version.id"
           (click)="selectedRestore = version.id"
         >
-          <span class="col-check-mark" *ngIf="selectedRestore === version.id">✓</span>
-          <span class="col-icon">💾</span>
-          <span class="col-label">{{ version.fecha }}</span>
-          <span class="col-desc">{{ version.descripcion }}</span>
+          <div class="version-card-header">
+            <span class="col-icon">💾</span>
+            <span class="version-tipo-badge" [class]="'tipo-' + version.tipo">
+              {{ version.tipo === 'completo' ? '🗄️ Completo' : version.tipo === 'parcial' ? '📦 Parcial' : '📄 Colección' }}
+            </span>
+            <span class="col-check-mark" *ngIf="selectedRestore === version.id">✓</span>
+          </div>
+          <div class="version-card-body">
+            <span class="version-fecha">📅 {{ version.fecha }}</span>
+            <span class="version-tamano">⚖️ {{ version.tamanoKb }} KB</span>
+            <div class="version-colecciones" *ngIf="version.colecciones && version.colecciones.length > 0">
+              <span class="version-col-title">Colecciones:</span>
+              <span class="version-col-tag" *ngFor="let col of version.colecciones">{{ col }}</span>
+            </div>
+            <div class="version-colecciones" *ngIf="version.tipo === 'completo'">
+              <span class="version-col-title">Alcance:</span>
+              <span class="version-col-tag version-col-all">Toda la base de datos</span>
+            </div>
+          </div>
+          <div class="version-card-footer">
+            <span class="version-filename" title="{{ version.descripcion }}">📁 {{ version.descripcion }}</span>
+          </div>
         </div>
       </div>
 

@@ -13,11 +13,12 @@
     <mat-nav-list class="scroll-nat-nav-list">
 
       <div class="menu-sections">
-        <div *ngFor="let group of menuGroups" class="menu-section">
-          <button class="btn menu-section-btn" [class.active]="isGroupOpen(group.id)" (click)="toggleGroup(group.id)">
-            <span class="section-title">{{ group.titleKey | translate }}</span>
-            <span class="section-plus" [class.rotated]="isGroupOpen(group.id)">+</span>
-          </button>
+        <ng-container *ngFor="let group of menuGroups">
+          <div class="menu-section" *ngIf="hasVisibleItems(group)">
+            <button class="btn menu-section-btn" [class.active]="isGroupOpen(group.id)" (click)="toggleGroup(group.id)">
+              <span class="section-title">{{ group.titleKey | translate }}</span>
+              <span class="section-plus" [class.rotated]="isGroupOpen(group.id)">+</span>
+            </button>
 
           <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
             <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route" [class.active]="isRouteActive(item.route)">
@@ -25,7 +26,8 @@
               <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
             </a>
           </mat-nav-list>
-        </div>
+          </div>
+        </ng-container>
       </div>
 
     </mat-nav-list>

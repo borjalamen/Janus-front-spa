@@ -170,6 +170,11 @@ export class AppComponent implements OnDestroy, OnInit {
     return this.getVisibleItems(group).length;
   }
 
+  // Verificar si un grupo tiene al menos un item visible
+  hasVisibleItems(group: any): boolean {
+    return this.getVisibleCount(group) > 0;
+  }
+
   // Verificar si una ruta está activa
   isRouteActive(route: string): boolean {
     return this.router.url === route;

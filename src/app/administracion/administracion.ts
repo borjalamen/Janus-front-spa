@@ -31,6 +31,9 @@ interface BackupVersion {
   id: string;
   fecha: string;
   descripcion: string;
+  tipo: 'completo' | 'parcial' | 'coleccion' | 'desconocido';
+  colecciones: string[];
+  tamanoKb: number;
 }
 
 interface PeticionAdmin {
@@ -985,9 +988,9 @@ export class AdministracionComponent implements OnInit {
         const archivo = res?.archivo || 'backup_' + new Date().toISOString().split('T')[0] + '.json';
         const coleccionesRes: string[] = res?.colecciones || cols;
         alert(`✅ Backup generado para ${coleccionesRes.length} colección(es)\nArchivo: ${archivo}`);
-        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: (allSelected ? 'completo' : 'parcial') as 'completo' | 'parcial', colecciones: coleccionesRes };
+        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: (allSelected ? 'completo' : 'parcial') as 'completo' | 'parcial', colecciones: coleccionesRes };
         this.logBackups.unshift(entry);
-        if (this.logBackups.length > 4) this.logBackups.pop();
+        if (this.logBackups.length > 1) this.logBackups.pop();
         this.selectedCollectionsBackup.clear();
       },
       error: (err) => {
@@ -1049,14 +1052,21 @@ export class AdministracionComponent implements OnInit {
       archivo: entry.descripcion,
       colecciones: esCompleto ? [] : entry.colecciones
     }).subscribe({
-      next: () => {
-        alert('✅ Backup restaurado correctamente');
+      next: (res: any) => {
+        const restauradas: string[] = res?.restauradas || [];
+        const errores: string[] = res?.errores || [];
+        if (errores.length > 0) {
+          alert(`⚠️ Restore completado con errores:\n\n✅ Restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}\n\n❌ Errores:\n${errores.map(c => '• ' + c).join('\n')}`);
+        } else {
+          alert(`✅ Restore completado correctamente\n\nColecciones restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}`);
+        }
         this.mostrarPopupRestore = false;
         this.selectedRestoreLogId = '';
       },
       error: err => {
+        const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
         console.error('Error en restore desde log', err);
-        alert('❌ Error al restaurar. Revisa que el servidor esté en marcha.');
+        alert(`❌ Error al restaurar: ${msg}`);
       }
     });
   }
@@ -1071,13 +1081,20 @@ export class AdministracionComponent implements OnInit {
     if (!confirmacion) return;
 
     this.http.post(`${environment.baseUrl}db/restore`, { backupId: this.selectedRestore }).subscribe({
-      next: () => {
-        alert('Base de datos restaurada correctamente');
+      next: (res: any) => {
+        const restauradas: string[] = res?.restauradas || [];
+        const errores: string[] = res?.errores || [];
+        if (errores.length > 0) {
+          alert(`⚠️ Restore completado con errores:\n\n✅ Restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}\n\n❌ Errores:\n${errores.map(c => '• ' + c).join('\n')}`);
+        } else {
+          alert(`✅ Restore completado correctamente\n\nColecciones restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}`);
+        }
         this.mostrarPopupRestore = false;
       },
       error: err => {
+        const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
         console.error('Error en restore', err);
-        alert('Error al restaurar la base de datos');
+        alert(`❌ Error al restaurar: ${msg}`);
       }
     });
   }
@@ -1369,9 +1386,9 @@ export class AdministracionComponent implements OnInit {
         const colecciones = res?.colecciones || ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos'];
         const archivo = res?.archivo || 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
         alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map((c: string) => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
-        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
         this.logBackups.unshift(entry);
-        if (this.logBackups.length > 4) this.logBackups.pop();
+        if (this.logBackups.length > 1) this.logBackups.pop();
       },
       error: err => {
         this.backupCompletoEnProgreso = false;
@@ -1379,9 +1396,9 @@ export class AdministracionComponent implements OnInit {
         const colecciones = ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos', 'formaciones', 'multimedia'];
         const archivo = 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
         alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map(c => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
-        const entry = { id: Date.now().toString(), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
         this.logBackups.unshift(entry);
-        if (this.logBackups.length > 4) this.logBackups.pop();
+        if (this.logBackups.length > 1) this.logBackups.pop();
       }
     });
   }

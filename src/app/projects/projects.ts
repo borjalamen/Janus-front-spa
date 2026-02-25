@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../local-storage.service';
+import { ProjectService, Project } from '../project.service';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ProjectDetailComponent } from './project-detail';
 
 // ===== MODELS =====
 export interface Task {
@@ -37,36 +38,10 @@ export interface OpenShiftInfo {
   grafana?: string | null;
 }
 
-export interface Proyecto {
-  nombre?: string;
-  codigoProyecto?: string;
-  codigoImputacion?: string | null;
-  urlEntornoDesarrollo?: string | null;
-  urlEntornoIntegracion?: string | null;
-  urlEntornoPreproduccion?: string | null;
-  urlEntornoProduccion?: string | null;
-  horaDaily?: string | null;
-  ip?: string[];
-  lote?: string | null;
-  departamento?: string | null;
-  responsableProyecto?: string | null;
-  responsableTecnico?: string | null;
-  tareas: Task[];
-  herramientas?: string[];
-  herramientasMind?: any;
-  jenkinsNodes?: string[];
-  dockerImages?: DockerImage[];
-  pipelines?: string[];
-  repositorios?: string[];
-  bbdd?: DatabaseInfo[];
-  openshift?: OpenShiftInfo[];
-  usuarios?: string[];
-  notasGenerales?: string | null;
-  entornoNotas?: string | null;
-  equipoMinsait?: { nombre?: string; rol?: string; email?: string }[];
-  devMachines?: { identifier?: string; ip?: string; user?: string; password?: string; ram?: string; cpu?: string; disk?: string }[];
-  codeRepos?: string[];
-  artifactRepos?: string[];
+export interface Proyecto extends Project {
+  ipString?: string;
+  tareasString?: string;
+  readonly?: boolean;
 }
 
 @Component({
@@ -74,21 +49,26 @@ export interface Proyecto {
   templateUrl: './projects.html',
   styleUrls: ['./projects.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, RouterLink, MatIconModule]
+  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, MatIconModule, ProjectDetailComponent]
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit {
   title = '';
 
   // Pestanyes principals
   activeTab: 'LIST' | 'NEW' | 'IMPORT' | 'STATS' = 'LIST';
 
   // Claus de storage
-  private readonly STORAGE_KEY = 'projects_v1';
   private readonly STORAGE_DRAFT_KEY = 'projects_draft';
   private readonly STORAGE_TAB_KEY = 'projects_active_tab';
 
   projectes: Proyecto[] = [];
   projectesFiltrats: Proyecto[] = this.projectes;
+  isLoading = false;
+
+  // Vista del detalle del proyecto
+  showDetailModal = false;
+  selectedProjectForDetail: Proyecto | undefined = undefined;
+  detailMode: 'view' | 'edit' = 'view';
 
   // Estat UI
   showProjectModal = false;
@@ -128,10 +108,12 @@ export class ProjectsComponent {
   newProjectJenkinsList: Array<{ name: string; url: string }> = [];
   newProjectSonarList: Array<{ prefix: string; url: string; tokenUser: string; tokenValue: string }> = [];
 
-  constructor(private translate: TranslateService, private storage: LocalStorageService) {
+  constructor(
+    private translate: TranslateService,
+    private storage: LocalStorageService,
+    private projectService: ProjectService
+  ) {
     this.title = this.translate.instant('PROJECTS.TITLE');
-
-    this.load();
 
     // restaurar pestanya principal
     const savedTab = this.storage.get(this.STORAGE_TAB_KEY) as any;
@@ -139,8 +121,46 @@ export class ProjectsComponent {
       this.activeTab = savedTab;
     }
 
-    // restaurar draft de “Nou projecte”
+    // restaurar draft de "Nou projecte"
     this.restoreDraft();
+  }
+
+  ngOnInit(): void {
+    this.loadProjects();
+  }
+
+  // ===== CARGAR PROYECTOS DEL BACKEND =====
+  private loadProjects() {
+    this.isLoading = true;
+    console.log('🔄 Cargando proyectos desde API...');
+    this.projectService.getAll().subscribe({
+      next: (projects) => {
+        console.log('✅ Proyectos cargados:', projects);
+        this.projectes = projects as Proyecto[];
+        this.projectesFiltrats = [...this.projectes];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar proyectos:', err);
+        alert('Error al cargar proyectos. Verifica la consola.');
+        this.projectes = [];
+        this.projectesFiltrats = [];
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // ===== ABRIR PROYECTO EN DETALLE =====
+  openProjectDetail(project: Proyecto, mode: 'view' | 'edit' = 'view') {
+    this.selectedProjectForDetail = project;
+    this.detailMode = mode;
+    this.showDetailModal = true;
+    console.log(`📖 Abriendo proyecto ${project.codigoProyecto} en modo ${mode}`);
+  }
+
+  closeProjectDetail() {
+    this.showDetailModal = false;
+    this.selectedProjectForDetail = undefined;
   }
 
   // ===== DRAFT NOU PROJECTE =====
@@ -262,20 +282,7 @@ export class ProjectsComponent {
     });
   }
 
-  private load() {
-    try {
-      const raw = this.storage.get(this.STORAGE_KEY);
-      if (raw) this.projectes = JSON.parse(raw) as Proyecto[];
-    } catch {
-      this.projectes = [];
-    }
-    this.projectesFiltrats = [...this.projectes];
-  }
 
-  private save() {
-    this.storage.setObject(this.STORAGE_KEY, this.projectes);
-    this.projectesFiltrats = [...this.projectes];
-  }
 
   // ===== Guardar projecte nou =====
   saveProject() {
@@ -288,7 +295,7 @@ export class ProjectsComponent {
       return;
     }
 
-    const proyecto: Proyecto = {
+    const proyecto: Partial<Proyecto> = {
       nombre: (partial.nombre || '').trim(),
       codigoProyecto: (partial.codigoProyecto || '').trim(),
       codigoImputacion: (partial as any).codigoImputacion || null,
@@ -326,17 +333,49 @@ export class ProjectsComponent {
       proyecto.codigoProyecto = Math.random().toString(36).slice(2, 9);
     }
 
-    const idx = this.projectes.findIndex(x => x.codigoProyecto === proyecto.codigoProyecto);
-    if (idx === -1) this.projectes.push(proyecto);
-    else this.projectes[idx] = proyecto;
-
-    this.save();
-    this.showProjectModal = false;
-    this.editingProject = {};
-    this.activeTab = 'LIST';
-    this.storage.set(this.STORAGE_TAB_KEY, 'LIST');
-    this.clearDraft();
-    alert('✅ Proyecto guardado correctamente');
+    // Check si es creación o actualización
+    const isEdit = partial.id !== undefined && partial.id !== '';
+    
+    if (isEdit) {
+      // ACTUALIZAR
+      this.projectService.update(partial.id!, proyecto).subscribe({
+        next: (updated) => {
+          const idx = this.projectes.findIndex(p => p.id === updated.id);
+          if (idx !== -1) {
+            this.projectes[idx] = updated as Proyecto;
+          }
+          this.projectesFiltrats = [...this.projectes];
+          this.showProjectModal = false;
+          this.editingProject = {};
+          this.activeTab = 'LIST';
+          this.storage.set(this.STORAGE_TAB_KEY, 'LIST');
+          this.clearDraft();
+          alert('✅ Proyecto actualizado correctamente');
+        },
+        error: (err) => {
+          console.error('Error al actualizar proyecto:', err);
+          alert('❌ Error al actualizar el proyecto');
+        }
+      });
+    } else {
+      // CREAR
+      this.projectService.create(proyecto).subscribe({
+        next: (created) => {
+          this.projectes.push(created as Proyecto);
+          this.projectesFiltrats = [...this.projectes];
+          this.showProjectModal = false;
+          this.editingProject = {};
+          this.activeTab = 'LIST';
+          this.storage.set(this.STORAGE_TAB_KEY, 'LIST');
+          this.clearDraft();
+          alert('✅ Proyecto guardado correctamente');
+        },
+        error: (err) => {
+          console.error('Error al guardar proyecto:', err);
+          alert('❌ Error al guardar el proyecto');
+        }
+      });
+    }
   }
 
   private parseTareasString(s: string): Task[] {
@@ -367,8 +406,19 @@ export class ProjectsComponent {
 
   deleteProject(code?: string) {
     if (!code) return;
-    this.projectes = this.projectes.filter(p => p.codigoProyecto !== code);
-    this.save();
+    const project = this.projectes.find(p => p.codigoProyecto === code);
+    if (!project || !project.id) return;
+
+    this.projectService.softDelete(project.id).subscribe({
+      next: () => {
+        this.projectes = this.projectes.filter(p => p.codigoProyecto !== code);
+        this.projectesFiltrats = [...this.projectes];
+      },
+      error: (err) => {
+        console.error('Error al eliminar proyecto:', err);
+        alert('❌ Error al eliminar el proyecto');
+      }
+    });
   }
 
   promptConfirm(message: string, action: () => void) {
@@ -425,17 +475,28 @@ export class ProjectsComponent {
         this.importResult = { success: false, message: '❌ No se encontraron proyectos en el archivo' };
         return;
       }
+      
+      let imported = 0;
       proyectos.forEach(p => {
         if (!p.codigoProyecto) {
           p.codigoProyecto = 'PRJ-' + Math.random().toString(36).slice(2, 9).toUpperCase();
         }
-        const existingIdx = this.projectes.findIndex(x => x.codigoProyecto === p.codigoProyecto);
-        if (existingIdx === -1) this.projectes.push(p);
-        else this.projectes[existingIdx] = p;
+        // Crear los proyectos en el backend
+        this.projectService.create(p).subscribe({
+          next: (created) => {
+            this.projectes.push(created as Proyecto);
+            imported++;
+            if (imported === proyectos.length) {
+              this.projectesFiltrats = [...this.projectes];
+              this.importResult = { success: true, message: `✅ Se importaron ${proyectos.length} proyecto(s) correctamente` };
+              this.csvTextImport = '';
+            }
+          },
+          error: (err) => {
+            console.error('Error al importar proyecto:', err);
+          }
+        });
       });
-      this.save();
-      this.importResult = { success: true, message: `✅ Se importaron ${proyectos.length} proyecto(s) correctamente` };
-      this.csvTextImport = '';
     } catch {
       this.importResult = { success: false, message: '❌ Error al procesar el archivo CSV' };
     }
