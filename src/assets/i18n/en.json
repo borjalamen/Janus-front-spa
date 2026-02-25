@@ -128,10 +128,31 @@
     }
   },
   "USER_SECTION": {
-    "TITLE": "User section",
-    "LABEL_USER": "User",
-    "LABEL_ROLE": "Role"
-  },
+  "TITLE": "User section",
+  "LABEL_USER": "User",
+  "LABEL_ROLE": "Role",
+  "SECTION_AVATAR": "Profile picture",
+  "HELP_AVATAR": "Upload a new picture for your profile (max. 2 MB).",
+  "CHANGE_AVATAR": "Change picture",
+  "UPDATING_AVATAR": "Updating picture...",
+  "SECTION_PASSWORD": "Password",
+  "HELP_PASSWORD": "Change your login password.",
+  "CHANGE_PASSWORD": "Change password",
+  "UPDATING_PASSWORD": "Updating password...",
+  "OLD_PASSWORD": "Current password",
+  "NEW_PASSWORD": "New password",
+  "CONFIRM_PASSWORD": "Confirm new password",
+  "SECTION_CV": "CV / Résumé",
+  "HELP_CV": "Upload your CV in PDF format so it can be consulted.",
+  "UPLOAD_CV": "Upload CV",
+  "UPLOADING_CV": "Uploading CV...",
+  "DOWNLOAD_CV": "Download CV"
+},
+"COMMON": {
+  "CANCEL": "Cancel",
+  "SAVE": "Save"
+}
+,
   "PROJECTS": {
     "TITLE": "Projects",
     "DESCRIPTION": "List of projects, client and status.",

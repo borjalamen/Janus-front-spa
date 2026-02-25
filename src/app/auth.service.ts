@@ -6,8 +6,16 @@ import { LocalStorageService } from './local-storage.service';
 export type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
 export interface User {
+  id: string;
   username: string;
   rol: Rol;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  status?: string;
+  avatarPath?: string;
+  cvPath?: string;
+  roles?: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -16,19 +24,23 @@ export class AuthService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-  constructor(private router: Router, private storage: LocalStorageService) {
+  constructor(
+    private router: Router,
+    private storage: LocalStorageService
+  ) {
     const userStr = this.storage.get('user');
     if (userStr) {
       try {
-        this.currentUserSubject.next(JSON.parse(userStr));
+        const user: User = JSON.parse(userStr);
+        this.currentUserSubject.next(user);
       } catch (e) {
         console.error('Error carregant usuari', e);
       }
     }
   }
 
-  login(username: string, rol: Rol) {
-    const user: User = { username, rol };
+  // REP el user COMPLET (amb id) i el guarda
+  setLoggedUser(user: User) {
     this.storage.setObject('user', user);
     this.currentUserSubject.next(user);
   }

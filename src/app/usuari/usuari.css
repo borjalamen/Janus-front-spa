@@ -1,35 +1,311 @@
 .usuario-section {
-  padding: 24px;
-  color: #E0E0E0;
-}
-
-.usuario-section h2 {
-  color: #FBC02D;
-  margin-bottom: 20px;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
 .usuario-card {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  background: #16181c;
-  border-radius: 10px;
-  padding: 16px 20px;
-  box-shadow: 0 2px 8px #E53935;
+  gap: 2rem;
+  max-width: 1100px;
+  width: 100%;
+  background: #1e1e24;
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  color: #f5f5f5;
 }
 
-.usuario-avatar {
-  width: 56px;
-  height: 56px;
+/* Layout columnes */
+.usuario-left,
+.usuario-right {
+  flex: 1;
+}
+
+.usuario-left {
+  display: flex;
+  gap: 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding-right: 1.5rem;
+}
+
+.usuario-avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.usuario-avatar-circle {
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: #0F1115;
+  background: linear-gradient(135deg, #3f51b5, #2196f3);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FBC02D;
-  font-size: 32px;
+  overflow: hidden;
+  color: #fff;
+  font-size: 56px;
 }
 
-.usuario-info p {
-  margin: 4px 0;
+.usuario-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.usuario-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.usuario-name {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.usuario-role {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #b0b0b0;
+}
+
+.usuario-role span {
+  font-weight: 600;
+  color: #ffeb3b;
+}
+
+/* Detalls de l'usuari */
+.usuario-details {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.usuario-details p {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+.usuario-details mat-icon {
+  font-size: 18px;
+}
+
+/* Columna dreta */
+.usuario-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Panels d'accions */
+.usuario-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.usuario-panel-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.usuario-help {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
+/* Botons i inputs */
+.usuario-file-label,
+.usuario-primary-btn,
+.usuario-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.usuario-file-label {
+  background: #303040;
+  color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+}
+
+.usuario-file-label input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.usuario-file-label:hover {
+  background: #3b3b4f;
+  transform: translateY(-1px);
+}
+
+.usuario-primary-btn {
+  background: #3f51b5;
+  color: #fff;
+}
+
+.usuario-primary-btn.small {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.usuario-primary-btn:hover {
+  background: #5c6bc0;
+  transform: translateY(-1px);
+}
+
+.usuario-secondary-btn {
+  background: transparent;
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.usuario-secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Formulari de contrasenya */
+.usuario-password-form {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.usuario-password-form input {
+  background: #252535;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.35rem 0.9rem;
+  font-size: 0.85rem;
+  color: #f5f5f5;
+  outline: none;
+}
+
+.usuario-password-form input:focus {
+  border-color: #3f51b5;
+}
+
+.usuario-password-actions {
+  margin-top: 0.4rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* CV */
+.usuario-cv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Missatges */
+.usuario-alert {
+  margin-top: 0.3rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.usuario-alert.success {
+  background: rgba(76, 175, 80, 0.12);
+  color: #b2ff59;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.usuario-alert.error {
+  background: rgba(244, 67, 54, 0.12);
+  color: #ff8a80;
+  border: 1px solid rgba(244, 67, 54, 0.4);
+}
+
+/* Edició de perfil (nom, email, telèfon) */
+.usuario-edit {
+  gap: 0.5rem;
+}
+
+.usuario-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.usuario-edit-row input {
+  flex: 1;
+  background: #252535;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+  color: #f5f5f5;
+  outline: none;
+}
+
+.usuario-edit-row input:focus {
+  border-color: #3f51b5;
+}
+
+/* Responsiu */
+@media (max-width: 900px) {
+  .usuario-card {
+    flex-direction: column;
+  }
+
+  .usuario-left {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .usuario-card {
+    padding: 1.2rem;
+  }
+
+  .usuario-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .usuario-info {
+    align-items: center;
+  }
+
+  .usuario-details {
+    align-items: flex-start;
+  }
+
+  .usuario-cv-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

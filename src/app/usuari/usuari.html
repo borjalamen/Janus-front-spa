@@ -1,20 +1,189 @@
 <section class="usuario-section">
-  <h2>{{ 'USER_SECTION.TITLE' | translate }}</h2>
-
   <div class="usuario-card">
-    <div class="usuario-avatar">
-      <mat-icon>person</mat-icon>
+
+    <!-- Columna esquerra: avatar + dades -->
+    <div class="usuario-left">
+      <div class="usuario-avatar-wrapper">
+        <div class="usuario-avatar-circle">
+          <img *ngIf="avatarPreview; else noAvatar" [src]="avatarPreview" alt="Avatar" />
+          <ng-template #noAvatar>
+            <mat-icon>person</mat-icon>
+          </ng-template>
+        </div>
+
+        <label class="usuario-file-label">
+          <mat-icon>photo_camera</mat-icon>
+          <span>
+            {{ updatingAvatar ? ('USER_SECTION.UPDATING_AVATAR' | translate) : ('USER_SECTION.CHANGE_AVATAR' | translate) }}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onAvatarSelected($event)"
+            [disabled]="updatingAvatar"
+          />
+        </label>
+      </div>
+
+      <div class="usuario-info">
+        <h2 class="usuario-name">{{ username }}</h2>
+        <p class="usuario-role">
+          {{ 'USER_SECTION.LABEL_ROLE' | translate }}:
+          <span>{{ rol }}</span>
+        </p>
+
+        <!-- MODE LECTURA -->
+        <div class="usuario-details" *ngIf="!editMode">
+          <p *ngIf="userInfo?.fullName">
+            <mat-icon>badge</mat-icon>
+            <span>{{ userInfo.fullName }}</span>
+          </p>
+          <p *ngIf="userInfo?.email">
+            <mat-icon>mail</mat-icon>
+            <span>{{ userInfo.email }}</span>
+          </p>
+          <p *ngIf="userInfo?.phone">
+            <mat-icon>phone</mat-icon>
+            <span>{{ userInfo.phone }}</span>
+          </p>
+          <p *ngIf="userInfo?.status">
+            <mat-icon>verified_user</mat-icon>
+            <span>{{ userInfo.status }}</span>
+          </p>
+
+          <button class="usuario-secondary-btn" (click)="toggleEditProfile()">
+            <mat-icon>edit</mat-icon>
+            Editar perfil
+          </button>
+        </div>
+
+        <!-- MODE EDICIÓ -->
+        <div class="usuario-details usuario-edit" *ngIf="editMode">
+          <div class="usuario-edit-row">
+            <mat-icon>badge</mat-icon>
+            <input
+              type="text"
+              [(ngModel)]="profileForm.fullName"
+              placeholder="Nombre completo"
+            />
+          </div>
+          <div class="usuario-edit-row">
+            <mat-icon>mail</mat-icon>
+            <input
+              type="email"
+              [(ngModel)]="profileForm.email"
+              placeholder="Email"
+            />
+          </div>
+          <div class="usuario-edit-row">
+            <mat-icon>phone</mat-icon>
+            <input
+              type="text"
+              [(ngModel)]="profileForm.phone"
+              placeholder="Teléfono"
+            />
+          </div>
+
+          <div class="usuario-password-actions">
+            <button class="usuario-secondary-btn" (click)="toggleEditProfile()">
+              {{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button class="usuario-primary-btn small" (click)="saveProfile()">
+              {{ 'COMMON.SAVE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="usuario-info">
-      <p>
-        <strong>{{ 'USER_SECTION.LABEL_USER' | translate }}:</strong>
-        {{ username }}
-      </p>
-      <p>
-        <strong>{{ 'USER_SECTION.LABEL_ROLE' | translate }}:</strong>
-        {{ rol }}
-      </p>
+    <!-- Columna dreta: accions -->
+    <div class="usuario-right">
+
+      <!-- Contrasenya -->
+      <div class="usuario-panel">
+        <div class="usuario-panel-header">
+          <h3>{{ 'USER_SECTION.SECTION_PASSWORD' | translate }}</h3>
+          <p class="usuario-help">{{ 'USER_SECTION.HELP_PASSWORD' | translate }}</p>
+        </div>
+
+        <button
+          class="usuario-primary-btn"
+          (click)="openChangePassword()"
+          [disabled]="updatingPassword"
+        >
+          <mat-icon>lock</mat-icon>
+          <span>
+            {{ updatingPassword ? ('USER_SECTION.UPDATING_PASSWORD' | translate) : ('USER_SECTION.CHANGE_PASSWORD' | translate) }}
+          </span>
+        </button>
+
+        <div *ngIf="showPasswordForm" class="usuario-password-form">
+          <input
+            type="password"
+            [(ngModel)]="passwordForm.oldPassword"
+            [placeholder]="'USER_SECTION.OLD_PASSWORD' | translate"
+          />
+          <input
+            type="password"
+            [(ngModel)]="passwordForm.newPassword"
+            [placeholder]="'USER_SECTION.NEW_PASSWORD' | translate"
+          />
+          <input
+            type="password"
+            [(ngModel)]="passwordForm.confirmPassword"
+            [placeholder]="'USER_SECTION.CONFIRM_PASSWORD' | translate"
+          />
+
+          <div class="usuario-password-actions">
+            <button class="usuario-secondary-btn" (click)="cancelPasswordForm()">
+              {{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button
+              class="usuario-primary-btn small"
+              (click)="submitPasswordForm()"
+              [disabled]="updatingPassword"
+            >
+              {{ 'COMMON.SAVE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CV -->
+      <div class="usuario-panel">
+        <div class="usuario-panel-header">
+          <h3>{{ 'USER_SECTION.SECTION_CV' | translate }}</h3>
+          <p class="usuario-help">{{ 'USER_SECTION.HELP_CV' | translate }}</p>
+        </div>
+
+        <div class="usuario-cv-row">
+          <label class="usuario-file-label">
+            <mat-icon>upload_file</mat-icon>
+            <span>
+              {{ updatingCv ? ('USER_SECTION.UPLOADING_CV' | translate) : ('USER_SECTION.UPLOAD_CV' | translate) }}
+            </span>
+            <input
+              type="file"
+              accept="application/pdf"
+              (change)="onCvSelected($event)"
+              [disabled]="updatingCv"
+            />
+          </label>
+
+          <button
+            class="usuario-secondary-btn"
+            *ngIf="hasCv"
+            (click)="downloadCV()"
+          >
+            <mat-icon>download</mat-icon>
+            {{ 'USER_SECTION.DOWNLOAD_CV' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Missatges -->
+      <div *ngIf="msg" class="usuario-alert success">{{ msg }}</div>
+      <div *ngIf="msgError" class="usuario-alert error">{{ msgError }}</div>
     </div>
   </div>
 </section>

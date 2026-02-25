@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService, Rol } from '../auth.service';
+import { AuthService, Rol, User } from '../auth.service';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -49,41 +49,68 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.error = '';
+  this.error = '';
 
-    this.http.post<{ username: string; roles: string[] }>(
-      `${environment.baseUrl}auth/signin`,
-      {
-        username: this.username,
-        password: this.password
-      }
-    ).subscribe({
-      next: (user) => {
-        const rolesArray = user.roles || [];
-        const rolesStr = rolesArray.join(',');
+  // 1) Validar usuari + contrasenya
+  this.http.post<any>(
+    `${environment.baseUrl}auth/signin`,
+    {
+      username: this.username,
+      password: this.password
+    }
+  ).subscribe({
+    next: () => {
+      // 2) Un cop signin OK, demanem el perfil complet
+      this.http.get<any>(
+        `${environment.baseUrl}profile`,
+        { params: { username: this.username } }
+      ).subscribe({
+        next: (profile) => {
+          const rolesArray: string[] = profile.roles || [];
+          const rolesStr = rolesArray.join(',');
 
-        let rolFront: Rol = 'invitado';
-        if (rolesStr.includes('ADMIN')) {
-          rolFront = 'admin';
-        } else if (rolesStr.includes('DEVOPS')) {
-          rolFront = 'devops';
-        } else if (rolesStr.includes('CONSULTOR')) {
-          rolFront = 'consultor';
+          let rolFront: Rol = 'invitado';
+          if (rolesStr.includes('ADMIN')) {
+            rolFront = 'admin';
+          } else if (rolesStr.includes('DEVOPS')) {
+            rolFront = 'devops';
+          } else if (rolesStr.includes('CONSULTOR')) {
+            rolFront = 'consultor';
+          }
+
+          const userToStore: User = {
+            id: profile.id,
+            username: profile.username,
+            rol: rolFront,
+            fullName: profile.fullName,
+            email: profile.email,
+            phone: profile.phone,
+            status: profile.status,
+            avatarPath: profile.avatarPath,
+            cvPath: profile.cvPath,
+            roles: profile.roles
+          };
+
+          this.authService.setLoggedUser(userToStore);
+
+          this.dialogRef.close({
+            success: true,
+            username: profile.username,
+            rol: rolFront
+          });
+        },
+        error: () => {
+          this.error = 'No se pudo cargar el perfil del usuario.';
         }
-
-        // Actualitza servei + localStorage
-        this.authService.login(user.username, rolFront);
-
-        // Tanca el diàleg informant del resultat
-        this.dialogRef.close({
-          success: true,
-          username: user.username,
-          rol: rolFront
-        });
-      },
-      error: () => {
-        this.error = 'Usuario o contraseña inválidos';
-      }
-    });
-  }
+      });
+    },
+    error: () => {
+      this.error = 'Usuario o contraseña inválidos';
+    }
+  });
 }
+;
+}
+
+
+

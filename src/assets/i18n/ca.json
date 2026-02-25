@@ -136,10 +136,30 @@
     }
   },
   "USER_SECTION": {
-    "TITLE": "Secció usuari",
-    "LABEL_USER": "Usuari",
-    "LABEL_ROLE": "Rol"
-  },
+  "TITLE": "Secció usuari",
+  "LABEL_USER": "Usuari",
+  "LABEL_ROLE": "Rol",
+  "SECTION_AVATAR": "Imatge de perfil",
+  "HELP_AVATAR": "Puja una nova imatge per al teu perfil (màx. 2 MB).",
+  "CHANGE_AVATAR": "Canviar imatge",
+  "UPDATING_AVATAR": "Actualitzant imatge...",
+  "SECTION_PASSWORD": "Contrasenya",
+  "HELP_PASSWORD": "Canvia la teva contrasenya d'accés.",
+  "CHANGE_PASSWORD": "Canviar contrasenya",
+  "UPDATING_PASSWORD": "Actualitzant contrasenya...",
+  "OLD_PASSWORD": "Contrasenya actual",
+  "NEW_PASSWORD": "Nova contrasenya",
+  "CONFIRM_PASSWORD": "Confirma la nova contrasenya",
+  "SECTION_CV": "CV / Currículum",
+  "HELP_CV": "Puja el teu CV en format PDF perquè es pugui consultar.",
+  "UPLOAD_CV": "Pujar CV",
+  "UPLOADING_CV": "Pujant CV...",
+  "DOWNLOAD_CV": "Descarregar CV"
+},
+"COMMON": {
+  "CANCEL": "Cancel·lar",
+  "SAVE": "Desar"
+},
   "PROJECTS": {
     "TITLE": "Projectes",
     "DESCRIPTION": "Llistat de projectes, client i estat.",
