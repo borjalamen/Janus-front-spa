@@ -150,7 +150,25 @@
               >
                 <img src="assets/images/File.png" alt="Archivo" />
               </button>
-              <span class="file-name" *ngIf="solucion.archivoNombre">📎 {{ solucion.archivoNombre }}</span>
+
+              <!-- Loading spinner while file is being loaded -->
+              <div class="file-loading" *ngIf="loadingFileId === 'create-' + solucion.numero">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Cargando archivo...</span>
+              </div>
+
+              <!-- File name with type badge -->
+              <div class="file-name-badge" *ngIf="solucion.archivoNombre && !solucion.archivoBase64">
+                <span class="file-name">📎 {{ solucion.archivoNombre }}</span>
+                <span class="file-type-badge">{{ getFileType(solucion) }}</span>
+              </div>
+
+              <!-- File name with type badge (when loaded) -->
+              <div class="file-name-badge" *ngIf="solucion.archivoNombre && solucion.archivoBase64">
+                <span class="file-name">✓ {{ solucion.archivoNombre }}</span>
+                <span class="file-type-badge loaded">{{ getFileType(solucion) }}</span>
+              </div>
+
               <textarea
                 [(ngModel)]="solucion.descripcion"
                 (ngModelChange)="onFormChange()"
@@ -233,59 +251,209 @@
     <!-- LIST MODE -->
     <ng-container *ngIf="!mostrarDetallSteps; else detallStepsTpl">
       <div class="bitacora-list" *ngIf="erroresFiltrados.length > 0">
-        <div *ngFor="let e of erroresFiltrados" class="bitacora-row">
-          <div
-            class="bitacora-icon"
-            [style.background]="'linear-gradient(135deg, ' + getColorEntorno(e.entorno) + ', ' + getColorEntorno(e.entorno) + 'cc)'"
-          >
-            <mat-icon [style.color]="getColorEntorno(e.entorno)">
-              bug_report
-            </mat-icon>
-          </div>
-
-          <div class="bitacora-info">
-            <div class="bitacora-title-row">
-              <strong class="bitacora-contexto">
-                {{ e.contexto || '(Sin contexto)' }}
-              </strong>
-              <span class="bitacora-fecha">{{ e.fecha }}</span>
-            </div>
-            <div class="bitacora-error">{{ e.error }}</div>
-
+        <div *ngFor="let e of erroresFiltrados" class="bitacora-row" [class.editing]="bitacoraEditandoId === e.id">
+          <!-- VISTA NORMAL -->
+          <ng-container *ngIf="bitacoraEditandoId !== e.id">
             <div
-              class="bitacora-tags"
-              *ngIf="e.tags && e.tags.length > 0"
+              class="bitacora-icon"
+              [style.background]="'linear-gradient(135deg, ' + getColorEntorno(e.entorno) + ', ' + getColorEntorno(e.entorno) + 'cc)'"
             >
-              <span class="tag" *ngFor="let tag of e.tags">
-                {{ tag }}
-              </span>
+              <mat-icon [style.color]="getColorEntorno(e.entorno)">
+                bug_report
+              </mat-icon>
             </div>
 
-            <div class="bitacora-actions">
-              <button
-                class="action-btn view-btn"
-                (click)="openDetallSteps(e)"
-                title="Ver pasos"
-                *ngIf="e.soluciones && e.soluciones.length > 0"
+            <div class="bitacora-info">
+              <div class="bitacora-title-row">
+                <strong class="bitacora-contexto">
+                  {{ e.contexto || '(Sin contexto)' }}
+                </strong>
+                <span class="bitacora-fecha">{{ e.fecha }}</span>
+              </div>
+              <div class="bitacora-error">{{ e.error }}</div>
+
+              <div
+                class="bitacora-tags"
+                *ngIf="e.tags && e.tags.length > 0"
               >
-                👁️
-              </button>
-              <button
-                class="action-btn edit-btn"
-                (click)="abrirPopupEditar(e)"
-                title="Editar"
-              >
-                ✏️
-              </button>
-              <button
-                class="action-btn delete-btn"
-                (click)="confirmarEliminar(e)"
-                title="Eliminar"
-              >
-                🗑️
-              </button>
+                <span class="tag" *ngFor="let tag of e.tags">
+                  {{ tag }}
+                </span>
+              </div>
+
+              <div class="bitacora-actions">
+                <button
+                  class="action-btn view-btn"
+                  (click)="openDetallSteps(e)"
+                  title="Ver pasos"
+                  *ngIf="e.soluciones && e.soluciones.length > 0"
+                >
+                  👁️
+                </button>
+                <button
+                  class="action-btn edit-btn"
+                  (click)="abrirPopupEditar(e)"
+                  title="Editar"
+                >
+                  ✏️
+                </button>
+                <button
+                  class="action-btn delete-btn"
+                  (click)="confirmarEliminar(e)"
+                  title="Eliminar"
+                >
+                  🗑️
+                </button>
+              </div>
             </div>
-          </div>
+          </ng-container>
+
+          <!-- FORMULARIO DE EDICIÓN INLINE -->
+          <ng-container *ngIf="bitacoraEditandoId === e.id && formBitacoraInline">
+            <div class="bitacora-edit-form">
+              <div class="edit-form-header">
+                <h4>Editando: {{ formBitacoraInline.contexto || '(Sin contexto)' }}</h4>
+              </div>
+
+              <div class="edit-form-content">
+                <div class="form-field">
+                  <label>Contexto</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="formBitacoraInline.contexto"
+                    placeholder="Contexto del error"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label>Error</label>
+                  <textarea
+                    rows="3"
+                    [(ngModel)]="formBitacoraInline.error"
+                    placeholder="Descripción del error"
+                  ></textarea>
+                </div>
+
+                <div class="form-field">
+                  <label>Entorno</label>
+                  <div class="entorno-options-inline">
+                    <button
+                      type="button"
+                      class="entorno-btn-small"
+                      [class.active]="formBitacoraInline.entorno === 'minsait'"
+                      (click)="formBitacoraInline.entorno = 'minsait'"
+                      [style.--color]="'#1E88E5'"
+                      title="Minsait"
+                    >
+                      Minsait
+                    </button>
+                    <button
+                      type="button"
+                      class="entorno-btn-small"
+                      [class.active]="formBitacoraInline.entorno === 'preproduccion'"
+                      (click)="formBitacoraInline.entorno = 'preproduccion'"
+                      [style.--color]="'#FBC02D'"
+                      title="Preproducción"
+                    >
+                      Preproducción
+                    </button>
+                    <button
+                      type="button"
+                      class="entorno-btn-small"
+                      [class.active]="formBitacoraInline.entorno === 'produccion'"
+                      (click)="formBitacoraInline.entorno = 'produccion'"
+                      [style.--color]="'#E53935'"
+                      title="Producción"
+                    >
+                      Producción
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Tags</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="tagsInputInline"
+                    placeholder="Etiquetas separadas por comas"
+                  />
+                </div>
+
+                <!-- Soluciones/Pasos -->
+                <div class="form-field solutions-field">
+                  <div class="solutions-header-inline">
+                    <label>Soluciones/Pasos</label>
+                  </div>
+                  <button
+                    type="button"
+                    class="guardar-btn agregar-solucion-btn"
+                    (click)="agregarSolucionInline()"
+                    title="Agregar Solución"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                  <div *ngIf="!formBitacoraInline.soluciones || formBitacoraInline.soluciones.length === 0" class="no-soluciones">
+                    <p>No hay soluciones agregadas</p>
+                  </div>
+
+                  <div *ngFor="let solucion of formBitacoraInline.soluciones; let i = index" class="solucion-item">
+                    <div class="solucion-header">
+                      <span class="solucion-numero">Paso {{ solucion.numero }}</span>
+                      <select [(ngModel)]="solucion.entorno" class="solucion-entorno-select" [style.borderColor]="getColorEntorno(solucion.entorno)">
+                        <option value="minsait">🔵 Minsait</option>
+                        <option value="preproduccion">🟡 Preproducción</option>
+                        <option value="produccion">🔴 Producción</option>
+                      </select>
+                      <button type="button" class="eliminar-solucion-btn" (click)="eliminarSolucionInline(i)" title="Eliminar solución">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </div>
+                    <div class="solucion-content-wrapper">
+                      <input type="file" #fileInputInline style="display: none;" (change)="onFileSelectedInline($event, solucion)" accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv" />
+                      <button type="button" class="file-btn" (click)="fileInputInline.click()" title="Añadir archivo">
+                        <img src="assets/images/File.png" alt="Archivo" />
+                      </button>
+
+                      <!-- Loading spinner while file is being loaded -->
+                      <div class="file-loading" *ngIf="loadingFileId === 'inline-' + solucion.numero">
+                        <mat-spinner diameter="20"></mat-spinner>
+                        <span>Cargando archivo...</span>
+                      </div>
+
+                      <!-- File name with type badge -->
+                      <div class="file-name-badge" *ngIf="solucion.archivoNombre && !solucion.archivoBase64">
+                        <span class="file-name">📎 {{ solucion.archivoNombre }}</span>
+                        <span class="file-type-badge">{{ getFileType(solucion) }}</span>
+                      </div>
+
+                      <!-- File name with type badge (when loaded) -->
+                      <div class="file-name-badge" *ngIf="solucion.archivoNombre && solucion.archivoBase64">
+                        <span class="file-name">✓ {{ solucion.archivoNombre }}</span>
+                        <span class="file-type-badge loaded">{{ getFileType(solucion) }}</span>
+                      </div>
+
+                      <textarea
+                        [(ngModel)]="solucion.descripcion"
+                        rows="2"
+                        placeholder="Descripción de la solución"
+                        class="solucion-textarea"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="edit-form-actions">
+                  <button type="button" class="cancelar-btn" (click)="cancelarEditarInline()" title="Cancelar edición">
+                    ✗
+                  </button>
+                  <button type="button" class="guardar-btn" (click)="guardarEditarInline()" title="Guardar cambios">
+                    ✓
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
 
@@ -361,34 +529,51 @@
                     <!-- Imagen -->
                     <div class="step-file-preview step-file-image" *ngIf="s.archivoBase64 && esImagen(s)">
                       <img [src]="s.archivoBase64" [alt]="s.archivoNombre" />
-                      <span class="step-file-label">📎 {{ s.archivoNombre }}</span>
                     </div>
 
-                    <!-- PDF -->
-                    <div class="step-file-preview step-file-pdf" *ngIf="s.archivoBase64 && esPdf(s)">
-                      <div class="step-file-pdf-icon">
-                        <mat-icon>picture_as_pdf</mat-icon>
-                        <span>PDF</span>
+                    <!-- PDF visualización -->
+                    <div class="step-file-preview step-file-pdf-viewer" *ngIf="s.archivoBase64 && esPdf(s)">
+                      <iframe 
+                        [src]="getSafeUrl(s.archivoBase64)" 
+                        frameborder="0"
+                        class="pdf-iframe"
+                      ></iframe>
+                    </div>
+
+                    <!-- CSV como tabla -->
+                    <div class="step-file-preview step-file-csv" *ngIf="s.archivoBase64 && esCsv(s)">
+                      <div class="csv-table-wrapper">
+                        <table class="csv-table">
+                          <thead *ngIf="parseCsvData(s)[0] as headers">
+                            <tr>
+                              <th *ngFor="let header of headers">{{ header }}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let row of parseCsvData(s).slice(1); let i = index">
+                              <td *ngFor="let cell of row">{{ cell }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                      <a [href]="s.archivoBase64" target="_blank" class="step-file-label step-file-link">
-                        📎 {{ s.archivoNombre }}
-                      </a>
                     </div>
 
                     <!-- Otro tipo de archivo -->
-                    <div class="step-file-preview step-file-other" *ngIf="s.archivoBase64 && !esImagen(s) && !esPdf(s)">
+                    <div class="step-file-preview step-file-other" *ngIf="s.archivoBase64 && !esImagen(s) && !esPdf(s) && !esCsv(s)">
                       <div class="step-file-badge">
+                        <mat-icon>description</mat-icon>
                         <span>{{ getExtension(s.archivoNombre) }}</span>
                       </div>
-                      <a [href]="s.archivoBase64" [download]="s.archivoNombre" class="step-file-label step-file-link">
-                        📎 {{ s.archivoNombre }}
+                      <a [href]="s.archivoBase64" [download]="s.archivoNombre" class="step-file-download-btn">
+                        <mat-icon>download</mat-icon> Descargar
                       </a>
                     </div>
 
                     <!-- Solo nombre si no hay base64 -->
-                    <span class="step-file-label-only" *ngIf="s.archivoNombre && !s.archivoBase64">
-                      📎 {{ s.archivoNombre }}
-                    </span>
+                    <div class="step-no-file" *ngIf="s.archivoNombre && !s.archivoBase64">
+                      <mat-icon>attach_file</mat-icon>
+                      <span>{{ s.archivoNombre }}</span>
+                    </div>
 
                     <!-- Descripción -->
                     <div class="bitacora-step-detail-text" *ngIf="s.descripcion">

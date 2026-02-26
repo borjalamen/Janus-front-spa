@@ -1,11 +1,13 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 import { DocumentService, BackendDocument } from '../document.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../local-storage.service';
+import { SafePipe } from '../safe.pipe';
 
 import { Proyecto, Task } from './projects';
 
@@ -41,11 +43,11 @@ type ProjectDetailDraft = {
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, MatIconModule, SafePipe],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input() proyecto?: Proyecto;
   @Input() mode: 'view' | 'edit' = 'view';
   @Output() close = new EventEmitter<void>();
@@ -60,6 +62,20 @@ export class ProjectDetailComponent implements OnInit {
       this.restoreDraft();
     }
   }
+
+  // Documentos agregados durante creación
+  projectDocumentsFromCreation: Array<{
+    nombre: string;
+    descripcion: string;
+    tipo: string;
+    path: string;
+  }> = [];
+
+  // Para cargar archivos en la vista de detalle
+  detailFileInput: File | null = null;
+  detailFileDescription: string = '';
+  documentPreviewUrls: Map<string, string> = new Map();
+  documentCsvContents: Map<string, string[][]> = new Map();
 
   projectDocs: BackendDocument[] = [];
   selectedDocFile?: File;
@@ -139,6 +155,15 @@ export class ProjectDetailComponent implements OnInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['proyecto']) {
+      // Cargar datos cuando el proyecto cambia (incluso en el primer cambio)
+      if (this.proyecto) {
+        this.initializeProjectData();
+      }
+    }
+  }
+
   private initializeProjectData() {
     if (!this.proyecto) return;
 
@@ -146,6 +171,21 @@ export class ProjectDetailComponent implements OnInit {
     p.ip = (p.ip || []);
     (p as any).entornoNotas = (p as any).entornoNotas || '';
     this.ipString = (p.ip || []).join(', ');
+
+    // Cargar documentos agregados durante creación
+    this.projectDocumentsFromCreation = (p as any).documents && Array.isArray((p as any).documents)
+      ? (p as any).documents
+      : [];
+
+    console.log('📄 Documentos cargados:', this.projectDocumentsFromCreation);
+    
+    // Limpiar URLs previas
+    this.documentPreviewUrls.forEach(url => URL.revokeObjectURL(url));
+    this.documentPreviewUrls.clear();
+    this.documentCsvContents.clear();
+    
+    // Cargar previews de documentos
+    this.loadDocumentPreviews();
 
     this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines)
       ? (p as any).devMachines as DevMachine[]
@@ -894,5 +934,197 @@ export class ProjectDetailComponent implements OnInit {
     });
     m.otherToolEnabled = true;
     this.saveDraft();
+  }
+
+  getDocumentIcon(doc: any): string {
+    if (doc.tipo && doc.tipo.startsWith('image/')) return '🖼️';
+    if (doc.tipo === 'application/pdf') return '📄';
+    if (doc.tipo === 'text/csv') return '📊';
+    if (doc.nombre.toLowerCase().endsWith('.docx') || doc.nombre.toLowerCase().endsWith('.doc')) return '📝';
+    if (doc.nombre.toLowerCase().endsWith('.xlsx') || doc.nombre.toLowerCase().endsWith('.xls')) return '📈';
+    if (doc.nombre.toLowerCase().endsWith('.pptx') || doc.nombre.toLowerCase().endsWith('.ppt')) return '🎯';
+    if (doc.nombre.toLowerCase().endsWith('.zip') || doc.nombre.toLowerCase().endsWith('.rar')) return '📦';
+    return '📎';
+  }
+
+  getDocumentTypeName(doc: any): string {
+    const tipo = doc.tipo || '';
+    const nombre = doc.nombre.toLowerCase();
+
+    if (tipo.startsWith('image/')) return 'Imagen';
+    if (tipo === 'application/pdf' || nombre.endsWith('.pdf')) return 'PDF';
+    if (tipo === 'text/csv' || nombre.endsWith('.csv')) return 'CSV';
+    if (nombre.endsWith('.docx') || nombre.endsWith('.doc')) return 'Word';
+    if (nombre.endsWith('.xlsx') || nombre.endsWith('.xls')) return 'Excel';
+    if (nombre.endsWith('.pptx') || nombre.endsWith('.ppt')) return 'PowerPoint';
+    if (nombre.endsWith('.zip') || nombre.endsWith('.rar')) return 'Comprimido';
+    if (nombre.endsWith('.txt')) return 'Texto';
+    
+    const ext = nombre.split('.').pop()?.toUpperCase() || 'Archivo';
+    return ext;
+  }
+
+  // Métodos para manejar documentos en la vista de detalle
+  onDetailDocumentSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.detailFileInput = input.files[0];
+    }
+  }
+
+  addDetailDocument() {
+    if (!this.detailFileInput || !this.proyecto?.id) {
+      alert('Por favor, selecciona un archivo');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.detailFileInput);
+    formData.append('descripcion', this.detailFileDescription);
+
+    // Subir archivo al servidor (importar ProjectService si no está)
+    const http = (this as any).http || (this.documentService as any).http;
+    if (!http) {
+      console.error('No se puede acceder a HttpClient');
+      return;
+    }
+
+    http.post(`http://localhost:8080/api/projects/${this.proyecto.id}/documents/upload`, formData)
+      .subscribe({
+        next: (response: any) => {
+          console.log('✅ Documento subido:', response);
+          // Agregar a la lista local
+          if (response.document) {
+            this.projectDocumentsFromCreation.push(response.document);
+          }
+          // Limpiar formulario
+          this.detailFileInput = null;
+          this.detailFileDescription = '';
+          const fileInput = document.querySelector('#fileInputDetail') as HTMLInputElement;
+          if (fileInput) fileInput.value = '';
+          const fileInput2 = document.querySelector('#fileInputDetail2') as HTMLInputElement;
+          if (fileInput2) fileInput2.value = '';
+          alert('✅ Documento agregado correctamente');
+        },
+        error: (err: any) => {
+          console.error('❌ Error al subir documento:', err);
+          alert('❌ Error al subir el documento');
+        }
+      });
+  }
+
+  removeProjectDocument(index: number) {
+    if (!this.proyecto?.id) return;
+
+    const doc = this.projectDocumentsFromCreation[index];
+    if (!confirm(`¿Eliminar el documento "${doc.nombre}"?`)) return;
+
+    // Extraer el nombre del archivo desde el path
+    const fileName = doc.path.split('/').pop();
+    if (!fileName) return;
+
+    const http = (this as any).http || (this.documentService as any).http;
+    if (!http) {
+      console.error('No se puede acceder a HttpClient');
+      return;
+    }
+
+    http.delete(
+      `http://localhost:8080/api/projects/${this.proyecto.id}/documents/delete?fileName=${encodeURIComponent(fileName)}`
+    ).subscribe({
+      next: () => {
+        this.projectDocumentsFromCreation.splice(index, 1);
+        alert('✅ Documento eliminado correctamente');
+      },
+      error: (err: any) => {
+        console.error('❌ Error al eliminar documento:', err);
+        alert('❌ Error al eliminar el documento');
+      }
+    });
+  }
+
+  downloadDocument(doc: any) {
+    if (!this.proyecto?.id || !doc.path) return;
+
+    const fileName = doc.path.split('/').pop();
+    if (!fileName) return;
+
+    const http = (this as any).http || (this.documentService as any).http;
+    if (!http) {
+      console.error('No se puede acceder a HttpClient');
+      return;
+    }
+
+    http.get(
+      `http://localhost:8080/api/projects/${this.proyecto.id}/documents/download?fileName=${encodeURIComponent(fileName)}`,
+      { responseType: 'blob' }
+    ).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = doc.nombre;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err: any) => {
+        console.error('❌ Error al descargar documento:', err);
+        alert('❌ Error al descargar el documento');
+      }
+    });
+  }
+
+  private loadDocumentPreviews() {
+    if (!this.proyecto?.id || !this.projectDocumentsFromCreation.length) return;
+
+    this.projectDocumentsFromCreation.forEach((doc: any) => {
+      const fileName = doc.path?.split('/').pop();
+      if (!fileName) return;
+
+      const http = (this as any).http || (this.documentService as any).http;
+      if (!http) return;
+
+      // Cargar blob del documento
+      http.get(
+        `http://localhost:8080/api/projects/${this.proyecto!.id}/documents/download?fileName=${encodeURIComponent(fileName)}`,
+        { responseType: 'blob' }
+      ).subscribe({
+        next: (blob: Blob) => {
+          // Para PDFs e imágenes, crear Object URL
+          if (doc.tipo?.startsWith('image/') || doc.tipo === 'application/pdf') {
+            const url = URL.createObjectURL(blob);
+            this.documentPreviewUrls.set(doc.path, url);
+          }
+          // Para CSVs, leer y parsear contenido
+          else if (doc.tipo === 'text/csv' || doc.nombre?.endsWith('.csv')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const text = e.target?.result as string;
+              const rows = text.split('\n').map(row => row.split(',').map(cell => cell.trim()));
+              this.documentCsvContents.set(doc.path, rows);
+            };
+            reader.readAsText(blob);
+          }
+        },
+        error: (err: any) => {
+          console.error('Error al cargar preview de documento:', err);
+        }
+      });
+    });
+  }
+
+  getDocumentPreviewUrl(doc: any): string | null {
+    return this.documentPreviewUrls.get(doc.path) || null;
+  }
+
+  getDocumentCsvContent(doc: any): string[][] | null {
+    return this.documentCsvContents.get(doc.path) || null;
+  }
+
+  ngOnDestroy() {
+    // Limpiar object URLs al destruir componente
+    this.documentPreviewUrls.forEach(url => URL.revokeObjectURL(url));
   }
 }

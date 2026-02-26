@@ -7,6 +7,7 @@ import { LocalStorageService } from '../local-storage.service';
 import { ProjectService, Project } from '../project.service';
 import { FormsModule } from '@angular/forms';
 import { ProjectDetailComponent } from './project-detail';
+import { SafePipe } from '../safe.pipe';
 
 // ===== MODELS =====
 export interface Task {
@@ -49,7 +50,7 @@ export interface Proyecto extends Project {
   templateUrl: './projects.html',
   styleUrls: ['./projects.css'],
   standalone: true,
-  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, MatIconModule, ProjectDetailComponent]
+  imports: [CommonModule, BuscadorComponent, TranslateModule, FormsModule, MatIconModule, ProjectDetailComponent, SafePipe]
 })
 export class ProjectsComponent implements OnInit {
   title = '';
@@ -90,7 +91,7 @@ export class ProjectsComponent implements OnInit {
   importResult: { success: boolean; message: string } | null = null;
 
   // Sub‑tabs “Nou projecte”
-  newProjectTab: 'info' | 'minsait' | 'dev' | 'mind' = 'info';
+  newProjectTab: 'info' | 'minsait' | 'dev' | 'mind' | 'documentos' = 'info';
 
   // Dades extres del formulari de “Nou projecte”
   newProjectMinsaitMembers: Array<{ nombre: string; rol: string; email: string }> = [];
@@ -107,6 +108,18 @@ export class ProjectsComponent implements OnInit {
   newProjectArtifactRepos: Array<{ name: string; url: string }> = [];
   newProjectJenkinsList: Array<{ name: string; url: string }> = [];
   newProjectSonarList: Array<{ prefix: string; url: string; tokenUser: string; tokenValue: string }> = [];
+  
+  // Documentos del proyecto (almacenados en el archivo)
+  newProjectDocuments: Array<{
+    file: File;
+    nombre: string;
+    descripcion: string;
+    tipo: string;
+  }> = [];
+  
+  // Para cargar archivos desde formulario
+  projectFileInput: File | null = null;
+  projectFileDescription: string = '';
 
   constructor(
     private translate: TranslateService,
@@ -173,7 +186,8 @@ export class ProjectsComponent implements OnInit {
       newProjectCodeRepos: this.newProjectCodeRepos,
       newProjectArtifactRepos: this.newProjectArtifactRepos,
       newProjectJenkinsList: this.newProjectJenkinsList,
-      newProjectSonarList: this.newProjectSonarList
+      newProjectSonarList: this.newProjectSonarList,
+      newProjectDocuments: this.newProjectDocuments
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -190,6 +204,7 @@ export class ProjectsComponent implements OnInit {
     if (draft.newProjectArtifactRepos) this.newProjectArtifactRepos = draft.newProjectArtifactRepos;
     if (draft.newProjectJenkinsList) this.newProjectJenkinsList = draft.newProjectJenkinsList;
     if (draft.newProjectSonarList) this.newProjectSonarList = draft.newProjectSonarList;
+    if (draft.newProjectDocuments) this.newProjectDocuments = draft.newProjectDocuments;
   }
 
   clearDraft(): void {
@@ -213,7 +228,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   // ===== SUB‑TABS NOU PROJECTE =====
-  cambiarNewProjectTab(tab: 'info' | 'minsait' | 'dev' | 'mind') {
+  cambiarNewProjectTab(tab: 'info' | 'minsait' | 'dev' | 'mind' | 'documentos') {
     this.newProjectTab = tab;
     this.saveDraft();
   }
@@ -266,6 +281,80 @@ export class ProjectsComponent implements OnInit {
 
   addNewProjectSonar() { this.newProjectSonarList.push({ prefix: '', url: '', tokenUser: '', tokenValue: '' }); this.saveDraft(); }
   removeNewProjectSonar(i: number) { this.newProjectSonarList.splice(i, 1); this.saveDraft(); }
+
+  // Manejo de documentos
+  onDocumentSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.projectFileInput = file;
+    }
+  }
+
+  addNewProjectDocument() {
+    if (!this.projectFileInput) {
+      alert('Por favor, selecciona un archivo');
+      return;
+    }
+
+    const doc = {
+      file: this.projectFileInput,
+      nombre: this.projectFileInput.name,
+      descripcion: this.projectFileDescription,
+      tipo: this.projectFileInput.type || 'application/octet-stream'
+    };
+
+    this.newProjectDocuments.push(doc);
+    
+    // Limpiar formulario
+    this.projectFileInput = null;
+    this.projectFileDescription = '';
+    const fileInput = document.querySelector('#fileInputProject') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+    
+    this.saveDraft();
+  }
+
+  removeNewProjectDocument(i: number) {
+    this.newProjectDocuments.splice(i, 1);
+    this.saveDraft();
+  }
+
+  getDocumentIcon(doc: any): string {
+    if (doc.tipo && doc.tipo.startsWith('image/')) return '🖼️';
+    if (doc.tipo === 'application/pdf') return '📄';
+    if (doc.tipo === 'text/csv') return '📊';
+    if (doc.nombre.toLowerCase().endsWith('.docx') || doc.nombre.toLowerCase().endsWith('.doc')) return '📝';
+    if (doc.nombre.toLowerCase().endsWith('.xlsx') || doc.nombre.toLowerCase().endsWith('.xls')) return '📈';
+    if (doc.nombre.toLowerCase().endsWith('.pptx') || doc.nombre.toLowerCase().endsWith('.ppt')) return '🎯';
+    if (doc.nombre.toLowerCase().endsWith('.zip') || doc.nombre.toLowerCase().endsWith('.rar')) return '📦';
+    return '📎';
+  }
+
+  getDocumentPreviewUrl(doc: any): string | null {
+    if (!doc.file) return null;
+    if (doc.tipo && (doc.tipo.startsWith('image/') || doc.tipo === 'application/pdf')) {
+      return URL.createObjectURL(doc.file);
+    }
+    return null;
+  }
+
+  getDocumentTypeName(doc: any): string {
+    const tipo = doc.tipo || '';
+    const nombre = doc.nombre.toLowerCase();
+
+    if (tipo.startsWith('image/')) return 'Imagen';
+    if (tipo === 'application/pdf' || nombre.endsWith('.pdf')) return 'PDF';
+    if (tipo === 'text/csv' || nombre.endsWith('.csv')) return 'CSV';
+    if (nombre.endsWith('.docx') || nombre.endsWith('.doc')) return 'Word';
+    if (nombre.endsWith('.xlsx') || nombre.endsWith('.xls')) return 'Excel';
+    if (nombre.endsWith('.pptx') || nombre.endsWith('.ppt')) return 'PowerPoint';
+    if (nombre.endsWith('.zip') || nombre.endsWith('.rar')) return 'Comprimido';
+    if (nombre.endsWith('.txt')) return 'Texto';
+    
+    const ext = nombre.split('.').pop()?.toUpperCase() || 'Archivo';
+    return ext;
+  }
 
   // ===== Llista / filtrat =====
   filtrar(valor: string) {
@@ -345,6 +434,10 @@ export class ProjectsComponent implements OnInit {
             this.projectes[idx] = updated as Proyecto;
           }
           this.projectesFiltrats = [...this.projectes];
+          // Subir documentos si existen
+          if (this.newProjectDocuments.length > 0) {
+            this.uploadProjectDocuments(partial.id!);
+          }
           this.showProjectModal = false;
           this.editingProject = {};
           this.activeTab = 'LIST';
@@ -363,6 +456,10 @@ export class ProjectsComponent implements OnInit {
         next: (created) => {
           this.projectes.push(created as Proyecto);
           this.projectesFiltrats = [...this.projectes];
+          // Subir documentos si existen
+          if (this.newProjectDocuments.length > 0 && created.id) {
+            this.uploadProjectDocuments(created.id);
+          }
           this.showProjectModal = false;
           this.editingProject = {};
           this.activeTab = 'LIST';
@@ -376,6 +473,57 @@ export class ProjectsComponent implements OnInit {
         }
       });
     }
+  }
+
+  private uploadProjectDocuments(projectId: string) {
+    if (!projectId || this.newProjectDocuments.length === 0) return;
+
+    let uploadedCount = 0;
+    const totalDocs = this.newProjectDocuments.length;
+
+    console.log(`📤 Subiendo ${totalDocs} documento(s)...`);
+
+    // Subir documentos uno por uno
+    this.newProjectDocuments.forEach((doc, index) => {
+      const formData = new FormData();
+      formData.append('file', doc.file);
+      formData.append('descripcion', doc.descripcion);
+
+      this.projectService.uploadProjectDocument(projectId, formData).subscribe({
+        next: (response) => {
+          uploadedCount++;
+          console.log(`✅ Documento ${uploadedCount}/${totalDocs} subido:`, response);
+
+          // Cuando se suban todos los documentos, recargar el proyecto
+          if (uploadedCount === totalDocs) {
+            console.log('✅ Todos los documentos subidos. Recargando proyecto...');
+            this.reloadProject(projectId);
+            this.newProjectDocuments = []; // Limpiar la lista
+          }
+        },
+        error: (err) => {
+          uploadedCount++;
+          console.error(`❌ Error al subir documento ${uploadedCount}/${totalDocs}:`, err);
+          alert(`❌ Error al subir el documento "${doc.nombre}"`);
+        }
+      });
+    });
+  }
+
+  private reloadProject(projectId: string) {
+    this.projectService.getById(projectId).subscribe({
+      next: (updatedProject) => {
+        const idx = this.projectes.findIndex(p => p.id === projectId);
+        if (idx !== -1) {
+          this.projectes[idx] = updatedProject as Proyecto;
+          this.projectesFiltrats = [...this.projectes];
+          console.log('✅ Proyecto recargado con documentos:', updatedProject);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al recargar proyecto:', err);
+      }
+    });
   }
 
   private parseTareasString(s: string): Task[] {
@@ -526,4 +674,5 @@ export class ProjectsComponent implements OnInit {
       .map(([nombre, count]) => ({ nombre, count }))
       .sort((a, b) => b.count - a.count);
   }
+
 }

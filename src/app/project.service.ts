@@ -109,7 +109,15 @@ export interface Project {
   
   // Herramientas MIND
   herramientasMind?: HerramientasMind;
-  
+
+  // Documentos
+  documents?: Array<{
+    nombre: string;
+    descripcion: string;
+    tipo: string;
+    path: string;
+  }>;
+
   // Auditoría
   createdAt?: string;
   updatedAt?: string;
@@ -200,5 +208,34 @@ export class ProjectService {
    */
   delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/delete/${id}`);
+  }
+
+  /**
+   * POST /api/projects/{id}/documents/upload
+   * Subir documento a un proyecto
+   */
+  uploadProjectDocument(projectId: string, formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/${projectId}/documents/upload`, formData);
+  }
+
+  /**
+   * DELETE /api/projects/{id}/documents/delete
+   * Eliminar documento de un proyecto
+   */
+  deleteProjectDocument(projectId: string, fileName: string): Observable<any> {
+    return this.http.delete<any>(
+      `${this.baseUrl}/${projectId}/documents/delete?fileName=${encodeURIComponent(fileName)}`
+    );
+  }
+
+  /**
+   * GET /api/projects/{id}/documents/download
+   * Descargar documento de un proyecto
+   */
+  downloadProjectDocument(projectId: string, fileName: string): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/${projectId}/documents/download?fileName=${encodeURIComponent(fileName)}`,
+      { responseType: 'blob' }
+    );
   }
 }

@@ -928,6 +928,163 @@ spring.datasource.password=..."></textarea>
       </div>
     </div>
 
+    <!-- Documentos agregados en creación -->
+    <div *ngIf="projectDocumentsFromCreation && projectDocumentsFromCreation.length > 0" class="sections-container">
+      <section class="section section-docs-bg">
+        <div class="section-title">{{ 'PROJECTS.DOCUMENTS_FROM_CREATION' | translate }}</div>
+        <div class="project-documents-grid">
+          <div *ngFor="let doc of projectDocumentsFromCreation; let i = index" class="doc-card-new-project">
+            <div class="doc-header">
+              <span class="doc-icon">{{ getDocumentIcon(doc) }}</span>
+              <span class="doc-filename">{{ doc.nombre }}</span>
+              <span class="doc-type-badge">{{ getDocumentTypeName(doc) }}</span>
+              <button *ngIf="editing" class="btn-remove-doc" (click)="removeProjectDocument(i)" title="Eliminar">
+                ✕
+              </button>
+            </div>
+            <textarea class="doc-description-textarea" 
+                      [(ngModel)]="doc.descripcion" 
+                      placeholder="{{ 'PROJECTS.DOCUMENT_DESCRIPTION' | translate }}"
+                      [readonly]="!editing"></textarea>
+            <div class="doc-preview">
+              <!-- IMAGEN -->
+              <div *ngIf="doc.tipo && doc.tipo.startsWith('image/')" class="preview-container">
+                <img *ngIf="getDocumentPreviewUrl(doc)" 
+                     [src]="getDocumentPreviewUrl(doc)" 
+                     alt="{{ doc.nombre }}" 
+                     style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
+                <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder image">
+                  <mat-icon>image</mat-icon>
+                  <p>Cargando imagen...</p>
+                </div>
+              </div>
+              
+              <!-- PDF -->
+              <div *ngIf="doc.tipo === 'application/pdf'" class="preview-container">
+                <iframe *ngIf="getDocumentPreviewUrl(doc)" 
+                        [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'" 
+                        style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 4px;"
+                        frameborder="0"></iframe>
+                <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder pdf">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  <p>Cargando PDF...</p>
+                </div>
+              </div>
+              
+              <!-- CSV -->
+              <div *ngIf="doc.tipo === 'text/csv' || doc.nombre?.endsWith('.csv')" class="preview-container">
+                <div *ngIf="getDocumentCsvContent(doc)" class="csv-table-container" style="max-height: 400px; overflow: auto;">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                    <tr *ngFor="let row of getDocumentCsvContent(doc); let i = index" 
+                        [style.background-color]="i === 0 ? '#f0f0f0' : 'transparent'"
+                        [style.font-weight]="i === 0 ? 'bold' : 'normal'">
+                      <td *ngFor="let cell of row" style="border: 1px solid #ddd; padding: 4px 8px;">
+                        {{ cell }}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div *ngIf="!getDocumentCsvContent(doc)" class="preview-placeholder csv">
+                  <mat-icon>table_chart</mat-icon>
+                  <p>Cargando CSV...</p>
+                </div>
+              </div>
+              
+              <!-- OTROS ARCHIVOS -->
+              <div *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv' && !doc.nombre?.endsWith('.csv'))" class="preview-placeholder other">
+                <mat-icon>insert_drive_file</mat-icon>
+                <p>{{ getDocumentTypeName(doc) }}</p>
+              </div>
+            </div>
+            <button *ngIf="!editing" class="btn-download-doc" (click)="downloadDocument(doc)">
+              📥 Descargar
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulario para agregar documentos (solo en modo edición) -->
+        <div *ngIf="editing" class="document-upload-form">
+          <h4>Agregar nuevo documento</h4>
+          <div class="form-row">
+            <label>Seleccionar archivo</label>
+            <div class="file-input-wrapper">
+              <input type="file" 
+                     #fileInputDetail
+                     id="fileInputDetail"
+                     style="display: none;"
+                     (change)="onDetailDocumentSelected($event)"
+                     accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
+              <button class="btn-round btn-secondary" (click)="fileInputDetail.click()">
+                📁 Seleccionar archivo
+              </button>
+              <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Descripción del documento</label>
+            <textarea 
+              [(ngModel)]="detailFileDescription"
+              placeholder="Descripción (opcional)"
+              rows="2"
+              class="doc-description-textarea"></textarea>
+          </div>
+
+          <div class="form-row">
+            <button class="btn-round btn-primary" 
+                    (click)="addDetailDocument()"
+                    [disabled]="!detailFileInput">
+              ➕ Agregar documento
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Mensaje si no hay documentos y está en edición -->
+    <div *ngIf="editing && (!projectDocumentsFromCreation || projectDocumentsFromCreation.length === 0)" class="sections-container">
+      <section class="section section-docs-bg">
+        <div class="section-title">{{ 'PROJECTS.DOCUMENTS_FROM_CREATION' | translate }}</div>
+        <p class="empty-list-msg">No hay documentos. Agrega uno nuevo:</p>
+        
+        <!-- Formulario para agregar documentos -->
+        <div class="document-upload-form">
+          <div class="form-row">
+            <label>Seleccionar archivo</label>
+            <div class="file-input-wrapper">
+              <input type="file" 
+                     #fileInputDetail2
+                     id="fileInputDetail2"
+                     style="display: none;"
+                     (change)="onDetailDocumentSelected($event)"
+                     accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
+              <button class="btn-round btn-secondary" (click)="fileInputDetail2.click()">
+                📁 Seleccionar archivo
+              </button>
+              <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Descripción del documento</label>
+            <textarea 
+              [(ngModel)]="detailFileDescription"
+              placeholder="Descripción (opcional)"
+              rows="2"
+              class="doc-description-textarea"></textarea>
+          </div>
+
+          <div class="form-row">
+            <button class="btn-round btn-primary" 
+                    (click)="addDetailDocument()"
+                    [disabled]="!detailFileInput">
+              ➕ Agregar documento
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
     <!-- Botons d'acció -->
     <div class="actions">
       <button class="jh-btn"

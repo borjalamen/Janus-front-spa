@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BuscadorComponent } from '../buscador/buscador';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../environments/environment';
 import { LocalStorageService } from '../local-storage.service';
@@ -39,6 +41,7 @@ interface Bitacora {
     BuscadorComponent,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     TranslateModule
   ],
   templateUrl: './bitacora.html',
@@ -69,6 +72,11 @@ export class BitacoraComponent implements OnInit {
   formBitacora: Bitacora = this.getEmptyBitacora();
   tagsInput = '';
 
+  // Edición inline en lista
+  bitacoraEditandoId: string | null = null;
+  formBitacoraInline: Bitacora | null = null;
+  tagsInputInline = '';
+
   // Popup eliminar
   mostrarPopupDelete = false;
   bitacoraAEliminar: Bitacora | null = null;
@@ -82,6 +90,9 @@ export class BitacoraComponent implements OnInit {
   mostrarDetallSteps = false;
   currentStepIndex = 0;
   slideDirection: 'left' | 'right' = 'right';
+
+  // Loading de archivos
+  loadingFileId: string | null = null; // Ej: "create-0", "inline-1"
 
   // Steps expandidos en listado
   expandedSteps: Set<string> = new Set();
@@ -99,7 +110,8 @@ export class BitacoraComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -118,6 +130,8 @@ export class BitacoraComponent implements OnInit {
       const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
       if (draft) {
         this.formBitacora = draft;
+        // Asegurarse de que no tenga ID al crear nueva
+        delete this.formBitacora.id;
         this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
       }
     }
@@ -144,6 +158,8 @@ export class BitacoraComponent implements OnInit {
         ? this.tagsInput.split(',').map(t => t.trim()).filter(t => t)
         : []
     };
+    // NO guardar el ID en el draft para evitar sobrescribir bitácoras existentes
+    delete draft.id;
     this.storage.setObject(this.STORAGE_KEY_FORM, draft);
   }
 
@@ -174,10 +190,20 @@ export class BitacoraComponent implements OnInit {
     this.storage.set(this.STORAGE_KEY_TAB, tab);
 
     if (tab === 'crear') {
-      const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
-      if (draft) {
-        this.formBitacora = draft;
-        this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
+      // Si estábamos editando, resetear al modo crear
+      if (this.editando) {
+        this.editando = false;
+        this.formBitacora = this.getEmptyBitacora();
+        this.tagsInput = '';
+        this.storage.remove(this.STORAGE_KEY_FORM);
+      } else {
+        const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
+        if (draft) {
+          this.formBitacora = draft;
+          // Asegurarse de que no tenga ID al crear nueva
+          delete this.formBitacora.id;
+          this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
+        }
       }
     }
   }
@@ -213,6 +239,8 @@ export class BitacoraComponent implements OnInit {
     const draft = this.storage.getObject<Bitacora>(this.STORAGE_KEY_FORM);
     if (draft) {
       this.formBitacora = draft;
+      // Asegurarse de que no tenga ID al crear nueva
+      delete this.formBitacora.id;
       this.tagsInput = draft.tags ? draft.tags.join(', ') : '';
     } else {
       this.formBitacora = this.getEmptyBitacora();
@@ -221,20 +249,131 @@ export class BitacoraComponent implements OnInit {
     this.setActiveTab('crear');
   }
 
-  // ===== POPUP EDITAR =====
+  // ===== EDITAR INLINE =====
   abrirPopupEditar(bitacora: Bitacora) {
-    this.editando = true;
-    // Deep copy to avoid mutating the list item
-    this.formBitacora = JSON.parse(JSON.stringify(bitacora));
-    if (!this.formBitacora.soluciones) {
-      this.formBitacora.soluciones = [];
+    // Si ya está editando otra, cancelar primero
+    if (this.bitacoraEditandoId && this.bitacoraEditandoId !== bitacora.id) {
+      this.cancelarEditarInline();
     }
-    this.tagsInput = bitacora.tags ? bitacora.tags.join(', ') : '';
-    // Set tab directly — do NOT call setActiveTab() which would overwrite
-    // formBitacora with any saved draft from localStorage
-    this.activeTab = 'crear';
-    this.storage.set(this.STORAGE_KEY_TAB, 'crear');
-    this.mostrarDetallSteps = false;
+    
+    this.bitacoraEditandoId = bitacora.id || null;
+    // Deep copy to avoid mutating the list item
+    this.formBitacoraInline = JSON.parse(JSON.stringify(bitacora));
+    if (this.formBitacoraInline) {
+      if (!this.formBitacoraInline.soluciones) {
+        this.formBitacoraInline.soluciones = [];
+      }
+      this.tagsInputInline = bitacora.tags ? bitacora.tags.join(', ') : '';
+    }
+  }
+
+  // ===== CANCELAR EDICIÓN INLINE =====
+  cancelarEditarInline() {
+    this.bitacoraEditandoId = null;
+    this.formBitacoraInline = null;
+    this.tagsInputInline = '';
+    // Resetear editando para evitar problemas al crear nuevas
+    this.editando = false;
+  }
+
+  // ===== GUARDAR EDICIÓN INLINE =====
+  guardarEditarInline() {
+    if (!this.formBitacoraInline || !this.formBitacoraInline.id) {
+      return;
+    }
+
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.formBitacoraInline.tags = this.tagsInputInline
+      ? this.tagsInputInline.split(',').map(t => t.trim()).filter(t => t)
+      : [];
+
+    if (!this.formBitacoraInline.contexto || !this.formBitacoraInline.contexto.trim()) {
+      this.errorMessage = 'El campo Contexto es obligatorio.';
+      return;
+    }
+    if (!this.formBitacoraInline.error || !this.formBitacoraInline.error.trim()) {
+      this.errorMessage = 'El campo Error es obligatorio.';
+      return;
+    }
+
+    const payload: any = {
+      ...this.formBitacoraInline,
+      fecha: this.normalizeFecha(this.formBitacoraInline.fecha),
+      soluciones: (this.formBitacoraInline.soluciones || []).map((s: any) => ({
+        numero: s.numero,
+        descripcion: s.descripcion,
+        entorno: s.entorno,
+        archivoNombre: s.archivoNombre || null,
+        archivoTipo: s.archivoTipo || null,
+        archivoBase64: s.archivoBase64 || null
+      }))
+    };
+
+    this.http.put(`${this.baseUrl}/update/${this.formBitacoraInline.id}`, payload)
+      .subscribe({
+        next: () => {
+          this.successMessage = 'Bitácora actualizada correctamente.';
+          this.cargarBitacoras();
+          this.cancelarEditarInline();
+          setTimeout(() => { this.successMessage = ''; }, 1500);
+        },
+        error: (err) => {
+          console.error('❌ Error actualizando bitácora', err);
+          this.errorMessage = 'Error al actualizar: ' + (err?.error?.message || err?.message || 'Error del servidor');
+        }
+      });
+  }
+
+  // ===== AGREGAR SOLUCIÓN INLINE =====
+  agregarSolucionInline() {
+    if (!this.formBitacoraInline) {
+      this.formBitacoraInline = this.getEmptyBitacora();
+    }
+    const form = this.formBitacoraInline;
+    if (!form.soluciones) {
+      form.soluciones = [];
+    }
+    const numero = form.soluciones.length + 1;
+    form.soluciones.push({
+      numero,
+      descripcion: '',
+      entorno: 'minsait'
+    });
+  }
+
+  // ===== ELIMINAR SOLUCIÓN INLINE =====
+  eliminarSolucionInline(index: number) {
+    if (this.formBitacoraInline && this.formBitacoraInline.soluciones) {
+      this.formBitacoraInline.soluciones.splice(index, 1);
+      // Renumerar
+      this.formBitacoraInline.soluciones.forEach((s, i) => {
+        s.numero = i + 1;
+      });
+    }
+  }
+
+  // ===== SELECCIONAR ARCHIVO INLINE =====
+  onFileSelectedInline(event: Event, solucion: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      solucion.archivoNombre = file.name;
+      solucion.archivoTipo = file.type;
+
+      // Mostrar spinner mientras se carga
+      const fileId = `inline-${solucion.numero}`;
+      this.loadingFileId = fileId;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        solucion.archivoBase64 = e.target.result;
+        this.loadingFileId = null; // Ocultar spinner
+        this.saveFormDraft();
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   // ===== CERRAR =====
@@ -268,19 +407,42 @@ export class BitacoraComponent implements OnInit {
     }
 
     // Build payload: normalize fecha to ISO datetime and strip archivoBase64
-    // (base64 data is only for in-session preview; backend stores name+type only)
-    const payload: any = {
-      ...this.formBitacora,
-      fecha: this.normalizeFecha(this.formBitacora.fecha),
-      soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
-        numero: s.numero,
-        descripcion: s.descripcion,
-        entorno: s.entorno,
-        archivoNombre: s.archivoNombre || null,
-        archivoTipo: s.archivoTipo || null,
-        archivoBase64: s.archivoBase64 || null
-      }))
-    };
+    let payload: any;
+
+    if (this.editando && this.formBitacora.id) {
+      // EDITAR: Incluir el ID para actualizar
+      payload = {
+        ...this.formBitacora,
+        fecha: this.normalizeFecha(this.formBitacora.fecha),
+        soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
+          numero: s.numero,
+          descripcion: s.descripcion,
+          entorno: s.entorno,
+          archivoNombre: s.archivoNombre || null,
+          archivoTipo: s.archivoTipo || null,
+          archivoBase64: s.archivoBase64 || null
+        }))
+      };
+    } else {
+      // CREAR: Nunca incluir ID - construir payload SIN ID
+      payload = {
+        contexto: this.formBitacora.contexto,
+        error: this.formBitacora.error,
+        entorno: this.formBitacora.entorno,
+        fecha: this.normalizeFecha(this.formBitacora.fecha),
+        tags: this.formBitacora.tags,
+        soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
+          numero: s.numero,
+          descripcion: s.descripcion,
+          entorno: s.entorno,
+          archivoNombre: s.archivoNombre || null,
+          archivoTipo: s.archivoTipo || null,
+          archivoBase64: s.archivoBase64 || null
+        }))
+      };
+      // Asegurarse 100% de que NO hay ID
+      delete payload.id;
+    }
 
     if (this.editando && this.formBitacora.id) {
       this.http.put(`${this.baseUrl}/update/${this.formBitacora.id}`, payload)
@@ -329,27 +491,46 @@ export class BitacoraComponent implements OnInit {
 
   // ===== CONFIRMAR ELIMINAR =====
   confirmarEliminar(bitacora: Bitacora) {
+    console.log('🔵 confirmarEliminar() called with:', bitacora);
     this.bitacoraAEliminar = bitacora;
     this.mostrarPopupDelete = true;
+    console.log('🔵 mostrarPopupDelete:', this.mostrarPopupDelete);
   }
 
   cancelarEliminar() {
+    console.log('🔵 cancelarEliminar() called');
     this.mostrarPopupDelete = false;
     this.bitacoraAEliminar = null;
   }
 
   // ===== ELIMINAR =====
   eliminarBitacora() {
-    if (!this.bitacoraAEliminar || !this.bitacoraAEliminar.id) return;
+    console.log('🔵 eliminarBitacora() called');
+    console.log('🔵 bitacoraAEliminar:', this.bitacoraAEliminar);
+    
+    if (!this.bitacoraAEliminar || !this.bitacoraAEliminar.id) {
+      console.error('❌ bitacoraAEliminar no tiene ID:', this.bitacoraAEliminar);
+      return;
+    }
 
-    this.http.delete(`${this.baseUrl}/delete/${this.bitacoraAEliminar.id}`)
+    const deleteUrl = `${this.baseUrl}/delete/${this.bitacoraAEliminar.id}`;
+    console.log('🔵 Enviando DELETE a:', deleteUrl);
+    
+    this.http.delete(deleteUrl)
       .subscribe({
-        next: () => {
-          console.log('✅ Bitácora eliminada');
-          this.cargarBitacoras();
+        next: (response) => {
+          console.log('✅ Bitácora eliminada, respuesta:', response);
           this.cancelarEliminar();
+          this.cargarBitacoras();
         },
-        error: (err) => console.error('❌ Error eliminando bitácora', err)
+        error: (err) => {
+          console.error('❌ Error eliminando bitácora:', err);
+          if (err.error && err.error.message) {
+            this.errorMessage = 'Error al eliminar: ' + err.error.message;
+          } else {
+            this.errorMessage = 'Error al eliminar la bitácora';
+          }
+        }
       });
   }
 
@@ -461,9 +642,14 @@ export class BitacoraComponent implements OnInit {
       solucion.archivoNombre = file.name;
       solucion.archivoTipo = file.type;
 
+      // Mostrar spinner mientras se carga
+      const fileId = `create-${solucion.numero}`;
+      this.loadingFileId = fileId;
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         solucion.archivoBase64 = e.target.result;
+        this.loadingFileId = null; // Ocultar spinner
         this.onFormChange();
       };
       reader.readAsDataURL(file);
@@ -478,9 +664,82 @@ export class BitacoraComponent implements OnInit {
     return s.archivoTipo === 'application/pdf';
   }
 
+  getSafeUrl(base64: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(base64);
+  }
+
+  esCsv(s: Solucion): boolean {
+    return s.archivoTipo === 'text/csv' || 
+           s.archivoTipo === 'application/vnd.ms-excel' ||
+           (s.archivoNombre?.toLowerCase().endsWith('.csv') || false);
+  }
+
+  parseCsvData(s: Solucion): any[][] {
+    if (!s.archivoBase64) return [];
+    
+    try {
+      // Decode base64 to text
+      const base64Data = s.archivoBase64.split(',')[1] || s.archivoBase64;
+      const csvText = atob(base64Data);
+      
+      // Simple CSV parser
+      const lines = csvText.split('\n').filter(line => line.trim());
+      return lines.map(line => {
+        // Handle quoted values and commas
+        const values: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+        return values;
+      });
+    } catch (e) {
+      console.error('Error parsing CSV:', e);
+      return [];
+    }
+  }
+
   getExtension(nombre?: string): string {
     if (!nombre) return '';
     return nombre.split('.').pop()?.toUpperCase() || '';
   }
+
+  getFileType(s: Solucion): string {
+    if (!s.archivoTipo && !s.archivoNombre) return '';
+    
+    if (this.esImagen(s)) return 'Imagen';
+    if (this.esPdf(s)) return 'PDF';
+    if (this.esCsv(s)) return 'CSV';
+    
+    // Por archivo nombre si tipo MIME no es claro
+    if (s.archivoNombre) {
+      const ext = this.getExtension(s.archivoNombre);
+      if (ext === 'XLSX' || ext === 'XLS') return 'Excel';
+      if (ext === 'DOCX' || ext === 'DOC') return 'Word';
+      if (ext === 'PPTX' || ext === 'PPT') return 'PowerPoint';
+      if (ext === 'ZIP' || ext === 'RAR' || ext === 'TAR' || ext === 'GZ') return 'Comprimido';
+      if (ext === 'TXT') return 'Texto';
+      if (ext === 'JSON') return 'JSON';
+      if (ext === 'XML') return 'XML';
+    }
+    
+    // Genérico
+    return s.archivoTipo?.split('/')[1]?.toUpperCase() || 'Archivo';
+  }
+
+  // ===== DOCUMENTACIÓN: Métodos auxiliares =====
+
 
 }

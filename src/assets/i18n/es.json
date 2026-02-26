@@ -299,6 +299,8 @@
     "CRONTAB_DESCRIPTION": "Descripción",
     "NO_DOCUMENTS_MESSAGE": "No hay documentos disponibles",
     "DOCUMENTATION_LABEL": "Documentación",
+    "DOCUMENTS_FROM_CREATION": "Documentos agregados",
+    "DOCUMENT_DESCRIPTION": "Descripción del documento",
     "UPLOAD": "Subir",
     "SELECT_FILE": "Seleccionar archivo",
     "UPLOAD_LIMIT_HINT": "Tamaño máximo: {{size}}",

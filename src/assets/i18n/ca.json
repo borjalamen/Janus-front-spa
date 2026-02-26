@@ -349,6 +349,8 @@
     "STATS_PROJECT_UNIT": "projecte(s)",
     "NO_DOCUMENTS_MESSAGE": "No hi ha documents disponibles",
     "DOCUMENTATION_LABEL": "Documentació",
+    "DOCUMENTS_FROM_CREATION": "Documents afegits",
+    "DOCUMENT_DESCRIPTION": "Descripció del document",
     "UPLOAD": "Pujar",
     "SELECT_FILE": "Seleccionar fitxer",
     "UPLOAD_LIMIT_HINT": "Mida màxima: {{size}}",

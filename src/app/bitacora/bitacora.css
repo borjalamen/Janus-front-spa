@@ -1255,6 +1255,65 @@ p {
 }
 
 /* ─────────────────────────────────────────── */
+/* FILE LOADING SPINNER                      */
+/* ─────────────────────────────────────────── */
+
+.file-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: rgba(251, 192, 45, 0.12);
+  color: #fbc02d;
+  border: 1px solid rgba(251, 192, 45, 0.3);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.file-loading mat-spinner {
+  margin-right: -4px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ─────────────────────────────────────────── */
+/* FILE NAME WITH TYPE BADGE                 */
+/* ─────────────────────────────────────────── */
+
+.file-name-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+}
+
+.file-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(229, 57, 53, 0.2);
+  color: #ff7043;
+  border: 1px solid rgba(229, 57, 53, 0.4);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.file-type-badge.loaded {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+/* ─────────────────────────────────────────── */
 /* STEPS EXPANDIDOS INLINE EN LISTADO        */
 /* ─────────────────────────────────────────── */
 
@@ -1586,6 +1645,77 @@ p {
   width: fit-content;
 }
 
+/* PDF Viewer con iframe */
+.step-file-pdf-viewer {
+  width: 100%;
+  max-width: 800px;
+  height: 600px;
+  margin: 0 auto;
+}
+
+.pdf-iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+}
+
+/* CSV Table */
+.step-file-csv {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.csv-table-wrapper {
+  max-height: 500px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 11, 12, 0.6);
+}
+
+.csv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 500px;
+}
+
+.csv-table thead th {
+  position: sticky;
+  top: 0;
+  background: rgba(30, 132, 229, 0.15);
+  color: #4fc3f7;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(79, 195, 247, 0.3);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.csv-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s;
+}
+
+.csv-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.csv-table tbody td {
+  padding: 10px 16px;
+  color: #b0bec5;
+  vertical-align: top;
+}
+
+.csv-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+
 .step-file-pdf-icon {
   font-size: 36px !important;
   width: 36px !important;
@@ -1595,25 +1725,83 @@ p {
 
 .step-file-other {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
+  gap: 12px;
+  padding: 20px;
   background: rgba(30, 132, 163, 0.10);
   border: 1px solid rgba(30, 132, 163, 0.3);
   border-radius: 10px;
   width: fit-content;
+  margin: 0 auto;
 }
 
 .step-file-badge {
-  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 6px;
   background: rgba(251, 192, 45, 0.18);
   color: #FBC02D;
   letter-spacing: 0.5px;
 }
+
+.step-file-badge mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.step-file-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(79, 195, 247, 0.15);
+  color: #4fc3f7;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: 1px solid rgba(79, 195, 247, 0.3);
+}
+
+.step-file-download-btn:hover {
+  background: rgba(79, 195, 247, 0.25);
+  color: #81d4fa;
+  transform: translateY(-1px);
+}
+
+.step-file-download-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.step-no-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #90a4ae;
+  font-size: 13px;
+}
+
+.step-no-file mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #607d8b;
+}
+
 
 .step-file-label {
   font-size: 13px;
@@ -1681,5 +1869,180 @@ p {
 .solucion-file-pdf span {
   color: #b0bec5;
   font-size: 13px;
+}
+
+/* ===== EDICIÓN INLINE ===== */
+.bitacora-row.editing {
+  grid-column: 1 / -1;
+  padding: 20px;
+  background: rgba(30, 132, 229, 0.08);
+  border: 2px solid rgba(79, 195, 247, 0.3);
+  border-radius: 10px;
+}
+
+.bitacora-edit-form {
+  width: 100%;
+}
+
+.edit-form-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(79, 195, 247, 0.2);
+}
+
+.edit-form-header h4 {
+  margin: 0;
+  color: #4fc3f7;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.edit-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edit-form-content .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edit-form-content .form-field label {
+  color: #90caf9;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-form-content input,
+.edit-form-content textarea {
+  padding: 10px 12px;
+  background: rgba(10, 11, 12, 0.6);
+  border: 1px solid rgba(79, 195, 247, 0.2);
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.edit-form-content input:focus,
+.edit-form-content textarea:focus {
+  outline: none;
+  border-color: rgba(79, 195, 247, 0.6);
+  background: rgba(10, 11, 12, 0.8);
+  box-shadow: 0 0 10px rgba(79, 195, 247, 0.15);
+}
+
+/* Opciones de entorno inline - Pequeñas */
+.entorno-options-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.entorno-btn-small {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: #b0bec5;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.entorno-btn-small:hover {
+  border-color: var(--color, #1E88E5);
+  background: rgba(var(--color, #1E88E5), 0.1);
+}
+
+.entorno-btn-small.active {
+  background: var(--color, #1E88E5);
+  border-color: var(--color, #1E88E5);
+  color: white;
+  font-weight: 600;
+}
+
+/* Secciones de soluciones inline */
+.solutions-header-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.solutions-header-inline label {
+  color: #90caf9;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Botón de agregar solución en inline */
+.edit-form-content .agregar-solucion-btn {
+  padding: 8px 12px !important;
+  width: fit-content;
+  height: auto !important;
+  border-radius: 6px;
+  background: rgba(76, 175, 80, 0.15) !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important;
+  color: #4caf50 !important;
+  margin-bottom: 12px;
+}
+
+/* Botones de acciones de edición */
+.edit-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(79, 195, 247, 0.2);
+  justify-content: flex-end;
+}
+
+.edit-form-actions .guardar-btn,
+.edit-form-actions .cancelar-btn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 2px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.edit-form-actions .guardar-btn {
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.edit-form-actions .guardar-btn:hover {
+  background: rgba(76, 175, 80, 0.15);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  transform: scale(1.05);
+}
+
+.edit-form-actions .cancelar-btn {
+  color: #ef5350;
+  border-color: #ef5350;
+}
+
+.edit-form-actions .cancelar-btn:hover {
+  background: rgba(229, 57, 53, 0.15);
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.3);
+  transform: scale(1.05);
 }
 
