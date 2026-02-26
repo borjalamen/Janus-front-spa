@@ -40,7 +40,8 @@
           <label>{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}</label>
           <input
             type="text"
-            [(ngModel)]="procForm.titulo"
+            [ngModel]="procForm.titulo"
+            (ngModelChange)="onTituloChange($event)"
             [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_TITLE' | translate"
             title="Títol del procediment" />
         </div>
@@ -50,7 +51,8 @@
         <label>{{ 'PROCEDURES_SECTION.FIELD_DESCRIPTION' | translate }}</label>
         <textarea
           rows="3"
-          [(ngModel)]="procForm.descripcion"
+          [ngModel]="procForm.descripcion"
+          (ngModelChange)="onDescripcionChange($event)"
           [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_DESCRIPTION' | translate"
           title="Descripció del procediment">
         </textarea>
@@ -64,6 +66,17 @@
           [ngModel]="procForm.tags?.join(', ')"
           (ngModelChange)="onProcTagsChange($event)"
           placeholder="tag1, tag2, tag3"
+          class="procedure-step-edit-input" />
+      </div>
+
+      <!-- Responsable principal -->
+      <div class="procedure-field">
+        <label>{{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}</label>
+        <input
+          type="text"
+          [ngModel]="primerResponsable"
+          (ngModelChange)="onPrimerResponsableChange($event)"
+          placeholder="Responsable principal"
           class="procedure-step-edit-input" />
       </div>
 
@@ -105,7 +118,7 @@
                   type="button"
                   class="entorno-btn"
                   [class.active]="s.entorno === 'minsait'"
-                  (click)="s.entorno = 'minsait'"
+                  (click)="onStepEntornoClick('minsait', i)"
                   [style.--color]="'#1E88E5'">
                   M
                 </button>
@@ -113,7 +126,7 @@
                   type="button"
                   class="entorno-btn"
                   [class.active]="s.entorno === 'preproduccion'"
-                  (click)="s.entorno = 'preproduccion'"
+                  (click)="onStepEntornoClick('preproduccion', i)"
                   [style.--color]="'#FBC02D'">
                   PRE
                 </button>
@@ -121,7 +134,7 @@
                   type="button"
                   class="entorno-btn"
                   [class.active]="s.entorno === 'produccion'"
-                  (click)="s.entorno = 'produccion'"
+                  (click)="onStepEntornoClick('produccion', i)"
                   [style.--color]="'#E53935'">
                   PROD
                 </button>
@@ -140,13 +153,15 @@
             <div class="procedure-step-edit-grid">
               <input
                 type="text"
-                [(ngModel)]="s.titulo"
+                [ngModel]="s.titulo"
+                (ngModelChange)="onStepTituloChange($event, i)"
                 placeholder=""
                 class="procedure-step-edit-input" />
 
               <input
                 type="text"
-                [(ngModel)]="s.responsable"
+                [ngModel]="s.responsable"
+                (ngModelChange)="onStepResponsableChange($event, i)"
                 placeholder="Responsable"
                 class="procedure-step-edit-input" />
             </div>
@@ -169,6 +184,7 @@
                 <input
                   type="text"
                   [(ngModel)]="s.imageUrl"
+                  (ngModelChange)="saveFormToLocalStorage()"
                   placeholder="URL (opcional)"
                   class="procedure-step-edit-input" />
 
@@ -180,7 +196,7 @@
                   (change)="onStepImageSelected($event, i)"
                   style="display: none" />
 
-                <!-- Botó icona carpeta que dispara el click del file input -->
+                <!-- Botó icona carpeta -->
                 <button
                   type="button"
                   class="file-icon-btn"
@@ -199,7 +215,8 @@
 
             <textarea
               rows="2"
-              [(ngModel)]="s.descripcion"
+              [ngModel]="s.descripcion"
+              (ngModelChange)="onStepDescripcionChange($event, i)"
               placeholder="Descripció del step"
               class="procedure-step-edit-textarea">
             </textarea>
@@ -223,7 +240,6 @@
 
   <!-- Pestanya: Llistar -->
   <div *ngIf="activeTab==='listar'" class="procedures-tab-panel">
-
     <!-- MODE LLISTAT -->
     <ng-container *ngIf="!mostrarDetallSteps; else detallStepsTpl">
       <p class="procedures-description">
@@ -327,7 +343,6 @@
     <!-- MODE DETALL STEPS (mateixa vista) -->
     <ng-template #detallStepsTpl>
       <div class="procedure-steps-detail-container" *ngIf="procDetall">
-
         <!-- Header: títol + data + entorn -->
         <div class="procedure-steps-detail-header">
           <button class="procedure-detail-back-btn" (click)="tancarDetallSteps()" title="Tornar">
@@ -342,8 +357,8 @@
                 {{ procDetall.createdAt }}
               </span>
               <span class="tag-pill" *ngFor="let tag of procDetall.tags">
-            {{ tag }}
-          </span>
+                {{ tag }}
+              </span>
 
               <span
                 class="procedure-chip"
@@ -365,8 +380,6 @@
           </div>
         </div>
 
-        
-
         <!-- Carrusel de steps -->
         <div class="procedure-steps-carousel" *ngIf="procDetall.steps && procDetall.steps.length > 0">
           <div class="procedure-steps-carousel-wrapper">
@@ -375,7 +388,7 @@
               <mat-icon>chevron_left</mat-icon>
             </button>
 
-            <!-- Step central amb animació -->
+            <!-- Step central -->
             <div class="procedure-step-slide" [ngClass]="slideDirection">
               <ng-container *ngIf="procDetall.steps[currentStepIndex] as s; else noStep">
                 <div class="procedure-step-detail-item">
@@ -394,9 +407,6 @@
                         <ng-container *ngIf="s.titulo; else fallbackTitle">
                           {{ s.titulo }} - {{ currentStepIndex + 1 }}
                         </ng-container>
-                        <span class="tag-pill" *ngFor="let tag of s.tags">
-                      {{ tag }}
-                    </span>
                         <ng-template #fallbackTitle>
                           {{ procDetall.titulo || '(Sense títol)' }} - {{ currentStepIndex + 1 }}
                         </ng-template>
@@ -405,7 +415,9 @@
                         {{ 'PROCEDURES_SECTION.RESPONSIBLE' | translate }}:
                         {{ s.responsable || '-' }}
                       </span>
-                      
+                      <span class="tag-pill" *ngFor="let tag of s.tags">
+                        {{ tag }}
+                      </span>
                     </div>
                   </div>
 
@@ -479,6 +491,8 @@
     </div>
   </div>
 </div>
+
+<!-- Popup imatge gran -->
 <div
   class="image-popup-backdrop"
   *ngIf="showImagePopup"

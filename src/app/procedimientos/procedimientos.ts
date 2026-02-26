@@ -61,6 +61,9 @@ export class ProcedimientosComponent implements OnInit {
   private readonly STORAGE_KEY_FORM = 'procedimientos_form';
   private readonly STORAGE_KEY_TAB = 'procedimientos_tab';
 
+  showImagePopup = false;
+  imagePopupUrl: string | null = null;
+
   constructor(
     private proceduresService: ProceduresService,
     private authService: AuthService,
@@ -75,36 +78,47 @@ export class ProcedimientosComponent implements OnInit {
   // ===== LOCAL STORAGE =====
 
   private restoreFromLocalStorage(): void {
-    // restaurar tab actiu
+    // tab
     const savedTab = this.storage.get(this.STORAGE_KEY_TAB);
     if (savedTab === 'crear' || savedTab === 'listar') {
       this.activeTab = savedTab as any;
     }
 
-    // restaurar formulari
-    const savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(this.STORAGE_KEY_FORM);
-    if (savedForm) {
-      this.procForm = {
-        titulo: savedForm.titulo || '',
-        descripcion: savedForm.descripcion || '',
-        departamento: savedForm.departamento || '',
-        entorno: (savedForm.entorno as any) || 'minsait',
-        tags: savedForm.tags || [],
-        steps: savedForm.steps || [],
-        visible: savedForm.visible ?? true,
-        deleted: savedForm.deleted ?? false,
-        id: savedForm.id,
-        createdAt: savedForm.createdAt,
-        updatedAt: savedForm.updatedAt
-      };
-      this.primerResponsable = savedForm.primerResponsable || savedForm.steps?.[0]?.responsable || '';
-      this.modoForm = savedForm.id ? 'editar' : 'crear';
+    // formulari
+    let savedForm: (Procedure & { primerResponsable?: string }) | null = null;
+    try {
+      savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(this.STORAGE_KEY_FORM);
+    } catch (e) {
+      console.error('Error parsejant procedimientos_form, esborro clau', e);
+      this.storage.remove(this.STORAGE_KEY_FORM);
+      savedForm = null;
     }
+
+    if (!savedForm) return;
+
+    this.procForm = {
+      titulo: savedForm.titulo || '',
+      descripcion: savedForm.descripcion || '',
+      departamento: savedForm.departamento || '',
+      entorno: (savedForm.entorno as any) || 'minsait',
+      tags: savedForm.tags || [],
+      steps: savedForm.steps || [],
+      visible: savedForm.visible ?? true,
+      deleted: savedForm.deleted ?? false,
+      id: savedForm.id,
+      createdAt: savedForm.createdAt,
+      updatedAt: savedForm.updatedAt
+    };
+    this.primerResponsable =
+      savedForm.primerResponsable || savedForm.steps?.[0]?.responsable || '';
+    this.modoForm = savedForm.id ? 'editar' : 'crear';
   }
 
-  private saveFormToLocalStorage(): void {
+  saveFormToLocalStorage(): void {
     const data: Procedure & { primerResponsable?: string } = {
       ...this.procForm,
+      steps: [...(this.procForm.steps || [])],
+      tags: [...(this.procForm.tags || [])],
       primerResponsable: this.primerResponsable
     };
     this.storage.setObject(this.STORAGE_KEY_FORM, data);
@@ -120,19 +134,12 @@ export class ProcedimientosComponent implements OnInit {
   }
 
   // COLORS ENTORN
+
   getColorEntorno(entorno: string): string {
     const key = (entorno || '').toLowerCase().trim();
-    console.log('getColorEntorno key=', key);
-
-    if (key.includes('minsait')) {
-      return '#1E88E5';
-    }
-    if (key.includes('preprod')) {
-      return '#FBC02D';
-    }
-    if (key.includes('produc')) {
-      return '#E53935';
-    }
+    if (key.includes('minsait')) return '#1E88E5';
+    if (key.includes('preprod')) return '#FBC02D';
+    if (key.includes('produc')) return '#E53935';
     return '#FBC02D';
   }
 
@@ -153,6 +160,8 @@ export class ProcedimientosComponent implements OnInit {
       default: return 0;
     }
   }
+
+  // ===== BACKEND =====
 
   cargarProcedimientos() {
     this.proceduresService.getAll().subscribe({
@@ -207,17 +216,19 @@ export class ProcedimientosComponent implements OnInit {
       departamento: proc.departamento ?? '',
       entorno: (proc.entorno as any) ?? 'minsait',
       tags: proc.tags ?? [],
-      steps: proc.steps ? proc.steps.map((s: any, idx: number): ProcedureStep => ({
-        id: s.id ?? `step-${idx + 1}`,
-        titulo: s.titulo ?? '',
-        descripcion: s.descripcion ?? '',
-        responsable: s.responsable ?? '',
-        metodo: s.metodo ?? '',
-        orden: s.orden ?? (idx + 1),
-        tags: s.tags ?? [],
-        entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
-        imageUrl: s.imageUrl ?? ''
-      })) : [],
+      steps: proc.steps
+        ? proc.steps.map((s: any, idx: number): ProcedureStep => ({
+          id: s.id ?? `step-${idx + 1}`,
+          titulo: s.titulo ?? '',
+          descripcion: s.descripcion ?? '',
+          responsable: s.responsable ?? '',
+          metodo: s.metodo ?? '',
+          orden: s.orden ?? (idx + 1),
+          tags: s.tags ?? [],
+          entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
+          imageUrl: s.imageUrl ?? ''
+        }))
+        : [],
       visible: proc.visible ?? true,
       deleted: proc.deleted ?? false,
       createdAt: proc.createdAt,
@@ -241,7 +252,7 @@ export class ProcedimientosComponent implements OnInit {
       return;
     }
 
-    // primer step amb responsable si cal
+    // primer step amb responsable
     if ((!this.procForm.steps || this.procForm.steps.length === 0) && this.primerResponsable) {
       const step: ProcedureStep = {
         id: 'step-1',
@@ -268,8 +279,6 @@ export class ProcedimientosComponent implements OnInit {
       steps: this.procForm.steps ?? [],
       isVisible: this.procForm.visible ?? true
     };
-
-    console.log('BODY ENVIAT:', body);
 
     if (this.editando && this.editando.id) {
       this.proceduresService.update(this.editando.id, body).subscribe({
@@ -336,7 +345,6 @@ export class ProcedimientosComponent implements OnInit {
       entorno: (this.procForm.entorno as any) || 'minsait',
       imageUrl: ''
     };
-    console.log('NOU STEP AFEGIT:', nouStep);
     this.procForm.steps = [...(this.procForm.steps || []), nouStep];
     this.saveFormToLocalStorage();
   }
@@ -356,7 +364,6 @@ export class ProcedimientosComponent implements OnInit {
 
   verSteps(p: Procedure) {
     this.procDetall = p;
-    console.log('STEPS DETALL:', this.procDetall.steps);
     this.mostrarDetallSteps = true;
     this.resetCarousel();
   }
@@ -371,8 +378,6 @@ export class ProcedimientosComponent implements OnInit {
     if (this.currentStepIndex < this.procDetall.steps.length - 1) {
       this.slideDirection = 'right';
       this.currentStepIndex++;
-      const s = this.procDetall.steps[this.currentStepIndex];
-      console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
     }
   }
 
@@ -380,14 +385,39 @@ export class ProcedimientosComponent implements OnInit {
     if (this.currentStepIndex > 0 && this.procDetall?.steps) {
       this.slideDirection = 'left';
       this.currentStepIndex--;
-      const s = this.procDetall.steps[this.currentStepIndex];
-      console.log('STEP INDEX', this.currentStepIndex, 'ENTORNO=', s.entorno);
     }
   }
 
   resetCarousel() {
     this.currentStepIndex = 0;
     this.slideDirection = 'right';
+  }
+
+  // ==== AUTOSAVE EN ESCRIURE ====
+
+  onTituloChange(value: string) {
+    this.procForm.titulo = value;
+    this.saveFormToLocalStorage();
+  }
+
+  onDescripcionChange(value: string) {
+    this.procForm.descripcion = value;
+    this.saveFormToLocalStorage();
+  }
+
+  onDepartamentoChange(value: string) {
+    this.procForm.departamento = value;
+    this.saveFormToLocalStorage();
+  }
+
+  onEntornoChange(value: string) {
+    this.procForm.entorno = value as any;
+    this.saveFormToLocalStorage();
+  }
+
+  onPrimerResponsableChange(value: string) {
+    this.primerResponsable = value;
+    this.saveFormToLocalStorage();
   }
 
   onProcTagsChange(value: string) {
@@ -398,9 +428,26 @@ export class ProcedimientosComponent implements OnInit {
     this.saveFormToLocalStorage();
   }
 
+  onStepTituloChange(value: string, index: number) {
+    if (!this.procForm.steps) return;
+    this.procForm.steps[index].titulo = value;
+    this.saveFormToLocalStorage();
+  }
+
+  onStepResponsableChange(value: string, index: number) {
+    if (!this.procForm.steps) return;
+    this.procForm.steps[index].responsable = value;
+    this.saveFormToLocalStorage();
+  }
+
+  onStepDescripcionChange(value: string, index: number) {
+    if (!this.procForm.steps) return;
+    this.procForm.steps[index].descripcion = value;
+    this.saveFormToLocalStorage();
+  }
+
   onStepTagsChange(value: string, index: number) {
     if (!this.procForm.steps) return;
-
     this.procForm.steps[index].tags = value
       .split(',')
       .map(t => t.trim())
@@ -408,22 +455,20 @@ export class ProcedimientosComponent implements OnInit {
     this.saveFormToLocalStorage();
   }
 
+  onStepEntornoClick(value: string, index: number) {
+    if (!this.procForm.steps) return;
+    this.procForm.steps[index].entorno = value as any;
+    this.saveFormToLocalStorage();
+  }
+
   // ==== IMATGE STEP DES D'ARXIU ====
 
   onStepImageSelected(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
-
+    if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-
-    // URL temporal del navegador per a previsualitzar
     const objectUrl = URL.createObjectURL(file);
-
-    if (!this.procForm.steps) {
-      this.procForm.steps = [];
-    }
+    if (!this.procForm.steps) this.procForm.steps = [];
     this.procForm.steps[index].imageUrl = objectUrl;
     this.saveFormToLocalStorage();
   }
@@ -431,8 +476,6 @@ export class ProcedimientosComponent implements OnInit {
   onClickFileIcon(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
-  showImagePopup = false;
-  imagePopupUrl: string | null = null;
 
   openImagePopup(url?: string) {
     if (!url) return;
