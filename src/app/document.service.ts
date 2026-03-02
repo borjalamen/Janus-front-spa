@@ -72,4 +72,13 @@ export class DocumentService {
     const params = new HttpParams().set('idProyecto', String(projectId));
     return this.http.get<any[]>(`${this.baseUrl}\/getFolderInfo`, { params });
   }
+
+  // GET /getFile?idProyecto=...&nombreArchivo=...
+  // Descargar archivo usando el endpoint de documentos (alternativa)
+  getFile(projectId: string | number, fileName: string): Observable<Blob> {
+    const params = new HttpParams()
+      .set('idProyecto', String(projectId))
+      .set('nombreArchivo', fileName);
+    return this.http.get(`${this.baseUrl}\/getFile`, { params, responseType: 'blob' });
+  }
 }

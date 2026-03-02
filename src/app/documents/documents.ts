@@ -7,6 +7,7 @@ import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { DocumentService, BackendDocument } from '../document.service';
+import { ProjectService, Project as BackendProject } from '../project.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { LocalStorageService } from '../local-storage.service';
@@ -64,6 +65,7 @@ export class DocumentsComponent implements OnInit {
 
   constructor(
     private documentService: DocumentService,
+    private projectService: ProjectService,
     private storage: LocalStorageService
   ) {}
 
@@ -79,71 +81,85 @@ export class DocumentsComponent implements OnInit {
   // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
   private loadProjectsWithUiState(savedFilter: string, savedSelected: string | null) {
     console.log('🔍 Carregant projectes...');
-    this.documentService
-      .getAllFolders()
-      .pipe(
+    forkJoin({
+      ids: this.documentService.getAllFolders().pipe(
         catchError(err => {
           console.error('❌ Error carregant carpetes', err);
-          return of([]); // Retorna array buit si hi ha error
+          return of([] as Array<string | number>);
+        })
+      ),
+      projects: this.projectService.getAll().pipe(
+        catchError(err => {
+          console.error('❌ Error carregant projectes', err);
+          return of([] as BackendProject[]);
         })
       )
-      .subscribe(ids => {
-        console.log('📁 Carpetes rebudes:', ids);
-        if (!ids || ids.length === 0) {
-          console.log('⚠️ No hi ha carpetes');
-          this.projects = [];
-          this.projectsFiltrats = [];
-          this.selectedProjectId = null;
-          return;
+    }).subscribe(({ ids, projects }) => {
+      console.log('📁 Carpetes rebudes:', ids);
+      if (!ids || ids.length === 0) {
+        console.log('⚠️ No hi ha carpetes');
+        this.projects = [];
+        this.projectsFiltrats = [];
+        this.selectedProjectId = null;
+        return;
+      }
+
+      const nameMap = this.buildProjectNameMap(projects || []);
+
+      const requests = ids.map(id =>
+        this.documentService.getAllFiles(id).pipe(
+          map((files: BackendDocument[]) => {
+            const docs: BackendDocument[] = files || [];
+            return {
+              projectId: id,
+              name: nameMap.get(String(id)) || `Project ${id}`,
+              date: '',
+              documents: docs
+            } as Project;
+          }),
+          catchError(err => {
+            console.error('Error carregant fitxers project', id, err);
+            return of({
+              projectId: id,
+              name: nameMap.get(String(id)) || `Project ${id}`,
+              date: '',
+              documents: []
+            } as Project);
+          })
+        )
+      );
+
+      forkJoin(requests).subscribe(projectsWithDocs => {
+        console.log('✅ Projectes carregats:', projectsWithDocs);
+        this.projects = projectsWithDocs;
+        this.projectsFiltrats = [...projectsWithDocs];
+
+        if (savedFilter && savedFilter.trim()) {
+          this.filtrar(savedFilter);
         }
 
-        const requests = ids.map(id =>
-          this.documentService.getAllFiles(id).pipe(
-            map((files: BackendDocument[]) => {
-              const docs: BackendDocument[] = files || [];
-              return {
-                projectId: id,
-                name: `Project ${id}`,
-                date: '',
-                documents: docs
-              } as Project;
-            }),
-            catchError(err => {
-              console.error('Error carregant fitxers project', id, err);
-              return of({
-                projectId: id,
-                name: `Project ${id}`,
-                date: '',
-                documents: []
-              } as Project);
-            })
-          )
-        );
-
-        forkJoin(requests).subscribe(projects => {
-          console.log('✅ Projectes carregats:', projects);
-          this.projects = projects;
-          this.projectsFiltrats = [...projects];
-
-          // aplicar filtre guardat, si hi ha
-          if (savedFilter && savedFilter.trim()) {
-            this.filtrar(savedFilter);
+        if (savedSelected != null) {
+          const found = this.projects.find(
+            p => String(p.projectId) === String(savedSelected)
+          );
+          if (found) {
+            this.selectedProjectId = found.projectId;
+          } else {
+            this.selectedProjectId = null;
+            this.storage.set(this.STORAGE_KEY_SELECTED, '');
           }
-
-          // restaurar projecte seleccionat, si existeix
-          if (savedSelected != null) {
-            const found = this.projects.find(
-              p => String(p.projectId) === String(savedSelected)
-            );
-            if (found) {
-              this.selectedProjectId = found.projectId;
-            } else {
-              this.selectedProjectId = null;
-              this.storage.set(this.STORAGE_KEY_SELECTED, '');
-            }
-          }
-        });
+        }
       });
+    });
+  }
+
+  private buildProjectNameMap(projects: BackendProject[]): Map<string, string> {
+    const map = new Map<string, string>();
+    projects.forEach(p => {
+      if (p.id) map.set(String(p.id), p.nombre || p.codigoProyecto || String(p.id));
+      if (p.codigoProyecto) map.set(String(p.codigoProyecto), p.nombre || p.codigoProyecto);
+    });
+    return map;
   }
 
   // accessible si vols refrescar sense perdre estat UI

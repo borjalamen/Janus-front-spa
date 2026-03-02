@@ -165,10 +165,32 @@ export class ProjectsComponent implements OnInit {
 
   // ===== ABRIR PROYECTO EN DETALLE =====
   openProjectDetail(project: Proyecto, mode: 'view' | 'edit' = 'view') {
-    this.selectedProjectForDetail = project;
-    this.detailMode = mode;
-    this.showDetailModal = true;
-    console.log(`📖 Abriendo proyecto ${project.codigoProyecto} en modo ${mode}`);
+    console.log(`📖 Cargando proyecto completo ${project.codigoProyecto} desde backend...`);
+    
+    // Recargar proyecto completo desde backend para asegurar que incluye documentos
+    if (project.id) {
+      this.projectService.getById(project.id).subscribe({
+        next: (fullProject) => {
+          console.log('✅ Proyecto completo cargado:', fullProject);
+          console.log('📄 Documentos en proyecto:', (fullProject as any).documents);
+          this.selectedProjectForDetail = fullProject as Proyecto;
+          this.detailMode = mode;
+          this.showDetailModal = true;
+        },
+        error: (err) => {
+          console.error('❌ Error al cargar proyecto:', err);
+          // Si falla, usar el proyecto del listado
+          this.selectedProjectForDetail = project;
+          this.detailMode = mode;
+          this.showDetailModal = true;
+        }
+      });
+    } else {
+      // Si no tiene ID (proyecto nuevo), usar directamente
+      this.selectedProjectForDetail = project;
+      this.detailMode = mode;
+      this.showDetailModal = true;
+    }
   }
 
   closeProjectDetail() {

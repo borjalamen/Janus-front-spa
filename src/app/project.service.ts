@@ -199,7 +199,7 @@ export class ProjectService {
    * Marcar proyecto como eliminado (soft delete)
    */
   softDelete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/soft-delete/${id}`);
+    return this.http.delete(`${this.baseUrl}/soft-delete/${id}`, { responseType: 'text' });
   }
 
   /**

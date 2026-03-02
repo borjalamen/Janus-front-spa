@@ -4,7 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
-import { DocumentService, BackendDocument } from '../document.service';
+import { ProjectService } from '../project.service';
+import { DocumentService } from '../document.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../local-storage.service';
 import { SafePipe } from '../safe.pipe';
@@ -76,8 +77,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   detailFileDescription: string = '';
   documentPreviewUrls: Map<string, string> = new Map();
   documentCsvContents: Map<string, string[][]> = new Map();
+  private isRefreshingProject = false;
 
-  projectDocs: BackendDocument[] = [];
+  projectDocs: string[] = [];
   selectedDocFile?: File;
   loadingDocs = false;
   docsSearch = '';
@@ -139,6 +141,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private projectService: ProjectService,
     private documentService: DocumentService,
     private translate: TranslateService,
     private storage: LocalStorageService
@@ -150,12 +153,23 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     // Inicializar datos cuando el proyecto esté disponible
+    console.log('🔵 ngOnInit - proyecto:', this.proyecto);
     if (this.proyecto) {
+      console.log('🔵 ngOnInit - Inicializando datos del proyecto');
       this.initializeProjectData();
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('🔵 ngOnChanges:', changes);
+    if (changes['proyecto'] && changes['proyecto'].currentValue) {
+      console.log('🔵 Proyecto cambió:', changes['proyecto'].currentValue);
+      this.initializeProjectData();
+    }
+    if (changes['mode']) {
+      this.routeMode = this.mode === 'edit' ? 'edit' : 'view';
+      this.editing = this.mode === 'edit';
+    }
     if (changes['proyecto']) {
       // Cargar datos cuando el proyecto cambia (incluso en el primer cambio)
       if (this.proyecto) {
@@ -167,17 +181,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   private initializeProjectData() {
     if (!this.proyecto) return;
 
+    console.log('🔵 initializeProjectData - proyecto completo:', this.proyecto);
     const p = this.proyecto;
     p.ip = (p.ip || []);
     (p as any).entornoNotas = (p as any).entornoNotas || '';
     this.ipString = (p.ip || []).join(', ');
 
     // Cargar documentos agregados durante creación
+    console.log('🔵 proyecto.documents RAW:', (p as any).documents);
+    console.log('🔵 Es array?:', Array.isArray((p as any).documents));
     this.projectDocumentsFromCreation = (p as any).documents && Array.isArray((p as any).documents)
       ? (p as any).documents
       : [];
 
-    console.log('📄 Documentos cargados:', this.projectDocumentsFromCreation);
+    console.log('📄 Documentos cargados en projectDocumentsFromCreation:', this.projectDocumentsFromCreation);
+    console.log('📄 Cantidad de documentos:', this.projectDocumentsFromCreation?.length || 0);
     
     // Limpiar URLs previas
     this.documentPreviewUrls.forEach(url => URL.revokeObjectURL(url));
@@ -186,6 +204,25 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     
     // Cargar previews de documentos
     this.loadDocumentPreviews();
+
+    // Si el listado no trae documentos, refrescar desde el backend
+    if (!this.projectDocumentsFromCreation.length && p.id && !this.isRefreshingProject) {
+      this.isRefreshingProject = true;
+      this.projectService.getById(p.id).subscribe({
+        next: (updated) => {
+          this.proyecto = updated as Proyecto;
+          this.projectDocumentsFromCreation = (updated as any).documents && Array.isArray((updated as any).documents)
+            ? (updated as any).documents
+            : [];
+          this.loadDocumentPreviews();
+          this.loadProjectDocuments();
+          this.isRefreshingProject = false;
+        },
+        error: () => {
+          this.isRefreshingProject = false;
+        }
+      });
+    }
 
     this.devMachines = (p as any).devMachines && Array.isArray((p as any).devMachines)
       ? (p as any).devMachines as DevMachine[]
@@ -367,57 +404,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   private getDocsProjectId(): string | number | undefined {
     if (!this.proyecto) return undefined;
-    return (this.proyecto as any).id || this.proyecto.codigoProyecto;
+    return (this.proyecto as any).id;
   }
 
   loadProjectDocuments() {
     const pid = this.getDocsProjectId();
-    if (!pid) { this.projectDocs = []; return; }
+    if (!pid) { this.projectDocs = []; this.projectDocMeta = []; return; }
     this.loadingDocs = true;
-    this.documentService.getFolderInfo(pid).subscribe({
-      next: (meta: any[]) => {
-        if (Array.isArray(meta) && meta.length) {
-          this.projectDocMeta = meta.map(m => ({
-            name: (m.name || m.nombre || '').toString(),
-            size: m.size,
-            contentType: m.contentType,
-            lastModified: m.lastModified
-          }));
-          this.projectDocs = this.projectDocMeta.map(m => m.name as any);
-          this.loadingDocs = false;
-        } else {
-          this.documentService.getAllFiles(pid).subscribe({
-            next: (files: BackendDocument[]) => {
-              this.projectDocs = files || [];
-              this.projectDocMeta = (files || []).map(f => ({ name: f }));
-              this.loadingDocs = false;
-            },
-            error: (err: any) => {
-              console.error('Error cargando documentos proyecto', err);
-              this.projectDocs = [];
-              this.projectDocMeta = [];
-              this.loadingDocs = false;
-            }
-          });
-        }
-      },
-      error: (err: any) => {
-        console.warn('No se pudo obtener metadata de carpeta', err);
-        this.documentService.getAllFiles(pid).subscribe({
-          next: (files: BackendDocument[]) => {
-            this.projectDocs = files || [];
-            this.projectDocMeta = (files || []).map(f => ({ name: f }));
-            this.loadingDocs = false;
-          },
-          error: (err2: any) => {
-            console.error('Error cargando documentos proyecto', err2);
-            this.projectDocs = [];
-            this.projectDocMeta = [];
-            this.loadingDocs = false;
-          }
-        });
-      }
-    });
+
+    const docs = (this.projectDocumentsFromCreation || []) as any[];
+    this.projectDocMeta = docs.map(d => ({
+      name: (d.nombre || '').toString(),
+      contentType: d.tipo || undefined
+    }));
+    this.projectDocs = this.projectDocMeta.map(m => m.name as any);
+    this.loadingDocs = false;
   }
 
   onDocFileSelected(event: any) {
@@ -500,25 +501,24 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       this.uploadError = `${msg} (${this.formatBytes(fileRef.size)} > ${this.formatBytes(this.MAX_UPLOAD_BYTES)})`;
       return;
     }
-    this.documentService.uploadDocument(pid, this.selectedDocFile).subscribe({
-      next: () => {
-        const uploadedName = fileRef ? fileRef.name : '';
+    const formData = new FormData();
+    formData.append('file', this.selectedDocFile);
+    formData.append('descripcion', '');
+
+    this.projectService.uploadProjectDocument(String(pid), formData).subscribe({
+      next: (response: any) => {
         this.selectedDocFile = undefined;
         try {
           const el = document.getElementById('project-doc-file') as HTMLInputElement | null;
           if (el) el.value = '';
         } catch (e) {}
-        this.loadingDocs = true;
-        try { this.loadProjectDocuments(); } catch (e) {}
-        this.pollForFile(pid, uploadedName || '', 8, 300)
-          .then(() => {
-            this.loadProjectDocuments();
-            this.loadingDocs = false;
-          })
-          .catch(() => {
-            this.loadProjectDocuments();
-            this.loadingDocs = false;
-          });
+
+        if (response && response.document) {
+          this.projectDocumentsFromCreation = [...this.projectDocumentsFromCreation, response.document];
+          this.loadDocumentPreviews();
+        }
+        this.loadProjectDocuments();
+        this.loadingDocs = false;
       },
       error: (err: any) => {
         console.error('Error subiendo documento', err);
@@ -541,43 +541,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     return `${Math.round(val * 10) / 10} ${units[i]}`;
   }
 
-  private async pollForFile(projectId: string | number, fileName: string, attempts = 5, initialDelay = 300): Promise<boolean> {
-    if (!fileName) return Promise.resolve(true);
-    const target = (fileName || '').toLowerCase().trim();
-    let delay = initialDelay;
-    for (let i = 0; i < attempts; i++) {
-      try {
-        try {
-          const meta = await this.documentService.getFolderInfo(projectId).toPromise();
-          if (Array.isArray(meta)) {
-            const found = meta.some((m: any) => {
-              const n = (m && (m.name || m.nombre) || '').toString().toLowerCase();
-              return n === target || n.endsWith(target) || n.indexOf(target) >= 0;
-            });
-            if (found) return true;
-          }
-        } catch (e) {}
-        try {
-          const files = await this.documentService.getAllFiles(projectId).toPromise();
-          if (Array.isArray(files)) {
-            const found = files.some((f: any) => {
-              const n = (f || '').toString().toLowerCase();
-              return n === target || n.endsWith(target) || n.indexOf(target) >= 0;
-            });
-            if (found) return true;
-          }
-        } catch (e) {}
-      } catch (e) {}
-      await new Promise(res => setTimeout(res, delay));
-      delay = Math.min(3000, Math.round(delay * 1.8));
-    }
-    return false;
-  }
-
   downloadProjectDocument(fileName: string) {
     const pid = this.getDocsProjectId();
     if (!pid) return;
-    this.documentService.downloadFile(pid, fileName).subscribe({
+    const file = this.getProjectDocumentFileName(fileName);
+    this.documentService.getFile(String(pid), file).subscribe({
       next: (blob: Blob) => {
         try {
           const url = window.URL.createObjectURL(blob);
@@ -614,10 +582,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (!confirm('¿Desea eliminar el fichero "' + fileName + '"?')) return;
     const pid = this.getDocsProjectId();
     if (!pid) return;
-    this.documentService.deleteDocument(pid, fileName).subscribe({
-      next: () => this.loadProjectDocuments(),
+    const file = this.getProjectDocumentFileName(fileName);
+    this.projectService.deleteProjectDocument(String(pid), file).subscribe({
+      next: () => {
+        this.projectDocumentsFromCreation = this.projectDocumentsFromCreation.filter(d => d.nombre !== fileName);
+        this.loadProjectDocuments();
+      },
       error: (err: any) => console.error('Error eliminando documento', err)
     });
+  }
+
+  private getProjectDocumentFileName(displayName: string): string {
+    const match = (this.projectDocumentsFromCreation || []).find(d => d.nombre === displayName);
+    const path = match?.path || '';
+    const fromPath = path.split('/').pop();
+    return fromPath || displayName;
   }
 
   get hm() {
@@ -647,8 +626,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   save() {
-    if (!this.proyecto) return;
+    if (!this.proyecto || !this.proyecto.id) return;
     const p = this.proyecto;
+    
+    // Guardar documentos actuales antes de modificar
+    const documentsBackup = p.documents ? [...p.documents] : [];
+    
     try {
       p.ip = (this.ipString || '').split(',').map(s => s.trim()).filter(Boolean);
       const hm = p.herramientasMind = p.herramientasMind || {} as any;
@@ -666,59 +649,51 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       (p as any).documentacion = this.docsString || '';
       p.equipoMinsait = p.equipoMinsait || [];
       p.horaDaily = p.horaDaily || null;
+      p.devMachines = this.devMachines as any;
+      
+      // IMPORTANTE: Mantener documentos actuales SIN duplicarlos
+      // Solo actualizar documentación, NO los archivos adjuntos
+      p.documents = documentsBackup;
     } catch (e) { /* ignore */ }
 
-    try {
-      const raw = this.storage.get('projects_v1');
-      const arr: Proyecto[] = raw ? JSON.parse(raw) : [];
-      const code = p.codigoProyecto || '';
-      const idx = arr.findIndex(x => x.codigoProyecto === code);
-      (p as any).devMachines = this.devMachines.map(m => ({
-        ip: m.ip,
-        user: m.user,
-        password: m.password,
-        openshiftEnabled: !!m.openshiftEnabled,
-        openshifts: (m.openshifts || []).map(o =>
-          Object.assign({}, o || { identifier: '', user: '', password: '', ram: '', cpu: '', disk: '', volumes: [] })
-        ),
-        ram: m.ram,
-        cpu: m.cpu,
-        disk: m.disk,
-        dbEnabled: !!m.dbEnabled,
-        dbs: (m.dbs || []).map(d =>
-          Object.assign(
-            {},
-            d || {
-              identifier: '',
-              engine: '',
-              instanceName: '',
-              host: '',
-              port: '',
-              sid: '',
-              user: '',
-              password: '',
-              description: '',
-              properties: '',
-              contactPerson: '',
-              contactMail: ''
-            }
-          )
-        ),
-        otherToolEnabled: !!m.otherToolEnabled,
-        otherTools: (m.otherTools || []).map(t =>
-          Object.assign(
-            {},
-            t || { identifier: '', name: '', path: '', running: false, contactPerson: '', contactMail: '' }
-          )
-        )
-      }));
-      (p as any).equipoMinsait = p.equipoMinsait || [];
-      if (idx === -1) arr.push(p);
-      else arr[idx] = p;
-      this.storage.setObject('projects_v1', arr);
+    const projectId = p.id;
+    if (!projectId) return;
+    this.projectService.update(projectId, p).subscribe({
+      next: (updated) => {
+        this.proyecto = updated as Proyecto;
+        // Mantener lista de documentos (no recargar desde backend)
+        this.projectDocumentsFromCreation = (updated as any).documents && Array.isArray((updated as any).documents)
+          ? (updated as any).documents
+          : this.projectDocumentsFromCreation; // Mantener lista actual si no viene del servidor
+        this.loadDocumentPreviews();
+        this.loadProjectDocuments();
+        this.editing = false;
+        this.clearDraft();
+      },
+      error: (err: any) => {
+        console.error('Error al actualizar proyecto:', err);
+        alert('❌ Error al actualizar el proyecto');
+      }
+    });
+  }
+
+  cancelEdit() {
+    if (!this.proyecto?.id) {
       this.editing = false;
-      this.clearDraft();
-    } catch (e) { /* noop */ }
+      return;
+    }
+    this.projectService.getById(this.proyecto.id).subscribe({
+      next: (updated) => {
+        this.proyecto = updated as Proyecto;
+        this.initializeProjectData();
+        this.editing = false;
+        this.clearDraft();
+      },
+      error: () => {
+        this.editing = false;
+        this.clearDraft();
+      }
+    });
   }
 
   addDevMachine() {
@@ -782,8 +757,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       const fileName = this.removeDocCandidate;
       const pid = this.getDocsProjectId();
       if (fileName && pid) {
-        this.documentService.deleteDocument(pid, fileName).subscribe({
-          next: () => { this.loadProjectDocuments(); },
+        const file = this.getProjectDocumentFileName(fileName);
+        this.projectService.deleteProjectDocument(String(pid), file).subscribe({
+          next: () => {
+            this.projectDocumentsFromCreation = this.projectDocumentsFromCreation.filter(d => d.nombre !== fileName);
+            this.loadProjectDocuments();
+          },
           error: (err: any) => console.error('Error eliminando documento', err)
         });
       }
@@ -981,23 +960,23 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     const formData = new FormData();
     formData.append('file', this.detailFileInput);
     formData.append('descripcion', this.detailFileDescription);
-
-    // Subir archivo al servidor (importar ProjectService si no está)
-    const http = (this as any).http || (this.documentService as any).http;
-    if (!http) {
-      console.error('No se puede acceder a HttpClient');
-      return;
-    }
-
-    http.post(`http://localhost:8080/api/projects/${this.proyecto.id}/documents/upload`, formData)
+    this.projectService.uploadProjectDocument(this.proyecto.id, formData)
       .subscribe({
         next: (response: any) => {
           console.log('✅ Documento subido:', response);
-          // Agregar a la lista local
           if (response.document) {
-            this.projectDocumentsFromCreation.push(response.document);
+            // Agregar el documento a la lista
+            this.projectDocumentsFromCreation = [...this.projectDocumentsFromCreation, response.document];
+            console.log('📄 Lista actualizada de documentos:', this.projectDocumentsFromCreation);
+            
+            // Cargar preview del nuevo documento
+            setTimeout(() => {
+              this.loadDocumentPreviews();
+            }, 100);
+            
+            this.loadProjectDocuments();
           }
-          // Limpiar formulario
+          // Limpiar campos
           this.detailFileInput = null;
           this.detailFileDescription = '';
           const fileInput = document.querySelector('#fileInputDetail') as HTMLInputElement;
@@ -1014,31 +993,38 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeProjectDocument(index: number) {
-    if (!this.proyecto?.id) return;
+    if (!this.proyecto?.id || index < 0 || index >= this.projectDocumentsFromCreation.length) return;
 
     const doc = this.projectDocumentsFromCreation[index];
-    if (!confirm(`¿Eliminar el documento "${doc.nombre}"?`)) return;
-
-    // Extraer el nombre del archivo desde el path
-    const fileName = doc.path.split('/').pop();
-    if (!fileName) return;
-
-    const http = (this as any).http || (this.documentService as any).http;
-    if (!http) {
-      console.error('No se puede acceder a HttpClient');
+    const documentName = doc.nombre || 'documento desconocido';
+    
+    // Mostrar confirmación clara
+    if (!confirm(`¿Estás seguro de que deseas eliminar el documento "${documentName}"?\n\nEsta acción no se puede deshacer.`)) {
       return;
     }
 
-    http.delete(
-      `http://localhost:8080/api/projects/${this.proyecto.id}/documents/delete?fileName=${encodeURIComponent(fileName)}`
-    ).subscribe({
+    // Extraer el nombre del archivo desde el path
+    const fileName = doc.path?.split('/').pop() || documentName;
+
+    this.projectService.deleteProjectDocument(this.proyecto.id, fileName).subscribe({
       next: () => {
+        // Eliminar de la lista local
         this.projectDocumentsFromCreation.splice(index, 1);
+        this.loadProjectDocuments();
+        this.loadDocumentPreviews();
+        
+        // Limpiar URLs de la preview eliminada
+        if (doc.path) {
+          this.documentPreviewUrls.delete(doc.path);
+          this.documentCsvContents.delete(doc.path);
+        }
+        
+        console.log('✅ Documento eliminado correctamente:', documentName);
         alert('✅ Documento eliminado correctamente');
       },
       error: (err: any) => {
-        console.error('❌ Error al eliminar documento:', err);
-        alert('❌ Error al eliminar el documento');
+        console.error('❌ Error eliminando documento:', err);
+        alert('❌ Error al eliminar el documento. Por favor, intenta de nuevo.');
       }
     });
   }
@@ -1049,16 +1035,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     const fileName = doc.path.split('/').pop();
     if (!fileName) return;
 
-    const http = (this as any).http || (this.documentService as any).http;
-    if (!http) {
-      console.error('No se puede acceder a HttpClient');
-      return;
-    }
-
-    http.get(
-      `http://localhost:8080/api/projects/${this.proyecto.id}/documents/download?fileName=${encodeURIComponent(fileName)}`,
-      { responseType: 'blob' }
-    ).subscribe({
+    this.documentService.getFile(this.proyecto.id, fileName).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1077,20 +1054,15 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private loadDocumentPreviews() {
-    if (!this.proyecto?.id || !this.projectDocumentsFromCreation.length) return;
+    const projectId = this.proyecto?.id;
+    if (!projectId || !this.projectDocumentsFromCreation.length) return;
 
     this.projectDocumentsFromCreation.forEach((doc: any) => {
       const fileName = doc.path?.split('/').pop();
       if (!fileName) return;
 
-      const http = (this as any).http || (this.documentService as any).http;
-      if (!http) return;
-
       // Cargar blob del documento
-      http.get(
-        `http://localhost:8080/api/projects/${this.proyecto!.id}/documents/download?fileName=${encodeURIComponent(fileName)}`,
-        { responseType: 'blob' }
-      ).subscribe({
+      this.documentService.getFile(projectId, fileName).subscribe({
         next: (blob: Blob) => {
           // Para PDFs e imágenes, crear Object URL
           if (doc.tipo?.startsWith('image/') || doc.tipo === 'application/pdf') {

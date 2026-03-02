@@ -59,12 +59,515 @@
       </button>
     </div>
 
+    <!-- Formulario de edicion (mismo layout que Nuevo Proyecto) -->
+    <div *ngIf="editing">
+      <!-- Sub-tab: Info -->
+      <div *ngIf="activeTab === $any('info')" class="admin-card new-project-section">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</h3>
+        
+        <div class="form-grid three-col">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.CODE' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.codigoProyecto"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.NAME' | translate }} *</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.nombre"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.codigoImputacion"
+                   (ngModelChange)="saveDraft()">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.LOTE' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.lote"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.departamento"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}">
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <h4 class="subsection-title">URLs de Entornos</h4>
+
+        <div class="form-grid four-col">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.urlEntornoDesarrollo"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.urlEntornoIntegracion"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.urlEntornoPreproduccion"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.urlEntornoProduccion"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="input-field full-width">
+          <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+          <textarea rows="4"
+                    [(ngModel)]="proyecto.notasGenerales"
+                    (ngModelChange)="saveDraft()"
+                    placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Equipo Minsait -->
+      <div *ngIf="activeTab === $any('minsait')" class="admin-card new-project-section section-minsait-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</h3>
+
+        <div class="form-grid">
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.responsableProyecto"
+                   (ngModelChange)="saveDraft()">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
+            <input type="text"
+                   [(ngModel)]="proyecto.responsableTecnico"
+                   (ngModelChange)="saveDraft()">
+          </div>
+
+          <div class="input-field">
+            <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+            <input type="time"
+                   [(ngModel)]="proyecto.horaDaily"
+                   (ngModelChange)="saveDraft()">
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="members-header">
+          <h4 class="subsection-title">{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</h4>
+          <button class="btn-round btn-small btn-add"
+                  (click)="addMember()">
+            + {{ 'PROJECTS.ADD_MEMBER' | translate }}
+          </button>
+        </div>
+
+        <div class="members-list">
+          <div *ngFor="let member of proyecto.equipoMinsait || []; let i = index"
+               class="member-row-new">
+            <input type="text"
+                   [(ngModel)]="member.nombre"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}"
+                   class="member-input">
+            <input type="text"
+                   [(ngModel)]="member.rol"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}"
+                   class="member-input">
+            <input type="email"
+                   [(ngModel)]="member.email"
+                   (ngModelChange)="saveDraft()"
+                   placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}"
+                   class="member-input">
+            <button class="btn-remove" (click)="removeMember(i)">✕</button>
+          </div>
+          <div *ngIf="!proyecto.equipoMinsait || proyecto.equipoMinsait.length === 0" class="empty-list-msg">
+            No hay miembros añadidos
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Entorno de Desarrollo -->
+      <div *ngIf="activeTab === $any('dev')" class="admin-card new-project-section section-dev-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_DEV' | translate }}</h3>
+
+        <div class="members-header">
+          <h4 class="subsection-title">{{ 'PROJECTS.DEV_MACHINES' | translate }}</h4>
+          <button class="btn-round btn-small btn-add"
+                  (click)="addDevMachine()">
+            + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
+          </button>
+        </div>
+
+        <div class="dev-machines-list">
+          <div *ngFor="let machine of devMachines; let i = index"
+               class="dev-machine-card-new">
+            <div class="dev-machine-header">
+              <span class="machine-number">#{{ i + 1 }}</span>
+              <button class="btn-remove"
+                      (click)="removeDevMachine(i)">✕</button>
+            </div>
+            <div class="form-grid three-col">
+              <div class="input-field">
+                <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.identifier"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.ip"
+                       (ngModelChange)="saveDraft()">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.user"
+                       (ngModelChange)="saveDraft()">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.password"
+                       (ngModelChange)="saveDraft()">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.ram"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.cpu"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}">
+              </div>
+              <div class="input-field">
+                <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
+                <input type="text"
+                       [(ngModel)]="machine.disk"
+                       (ngModelChange)="saveDraft()"
+                       placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="devMachines.length === 0" class="empty-list-msg">
+            No hay máquinas de desarrollo añadidas
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="input-field full-width">
+          <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+          <textarea rows="4"
+                    [(ngModel)]="proyecto.notasGenerales"
+                    (ngModelChange)="saveDraft()"
+                    placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+        </div>
+      </div>
+
+      <!-- Sub-tab: MIND (Herramientas) -->
+      <div *ngIf="activeTab === $any('mind')" class="admin-card new-project-section section-mind-bg">
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MIND' | translate }}</h3>
+
+        <!-- Repositorios de código -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.CODE_REPOS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add"
+                    (click)="addCodeRepo()">
+              + {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}
+            </button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let repo of codeRepos; let i = index"
+                 class="repo-row-new">
+              <input type="text"
+                     [(ngModel)]="repo.name"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                     class="repo-input">
+              <input type="text"
+                     [(ngModel)]="repo.url"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                     class="repo-input">
+              <button class="btn-remove"
+                      (click)="removeCodeRepo(i)">✕</button>
+            </div>
+            <div *ngIf="codeRepos.length === 0" class="empty-list-msg">
+              Sin repositorios de código
+            </div>
+          </div>
+        </div>
+
+        <!-- Repositorios de artefactos -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add"
+                    (click)="addArtifactRepo()">
+              + {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}
+            </button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let repo of artifactRepos; let i = index"
+                 class="repo-row-new">
+              <input type="text"
+                     [(ngModel)]="repo.name"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                     class="repo-input">
+              <input type="text"
+                     [(ngModel)]="repo.url"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                     class="repo-input">
+              <button class="btn-remove"
+                      (click)="removeArtifactRepo(i)">✕</button>
+            </div>
+            <div *ngIf="artifactRepos.length === 0" class="empty-list-msg">
+              Sin repositorios de artefactos
+            </div>
+          </div>
+        </div>
+
+        <!-- Jenkins -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.JENKINS' | translate }}</h4>
+            <button class="btn-round btn-small btn-add"
+                    (click)="addJenkins()">
+              + Jenkins
+            </button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let jenkins of jenkinsList; let i = index"
+                 class="repo-row-new">
+              <input type="text"
+                     [(ngModel)]="jenkins.name"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                     class="repo-input">
+              <input type="text"
+                     [(ngModel)]="jenkins.url"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                     class="repo-input">
+              <button class="btn-remove"
+                      (click)="removeJenkins(i)">✕</button>
+            </div>
+            <div *ngIf="jenkinsList.length === 0" class="empty-list-msg">
+              Sin Jenkins configurados
+            </div>
+          </div>
+        </div>
+
+        <!-- Sonar -->
+        <div class="mind-block">
+          <div class="members-header">
+            <h4 class="subsection-title">{{ 'PROJECTS_MIND.SONAR' | translate }}</h4>
+            <button class="btn-round btn-small btn-add"
+                    (click)="addSonar()">
+              + Sonar
+            </button>
+          </div>
+          <div class="repo-list-new">
+            <div *ngFor="let sonar of sonarList; let i = index"
+                 class="sonar-row-new">
+              <input type="text"
+                     [(ngModel)]="sonar.prefix"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}"
+                     class="sonar-input">
+              <input type="text"
+                     [(ngModel)]="sonar.url"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}"
+                     class="sonar-input">
+              <input type="text"
+                     [(ngModel)]="sonar.tokenUser"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}"
+                     class="sonar-input">
+              <input type="text"
+                     [(ngModel)]="sonar.tokenValue"
+                     (ngModelChange)="saveDraft()"
+                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}"
+                     class="sonar-input">
+              <button class="btn-remove"
+                      (click)="removeSonar(i)">✕</button>
+            </div>
+            <div *ngIf="sonarList.length === 0" class="empty-list-msg">
+              Sin Sonar configurado
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Documentos -->
+      <div *ngIf="activeTab === $any('docs')" class="admin-card new-project-section section-docs-bg">
+        <h3 class="section-subtitle">📂 Documentación del Proyecto</h3>
+
+        <div class="documents-section">
+          <!-- Formulario de carga de archivo -->
+          <div class="document-upload-form">
+            <div class="form-row">
+              <label>Seleccionar archivo</label>
+              <div class="file-input-wrapper">
+                <input type="file" 
+                       #fileInputDetail
+                       id="fileInputDetail"
+                       style="display: none;"
+                       (change)="onDetailDocumentSelected($event)"
+                       accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
+                <button class="btn-round btn-secondary" (click)="fileInputDetail.click()">
+                  📁 Seleccionar archivo
+                </button>
+                <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Descripción del documento</label>
+              <textarea 
+                [(ngModel)]="detailFileDescription"
+                placeholder="Descripción (opcional)"
+                rows="2"
+                class="doc-description-textarea"></textarea>
+            </div>
+
+            <div class="form-row">
+              <button class="btn-round btn-primary" 
+                      (click)="addDetailDocument()"
+                      [disabled]="!detailFileInput">
+                ➕ Agregar documento
+              </button>
+            </div>
+          </div>
+
+          <!-- Documentos cargados -->
+          <div *ngIf="!projectDocumentsFromCreation || projectDocumentsFromCreation.length === 0" class="empty-list-msg">
+            Sin documentos cargados
+          </div>
+
+          <div *ngIf="projectDocumentsFromCreation && projectDocumentsFromCreation.length > 0" class="project-documents-grid">
+            <div *ngFor="let doc of projectDocumentsFromCreation; let i = index" class="doc-card-new-project">
+              <div class="doc-header">
+                <span class="doc-icon">{{ getDocumentIcon(doc) }}</span>
+                <span class="doc-filename">{{ doc.nombre }}</span>
+                <span class="doc-type-badge">{{ getDocumentTypeName(doc) }}</span>
+              </div>
+
+              <textarea 
+                [(ngModel)]="doc.descripcion"
+                placeholder="Descripción del documento..."
+                class="doc-description-textarea"
+                rows="2"></textarea>
+
+              <div class="doc-preview">
+                <!-- IMAGEN -->
+                <div *ngIf="doc.tipo && doc.tipo.startsWith('image/')" class="preview-container">
+                  <img *ngIf="getDocumentPreviewUrl(doc)" 
+                       [src]="getDocumentPreviewUrl(doc)" 
+                       alt="{{ doc.nombre }}" 
+                       style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
+                  <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder image">
+                    <mat-icon>image</mat-icon>
+                    <p>Cargando imagen...</p>
+                  </div>
+                </div>
+                
+                <!-- PDF -->
+                <div *ngIf="doc.tipo === 'application/pdf'" class="preview-container">
+                  <iframe *ngIf="getDocumentPreviewUrl(doc)" 
+                          [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'" 
+                          style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 4px;"
+                          frameborder="0"></iframe>
+                  <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder pdf">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    <p>Cargando PDF...</p>
+                  </div>
+                </div>
+                
+                <!-- CSV -->
+                <div *ngIf="doc.tipo === 'text/csv' || (doc.nombre && doc.nombre.endsWith('.csv'))" class="preview-container">
+                  <div *ngIf="getDocumentCsvContent(doc)" class="csv-table-container" style="max-height: 400px; overflow: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                      <tr *ngFor="let row of getDocumentCsvContent(doc); let i = index" 
+                          [style.background-color]="i === 0 ? '#f0f0f0' : 'transparent'"
+                          [style.font-weight]="i === 0 ? 'bold' : 'normal'">
+                        <td *ngFor="let cell of row" style="border: 1px solid #ddd; padding: 4px 8px;">
+                          {{ cell }}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div *ngIf="!getDocumentCsvContent(doc)" class="preview-placeholder csv">
+                    <mat-icon>table_chart</mat-icon>
+                    <p>Cargando CSV...</p>
+                  </div>
+                </div>
+                
+                <!-- OTROS ARCHIVOS -->
+                <div *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv' && !(doc.nombre && doc.nombre.endsWith('.csv')))" class="preview-placeholder other">
+                  <mat-icon>insert_drive_file</mat-icon>
+                  <p>{{ getDocumentTypeName(doc) }}</p>
+                </div>
+              </div>
+
+              <!-- Botón de eliminar bajo la preview -->
+              <div class="doc-actions-below-preview">
+                <button class="jh-btn jh-btn-secondary btn-delete-doc" (click)="removeProjectDocument(i)">
+                  🗑️ Eliminar documento
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!editing">
     <!-- Info tab -->
     <div *ngIf="activeTab === $any('info')">
       <div class="sections-container">
 
         <!-- Datos generales -->
-        <section class="section section-general">
+        <section class="section section-general" [ngClass]="{ 'admin-card new-project-section': editing }">
           <div class="section-title">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</div>
           <div class="project-form-grid full-width">
             <div class="general-grid three-col">
@@ -150,7 +653,7 @@
     <!-- Equipo Minsait tab -->
     <div *ngIf="activeTab === $any('minsait')">
       <div class="sections-container">
-        <section class="section section-minsait">
+        <section class="section section-minsait" [ngClass]="{ 'admin-card new-project-section section-minsait-bg': editing }">
           <div class="section-title">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</div>
           <div class="project-form-grid full-width">
             <div class="general-grid three-col">
@@ -172,7 +675,7 @@
                   <div class="member-controls add-member-row">
                     <label>{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</label>
                     <div class="members-actions">
-                      <button class="btn small" (click)="addMember()">
+                      <button *ngIf="editing" class="btn small" (click)="addMember()">
                         + {{ 'PROJECTS.ADD_MEMBER' | translate }}
                       </button>
                     </div>
@@ -200,7 +703,7 @@
                                  [disabled]="!editing" />
                         </div>
                         <div class="member-actions">
-                          <button type="button" class="btn small"
+                          <button *ngIf="editing" type="button" class="btn small"
                                   (click)="promptRemove('member', mi)">-</button>
                         </div>
                       </div>
@@ -220,10 +723,10 @@
     <!-- Dev tab -->
     <div *ngIf="activeTab === $any('dev')">
       <div class="sections-container">
-        <section class="section section-dev">
+        <section class="section section-dev" [ngClass]="{ 'admin-card new-project-section section-dev-bg': editing }">
           <div class="section-title">
             {{ 'PROJECTS.SECTION_DEV' | translate }}
-            <button class="btn small add-dev-title" (click)="addDevMachine()">
+            <button *ngIf="editing" class="btn small add-dev-title" (click)="addDevMachine()">
               + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
             </button>
           </div>
@@ -276,7 +779,7 @@
                       </div>
 
                       <div class="dev-actions">
-                        <button class="btn small danger"
+                        <button *ngIf="editing" class="btn small danger"
                                 (click)="promptRemove('machine', selectedDevMachineIndex)">-</button>
                       </div>
                     </div>
@@ -305,7 +808,7 @@
                     <!-- Openshift -->
                     <div class="add-section-row">
                       <span class="add-section-label">{{ 'PROJECTS.OPENSHIFT' | translate }}</span>
-                      <button type="button" class="btn small"
+                      <button *ngIf="editing" type="button" class="btn small"
                               (click)="addOpenshift(selectedDevMachineIndex)">+</button>
                     </div>
 
@@ -388,7 +891,7 @@
                     <!-- DB -->
                     <div class="add-section-row">
                       <span class="add-section-label">{{ 'PROJECTS.DB_LABEL' | translate }}</span>
-                      <button type="button" class="btn small"
+                      <button *ngIf="editing" type="button" class="btn small"
                               (click)="addDb(selectedDevMachineIndex)">+</button>
                     </div>
 
@@ -483,7 +986,7 @@ spring.datasource.password=..."></textarea>
                     <!-- Other tools -->
                     <div class="add-section-row">
                       <span class="add-section-label">{{ 'PROJECTS.OTHER_TOOL' | translate }}</span>
-                      <button type="button" class="btn small"
+                      <button *ngIf="editing" type="button" class="btn small"
                               (click)="addOtherTool(selectedDevMachineIndex)">+</button>
                     </div>
 
@@ -550,7 +1053,7 @@ spring.datasource.password=..."></textarea>
               </div>
 
               <div class="add-dev-row">
-                <button class="btn small" (click)="addDevMachine()">
+                <button *ngIf="editing" class="btn small" (click)="addDevMachine()">
                   + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
                 </button>
               </div>
@@ -571,7 +1074,7 @@ spring.datasource.password=..."></textarea>
     <!-- MIND tab -->
     <div *ngIf="activeTab === $any('mind')">
       <div class="sections-container">
-        <section class="section section-mind">
+        <section class="section section-mind" [ngClass]="{ 'admin-card new-project-section section-mind-bg': editing }">
           <div class="mind-card">
             <div class="mind-card-header">
               <h3>{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
@@ -805,7 +1308,7 @@ spring.datasource.password=..."></textarea>
     <!-- Docs tab -->
     <div *ngIf="activeTab === $any('docs')">
       <div class="sections-container">
-        <section class="section section-general">
+        <section class="section section-general" [ngClass]="{ 'admin-card new-project-section section-docs-bg': editing }">
           <div class="section-title">{{ 'PROJECTS.TAB_DOCS' | translate }}</div>
           <div class="project-form-grid full-width">
             <div class="form-row">
@@ -844,83 +1347,95 @@ spring.datasource.password=..."></textarea>
                 </div>
               </div>
 
-              <div class="doc-list descargables-root">
-                <div class="desc-search">
-                  <input type="search"
-                         [(ngModel)]="docsSearch"
-                         placeholder="{{ 'DESCARGABLES.SEARCH_PLACEHOLDER' | translate }}" />
+              <div class="documents-section">
+                <div class="project-docs-name">{{ proyecto && proyecto.nombre }}</div>
+                <div *ngIf="!projectDocumentsFromCreation || projectDocumentsFromCreation.length === 0" class="empty-list-msg">
+                  No hay documentos disponibles
                 </div>
 
-                <div *ngIf="loadingDocs">
-                  {{ 'DESCARGABLES.LOADING' | translate }}
-                </div>
+                <div *ngIf="projectDocumentsFromCreation && projectDocumentsFromCreation.length > 0" class="project-documents-grid">
+                  <div *ngFor="let doc of projectDocumentsFromCreation; let i = index" class="doc-card-new-project">
+                    <div class="doc-header">
+                      <span class="doc-icon">{{ getDocumentIcon(doc) }}</span>
+                      <span class="doc-filename">{{ doc.nombre }}</span>
+                      <span class="doc-type-badge">{{ getDocumentTypeName(doc) }}</span>
+                    </div>
 
-                <div *ngIf="!loadingDocs && (!projectDocMeta || (projectDocMeta.length===0 && (!projectDocs || projectDocs.length===0)))">
-                  {{ 'PROJECTS.NO_DOCUMENTS_MESSAGE' | translate }}
-                </div>
+                    <textarea
+                      *ngIf="editing"
+                      [(ngModel)]="doc.descripcion"
+                      placeholder="Descripción del documento..."
+                      class="doc-description-textarea"
+                      rows="2"></textarea>
 
-                <div *ngIf="!loadingDocs && (filteredProjectDocs && filteredProjectDocs.length)">
-                  <div *ngFor="let doc of filteredProjectDocs" class="doc-row">
-                    <div class="doc-info">
-                      <div class="doc-title-row">
-                        <strong class="doc-name">{{ doc.name }}</strong>
-                        <span *ngIf="doc.size" class="doc-size">
-                          {{ doc.size | number }} B
-                        </span>
+                    <div
+                      *ngIf="!editing && doc.descripcion && doc.descripcion.trim()"
+                      class="doc-description-text">
+                      {{ doc.descripcion }}
+                    </div>
+
+                    <div class="doc-preview">
+                      <!-- IMAGEN -->
+                      <div *ngIf="doc.tipo && doc.tipo.startsWith('image/')" class="preview-container">
+                        <img *ngIf="getDocumentPreviewUrl(doc)"
+                             [src]="getDocumentPreviewUrl(doc)"
+                             alt="{{ doc.nombre }}"
+                             style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
+                        <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder image">
+                          <mat-icon>image</mat-icon>
+                          <p>Cargando imagen...</p>
+                        </div>
                       </div>
-                      <div class="doc-desc">{{ doc.contentType || '' }}</div>
-                      <div class="doc-modified">
-                        {{ 'DESCARGABLES.LAST_MODIFIED' | translate }}:
-                        <strong>{{ doc.lastModified }}</strong>
+
+                      <!-- PDF -->
+                      <div *ngIf="doc.tipo === 'application/pdf'" class="preview-container">
+                        <iframe *ngIf="getDocumentPreviewUrl(doc)"
+                                [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'"
+                                style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 4px;"
+                                frameborder="0"></iframe>
+                        <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder pdf">
+                          <mat-icon>picture_as_pdf</mat-icon>
+                          <p>Cargando PDF...</p>
+                        </div>
+                      </div>
+
+                      <!-- CSV -->
+                      <div *ngIf="doc.tipo === 'text/csv' || (doc.nombre && doc.nombre.endsWith('.csv'))" class="preview-container">
+                        <div *ngIf="getDocumentCsvContent(doc)" class="csv-table-container" style="max-height: 400px; overflow: auto;">
+                          <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <tr *ngFor="let row of getDocumentCsvContent(doc); let ri = index"
+                                [style.background-color]="ri === 0 ? '#f0f0f0' : 'transparent'"
+                                [style.font-weight]="ri === 0 ? 'bold' : 'normal'">
+                              <td *ngFor="let cell of row" style="border: 1px solid #ddd; padding: 4px 8px;">
+                                {{ cell }}
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                        <div *ngIf="!getDocumentCsvContent(doc)" class="preview-placeholder csv">
+                          <mat-icon>table_chart</mat-icon>
+                          <p>Cargando CSV...</p>
+                        </div>
+                      </div>
+
+                      <!-- OTROS ARCHIVOS -->
+                      <div *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv' && !(doc.nombre && doc.nombre.endsWith('.csv')))" class="preview-placeholder other">
+                        <mat-icon>insert_drive_file</mat-icon>
+                        <p>{{ getDocumentTypeName(doc) }}</p>
                       </div>
                     </div>
-                    <div class="doc-actions">
-                      <button class="btn small"
-                              (click)="downloadProjectDocument(doc.name)"
-                              title="{{ 'DESCARGABLES.DOWNLOAD' | translate }}"
-                              aria-label="{{ 'DESCARGABLES.DOWNLOAD' | translate }}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                          <path d="M12 3v12"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M8 11l4 4 4-4"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M21 21H3"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </button>
 
-                      <button class="btn small"
-                              *ngIf="editing"
-                              (click)="(removeDocCandidate = doc.name); promptRemove('document', -1)"
-                              title="{{ 'DOCUMENTS.DELETE' | translate }}"
-                              aria-label="{{ 'DOCUMENTS.DELETE' | translate }}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                          <path d="M3 6h18"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M10 11v6"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M14 11v6"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
-                                stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <!-- Acciones bajo preview -->
+                    <div class="doc-actions-below-preview">
+                      <button *ngIf="!editing" class="btn-download-doc" (click)="downloadProjectDocument(doc.nombre)">
+                        📥 Descargar
+                      </button>
+                      <button *ngIf="editing" class="jh-btn jh-btn-secondary btn-delete-doc" (click)="removeProjectDocument(projectDocumentsFromCreation.indexOf(doc))">
+                        🗑️ Eliminar
                       </button>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -928,197 +1443,34 @@ spring.datasource.password=..."></textarea>
       </div>
     </div>
 
-    <!-- Documentos agregados en creación -->
-    <div *ngIf="projectDocumentsFromCreation && projectDocumentsFromCreation.length > 0" class="sections-container">
-      <section class="section section-docs-bg">
-        <div class="section-title">{{ 'PROJECTS.DOCUMENTS_FROM_CREATION' | translate }}</div>
-        <div class="project-documents-grid">
-          <div *ngFor="let doc of projectDocumentsFromCreation; let i = index" class="doc-card-new-project">
-            <div class="doc-header">
-              <span class="doc-icon">{{ getDocumentIcon(doc) }}</span>
-              <span class="doc-filename">{{ doc.nombre }}</span>
-              <span class="doc-type-badge">{{ getDocumentTypeName(doc) }}</span>
-              <button *ngIf="editing" class="btn-remove-doc" (click)="removeProjectDocument(i)" title="Eliminar">
-                ✕
-              </button>
-            </div>
-            <textarea class="doc-description-textarea" 
-                      [(ngModel)]="doc.descripcion" 
-                      placeholder="{{ 'PROJECTS.DOCUMENT_DESCRIPTION' | translate }}"
-                      [readonly]="!editing"></textarea>
-            <div class="doc-preview">
-              <!-- IMAGEN -->
-              <div *ngIf="doc.tipo && doc.tipo.startsWith('image/')" class="preview-container">
-                <img *ngIf="getDocumentPreviewUrl(doc)" 
-                     [src]="getDocumentPreviewUrl(doc)" 
-                     alt="{{ doc.nombre }}" 
-                     style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
-                <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder image">
-                  <mat-icon>image</mat-icon>
-                  <p>Cargando imagen...</p>
-                </div>
-              </div>
-              
-              <!-- PDF -->
-              <div *ngIf="doc.tipo === 'application/pdf'" class="preview-container">
-                <iframe *ngIf="getDocumentPreviewUrl(doc)" 
-                        [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'" 
-                        style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 4px;"
-                        frameborder="0"></iframe>
-                <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder pdf">
-                  <mat-icon>picture_as_pdf</mat-icon>
-                  <p>Cargando PDF...</p>
-                </div>
-              </div>
-              
-              <!-- CSV -->
-              <div *ngIf="doc.tipo === 'text/csv' || doc.nombre?.endsWith('.csv')" class="preview-container">
-                <div *ngIf="getDocumentCsvContent(doc)" class="csv-table-container" style="max-height: 400px; overflow: auto;">
-                  <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                    <tr *ngFor="let row of getDocumentCsvContent(doc); let i = index" 
-                        [style.background-color]="i === 0 ? '#f0f0f0' : 'transparent'"
-                        [style.font-weight]="i === 0 ? 'bold' : 'normal'">
-                      <td *ngFor="let cell of row" style="border: 1px solid #ddd; padding: 4px 8px;">
-                        {{ cell }}
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div *ngIf="!getDocumentCsvContent(doc)" class="preview-placeholder csv">
-                  <mat-icon>table_chart</mat-icon>
-                  <p>Cargando CSV...</p>
-                </div>
-              </div>
-              
-              <!-- OTROS ARCHIVOS -->
-              <div *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv' && !doc.nombre?.endsWith('.csv'))" class="preview-placeholder other">
-                <mat-icon>insert_drive_file</mat-icon>
-                <p>{{ getDocumentTypeName(doc) }}</p>
-              </div>
-            </div>
-            <button *ngIf="!editing" class="btn-download-doc" (click)="downloadDocument(doc)">
-              📥 Descargar
-            </button>
-          </div>
-        </div>
-
-        <!-- Formulario para agregar documentos (solo en modo edición) -->
-        <div *ngIf="editing" class="document-upload-form">
-          <h4>Agregar nuevo documento</h4>
-          <div class="form-row">
-            <label>Seleccionar archivo</label>
-            <div class="file-input-wrapper">
-              <input type="file" 
-                     #fileInputDetail
-                     id="fileInputDetail"
-                     style="display: none;"
-                     (change)="onDetailDocumentSelected($event)"
-                     accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
-              <button class="btn-round btn-secondary" (click)="fileInputDetail.click()">
-                📁 Seleccionar archivo
-              </button>
-              <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label>Descripción del documento</label>
-            <textarea 
-              [(ngModel)]="detailFileDescription"
-              placeholder="Descripción (opcional)"
-              rows="2"
-              class="doc-description-textarea"></textarea>
-          </div>
-
-          <div class="form-row">
-            <button class="btn-round btn-primary" 
-                    (click)="addDetailDocument()"
-                    [disabled]="!detailFileInput">
-              ➕ Agregar documento
-            </button>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Mensaje si no hay documentos y está en edición -->
-    <div *ngIf="editing && (!projectDocumentsFromCreation || projectDocumentsFromCreation.length === 0)" class="sections-container">
-      <section class="section section-docs-bg">
-        <div class="section-title">{{ 'PROJECTS.DOCUMENTS_FROM_CREATION' | translate }}</div>
-        <p class="empty-list-msg">No hay documentos. Agrega uno nuevo:</p>
-        
-        <!-- Formulario para agregar documentos -->
-        <div class="document-upload-form">
-          <div class="form-row">
-            <label>Seleccionar archivo</label>
-            <div class="file-input-wrapper">
-              <input type="file" 
-                     #fileInputDetail2
-                     id="fileInputDetail2"
-                     style="display: none;"
-                     (change)="onDetailDocumentSelected($event)"
-                     accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
-              <button class="btn-round btn-secondary" (click)="fileInputDetail2.click()">
-                📁 Seleccionar archivo
-              </button>
-              <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label>Descripción del documento</label>
-            <textarea 
-              [(ngModel)]="detailFileDescription"
-              placeholder="Descripción (opcional)"
-              rows="2"
-              class="doc-description-textarea"></textarea>
-          </div>
-
-          <div class="form-row">
-            <button class="btn-round btn-primary" 
-                    (click)="addDetailDocument()"
-                    [disabled]="!detailFileInput">
-              ➕ Agregar documento
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
 
     <!-- Botons d'acció -->
-    <div class="actions">
-      <button class="jh-btn"
-              *ngIf="!editing && routeMode==='edit'"
-              (click)="editing=true; saveDraft()"
-              title="{{ 'PROJECTS.EDIT' | translate }}"
-              aria-label="{{ 'PROJECTS.EDIT' | translate }}">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M3 21v-3.75L14.06 6.19l3.75 3.75L6.75 21H3z"
-                stroke="currentColor" stroke-width="1"
-                stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18.37 7.63l-2 2"
-                stroke="currentColor" stroke-width="1"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <div class="action-buttons-right">
+      <button class="btn-round btn-secondary"
+          *ngIf="!editing && routeMode==='edit'"
+          (click)="editing=true; saveDraft()"
+          title="{{ 'PROJECTS.EDIT' | translate }}"
+          aria-label="{{ 'PROJECTS.EDIT' | translate }}">
+        ✏️ {{ 'PROJECTS.EDIT' | translate }}
       </button>
 
-      <button class="jh-btn jh-btn-full"
-              *ngIf="editing"
-              (click)="save()"
-              title="{{ 'PROJECTS.SAVE' | translate }}"
-              aria-label="{{ 'PROJECTS.SAVE' | translate }}">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2z"
-                stroke="currentColor" stroke-width="1.5"
-                stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M17 21v-8H7v8"
-                stroke="currentColor" stroke-width="1.5"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <button class="btn-round btn-secondary"
+          *ngIf="editing"
+          (click)="cancelEdit()"
+          title="{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}"
+          aria-label="{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}">
+        ✕ {{ 'PROJECTS.CONFIRM_CANCEL' | translate }}
       </button>
-    </div>
+
+      <button class="btn-round btn-primary"
+          *ngIf="editing"
+          (click)="save()"
+          title="{{ 'PROJECTS.SAVE' | translate }}"
+          aria-label="{{ 'PROJECTS.SAVE' | translate }}">
+        💾 {{ 'PROJECTS.SAVE' | translate }}
+      </button>
+        </div>
 
   </div>
 </div>
