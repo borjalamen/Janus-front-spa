@@ -510,3 +510,7 @@
       class="image-popup-img" />
   </div>
 </div>
+
+<!-- Toast notification -->
+<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>
+

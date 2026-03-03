@@ -59,6 +59,11 @@ export class PeticionComponent implements OnInit {
 
   showErrors = false;
 
+  // Toast notification
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
+
   constructor(
     private storage: LocalStorageService,
     private dialog: MatDialog,
@@ -157,12 +162,12 @@ export class PeticionComponent implements OnInit {
 
     this.http.post(`${environment.baseUrl}peticiones-tareas`, payload).subscribe({
       next: () => {
-        alert('✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.');
+        this.showToast('✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.');
         this.resetForm();
       },
       error: err => {
         console.error('Error enviando petición', err);
-        alert('❌ Error al enviar la petición. Revisa que el servidor esté disponible.');
+        this.showToast('❌ Error al enviar la petición. Revisa que el servidor esté disponible.', false);
       }
     });
   }
@@ -183,6 +188,13 @@ export class PeticionComponent implements OnInit {
 
   isEmpty(v: string): boolean {
     return !v || !String(v).trim();
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 }
 

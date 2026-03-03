@@ -26,7 +26,7 @@ interface Bitacora {
   contexto: string;
   error: string;
   soluciones: Solucion[];
-  entorno: 'minsait' | 'preproduccion' | 'produccion';
+  entorno: ('minsait' | 'preproduccion' | 'produccion')[];
   fecha: string;
   tags: string[];
   visible?: boolean;
@@ -94,6 +94,10 @@ export class BitacoraComponent implements OnInit {
   // Loading de archivos
   loadingFileId: string | null = null; // Ej: "create-0", "inline-1"
 
+  // Image popup (enlarge)
+  showImagePopup = false;
+  imagePopupUrl = '';
+
   // Steps expandidos en listado
   expandedSteps: Set<string> = new Set();
 
@@ -144,10 +148,51 @@ export class BitacoraComponent implements OnInit {
       contexto: '',
       error: '',
       soluciones: [],
-      entorno: 'minsait',
+      entorno: [],
       fecha: '',
       tags: []
     };
+  }
+
+  // ===== ENTORNO MULTI-SELECT =====
+  toggleBitacoraEntorno(e: string, form: Bitacora | null): void {
+    if (!form) return;
+    // Normalize to array in case old data has a string
+    if (!Array.isArray(form.entorno)) {
+      form.entorno = form.entorno ? [form.entorno] : [];
+    }
+    const idx = form.entorno.indexOf(e as any);
+    if (idx >= 0) {
+      form.entorno.splice(idx, 1);
+    } else {
+      (form.entorno as string[]).push(e);
+    }
+  }
+
+  isBitacoraEntornoSelected(e: string, form: Bitacora | null): boolean {
+    if (!form) return false;
+    if (!Array.isArray(form.entorno)) return (form.entorno as any) === e;
+    return form.entorno.includes(e as any);
+  }
+
+  getGradientForEntornos(entornos: string | string[]): string {
+    const list: string[] = Array.isArray(entornos) ? entornos : [entornos];
+    const colors = list.map(e => this.coloresEntorno[e as keyof typeof this.coloresEntorno] || '#999');
+    if (colors.length === 0) return 'linear-gradient(135deg, #888, #555)';
+    if (colors.length === 1) return `linear-gradient(135deg, ${colors[0]}, ${colors[0]}cc)`;
+    const stops = colors.map((c, i) => `${c} ${Math.round((i / (colors.length - 1)) * 100)}%`).join(', ');
+    return `linear-gradient(135deg, ${stops})`;
+  }
+
+  // ===== IMAGE POPUP =====
+  openImagePopup(url: string): void {
+    this.imagePopupUrl = url;
+    this.showImagePopup = true;
+  }
+
+  closeImagePopup(): void {
+    this.showImagePopup = false;
+    this.imagePopupUrl = '';
   }
 
   // ===== DRAFT: guardar formulari =====
@@ -170,11 +215,15 @@ export class BitacoraComponent implements OnInit {
 
   // ===== CARGAR =====
   cargarBitacoras() {
-    this.http.get<Bitacora[]>(`${this.baseUrl}/all`).subscribe({
+    this.http.get<any[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
         console.log('✅ Bitácoras cargadas:', data);
-        this.errores = data;
-        this.erroresFiltrados = [...data];
+        // Normalize entorno: backend stores as comma-string, frontend uses string[]
+        this.errores = data.map(e => ({
+          ...e,
+          entorno: this.normalizeEntorno(e.entorno)
+        }));
+        this.erroresFiltrados = [...this.errores];
 
         if (this.searchText && this.searchText.trim()) {
           this.filtrar(this.searchText);
@@ -182,6 +231,18 @@ export class BitacoraComponent implements OnInit {
       },
       error: (err) => console.error('❌ Error cargando bitácoras', err)
     });
+  }
+
+  /** Convert any entorno representation to string[] */
+  private normalizeEntorno(raw: any): ('minsait' | 'preproduccion' | 'produccion')[] {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    return (raw as string).split(',').map(s => s.trim()).filter(s => s) as any;
+  }
+
+  /** Convert string[] to comma-separated string for the backend */
+  private serializeEntorno(arr: string[]): string {
+    return (arr || []).join(',');
   }
 
   // ===== CANVI DE PESTANYA (amb persistència) =====
@@ -300,6 +361,7 @@ export class BitacoraComponent implements OnInit {
 
     const payload: any = {
       ...this.formBitacoraInline,
+      entorno: this.serializeEntorno(this.formBitacoraInline.entorno),
       fecha: this.normalizeFecha(this.formBitacoraInline.fecha),
       soluciones: (this.formBitacoraInline.soluciones || []).map((s: any) => ({
         numero: s.numero,
@@ -413,6 +475,7 @@ export class BitacoraComponent implements OnInit {
       // EDITAR: Incluir el ID para actualizar
       payload = {
         ...this.formBitacora,
+        entorno: this.serializeEntorno(this.formBitacora.entorno),
         fecha: this.normalizeFecha(this.formBitacora.fecha),
         soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
           numero: s.numero,
@@ -428,7 +491,7 @@ export class BitacoraComponent implements OnInit {
       payload = {
         contexto: this.formBitacora.contexto,
         error: this.formBitacora.error,
-        entorno: this.formBitacora.entorno,
+        entorno: this.serializeEntorno(this.formBitacora.entorno),
         fecha: this.normalizeFecha(this.formBitacora.fecha),
         tags: this.formBitacora.tags,
         soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({

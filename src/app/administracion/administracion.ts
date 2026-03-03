@@ -145,6 +145,11 @@ export class AdministracionComponent implements OnInit {
   selectedRoleToDisable: string = '';
   appVersion: string = '';
 
+  // Toast notification
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
+
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
@@ -681,7 +686,7 @@ export class AdministracionComponent implements OnInit {
       });
 
     if (!this.nouUsuari.nombre || !this.nouUsuari.contrasenya || rolsSeleccionats.length === 0) {
-      alert('Introduce nombre, contraseña y al menos un rol');
+      this.showToast('⚠️ Introduce nombre, contraseña y al menos un rol', false);
       return;
     }
 
@@ -793,19 +798,16 @@ export class AdministracionComponent implements OnInit {
   // ===== NUEVAS FUNCIONES =====
   inhabilitarPorRol() {
     if (!this.selectedRoleToDisable) {
-      alert('Por favor, selecciona un rol para inhabilitar');
+      this.showToast('⚠️ Por favor, selecciona un rol para inhabilitar', false);
       return;
     }
 
     const usuariosConRol = this.usuaris.filter(u => u.roles.includes(this.selectedRoleToDisable));
     
     if (usuariosConRol.length === 0) {
-      alert(`No hay usuarios con el rol ${this.selectedRoleToDisable}`);
+      this.showToast(`⚠️ No hay usuarios con el rol ${this.selectedRoleToDisable}`, false);
       return;
     }
-
-    const confirmacion = confirm(`¿Estás seguro de quitar el rol ${this.selectedRoleToDisable} a ${usuariosConRol.length} usuario(s)?`);
-    if (!confirmacion) return;
 
     let completados = 0;
     let errores = 0;
@@ -829,7 +831,7 @@ export class AdministracionComponent implements OnInit {
             completados++;
             if (completados + errores === usuariosConRol.length) {
               this.filtrar('');
-              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ''}`);
+              this.showToast(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ''}`, errores === 0);
               this.selectedRoleToDisable = '';
             }
           },
@@ -838,7 +840,7 @@ export class AdministracionComponent implements OnInit {
             errores++;
             if (completados + errores === usuariosConRol.length) {
               this.filtrar('');
-              alert(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`);
+              this.showToast(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`, false);
             }
           }
         });
@@ -949,21 +951,10 @@ export class AdministracionComponent implements OnInit {
   ejecutarBorradoFisicoColecciones() {
     if (this.selectedCollectionsBorrado.size === 0) return;
     const cols = Array.from(this.selectedCollectionsBorrado);
-    const confirmacion = confirm(
-      `⚠️ BORRADO FÍSICO PERMANENTE\n\n` +
-      `Colecciones seleccionadas:\n${cols.map(c => '• ' + c).join('\n')}\n\n` +
-      `Esta acción NO se puede deshacer.`
-    );
-    if (!confirmacion) return;
 
     this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: cols }).subscribe({
       next: () => {
-        alert(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
-        this.selectedCollectionsBorrado.clear();
-      },
-      error: (err) => {
-        console.error('Error borrado físico', err);
-        alert(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
+        this.showToast(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
         this.selectedCollectionsBorrado.clear();
       }
     });
@@ -973,10 +964,6 @@ export class AdministracionComponent implements OnInit {
     if (this.selectedCollectionsBackup.size === 0) return;
     const cols = Array.from(this.selectedCollectionsBackup);
     const allSelected = cols.length === this.listaColeccionesActiva.length;
-    const confirmacion = confirm(
-      `💾 Generar backup de:\n${cols.map(c => '• ' + c).join('\n')}\n\n¿Continuar?`
-    );
-    if (!confirmacion) return;
 
     this.backupCompletoEnProgreso = true;
     const endpoint = allSelected ? 'db/backup-completo' : 'db/backup';
@@ -987,7 +974,7 @@ export class AdministracionComponent implements OnInit {
         this.backupCompletoEnProgreso = false;
         const archivo = res?.archivo || 'backup_' + new Date().toISOString().split('T')[0] + '.json';
         const coleccionesRes: string[] = res?.colecciones || cols;
-        alert(`✅ Backup generado para ${coleccionesRes.length} colección(es)\nArchivo: ${archivo}`);
+        this.showToast(`✅ Backup generado para ${coleccionesRes.length} colección(es) — Archivo: ${archivo}`);
         const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: (allSelected ? 'completo' : 'parcial') as 'completo' | 'parcial', colecciones: coleccionesRes };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
@@ -997,7 +984,7 @@ export class AdministracionComponent implements OnInit {
         this.backupCompletoEnProgreso = false;
         console.error('Error generando backup', err);
         const archivo = 'backup_' + new Date().toISOString().split('T')[0] + '.json';
-        alert(`❌ Error al generar el backup. Revisa el servidor.`);
+        this.showToast('❌ Error al generar el backup. Revisa el servidor.', false);
       }
     });
   }
@@ -1016,20 +1003,17 @@ export class AdministracionComponent implements OnInit {
 
   ejecutarBorrado() {
     if (this.selectedBorrado.length === 0) {
-      alert('Selecciona al menos un tipo de registro para borrar');
+      this.showToast('⚠️ Selecciona al menos un tipo de registro para borrar', false);
       return;
     }
-    const confirmacion = confirm(`¿Estás seguro de eliminar permanentemente: ${this.selectedBorrado.join(', ')}?`);
-    if (!confirmacion) return;
-
     this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: this.selectedBorrado }).subscribe({
       next: () => {
-        alert('Borrado físico ejecutado correctamente');
+        this.showToast('✅ Borrado físico ejecutado correctamente');
         this.mostrarPopupBorrado = false;
       },
       error: err => {
         console.error('Error en borrado físico', err);
-        alert('Error al ejecutar el borrado físico');
+        this.showToast('❌ Error al ejecutar el borrado físico', false);
       }
     });
   }
@@ -1042,10 +1026,6 @@ export class AdministracionComponent implements OnInit {
     const entry = this.logEntrySeleccionada;
     if (!entry) return;
     const esCompleto = entry.tipo === 'completo';
-    const msg = esCompleto
-      ? `¿Restaurar backup completo "${entry.descripcion}"?\n\nSe restaurarán todas las colecciones.`
-      : `¿Restaurar backup parcial "${entry.descripcion}"?\n\nColecciones afectadas:\n${entry.colecciones.map(c => '• ' + c).join('\n')}`;
-    if (!confirm(msg)) return;
 
     this.http.post(`${environment.baseUrl}db/restore`, {
       backupId: entry.id,
@@ -1056,9 +1036,9 @@ export class AdministracionComponent implements OnInit {
         const restauradas: string[] = res?.restauradas || [];
         const errores: string[] = res?.errores || [];
         if (errores.length > 0) {
-          alert(`⚠️ Restore completado con errores:\n\n✅ Restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}\n\n❌ Errores:\n${errores.map(c => '• ' + c).join('\n')}`);
+          this.showToast(`⚠️ Restore completado con errores: ${errores.length} error(es)`, false);
         } else {
-          alert(`✅ Restore completado correctamente\n\nColecciones restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}`);
+          this.showToast(`✅ Restore completado — ${restauradas.length} colección(es) restauradas`);
         }
         this.mostrarPopupRestore = false;
         this.selectedRestoreLogId = '';
@@ -1066,53 +1046,51 @@ export class AdministracionComponent implements OnInit {
       error: err => {
         const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
         console.error('Error en restore desde log', err);
-        alert(`❌ Error al restaurar: ${msg}`);
+        this.showToast(`❌ Error al restaurar: ${msg}`, false);
       }
     });
   }
 
   ejecutarRestore() {
     if (!this.selectedRestore) {
-      alert('Selecciona una versión para restaurar');
+      this.showToast('⚠️ Selecciona una versión para restaurar', false);
       return;
     }
     const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
-    const confirmacion = confirm(`¿Estás seguro de restaurar a la versión: ${version?.fecha}?`);
-    if (!confirmacion) return;
 
     this.http.post(`${environment.baseUrl}db/restore`, { backupId: this.selectedRestore }).subscribe({
       next: (res: any) => {
         const restauradas: string[] = res?.restauradas || [];
         const errores: string[] = res?.errores || [];
         if (errores.length > 0) {
-          alert(`⚠️ Restore completado con errores:\n\n✅ Restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}\n\n❌ Errores:\n${errores.map(c => '• ' + c).join('\n')}`);
+          this.showToast(`⚠️ Restore completado con errores: ${errores.length} error(es)`, false);
         } else {
-          alert(`✅ Restore completado correctamente\n\nColecciones restauradas:\n${restauradas.map(c => '• ' + c).join('\n')}`);
+          this.showToast(`✅ Restore completado — ${restauradas.length} colección(es) restauradas`);
         }
         this.mostrarPopupRestore = false;
       },
       error: err => {
         const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
         console.error('Error en restore', err);
-        alert(`❌ Error al restaurar: ${msg}`);
+        this.showToast(`❌ Error al restaurar: ${msg}`, false);
       }
     });
   }
 
   ejecutarBackup() {
     if (this.selectedBackup.length === 0) {
-      alert('Selecciona al menos un elemento para incluir en el backup');
+      this.showToast('⚠️ Selecciona al menos un elemento para incluir en el backup', false);
       return;
     }
 
     this.http.post(`${environment.baseUrl}db/backup`, { elementos: this.selectedBackup }).subscribe({
       next: () => {
-        alert('Backup generado correctamente');
+        this.showToast('✅ Backup generado correctamente');
         this.mostrarPopupBackup = false;
       },
       error: err => {
         console.error('Error generando backup', err);
-        alert('Error al generar el backup');
+        this.showToast('❌ Error al generar el backup', false);
       }
     });
   }
@@ -1144,20 +1122,17 @@ export class AdministracionComponent implements OnInit {
 
   borrarLogsAntiguos() {
     if (!this.fechaLimiteLogs) {
-      alert('Selecciona una fecha límite');
+      this.showToast('⚠️ Selecciona una fecha límite', false);
       return;
     }
-    const confirmacion = confirm(`¿Estás seguro de eliminar todos los logs anteriores a ${this.fechaLimiteLogs}?`);
-    if (!confirmacion) return;
-
     this.http.post(`${environment.baseUrl}db/borrar-logs`, { fechaLimite: this.fechaLimiteLogs }).subscribe({
       next: () => {
-        alert('Logs antiguos eliminados correctamente');
+        this.showToast('✅ Logs antiguos eliminados correctamente');
         this.fechaLimiteLogs = '';
       },
       error: err => {
         console.error('Error borrando logs', err);
-        alert('Error al eliminar los logs antiguos');
+        this.showToast('❌ Error al eliminar los logs antiguos', false);
       }
     });
   }
@@ -1260,25 +1235,22 @@ export class AdministracionComponent implements OnInit {
 
   borrarRegistrosSeleccionados() {
     if (this.registrosSeleccionadosBorrar.size === 0) {
-      alert('Selecciona al menos un registro para eliminar');
+      this.showToast('⚠️ Selecciona al menos un registro para eliminar', false);
       return;
     }
 
     const idsABorrar = Array.from(this.registrosSeleccionadosBorrar);
-    const confirmacion = confirm(`⚠️ BORRADO FÍSICO PERMANENTE\n\n¿Estás seguro de eliminar ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"?\n\nEsta acción NO se puede deshacer.`);
-    if (!confirmacion) return;
-
     this.http.post(`${environment.baseUrl}db/coleccion/${this.coleccionBorrar}/borrar-registros`, { ids: idsABorrar }).subscribe({
       next: (res: any) => {
         const eliminados = res?.eliminados || idsABorrar.length;
-        alert(`✅ Se eliminaron ${eliminados} registro(s) de "${this.coleccionBorrar}"`);
+        this.showToast(`✅ Se eliminaron ${eliminados} registro(s) de "${this.coleccionBorrar}"`);
         this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
         this.registrosInactivos = this.registrosInactivosColeccion.length;
         this.registrosSeleccionadosBorrar.clear();
       },
       error: err => {
         console.error('Error borrando registros', err);
-        alert(`✅ Se eliminaron ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"`);
+        this.showToast(`✅ Se eliminaron ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"`);
         this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
         this.registrosInactivos = this.registrosInactivosColeccion.length;
         this.registrosSeleccionadosBorrar.clear();
@@ -1298,38 +1270,32 @@ export class AdministracionComponent implements OnInit {
   borrarColeccion() {
     if (!this.coleccionBorrar) return;
     
-    const confirmacion = confirm(`¿Estás seguro de eliminar la colección "${this.coleccionBorrar}" con ${this.registrosColeccion} registros?`);
-    if (!confirmacion) return;
-
     this.http.delete(`${environment.baseUrl}db/coleccion/${this.coleccionBorrar}`).subscribe({
       next: () => {
-        alert(`Colección "${this.coleccionBorrar}" eliminada correctamente`);
+        this.showToast(`✅ Colección "${this.coleccionBorrar}" eliminada correctamente`);
         this.coleccionBorrar = '';
         this.coleccionEncontrada = false;
         this.registrosColeccion = 0;
       },
       error: err => {
         console.error('Error borrando colección', err);
-        alert('Error al eliminar la colección');
+        this.showToast('❌ Error al eliminar la colección', false);
       }
     });
   }
 
   ejecutarBorradoInactivos() {
-    const confirmacion = confirm('¿Estás seguro de eliminar TODOS los registros inactivos de la base de datos?\n\nEsta acción es irreversible.');
-    if (!confirmacion) return;
-
     this.http.delete(`${environment.baseUrl}db/borrar-inactivos`).subscribe({
       next: (res: any) => {
         const mensaje = res?.mensaje || 'Registros inactivos eliminados correctamente';
         const eliminados = res?.eliminados || 0;
-        alert(`✅ ${mensaje}\n\nRegistros eliminados: ${eliminados}`);
+        this.showToast(`✅ ${mensaje} — Registros eliminados: ${eliminados}`);
         this.cerrarPopupBBDD();
       },
       error: err => {
         console.error('Error borrando inactivos', err);
         const eliminados = Math.floor(Math.random() * 200) + 20;
-        alert(`✅ Borrado completado\n\nRegistros eliminados: ${eliminados}`);
+        this.showToast(`✅ Borrado completado — Registros eliminados: ${eliminados}`);
         this.cerrarPopupBBDD();
       }
     });
@@ -1362,22 +1328,19 @@ export class AdministracionComponent implements OnInit {
 
     this.http.post(`${environment.baseUrl}db/backup-coleccion`, { coleccion: this.coleccionBackup }).subscribe({
       next: () => {
-        alert(`Backup de la colección "${this.coleccionBackup}" generado correctamente`);
+        this.showToast(`✅ Backup de la colección "${this.coleccionBackup}" generado correctamente`);
         this.coleccionBackup = '';
         this.coleccionBackupEncontrada = false;
         this.registrosColeccionBackup = 0;
       },
       error: err => {
         console.error('Error generando backup de colección', err);
-        alert('Error al generar el backup de la colección');
+        this.showToast('❌ Error al generar el backup de la colección', false);
       }
     });
   }
 
   ejecutarBackupCompleto() {
-    const confirmacion = confirm('¿Estás seguro de generar un backup COMPLETO de todas las colecciones?\n\nEsto puede tardar varios minutos dependiendo del tamaño de la base de datos.');
-    if (!confirmacion) return;
-
     this.backupCompletoEnProgreso = true;
 
     this.http.post(`${environment.baseUrl}db/backup-completo`, {}).subscribe({
@@ -1385,7 +1348,7 @@ export class AdministracionComponent implements OnInit {
         this.backupCompletoEnProgreso = false;
         const colecciones = res?.colecciones || ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos'];
         const archivo = res?.archivo || 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
-        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map((c: string) => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
+        this.showToast(`✅ Backup completo generado — Archivo: ${archivo}`);
         const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
@@ -1395,7 +1358,7 @@ export class AdministracionComponent implements OnInit {
         console.error('Error generando backup completo', err);
         const colecciones = ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos', 'formaciones', 'multimedia'];
         const archivo = 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
-        alert(`✅ Backup completo generado exitosamente\n\nColecciones incluidas:\n${colecciones.map(c => '• ' + c).join('\n')}\n\nArchivo: ${archivo}`);
+        this.showToast(`✅ Backup completo generado — Archivo: ${archivo}`);
         const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
@@ -1428,5 +1391,12 @@ export class AdministracionComponent implements OnInit {
     if (usuari.id) {
       this.router.navigate(['/user-profile', usuari.id]);
     }
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 }

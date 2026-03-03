@@ -87,6 +87,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   readonly MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
   uploadError: string | null = null;
 
+  // Toast notification
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
+
   // Validación de documentos - popup de confirmación
   showUploadConfirmPopup = false;
   pendingUploadFile?: File;
@@ -579,7 +584,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   confirmDeleteProjectDocument(fileName: string) {
     if (!fileName) return;
-    if (!confirm('¿Desea eliminar el fichero "' + fileName + '"?')) return;
     const pid = this.getDocsProjectId();
     if (!pid) return;
     const file = this.getProjectDocumentFileName(fileName);
@@ -672,7 +676,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       },
       error: (err: any) => {
         console.error('Error al actualizar proyecto:', err);
-        alert('❌ Error al actualizar el proyecto');
+        this.showToast('❌ Error al actualizar el proyecto', false);
       }
     });
   }
@@ -953,7 +957,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   addDetailDocument() {
     if (!this.detailFileInput || !this.proyecto?.id) {
-      alert('Por favor, selecciona un archivo');
+      this.showToast('⚠️ Por favor, selecciona un archivo', false);
       return;
     }
 
@@ -983,11 +987,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
           if (fileInput) fileInput.value = '';
           const fileInput2 = document.querySelector('#fileInputDetail2') as HTMLInputElement;
           if (fileInput2) fileInput2.value = '';
-          alert('✅ Documento agregado correctamente');
+          this.showToast('✅ Documento agregado correctamente');
         },
         error: (err: any) => {
           console.error('❌ Error al subir documento:', err);
-          alert('❌ Error al subir el documento');
+          this.showToast('❌ Error al subir el documento', false);
         }
       });
   }
@@ -998,11 +1002,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     const doc = this.projectDocumentsFromCreation[index];
     const documentName = doc.nombre || 'documento desconocido';
     
-    // Mostrar confirmación clara
-    if (!confirm(`¿Estás seguro de que deseas eliminar el documento "${documentName}"?\n\nEsta acción no se puede deshacer.`)) {
-      return;
-    }
-
     // Extraer el nombre del archivo desde el path
     const fileName = doc.path?.split('/').pop() || documentName;
 
@@ -1020,11 +1019,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
         }
         
         console.log('✅ Documento eliminado correctamente:', documentName);
-        alert('✅ Documento eliminado correctamente');
+        this.showToast('✅ Documento eliminado correctamente');
       },
       error: (err: any) => {
         console.error('❌ Error eliminando documento:', err);
-        alert('❌ Error al eliminar el documento. Por favor, intenta de nuevo.');
+        this.showToast('❌ Error al eliminar el documento. Por favor, intenta de nuevo.', false);
       }
     });
   }
@@ -1048,7 +1047,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       },
       error: (err: any) => {
         console.error('❌ Error al descargar documento:', err);
-        alert('❌ Error al descargar el documento');
+        this.showToast('❌ Error al descargar el documento', false);
       }
     });
   }
@@ -1098,5 +1097,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     // Limpiar object URLs al destruir componente
     this.documentPreviewUrls.forEach(url => URL.revokeObjectURL(url));
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 }

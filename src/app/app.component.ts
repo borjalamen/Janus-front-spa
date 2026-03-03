@@ -341,14 +341,18 @@ export class AppComponent implements OnDestroy, OnInit {
       case 'bienvenida': return true;
       case 'proyectos':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
+      case 'scrum':
+        return ['devops', 'admin'].includes(this.rol);
+      case 'estimacion':
+        return ['devops', 'admin'].includes(this.rol);
       case 'procedimientos':
         return ['devops', 'admin'].includes(this.rol);
       case 'documentos':
         return ['devops', 'admin'].includes(this.rol);
       case 'formacion':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
+        return true;
       case 'planificacion':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
+        return ['devops', 'admin'].includes(this.rol);
       case 'multimedia':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
       case 'administracion':
@@ -360,9 +364,9 @@ export class AppComponent implements OnDestroy, OnInit {
       case 'unete':
         return true;
       case 'infraestructura':
-        return ['devops', 'admin','consultor'].includes(this.rol);
+        return ['devops', 'admin'].includes(this.rol);
       case 'herramientas':
-        return ['devops', 'admin','consultor'].includes(this.rol);
+        return ['devops', 'admin'].includes(this.rol);
 
       default:
         return false;

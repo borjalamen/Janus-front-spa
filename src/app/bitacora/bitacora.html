@@ -56,8 +56,8 @@
           <button
             type="button"
             class="entorno-btn"
-            [class.active]="formBitacora.entorno === 'minsait'"
-            (click)="formBitacora.entorno = 'minsait'; onFormChange()"
+            [class.active]="isBitacoraEntornoSelected('minsait', formBitacora)"
+            (click)="toggleBitacoraEntorno('minsait', formBitacora); onFormChange()"
             [style.--color]="'#1E88E5'"
             title="Minsait"
           >
@@ -66,8 +66,8 @@
           <button
             type="button"
             class="entorno-btn"
-            [class.active]="formBitacora.entorno === 'preproduccion'"
-            (click)="formBitacora.entorno = 'preproduccion'; onFormChange()"
+            [class.active]="isBitacoraEntornoSelected('preproduccion', formBitacora)"
+            (click)="toggleBitacoraEntorno('preproduccion', formBitacora); onFormChange()"
             [style.--color]="'#FBC02D'"
             title="Preproducción"
           >
@@ -76,8 +76,8 @@
           <button
             type="button"
             class="entorno-btn"
-            [class.active]="formBitacora.entorno === 'produccion'"
-            (click)="formBitacora.entorno = 'produccion'; onFormChange()"
+            [class.active]="isBitacoraEntornoSelected('produccion', formBitacora)"
+            (click)="toggleBitacoraEntorno('produccion', formBitacora); onFormChange()"
             [style.--color]="'#E53935'"
             title="Producción"
           >
@@ -85,11 +85,9 @@
           </button>
           <div
             class="entorno-icon-preview"
-            [style.background]="'linear-gradient(135deg, ' + getColorEntorno(formBitacora.entorno) + ', ' + getColorEntorno(formBitacora.entorno) + 'cc)'"
+            [style.background]="getGradientForEntornos(formBitacora.entorno)"
           >
-            <mat-icon [style.color]="getColorEntorno(formBitacora.entorno)">
-              bug_report
-            </mat-icon>
+            <mat-icon>bug_report</mat-icon>
           </div>
         </div>
       </div>
@@ -118,19 +116,15 @@
           <div
             *ngFor="let solucion of formBitacora.soluciones; let i = index"
             class="solucion-item"
+            [style.borderLeftColor]="getColorEntorno(solucion.entorno)"
           >
             <div class="solucion-header">
               <span class="solucion-numero">Paso {{ solucion.numero }}</span>
-              <select
-                [(ngModel)]="solucion.entorno"
-                (ngModelChange)="onFormChange()"
-                class="solucion-entorno-select"
-                [style.borderColor]="getColorEntorno(solucion.entorno)"
-              >
-                <option value="minsait">🔵 Minsait</option>
-                <option value="preproduccion">🟡 Preproducción</option>
-                <option value="produccion">🔴 Producción</option>
-              </select>
+              <div class="solucion-entorno-btns">
+                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'minsait'" (click)="solucion.entorno='minsait'; onFormChange()" [style.--color]="'#1E88E5'" title="Minsait">M</button>
+                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'; onFormChange()" [style.--color]="'#FBC02D'" title="Preproducción">PRE</button>
+                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'; onFormChange()" [style.--color]="'#E53935'" title="Producción">PRO</button>
+              </div>
               <button
                 type="button"
                 class="eliminar-solucion-btn"
@@ -256,9 +250,9 @@
           <ng-container *ngIf="bitacoraEditandoId !== e.id">
             <div
               class="bitacora-icon"
-              [style.background]="'linear-gradient(135deg, ' + getColorEntorno(e.entorno) + ', ' + getColorEntorno(e.entorno) + 'cc)'"
+              [style.background]="getGradientForEntornos(e.entorno)"
             >
-              <mat-icon [style.color]="getColorEntorno(e.entorno)">
+              <mat-icon>
                 bug_report
               </mat-icon>
             </div>
@@ -340,8 +334,8 @@
                     <button
                       type="button"
                       class="entorno-btn-small"
-                      [class.active]="formBitacoraInline.entorno === 'minsait'"
-                      (click)="formBitacoraInline.entorno = 'minsait'"
+                      [class.active]="isBitacoraEntornoSelected('minsait', formBitacoraInline)"
+                      (click)="toggleBitacoraEntorno('minsait', formBitacoraInline)"
                       [style.--color]="'#1E88E5'"
                       title="Minsait"
                     >
@@ -350,8 +344,8 @@
                     <button
                       type="button"
                       class="entorno-btn-small"
-                      [class.active]="formBitacoraInline.entorno === 'preproduccion'"
-                      (click)="formBitacoraInline.entorno = 'preproduccion'"
+                      [class.active]="isBitacoraEntornoSelected('preproduccion', formBitacoraInline)"
+                      (click)="toggleBitacoraEntorno('preproduccion', formBitacoraInline)"
                       [style.--color]="'#FBC02D'"
                       title="Preproducción"
                     >
@@ -360,8 +354,8 @@
                     <button
                       type="button"
                       class="entorno-btn-small"
-                      [class.active]="formBitacoraInline.entorno === 'produccion'"
-                      (click)="formBitacoraInline.entorno = 'produccion'"
+                      [class.active]="isBitacoraEntornoSelected('produccion', formBitacoraInline)"
+                      (click)="toggleBitacoraEntorno('produccion', formBitacoraInline)"
                       [style.--color]="'#E53935'"
                       title="Producción"
                     >
@@ -397,14 +391,14 @@
                     <p>No hay soluciones agregadas</p>
                   </div>
 
-                  <div *ngFor="let solucion of formBitacoraInline.soluciones; let i = index" class="solucion-item">
+                  <div *ngFor="let solucion of formBitacoraInline.soluciones; let i = index" class="solucion-item" [style.borderLeftColor]="getColorEntorno(solucion.entorno)">
                     <div class="solucion-header">
                       <span class="solucion-numero">Paso {{ solucion.numero }}</span>
-                      <select [(ngModel)]="solucion.entorno" class="solucion-entorno-select" [style.borderColor]="getColorEntorno(solucion.entorno)">
-                        <option value="minsait">🔵 Minsait</option>
-                        <option value="preproduccion">🟡 Preproducción</option>
-                        <option value="produccion">🔴 Producción</option>
-                      </select>
+                      <div class="solucion-entorno-btns">
+                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'minsait'" (click)="solucion.entorno='minsait'" [style.--color]="'#1E88E5'" title="Minsait">M</button>
+                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'" [style.--color]="'#FBC02D'" title="Preproducción">PRE</button>
+                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'" [style.--color]="'#E53935'" title="Producción">PRO</button>
+                      </div>
                       <button type="button" class="eliminar-solucion-btn" (click)="eliminarSolucionInline(i)" title="Eliminar solución">
                         <mat-icon>close</mat-icon>
                       </button>
@@ -480,16 +474,17 @@
               <span *ngFor="let tag of bitacoraDetall.tags" class="tag-pill">
                 {{ tag }}
               </span>
-              <span
-                class="bitacora-chip"
-                *ngIf="bitacoraDetall.entorno"
-                [style.backgroundColor]="getColorEntorno(bitacoraDetall.entorno) + '33'"
-                [style.borderColor]="getColorEntorno(bitacoraDetall.entorno)"
-              >
-                <span [style.color]="getColorEntorno(bitacoraDetall.entorno)">
-                  {{ getNombreEntorno(bitacoraDetall.entorno) }}
+              <ng-container *ngFor="let env of bitacoraDetall.entorno">
+                <span
+                  class="bitacora-chip"
+                  [style.backgroundColor]="getColorEntorno(env) + '33'"
+                  [style.borderColor]="getColorEntorno(env)"
+                >
+                  <span [style.color]="getColorEntorno(env)">
+                    {{ getNombreEntorno(env) }}
+                  </span>
                 </span>
-              </span>
+              </ng-container>
             </div>
             <p class="bitacora-steps-detail-sub">
               {{ bitacoraDetall.error }}
@@ -528,7 +523,10 @@
                   <div class="bitacora-step-detail-body">
                     <!-- Imagen -->
                     <div class="step-file-preview step-file-image" *ngIf="s.archivoBase64 && esImagen(s)">
-                      <img [src]="s.archivoBase64" [alt]="s.archivoNombre" />
+                      <img [src]="s.archivoBase64" [alt]="s.archivoNombre"
+                        (click)="openImagePopup(s.archivoBase64!)"
+                        style="cursor:pointer"
+                        title="Clic para ampliar" />
                     </div>
 
                     <!-- PDF visualización -->
@@ -638,5 +636,22 @@
         ✓
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Popup imagen grande -->
+<div
+  class="image-popup-backdrop"
+  *ngIf="showImagePopup"
+  (click)="closeImagePopup()">
+  <div class="image-popup-container" (click)="$event.stopPropagation()">
+    <button class="image-popup-close-btn" (click)="closeImagePopup()" title="Cerrar">
+      ✕
+    </button>
+    <img
+      *ngIf="imagePopupUrl"
+      [src]="imagePopupUrl"
+      alt="Imagen ampliada"
+      class="image-popup-img" />
   </div>
 </div>

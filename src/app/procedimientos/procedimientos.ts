@@ -44,6 +44,11 @@ export class ProcedimientosComponent implements OnInit {
   mostrarPopupDelete = false;
   procAEliminar: Procedure | null = null;
 
+  // Toast notification
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
+
   // vista de steps dins la mateixa pantalla
   procDetall: Procedure | null = null;
   mostrarDetallSteps = false;
@@ -248,7 +253,7 @@ export class ProcedimientosComponent implements OnInit {
 
   guardarProcedimiento() {
     if (!this.procForm.titulo || !this.procForm.descripcion) {
-      alert('Falta títol o descripció');
+      this.showToast('⚠️ Falta títol o descripció', false);
       return;
     }
 
@@ -486,5 +491,12 @@ export class ProcedimientosComponent implements OnInit {
   closeImagePopup() {
     this.showImagePopup = false;
     this.imagePopupUrl = null;
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 }

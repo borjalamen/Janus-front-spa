@@ -25,6 +25,9 @@ import { LocalStorageService } from '../local-storage.service';
 })
 export class UneteComponent implements OnInit, OnDestroy {
   sending: boolean = false;
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
   recipient = 'contacto@janushub.local';
 
   private STORAGE_KEY = 'uneteForm';
@@ -73,7 +76,7 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   sendMail() {
     if (!this.form.fullName || !this.form.email) {
-      alert('Por favor, indica nombre completo y email.');
+      this.showToast('⚠️ Por favor, indica nombre completo y email.', false);
       return;
     }
 
@@ -89,14 +92,14 @@ export class UneteComponent implements OnInit, OnDestroy {
           body: JSON.stringify(this.form)
         });
         if (resp.ok) {
-          alert('Correo enviado correctamente. Gracias.');
+          this.showToast('✅ Correo enviado correctamente. Gracias.');
           this.resetForm();
         } else {
           const txt = await resp.text();
-          alert('Error enviando correo: ' + txt);
+          this.showToast('❌ Error enviando correo: ' + txt, false);
         }
       } catch (err: any) {
-        alert('Error en la petición: ' + (err?.message || err));
+        this.showToast('❌ Error en la petición: ' + (err?.message || err), false);
       } finally {
         (this as any).sending = false;
       }
@@ -113,5 +116,12 @@ export class UneteComponent implements OnInit, OnDestroy {
       comments: ''
     };
     this.storage.remove(this.STORAGE_KEY);
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 }

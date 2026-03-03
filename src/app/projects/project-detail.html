@@ -99,10 +99,14 @@
 
           <div class="input-field">
             <label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="proyecto.departamento"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.DEPARTMENT_PLACEHOLDER' | translate }}">
+            <select [(ngModel)]="proyecto.departamento"
+                   (ngModelChange)="saveDraft()">
+              <option value="">Selecciona un departamento</option>
+              <option value="Agricultura">Agricultura</option>
+              <option value="Cultura">Cultura</option>
+              <option value="Policía">Policía</option>
+              <option value="Justicia">Justicia</option>
+            </select>
           </div>
         </div>
 
@@ -1622,3 +1626,6 @@ spring.datasource.password=..."></textarea>
     </div>
   </div>
 </div>
+
+<!-- Toast notification -->
+<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>

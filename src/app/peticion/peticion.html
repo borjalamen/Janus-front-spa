@@ -144,3 +144,7 @@
     <p class="helper">{{ 'PETICION.REQUIRED_FIELDS' | translate }}</p>
   </div>
 </div>
+
+<!-- Toast notification -->
+<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>
+

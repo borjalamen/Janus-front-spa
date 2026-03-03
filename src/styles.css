@@ -104,3 +104,30 @@ body .mat-tooltip,
   background: #FBC02D !important;
   color: #0F1115 !important;
 }
+
+/* ===== APP TOAST NOTIFICATION ===== */
+.app-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1E272E;
+  color: #E0E0E0;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  z-index: 9999;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  border-left: 4px solid #4CAF50;
+  animation: toastIn 0.25s ease;
+  max-width: 90vw;
+  text-align: center;
+  pointer-events: none;
+}
+.app-toast.toast-err {
+  border-left-color: #E53935;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

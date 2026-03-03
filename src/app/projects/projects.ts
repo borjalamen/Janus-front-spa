@@ -66,6 +66,11 @@ export class ProjectsComponent implements OnInit {
   projectesFiltrats: Proyecto[] = this.projectes;
   isLoading = false;
 
+  // Toast notification
+  toastMsg = '';
+  toastOk = true;
+  private _toastTimer: any = null;
+
   // Vista del detalle del proyecto
   showDetailModal = false;
   selectedProjectForDetail: Proyecto | undefined = undefined;
@@ -155,7 +160,7 @@ export class ProjectsComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error al cargar proyectos:', err);
-        alert('Error al cargar proyectos. Verifica la consola.');
+        this.showToast('❌ Error al cargar proyectos. Verifica la consola.', false);
         this.projectes = [];
         this.projectesFiltrats = [];
         this.isLoading = false;
@@ -315,7 +320,7 @@ export class ProjectsComponent implements OnInit {
 
   addNewProjectDocument() {
     if (!this.projectFileInput) {
-      alert('Por favor, selecciona un archivo');
+      this.showToast('⚠️ Por favor, selecciona un archivo', false);
       return;
     }
 
@@ -402,7 +407,7 @@ export class ProjectsComponent implements OnInit {
     const partial = this.editingProject as Partial<Proyecto> & { ipString?: string; tareasString?: string };
 
     if (!partial.nombre || !partial.nombre.trim()) {
-      alert('El nombre del proyecto es obligatorio');
+      this.showToast('⚠️ El nombre del proyecto es obligatorio', false);
       return;
     }
 
@@ -465,11 +470,11 @@ export class ProjectsComponent implements OnInit {
           this.activeTab = 'LIST';
           this.storage.set(this.STORAGE_TAB_KEY, 'LIST');
           this.clearDraft();
-          alert('✅ Proyecto actualizado correctamente');
+          this.showToast('✅ Proyecto actualizado correctamente');
         },
         error: (err) => {
           console.error('Error al actualizar proyecto:', err);
-          alert('❌ Error al actualizar el proyecto');
+          this.showToast('❌ Error al actualizar el proyecto', false);
         }
       });
     } else {
@@ -487,11 +492,11 @@ export class ProjectsComponent implements OnInit {
           this.activeTab = 'LIST';
           this.storage.set(this.STORAGE_TAB_KEY, 'LIST');
           this.clearDraft();
-          alert('✅ Proyecto guardado correctamente');
+          this.showToast('✅ Proyecto guardado correctamente');
         },
         error: (err) => {
           console.error('Error al guardar proyecto:', err);
-          alert('❌ Error al guardar el proyecto');
+          this.showToast('❌ Error al guardar el proyecto', false);
         }
       });
     }
@@ -526,7 +531,7 @@ export class ProjectsComponent implements OnInit {
         error: (err) => {
           uploadedCount++;
           console.error(`❌ Error al subir documento ${uploadedCount}/${totalDocs}:`, err);
-          alert(`❌ Error al subir el documento "${doc.nombre}"`);
+          this.showToast(`❌ Error al subir el documento "${doc.nombre}"`, false);
         }
       });
     });
@@ -586,7 +591,7 @@ export class ProjectsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al eliminar proyecto:', err);
-        alert('❌ Error al eliminar el proyecto');
+        this.showToast('❌ Error al eliminar el proyecto', false);
       }
     });
   }
@@ -695,6 +700,13 @@ export class ProjectsComponent implements OnInit {
     return Array.from(map.entries())
       .map(([nombre, count]) => ({ nombre, count }))
       .sort((a, b) => b.count - a.count);
+  }
+
+  showToast(msg: string, ok = true) {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
 
 }

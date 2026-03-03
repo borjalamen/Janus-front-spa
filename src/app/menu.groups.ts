@@ -28,8 +28,8 @@ export const MENU_GROUPS: MenuGroup[] = [
     titleKey: 'MENU.GROUPS.GESTION',
     items: [
       { id: 'proyectos', labelKey: 'MENU.PROJECTS', route: '/projects', icon: 'folder_open', requiresCheck: true },
-      { id: 'scrum', labelKey: 'MENU.SCRUM', route: '/scrum', icon: 'view_week', requiresCheck: false },
-      { id: 'estimacion', labelKey: 'MENU.ESTIMATION', route: '/estimacion', icon: 'timeline', requiresCheck: false },
+      { id: 'scrum', labelKey: 'MENU.SCRUM', route: '/scrum', icon: 'view_week', requiresCheck: true },
+      { id: 'estimacion', labelKey: 'MENU.ESTIMATION', route: '/estimacion', icon: 'timeline', requiresCheck: true },
       { id: 'planificacion', labelKey: 'MENU.PLANNING', route: '/planificacion', icon: 'event_note', requiresCheck: true }
     ]
   },

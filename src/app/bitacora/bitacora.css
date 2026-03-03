@@ -929,11 +929,13 @@ p {
 .solucion-item {
   background: #0f1113;
   border: 1px solid #2e3236;
+  border-left: 4px solid #2e3236;
   border-radius: 6px;
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: border-left-color 0.25s ease;
 }
 
 .solucion-header {
@@ -955,6 +957,31 @@ p {
   font-size: 0.9rem;
   border: 2px solid !important;
   transition: border-color 0.2s ease;
+}
+
+.solucion-entorno-btns {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.solucion-entorno-btn {
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1.5px solid var(--color, #888);
+  color: var(--color, #888);
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.solucion-entorno-btn.active {
+  background: var(--color, #888);
+  color: #fff;
+  box-shadow: 0 0 6px var(--color, #888);
 }
 
 .solucion-entorno-select:focus {
@@ -1526,7 +1553,7 @@ p {
 
 .bitacora-step-detail-body {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
   margin-top: 8px;
 }
@@ -2046,3 +2073,53 @@ p {
   transform: scale(1.05);
 }
 
+/* ===== IMAGE POPUP ===== */
+.image-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.image-popup-container {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: #111;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-popup-img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.image-popup-close-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.image-popup-close-btn:hover {
+  background: rgba(200, 0, 0, 0.7);
+}

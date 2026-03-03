@@ -421,7 +421,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       if (!w) {
         const html = this.buildPrintableHtml();
         const newWin = window.open('', '_blank', 'width=900,height=700');
-        if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+        if (!newWin) { this.snackBar.open('No se ha podido abrir la ventana de impresión.', '✕', { duration: 3500 }); return; }
         newWin.document.open();
         newWin.document.write(html);
         newWin.document.close();
@@ -431,7 +431,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     }).catch(_ => {
       const html = this.buildPrintableHtml();
       const newWin = window.open('', '_blank', 'width=900,height=700');
-      if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+      if (!newWin) { this.snackBar.open('No se ha podido abrir la ventana de impresión.', '✕', { duration: 3500 }); return; }
       newWin.document.open();
       newWin.document.write(html);
       newWin.document.close();
@@ -613,7 +613,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     } catch (e) {
       const html = this.buildPrintableHtml();
       const newWin = window.open('', '_blank', 'width=900,height=700');
-      if (!newWin) { alert('No se ha podido abrir la ventana de impresión.'); return; }
+      if (!newWin) { this.snackBar.open('No se ha podido abrir la ventana de impresión.', '✕', { duration: 3500 }); return; }
       newWin.document.open();
       newWin.document.write(html);
       newWin.document.close();
@@ -630,7 +630,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       inp.value = '';
     } catch (e) {
       console.error('PDF import error', e);
-      alert('Error importando PDF: ' + (e && (e as any).message ? (e as any).message : e));
+      this.snackBar.open('Error importando PDF: ' + (e && (e as any).message ? (e as any).message : e), '✕', { duration: 3500 });
     }
   }
 
