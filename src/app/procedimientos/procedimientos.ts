@@ -73,7 +73,7 @@ export class ProcedimientosComponent implements OnInit {
     private proceduresService: ProceduresService,
     private authService: AuthService,
     private storage: LocalStorageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.restoreFromLocalStorage();
@@ -92,7 +92,9 @@ export class ProcedimientosComponent implements OnInit {
     // formulari
     let savedForm: (Procedure & { primerResponsable?: string }) | null = null;
     try {
-      savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(this.STORAGE_KEY_FORM);
+      savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(
+        this.STORAGE_KEY_FORM
+      );
     } catch (e) {
       console.error('Error parsejant procedimientos_form, esborro clau', e);
       this.storage.remove(this.STORAGE_KEY_FORM);
@@ -150,19 +152,27 @@ export class ProcedimientosComponent implements OnInit {
 
   getNombreEntorno(entorno: string): string {
     switch ((entorno || '').toLowerCase()) {
-      case 'minsait': return 'Minsait';
-      case 'preproduccion': return 'Preproducció';
-      case 'produccion': return 'Producció';
-      default: return entorno;
+      case 'minsait':
+        return 'Minsait';
+      case 'preproduccion':
+        return 'Preproducció';
+      case 'produccion':
+        return 'Producció';
+      default:
+        return entorno;
     }
   }
 
   getNumeroDepartamento(entorno: string): number {
     switch ((entorno || '').toLowerCase()) {
-      case 'minsait': return 1;
-      case 'preproduccion': return 2;
-      case 'produccion': return 3;
-      default: return 0;
+      case 'minsait':
+        return 1;
+      case 'preproduccion':
+        return 2;
+      case 'produccion':
+        return 3;
+      default:
+        return 0;
     }
   }
 
@@ -184,10 +194,11 @@ export class ProcedimientosComponent implements OnInit {
       return;
     }
     const v = valor.toLowerCase();
-    this.procedimientosFiltrados = this.procedures.filter(p =>
-      (p.titulo || '').toLowerCase().includes(v) ||
-      (p.departamento || '').toLowerCase().includes(v) ||
-      (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
+    this.procedimientosFiltrados = this.procedures.filter(
+      p =>
+        (p.titulo || '').toLowerCase().includes(v) ||
+        (p.departamento || '').toLowerCase().includes(v) ||
+        (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
     );
   }
 
@@ -223,16 +234,16 @@ export class ProcedimientosComponent implements OnInit {
       tags: proc.tags ?? [],
       steps: proc.steps
         ? proc.steps.map((s: any, idx: number): ProcedureStep => ({
-          id: s.id ?? `step-${idx + 1}`,
-          titulo: s.titulo ?? '',
-          descripcion: s.descripcion ?? '',
-          responsable: s.responsable ?? '',
-          metodo: s.metodo ?? '',
-          orden: s.orden ?? (idx + 1),
-          tags: s.tags ?? [],
-          entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
-          imageUrl: s.imageUrl ?? ''
-        }))
+            id: s.id ?? `step-${idx + 1}`,
+            titulo: s.titulo ?? '',
+            descripcion: s.descripcion ?? '',
+            responsable: s.responsable ?? '',
+            metodo: s.metodo ?? '',
+            orden: s.orden ?? (idx + 1),
+            tags: s.tags ?? [],
+            entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
+            imageUrl: s.imageUrl ?? ''
+          }))
         : [],
       visible: proc.visible ?? true,
       deleted: proc.deleted ?? false,
@@ -466,16 +477,23 @@ export class ProcedimientosComponent implements OnInit {
     this.saveFormToLocalStorage();
   }
 
-  // ==== IMATGE STEP DES D'ARXIU ====
+  // ==== IMATGE STEP DES D'ARXIU (Base64) ====
 
   onStepImageSelected(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
+
     const file = input.files[0];
-    const objectUrl = URL.createObjectURL(file);
-    if (!this.procForm.steps) this.procForm.steps = [];
-    this.procForm.steps[index].imageUrl = objectUrl;
-    this.saveFormToLocalStorage();
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const dataUrl = reader.result as string; // data:image/png;base64,...
+      if (!this.procForm.steps) this.procForm.steps = [];
+      this.procForm.steps[index].imageUrl = dataUrl;
+      this.saveFormToLocalStorage();
+    };
+
+    reader.readAsDataURL(file);
   }
 
   onClickFileIcon(fileInput: HTMLInputElement): void {
@@ -497,6 +515,6 @@ export class ProcedimientosComponent implements OnInit {
     this.toastMsg = msg;
     this.toastOk = ok;
     clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
+    this._toastTimer = setTimeout(() => (this.toastMsg = ''), 3500);
   }
 }
