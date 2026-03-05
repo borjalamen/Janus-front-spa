@@ -601,9 +601,21 @@ export class AdministracionComponent implements OnInit {
 
   private actualizarEstadoPeticion(peticion: PeticionAdmin, estado: PeticionAdmin['estado']) {
     const action = estado === 'APROBADA' ? 'approve' : 'reject';
-    this.http.put<PeticionUneteBackend>(`${this.joinRequestsUrl}/${peticion.id}/${action}`, {})
+    this.http.put<any>(`${this.joinRequestsUrl}/${peticion.id}/${action}`, {})
       .subscribe({
-        next: updated => {
+        next: response => {
+          // Si es aprobación, la respuesta incluye las credenciales del usuario creado
+          if (estado === 'APROBADA' && response.credentials) {
+            const cred = response.credentials;
+            this.showToast(`✅ Usuario creado: ${cred.username} | Contraseña: ${cred.password}`);
+          } else if (estado === 'APROBADA') {
+            this.showToast('✅ Solicitud aprobada. Usuario creado exitosamente.');
+          } else {
+            this.showToast('✅ Solicitud rechazada.');
+          }
+          
+          // Actualizar la lista de peticiones
+          const updated = response.request || response;
           const mapped = this.mapJoinRequest(updated);
           const idx = this.peticiones.findIndex(p => p.id === peticion.id);
           if (idx !== -1) {
@@ -611,7 +623,21 @@ export class AdministracionComponent implements OnInit {
           }
           this.aplicarFiltrosPeticiones();
         },
-        error: err => console.error('Error actualizando petición', err)
+        error: err => {
+          let mensaje = 'Error actualizando petición';
+          
+          // Manejar errores específicos
+          if (err.status === 409) {
+            mensaje = '⚠️ Error: ' + (err.error?.message || 'No se pudo crear el usuario. Verifica que el email no esté registrado.');
+          } else if (err.status === 400) {
+            mensaje = '⚠️ ' + (err.error?.message || 'Error en los datos de la solicitud.');
+          } else if (err.error?.message) {
+            mensaje = '❌ ' + err.error.message;
+          }
+          
+          this.showToast(mensaje, false);
+          console.error('Error actualizando petición', err);
+        }
       });
   }
 

@@ -1553,9 +1553,10 @@ p {
 
 .bitacora-step-detail-body {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  gap: 20px;
   margin-top: 8px;
+  align-items: flex-start;
 }
 
 .bitacora-step-detail-text {
@@ -1564,6 +1565,11 @@ p {
   color: #CFD8DC;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  order: 1;
+}
+
+.step-file-preview {
+  order: 2;
 }
 
 .bitacora-step-detail-file {

@@ -75,8 +75,20 @@ export class UneteComponent implements OnInit, OnDestroy {
   }
 
   sendMail() {
-    if (!this.form.fullName || !this.form.email) {
-      this.showToast('⚠️ Por favor, indica nombre completo y email.', false);
+    if (!this.form.fullName || !this.form.fullName.trim()) {
+      this.showToast('⚠️ Por favor, indica el nombre completo.', false);
+      return;
+    }
+    
+    if (!this.form.email || !this.form.email.trim()) {
+      this.showToast('⚠️ Por favor, indica un email válido.', false);
+      return;
+    }
+
+    // Validación básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.form.email)) {
+      this.showToast('⚠️ Por favor, indica un email válido.', false);
       return;
     }
 
@@ -92,11 +104,14 @@ export class UneteComponent implements OnInit, OnDestroy {
           body: JSON.stringify(this.form)
         });
         if (resp.ok) {
-          this.showToast('✅ Correo enviado correctamente. Gracias.');
+          this.showToast('✅ Solicitud enviada correctamente. Un administrador la revisará pronto.', true);
           this.resetForm();
+        } else if (resp.status === 400) {
+          const txt = await resp.text();
+          this.showToast('⚠️ ' + txt, false);
         } else {
           const txt = await resp.text();
-          this.showToast('❌ Error enviando correo: ' + txt, false);
+          this.showToast('❌ Error al procesar la solicitud: ' + txt, false);
         }
       } catch (err: any) {
         this.showToast('❌ Error en la petición: ' + (err?.message || err), false);
