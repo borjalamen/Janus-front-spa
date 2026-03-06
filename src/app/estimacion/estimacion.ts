@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface Task {
   id: string;
@@ -36,7 +37,8 @@ interface Task {
     MatCardModule,
     MatListModule,
     TranslateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
 })
 export class EstimacionComponent implements OnInit, OnDestroy {

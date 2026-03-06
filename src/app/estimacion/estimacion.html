@@ -113,7 +113,9 @@
           </button>
         </div>
 
+        <!-- BOTONS EXPORT / IMPORT / MAIL – ICON-BTN MODERNS -->
         <div class="controls-left-bottom">
+          <!-- Export CSV -->
           <button
             type="button"
             class="icon-btn export-icon-btn"
@@ -121,8 +123,13 @@
             aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
             title="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
           >
-            <img class="icon-img" src="assets/icons/csv.png" alt="CSV" />
+            <mat-icon>table_view</mat-icon>
+            <span class="btn-label">
+              {{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}
+            </span>
           </button>
+
+          <!-- Export PDF -->
           <button
             type="button"
             class="icon-btn export-icon-btn"
@@ -130,8 +137,13 @@
             aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
             title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
           >
-            <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+            <mat-icon>file_download</mat-icon>
+            <span class="btn-label">
+              {{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}
+            </span>
           </button>
+
+          <!-- Import PDF -->
           <button
             type="button"
             class="icon-btn import-icon-btn"
@@ -139,8 +151,12 @@
             aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
             title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
           >
-          <img class="icon-img" src="assets/icons/pdf.png" alt="PDF" />
+            <mat-icon>file_upload</mat-icon>
+            <span class="btn-label">
+              {{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}
+            </span>
           </button>
+
           <input
             type="file"
             accept="application/pdf"
@@ -148,6 +164,8 @@
             style="display:none"
             (change)="onPdfSelected($event)"
           />
+
+          <!-- Mail PDF -->
           <button
             type="button"
             class="icon-btn mail-icon-btn"
@@ -156,7 +174,10 @@
             aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}"
             title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}"
           >
-            ✉️
+            <mat-icon>mail</mat-icon>
+            <span class="btn-label">
+              {{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}
+            </span>
           </button>
         </div>
 
@@ -178,7 +199,7 @@
             aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
             title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
           >
-          <span class="limpiar-label">Limpiar</span>
+            <span class="limpiar-label">Limpiar</span>
             🗑️
           </button>
         </div>
