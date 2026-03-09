@@ -708,13 +708,8 @@ export class AdministracionComponent implements OnInit {
       .map(([k]) => {
         if (k === 'admin') return 'ADMIN';
         if (k === 'consultor') return 'CONSULTOR';
-        return 'DEV';
+        return 'DEVOPS';
       });
-
-    if (!this.nouUsuari.nombre || !this.nouUsuari.contrasenya || rolsSeleccionats.length === 0) {
-      this.showToast('⚠️ Introduce nombre, contraseña y al menos un rol', false);
-      return;
-    }
 
     const body = {
       username: this.nouUsuari.nombre,
