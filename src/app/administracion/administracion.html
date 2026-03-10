@@ -367,7 +367,7 @@
     <div class="form-content">
       <div class="input-field">
         <label>{{ 'ADMIN.NAME' | translate }}</label>
-        <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez">
+        <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez" [disabled]="usuariEditant !== null">
       </div>
 
       <div class="input-field">

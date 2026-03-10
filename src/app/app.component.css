@@ -35,17 +35,16 @@ mat-sidenav { box-sizing: border-box; min-height: 0; height: 100vh; }
 mat-nav-list a {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   color: #E0E0E0;
   margin-bottom: 12px;
   border-radius: 6px;
   padding: 10px 12px;
-  font-size: var(--menu-font-size); /* base size for menu items */
+  font-size: var(--menu-font-size);
   min-height: 44px;
   text-decoration: none;
   transition: background 0.18s, color 0.18s, width 0.3s;
 }
-mat-nav-list a { line-height: 1; }
 
 /* Texto emergente del menú lateral */
 .menu-text {
@@ -54,17 +53,17 @@ mat-nav-list a { line-height: 1; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* spacing handled by gap on the parent */
   margin-left: 0;
   color: #1e84a3;
-  font-size: calc(var(--menu-font-size) - 1px); /* 1px smaller than base */
+  font-size: calc(var(--menu-font-size) - 1px);
   transition: opacity 0.3s ease, max-width 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 22px;
+  height: 22px;
 }
 
-/* Hover del menú */
+.menu-text strong { display: inline; line-height: inherit; vertical-align: baseline; }
 mat-nav-list a:hover {
   background: #1e84a3;
   box-shadow: 2px 2px 12px #FBC02D70;
@@ -87,14 +86,9 @@ mat-nav-list a.active .menu-text {
 mat-nav-list a mat-icon {
   color: #FBC02D !important;
   font-size: 22px !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
-  width: 28px;
 }
 
-.menu-text strong { display: inline-block; line-height: 1; }
+.menu-text strong { display: inline-block; line-height: 1; vertical-align: middle; }
 
 /* ÍTEMS DESHABILITADOS (rol sin acceso) */
 .disabled {

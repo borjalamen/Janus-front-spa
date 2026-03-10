@@ -711,16 +711,21 @@ export class AdministracionComponent implements OnInit {
         return 'DEVOPS';
       });
 
-    const body = {
-      username: this.nouUsuari.nombre,
-      password: this.nouUsuari.contrasenya,
-      fullName: this.nouUsuari.nombre,
-      email: this.nouUsuari.email || `${this.nouUsuari.nombre.toLowerCase()}@minsait.com`,
-      roles: rolsSeleccionats,
-      status: 'ACTIVE'
-    };
-
+    // En modo edición, permitir cambiar otros campos sin tocar username y fullName
     if (this.usuariEditant && this.usuariEditant.id) {
+      const body: any = {
+        username: this.usuariEditant.username, // Mantener username original
+        fullName: this.usuariEditant.fullName, // Mantener fullName original
+        email: this.nouUsuari.email || this.usuariEditant.email,
+        roles: rolsSeleccionats,
+        status: 'ACTIVE'
+      };
+      
+      // Incluir password solo si se proporciona una nueva
+      if (this.nouUsuari.contrasenya && this.nouUsuari.contrasenya.trim()) {
+        body.password = this.nouUsuari.contrasenya;
+      }
+
       this.http.put<UsuariBackend>(`${this.baseUrl}/update/${this.usuariEditant.id}`, body)
         .subscribe({
           next: updated => {
@@ -728,17 +733,40 @@ export class AdministracionComponent implements OnInit {
             if (idx !== -1) this.usuaris[idx] = updated;
             this.filtrar(''); 
             this.tancarPopup();
+            this.showToast('Usuario actualizado correctamente', true);
           },
-          error: err => console.error('Error actualitzant usuari', err)
+          error: err => {
+            console.error('Error actualitzant usuari', err);
+            this.showToast('Error al actualizar el usuario', false);
+          }
         });
     } else {
+      // En modo creación, requerir nombre
+      if (!this.nouUsuari.nombre.trim()) {
+        this.showToast('El nombre es requerido para crear un usuario', false);
+        return;
+      }
+
+      const body = {
+        username: this.nouUsuari.nombre,
+        password: this.nouUsuari.contrasenya,
+        fullName: this.nouUsuari.nombre,
+        email: this.nouUsuari.email || `${this.nouUsuari.nombre.toLowerCase()}@minsait.com`,
+        roles: rolsSeleccionats,
+        status: 'ACTIVE'
+      };
+
       this.http.post<UsuariBackend>(`${this.baseUrl}/create`, body).subscribe({
         next: created => {
           this.usuaris.push(created);
           this.filtrar('');
           this.tancarPopup();
+          this.showToast('Usuario creado correctamente', true);
         },
-        error: err => console.error('Error creant usuari', err)
+        error: err => {
+          console.error('Error creant usuari', err);
+          this.showToast('Error al crear el usuario', false);
+        }
       });
     }
   }

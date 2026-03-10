@@ -42,6 +42,40 @@ mat-nav-list *,
 .mat-list-item * {
   color: inherit !important;
 }
+
+/* ── Alineación icono + texto menú lateral ── */
+mat-nav-list a.mdc-list-item,
+mat-nav-list a.mat-mdc-list-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  height: auto !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+mat-nav-list a .mdc-list-item__content,
+mat-nav-list a .mat-mdc-list-item-unscoped-content,
+mat-nav-list a span.mdc-list-item__primary-text {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 14px !important;
+  width: 100%;
+}
+
+mat-nav-list a mat-icon {
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 22px !important;
+  width: 22px !important;
+  min-width: 22px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 /* ----- DESPLEGABLE (que ja et funciona i t’agrada) ----- */
 
 .lang-panel.mat-mdc-select-panel {
