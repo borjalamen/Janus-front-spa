@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +15,7 @@ import { LocalStorageService } from '../local-storage.service';
   templateUrl: './unete.html',
   styleUrls: ['./unete.css'],
   imports: [
+    CommonModule,
     MatIconModule,
     TranslateModule,
     FormsModule,
@@ -29,6 +31,9 @@ export class UneteComponent implements OnInit, OnDestroy {
   toastOk = true;
   private _toastTimer: any = null;
   recipient = 'contacto@janushub.local';
+
+  mostrarPopupCredenciales = false;
+  credencialesPopup: { username: string; password: string } | null = null;
 
   private STORAGE_KEY = 'uneteForm';
 
@@ -94,6 +99,7 @@ export class UneteComponent implements OnInit, OnDestroy {
 
     // guardar l’últim estat abans d’enviar
     this.saveDraft();
+    const emailSnapshot = this.form.email;
 
     (async () => {
       try {
@@ -104,7 +110,11 @@ export class UneteComponent implements OnInit, OnDestroy {
           body: JSON.stringify(this.form)
         });
         if (resp.ok) {
-          this.showToast('✅ Solicitud enviada correctamente. Un administrador la revisará pronto.', true);
+          const data = await resp.json().catch(() => ({}));
+          const username = emailSnapshot.split('@')[0];
+          const password = data.password || data.credentials?.password || '';
+          this.credencialesPopup = { username, password };
+          this.mostrarPopupCredenciales = true;
           this.resetForm();
         } else if (resp.status === 400) {
           const txt = await resp.text();
@@ -119,6 +129,11 @@ export class UneteComponent implements OnInit, OnDestroy {
         (this as any).sending = false;
       }
     })();
+  }
+
+  cerrarPopupCredenciales() {
+    this.mostrarPopupCredenciales = false;
+    this.credencialesPopup = null;
   }
 
   resetForm() {

@@ -437,6 +437,31 @@
   </div>
 </div>
 
+<!-- Popup credenciales usuario creado (al aprobar solicitud) -->
+<div class="modal-overlay" *ngIf="mostrarPopupCredenciales && credencialesNuevas">
+  <div class="auth-card">
+    <h2 class="form-title">Usuario creado</h2>
+    <hr class="divider">
+    <div class="form-content">
+      <p style="color: #cfd8dc; margin-bottom: 16px;">Se ha creado el usuario con las siguientes credenciales:</p>
+      <div class="input-field">
+        <label>Usuario</label>
+        <input type="text" [value]="credencialesNuevas.username" readonly style="background:#0f1116; color: #ffd54f; font-weight: bold;">
+      </div>
+      <div class="input-field">
+        <label>Contraseña autogenerada</label>
+        <input type="text" [value]="credencialesNuevas.password" readonly style="background:#0f1116; color: #ffd54f; font-weight: bold;">
+      </div>
+      <p style="color: #ff6b6b; font-size: 0.85em; margin-top: 12px;">⚠️ Guarda esta contraseña, no se volverá a mostrar.</p>
+      <hr class="divider">
+      <div class="action-buttons">
+        <button class="btn-emoji confirm" (click)="cerrarPopupCredenciales()" title="Cerrar">✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Popup Borrado Físico -->
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
   <div class="auth-card db-popup db-popup-large">

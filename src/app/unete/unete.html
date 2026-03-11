@@ -63,5 +63,25 @@
   </div>
 </div>
 
+<!-- Credentials popup -->
+<div class="modal-overlay" *ngIf="mostrarPopupCredenciales && credencialesPopup">
+  <div class="auth-card">
+    <h2 class="form-title">✅ Solicitud enviada</h2>
+    <p class="popup-desc">Tu solicitud ha sido recibida. Accede con las credenciales cuando tu cuenta sea activada por un administrador.</p>
+    <div class="popup-field">
+      <label>👤 Usuario</label>
+      <input type="text" [value]="credencialesPopup!.username" readonly class="popup-input" />
+    </div>
+    <div class="popup-field">
+      <label>🔑 Contraseña</label>
+      <input type="text" [value]="credencialesPopup!.password || '—'" readonly class="popup-input" />
+    </div>
+    <p class="popup-warn">⚠️ Guarda esta contraseña, no se volverá a mostrar.</p>
+    <div class="popup-actions">
+      <button class="btn-emoji confirm" (click)="cerrarPopupCredenciales()">✓</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast notification -->
 <div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>

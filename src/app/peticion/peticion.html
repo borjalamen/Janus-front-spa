@@ -83,40 +83,48 @@
     </div>
 
     <div class="row">
-      <mat-form-field appearance="outline" class="full" [class.invalid-field]="showErrors && isEmpty(form.comments)">
+      <mat-form-field appearance="outline" class="full">
         <textarea
           matInput
           rows="4"
-          placeholder="Comentarios de la tarea"
+          placeholder="Comentarios de la tarea (opcional)"
           [(ngModel)]="form.comments"
           (ngModelChange)="onFormChange()"
         ></textarea>
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.comments)">Campo obligatorio</div>
       </mat-form-field>
     </div>
 
-    <div class="row attachments">
-      <div class="upload">
+    <div class="row attachments-section">
+      <div class="upload-area">
         <label class="upload-label" for="fileInput">
           <mat-icon>attach_file</mat-icon>
-          Añadir anexos
+          <span>Añadir anexos</span>
         </label>
-        <input
-          id="fileInput"
-          type="file"
-          multiple
-          (change)="onFilesSelected($event)"
-        />
-        <p class="muted">Imágenes, vídeos o documentos. Opcional.</p>
+        <input id="fileInput" type="file" multiple (change)="onFilesSelected($event)" />
+        <p class="muted">Imágenes, PDFs o documentos. Opcional.</p>
       </div>
-      <div class="attach-list" *ngIf="attachments.length">
-        <div class="attach-item" *ngFor="let a of attachments; let i = index">
-          <div class="name">{{ a.name }}</div>
-          <div class="meta">{{ (a.size / 1024) | number:'1.0-1' }} KB · {{ a.type || 'binario' }}</div>
-          <button mat-icon-button color="warn" (click)="removeAttachment(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
+    </div>
+
+    <div class="attach-grid" *ngIf="attachments.length">
+      <div class="attach-card" *ngFor="let a of attachments; let i = index">
+        <div class="attach-preview" (click)="openPreview(a)">
+          <img *ngIf="a.rawUrl && a.type.startsWith('image/')" [src]="a.rawUrl | safe:'url'" class="attach-thumb" [alt]="a.name" />
+          <div *ngIf="a.type === 'application/pdf'" class="attach-pdf-preview">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span class="pdf-label">PDF</span>
+          </div>
+          <div *ngIf="!a.rawUrl && a.type !== 'application/pdf'" class="attach-icon-preview">
+            <mat-icon>insert_drive_file</mat-icon>
+          </div>
+          <div class="attach-overlay" *ngIf="a.rawUrl">
+            <mat-icon>zoom_in</mat-icon>
+          </div>
         </div>
+        <div class="attach-info">
+          <div class="attach-name" [title]="a.name">{{ a.name }}</div>
+          <div class="attach-meta">{{ (a.size / 1024) | number:'1.0-1' }} KB</div>
+        </div>
+        <button class="attach-delete" (click)="removeAttachment(i)" title="Eliminar">✕</button>
       </div>
     </div>
 
@@ -142,6 +150,20 @@
       </button>
     </div>
     <p class="helper">{{ 'PETICION.REQUIRED_FIELDS' | translate }}</p>
+  </div>
+</div>
+
+<!-- Fullscreen preview popup -->
+<div class="preview-overlay" *ngIf="previewPopup" (click)="closePreview()">
+  <div class="preview-modal" (click)="$event.stopPropagation()">
+    <div class="preview-header">
+      <span class="preview-name">{{ previewPopup.name }}</span>
+      <button class="preview-close" (click)="closePreview()">✕</button>
+    </div>
+    <div class="preview-body">
+      <img *ngIf="previewPopup.type.startsWith('image/')" [src]="previewPopup.rawUrl | safe:'url'" class="preview-img" alt="preview" />
+      <iframe *ngIf="previewPopup.type === 'application/pdf'" [src]="previewPopup.rawUrl | safe:'resourceUrl'" class="preview-pdf" frameborder="0"></iframe>
+    </div>
   </div>
 </div>
 

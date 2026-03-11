@@ -8,8 +8,8 @@ body {
 /* Container general con GLOW ROJO */
 .section-container {
   padding: 24px;
-  background: #16181c;
-  border-radius: 10px;
+  background: #101218;
+  border-radius: 12px;
   box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
   margin: 20px;
   color: #E0E0E0;
@@ -91,7 +91,7 @@ p {
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  background: #0f1113;
+  background: #14161d;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.2s ease;
@@ -775,10 +775,11 @@ p {
 
 /* Formulario en pestaña crear */
 .form-container {
-  background: rgba(22, 24, 28, 0.6);
+  background: #14161d;
   padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 18px rgba(0,0,0,0.6);
 }
 
 .form-container h3 {

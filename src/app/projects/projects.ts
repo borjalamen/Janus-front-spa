@@ -446,11 +446,21 @@ export class ProjectsComponent implements OnInit {
     };
 
     if (!proyecto.codigoProyecto) {
-      proyecto.codigoProyecto = Math.random().toString(36).slice(2, 9);
+      this.showToast('⚠️ El código del proyecto es obligatorio', false);
+      return;
     }
 
     // Check si es creación o actualización
     const isEdit = partial.id !== undefined && partial.id !== '';
+
+    // Unicidad del código
+    const codeConflict = this.projectes.find(p =>
+      p.codigoProyecto === proyecto.codigoProyecto && p.id !== (partial as any).id
+    );
+    if (codeConflict) {
+      this.showToast(`⚠️ El código "${proyecto.codigoProyecto}" ya está en uso por otro proyecto`, false);
+      return;
+    }
     
     if (isEdit) {
       // ACTUALIZAR

@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SafePipe } from '../safe.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,6 +24,7 @@ import { environment } from '../../environments/environment';
   imports: [
     CommonModule,
     FormsModule,
+    SafePipe,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -55,9 +58,10 @@ export class PeticionComponent implements OnInit {
     'Rubén Planté',
     'Borja Lara'
   ];
-  attachments: Array<{ name: string; size: number; type: string; file?: File }> = [];
+  attachments: Array<{ name: string; size: number; type: string; file?: File; rawUrl?: string }> = [];
 
   showErrors = false;
+  previewPopup: { rawUrl: string; type: string; name: string } | null = null;
 
   // Toast notification
   toastMsg = '';
@@ -67,7 +71,8 @@ export class PeticionComponent implements OnInit {
   constructor(
     private storage: LocalStorageService,
     private dialog: MatDialog,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -85,40 +90,36 @@ export class PeticionComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files || []);
     files.forEach(f => {
-      this.attachments.push({ name: f.name, size: f.size, type: f.type, file: f });
+      const rawUrl = (f.type.startsWith('image/') || f.type === 'application/pdf')
+        ? URL.createObjectURL(f)
+        : undefined;
+      this.attachments.push({ name: f.name, size: f.size, type: f.type, file: f, rawUrl });
     });
     if (input) input.value = '';
   }
 
   removeAttachment(idx: number): void {
+    const a = this.attachments[idx];
+    if (a.rawUrl) URL.revokeObjectURL(a.rawUrl);
     this.attachments.splice(idx, 1);
   }
 
   isValid(): boolean {
-    // Check all required fields have content
     const allFieldsFilled = [
       this.form.requesterName,
       this.form.requesterEmail,
       this.form.projectName,
       this.form.projectCode,
-      this.form.jiraTask,
-      this.form.comments
+      this.form.jiraTask
     ].every(v => !!v && !!String(v).trim());
 
-    if (!allFieldsFilled) {
-      return false;
-    }
-
-    // Validate email format
-    if (!this.validateEmail(this.form.requesterEmail)) {
-      return false;
-    }
-
-    // JIRA task just needs to have content, no strict URL validation
-    return !!this.form.jiraTask.trim();
+    if (!allFieldsFilled) return false;
+    if (!this.validateEmail(this.form.requesterEmail)) return false;
+    return true;
   }
 
   resetForm(): void {
+    this.attachments.forEach(a => { if (a.rawUrl) URL.revokeObjectURL(a.rawUrl); });
     this.form = {
       requesterName: '',
       requesterEmail: '',
@@ -132,6 +133,14 @@ export class PeticionComponent implements OnInit {
     this.deadline = null;
     this.showErrors = false;
     this.storage.remove(this.STORAGE_KEY);
+  }
+
+  openPreview(a: { rawUrl?: string; type: string; name: string }) {
+    if (a.rawUrl) this.previewPopup = { rawUrl: a.rawUrl, type: a.type, name: a.name };
+  }
+
+  closePreview() {
+    this.previewPopup = null;
   }
 
   confirmAndSubmit(): void {
@@ -154,13 +163,20 @@ export class PeticionComponent implements OnInit {
   }
 
   private submitInternal(): void {
-    const payload = {
-      ...this.form,
-      deadline: this.deadline ? this.deadline.toISOString() : null,
-      attachments: this.attachments.map(a => a.name)
-    };
+    const formData = new FormData();
+    formData.append('requesterName', this.form.requesterName);
+    formData.append('requesterEmail', this.form.requesterEmail);
+    formData.append('projectName', this.form.projectName);
+    formData.append('projectCode', this.form.projectCode);
+    formData.append('jiraTask', this.form.jiraTask);
+    if (this.form.comments) formData.append('comments', this.form.comments);
+    formData.append('devopsAssignee', this.form.devopsAssignee || 'Cualquiera');
+    if (this.deadline) formData.append('deadline', this.deadline.toISOString());
+    this.attachments.forEach(a => {
+      if (a.file) formData.append('files', a.file, a.name);
+    });
 
-    this.http.post(`${environment.baseUrl}peticiones-tareas`, payload).subscribe({
+    this.http.post(`${environment.baseUrl}peticiones-tareas`, formData).subscribe({
       next: () => {
         this.showToast('✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.');
         this.resetForm();

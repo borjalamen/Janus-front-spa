@@ -73,43 +73,31 @@
     "USERNAME": "Usuari"
   },
   "FOOTER": {
-    "TITLE": "Scrum",
-    "LEAD": "Tauló diari per compartir tasques, estimacions i prioritats.",
-    "DESCRIPTION": "Tauló diari per compartir tasques, estimacions i prioritats.",
-    "TASK_TITLE": "Títol tasca",
-    "PLACEHOLDER_TITLE": "Títol tasca",
-    "ESTIMATE": "Estimació (h)",
-    "PLACEHOLDER_ESTIMATE": "Estimació (h)",
-    "PRIORITY": "Prioritat",
-    "PRIORITY_LOW": "Baixa",
-    "PRIORITY_MEDIUM": "Mitjana",
-    "PRIORITY_HIGH": "Alta",
-    "PRI_LABEL_OPT": "Opcional",
-    "PRI_LABEL_NOW": "Fes-ho ja!",
-    "PRI_SCALE_HINT": "Prioritat 0–150. Menys de 25 són opcionals; 100–150: Fes-ho ja!",
-    "PRI_LOW": "Baixa",
-    "PRI_MEDIUM": "Mitjana",
-    "PRI_HIGH": "Alta",
-    "ADD": "Afegeix",
-    "ADD_BUTTON": "Afegeix",
-    "TODO": "Per fer",
-    "COL_TODO": "Per fer",
-    "DOING": "Fent",
-    "COL_DOING": "En procés",
-    "DONE": "Fet",
-    "COL_DONE": "Fet",
-    "MOVE_DOING": "→ Fent",
-    "MOVE_DONE": "✓ Fet",
-    "MOVE_TODO": "← Per fer",
-    "REMOVE": "✕",
+    "COPYRIGHT": "Copyright"
+  },
+  "HOME": {
+    "TITLE": "Benvingut a JanusHUB.v0",
+    "WHO_WE_ARE": "Qui som",
+    "WHAT_WE_DO": "Què fem",
+    "MISSION": "La nostra missió",
+    "CONTACT": "Contacte",
+    "INTRO": "JanusHub pren el seu nom del déu romà Janus, simbolitzat per dos rostres que miren al passat i al futur. Representa la visió estratègica capaç d'aprendre de l'experiència i, alhora, anticipar i construir el demà. Des d'aquesta filosofia, JanusHub neix com a punt de convergència tecnològica, on tradició i innovació es combinen per impulsar els equips cap a un model de lliurament continu, eficient i de màxima qualitat.",
+    "WHO_WE_ARE_TEXT": "Som un equip transversal d'experts DevOps especialitzat en habilitar, evolucionar i consolidar pràctiques modernes de desenvolupament i operació de programari. Ens enfoquem en accelerar el lliurament de valor mitjançant automatització, integració contínua i desplegament continu, garantint qualitat, seguretat i observabilitat en cada fase del cicle de vida del programari.",
+    "WHAT_WE_DO_DEVOPS": "DevOps transversal",
+    "WHAT_WE_DO_DEVOPS_ITEMS": {
+      "CULTURE": "Implantació de cultura DevOps i models operatius col·laboratius",
+      "ADVICE": "Assessorament i suport en bones pràctiques CI/CD"
+    },
+    "WHAT_WE_DO_CICD": "Integració Contínua i Desplegament Continu (CI/CD)",
     "WHAT_WE_DO_CICD_ITEMS": {
-      "PIPELINES": "Creació, manteniment i optimització de pipelines de CI/CD",
+      "PIPELINES": "Creació, manteniment i optimització de pipelines CI/CD",
+      "AUTOMATION": "Automatització de compilació, proves i anàlisi de codi",
       "SONARQUBE": "Integració d'eines de qualitat com SonarQube"
     },
     "WHAT_WE_DO_ENVIRONMENTS": "Desplegament i operació multientorn",
     "WHAT_WE_DO_ENVIRONMENTS_ITEMS": {
       "CLOUD": "Cloud: OpenShift, Azure",
-      "ON_PREM": "On-premise: Nginx, Apache, WebLogic"
+      "ON_PREM": "On-Premise: Nginx, Apache, WebLogic"
     },
     "WHAT_WE_DO_DATABASES": "Arquitectura i gestió de bases de dades",
     "WHAT_WE_DO_DATABASES_ITEMS": {
@@ -119,7 +107,7 @@
     "WHAT_WE_DO_GOVERNANCE": "Governança i estàndards",
     "WHAT_WE_DO_GOVERNANCE_ITEMS": {
       "TEMPLATES": "Definició de plantilles, components reutilitzables i bones pràctiques",
-      "TRAINING": "Formació, suport continu i transferència de coneixement"
+      "TRAINING": "Capacitació, suport continu i transferència de coneixement"
     },
     "MISSION_INTRO": "Facilitar que els equips de desenvolupament entreguin programari:",
     "MISSION_ITEMS": {

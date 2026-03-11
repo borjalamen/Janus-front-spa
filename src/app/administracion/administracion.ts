@@ -150,6 +150,10 @@ export class AdministracionComponent implements OnInit {
   toastOk = true;
   private _toastTimer: any = null;
 
+  // Popup credenciales (usado al aceptar una solicitud)
+  mostrarPopupCredenciales = false;
+  credencialesNuevas: { username: string; password: string } | null = null;
+
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
@@ -607,7 +611,8 @@ export class AdministracionComponent implements OnInit {
           // Si es aprobación, la respuesta incluye las credenciales del usuario creado
           if (estado === 'APROBADA' && response.credentials) {
             const cred = response.credentials;
-            this.showToast(`✅ Usuario creado: ${cred.username} | Contraseña: ${cred.password}`);
+            this.credencialesNuevas = { username: cred.username, password: cred.password };
+            this.mostrarPopupCredenciales = true;
           } else if (estado === 'APROBADA') {
             this.showToast('✅ Solicitud aprobada. Usuario creado exitosamente.');
           } else {
@@ -1440,6 +1445,11 @@ export class AdministracionComponent implements OnInit {
     if (usuari.id) {
       this.router.navigate(['/user-profile', usuari.id]);
     }
+  }
+
+  cerrarPopupCredenciales() {
+    this.mostrarPopupCredenciales = false;
+    this.credencialesNuevas = null;
   }
 
   showToast(msg: string, ok = true) {
