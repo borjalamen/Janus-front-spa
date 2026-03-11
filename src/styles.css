@@ -19,6 +19,13 @@ a{
   padding: 0 !important;
 }
 
+.btn-custom-img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+}
+
 body, app-root {
   color: #E0E0E0 !important;
 }

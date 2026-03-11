@@ -312,7 +312,7 @@
   color: #b0bec5;
   font-size: 13px;
   font-weight: 500;
-  margin-left: -4px;
+  text-align: center;
 }
 
 .emoji-btn {
@@ -324,6 +324,17 @@
   font-size: 20px;
   transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
   color: #E0E0E0;
+}
+
+.limpiar-btn-round {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  min-width: 64px;
 }
 
 .emoji-btn:hover {
@@ -350,6 +361,13 @@
   width: 22px;
   height: 22px;
   display: block;
+}
+
+.btn-custom-img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
 }
 
 .icon-btn:hover {

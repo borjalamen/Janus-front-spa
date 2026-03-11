@@ -123,10 +123,7 @@
             aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
             title="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}"
           >
-            <mat-icon>table_view</mat-icon>
-            <span class="btn-label">
-              {{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}
-            </span>
+            <img src="assets/images/ExportarCSV.png" class="btn-custom-img" alt="{{ 'ESTIMATION_EXPORT.EXPORT_CSV' | translate }}" />
           </button>
 
           <!-- Export PDF -->
@@ -137,10 +134,7 @@
             aria-label="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
             title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}"
           >
-            <mat-icon>file_download</mat-icon>
-            <span class="btn-label">
-              {{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}
-            </span>
+            <img src="assets/images/ExportarPdf.png" class="btn-custom-img" alt="{{ 'ESTIMATION_EXPORT.EXPORT_PDF' | translate }}" />
           </button>
 
           <!-- Import PDF -->
@@ -151,10 +145,7 @@
             aria-label="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
             title="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}"
           >
-            <mat-icon>file_upload</mat-icon>
-            <span class="btn-label">
-              {{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}
-            </span>
+            <img src="assets/images/Importarpdf.png" class="btn-custom-img" alt="{{ 'ESTIMATION_IMPORT.IMPORT_PDF' | translate }}" />
           </button>
 
           <input
@@ -175,9 +166,6 @@
             title="{{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}"
           >
             <mat-icon>mail</mat-icon>
-            <span class="btn-label">
-              {{ 'ESTIMATION_EXPORT.EXPORT_PDF_EMAIL' | translate }}
-            </span>
           </button>
         </div>
 
@@ -194,13 +182,13 @@
           </label>
           <button
             type="button"
-            class="emoji-btn delete-emoji"
+            class="emoji-btn delete-emoji limpiar-btn-round"
             (click)="clearSelected()"
             aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
             title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
           >
             <span class="limpiar-label">Limpiar</span>
-            🗑️
+            <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" />
           </button>
         </div>
       </div>
