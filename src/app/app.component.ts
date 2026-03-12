@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -8,30 +8,26 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import {
-  RouterLink,
-  RouterLinkWithHref,
-  RouterOutlet
-} from '@angular/router';
-import { LoginDialogComponent } from './login-dialog/login-dialog';
+
 import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { HostListener } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+
+import { LoginDialogComponent } from './login-dialog/login-dialog';
 import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
 import { LocalStorageService } from './local-storage.service';
-import { Subscription } from 'rxjs';
-import { environment } from '../environments/environment';
-import { FormsModule } from '@angular/forms';
 import { AiService } from './ai.service';
 import { SpinnerComponent } from './spinner.component';
 import { SpinnerService } from './spinner.service';
 import { MENU_GROUPS } from './menu.groups';
-import { OnInit } from '@angular/core';
+import { environment } from '../environments/environment';
 import { ApiService } from './api.service';
+import { AvatarService } from './avatar.service';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -44,7 +40,6 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    // Material expansion for collapsible groups
     MatExpansionModule,
     MatTooltipModule,
     MatFormFieldModule,
@@ -54,8 +49,7 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
     MatListModule,
     RouterOutlet,
     RouterLink,
-    RouterLinkWithHref
-    ,
+    RouterLinkWithHref,
     SpinnerComponent
   ],
   templateUrl: './app.component.html',
@@ -69,8 +63,18 @@ export class AppComponent implements OnDestroy, OnInit {
   userMenuOpen = false;
   appVersion?: string;
 
+  avatarPreview: string | null = null;
+
   private authSubscription?: Subscription;
   private versionSubscription?: Subscription;
+  private avatarSub?: Subscription;
+
+  public menuGroups = MENU_GROUPS;
+  public expandedGroups: { [id: string]: boolean } = {};
+
+  aiMessages: { from: 'user' | 'ai', text: string }[] = [];
+  userInput = '';
+  private greeted = false;
 
   constructor(
     private dialog: MatDialog,
@@ -78,58 +82,96 @@ export class AppComponent implements OnDestroy, OnInit {
     private http: HttpClient,
     private ai: AiService,
     public translate: TranslateService,
-    private authService: AuthService,  // ⬅ Afegit
+    private authService: AuthService,
     private storage: LocalStorageService,
     private logger: LoggerService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private avatarService: AvatarService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = this.storage.get('lang');
     const browserLang = this.translate.getBrowserLang();
     const defaultLang = (saved ?? browserLang ?? 'es').toString();
     this.translate.setDefaultLang('es');
-    // Ensure we pass the short code ('en'|'es'|'ca') to the loader — avoid full tags like 'es-ES'
     const matched = defaultLang.match(/en|es|ca/);
     const initial = (matched && matched[0]) ? matched[0] : 'es';
     this.translate.use(initial);
 
-    // ⬅ Subscriu-te als canvis d'usuari
+    // Cada cop que canvia l’usuari (login / logout)
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.username = user.username;
-        this.rol = user.rol;
+        this.rol = user.rol as Rol;
+
+        // 1) intentar carregar avatar des de localStorage.user
+        try {
+          const savedUser = this.storage.get('user');
+          if (savedUser) {
+            const u = JSON.parse(savedUser);
+            if (u?.avatarPath && u?.username) {
+              const url =
+                `${environment.baseUrl}profile/image?username=${encodeURIComponent(u.username)}`;
+              this.avatarPreview = url;
+              this.storage.set('userAvatar', url);
+              this.avatarService.setAvatar(url);
+              return;
+            }
+          }
+        } catch (e) {
+          console.error('Error parsejant user per carregar avatar a currentUser$', e);
+        }
+
+        // 2) fallback: avatar ja guardat
+        const savedAvatar = this.storage.get('userAvatar');
+        if (savedAvatar) {
+          this.avatarPreview = savedAvatar;
+          this.avatarService.setAvatar(savedAvatar);
+        } else {
+          this.avatarPreview = null;
+          this.avatarService.setAvatar(null);
+        }
+
       } else {
+        // Logout
         this.username = '';
         this.rol = 'invitado';
+        this.avatarPreview = null;
+        this.avatarService.setAvatar(null);
+        try { this.storage.remove('userAvatar'); } catch {}
+        try { localStorage.removeItem('userAvatar'); } catch {}
       }
     });
 
     this.loadVersion();
   }
-  // menu grouping (visual only)
-  public menuGroups = MENU_GROUPS;
-  // track expanded/collapsed state per group (false = collapsed)
-  public expandedGroups: { [id: string]: boolean } = {};
 
   ngOnInit(): void {
-    // Suscribirse a cambios de versión en tiempo real
     this.versionSubscription = this.apiService.version$.subscribe(v => {
       if (v) this.appVersion = v;
     });
 
-    // load persisted state if present
     try {
       const raw = this.storage.get('menu.expanded');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') this.expandedGroups = parsed;
       }
-    } catch (e) { /* ignore parse errors */ }
+    } catch (e) { }
 
-    // ensure all groups have an explicit boolean value
     for (const g of this.menuGroups) {
       if (this.expandedGroups[g.id] === undefined) this.expandedGroups[g.id] = false;
     }
+
+    // Canvis en viu d’avatar des del servei (perfil)
+    this.avatarSub = this.avatarService.avatar$.subscribe(url => {
+      this.avatarPreview = url;
+    });
+  }
+
+  ngOnDestroy() {
+    this.authSubscription?.unsubscribe();
+    this.versionSubscription?.unsubscribe();
+    this.avatarSub?.unsubscribe();
   }
 
   isGroupOpen(id: string): boolean {
@@ -138,27 +180,20 @@ export class AppComponent implements OnDestroy, OnInit {
 
   toggleGroup(id: string): void {
     const wasOpen = this.expandedGroups[id];
-    
-    // Cerrar todos los grupos
     for (const key in this.expandedGroups) {
       this.expandedGroups[key] = false;
     }
-    
-    // Si el grupo estaba cerrado, abrirlo
     if (!wasOpen) {
       this.expandedGroups[id] = true;
     }
-    
-    // persist
-    try { this.storage.setObject('menu.expanded', this.expandedGroups); } catch (e) { /* ignore */ }
+    try { this.storage.setObject('menu.expanded', this.expandedGroups); } catch (e) { }
   }
-  
+
   setGroupOpen(id: string, open: boolean) {
     this.expandedGroups[id] = open;
     try { this.storage.setObject('menu.expanded', this.expandedGroups); } catch (e) { }
   }
 
-  // return visible items after applying canShow rules
   getVisibleItems(group: any) {
     return group.items.filter((it: any) => {
       if (it.requiresCheck) return this.canShow(it.id);
@@ -170,34 +205,18 @@ export class AppComponent implements OnDestroy, OnInit {
     return this.getVisibleItems(group).length;
   }
 
-  // Verificar si un grupo tiene al menos un item visible
   hasVisibleItems(group: any): boolean {
     return this.getVisibleCount(group) > 0;
   }
 
-  // Verificar si una ruta está activa
   isRouteActive(route: string): boolean {
     return this.router.url === route;
   }
-    // Chat state
-    aiMessages: { from: 'user'|'ai', text: string }[] = [];
-    userInput = '';
-    // reference flag to indicate whether initial greeting has been shown
-    private greeted = false;
-
-  ngOnDestroy() {
-    this.authSubscription?.unsubscribe();
-    this.versionSubscription?.unsubscribe();
-  }
 
   translateLanguage(lang: string) {
-    console.log('Cambiando idioma a:', lang);
-    console.log('Idioma actual antes:', this.translate.currentLang);
     if (!lang) return;
     this.translate.use(lang).subscribe({
-        next: () => {
-        console.log('✅ Idioma cambiado exitosamente a:', lang);
-        console.log('Idioma actual después:', this.translate.currentLang);
+      next: () => {
         this.storage.set('lang', lang);
       },
       error: (err) => {
@@ -209,69 +228,65 @@ export class AppComponent implements OnDestroy, OnInit {
   toggleClip(): void {
     this.clipOpen = !this.clipOpen;
     if (this.clipOpen) {
-      // show greeting once
       setTimeout(() => this.showGreeting(), 50);
     }
   }
-  
-    sendToAi(){
-      const text = this.userInput?.trim();
-      if(!text) return;
-      this.aiMessages.push({ from: 'user', text });
-      this.userInput = '';
-      // call backend
-      this.ai.query(text).subscribe({
-        next: res => {
-          const answer = res?.answer ?? 'No hay respuesta';
-          this.aiMessages.push({ from: 'ai', text: answer });
-          setTimeout(() => this.scrollMessagesToBottom(), 10);
-          this.speak(answer);
-        },
-        error: err => {
-          const msg = this.translate.instant('CLIP.ERROR_QUERY');
-          this.aiMessages.push({ from: 'ai', text: msg });
-          console.error(err);
-        }
-      });
-    }
 
-    onEnter(ev: Event){
-      // Event comes from template; cast to KeyboardEvent to access keys
-      const ke = ev as KeyboardEvent;
-      // Allow Shift+Enter for new line
-      if (ke.shiftKey) return;
-      ke.preventDefault();
-      this.sendToAi();
-    }
+  sendToAi() {
+    const text = this.userInput?.trim();
+    if (!text) return;
+    this.aiMessages.push({ from: 'user', text });
+    this.userInput = '';
 
-    private showGreeting(){
-      if(this.greeted) return;
-      const hello = this.translate.instant('CLIP.HELLO');
-      this.aiMessages.push({ from: 'ai', text: hello });
-      this.greeted = true;
-      setTimeout(() => this.scrollMessagesToBottom(), 20);
-    }
-
-    private scrollMessagesToBottom(){
-      try{
-        const container = document.querySelector('.messages');
-        if(container) container.scrollTop = container.scrollHeight;
-      }catch(e){/* ignore */}
-    }
-  
-    // Text-to-speech via Web Speech API
-    speak(text: string){
-      try{
-        const synth = (window as any).speechSynthesis;
-        if(!synth) return;
-        const ut = new SpeechSynthesisUtterance(text);
-        ut.lang = this.translate.currentLang || 'es-ES';
-        synth.cancel();
-        synth.speak(ut);
-      }catch(e){
-        this.logger.warn('TTS no disponible', e);
+    this.ai.query(text).subscribe({
+      next: res => {
+        const answer = res?.answer ?? 'No hay respuesta';
+        this.aiMessages.push({ from: 'ai', text: answer });
+        setTimeout(() => this.scrollMessagesToBottom(), 10);
+        this.speak(answer);
+      },
+      error: err => {
+        const msg = this.translate.instant('CLIP.ERROR_QUERY');
+        this.aiMessages.push({ from: 'ai', text: msg });
+        console.error(err);
       }
+    });
+  }
+
+  onEnter(ev: Event) {
+    const ke = ev as KeyboardEvent;
+    if (ke.shiftKey) return;
+    ke.preventDefault();
+    this.sendToAi();
+  }
+
+  private showGreeting() {
+    if (this.greeted) return;
+    const hello = this.translate.instant('CLIP.HELLO');
+    this.aiMessages.push({ from: 'ai', text: hello });
+    this.greeted = true;
+    setTimeout(() => this.scrollMessagesToBottom(), 20);
+  }
+
+  private scrollMessagesToBottom() {
+    try {
+      const container = document.querySelector('.messages');
+      if (container) (container as HTMLElement).scrollTop = container.scrollHeight;
+    } catch (e) { }
+  }
+
+  speak(text: string) {
+    try {
+      const synth = (window as any).speechSynthesis;
+      if (!synth) return;
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.lang = this.translate.currentLang || 'es-ES';
+      synth.cancel();
+      synth.speak(ut);
+    } catch (e) {
+      this.logger.warn('TTS no disponible', e);
     }
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -285,19 +300,16 @@ export class AppComponent implements OnDestroy, OnInit {
     this.clipOpen = false;
   }
 
-  speakLast(){
-    const last = this.aiMessages.length ? this.aiMessages[this.aiMessages.length-1].text : null;
+  speakLast() {
+    const last = this.aiMessages.length ? this.aiMessages[this.aiMessages.length - 1].text : null;
     const content = last ?? this.translate.instant('CLIP.HELLO');
     this.speak(content);
   }
 
   loadVersion() {
-    console.log('CRIDANT /api/config/all');
     this.http.get<any>(`${environment.baseUrl}config/all`).subscribe({
       next: (data) => {
-        console.log('RESPUESTA VERSION:', data);
         this.appVersion = data[0]?.version || 'sin versión';
-        console.log('VERSION ASIGNADA:', this.appVersion);
         this.apiService.setVersion(this.appVersion ?? '');
       },
       error: (err) => {
@@ -315,10 +327,8 @@ export class AppComponent implements OnDestroy, OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result?.success) {
-        // Si es tanca sense login → invitado
         this.authService.logout();
       }
-      // Si hi ha success, ja s'ha fet login al LoginDialogComponent
     });
   }
 
@@ -328,11 +338,15 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   logout() {
-    this.authService.logout();  
+    this.authService.logout();
+
+    this.avatarPreview = null;
+    this.avatarService.setAvatar(null);
+    try { this.storage.remove('userAvatar'); } catch {}
+    try { localStorage.removeItem('userAvatar'); } catch {}
 
     this.showUserMenu = false;
     this.userMenuOpen = false;
-
     this.router.navigate(['/home']);
   }
 
@@ -367,7 +381,6 @@ export class AppComponent implements OnDestroy, OnInit {
         return ['devops', 'admin'].includes(this.rol);
       case 'herramientas':
         return ['devops', 'admin'].includes(this.rol);
-
       default:
         return false;
     }

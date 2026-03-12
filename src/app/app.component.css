@@ -704,3 +704,10 @@ mat-nav-list a[routerLink="/descargables"] {
 }
 .clip-buttons{display:flex;flex-direction:column;gap:8px}
 .clip-buttons button{min-width:84px}
+
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}

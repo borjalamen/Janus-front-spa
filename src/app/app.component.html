@@ -20,12 +20,13 @@
               <span class="section-plus" [class.rotated]="isGroupOpen(group.id)">+</span>
             </button>
 
-          <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
-            <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route" [class.active]="isRouteActive(item.route)">
-              <mat-icon>{{ item.icon }}</mat-icon>
-              <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
-            </a>
-          </mat-nav-list>
+            <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
+              <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route"
+                [class.active]="isRouteActive(item.route)">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
+              </a>
+            </mat-nav-list>
           </div>
         </ng-container>
       </div>
@@ -50,13 +51,15 @@
 
         <div class="messages" #messagesContainer>
           <div *ngFor="let m of aiMessages" class="message" [ngClass]="{user: m.from==='user', ai: m.from==='ai'}">
-            <div class="msg-from"><strong>{{ m.from==='user' ? ('CLIP.USER' | translate) : ('CLIP.AI' | translate) }}</strong></div>
+            <div class="msg-from"><strong>{{ m.from==='user' ? ('CLIP.USER' | translate) : ('CLIP.AI' | translate)
+                }}</strong></div>
             <div class="msg-text">{{ m.text }}</div>
           </div>
         </div>
 
         <div class="clip-input-row">
-          <textarea id="clip-input" class="clip-input" rows="3" title="clip"[(ngModel)]="userInput" (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)"></textarea>
+          <textarea id="clip-input" class="clip-input" rows="3" title="clip" [(ngModel)]="userInput"
+            (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)"></textarea>
           <div class="clip-buttons">
             <button mat-flat-button color="primary" (click)="sendToAi()">{{ 'CLIP.SEND' | translate }}</button>
             <button mat-stroked-button (click)="speakLast()">{{ 'CLIP.SPEAK' | translate }}</button>
@@ -118,25 +121,16 @@
     <mat-toolbar color="primary" class="main-toolbar">
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
-      
+
       <!-- Botones de idioma -->
       <div class="lang-buttons">
-        <button 
-          class="lang-btn" 
-          [class.active]="translate.currentLang === 'es'"
-          (click)="translateLanguage('es')">
+        <button class="lang-btn" [class.active]="translate.currentLang === 'es'" (click)="translateLanguage('es')">
           ES
         </button>
-        <button 
-          class="lang-btn" 
-          [class.active]="translate.currentLang === 'ca'"
-          (click)="translateLanguage('ca')">
+        <button class="lang-btn" [class.active]="translate.currentLang === 'ca'" (click)="translateLanguage('ca')">
           CA
         </button>
-        <button 
-          class="lang-btn" 
-          [class.active]="translate.currentLang === 'en'"
-          (click)="translateLanguage('en')">
+        <button class="lang-btn" [class.active]="translate.currentLang === 'en'" (click)="translateLanguage('en')">
           EN
         </button>
       </div>
@@ -144,15 +138,18 @@
       <!-- ICONA ÚNICA -->
       <div class="user-dropdown-container">
         <div class="user-icon" (click)="username ? userMenuOpen = !userMenuOpen : openLoginDialog()">
-          <mat-icon>person</mat-icon>
+          <ng-container *ngIf="avatarPreview; else defaultUserIcon">
+            <img [src]="avatarPreview" alt="Avatar" class="user-avatar-img" />
+          </ng-container>
+          <ng-template #defaultUserIcon>
+            <mat-icon>person</mat-icon>
+          </ng-template>
         </div>
 
-        <!-- Menú només si hi ha usuari -->
         <div class="dropdown-user-menu" *ngIf="userMenuOpen && username">
           <p>{{ 'USER.USERNAME' | translate }}: <strong>{{ username }}</strong></p>
-          <strong>{{rol}}</strong>
+          <strong>{{ rol }}</strong>
 
-          <!-- AFEGEIX AQUI el botó de secció usuari -->
           <button mat-button (click)="abrirSeccionUsuario()">
             <mat-icon>manage_accounts</mat-icon> {{ 'USER.PROFILE' | translate }}
           </button>

@@ -6,6 +6,7 @@ import { LocalStorageService } from '../local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { AvatarService } from '../avatar.service';
 
 interface StoredUser {
   id: string;
@@ -43,7 +44,6 @@ export class UsuarioComponent {
   msg?: string;
   msgError?: string;
 
-  // Contrasenya
   showPasswordForm = false;
   passwordForm = {
     oldPassword: '',
@@ -51,7 +51,6 @@ export class UsuarioComponent {
     confirmPassword: ''
   };
 
-  // Perfil editable (nom, email, telèfon)
   editMode = false;
   profileForm = {
     fullName: '',
@@ -63,7 +62,8 @@ export class UsuarioComponent {
 
   constructor(
     private storage: LocalStorageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private avatarService: AvatarService
   ) {
     const savedUser = this.storage.get('user');
     console.log('UsuarioComponent savedUser string =', savedUser);
@@ -81,14 +81,17 @@ export class UsuarioComponent {
 
         this.hasCv = !!user.cvPath;
 
-        // Inicialitzar formulari d'edició amb el que vingui del backend
         this.profileForm.fullName = user.fullName || '';
         this.profileForm.email = user.email || '';
         this.profileForm.phone = user.phone || '';
 
         if (user.avatarPath) {
-          this.avatarPreview =
+          const url =
             `${environment.baseUrl}profile/image?username=${encodeURIComponent(this.username)}`;
+          this.avatarPreview = url;
+
+          this.storage.set('userAvatar', this.avatarPreview);
+          this.avatarService.setAvatar(this.avatarPreview);
         }
       } catch (e) {
         console.error('Error parseando user de localStorage', e);
@@ -138,6 +141,9 @@ export class UsuarioComponent {
     const reader = new FileReader();
     reader.onload = () => {
       this.avatarPreview = reader.result as string;
+
+      this.storage.set('userAvatar', this.avatarPreview);
+      this.avatarService.setAvatar(this.avatarPreview);
     };
     reader.readAsDataURL(file);
 
@@ -159,11 +165,16 @@ export class UsuarioComponent {
         this.updatingAvatar = false;
         this.msg = 'Imagen actualizada correctamente.';
 
-        // Opcional: refrescar storedUser.avatarPath i guardar a localStorage
         if (this.storedUser) {
           this.storedUser.avatarPath = 'true';
           this.storage.setObject('user', this.storedUser);
         }
+
+        const url =
+          `${environment.baseUrl}profile/image?username=${encodeURIComponent(this.username)}`;
+        this.avatarPreview = url;
+        this.storage.set('userAvatar', url);
+        this.avatarService.setAvatar(url);
       },
       error: (err) => {
         console.error('Error subiendo avatar', err);
@@ -285,14 +296,13 @@ export class UsuarioComponent {
   }
 
   /* ===========================
-     PERFIL (nom, email, telèfon)
+     PERFIL
      =========================== */
   toggleEditProfile(): void {
     this.editMode = !this.editMode;
     this.msg = undefined;
     this.msgError = undefined;
 
-    // Si cancela, reseteja els valors al que tenim guardat
     if (!this.editMode && this.storedUser) {
       this.profileForm.fullName = this.storedUser.fullName || '';
       this.profileForm.email = this.storedUser.email || '';
@@ -320,7 +330,6 @@ export class UsuarioComponent {
       next: (updated: any) => {
         console.log('Respuesta actualización perfil =', updated);
 
-        // actualitza objecte en memòria
         this.storedUser = {
           ...this.storedUser!,
           fullName: updated.fullName,
@@ -328,7 +337,6 @@ export class UsuarioComponent {
           phone: updated.phone
         };
 
-        // i persisteix al localStorage
         this.storage.setObject('user', this.storedUser);
         this.editMode = false;
         this.msg = 'Perfil actualizado correctamente.';
