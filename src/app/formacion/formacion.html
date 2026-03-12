@@ -27,7 +27,7 @@
     <div class="left" *ngIf="isTab('paths')">
       <div class="left-header">
         <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-        <button class="jenkins-add-btn" (click)="newPath()">
+        <button class="jenkins-add-btn" *ngIf="!isConsultor" (click)="newPath()">
           <mat-icon inline="true">add</mat-icon>
           <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
         </button>
@@ -51,6 +51,7 @@
               <span class="icon-eye">👁️</span>
             </button>
             <button
+              *ngIf="!isConsultor"
               type="button"
               class="icon-btn edit"
               title="{{ 'TRAINING.EDIT' | translate }}"
@@ -59,6 +60,7 @@
               <span class="icon-edit">✏️</span>
             </button>
             <button
+              *ngIf="!isConsultor"
               type="button"
               class="icon-btn delete"
               title="{{ 'TRAINING.DELETE' | translate }}"
@@ -107,7 +109,7 @@
 
         <div class="items-header">
           <h4>{{ 'TRAINING.ITEMS' | translate }}</h4>
-          <button class="jenkins-add-btn" (click)="addItem()">
+          <button class="jenkins-add-btn" *ngIf="!isConsultor" (click)="addItem()">
             <mat-icon inline="true">add</mat-icon>
             <span>{{ 'TRAINING.ADD_ITEM' | translate }}</span>
           </button>
@@ -137,6 +139,7 @@
                   <span class="icon-eye">👁️</span>
                 </button>
                 <button
+                  *ngIf="!isConsultor"
                   type="button"
                   class="icon-btn edit"
                   title="{{ 'TRAINING.EDIT' | translate }}"
@@ -145,6 +148,7 @@
                   <span class="icon-edit">✏️</span>
                 </button>
                 <button
+                  *ngIf="!isConsultor"
                   type="button"
                   class="icon-btn delete"
                   title="{{ 'TRAINING.DELETE' | translate }}"
@@ -211,6 +215,7 @@
           <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
           <div>
             <button
+              *ngIf="!isConsultor"
               type="button"
               class="jenkins-add-btn"
               (click)="addCourseFromAll()"
@@ -238,6 +243,7 @@
                   <span class="icon-eye">👁️</span>
                 </button>
                 <button
+                  *ngIf="!isConsultor"
                   class="icon-btn edit"
                   title="{{ 'TRAINING.EDIT' | translate }}"
                   (click)="editCourse(c); $event.stopPropagation()"
@@ -245,6 +251,7 @@
                   <span class="icon-edit">✏️</span>
                 </button>
                 <button
+                  *ngIf="!isConsultor"
                   class="icon-btn delete"
                   title="{{ 'TRAINING.DELETE' | translate }}"
                   (click)="confirmDeleteCourse(c.id, c.name); $event.stopPropagation()"

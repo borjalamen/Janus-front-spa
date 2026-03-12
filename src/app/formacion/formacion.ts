@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../local-storage.service';
+import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -90,9 +91,15 @@ export class FormacionComponent {
     this.filtrar(this.lastSearch || '');
   }
 
+  get isConsultor(): boolean {
+    const rol = this.auth.currentUserValue?.rol;
+    return !rol || rol === 'consultor';
+  }
+
   constructor(
     private translate: TranslateService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private auth: AuthService
   ) {
     this.load();
     this.translate.get('TRAINING.TITLE').subscribe(t => (this.title = t));
