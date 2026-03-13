@@ -1,172 +1,131 @@
 <div class="peticion-root">
-  <h2>{{ 'PETICION.TITLE' | translate }}</h2>
-
-  <div class="form-card">
-    <div class="row">
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.requesterName)">
-        <input
-          matInput
-          placeholder="Nombre del peticionario"
-          [(ngModel)]="form.requesterName"
-          (ngModelChange)="onFormChange()"
-        />
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterName)">Campo obligatorio</div>
-      </mat-form-field>
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))">
-        <input
-          matInput
-          type="email"
-          placeholder="Email del peticionario"
-          [(ngModel)]="form.requesterEmail"
-          (ngModelChange)="onFormChange()"
-        />
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.requesterEmail)">Campo obligatorio</div>
-        <div class="error-msg" *ngIf="showErrors && !isEmpty(form.requesterEmail) && !validateEmail(form.requesterEmail)">Email inválido</div>
-      </mat-form-field>
+  <div class="peticion-main-container">
+    
+    <div class="peticion-header-section">
+      <h2>{{ 'PETICION.TITLE' | translate }}</h2>
+      <p class="peticion-subtitle">
+        {{ 'PETICION.SUBTITLE' | translate }}
+      </p>
     </div>
 
-    <div class="row">
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.projectName)">
-        <input
-          matInput
-          placeholder="Proyecto de la tarea"
-          [(ngModel)]="form.projectName"
-          (ngModelChange)="onFormChange()"
-        />
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectName)">Campo obligatorio</div>
-      </mat-form-field>
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.projectCode)">
-        <input
-          matInput
-          placeholder="Código del proyecto"
-          [(ngModel)]="form.projectCode"
-          (ngModelChange)="onFormChange()"
-        />
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.projectCode)">Campo obligatorio</div>
-      </mat-form-field>
-    </div>
+    <div class="peticion-form-content">
+      
+      <div class="peticion-row">
+        <mat-form-field appearance="outline" [class.peticion-invalid]="showErrors && (!form.requesterName || !form.requesterName.trim())">
+          <mat-label>Nombre del peticionario</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput 
+                 [(ngModel)]="form.requesterName" 
+                 (ngModelChange)="onFormChange()" 
+                 placeholder="Ej. Juan Pérez"
+                 required />
+          <div class="peticion-error-msg" *ngIf="showErrors && (!form.requesterName || !form.requesterName.trim())">
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
+        </mat-form-field>
 
-    <div class="row">
-      <mat-form-field appearance="outline" [class.invalid-field]="showErrors && isEmpty(form.jiraTask)">
-        <input
-          matInput
-          placeholder="Tarea JIRA"
-          [(ngModel)]="form.jiraTask"
-          (ngModelChange)="onFormChange()"
-        />
-        <div class="error-msg" *ngIf="showErrors && isEmpty(form.jiraTask)">Campo obligatorio</div>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-select
-          placeholder="Asignar a DevOps (opcional)"
-          [(ngModel)]="form.devopsAssignee"
-          (ngModelChange)="onFormChange()"
-          [panelClass]="'devops-select-panel'"
-        >
-          <mat-option *ngFor="let opt of devopsOptions" [value]="opt">{{ opt }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline" [class.peticion-invalid]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))">
+          <mat-label>Email del peticionario</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput 
+                 type="email" 
+                 [(ngModel)]="form.requesterEmail" 
+                 (ngModelChange)="onFormChange()" 
+                 placeholder="usuario@dominio.com"
+                 required />
+          <div class="peticion-error-msg" *ngIf="showErrors && !form.requesterEmail">{{ 'UNETE.ERROR_REQUIRED' | translate }}</div>
+          <div class="peticion-error-msg" *ngIf="showErrors && form.requesterEmail && !validateEmail(form.requesterEmail)">{{ 'UNETE.ERROR_EMAIL' | translate }}</div>
+        </mat-form-field>
+      </div>
 
-    <div class="row">
-      <mat-form-field appearance="outline" class="full">
-        <input
-          matInput
-          [matDatepicker]="picker"
-          placeholder="Fecha límite (opcional)"
-          [(ngModel)]="deadline"
-          (dateChange)="onFormChange()"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </div>
+      <div class="peticion-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Proyecto de la tarea</mat-label>
+          <mat-icon matPrefix>work</mat-icon>
+          <input matInput 
+                 [(ngModel)]="form.projectName" 
+                 (ngModelChange)="onFormChange()" 
+                 placeholder="Nombre del proyecto" />
+        </mat-form-field>
 
-    <div class="row">
-      <mat-form-field appearance="outline" class="full">
-        <textarea
-          matInput
-          rows="4"
-          placeholder="Comentarios de la tarea (opcional)"
-          [(ngModel)]="form.comments"
-          (ngModelChange)="onFormChange()"
-        ></textarea>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Código del proyecto</mat-label>
+          <mat-icon matPrefix>code</mat-icon>
+          <input matInput 
+                 [(ngModel)]="form.projectCode" 
+                 (ngModelChange)="onFormChange()" 
+                 placeholder="Ej. PRJ-2024" />
+        </mat-form-field>
+      </div>
 
-    <div class="row attachments-section">
-      <div class="upload-area">
-        <label class="upload-label" for="fileInput">
-          <mat-icon>attach_file</mat-icon>
-          <span>Añadir anexos</span>
-        </label>
-        <input id="fileInput" type="file" multiple (change)="onFilesSelected($event)" />
-        <p class="muted">Imágenes, PDFs o documentos. Opcional.</p>
+      <div class="peticion-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tarea JIRA</mat-label>
+          <mat-icon matPrefix>confirmation_number</mat-icon>
+          <input matInput 
+                 [(ngModel)]="form.jiraTask" 
+                 (ngModelChange)="onFormChange()" 
+                 placeholder="Ej. JAN-123" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Asignar a DevOps</mat-label>
+          <mat-icon matPrefix>assignment_ind</mat-icon>
+          <mat-select [(ngModel)]="form.devopsAssignee" 
+                      (ngModelChange)="onFormChange()"
+                      panelClass="peticion-select-panel">
+            <mat-option *ngFor="let opt of devopsOptions" [value]="opt">{{ opt }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="peticion-row">
+        <mat-form-field appearance="outline" class="peticion-full">
+          <mat-label>Fecha límite (opcional)</mat-label>
+          <input matInput 
+                 [matDatepicker]="picker" 
+                 [(ngModel)]="deadline" 
+                 (dateChange)="onFormChange()" 
+                 placeholder="Selecciona una fecha" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="peticion-row">
+        <mat-form-field appearance="outline" class="peticion-full">
+          <mat-label>Comentarios de la tarea</mat-label>
+          <textarea matInput 
+                    rows="4" 
+                    [(ngModel)]="form.comments" 
+                    (ngModelChange)="onFormChange()" 
+                    placeholder="Describe los detalles de la petición..."></textarea>
+        </mat-form-field>
       </div>
     </div>
 
-    <div class="attach-grid" *ngIf="attachments.length">
-      <div class="attach-card" *ngFor="let a of attachments; let i = index">
-        <div class="attach-preview" (click)="openPreview(a)">
-          <img *ngIf="a.rawUrl && a.type.startsWith('image/')" [src]="a.rawUrl | safe:'url'" class="attach-thumb" [alt]="a.name" />
-          <div *ngIf="a.type === 'application/pdf'" class="attach-pdf-preview">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span class="pdf-label">PDF</span>
-          </div>
-          <div *ngIf="!a.rawUrl && a.type !== 'application/pdf'" class="attach-icon-preview">
-            <mat-icon>insert_drive_file</mat-icon>
-          </div>
-          <div class="attach-overlay" *ngIf="a.rawUrl">
-            <mat-icon>zoom_in</mat-icon>
-          </div>
-        </div>
-        <div class="attach-info">
-          <div class="attach-name" [title]="a.name">{{ a.name }}</div>
-          <div class="attach-meta">{{ (a.size / 1024) | number:'1.0-1' }} KB</div>
-        </div>
-        <button class="attach-delete" (click)="removeAttachment(i)" title="Eliminar">✕</button>
+    <div class="peticion-form-footer">
+      <div class="peticion-actions">
+        <button type="button" class="peticion-action-btn peticion-primary" (click)="confirmAndSubmit()" [disabled]="!isValid() || sending">
+          <mat-icon [class.peticion-spinning]="sending">{{ sending ? 'sync' : 'send' }}</mat-icon>
+          <span>{{ sending ? 'Enviando...' : 'Enviar petición' }}</span>
+        </button>
+
+        <button type="button" class="peticion-action-btn peticion-secondary" (click)="resetForm()" [disabled]="sending">
+          <mat-icon>history</mat-icon>
+          <span>Reiniciar</span>
+        </button>
       </div>
-    </div>
 
-    <div class="actions">
-      <button 
-        type="button"
-        class="action-btn"
-        (click)="confirmAndSubmit()" 
-        [disabled]="!isValid()"
-        aria-label="Enviar petición"
-      >
-        <mat-icon>send</mat-icon>
-        Enviar petición
-      </button>
-      <button 
-        type="button"
-        class="action-btn"
-        (click)="resetForm()"
-        aria-label="Limpiar formulario"
-      >
-        <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" />
-        Limpiar
-      </button>
-    </div>
-    <p class="helper">{{ 'PETICION.REQUIRED_FIELDS' | translate }}</p>
-  </div>
-</div>
-
-<!-- Fullscreen preview popup -->
-<div class="preview-overlay" *ngIf="previewPopup" (click)="closePreview()">
-  <div class="preview-modal" (click)="$event.stopPropagation()">
-    <div class="preview-header">
-      <span class="preview-name">{{ previewPopup.name }}</span>
-      <button class="preview-close" (click)="closePreview()">✕</button>
-    </div>
-    <div class="preview-body">
-      <img *ngIf="previewPopup.type.startsWith('image/')" [src]="previewPopup.rawUrl | safe:'url'" class="preview-img" alt="preview" />
-      <iframe *ngIf="previewPopup.type === 'application/pdf'" [src]="previewPopup.rawUrl | safe:'resourceUrl'" class="preview-pdf" frameborder="0"></iframe>
+      <p class="peticion-helper">
+        <mat-icon>info</mat-icon>
+        {{ 'UNETE.REQUIRED_FIELDS' | translate }}
+      </p>
     </div>
   </div>
+
+  <div class="peticion-toast" [class.show]="toastMsg" [class.error]="!toastOk">
+    <mat-icon>{{ toastOk ? 'check_circle' : 'error' }}</mat-icon>
+    <span>{{ toastMsg }}</span>
+  </div>
 </div>
-
-<!-- Toast notification -->
-<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>
-

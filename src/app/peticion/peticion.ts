@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { SafePipe } from '../safe.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +20,7 @@ import { environment } from '../../environments/environment';
   selector: 'app-peticion',
   standalone: true,
   templateUrl: './peticion.html',
-  styleUrls: ['./peticion.css'],
+  styleUrls: ['./peticion.css'], // Recorda que ara aquest fitxer té els estils .peticion-root
   imports: [
     CommonModule,
     FormsModule,
@@ -50,6 +50,7 @@ export class PeticionComponent implements OnInit {
   };
 
   deadline: Date | null = null;
+  sending = false; // Variable per controlar l'estat d'enviament i l'animació
 
   devopsOptions: string[] = [
     'Cualquiera',
@@ -58,6 +59,7 @@ export class PeticionComponent implements OnInit {
     'Rubén Planté',
     'Borja Lara'
   ];
+
   attachments: Array<{ name: string; size: number; type: string; file?: File; rawUrl?: string }> = [];
 
   showErrors = false;
@@ -132,6 +134,7 @@ export class PeticionComponent implements OnInit {
     this.attachments = [];
     this.deadline = null;
     this.showErrors = false;
+    this.sending = false;
     this.storage.remove(this.STORAGE_KEY);
   }
 
@@ -153,7 +156,9 @@ export class PeticionComponent implements OnInit {
       data: {
         deadline: this.deadline
       },
-      width: '420px'
+      width: '420px',
+      // Apliquem un panelClass si volem forçar l'estil fosc del dialog des del CSS global
+      panelClass: 'peticion-confirm-panel' 
     });
 
     dialogRef.afterClosed().subscribe(ok => {
@@ -163,15 +168,20 @@ export class PeticionComponent implements OnInit {
   }
 
   private submitInternal(): void {
+    this.sending = true; // Activem el mode "enviant"
+    
     const formData = new FormData();
     formData.append('requesterName', this.form.requesterName);
     formData.append('requesterEmail', this.form.requesterEmail);
     formData.append('projectName', this.form.projectName);
     formData.append('projectCode', this.form.projectCode);
     formData.append('jiraTask', this.form.jiraTask);
+    
     if (this.form.comments) formData.append('comments', this.form.comments);
     formData.append('devopsAssignee', this.form.devopsAssignee || 'Cualquiera');
+    
     if (this.deadline) formData.append('deadline', this.deadline.toISOString());
+    
     this.attachments.forEach(a => {
       if (a.file) formData.append('files', a.file, a.name);
     });
@@ -184,6 +194,7 @@ export class PeticionComponent implements OnInit {
       error: err => {
         console.error('Error enviando petición', err);
         this.showToast('❌ Error al enviar la petición. Revisa que el servidor esté disponible.', false);
+        this.sending = false; // Permitem tornar a intentar-ho
       }
     });
   }
@@ -191,19 +202,6 @@ export class PeticionComponent implements OnInit {
   validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email || '').trim());
-  }
-
-  validateUrl(url: string): boolean {
-    try {
-      const u = new URL(String(url || '').trim());
-      return !!u.protocol && !!u.host;
-    } catch {
-      return false;
-    }
-  }
-
-  isEmpty(v: string): boolean {
-    return !v || !String(v).trim();
   }
 
   showToast(msg: string, ok = true) {
@@ -214,32 +212,58 @@ export class PeticionComponent implements OnInit {
   }
 }
 
+/* DIALOG DE CONFIRMACIÓ REESTILITZAT */
 @Component({
   selector: 'app-peticion-confirm-dialog',
   standalone: true,
   template: `
-    <h3 class="dialog-title">Confirmar envío</h3>
-    <p class="dialog-text">
-      Estás a un click de enviar la petición, confirma que hay permisos de imputación en el JIRA propuesto,
-      sino la petición será rechazada. Nuestro equipo se pondrá en contacto en cuanto pueda.
-    </p>
-    <p class="dialog-text">
-      La fecha límite se usará para priorizar la tarea si es posible, pero el equipo Janus no asume que se finalizará en dicha fecha.
-    </p>
-    <p class="dialog-text">
-      Fecha límite: {{ data?.deadline ? (data.deadline | date:'dd/MM/yyyy') : 'No indicada' }}
-    </p>
-    <div class="dialog-actions">
-      <button mat-stroked-button (click)="close(false)">Cancelar</button>
-      <button mat-flat-button color="primary" (click)="close(true)">Confirmar envío</button>
+    <div class="peticion-dialog-container">
+      <h3 class="dialog-title">Confirmar envío</h3>
+      <p class="dialog-text">
+        Estás a un click de enviar la petición. Confirma que hay permisos de imputación en el JIRA propuesto,
+        de lo contrario la petición será rechazada.
+      </p>
+      <div class="peticion-dialog-info">
+        <strong>Fecha límite:</strong> {{ data?.deadline ? (data.deadline | date:'dd/MM/yyyy') : 'No indicada' }}
+      </div>
+      <div class="dialog-actions">
+        <button class="peticion-btn peticion-secondary" (click)="close(false)">Cancelar</button>
+        <button class="peticion-btn peticion-primary" (click)="close(true)">Confirmar envío</button>
+      </div>
     </div>
   `,
   styles: [
     `
-      :host { display: block; padding: 16px; background: #121417; color: #e5e7eb; }
-      .dialog-title { margin: 0 0 8px; color: #FBC02D; }
-      .dialog-text { margin: 0 0 10px; line-height: 1.4; }
-      .dialog-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 12px; }
+      .peticion-dialog-container { 
+        padding: 10px; 
+        background: #14161d; 
+        color: #e0e0e0; 
+      }
+      .dialog-title { color: #fbc02d; font-size: 1.5rem; margin-top: 0; }
+      .dialog-text { font-size: 0.95rem; line-height: 1.5; color: #9da3ae; }
+      .peticion-dialog-info { 
+        margin: 15px 0; 
+        padding: 10px; 
+        background: rgba(251, 192, 45, 0.05); 
+        border-radius: 8px; 
+        border-left: 3px solid #fbc02d;
+      }
+      .dialog-actions { 
+        display: flex; 
+        justify-content: flex-end; 
+        gap: 12px; 
+        margin-top: 20px; 
+      }
+      /* Reutilitzem estils de botons de peticion */
+      .peticion-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+      }
+      .peticion-primary { background: #fbc02d; color: #101218; }
+      .peticion-secondary { background: rgba(255,255,255,0.1); color: #fff; }
     `
   ],
   imports: [CommonModule, MatButtonModule, MatDialogModule]
