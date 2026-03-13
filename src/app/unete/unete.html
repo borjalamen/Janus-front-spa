@@ -1,87 +1,155 @@
 <div class="unete-root">
-  <h2>{{ 'MENU.JOIN' | translate }}</h2>
-
-  <div class="form-card">
-    <div class="row">
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          placeholder="{{ 'UNETE.FULLNAME' | translate }}"
-          name="fullName"
-          [(ngModel)]="form.fullName"
-          (ngModelChange)="onFormChange()"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="email"
-          placeholder="{{ 'UNETE.EMAIL' | translate }}"
-          name="email"
-          [(ngModel)]="form.email"
-          (ngModelChange)="onFormChange()"
-        />
-      </mat-form-field>
+  <div class="form-card main-container">
+    
+    <div class="header-section">
+      <h2>{{ 'MENU.JOIN' | translate }}</h2>
+      <p class="subtitle">
+        {{ 'UNETE.SUBTITLE' | translate }}
+      </p>
     </div>
 
-    <div class="row">
-      <mat-form-field appearance="outline" class="full">
-        <textarea
-          matInput
-          rows="5"
-          placeholder="{{ 'UNETE.COMMENTS' | translate }}"
-          name="comments"
-          [(ngModel)]="form.comments"
-          (ngModelChange)="onFormChange()"
-        ></textarea>
-      </mat-form-field>
+    <div class="form-content">
+      <div class="row">
+        <mat-form-field
+          appearance="outline"
+          [class.invalid-field]="showErrors && (!form.fullName || !form.fullName.trim())"
+        >
+          <mat-label>{{ 'UNETE.FULLNAME' | translate }}</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input
+            matInput
+            name="fullName"
+            [(ngModel)]="form.fullName"
+            (ngModelChange)="onFormChange()"
+            [placeholder]="'UNETE.PLACEHOLDER_NAME' | translate"
+            required
+          />
+          <div
+            class="error-msg"
+            *ngIf="showErrors && (!form.fullName || !form.fullName.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          [class.invalid-field]="showErrors && (!form.email || !validateEmail(form.email))"
+        >
+          <mat-label>{{ 'UNETE.EMAIL' | translate }}</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input
+            matInput
+            type="email"
+            name="email"
+            [(ngModel)]="form.email"
+            (ngModelChange)="onFormChange()"
+            [placeholder]="'UNETE.PLACEHOLDER_EMAIL' | translate"
+            required
+          />
+          <div
+            class="error-msg"
+            *ngIf="showErrors && (!form.email || !form.email.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
+          <div
+            class="error-msg"
+            *ngIf="showErrors && form.email && form.email.trim() && !validateEmail(form.email)"
+          >
+            {{ 'UNETE.ERROR_EMAIL' | translate }}
+          </div>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>{{ 'UNETE.COMMENTS' | translate }}</mat-label>
+          <textarea
+            matInput
+            rows="4"
+            name="comments"
+            [(ngModel)]="form.comments"
+            (ngModelChange)="onFormChange()"
+            [placeholder]="'UNETE.PLACEHOLDER_COMMENTS' | translate"
+          ></textarea>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div class="actions">
-      <button
-        type="button"
-        class="action-btn"
-        (click)="sendMail()"
-        [disabled]="!form.fullName || !form.email || sending"
-        aria-label="{{ 'UNETE.SEND_BY_MAIL' | translate }}"
-      >
-        <mat-icon>{{ sending ? 'hourglass_empty' : 'send' }}</mat-icon>
-        {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
-      </button>
+    <div class="form-footer">
+      <div class="actions">
+        <button
+          type="button"
+          class="action-btn primary"
+          (click)="sendMail()"
+          [disabled]="!form.fullName || !form.email || sending || !validateEmail(form.email)"
+        >
+          <mat-icon [class.spinning]="sending">
+            {{ sending ? 'sync' : 'send' }}
+          </mat-icon>
+          <span>
+            {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
+          </span>
+        </button>
 
-      <button
-        type="button"
-        class="action-btn"
-        (click)="resetForm()"
-        [disabled]="sending"
-        aria-label="{{ 'UNETE.RESET' | translate }}"
-      >
-        <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" />
-        {{ 'UNETE.RESET' | translate }}
-      </button>
+        <button
+          type="button"
+          class="action-btn secondary"
+          (click)="resetForm()"
+          [disabled]="sending"
+        >
+          <mat-icon>history</mat-icon>
+          <span>{{ 'UNETE.RESET' | translate }}</span>
+        </button>
+      </div>
+
+      <p class="helper">
+        <mat-icon>info</mat-icon>
+        {{ 'UNETE.REQUIRED_FIELDS' | translate }}
+      </p>
     </div>
   </div>
 </div>
 
-<!-- Credentials popup -->
 <div class="modal-overlay" *ngIf="mostrarPopupCredenciales && credencialesPopup">
   <div class="auth-card">
-    <h2 class="form-title">✅ Solicitud enviada</h2>
-    <p class="popup-desc">Tu solicitud ha sido recibida. Accede con las credenciales cuando tu cuenta sea activada por un administrador.</p>
-    <div class="popup-field">
-      <label>👤 Usuario</label>
-      <input type="text" [value]="credencialesPopup!.username" readonly class="popup-input" />
+    <div class="success-icon">
+      <mat-icon>check_circle</mat-icon>
     </div>
-    <div class="popup-field">
-      <label>🔑 Contraseña</label>
-      <input type="text" [value]="credencialesPopup!.password || '—'" readonly class="popup-input" />
+    <h2 class="form-title">
+      {{ 'UNETE.POPUP_TITLE' | translate }}
+    </h2>
+    <p class="popup-desc">
+      {{ 'UNETE.POPUP_DESC' | translate }}
+    </p>
+
+    <div class="credential-box">
+      <div class="popup-field">
+        <label>{{ 'UNETE.POPUP_USER_LABEL' | translate }}</label>
+        <input
+          type="text"
+          [value]="credencialesPopup!.username"
+          readonly
+          class="popup-input"
+        />
+      </div>
+      <div class="popup-field">
+        <label>{{ 'UNETE.POPUP_PASS_LABEL' | translate }}</label>
+        <input
+          type="text"
+          [value]="credencialesPopup!.password || '—'"
+          readonly
+          class="popup-input highlight"
+        />
+      </div>
     </div>
-    <p class="popup-warn">⚠️ Guarda esta contraseña, no se volverá a mostrar.</p>
-    <div class="popup-actions">
-      <button class="btn-emoji confirm" (click)="cerrarPopupCredenciales()">✓</button>
-    </div>
+
+    <p class="popup-warn">
+      {{ 'UNETE.POPUP_WARN' | translate }}
+    </p>
+    <button class="confirm-full-btn" (click)="cerrarPopupCredenciales()">
+      {{ 'UNETE.POPUP_CONFIRM' | translate }}
+    </button>
   </div>
 </div>
-
-<!-- Toast notification -->
-<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>

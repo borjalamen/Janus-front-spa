@@ -26,7 +26,7 @@ import { LocalStorageService } from '../local-storage.service';
   ]
 })
 export class UneteComponent implements OnInit, OnDestroy {
-  sending: boolean = false;
+  sending = false;
   toastMsg = '';
   toastOk = true;
   private _toastTimer: any = null;
@@ -36,6 +36,9 @@ export class UneteComponent implements OnInit, OnDestroy {
   credencialesPopup: { username: string; password: string } | null = null;
 
   private STORAGE_KEY = 'uneteForm';
+
+  // per mostrar errors sota els camps
+  showErrors = false;
 
   form = {
     fullName: '',
@@ -56,54 +59,58 @@ export class UneteComponent implements OnInit, OnDestroy {
   constructor(private storage: LocalStorageService) {}
 
   ngOnInit(): void {
-    console.log('UneteComponent ngOnInit');
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
-    console.log('UneteComponent saved draft =', saved);
     if (saved) {
       this.form = saved;
     }
   }
 
   ngOnDestroy(): void {
-    console.log('UneteComponent ngOnDestroy');
     this.saveDraft();
   }
 
   private saveDraft(): void {
-    console.log('Guardant draft en localStorage', this.form);
     this.storage.setObject(this.STORAGE_KEY, this.form);
   }
 
-  // Es crida cada vegada que canvia algun camp del formulari
   onFormChange(): void {
     this.saveDraft();
+    // si ja s’han mostrat errors, els recalcularem visualment
+    if (this.showErrors) {
+      this.showErrors = true;
+    }
+  }
+
+  validateEmail(email: string | null | undefined): boolean {
+    if (!email) return false;
+    const trimmed = email.trim();
+    if (!trimmed) return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(trimmed);
   }
 
   sendMail() {
-    if (!this.form.fullName || !this.form.fullName.trim()) {
+    this.showErrors = true;
+
+    const fullNameOk = this.form.fullName && this.form.fullName.trim();
+    const emailOk = this.validateEmail(this.form.email);
+
+    if (!fullNameOk) {
       this.showToast('⚠️ Por favor, indica el nombre completo.', false);
       return;
     }
-    
-    if (!this.form.email || !this.form.email.trim()) {
+
+    if (!emailOk) {
       this.showToast('⚠️ Por favor, indica un email válido.', false);
       return;
     }
 
-    // Validación básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.form.email)) {
-      this.showToast('⚠️ Por favor, indica un email válido.', false);
-      return;
-    }
-
-    // guardar l’últim estat abans d’enviar
     this.saveDraft();
     const emailSnapshot = this.form.email;
 
+    (this as any).sending = true;
     (async () => {
       try {
-        (this as any).sending = true;
         const resp = await fetch('/api/contact/unete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -111,11 +118,12 @@ export class UneteComponent implements OnInit, OnDestroy {
         });
         if (resp.ok) {
           const data = await resp.json().catch(() => ({}));
-          const username = emailSnapshot.split('@')[0];
+          const username = (emailSnapshot || '').split('@')[0];
           const password = data.password || data.credentials?.password || '';
           this.credencialesPopup = { username, password };
           this.mostrarPopupCredenciales = true;
           this.resetForm();
+          this.showErrors = false;
         } else if (resp.status === 400) {
           const txt = await resp.text();
           this.showToast('⚠️ ' + txt, false);
@@ -145,6 +153,7 @@ export class UneteComponent implements OnInit, OnDestroy {
       projectName: '',
       comments: ''
     };
+    this.showErrors = false;
     this.storage.remove(this.STORAGE_KEY);
   }
 
@@ -152,6 +161,6 @@ export class UneteComponent implements OnInit, OnDestroy {
     this.toastMsg = msg;
     this.toastOk = ok;
     clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
+    this._toastTimer = setTimeout(() => (this.toastMsg = ''), 3500);
   }
 }
