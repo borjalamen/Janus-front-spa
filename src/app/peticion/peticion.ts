@@ -10,7 +10,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '../local-storage.service';
@@ -20,7 +25,7 @@ import { environment } from '../../environments/environment';
   selector: 'app-peticion',
   standalone: true,
   templateUrl: './peticion.html',
-  styleUrls: ['./peticion.css'], // Recorda que ara aquest fitxer té els estils .peticion-root
+  styleUrls: ['./peticion.css'],
   imports: [
     CommonModule,
     FormsModule,
@@ -50,7 +55,7 @@ export class PeticionComponent implements OnInit {
   };
 
   deadline: Date | null = null;
-  sending = false; // Variable per controlar l'estat d'enviament i l'animació
+  sending = false;
 
   devopsOptions: string[] = [
     'Cualquiera',
@@ -60,12 +65,17 @@ export class PeticionComponent implements OnInit {
     'Borja Lara'
   ];
 
-  attachments: Array<{ name: string; size: number; type: string; file?: File; rawUrl?: string }> = [];
+  attachments: Array<{
+    name: string;
+    size: number;
+    type: string;
+    file?: File;
+    rawUrl?: string;
+  }> = [];
 
   showErrors = false;
   previewPopup: { rawUrl: string; type: string; name: string } | null = null;
 
-  // Toast notification
   toastMsg = '';
   toastOk = true;
   private _toastTimer: any = null;
@@ -92,10 +102,17 @@ export class PeticionComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files || []);
     files.forEach(f => {
-      const rawUrl = (f.type.startsWith('image/') || f.type === 'application/pdf')
-        ? URL.createObjectURL(f)
-        : undefined;
-      this.attachments.push({ name: f.name, size: f.size, type: f.type, file: f, rawUrl });
+      const rawUrl =
+        f.type.startsWith('image/') || f.type === 'application/pdf'
+          ? URL.createObjectURL(f)
+          : undefined;
+      this.attachments.push({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        file: f,
+        rawUrl
+      });
     });
     if (input) input.value = '';
   }
@@ -106,13 +123,15 @@ export class PeticionComponent implements OnInit {
     this.attachments.splice(idx, 1);
   }
 
+
   isValid(): boolean {
     const allFieldsFilled = [
       this.form.requesterName,
       this.form.requesterEmail,
       this.form.projectName,
       this.form.projectCode,
-      this.form.jiraTask
+      this.form.jiraTask,
+      this.form.devopsAssignee
     ].every(v => !!v && !!String(v).trim());
 
     if (!allFieldsFilled) return false;
@@ -121,7 +140,9 @@ export class PeticionComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.attachments.forEach(a => { if (a.rawUrl) URL.revokeObjectURL(a.rawUrl); });
+    this.attachments.forEach(a => {
+      if (a.rawUrl) URL.revokeObjectURL(a.rawUrl);
+    });
     this.form = {
       requesterName: '',
       requesterEmail: '',
@@ -139,7 +160,9 @@ export class PeticionComponent implements OnInit {
   }
 
   openPreview(a: { rawUrl?: string; type: string; name: string }) {
-    if (a.rawUrl) this.previewPopup = { rawUrl: a.rawUrl, type: a.type, name: a.name };
+    if (a.rawUrl) {
+      this.previewPopup = { rawUrl: a.rawUrl, type: a.type, name: a.name };
+    }
   }
 
   closePreview() {
@@ -157,8 +180,7 @@ export class PeticionComponent implements OnInit {
         deadline: this.deadline
       },
       width: '420px',
-      // Apliquem un panelClass si volem forçar l'estil fosc del dialog des del CSS global
-      panelClass: 'peticion-confirm-panel' 
+      panelClass: 'peticion-confirm-panel'
     });
 
     dialogRef.afterClosed().subscribe(ok => {
@@ -168,33 +190,42 @@ export class PeticionComponent implements OnInit {
   }
 
   private submitInternal(): void {
-    this.sending = true; // Activem el mode "enviant"
-    
+    this.sending = true;
+
     const formData = new FormData();
     formData.append('requesterName', this.form.requesterName);
     formData.append('requesterEmail', this.form.requesterEmail);
     formData.append('projectName', this.form.projectName);
     formData.append('projectCode', this.form.projectCode);
     formData.append('jiraTask', this.form.jiraTask);
-    
-    if (this.form.comments) formData.append('comments', this.form.comments);
+
+    if (this.form.comments) {
+      formData.append('comments', this.form.comments);
+    }
     formData.append('devopsAssignee', this.form.devopsAssignee || 'Cualquiera');
-    
-    if (this.deadline) formData.append('deadline', this.deadline.toISOString());
-    
+
+    if (this.deadline) {
+      formData.append('deadline', this.deadline.toISOString());
+    }
+
     this.attachments.forEach(a => {
       if (a.file) formData.append('files', a.file, a.name);
     });
 
     this.http.post(`${environment.baseUrl}peticiones-tareas`, formData).subscribe({
       next: () => {
-        this.showToast('✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.');
+        this.showToast(
+          '✅ Petición enviada correctamente. El equipo Janus la revisará lo antes posible.'
+        );
         this.resetForm();
       },
       error: err => {
         console.error('Error enviando petición', err);
-        this.showToast('❌ Error al enviar la petición. Revisa que el servidor esté disponible.', false);
-        this.sending = false; // Permitem tornar a intentar-ho
+        this.showToast(
+          '❌ Error al enviar la petición. Revisa que el servidor esté disponible.',
+          false
+        );
+        this.sending = false;
       }
     });
   }
@@ -208,11 +239,11 @@ export class PeticionComponent implements OnInit {
     this.toastMsg = msg;
     this.toastOk = ok;
     clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
+    this._toastTimer = setTimeout(() => (this.toastMsg = ''), 3500);
   }
 }
 
-/* DIALOG DE CONFIRMACIÓ REESTILITZAT */
+/* DIALOG DE CONFIRMACIÓ */
 @Component({
   selector: 'app-peticion-confirm-dialog',
   standalone: true,
@@ -220,41 +251,53 @@ export class PeticionComponent implements OnInit {
     <div class="peticion-dialog-container">
       <h3 class="dialog-title">Confirmar envío</h3>
       <p class="dialog-text">
-        Estás a un click de enviar la petición. Confirma que hay permisos de imputación en el JIRA propuesto,
-        de lo contrario la petición será rechazada.
+        Estás a un clic de enviar la petición. Confirma que hay permisos de imputación en el
+        JIRA propuesto, de lo contrario la petición será rechazada.
       </p>
       <div class="peticion-dialog-info">
-        <strong>Fecha límite:</strong> {{ data?.deadline ? (data.deadline | date:'dd/MM/yyyy') : 'No indicada' }}
+        <strong>Fecha límite:</strong>
+        {{ data?.deadline ? (data.deadline | date: 'dd/MM/yyyy') : 'No indicada' }}
       </div>
       <div class="dialog-actions">
-        <button class="peticion-btn peticion-secondary" (click)="close(false)">Cancelar</button>
-        <button class="peticion-btn peticion-primary" (click)="close(true)">Confirmar envío</button>
+        <button class="peticion-btn peticion-secondary" (click)="close(false)">
+          Cancelar
+        </button>
+        <button class="peticion-btn peticion-primary" (click)="close(true)">
+          Confirmar envío
+        </button>
       </div>
     </div>
   `,
   styles: [
     `
-      .peticion-dialog-container { 
-        padding: 10px; 
-        background: #14161d; 
-        color: #e0e0e0; 
+      .peticion-dialog-container {
+        padding: 10px;
+        background: #14161d;
+        color: #e0e0e0;
       }
-      .dialog-title { color: #fbc02d; font-size: 1.5rem; margin-top: 0; }
-      .dialog-text { font-size: 0.95rem; line-height: 1.5; color: #9da3ae; }
-      .peticion-dialog-info { 
-        margin: 15px 0; 
-        padding: 10px; 
-        background: rgba(251, 192, 45, 0.05); 
-        border-radius: 8px; 
+      .dialog-title {
+        color: #fbc02d;
+        font-size: 1.5rem;
+        margin-top: 0;
+      }
+      .dialog-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #9da3ae;
+      }
+      .peticion-dialog-info {
+        margin: 15px 0;
+        padding: 10px;
+        background: rgba(251, 192, 45, 0.05);
+        border-radius: 8px;
         border-left: 3px solid #fbc02d;
       }
-      .dialog-actions { 
-        display: flex; 
-        justify-content: flex-end; 
-        gap: 12px; 
-        margin-top: 20px; 
+      .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 20px;
       }
-      /* Reutilitzem estils de botons de peticion */
       .peticion-btn {
         padding: 10px 20px;
         border-radius: 8px;
@@ -262,13 +305,25 @@ export class PeticionComponent implements OnInit {
         cursor: pointer;
         border: none;
       }
-      .peticion-primary { background: #fbc02d; color: #101218; }
-      .peticion-secondary { background: rgba(255,255,255,0.1); color: #fff; }
+      .peticion-primary {
+        background: #fbc02d;
+        color: #101218;
+      }
+      .peticion-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
     `
   ],
   imports: [CommonModule, MatButtonModule, MatDialogModule]
 })
 export class PeticionConfirmDialog {
-  constructor(private dialogRef: MatDialogRef<PeticionConfirmDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {}
-  close(val: boolean) { this.dialogRef.close(val); }
+  constructor(
+    private dialogRef: MatDialogRef<PeticionConfirmDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  close(val: boolean) {
+    this.dialogRef.close(val);
+  }
 }

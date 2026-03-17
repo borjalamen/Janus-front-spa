@@ -878,5 +878,11 @@
     "STATUS_PENDING": "Pendent",
     "STATUS_APPROVED": "Aprovada",
     "STATUS_REJECTED": "Rebutjada"
-  }
+  },
+  "PETICION": {
+  "TITLE": "Nova petició DevOps",
+  "SUBTITLE": "Introdueix les dades de la tasca perquè l'equip DevOps la pugui gestionar correctament.",
+  "HINT_REQUIRED": "Omple tots els camps obligatoris abans d'enviar la petició."
+
+}
 }

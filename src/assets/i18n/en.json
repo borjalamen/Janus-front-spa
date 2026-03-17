@@ -958,5 +958,12 @@
     "STATUS_PENDING": "Pending",
     "STATUS_APPROVED": "Approved",
     "STATUS_REJECTED": "Rejected"
-  }
+  },
+  "PETICION": {
+  "TITLE": "New DevOps request",
+  "SUBTITLE": "Provide the task details so the DevOps team can process your request properly.",
+  "HINT_REQUIRED": "Please fill in all required fields before submitting the request."
+}
+
+
 }

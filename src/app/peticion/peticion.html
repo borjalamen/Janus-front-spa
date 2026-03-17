@@ -1,6 +1,6 @@
 <div class="peticion-root">
   <div class="peticion-main-container">
-    
+
     <div class="peticion-header-section">
       <h2>{{ 'PETICION.TITLE' | translate }}</h2>
       <p class="peticion-subtitle">
@@ -9,123 +9,223 @@
     </div>
 
     <div class="peticion-form-content">
-      
+      <!-- Fila 1: Nom + Email -->
       <div class="peticion-row">
-        <mat-form-field appearance="outline" [class.peticion-invalid]="showErrors && (!form.requesterName || !form.requesterName.trim())">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.requesterName || !form.requesterName.trim())"
+        >
           <mat-label>Nombre del peticionario</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input matInput 
-                 [(ngModel)]="form.requesterName" 
-                 (ngModelChange)="onFormChange()" 
-                 placeholder="Ej. Juan Pérez"
-                 required />
-          <div class="peticion-error-msg" *ngIf="showErrors && (!form.requesterName || !form.requesterName.trim())">
+          <input
+            matInput
+            [(ngModel)]="form.requesterName"
+            (ngModelChange)="onFormChange()"
+            placeholder="Ej. Juan Pérez"
+            required
+          />
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && (!form.requesterName || !form.requesterName.trim())"
+          >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" [class.peticion-invalid]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))"
+        >
           <mat-label>Email del peticionario</mat-label>
           <mat-icon matPrefix>email</mat-icon>
-          <input matInput 
-                 type="email" 
-                 [(ngModel)]="form.requesterEmail" 
-                 (ngModelChange)="onFormChange()" 
-                 placeholder="usuario@dominio.com"
-                 required />
-          <div class="peticion-error-msg" *ngIf="showErrors && !form.requesterEmail">{{ 'UNETE.ERROR_REQUIRED' | translate }}</div>
-          <div class="peticion-error-msg" *ngIf="showErrors && form.requesterEmail && !validateEmail(form.requesterEmail)">{{ 'UNETE.ERROR_EMAIL' | translate }}</div>
+          <input
+            matInput
+            type="email"
+            [(ngModel)]="form.requesterEmail"
+            (ngModelChange)="onFormChange()"
+            placeholder="usuario@dominio.com"
+            required
+          />
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && !form.requesterEmail"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && form.requesterEmail && !validateEmail(form.requesterEmail)"
+          >
+            {{ 'UNETE.ERROR_EMAIL' | translate }}
+          </div>
         </mat-form-field>
       </div>
 
+      <!-- Fila 2: Projecte + Codi -->
       <div class="peticion-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.projectName || !form.projectName.trim())"
+        >
           <mat-label>Proyecto de la tarea</mat-label>
           <mat-icon matPrefix>work</mat-icon>
-          <input matInput 
-                 [(ngModel)]="form.projectName" 
-                 (ngModelChange)="onFormChange()" 
-                 placeholder="Nombre del proyecto" />
+          <input
+            matInput
+            [(ngModel)]="form.projectName"
+            (ngModelChange)="onFormChange()"
+            placeholder="Nombre del proyecto"
+            required
+          />
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && (!form.projectName || !form.projectName.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.projectCode || !form.projectCode.trim())"
+        >
           <mat-label>Código del proyecto</mat-label>
           <mat-icon matPrefix>code</mat-icon>
-          <input matInput 
-                 [(ngModel)]="form.projectCode" 
-                 (ngModelChange)="onFormChange()" 
-                 placeholder="Ej. PRJ-2024" />
+          <input
+            matInput
+            [(ngModel)]="form.projectCode"
+            (ngModelChange)="onFormChange()"
+            placeholder="Ej. PRJ-2024"
+            required
+          />
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && (!form.projectCode || !form.projectCode.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
         </mat-form-field>
       </div>
 
+      <!-- Fila 3: JIRA + DevOps -->
       <div class="peticion-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.jiraTask || !form.jiraTask.trim())"
+        >
           <mat-label>Tarea JIRA</mat-label>
           <mat-icon matPrefix>confirmation_number</mat-icon>
-          <input matInput 
-                 [(ngModel)]="form.jiraTask" 
-                 (ngModelChange)="onFormChange()" 
-                 placeholder="Ej. JAN-123" />
+          <input
+            matInput
+            [(ngModel)]="form.jiraTask"
+            (ngModelChange)="onFormChange()"
+            placeholder="Ej. JAN-123"
+            required
+          />
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && (!form.jiraTask || !form.jiraTask.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="showErrors && (!form.devopsAssignee || !form.devopsAssignee.trim())"
+        >
           <mat-label>Asignar a DevOps</mat-label>
           <mat-icon matPrefix>assignment_ind</mat-icon>
-          <mat-select [(ngModel)]="form.devopsAssignee" 
-                      (ngModelChange)="onFormChange()"
-                      panelClass="peticion-select-panel">
-            <mat-option *ngFor="let opt of devopsOptions" [value]="opt">{{ opt }}</mat-option>
+          <mat-select
+            [(ngModel)]="form.devopsAssignee"
+            (ngModelChange)="onFormChange()"
+            required
+            panelClass="peticion-select-panel"
+          >
+            <mat-option *ngFor="let opt of devopsOptions" [value]="opt">
+              {{ opt }}
+            </mat-option>
           </mat-select>
+          <div
+            class="peticion-error-msg"
+            *ngIf="showErrors && (!form.devopsAssignee || !form.devopsAssignee.trim())"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
         </mat-form-field>
       </div>
 
+      <!-- Fila 4: Data (opcional) -->
       <div class="peticion-row">
-        <mat-form-field appearance="outline" class="peticion-full">
+        <mat-form-field appearance="outline" class="peticion-date-field">
           <mat-label>Fecha límite (opcional)</mat-label>
-          <input matInput 
-                 [matDatepicker]="picker" 
-                 [(ngModel)]="deadline" 
-                 (dateChange)="onFormChange()" 
-                 placeholder="Selecciona una fecha" />
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="deadline"
+            (dateChange)="onFormChange()"
+            placeholder="Selecciona una fecha"
+          />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+
+          <mat-datepicker
+            #picker
+            panelClass="peticion-date-panel"
+          ></mat-datepicker>
         </mat-form-field>
+
+        <div></div>
       </div>
 
-      <div class="peticion-row">
-        <mat-form-field appearance="outline" class="peticion-full">
+      <!-- Fila 5: Comentaris (opcional) -->
+      <div class="peticion-row comments-row">
+        <mat-form-field appearance="outline">
           <mat-label>Comentarios de la tarea</mat-label>
-          <textarea matInput 
-                    rows="4" 
-                    [(ngModel)]="form.comments" 
-                    (ngModelChange)="onFormChange()" 
-                    placeholder="Describe los detalles de la petición..."></textarea>
+          <textarea
+            matInput
+            rows="3"
+            [(ngModel)]="form.comments"
+            (ngModelChange)="onFormChange()"
+            placeholder="Describe los detalles de la petición..."
+          ></textarea>
         </mat-form-field>
       </div>
+    </div>
+
+    <!-- Missatge camps obligatoris -->
+    <div class="peticion-required-hint">
+      <mat-icon>info</mat-icon>
+      <span>{{ 'PETICION.HINT_REQUIRED' | translate }}</span>
     </div>
 
     <div class="peticion-form-footer">
       <div class="peticion-actions">
-        <button type="button" class="peticion-action-btn peticion-primary" (click)="confirmAndSubmit()" [disabled]="!isValid() || sending">
-          <mat-icon [class.peticion-spinning]="sending">{{ sending ? 'sync' : 'send' }}</mat-icon>
+        <button
+          type="button"
+          class="peticion-action-btn peticion-primary"
+          (click)="confirmAndSubmit()"
+          [disabled]="!isValid() || sending"
+        >
+          <mat-icon [class.peticion-spinning]="sending">
+            {{ sending ? 'sync' : 'send' }}
+          </mat-icon>
           <span>{{ sending ? 'Enviando...' : 'Enviar petición' }}</span>
         </button>
 
-        <button type="button" class="peticion-action-btn peticion-secondary" (click)="resetForm()" [disabled]="sending">
+        <button
+          type="button"
+          class="peticion-action-btn peticion-secondary"
+          (click)="resetForm()"
+          [disabled]="sending"
+        >
           <mat-icon>history</mat-icon>
           <span>Reiniciar</span>
         </button>
       </div>
-
-      <p class="peticion-helper">
-        <mat-icon>info</mat-icon>
-        {{ 'UNETE.REQUIRED_FIELDS' | translate }}
-      </p>
     </div>
-  </div>
 
-  <div class="peticion-toast" [class.show]="toastMsg" [class.error]="!toastOk">
-    <mat-icon>{{ toastOk ? 'check_circle' : 'error' }}</mat-icon>
-    <span>{{ toastMsg }}</span>
+    <div class="peticion-toast" [class.show]="toastMsg" [class.error]="!toastOk">
+      <mat-icon>{{ toastOk ? 'check_circle' : 'error' }}</mat-icon>
+      <span>{{ toastMsg }}</span>
+    </div>
   </div>
 </div>

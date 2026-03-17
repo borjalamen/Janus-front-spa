@@ -956,5 +956,11 @@
     "STATUS_PENDING": "Pendiente",
     "STATUS_APPROVED": "Aprobada",
     "STATUS_REJECTED": "Rechazada"
-  }
+  },
+ "PETICION": {
+  "TITLE": "Nueva petición DevOps",
+  "SUBTITLE": "Introduce los datos de la tarea para que el equipo DevOps pueda gestionarla correctamente.",
+  "HINT_REQUIRED": "Rellena todos los campos obligatorios antes de enviar la petición."
+}
+
 }
