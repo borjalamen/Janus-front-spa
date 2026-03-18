@@ -83,7 +83,12 @@
           type="button"
           class="action-btn primary"
           (click)="sendMail()"
-          [disabled]="!form.fullName || !form.email || sending || !validateEmail(form.email)"
+          [disabled]="
+            sending ||
+            !form.fullName?.trim() ||
+            !form.email?.trim() ||
+            !validateEmail(form.email)
+          "
         >
           <mat-icon [class.spinning]="sending">
             {{ sending ? 'sync' : 'send' }}
@@ -95,12 +100,16 @@
 
         <button
           type="button"
-          class="action-btn secondary"
+          class="action-btn secondary limpiar-btn-round"
           (click)="resetForm()"
           [disabled]="sending"
         >
-          <mat-icon>history</mat-icon>
-          <span>{{ 'UNETE.RESET' | translate }}</span>
+          <span class="limpiar-label">{{ 'UNETE.RESET' | translate }}</span>
+          <img
+            src="assets/images/Escova.png"
+            class="btn-custom-img"
+            alt="{{ 'UNETE.RESET' | translate }}"
+          />
         </button>
       </div>
 

@@ -1,7 +1,7 @@
 /* ===== SECCIÓ PETICION ===== */
 .peticion-root {
   width: 100%;
-  height: 100vh;
+  /* height: 100vh;  // eliminat per evitar scroll i espai buit */
   background: #0d0f14;
   color: #e0e0e0;
   padding: 8px 16px;
@@ -170,22 +170,29 @@
 }
 
 /* ===== DATEPICKER POPUP ===== */
+/* fons SÒLID a tot el popup (overlay + content) */
+::ng-deep .cdk-overlay-pane .peticion-date-panel,
 ::ng-deep .peticion-date-panel .mat-datepicker-content {
-  background: #14161d;
-  color: #e0e0e0;
+  background-color: #14161d !important;
+  color: #e0e0e0 !important;
   border-radius: 12px;
   border: 1px solid rgba(251, 192, 45, 0.25);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
   z-index: 2000;
 }
 
+/* interior del calendari */
+::ng-deep .peticion-date-panel .mat-calendar {
+  background-color: #14161d !important;
+}
+
 ::ng-deep .peticion-date-panel .mat-calendar-header {
-  background: rgba(251, 192, 45, 0.06);
-  color: #fbc02d;
+  background: rgba(251, 192, 45, 0.06) !important;
+  color: #fbc02d !important;
 }
 
 ::ng-deep .peticion-date-panel .mat-calendar-body-cell-content {
-  color: #e0e0e0;
+  color: #e0e0e0 !important;
 }
 
 ::ng-deep .peticion-date-panel .mat-calendar-body-selected {
@@ -226,16 +233,17 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* botó ENVIAR blau */
 .peticion-action-btn.peticion-primary {
-  background: #fbc02d;
+  background: #2196f3;
   color: #101218;
   border: none;
 }
 
 .peticion-action-btn.peticion-primary:hover:not(:disabled) {
-  background: #fdd835;
+  background: #42a5f5;
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(251, 192, 45, 0.25);
+  box-shadow: 0 6px 12px rgba(33, 150, 243, 0.35);
 }
 
 .peticion-action-btn.peticion-secondary {
@@ -259,6 +267,32 @@
 
 @keyframes peticionSpin {
   100% { transform: rotate(360deg); }
+}
+
+/* === estils reciclats d'estimació per al botó de reiniciar === */
+.limpiar-label {
+  color: #b0bec5;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.limpiar-btn-round {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 64px;
+}
+
+.btn-custom-img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
 }
 
 /* ===== TOAST ===== */
@@ -288,14 +322,14 @@
   opacity: 1;
 }
 
-.peticion-toast.error {
+_peticion-toast.error {
   border-color: rgba(255, 82, 82, 0.3);
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .peticion-root {
-    height: auto;
+    /* sense height forçat, només padding */
     padding: 12px 8px 24px;
   }
 
@@ -312,7 +346,7 @@
   .peticion-form-footer {
     flex-direction: column;
     gap: 12px;
-    align-items: flex-start;
+    alignments: flex-start;
   }
 
   .peticion-actions {

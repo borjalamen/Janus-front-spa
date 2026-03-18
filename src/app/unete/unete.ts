@@ -37,7 +37,6 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   private STORAGE_KEY = 'uneteForm';
 
-  // per mostrar errors sota els camps
   showErrors = false;
 
   form = {
@@ -75,7 +74,6 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   onFormChange(): void {
     this.saveDraft();
-    // si ja s’han mostrat errors, els recalcularem visualment
     if (this.showErrors) {
       this.showErrors = true;
     }
@@ -92,7 +90,7 @@ export class UneteComponent implements OnInit, OnDestroy {
   sendMail() {
     this.showErrors = true;
 
-    const fullNameOk = this.form.fullName && this.form.fullName.trim();
+    const fullNameOk = !!this.form.fullName?.trim();
     const emailOk = this.validateEmail(this.form.email);
 
     if (!fullNameOk) {
