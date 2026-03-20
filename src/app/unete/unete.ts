@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { LocalStorageService } from '../local-storage.service';
 
+const PENDING_REQUEST_KEY = 'unetePendingRequest';
+
 @Component({
   selector: 'app-unete',
   standalone: true,
@@ -30,8 +32,14 @@ export class UneteComponent implements OnInit, OnDestroy {
   toastMsg = '';
   toastOk = true;
   private _toastTimer: any = null;
-  recipient = 'contacto@janushub.local';
 
+  // Estat de la sol·licitud pendent
+  pendingEmail: string | null = null;
+  pendingName: string | null = null;
+  requestStatus: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | null = null;
+  checkingStatus = false;
+
+  // Popup credencials quan s'aprova
   mostrarPopupCredenciales = false;
   credencialesPopup: { username: string; password: string } | null = null;
 
@@ -62,6 +70,14 @@ export class UneteComponent implements OnInit, OnDestroy {
     if (saved) {
       this.form = saved;
     }
+
+    // Comprovar si hi ha una sol·licitud pendent guardada
+    const pending = this.storage.getObject<{ email: string; name: string }>(PENDING_REQUEST_KEY);
+    if (pending?.email) {
+      this.pendingEmail = pending.email;
+      this.pendingName = pending.name;
+      this.checkRequestStatus();
+    }
   }
 
   ngOnDestroy(): void {
@@ -74,9 +90,6 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   onFormChange(): void {
     this.saveDraft();
-    if (this.showErrors) {
-      this.showErrors = true;
-    }
   }
 
   validateEmail(email: string | null | undefined): boolean {
@@ -85,6 +98,46 @@ export class UneteComponent implements OnInit, OnDestroy {
     if (!trimmed) return false;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(trimmed);
+  }
+
+  // Comprova l'estat de la sol·licitud pendent al backend
+  checkRequestStatus(): void {
+    if (!this.pendingEmail) return;
+    this.checkingStatus = true;
+
+    fetch(`/api/join-requests/by-email/${encodeURIComponent(this.pendingEmail)}`)
+      .then(res => {
+        if (!res.ok) throw new Error('No trobat');
+        return res.json();
+      })
+      .then(data => {
+        this.checkingStatus = false;
+        this.requestStatus = data.estado?.toUpperCase() || 'PENDIENTE';
+
+        if (this.requestStatus === 'APROBADA') {
+          // Generar les credencials igual que fa el backend
+          const username = (this.pendingName || data.fullName || '')
+            .replaceAll(' ', '').toLowerCase();
+          const password = (this.pendingName || data.fullName || '') + '1234';
+          this.credencialesPopup = { username, password };
+          this.mostrarPopupCredenciales = true;
+          // Esborrar la sol·licitud pendent del localStorage
+          this.storage.remove(PENDING_REQUEST_KEY);
+          this.pendingEmail = null;
+          this.pendingName = null;
+          this.requestStatus = null;
+        } else if (this.requestStatus === 'RECHAZADA') {
+          // Esborrar la sol·licitud pendent
+          this.storage.remove(PENDING_REQUEST_KEY);
+          this.pendingEmail = null;
+          this.pendingName = null;
+          this.requestStatus = null;
+        }
+      })
+      .catch(() => {
+        this.checkingStatus = false;
+        this.requestStatus = 'PENDIENTE';
+      });
   }
 
   sendMail() {
@@ -105,21 +158,25 @@ export class UneteComponent implements OnInit, OnDestroy {
 
     this.saveDraft();
     const emailSnapshot = this.form.email;
+    const nameSnapshot = this.form.fullName;
 
-    (this as any).sending = true;
-    (async () => {
-      try {
-        const resp = await fetch('/api/contact/unete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        });
+    this.sending = true;
+
+    fetch('/api/contact/unete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.form)
+    })
+      .then(async resp => {
         if (resp.ok) {
-          const data = await resp.json().catch(() => ({}));
-          const username = (emailSnapshot || '').split('@')[0];
-          const password = data.password || data.credentials?.password || '';
-          this.credencialesPopup = { username, password };
-          this.mostrarPopupCredenciales = true;
+          // Guardar la sol·licitud pendent al localStorage
+          this.storage.setObject(PENDING_REQUEST_KEY, {
+            email: emailSnapshot,
+            name: nameSnapshot
+          });
+          this.pendingEmail = emailSnapshot;
+          this.pendingName = nameSnapshot;
+          this.requestStatus = 'PENDIENTE';
           this.resetForm();
           this.showErrors = false;
         } else if (resp.status === 400) {
@@ -129,17 +186,25 @@ export class UneteComponent implements OnInit, OnDestroy {
           const txt = await resp.text();
           this.showToast('❌ Error al procesar la solicitud: ' + txt, false);
         }
-      } catch (err: any) {
+      })
+      .catch(err => {
         this.showToast('❌ Error en la petición: ' + (err?.message || err), false);
-      } finally {
-        (this as any).sending = false;
-      }
-    })();
+      })
+      .finally(() => {
+        this.sending = false;
+      });
   }
 
   cerrarPopupCredenciales() {
     this.mostrarPopupCredenciales = false;
     this.credencialesPopup = null;
+  }
+
+  cancelarSolicitud() {
+    this.storage.remove(PENDING_REQUEST_KEY);
+    this.pendingEmail = null;
+    this.pendingName = null;
+    this.requestStatus = null;
   }
 
   resetForm() {

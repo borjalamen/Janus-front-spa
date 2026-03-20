@@ -1,126 +1,155 @@
 <div class="unete-root">
   <div class="form-card main-container">
-    
-    <div class="header-section">
-      <h2>{{ 'MENU.JOIN' | translate }}</h2>
-      <p class="subtitle">
-        {{ 'UNETE.SUBTITLE' | translate }}
-      </p>
-    </div>
 
-    <div class="form-content">
-      <div class="row">
-        <mat-form-field
-          appearance="outline"
-          [class.invalid-field]="showErrors && (!form.fullName || !form.fullName.trim())"
-        >
-          <mat-label>{{ 'UNETE.FULLNAME' | translate }}</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <input
-            matInput
-            name="fullName"
-            [(ngModel)]="form.fullName"
-            (ngModelChange)="onFormChange()"
-            [placeholder]="'UNETE.PLACEHOLDER_NAME' | translate"
-            required
-          />
-          <div
-            class="error-msg"
-            *ngIf="showErrors && (!form.fullName || !form.fullName.trim())"
-          >
-            {{ 'UNETE.ERROR_REQUIRED' | translate }}
-          </div>
-        </mat-form-field>
-
-        <mat-form-field
-          appearance="outline"
-          [class.invalid-field]="showErrors && (!form.email || !validateEmail(form.email))"
-        >
-          <mat-label>{{ 'UNETE.EMAIL' | translate }}</mat-label>
-          <mat-icon matPrefix>email</mat-icon>
-          <input
-            matInput
-            type="email"
-            name="email"
-            [(ngModel)]="form.email"
-            (ngModelChange)="onFormChange()"
-            [placeholder]="'UNETE.PLACEHOLDER_EMAIL' | translate"
-            required
-          />
-          <div
-            class="error-msg"
-            *ngIf="showErrors && (!form.email || !form.email.trim())"
-          >
-            {{ 'UNETE.ERROR_REQUIRED' | translate }}
-          </div>
-          <div
-            class="error-msg"
-            *ngIf="showErrors && form.email && form.email.trim() && !validateEmail(form.email)"
-          >
-            {{ 'UNETE.ERROR_EMAIL' | translate }}
-          </div>
-        </mat-form-field>
+    <!-- BLOC D'ESPERA: es mostra quan hi ha una sol·licitud pendent -->
+    <div class="pending-card" *ngIf="pendingEmail">
+      <div class="pending-icon-wrapper">
+        <mat-icon class="pending-icon" *ngIf="!checkingStatus">hourglass_empty</mat-icon>
+        <mat-icon class="pending-icon spinning" *ngIf="checkingStatus">sync</mat-icon>
       </div>
-
-      <div class="row">
-        <mat-form-field appearance="outline" class="full">
-          <mat-label>{{ 'UNETE.COMMENTS' | translate }}</mat-label>
-          <textarea
-            matInput
-            rows="4"
-            name="comments"
-            [(ngModel)]="form.comments"
-            (ngModelChange)="onFormChange()"
-            [placeholder]="'UNETE.PLACEHOLDER_COMMENTS' | translate"
-          ></textarea>
-        </mat-form-field>
+      <div class="pending-content">
+        <h3 class="pending-title">Sol·licitud enviada</h3>
+        <p class="pending-desc">
+          La teva sol·licitud per a <strong>{{ pendingEmail }}</strong> està pendent d'aprovació per part de l'administrador.
+          Torna a visitar aquesta pàgina per veure si ha estat aprovada.
+        </p>
+        <div class="pending-actions">
+          <button class="pending-check-btn" (click)="checkRequestStatus()" [disabled]="checkingStatus">
+            <mat-icon>refresh</mat-icon>
+            <span>{{ checkingStatus ? 'Comprovant...' : 'Comprovar ara' }}</span>
+          </button>
+          <button class="pending-cancel-btn" (click)="cancelarSolicitud()">
+            <mat-icon>close</mat-icon>
+            <span>Cancel·lar sol·licitud</span>
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="form-footer">
-      <div class="actions">
-        <button
-          type="button"
-          class="action-btn primary"
-          (click)="sendMail()"
-          [disabled]="
-            sending ||
-            !form.fullName?.trim() ||
-            !form.email?.trim() ||
-            !validateEmail(form.email)
-          "
-        >
-          <mat-icon [class.spinning]="sending">
-            {{ sending ? 'sync' : 'send' }}
-          </mat-icon>
-          <span>
-            {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="action-btn secondary limpiar-btn-round"
-          (click)="resetForm()"
-          [disabled]="sending"
-        >
-          <span class="limpiar-label">{{ 'UNETE.RESET' | translate }}</span>
-          <img
-            src="assets/images/Escova.png"
-            class="btn-custom-img"
-            alt="{{ 'UNETE.RESET' | translate }}"
-          />
-        </button>
+    <!-- FORMULARI: es mostra quan no hi ha sol·licitud pendent -->
+    <ng-container *ngIf="!pendingEmail">
+      <div class="header-section">
+        <h2>{{ 'MENU.JOIN' | translate }}</h2>
+        <p class="subtitle">
+          {{ 'UNETE.SUBTITLE' | translate }}
+        </p>
       </div>
 
-      <p class="helper">
-        <mat-icon>info</mat-icon>
-        {{ 'UNETE.REQUIRED_FIELDS' | translate }}
-      </p>
-    </div>
+      <div class="form-content">
+        <div class="row">
+          <mat-form-field
+            appearance="outline"
+            [class.invalid-field]="showErrors && (!form.fullName || !form.fullName.trim())"
+          >
+            <mat-label>{{ 'UNETE.FULLNAME' | translate }}</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input
+              matInput
+              name="fullName"
+              [(ngModel)]="form.fullName"
+              (ngModelChange)="onFormChange()"
+              [placeholder]="'UNETE.PLACEHOLDER_NAME' | translate"
+              required
+            />
+            <div
+              class="error-msg"
+              *ngIf="showErrors && (!form.fullName || !form.fullName.trim())"
+            >
+              {{ 'UNETE.ERROR_REQUIRED' | translate }}
+            </div>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="outline"
+            [class.invalid-field]="showErrors && (!form.email || !validateEmail(form.email))"
+          >
+            <mat-label>{{ 'UNETE.EMAIL' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input
+              matInput
+              type="email"
+              name="email"
+              [(ngModel)]="form.email"
+              (ngModelChange)="onFormChange()"
+              [placeholder]="'UNETE.PLACEHOLDER_EMAIL' | translate"
+              required
+            />
+            <div
+              class="error-msg"
+              *ngIf="showErrors && (!form.email || !form.email.trim())"
+            >
+              {{ 'UNETE.ERROR_REQUIRED' | translate }}
+            </div>
+            <div
+              class="error-msg"
+              *ngIf="showErrors && form.email && form.email.trim() && !validateEmail(form.email)"
+            >
+              {{ 'UNETE.ERROR_EMAIL' | translate }}
+            </div>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>{{ 'UNETE.COMMENTS' | translate }}</mat-label>
+            <textarea
+              matInput
+              rows="4"
+              name="comments"
+              [(ngModel)]="form.comments"
+              (ngModelChange)="onFormChange()"
+              [placeholder]="'UNETE.PLACEHOLDER_COMMENTS' | translate"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <div class="actions">
+          <button
+            type="button"
+            class="action-btn primary"
+            (click)="sendMail()"
+            [disabled]="
+              sending ||
+              !form.fullName?.trim() ||
+              !form.email?.trim() ||
+              !validateEmail(form.email)
+            "
+          >
+            <mat-icon [class.spinning]="sending">
+              {{ sending ? 'sync' : 'send' }}
+            </mat-icon>
+            <span>
+              {{ sending ? ('UNETE.SENDING' | translate) : ('UNETE.SEND_BY_MAIL' | translate) }}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="action-btn secondary limpiar-btn-round"
+            (click)="resetForm()"
+            [disabled]="sending"
+          >
+            <span class="limpiar-label">{{ 'UNETE.RESET' | translate }}</span>
+            <img
+              src="assets/images/Escova.png"
+              class="btn-custom-img"
+              alt="{{ 'UNETE.RESET' | translate }}"
+            />
+          </button>
+        </div>
+
+        <p class="helper">
+          <mat-icon>info</mat-icon>
+          {{ 'UNETE.REQUIRED_FIELDS' | translate }}
+        </p>
+      </div>
+    </ng-container>
   </div>
 </div>
 
+<!-- POPUP CREDENCIALS (quan l'admin aprova) -->
 <div class="modal-overlay" *ngIf="mostrarPopupCredenciales && credencialesPopup">
   <div class="auth-card">
     <div class="success-icon">
