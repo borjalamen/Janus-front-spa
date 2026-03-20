@@ -1,7 +1,6 @@
 /* ===== SECCIÓ PETICION ===== */
 .peticion-root {
   width: 100%;
-  /* height: 100vh;  // eliminat per evitar scroll i espai buit */
   background: #0d0f14;
   color: #e0e0e0;
   padding: 8px 16px;
@@ -170,7 +169,6 @@
 }
 
 /* ===== DATEPICKER POPUP ===== */
-/* fons SÒLID a tot el popup (overlay + content) */
 ::ng-deep .cdk-overlay-pane .peticion-date-panel,
 ::ng-deep .peticion-date-panel .mat-datepicker-content {
   background-color: #14161d !important;
@@ -181,7 +179,6 @@
   z-index: 2000;
 }
 
-/* interior del calendari */
 ::ng-deep .peticion-date-panel .mat-calendar {
   background-color: #14161d !important;
 }
@@ -295,6 +292,243 @@
   object-fit: contain;
 }
 
+/* ===== ADJUNTAR DOCUMENTS ===== */
+.peticion-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Zona d'upload */
+.peticion-upload-zone {
+  display: block;
+  cursor: pointer;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(251, 192, 45, 0.3);
+  background: linear-gradient(135deg, rgba(251, 192, 45, 0.03) 0%, rgba(33, 150, 243, 0.03) 100%);
+  padding: 20px 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.peticion-upload-zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(251, 192, 45, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.peticion-upload-zone:hover {
+  border-color: rgba(251, 192, 45, 0.7);
+  background: linear-gradient(135deg, rgba(251, 192, 45, 0.06) 0%, rgba(33, 150, 243, 0.04) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(251, 192, 45, 0.12), 0 0 0 1px rgba(251, 192, 45, 0.15);
+}
+
+.peticion-upload-zone:hover::before {
+  opacity: 1;
+}
+
+.upload-zone-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Icona animada */
+.upload-icon-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-icon-main {
+  font-size: 26px !important;
+  width: 26px !important;
+  height: 26px !important;
+  color: #fbc02d !important;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.peticion-upload-zone:hover .upload-icon-main {
+  transform: translateY(-3px) scale(1.1);
+}
+
+.upload-icon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(251, 192, 45, 0.25);
+  background: rgba(251, 192, 45, 0.07);
+  transition: all 0.3s ease;
+}
+
+.peticion-upload-zone:hover .upload-icon-ring {
+  border-color: rgba(251, 192, 45, 0.5);
+  background: rgba(251, 192, 45, 0.12);
+  box-shadow: 0 0 16px rgba(251, 192, 45, 0.2);
+}
+
+/* Textos */
+.upload-zone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.upload-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  letter-spacing: -0.2px;
+}
+
+.upload-subtitle {
+  font-size: 0.78rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Badge "Seleccionar" */
+.upload-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(251, 192, 45, 0.1);
+  border: 1px solid rgba(251, 192, 45, 0.3);
+  color: #fbc02d;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.upload-badge mat-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.peticion-upload-zone:hover .upload-badge {
+  background: rgba(251, 192, 45, 0.18);
+  border-color: rgba(251, 192, 45, 0.6);
+  box-shadow: 0 0 12px rgba(251, 192, 45, 0.2);
+}
+
+/* Llista de fitxers */
+.peticion-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.peticion-file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease;
+  animation: fileItemIn 0.25s ease-out;
+}
+
+@keyframes fileItemIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.peticion-file-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.file-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(251, 192, 45, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.file-icon-wrap mat-icon {
+  color: #fbc02d !important;
+  font-size: 17px !important;
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.peticion-file-name {
+  font-size: 0.85rem;
+  color: #e0e0e0;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.peticion-file-size {
+  font-size: 0.72rem;
+  color: #4b5563;
+}
+
+.peticion-file-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  padding: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.peticion-file-remove:hover {
+  background: rgba(255, 82, 82, 0.15);
+}
+
+.peticion-file-remove mat-icon {
+  color: #4b5563 !important;
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  transition: color 0.2s ease;
+}
+
+.peticion-file-remove:hover mat-icon {
+  color: #ff5252 !important;
+}
+
 /* ===== TOAST ===== */
 .peticion-toast {
   position: fixed;
@@ -322,14 +556,13 @@
   opacity: 1;
 }
 
-_peticion-toast.error {
+.peticion-toast.error {
   border-color: rgba(255, 82, 82, 0.3);
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .peticion-root {
-    /* sense height forçat, només padding */
     padding: 12px 8px 24px;
   }
 
@@ -346,7 +579,7 @@ _peticion-toast.error {
   .peticion-form-footer {
     flex-direction: column;
     gap: 12px;
-    alignments: flex-start;
+    align-items: flex-start;
   }
 
   .peticion-actions {

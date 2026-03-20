@@ -166,7 +166,6 @@
             placeholder="Selecciona una fecha"
           />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-
           <mat-datepicker
             #picker
             panelClass="peticion-date-panel"
@@ -189,6 +188,52 @@
           ></textarea>
         </mat-form-field>
       </div>
+
+      <!-- Fila 6: Adjuntar documents -->
+      <div class="peticion-row comments-row">
+        <div class="peticion-attachments">
+
+          <label class="peticion-upload-zone">
+            <input
+              type="file"
+              multiple
+              hidden
+              (change)="onFilesSelected($event)"
+            />
+            <div class="upload-zone-inner">
+              <div class="upload-icon-wrapper">
+                <mat-icon class="upload-icon-main">upload_file</mat-icon>
+                <div class="upload-icon-ring"></div>
+              </div>
+              <div class="upload-zone-text">
+                <span class="upload-title">Adjunta els teus documents</span>
+                <span class="upload-subtitle">Arrossega fitxers aquí o fes clic per seleccionar</span>
+              </div>
+              <div class="upload-badge">
+                <mat-icon>add</mat-icon>
+                <span>Seleccionar</span>
+              </div>
+            </div>
+          </label>
+
+          <div class="peticion-file-list" *ngIf="attachments.length > 0">
+            <div class="peticion-file-item" *ngFor="let a of attachments; let i = index">
+              <div class="file-icon-wrap">
+                <mat-icon>insert_drive_file</mat-icon>
+              </div>
+              <div class="file-info">
+                <span class="peticion-file-name">{{ a.name }}</span>
+                <span class="peticion-file-size">{{ (a.size / 1024).toFixed(1) }} KB</span>
+              </div>
+              <button type="button" class="peticion-file-remove" (click)="removeAttachment(i)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
     <!-- Missatge camps obligatoris -->
