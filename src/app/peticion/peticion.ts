@@ -51,19 +51,14 @@ export class PeticionComponent implements OnInit {
     projectCode: '',
     jiraTask: '',
     comments: '',
-    devopsAssignee: 'Cualquiera'
+    devopsAssignee: ''
   };
 
   deadline: Date | null = null;
   sending = false;
 
-  devopsOptions: string[] = [
-    'Cualquiera',
-    'Fernando Silvano Gil',
-    'Raúl Gallego',
-    'Rubén Planté',
-    'Borja Lara'
-  ];
+  // Opcions del select (es carreguen des de l’API)
+  devopsOptions: string[] = [];
 
   attachments: Array<{
     name: string;
@@ -92,6 +87,38 @@ export class PeticionComponent implements OnInit {
     if (saved) {
       this.form = saved;
     }
+
+    this.loadDevopsUsers();
+  }
+
+  /**
+   * Carrega només usuaris amb rol DEVOPS i omple el desplegable.
+   */
+  private loadDevopsUsers(): void {
+    this.http
+      .get<any[]>(`${environment.baseUrl}users/all`)
+      .subscribe({
+        next: users => {
+          console.log('USUARIOS API', users);
+
+          const devopsUsers = users.filter(u =>
+            Array.isArray(u.roles) && u.roles.includes('DEVOPS')
+          );
+
+          this.devopsOptions = [
+            'Cualquiera',
+            ...devopsUsers.map(u => u.fullName)
+          ];
+
+          if (!this.devopsOptions.includes(this.form.devopsAssignee)) {
+            this.form.devopsAssignee = 'Cualquiera';
+          }
+        },
+        error: err => {
+          console.error('Error cargando usuarios DevOps', err);
+          this.devopsOptions = ['Cualquiera'];
+        }
+      });
   }
 
   onFormChange(): void {
@@ -122,7 +149,6 @@ export class PeticionComponent implements OnInit {
     if (a.rawUrl) URL.revokeObjectURL(a.rawUrl);
     this.attachments.splice(idx, 1);
   }
-
 
   isValid(): boolean {
     const allFieldsFilled = [

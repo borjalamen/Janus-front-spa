@@ -15,13 +15,13 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.requesterName || !form.requesterName.trim())"
         >
-          <mat-label>Nombre del peticionario</mat-label>
+          <mat-label>{{ 'PETICION.REQUESTER_NAME' | translate }}</mat-label>
           <mat-icon matPrefix>person</mat-icon>
           <input
             matInput
             [(ngModel)]="form.requesterName"
             (ngModelChange)="onFormChange()"
-            placeholder="Ej. Juan Pérez"
+            [placeholder]="'PETICION.REQUESTER_NAME_PH' | translate"
             required
           />
           <div
@@ -36,14 +36,14 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))"
         >
-          <mat-label>Email del peticionario</mat-label>
+          <mat-label>{{ 'PETICION.REQUESTER_EMAIL' | translate }}</mat-label>
           <mat-icon matPrefix>email</mat-icon>
           <input
             matInput
             type="email"
             [(ngModel)]="form.requesterEmail"
             (ngModelChange)="onFormChange()"
-            placeholder="usuario@dominio.com"
+            [placeholder]="'PETICION.REQUESTER_EMAIL_PH' | translate"
             required
           />
           <div
@@ -67,13 +67,13 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.projectName || !form.projectName.trim())"
         >
-          <mat-label>Proyecto de la tarea</mat-label>
+          <mat-label>{{ 'PETICION.PROJECT_NAME' | translate }}</mat-label>
           <mat-icon matPrefix>work</mat-icon>
           <input
             matInput
             [(ngModel)]="form.projectName"
             (ngModelChange)="onFormChange()"
-            placeholder="Nombre del proyecto"
+            [placeholder]="'PETICION.PROJECT_NAME_PH' | translate"
             required
           />
           <div
@@ -88,13 +88,13 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.projectCode || !form.projectCode.trim())"
         >
-          <mat-label>Código del proyecto</mat-label>
+          <mat-label>{{ 'PETICION.PROJECT_CODE' | translate }}</mat-label>
           <mat-icon matPrefix>code</mat-icon>
           <input
             matInput
             [(ngModel)]="form.projectCode"
             (ngModelChange)="onFormChange()"
-            placeholder="Ej. PRJ-2024"
+            [placeholder]="'PETICION.PROJECT_CODE_PH' | translate"
             required
           />
           <div
@@ -112,13 +112,13 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.jiraTask || !form.jiraTask.trim())"
         >
-          <mat-label>Tarea JIRA</mat-label>
+          <mat-label>{{ 'PETICION.JIRA_TASK' | translate }}</mat-label>
           <mat-icon matPrefix>confirmation_number</mat-icon>
           <input
             matInput
             [(ngModel)]="form.jiraTask"
             (ngModelChange)="onFormChange()"
-            placeholder="Ej. JAN-123"
+            [placeholder]="'PETICION.JIRA_TASK_PH' | translate"
             required
           />
           <div
@@ -133,7 +133,7 @@
           appearance="outline"
           [class.peticion-invalid]="showErrors && (!form.devopsAssignee || !form.devopsAssignee.trim())"
         >
-          <mat-label>Asignar a DevOps</mat-label>
+          <mat-label>{{ 'PETICION.DEVOPS_ASSIGNEE' | translate }}</mat-label>
           <mat-icon matPrefix>assignment_ind</mat-icon>
           <mat-select
             [(ngModel)]="form.devopsAssignee"
@@ -157,13 +157,13 @@
       <!-- Fila 4: Data (opcional) -->
       <div class="peticion-row">
         <mat-form-field appearance="outline" class="peticion-date-field">
-          <mat-label>Fecha límite (opcional)</mat-label>
+          <mat-label>{{ 'PETICION.DEADLINE' | translate }}</mat-label>
           <input
             matInput
             [matDatepicker]="picker"
             [(ngModel)]="deadline"
             (dateChange)="onFormChange()"
-            placeholder="Selecciona una fecha"
+            [placeholder]="'PETICION.DEADLINE_PH' | translate"
           />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker
@@ -178,13 +178,13 @@
       <!-- Fila 5: Comentaris (opcional) -->
       <div class="peticion-row comments-row">
         <mat-form-field appearance="outline">
-          <mat-label>Comentarios de la tarea</mat-label>
+          <mat-label>{{ 'PETICION.COMMENTS' | translate }}</mat-label>
           <textarea
             matInput
             rows="3"
             [(ngModel)]="form.comments"
             (ngModelChange)="onFormChange()"
-            placeholder="Describe los detalles de la petición..."
+            [placeholder]="'PETICION.COMMENTS_PH' | translate"
           ></textarea>
         </mat-form-field>
       </div>
@@ -192,7 +192,6 @@
       <!-- Fila 6: Adjuntar documents -->
       <div class="peticion-row comments-row">
         <div class="peticion-attachments">
-
           <label class="peticion-upload-zone">
             <input
               type="file"
@@ -206,12 +205,12 @@
                 <div class="upload-icon-ring"></div>
               </div>
               <div class="upload-zone-text">
-                <span class="upload-title">Adjunta els teus documents</span>
-                <span class="upload-subtitle">Arrossega fitxers aquí o fes clic per seleccionar</span>
+                <span class="upload-title">{{ 'PETICION.UPLOAD_TITLE' | translate }}</span>
+                <span class="upload-subtitle">{{ 'PETICION.UPLOAD_SUBTITLE' | translate }}</span>
               </div>
               <div class="upload-badge">
                 <mat-icon>add</mat-icon>
-                <span>Seleccionar</span>
+                <span>{{ 'PETICION.UPLOAD_BUTTON' | translate }}</span>
               </div>
             </div>
           </label>
@@ -233,7 +232,6 @@
 
         </div>
       </div>
-
     </div>
 
     <!-- Missatge camps obligatoris -->
@@ -253,7 +251,9 @@
           <mat-icon [class.peticion-spinning]="sending">
             {{ sending ? 'sync' : 'send' }}
           </mat-icon>
-          <span>{{ sending ? 'Enviando...' : 'Enviar petición' }}</span>
+          <span>
+            {{ sending ? ('PETICION.SENDING' | translate) : ('PETICION.SEND' | translate) }}
+          </span>
         </button>
 
         <button
@@ -262,7 +262,7 @@
           (click)="resetForm()"
           [disabled]="sending"
         >
-          <span class="limpiar-label">Reiniciar</span>
+          <span class="limpiar-label">{{ 'PETICION.RESET' | translate }}</span>
           <img src="assets/images/Escova.png" class="btn-custom-img" alt="Reiniciar" />
         </button>
       </div>

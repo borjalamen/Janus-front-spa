@@ -960,7 +960,29 @@
  "PETICION": {
   "TITLE": "Nueva petición DevOps",
   "SUBTITLE": "Introduce los datos de la tarea para que el equipo DevOps pueda gestionarla correctamente.",
-  "HINT_REQUIRED": "Rellena todos los campos obligatorios antes de enviar la petición."
+  "HINT_REQUIRED": "Rellena todos los campos obligatorios antes de enviar la petición.",
+  "REQUESTER_NAME": "Nombre del peticionario",
+  "REQUESTER_NAME_PH": "Ej. Juan Pérez",
+  "REQUESTER_EMAIL": "Email del peticionario",
+  "REQUESTER_EMAIL_PH": "usuario@dominio.com",
+  "PROJECT_NAME": "Proyecto de la tarea",
+  "PROJECT_NAME_PH": "Nombre del proyecto",
+  "PROJECT_CODE": "Código del proyecto",
+  "PROJECT_CODE_PH": "Ej. PRJ-2024",
+  "JIRA_TASK": "Tarea JIRA",
+  "JIRA_TASK_PH": "Ej. JAN-123",
+  "DEVOPS_ASSIGNEE": "Asignar a DevOps",
+  "DEADLINE": "Fecha límite (opcional)",
+  "DEADLINE_PH": "Selecciona una fecha",
+  "COMMENTS": "Comentarios de la tarea",
+  "COMMENTS_PH": "Describe los detalles de la petición...",
+  "UPLOAD_TITLE": "Adjunta tus documentos",
+  "UPLOAD_SUBTITLE": "Arrastra archivos aquí o haz clic para seleccionar",
+  "UPLOAD_BUTTON": "Seleccionar",
+  "SEND": "Enviar petición",
+  "SENDING": "Enviando...",
+  "RESET": "Reiniciar"
 }
+
 
 }

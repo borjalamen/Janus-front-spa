@@ -882,7 +882,28 @@
   "PETICION": {
   "TITLE": "Nova petició DevOps",
   "SUBTITLE": "Introdueix les dades de la tasca perquè l'equip DevOps la pugui gestionar correctament.",
-  "HINT_REQUIRED": "Omple tots els camps obligatoris abans d'enviar la petició."
-
+  "HINT_REQUIRED": "Omple tots els camps obligatoris abans d'enviar la petició.",
+  "REQUESTER_NAME": "Nom del peticionari",
+  "REQUESTER_NAME_PH": "Ex. Joan Pérez",
+  "REQUESTER_EMAIL": "Email del peticionari",
+  "REQUESTER_EMAIL_PH": "usuari@domini.com",
+  "PROJECT_NAME": "Projecte de la tasca",
+  "PROJECT_NAME_PH": "Nom del projecte",
+  "PROJECT_CODE": "Codi del projecte",
+  "PROJECT_CODE_PH": "Ex. PRJ-2024",
+  "JIRA_TASK": "Tasca JIRA",
+  "JIRA_TASK_PH": "Ex. JAN-123",
+  "DEVOPS_ASSIGNEE": "Assignar a DevOps",
+  "DEADLINE": "Data límit (opcional)",
+  "DEADLINE_PH": "Selecciona una data",
+  "COMMENTS": "Comentaris de la tasca",
+  "COMMENTS_PH": "Descriu els detalls de la petició...",
+  "UPLOAD_TITLE": "Adjunta els teus documents",
+  "UPLOAD_SUBTITLE": "Arrossega fitxers aquí o fes clic per seleccionar",
+  "UPLOAD_BUTTON": "Seleccionar",
+  "SEND": "Enviar petició",
+  "SENDING": "Enviant...",
+  "RESET": "Reinicia"
 }
+
 }

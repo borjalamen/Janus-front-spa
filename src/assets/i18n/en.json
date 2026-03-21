@@ -961,9 +961,31 @@
   },
   "PETICION": {
   "TITLE": "New DevOps request",
-  "SUBTITLE": "Provide the task details so the DevOps team can process your request properly.",
-  "HINT_REQUIRED": "Please fill in all required fields before submitting the request."
+  "SUBTITLE": "Enter the task details so the DevOps team can handle it properly.",
+  "HINT_REQUIRED": "Fill in all required fields before sending the request.",
+  "REQUESTER_NAME": "Requester name",
+  "REQUESTER_NAME_PH": "e.g. John Doe",
+  "REQUESTER_EMAIL": "Requester email",
+  "REQUESTER_EMAIL_PH": "user@domain.com",
+  "PROJECT_NAME": "Task project",
+  "PROJECT_NAME_PH": "Project name",
+  "PROJECT_CODE": "Project code",
+  "PROJECT_CODE_PH": "e.g. PRJ-2024",
+  "JIRA_TASK": "JIRA task",
+  "JIRA_TASK_PH": "e.g. JAN-123",
+  "DEVOPS_ASSIGNEE": "Assign to DevOps",
+  "DEADLINE": "Deadline (optional)",
+  "DEADLINE_PH": "Select a date",
+  "COMMENTS": "Task comments",
+  "COMMENTS_PH": "Describe the details of the request...",
+  "UPLOAD_TITLE": "Attach your documents",
+  "UPLOAD_SUBTITLE": "Drag files here or click to select",
+  "UPLOAD_BUTTON": "Select",
+  "SEND": "Send request",
+  "SENDING": "Sending...",
+  "RESET": "Reset"
 }
+
 
 
 }

@@ -3,9 +3,8 @@
   width: 100%;
   background: #0d0f14;
   color: #e0e0e0;
-  padding: 8px 16px;
+  padding: 4px 8px;
   box-sizing: border-box;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -14,41 +13,35 @@
 /* ===== CARD PRINCIPAL ===== */
 .peticion-main-container {
   background: linear-gradient(145deg, #14161d 0%, #0f1116 100%);
-  border-radius: 20px;
-  padding: 16px 20px;
+  border-radius: 16px;
+  padding: 8px 12px;
   width: 100%;
   max-width: 1100px;
   border: 1px solid rgba(229, 57, 53, 0.25);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
-              0 0 30px rgba(229, 57, 53, 0.15);
-  animation: peticionCardFadeIn 0.6s ease-out;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7),
+              0 0 20px rgba(229, 57, 53, 0.15);
   box-sizing: border-box;
   margin: 0;
 }
 
-@keyframes peticionCardFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 /* ===== TÍTOL ===== */
 .peticion-header-section {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
 .peticion-header-section h2 {
   color: #fbc02d;
-  margin: 0 0 4px 0;
-  font-size: 1.8rem;
+  margin: 0 0 2px 0;
+  font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -1px;
 }
 
 .peticion-subtitle {
   color: #9da3ae;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   margin: 0;
 }
 
@@ -56,13 +49,13 @@
 .peticion-form-content {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .peticion-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 12px;
+  column-gap: 8px;
 }
 
 .peticion-row.comments-row {
@@ -73,42 +66,39 @@
   width: 100%;
 }
 
-/* camp data amb una mica d'espai sota */
 .peticion-date-field {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 /* ===== MISSATGE CAMPS OBLIGATORIS ===== */
 .peticion-required-hint {
-  position: relative;
-  z-index: 0;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  font-size: 0.85rem;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.8rem;
   color: #9da3ae;
   opacity: 0.9;
 }
 
 .peticion-required-hint mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
   color: #fbc02d;
 }
 
 /* ===== ANGULAR MATERIAL COMPACTE ===== */
 ::ng-deep .peticion-main-container .mat-mdc-text-field-wrapper {
   background: rgba(0, 0, 0, 0.3) !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   margin: 0 !important;
 }
 
 ::ng-deep .peticion-main-container .mat-mdc-form-field-flex {
   border: 1px solid #2e3236 !important;
-  padding: 4px 10px !important;
-  min-height: 44px !important;
+  padding: 2px 8px !important;
+  min-height: 34px !important;
   transition: all 0.2s ease;
 }
 
@@ -123,7 +113,7 @@
   .mat-mdc-form-field-icon-prefix
   .mat-icon {
   color: #7c8084 !important;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 ::ng-deep .peticion-main-container .mdc-line-ripple,
@@ -135,23 +125,25 @@
 ::ng-deep .peticion-main-container textarea::placeholder {
   color: rgba(157, 163, 174, 0.4) !important;
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 /* Errors */
 .peticion-error-msg {
   color: #ff5252;
-  font-size: 11px;
+  font-size: 10px;
   margin-top: 2px;
   font-weight: 500;
 }
 
-/* ===== SELECT ===== */
+/* ===== SELECT (amb scroll intern) ===== */
 ::ng-deep .peticion-select-panel {
+  max-height: 200px !important;      /* alçada màxima del panell */
+  overflow-y: auto !important;       /* scroll només dins del panell */
   background: #1a1d26 !important;
   border: 1px solid rgba(251, 192, 45, 0.3) !important;
-  border-radius: 12px !important;
-  margin-top: 5px !important;
+  border-radius: 10px !important;
+  margin-top: 4px !important;
 }
 
 ::ng-deep .peticion-select-panel .mat-mdc-option {
@@ -168,12 +160,22 @@
   background: rgba(251, 192, 45, 0.15) !important;
 }
 
+/* Scroll bar del panell (opcional) */
+::ng-deep .peticion-select-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+::ng-deep .peticion-select-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+}
+
 /* ===== DATEPICKER POPUP ===== */
 ::ng-deep .cdk-overlay-pane .peticion-date-panel,
 ::ng-deep .peticion-date-panel .mat-datepicker-content {
   background-color: #14161d !important;
   color: #e0e0e0 !important;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(251, 192, 45, 0.25);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
   z-index: 2000;
@@ -207,30 +209,29 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 8px;
-  padding-top: 4px;
+  margin-top: 4px;
+  padding-top: 2px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .peticion-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .peticion-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 10px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* botó ENVIAR blau */
 .peticion-action-btn.peticion-primary {
   background: #2196f3;
   color: #101218;
@@ -266,10 +267,10 @@
   100% { transform: rotate(360deg); }
 }
 
-/* === estils reciclats d'estimació per al botó de reiniciar === */
+/* Botó reiniciar */
 .limpiar-label {
   color: #b0bec5;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   text-align: center;
 }
@@ -279,15 +280,15 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  border-radius: 20px;
+  gap: 4px;
+  border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   min-width: 64px;
 }
 
 .btn-custom-img {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   display: block;
   object-fit: contain;
 }
@@ -296,17 +297,16 @@
 .peticion-attachments {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
-/* Zona d'upload */
 .peticion-upload-zone {
   display: block;
   cursor: pointer;
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1.5px dashed rgba(251, 192, 45, 0.3);
   background: linear-gradient(135deg, rgba(251, 192, 45, 0.03) 0%, rgba(33, 150, 243, 0.03) 100%);
-  padding: 20px 24px;
+  padding: 10px 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -324,8 +324,8 @@
 .peticion-upload-zone:hover {
   border-color: rgba(251, 192, 45, 0.7);
   background: linear-gradient(135deg, rgba(251, 192, 45, 0.06) 0%, rgba(33, 150, 243, 0.04) 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(251, 192, 45, 0.12), 0 0 0 1px rgba(251, 192, 45, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(251, 192, 45, 0.12), 0 0 0 1px rgba(251, 192, 45, 0.15);
 }
 
 .peticion-upload-zone:hover::before {
@@ -335,26 +335,26 @@
 .upload-zone-inner {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   position: relative;
   z-index: 1;
 }
 
-/* Icona animada */
+/* Icona */
 .upload-icon-wrapper {
   position: relative;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .upload-icon-main {
-  font-size: 26px !important;
-  width: 26px !important;
-  height: 26px !important;
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
   color: #fbc02d !important;
   position: relative;
   z-index: 2;
@@ -362,14 +362,14 @@
 }
 
 .peticion-upload-zone:hover .upload-icon-main {
-  transform: translateY(-3px) scale(1.1);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .upload-icon-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1.5px solid rgba(251, 192, 45, 0.25);
+  border: 1.2px solid rgba(251, 192, 45, 0.25);
   background: rgba(251, 192, 45, 0.07);
   transition: all 0.3s ease;
 }
@@ -377,26 +377,25 @@
 .peticion-upload-zone:hover .upload-icon-ring {
   border-color: rgba(251, 192, 45, 0.5);
   background: rgba(251, 192, 45, 0.12);
-  box-shadow: 0 0 16px rgba(251, 192, 45, 0.2);
+  box-shadow: 0 0 12px rgba(251, 192, 45, 0.2);
 }
 
 /* Textos */
 .upload-zone-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   flex: 1;
 }
 
 .upload-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #e0e0e0;
-  letter-spacing: -0.2px;
 }
 
 .upload-subtitle {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: #6b7280;
   font-style: italic;
 }
@@ -405,53 +404,46 @@
 .upload-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
-  border-radius: 20px;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 18px;
   background: rgba(251, 192, 45, 0.1);
   border: 1px solid rgba(251, 192, 45, 0.3);
   color: #fbc02d;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.3px;
   flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
 .upload-badge mat-icon {
-  font-size: 15px !important;
-  width: 15px !important;
-  height: 15px !important;
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
 }
 
 .peticion-upload-zone:hover .upload-badge {
   background: rgba(251, 192, 45, 0.18);
   border-color: rgba(251, 192, 45, 0.6);
-  box-shadow: 0 0 12px rgba(251, 192, 45, 0.2);
+  box-shadow: 0 0 10px rgba(251, 192, 45, 0.2);
 }
 
 /* Llista de fitxers */
 .peticion-file-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .peticion-file-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 8px;
+  padding: 6px 8px;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   transition: background 0.2s ease;
-  animation: fileItemIn 0.25s ease-out;
-}
-
-@keyframes fileItemIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
 }
 
 .peticion-file-item:hover {
@@ -459,9 +451,9 @@
 }
 
 .file-icon-wrap {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
   background: rgba(251, 192, 45, 0.1);
   display: flex;
   align-items: center;
@@ -471,9 +463,9 @@
 
 .file-icon-wrap mat-icon {
   color: #fbc02d !important;
-  font-size: 17px !important;
-  width: 17px !important;
-  height: 17px !important;
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 .file-info {
@@ -485,7 +477,7 @@
 }
 
 .peticion-file-name {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #e0e0e0;
   font-weight: 500;
   white-space: nowrap;
@@ -494,7 +486,7 @@
 }
 
 .peticion-file-size {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: #4b5563;
 }
 
@@ -505,8 +497,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   padding: 0;
   transition: all 0.2s ease;
@@ -519,9 +511,9 @@
 
 .peticion-file-remove mat-icon {
   color: #4b5563 !important;
-  font-size: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
   transition: color 0.2s ease;
 }
 
@@ -532,23 +524,23 @@
 /* ===== TOAST ===== */
 .peticion-toast {
   position: fixed;
-  bottom: 30px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
   background: #1e2128;
   color: #fff;
-  padding: 12px 24px;
-  border-radius: 50px;
+  padding: 8px 16px;
+  border-radius: 40px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   border: 1px solid rgba(251, 192, 45, 0.2);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 10000;
   opacity: 0;
   pointer-events: none;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .peticion-toast.show {
@@ -563,22 +555,22 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .peticion-root {
-    padding: 12px 8px 24px;
+    padding: 8px 6px 16px;
   }
 
   .peticion-main-container {
-    padding: 16px;
+    padding: 10px;
     border-radius: 12px;
   }
 
   .peticion-row {
     grid-template-columns: 1fr;
-    row-gap: 6px;
+    row-gap: 4px;
   }
 
   .peticion-form-footer {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     align-items: flex-start;
   }
 
