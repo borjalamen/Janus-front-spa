@@ -5,7 +5,6 @@
   color: #e0e0e0;
   padding: 48px 24px;
   box-sizing: border-box;
-
   display: flex;
   justify-content: center;
 }
@@ -17,11 +16,9 @@
   padding: 40px;
   width: 100%;
   max-width: 850px;
-
   border: 1px solid rgba(229, 57, 53, 0.25);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
               0 0 30px rgba(229, 57, 53, 0.15);
-
   animation: cardFadeIn 0.6s ease-out;
   box-sizing: border-box;
   margin: auto 0;
@@ -51,6 +48,116 @@
   color: #9da3ae;
   font-size: 1.1rem;
   margin: 0;
+}
+
+/* ===== CARD SOL·LICITUD PENDENT ===== */
+.pending-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  padding: 18px 22px 16px;
+  border: 1px solid rgba(251, 192, 45, 0.25);
+  margin-bottom: 20px;
+}
+
+.pending-icon-wrapper {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(251, 192, 45, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pending-icon {
+  font-size: 22px;
+  color: #fbc02d;
+}
+
+.pending-content {
+  flex: 1;
+}
+
+.pending-title {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbc02d;
+}
+
+.pending-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #cfd8dc;
+  line-height: 1.4;
+}
+
+/* ===== BOTONS PENDENT ===== */
+.pending-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* netegem estil mat-button i definim el nostre */
+.pending-btn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: #e0e0e0;
+  box-sizing: border-box;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pending-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* principal blau */
+.pending-btn.primary {
+  background: #2196f3;
+  color: #101218;
+  border-color: transparent;
+}
+
+.pending-btn.primary:hover:not(:disabled) {
+  background: #42a5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.35);
+}
+
+/* secundari gris */
+.pending-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e0e0e0;
+}
+
+.pending-btn.secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pending-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none;
 }
 
 /* ===== FORMULARI I FILES ===== */
@@ -118,7 +225,7 @@
   font-weight: 500;
 }
 
-/* ===== FOOTER I BOTONS ===== */
+/* ===== FOOTER I BOTONS FORMULARI ===== */
 .form-footer {
   display: flex;
   justify-content: space-between;
@@ -130,20 +237,28 @@
 
 .actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  border-radius: 12px;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 /* primary blau com a peticion */
@@ -155,8 +270,8 @@
 
 .action-btn.primary:hover:not(:disabled) {
   background: #42a5f5;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(33, 150, 243, 0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(33, 150, 243, 0.35);
 }
 
 /* secondary amb escova */
@@ -165,12 +280,17 @@
   color: #e0e0e0;
 }
 
+.action-btn.secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .action-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.35;
   cursor: not-allowed;
   transform: none !important;
 }
 
+/* Spinner icona */
 .spinning {
   animation: spin 1s linear infinite;
 }
@@ -187,28 +307,22 @@
   gap: 8px;
 }
 
-/* === estils reciclats per al botó de reset amb Escova === */
+/* === estils per al botó de reset amb Escova === */
 .limpiar-label {
   color: #b0bec5;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  text-align: center;
 }
 
 .limpiar-btn-round {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  min-width: 64px;
+  border-radius: 18px;
+  min-width: 0;
+  padding-inline: 10px;
 }
 
 .btn-custom-img {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   display: block;
   object-fit: contain;
 }
@@ -300,6 +414,19 @@
 
   .action-btn {
     flex: 1;
-    justify-content: center;
+  }
+
+  .pending-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pending-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .pending-btn {
+    min-width: 0;
   }
 }

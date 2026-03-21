@@ -7,18 +7,31 @@
         <mat-icon class="pending-icon" *ngIf="!checkingStatus">hourglass_empty</mat-icon>
         <mat-icon class="pending-icon spinning" *ngIf="checkingStatus">sync</mat-icon>
       </div>
+
       <div class="pending-content">
         <h3 class="pending-title">Sol·licitud enviada</h3>
         <p class="pending-desc">
           La teva sol·licitud per a <strong>{{ pendingEmail }}</strong> està pendent d'aprovació per part de l'administrador.
           Torna a visitar aquesta pàgina per veure si ha estat aprovada.
         </p>
+
         <div class="pending-actions">
-          <button class="pending-check-btn" (click)="checkRequestStatus()" [disabled]="checkingStatus">
-            <mat-icon>refresh</mat-icon>
+          <button
+            class="pending-btn primary"
+            (click)="checkRequestStatus()"
+            [disabled]="checkingStatus"
+          >
+            <mat-icon [class.spinning]="checkingStatus">
+              {{ checkingStatus ? 'sync' : 'refresh' }}
+            </mat-icon>
             <span>{{ checkingStatus ? 'Comprovant...' : 'Comprovar ara' }}</span>
           </button>
-          <button class="pending-cancel-btn" (click)="cancelarSolicitud()">
+
+          <button
+            class="pending-btn secondary"
+            (click)="cancelarSolicitud()"
+            [disabled]="checkingStatus"
+          >
             <mat-icon>close</mat-icon>
             <span>Cancel·lar sol·licitud</span>
           </button>
