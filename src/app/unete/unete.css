@@ -9,6 +9,7 @@
   justify-content: center;
 }
 
+
 /* ===== CARD PRINCIPAL ===== */
 .main-container {
   background: linear-gradient(145deg, #14161d 0%, #0f1116 100%);
@@ -24,10 +25,12 @@
   margin: auto 0;
 }
 
+
 @keyframes cardFadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
 
 /* ===== SECCIÓ DEL TÍTOL ===== */
 .header-section {
@@ -35,6 +38,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 20px;
 }
+
 
 .header-section h2 {
   color: #fbc02d;
@@ -44,11 +48,13 @@
   letter-spacing: -1px;
 }
 
+
 .subtitle {
   color: #9da3ae;
   font-size: 1.1rem;
   margin: 0;
 }
+
 
 /* ===== CARD SOL·LICITUD PENDENT ===== */
 .pending-card {
@@ -62,6 +68,7 @@
   margin-bottom: 20px;
 }
 
+
 .pending-icon-wrapper {
   flex-shrink: 0;
   width: 46px;
@@ -73,14 +80,17 @@
   justify-content: center;
 }
 
+
 .pending-icon {
   font-size: 22px;
   color: #fbc02d;
 }
 
+
 .pending-content {
   flex: 1;
 }
+
 
 .pending-title {
   margin: 0 0 4px 0;
@@ -89,12 +99,14 @@
   color: #fbc02d;
 }
 
+
 .pending-desc {
   margin: 0;
   font-size: 0.9rem;
   color: #cfd8dc;
   line-height: 1.4;
 }
+
 
 /* ===== BOTONS PENDENT ===== */
 .pending-actions {
@@ -104,6 +116,7 @@
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+
 
 /* netegem estil mat-button i definim el nostre */
 .pending-btn {
@@ -124,11 +137,13 @@
   transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
 .pending-btn mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
 }
+
 
 /* principal blau */
 .pending-btn.primary {
@@ -137,11 +152,13 @@
   border-color: transparent;
 }
 
+
 .pending-btn.primary:hover:not(:disabled) {
   background: #42a5f5;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(33, 150, 243, 0.35);
 }
+
 
 /* secundari gris */
 .pending-btn.secondary {
@@ -149,9 +166,11 @@
   color: #e0e0e0;
 }
 
+
 .pending-btn.secondary:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.12);
 }
+
 
 .pending-btn:disabled {
   opacity: 0.35;
@@ -160,6 +179,7 @@
   box-shadow: none;
 }
 
+
 /* ===== FORMULARI I FILES ===== */
 .form-content {
   display: flex;
@@ -167,19 +187,23 @@
   gap: 20px;
 }
 
+
 .row {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
 }
 
+
 .row mat-form-field {
   flex: 1 1 300px;
 }
 
+
 .row .full {
   flex: 1 1 100%;
 }
+
 
 /* ===== ANGULAR MATERIAL PERSONALITZAT ===== */
 ::ng-deep .main-container .mat-mdc-text-field-wrapper {
@@ -187,27 +211,32 @@
   border-radius: 10px !important;
 }
 
+
 ::ng-deep .main-container .mat-mdc-form-field-flex {
   border: 1px solid #2e3236 !important;
   padding: 10px 16px !important;
   transition: all 0.2s ease;
 }
 
+
 ::ng-deep .main-container .mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex {
   border-color: #fbc02d !important;
   background: rgba(251, 192, 45, 0.02) !important;
 }
+
 
 ::ng-deep .main-container .mat-mdc-form-field-icon-prefix .mat-icon {
   color: #7c8084 !important;
   margin-right: 12px;
 }
 
+
 /* Netegem estils per defecte de Material */
 ::ng-deep .main-container .mdc-line-ripple,
 ::ng-deep .main-container .mdc-notched-outline {
   display: none !important;
 }
+
 
 /* Placeholder */
 ::ng-deep .main-container input::placeholder,
@@ -217,6 +246,7 @@
   font-size: 0.9rem;
 }
 
+
 /* Missatges d'error */
 .error-msg {
   color: #ff5252;
@@ -224,6 +254,7 @@
   margin-top: 6px;
   font-weight: 500;
 }
+
 
 /* ===== FOOTER I BOTONS FORMULARI ===== */
 .form-footer {
@@ -235,11 +266,13 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+
 .actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
+
 
 .action-btn {
   display: inline-flex;
@@ -255,11 +288,13 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
 .action-btn mat-icon {
   font-size: 20px;
   width: 20px;
   height: 20px;
 }
+
 
 /* primary blau com a peticion */
 .action-btn.primary {
@@ -268,11 +303,13 @@
   border: none;
 }
 
+
 .action-btn.primary:hover:not(:disabled) {
   background: #42a5f5;
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(33, 150, 243, 0.35);
 }
+
 
 /* secondary amb escova */
 .action-btn.secondary {
@@ -280,9 +317,11 @@
   color: #e0e0e0;
 }
 
+
 .action-btn.secondary:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.08);
 }
+
 
 .action-btn:disabled {
   opacity: 0.35;
@@ -290,14 +329,17 @@
   transform: none !important;
 }
 
+
 /* Spinner icona */
 .spinning {
   animation: spin 1s linear infinite;
 }
 
+
 @keyframes spin {
   100% { transform: rotate(360deg); }
 }
+
 
 .helper {
   color: #78909c;
@@ -307,6 +349,7 @@
   gap: 8px;
 }
 
+
 /* === estils per al botó de reset amb Escova === */
 .limpiar-label {
   color: #b0bec5;
@@ -314,11 +357,13 @@
   font-weight: 500;
 }
 
+
 .limpiar-btn-round {
   border-radius: 18px;
   min-width: 0;
   padding-inline: 10px;
 }
+
 
 .btn-custom-img {
   width: 18px;
@@ -326,6 +371,7 @@
   display: block;
   object-fit: contain;
 }
+
 
 /* ===== MODAL / POPUP CREDENCIALS ===== */
 .modal-overlay {
@@ -339,7 +385,9 @@
   z-index: 9999;
 }
 
+
 .auth-card {
+  position: relative;
   background: #1a1d26;
   padding: 40px;
   border-radius: 24px;
@@ -350,6 +398,49 @@
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
 }
 
+
+/* ===== BOTÓ TANCAR POPUP (CREU) ===== */
+.close-popup-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.close-popup-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+
+.close-popup-btn:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+
+.close-popup-btn mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+
+.close-popup-btn:hover mat-icon {
+  color: #fff;
+}
+
+
 .credential-box {
   background: #0d0f14;
   border-radius: 15px;
@@ -357,6 +448,7 @@
   margin: 25px 0;
   text-align: left;
 }
+
 
 .popup-input {
   width: 100%;
@@ -369,10 +461,12 @@
   margin-top: 5px;
 }
 
+
 .popup-input.highlight {
   color: #fbc02d;
   border-color: rgba(251, 192, 45, 0.3);
 }
+
 
 .confirm-full-btn {
   width: 100%;
@@ -383,7 +477,64 @@
   border-radius: 12px;
   font-weight: 800;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
+
+
+.confirm-full-btn:hover {
+  background: #66bb6a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+}
+
+
+.confirm-full-btn:active {
+  transform: translateY(0);
+}
+
+
+/* ===== POPUP DESCRIPTION I WARN ===== */
+.success-icon {
+  font-size: 48px;
+  color: #fbc02d;
+  margin-bottom: 16px;
+}
+
+
+.success-icon mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+
+.form-title {
+  color: #fbc02d;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 16px 0 12px 0;
+}
+
+
+.popup-desc {
+  color: #cfd8dc;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 16px 0 20px 0;
+}
+
+
+.popup-warn {
+  color: #ffb74d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0 0 24px 0;
+  padding: 12px;
+  background: rgba(255, 183, 77, 0.08);
+  border-radius: 8px;
+  border-left: 3px solid #ffb74d;
+}
+
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
@@ -392,41 +543,10 @@
     justify-content: center;
   }
 
+
   .main-container {
     padding: 25px;
     border-radius: 12px;
     margin: auto 0;
+  
   }
-
-  .header-section h2 {
-    font-size: 1.8rem;
-  }
-
-  .form-footer {
-    flex-direction: column;
-    gap: 25px;
-    align-items: flex-start;
-  }
-
-  .actions {
-    width: 100%;
-  }
-
-  .action-btn {
-    flex: 1;
-  }
-
-  .pending-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .pending-actions {
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .pending-btn {
-    min-width: 0;
-  }
-}

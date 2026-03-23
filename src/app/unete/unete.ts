@@ -9,7 +9,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { LocalStorageService } from '../local-storage.service';
 
-const PENDING_REQUEST_KEY = 'unetePendingRequest';
 
 type UneteForm = {
   fullName: string;
@@ -19,6 +18,7 @@ type UneteForm = {
   projectName: string;
   comments: string;
 };
+
 
 @Component({
   selector: 'app-unete',
@@ -42,19 +42,15 @@ export class UneteComponent implements OnInit, OnDestroy {
   toastOk = true;
   private _toastTimer: any = null;
 
-  // Estat de la sol·licitud pendent
-  pendingEmail: string | null = null;
-  pendingName: string | null = null;
-  requestStatus: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | null = null;
-  checkingStatus = false;
 
-  // Popup credencials quan s'aprova
-  mostrarPopupCredenciales = false;
-  credencialesPopup: { username: string; password: string } | null = null;
+  // Popup de verificació
+  mostrarPopupVerificacio = false;
+  emailEnviat = ''; // ✅ NOVA VARIABLE para guardar el email
+
 
   private STORAGE_KEY = 'uneteForm';
-
   showErrors = false;
+
 
   form: UneteForm = {
     fullName: '',
@@ -65,37 +61,27 @@ export class UneteComponent implements OnInit, OnDestroy {
     comments: ''
   };
 
-  roleOptions = [
-    { value: 'invitado', label: 'Invitado' },
-    { value: 'consultor', label: 'Consultor' },
-    { value: 'devops', label: 'DevOps' },
-    { value: 'admin', label: 'Admin' }
-  ];
 
   constructor(private storage: LocalStorageService) {}
+
 
   ngOnInit(): void {
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
     if (saved) {
       this.form = this.mergeForm(saved);
     }
-
-    // Comprovar si hi ha una sol·licitud pendent guardada
-    const pending = this.storage.getObject<{ email: string; name: string }>(PENDING_REQUEST_KEY);
-    if (pending?.email) {
-      this.pendingEmail = pending.email;
-      this.pendingName = pending.name;
-      this.checkRequestStatus();
-    }
   }
+
 
   ngOnDestroy(): void {
     this.saveDraft();
   }
 
+
   private saveDraft(): void {
     this.storage.setObject(this.STORAGE_KEY, this.form);
   }
+
 
   private mergeForm(saved?: Partial<UneteForm>): UneteForm {
     return {
@@ -108,9 +94,11 @@ export class UneteComponent implements OnInit, OnDestroy {
     };
   }
 
+
   onFormChange(): void {
     this.saveDraft();
   }
+
 
   validateEmail(email: string | null | undefined): boolean {
     if (!email) return false;
@@ -120,67 +108,30 @@ export class UneteComponent implements OnInit, OnDestroy {
     return emailRegex.test(trimmed);
   }
 
-  // Comprova l'estat de la sol·licitud pendent al backend
-  checkRequestStatus(): void {
-    if (!this.pendingEmail) return;
-    this.checkingStatus = true;
-
-    fetch(`/api/join-requests/by-email/${encodeURIComponent(this.pendingEmail)}`)
-      .then(res => {
-        if (!res.ok) throw new Error('No trobat');
-        return res.json();
-      })
-      .then(data => {
-        this.checkingStatus = false;
-        this.requestStatus = data.estado?.toUpperCase() || 'PENDIENTE';
-
-        if (this.requestStatus === 'APROBADA') {
-          // Generar les credencials igual que fa el backend
-          const username = (this.pendingName || data.fullName || '')
-            .replaceAll(' ', '').toLowerCase();
-          const password = (this.pendingName || data.fullName || '') + '1234';
-          this.credencialesPopup = { username, password };
-          this.mostrarPopupCredenciales = true;
-          // Esborrar la sol·licitud pendent del localStorage
-          this.storage.remove(PENDING_REQUEST_KEY);
-          this.pendingEmail = null;
-          this.pendingName = null;
-          this.requestStatus = null;
-        } else if (this.requestStatus === 'RECHAZADA') {
-          // Esborrar la sol·licitud pendent
-          this.storage.remove(PENDING_REQUEST_KEY);
-          this.pendingEmail = null;
-          this.pendingName = null;
-          this.requestStatus = null;
-        }
-      })
-      .catch(() => {
-        this.checkingStatus = false;
-        this.requestStatus = 'PENDIENTE';
-      });
-  }
 
   sendMail() {
     this.showErrors = true;
 
+
     const fullNameOk = !!this.form.fullName.trim();
     const emailOk = this.validateEmail(this.form.email);
+
 
     if (!fullNameOk) {
       this.showToast('⚠️ Por favor, indica el nombre completo.', false);
       return;
     }
 
+
     if (!emailOk) {
       this.showToast('⚠️ Por favor, indica un email válido.', false);
       return;
     }
 
-    this.saveDraft();
-    const emailSnapshot = this.form.email;
-    const nameSnapshot = this.form.fullName;
 
+    this.saveDraft();
     this.sending = true;
+
 
     fetch('/api/contact/unete', {
       method: 'POST',
@@ -189,14 +140,10 @@ export class UneteComponent implements OnInit, OnDestroy {
     })
       .then(async resp => {
         if (resp.ok) {
-          // Guardar la sol·licitud pendent al localStorage
-          this.storage.setObject(PENDING_REQUEST_KEY, {
-            email: emailSnapshot,
-            name: nameSnapshot
-          });
-          this.pendingEmail = emailSnapshot;
-          this.pendingName = nameSnapshot;
-          this.requestStatus = 'PENDIENTE';
+          // ✅ GUARDAR L'EMAIL ANTES DE NETEJAR
+          this.emailEnviat = this.form.email;
+          // Mostra el popup de verificació
+          this.mostrarPopupVerificacio = true;
           this.resetForm();
           this.showErrors = false;
         } else if (resp.status === 400) {
@@ -215,17 +162,12 @@ export class UneteComponent implements OnInit, OnDestroy {
       });
   }
 
-  cerrarPopupCredenciales() {
-    this.mostrarPopupCredenciales = false;
-    this.credencialesPopup = null;
+
+  cerrarPopupVerificacio() {
+    this.mostrarPopupVerificacio = false;
+    this.emailEnviat = ''; // Netejar l'email quan tancam el popup
   }
 
-  cancelarSolicitud() {
-    this.storage.remove(PENDING_REQUEST_KEY);
-    this.pendingEmail = null;
-    this.pendingName = null;
-    this.requestStatus = null;
-  }
 
   resetForm() {
     this.form = {
@@ -239,6 +181,7 @@ export class UneteComponent implements OnInit, OnDestroy {
     this.showErrors = false;
     this.storage.remove(this.STORAGE_KEY);
   }
+
 
   showToast(msg: string, ok = true) {
     this.toastMsg = msg;
