@@ -125,8 +125,8 @@
             (click)="sendMail()"
             [disabled]="
               sending ||
-              !form.fullName?.trim() ||
-              !form.email?.trim() ||
+              !form.fullName.trim() ||
+              !form.email.trim() ||
               !validateEmail(form.email)
             "
           >

@@ -11,6 +11,15 @@ import { LocalStorageService } from '../local-storage.service';
 
 const PENDING_REQUEST_KEY = 'unetePendingRequest';
 
+type UneteForm = {
+  fullName: string;
+  email: string;
+  role: string;
+  projectCode: string;
+  projectName: string;
+  comments: string;
+};
+
 @Component({
   selector: 'app-unete',
   standalone: true,
@@ -47,7 +56,7 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   showErrors = false;
 
-  form = {
+  form: UneteForm = {
     fullName: '',
     email: '',
     role: '',
@@ -68,7 +77,7 @@ export class UneteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
     if (saved) {
-      this.form = saved;
+      this.form = this.mergeForm(saved);
     }
 
     // Comprovar si hi ha una sol·licitud pendent guardada
@@ -86,6 +95,17 @@ export class UneteComponent implements OnInit, OnDestroy {
 
   private saveDraft(): void {
     this.storage.setObject(this.STORAGE_KEY, this.form);
+  }
+
+  private mergeForm(saved?: Partial<UneteForm>): UneteForm {
+    return {
+      fullName: saved?.fullName ?? '',
+      email: saved?.email ?? '',
+      role: saved?.role ?? '',
+      projectCode: saved?.projectCode ?? '',
+      projectName: saved?.projectName ?? '',
+      comments: saved?.comments ?? ''
+    };
   }
 
   onFormChange(): void {
@@ -143,7 +163,7 @@ export class UneteComponent implements OnInit, OnDestroy {
   sendMail() {
     this.showErrors = true;
 
-    const fullNameOk = !!this.form.fullName?.trim();
+    const fullNameOk = !!this.form.fullName.trim();
     const emailOk = this.validateEmail(this.form.email);
 
     if (!fullNameOk) {

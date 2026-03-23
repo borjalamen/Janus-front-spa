@@ -1,8 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SafePipe } from '../safe.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -29,7 +27,6 @@ import { environment } from '../../environments/environment';
   imports: [
     CommonModule,
     FormsModule,
-    SafePipe,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -78,8 +75,7 @@ export class PeticionComponent implements OnInit {
   constructor(
     private storage: LocalStorageService,
     private dialog: MatDialog,
-    private http: HttpClient,
-    private sanitizer: DomSanitizer
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
