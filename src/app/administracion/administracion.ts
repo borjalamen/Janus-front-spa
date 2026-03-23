@@ -514,18 +514,23 @@ export class AdministracionComponent implements OnInit {
   }
 
   private cargarPeticionsTareas() {
-    this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
-      next: data => {
-        this.peticionsTareas = data.map(p => this.mapPeticionTarea(p));
+  this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe(
+    {
+      next: (data) => {
+        // Invertir orden: más nuevas arriba
+        this.peticionsTareas = data
+          .reverse()
+          .map((p) => this.mapPeticionTarea(p));
         this.aplicarFiltrosTareas();
       },
-      error: err => {
-        console.error('Error cargando peticiones de tarea', err);
+      error: (err) => {
+        console.error('Error cargando peticiones de tarea: ', err);
         this.peticionsTareas = [];
         this.aplicarFiltrosTareas();
-      }
-    });
-  }
+      },
+    }
+  );
+}
 
   private mapPeticionTarea(p: PeticionTareaBackend): PeticionTareaAdmin {
     return {
@@ -647,18 +652,23 @@ export class AdministracionComponent implements OnInit {
   }
 
   private cargarPeticiones() {
-    this.http.get<PeticionUneteBackend[]>(this.joinRequestsUrl).subscribe({
-      next: data => {
-        this.peticiones = data.map(req => this.mapJoinRequest(req));
+  this.http.get<PeticionUneteBackend[]>(this.joinRequestsUrl).subscribe(
+    {
+      next: (data) => {
+        // Invertir orden: más nuevas arriba
+        this.peticiones = data
+          .reverse()
+          .map((req) => this.mapJoinRequest(req));
         this.aplicarFiltrosPeticiones();
       },
-      error: err => {
-        console.error('Error cargando peticiones de Unete', err);
+      error: (err) => {
+        console.error('Error cargando peticiones de Unete: ', err);
         this.peticiones = [];
         this.aplicarFiltrosPeticiones();
-      }
-    });
-  }
+      },
+    }
+  );
+}
 
   private mapJoinRequest(req: PeticionUneteBackend): PeticionAdmin {
     return {

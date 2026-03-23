@@ -1,11 +1,8 @@
 <div class="peticion-root">
   <div class="peticion-main-container">
-
     <div class="peticion-header-section">
       <h2>{{ 'PETICION.TITLE' | translate }}</h2>
-      <p class="peticion-subtitle">
-        {{ 'PETICION.SUBTITLE' | translate }}
-      </p>
+      <p class="peticion-subtitle">{{ 'PETICION.SUBTITLE' | translate }}</p>
     </div>
 
     <div class="peticion-form-content">
@@ -165,7 +162,10 @@
             (dateChange)="onFormChange()"
             [placeholder]="'PETICION.DEADLINE_PH' | translate"
           />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker
             #picker
             panelClass="peticion-date-panel"
@@ -205,8 +205,12 @@
                 <div class="upload-icon-ring"></div>
               </div>
               <div class="upload-zone-text">
-                <span class="upload-title">{{ 'PETICION.UPLOAD_TITLE' | translate }}</span>
-                <span class="upload-subtitle">{{ 'PETICION.UPLOAD_SUBTITLE' | translate }}</span>
+                <span class="upload-title"
+                  >{{ 'PETICION.UPLOAD_TITLE' | translate }}</span
+                >
+                <span class="upload-subtitle"
+                  >{{ 'PETICION.UPLOAD_SUBTITLE' | translate }}</span
+                >
               </div>
               <div class="upload-badge">
                 <mat-icon>add</mat-icon>
@@ -216,20 +220,28 @@
           </label>
 
           <div class="peticion-file-list" *ngIf="attachments.length > 0">
-            <div class="peticion-file-item" *ngFor="let a of attachments; let i = index">
+            <div
+              class="peticion-file-item"
+              *ngFor="let a of attachments; let i = index"
+            >
               <div class="file-icon-wrap">
                 <mat-icon>insert_drive_file</mat-icon>
               </div>
               <div class="file-info">
                 <span class="peticion-file-name">{{ a.name }}</span>
-                <span class="peticion-file-size">{{ (a.size / 1024).toFixed(1) }} KB</span>
+                <span class="peticion-file-size"
+                  >{{ (a.size / 1024).toFixed(1) }} KB</span
+                >
               </div>
-              <button type="button" class="peticion-file-remove" (click)="removeAttachment(i)">
+              <button
+                type="button"
+                class="peticion-file-remove"
+                (click)="removeAttachment(i)"
+              >
                 <mat-icon>close</mat-icon>
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -252,7 +264,8 @@
             {{ sending ? 'sync' : 'send' }}
           </mat-icon>
           <span>
-            {{ sending ? ('PETICION.SENDING' | translate) : ('PETICION.SEND' | translate) }}
+            {{ sending ? ('PETICION.SENDING' | translate) : ('PETICION.SEND' |
+            translate) }}
           </span>
         </button>
 
@@ -263,12 +276,20 @@
           [disabled]="sending"
         >
           <span class="limpiar-label">{{ 'PETICION.RESET' | translate }}</span>
-          <img src="assets/images/Escova.png" class="btn-custom-img" alt="Reiniciar" />
+          <img
+            src="assets/images/Escova.png"
+            class="btn-custom-img"
+            alt="Reiniciar"
+          />
         </button>
       </div>
     </div>
 
-    <div class="peticion-toast" [class.show]="toastMsg" [class.error]="!toastOk">
+    <div
+      class="peticion-toast"
+      [class.show]="toastMsg"
+      [class.error]="!toastOk"
+    >
       <mat-icon>{{ toastOk ? 'check_circle' : 'error' }}</mat-icon>
       <span>{{ toastMsg }}</span>
     </div>
