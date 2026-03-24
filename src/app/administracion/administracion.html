@@ -1,59 +1,82 @@
 <div class="section-container admin-layout admin-top-tabs">
-  
   <div class="admin-top-nav">
     <h2 class="admin-top-title">{{ 'ADMIN.PANEL_TITLE' | translate }}</h2>
     <div class="admin-top-tabs-bar">
-      <button class="menu-btn" 
-              [class.active]="activeTab === 'USERS'" 
-              (click)="cambiarTab('USERS')">
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'USERS'"
+        (click)="cambiarTab('USERS')"
+      >
         <span class="menu-emoji">👥</span> {{ 'ADMIN.TAB_USERS' | translate }}
       </button>
-      
-      <button class="menu-btn" 
-              [class.active]="activeTab === 'APP'" 
-              (click)="cambiarTab('APP')">
+
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'APP'"
+        (click)="cambiarTab('APP')"
+      >
         <span class="menu-emoji">⚙️</span> {{ 'ADMIN.TAB_APP' | translate }}
       </button>
-      
-      <button class="menu-btn" 
-              [class.active]="activeTab === 'PARAM'" 
-              (click)="cambiarTab('PARAM')">
+
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'PARAM'"
+        (click)="cambiarTab('PARAM')"
+      >
         <span class="menu-emoji">🎛️</span> {{ 'ADMIN.TAB_PARAM' | translate }}
       </button>
-      
-      <button class="menu-btn" 
-              [class.active]="activeTab === 'DB'" 
-              (click)="cambiarTab('DB')">
+
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'DB'"
+        (click)="cambiarTab('DB')"
+      >
         <span class="menu-emoji">🗄️</span> {{ 'ADMIN.TAB_DB' | translate }}
       </button>
 
-      <button class="menu-btn" 
-              [class.active]="activeTab === 'REQUESTS'" 
-              (click)="cambiarTab('REQUESTS')">
-        <span class="menu-emoji">📋</span> {{ 'ADMIN.TAB_REQUESTS' | translate }}
-        <span class="tab-badge" *ngIf="peticionesPendientes > 0">{{ peticionesPendientes }}</span>
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'REQUESTS'"
+        (click)="cambiarTab('REQUESTS')"
+      >
+        <span class="menu-emoji">📋</span> {{ 'ADMIN.TAB_REQUESTS' | translate
+        }}
+        <span class="tab-badge" *ngIf="peticionesPendientes > 0"
+          >{{ peticionesPendientes }}</span
+        >
       </button>
 
-      <button class="menu-btn"
-              [class.active]="activeTab === 'PETICIONES_TAREAS'"
-              (click)="cambiarTab('PETICIONES_TAREAS')">
-        <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_PETICIONES' | translate }}
-        <span class="tab-badge" *ngIf="tareasPendientes > 0">{{ tareasPendientes }}</span>
+      <button
+        class="menu-btn"
+        [class.active]="activeTab === 'PETICIONES_TAREAS'"
+        (click)="cambiarTab('PETICIONES_TAREAS')"
+      >
+        <span class="menu-emoji">📝</span> {{ 'ADMIN.TAB_PETICIONES' | translate
+        }}
+        <span class="tab-badge" *ngIf="tareasPendientes > 0"
+          >{{ tareasPendientes }}</span
+        >
       </button>
     </div>
   </div>
 
   <div class="admin-content">
-
     <div *ngIf="activeTab === 'USERS'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>{{ 'ADMIN.MANAGE_USERS' | translate }}</h2>
-        <button class="jenkins-add-btn" *ngIf="canEdit" (click)="obrirPopupCrear()">
+        <button
+          class="jenkins-add-btn"
+          *ngIf="canEdit"
+          (click)="obrirPopupCrear()"
+        >
           <mat-icon>add</mat-icon> {{ 'ADMIN.ADD_USER' | translate }}
         </button>
       </div>
 
-      <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+      <app-buscador
+        (buscar)="filtrar($event)"
+        style="margin-bottom: 20px; display: block"
+      ></app-buscador>
 
       <div class="users-list">
         <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
@@ -66,13 +89,27 @@
           </div>
 
           <div class="actions">
-            <button class="icon-btn view-profile" (click)="verPerfil(usuari)" [title]="'ADMIN.VIEW_FULL_PROFILE' | translate">
+            <button
+              class="icon-btn view-profile"
+              (click)="verPerfil(usuari)"
+              [title]="'ADMIN.VIEW_FULL_PROFILE' | translate"
+            >
               <span class="emoji-icon">👁️</span>
             </button>
-            <button class="icon-btn edit" *ngIf="canEdit" (click)="obrirPopupEditar(usuari)" [title]="'ADMIN.UPDATE_USER' | translate">
+            <button
+              class="icon-btn edit"
+              *ngIf="canEdit"
+              (click)="obrirPopupEditar(usuari)"
+              [title]="'ADMIN.UPDATE_USER' | translate"
+            >
               <span class="emoji-icon">✏️</span>
             </button>
-            <button class="icon-btn delete" *ngIf="canEdit" (click)="confirmarInhabilitar(usuari)" [title]="'ADMIN.DISABLE_USER' | translate">
+            <button
+              class="icon-btn delete"
+              *ngIf="canEdit"
+              (click)="confirmarInhabilitar(usuari)"
+              [title]="'ADMIN.DISABLE_USER' | translate"
+            >
               <span class="emoji-icon">🗑️</span>
             </button>
           </div>
@@ -84,24 +121,28 @@
       <div class="documents-header">
         <h2>{{ 'ADMIN.MANAGE_APP' | translate }}</h2>
       </div>
-      
+
       <div class="admin-card">
         <h3>{{ 'ADMIN.DISABLE_BY_ROLES' | translate }}</h3>
         <p>{{ 'ADMIN.DISABLE_DESCRIPTION' | translate }}</p>
-        
+
         <div class="form-field">
-            <label>{{ 'ADMIN.SELECT_ROLE' | translate }}</label>
-            <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
-                <option value="" disabled selected>{{ 'ADMIN.CHOOSE' | translate }}</option>
-                <option value="CONSULTOR">{{ 'ADMIN.CONSULTANT' | translate }}</option>
-                <option value="DEV">{{ 'ADMIN.DEVOPS' | translate }}</option>
-            </select>
+          <label>{{ 'ADMIN.SELECT_ROLE' | translate }}</label>
+          <select [(ngModel)]="selectedRoleToDisable" class="custom-select">
+            <option value="" disabled selected>
+              {{ 'ADMIN.CHOOSE' | translate }}
+            </option>
+            <option value="CONSULTOR">
+              {{ 'ADMIN.CONSULTANT' | translate }}
+            </option>
+            <option value="DEV">{{ 'ADMIN.DEVOPS' | translate }}</option>
+          </select>
         </div>
-        
-        <div style="margin-top: 16px; text-align: right;">
-            <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
-                {{ 'ADMIN.DISABLE_ACCESS' | translate }}
-            </button>
+
+        <div style="margin-top: 16px; text-align: right">
+          <button class="jenkins-add-btn" (click)="inhabilitarPorRol()">
+            {{ 'ADMIN.DISABLE_ACCESS' | translate }}
+          </button>
         </div>
       </div>
     </div>
@@ -117,7 +158,12 @@
 
         <div class="form-field">
           <label>{{ 'ADMIN.SYSTEM_VERSION' | translate }}</label>
-          <input type="text" [(ngModel)]="appVersion" placeholder="Ej: 1.0.0" [disabled]="versionSaving">
+          <input
+            type="text"
+            [(ngModel)]="appVersion"
+            placeholder="Ej: 1.0.0"
+            [disabled]="versionSaving"
+          />
         </div>
 
         <div class="param-feedback">
@@ -129,10 +175,17 @@
           </div>
         </div>
 
-        <div style="margin-top: 16px; text-align: right;">
-          <button class="jenkins-add-btn" (click)="cambiarVersion()" [disabled]="versionSaving">
-            <mat-icon>{{ versionSaving ? 'hourglass_empty' : 'update' }}</mat-icon>
-            {{ versionSaving ? 'Guardando...' : ('ADMIN.UPDATE_VERSION' | translate) }}
+        <div style="margin-top: 16px; text-align: right">
+          <button
+            class="jenkins-add-btn"
+            (click)="cambiarVersion()"
+            [disabled]="versionSaving"
+          >
+            <mat-icon
+              >{{ versionSaving ? 'hourglass_empty' : 'update' }}</mat-icon
+            >
+            {{ versionSaving ? 'Guardando...' : ('ADMIN.UPDATE_VERSION' |
+            translate) }}
           </button>
         </div>
       </div>
@@ -149,7 +202,10 @@
           <span class="big-emoji">🗑️</span>
           <h3>{{ 'ADMIN.PHYSICAL_DELETE' | translate }}</h3>
           <p>{{ 'ADMIN.PHYSICAL_DELETE_DESC' | translate }}</p>
-          <button class="jenkins-add-btn db-danger-btn" (click)="accionBBDD('borrado')">
+          <button
+            class="jenkins-add-btn db-danger-btn"
+            (click)="accionBBDD('borrado')"
+          >
             <mat-icon>delete_forever</mat-icon>
             {{ 'ADMIN.PHYSICAL_DELETE' | translate }}
           </button>
@@ -183,55 +239,92 @@
       <div class="documents-header">
         <h2>{{ 'ADMIN.REQUESTS' | translate }}</h2>
         <div class="requests-summary">
-          <span class="status-pill pendiente" 
-                [class.active]="filtroEstadoPeticiones === 'PENDIENTE'"
-                (click)="filtrarPorEstado('PENDIENTE')"
-                style="cursor: pointer;">
+          <span
+            class="status-pill pendiente"
+            [class.active]="filtroEstadoPeticiones === 'PENDIENTE'"
+            (click)="filtrarPorEstado('PENDIENTE')"
+            style="cursor: pointer"
+          >
             {{ peticionesPendientes }} {{ 'ADMIN.PENDING' | translate }}
           </span>
-          <span class="status-pill aprobada" 
-                [class.active]="filtroEstadoPeticiones === 'APROBADA'"
-                (click)="filtrarPorEstado('APROBADA')"
-                style="cursor: pointer;">
+          <span
+            class="status-pill aprobada"
+            [class.active]="filtroEstadoPeticiones === 'APROBADA'"
+            (click)="filtrarPorEstado('APROBADA')"
+            style="cursor: pointer"
+          >
             {{ peticionesAprobadas }} {{ 'ADMIN.APPROVED' | translate }}
           </span>
-          <span class="status-pill rechazada" 
-                [class.active]="filtroEstadoPeticiones === 'RECHAZADA'"
-                (click)="filtrarPorEstado('RECHAZADA')"
-                style="cursor: pointer;">
+          <span
+            class="status-pill rechazada"
+            [class.active]="filtroEstadoPeticiones === 'RECHAZADA'"
+            (click)="filtrarPorEstado('RECHAZADA')"
+            style="cursor: pointer"
+          >
             {{ peticionesRechazadas }} {{ 'ADMIN.REJECTED' | translate }}
           </span>
-          <span class="status-pill" 
-                [class.active]="filtroEstadoPeticiones === 'TODAS'"
-                (click)="filtrarPorEstado('TODAS')"
-                style="cursor: pointer;">
+          <span
+            class="status-pill"
+            [class.active]="filtroEstadoPeticiones === 'TODAS'"
+            (click)="filtrarPorEstado('TODAS')"
+            style="cursor: pointer"
+          >
             {{ peticiones.length }} {{ 'ADMIN.ALL' | translate }}
           </span>
         </div>
       </div>
 
-      <app-buscador (buscar)="filtrarPeticiones($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+      <app-buscador
+        (buscar)="filtrarPeticiones($event)"
+        style="margin-bottom: 20px; display: block"
+      ></app-buscador>
 
       <div class="requests-list">
-        <div *ngFor="let peticion of peticionesPaginadas" class="admin-card request-card">
+        <div
+          *ngFor="let peticion of peticionesPaginadas"
+          class="admin-card request-card"
+        >
           <div class="request-header">
             <div class="request-title">
               <span class="request-id">#{{ peticion.id }}</span>
               <span class="request-type">{{ peticion.tipo }}</span>
             </div>
-            <span class="status-pill" [ngClass]="peticion.estado.toLowerCase()">{{ (getStatusTranslation(peticion.estado)) | translate }}</span>
+            <span class="status-pill" [ngClass]="peticion.estado.toLowerCase()"
+              >{{ (getStatusTranslation(peticion.estado)) | translate }}</span
+            >
           </div>
           <div class="request-meta">
             <span>👤 {{ peticion.solicitante }}</span>
             <span>📅 {{ peticion.fecha }}</span>
           </div>
           <p class="request-note">{{ peticion.comentario }}</p>
-          <div class="request-actions" *ngIf="peticion.estado === 'PENDIENTE'">
-            <button class="btn-emoji confirm" (click)="aprobarPeticion(peticion)" [disabled]="!canEdit">
-              ✓
-            </button>
-            <button class="btn-emoji cancel" (click)="rechazarPeticion(peticion)" [disabled]="!canEdit">
-              ✗
+          <div class="request-actions">
+            <div
+              *ngIf="peticion.estado === 'PENDIENTE'"
+              style="display: flex; gap: 10px"
+            >
+              <button
+                class="btn-emoji confirm"
+                (click)="aprobarPeticion(peticion)"
+                [disabled]="!canEdit"
+              >
+                ✓
+              </button>
+              <button
+                class="btn-emoji cancel"
+                (click)="rechazarPeticion(peticion)"
+                [disabled]="!canEdit"
+              >
+                ✗
+              </button>
+            </div>
+            <!-- ✅ BOTÓ PDF - AFEGIT -->
+            <button
+              class="btn-emoji pdf"
+              (click)="descargarPDF(peticion)"
+              title="Descargar PDF"
+            >
+              📄
             </button>
           </div>
         </div>
@@ -243,20 +336,31 @@
 
       <!-- Paginación -->
       <div class="pagination-bar" *ngIf="totalPaginasPeticiones > 1">
-        <button class="page-btn" (click)="cambiarPaginaPeticiones(paginaActualPeticiones - 1)" [disabled]="paginaActualPeticiones === 1">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaPeticiones(paginaActualPeticiones - 1)"
+          [disabled]="paginaActualPeticiones === 1"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
         <button
           *ngFor="let p of paginasArray"
           class="page-btn"
           [class.active]="p === paginaActualPeticiones"
-          (click)="cambiarPaginaPeticiones(p)">
+          (click)="cambiarPaginaPeticiones(p)"
+        >
           {{ p }}
         </button>
-        <button class="page-btn" (click)="cambiarPaginaPeticiones(paginaActualPeticiones + 1)" [disabled]="paginaActualPeticiones === totalPaginasPeticiones">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaPeticiones(paginaActualPeticiones + 1)"
+          [disabled]="paginaActualPeticiones === totalPaginasPeticiones"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
-        <span class="page-info">{{ paginaActualPeticiones }} / {{ totalPaginasPeticiones }}</span>
+        <span class="page-info"
+          >{{ paginaActualPeticiones }} / {{ totalPaginasPeticiones }}</span
+        >
       </div>
     </div>
 
@@ -264,41 +368,60 @@
       <div class="documents-header">
         <h2>{{ 'ADMIN.TAB_PETICIONES' | translate }}</h2>
         <div class="requests-summary">
-          <span class="status-pill pendiente"
-                [class.active]="filtroEstadoTareas === 'PENDIENTE'"
-                (click)="filtrarPorEstadoTareas('PENDIENTE')"
-                style="cursor:pointer">
+          <span
+            class="status-pill pendiente"
+            [class.active]="filtroEstadoTareas === 'PENDIENTE'"
+            (click)="filtrarPorEstadoTareas('PENDIENTE')"
+            style="cursor: pointer"
+          >
             {{ tareasPendientes }} Pendientes
           </span>
-          <span class="status-pill aprobada"
-                [class.active]="filtroEstadoTareas === 'APROBADA'"
-                (click)="filtrarPorEstadoTareas('APROBADA')"
-                style="cursor:pointer">
+          <span
+            class="status-pill aprobada"
+            [class.active]="filtroEstadoTareas === 'APROBADA'"
+            (click)="filtrarPorEstadoTareas('APROBADA')"
+            style="cursor: pointer"
+          >
             {{ tareasAprobadas }} Completadas
           </span>
-          <span class="status-pill rechazada"
-                [class.active]="filtroEstadoTareas === 'RECHAZADA'"
-                (click)="filtrarPorEstadoTareas('RECHAZADA')"
-                style="cursor:pointer">
+          <span
+            class="status-pill rechazada"
+            [class.active]="filtroEstadoTareas === 'RECHAZADA'"
+            (click)="filtrarPorEstadoTareas('RECHAZADA')"
+            style="cursor: pointer"
+          >
             {{ tareasRechazadas }} Rechazadas
           </span>
-          <span class="status-pill"
-                [class.active]="filtroEstadoTareas === 'TODAS'"
-                (click)="filtrarPorEstadoTareas('TODAS')"
-                style="cursor:pointer">
+          <span
+            class="status-pill"
+            [class.active]="filtroEstadoTareas === 'TODAS'"
+            (click)="filtrarPorEstadoTareas('TODAS')"
+            style="cursor: pointer"
+          >
             {{ peticionsTareas.length }} {{ 'ADMIN.ALL' | translate }}
           </span>
         </div>
       </div>
 
-      <app-buscador (buscar)="filtrarTareas($event)" style="margin-bottom:20px; display:block"></app-buscador>
+      <app-buscador
+        (buscar)="filtrarTareas($event)"
+        style="margin-bottom: 20px; display: block"
+      ></app-buscador>
 
       <div class="requests-list">
-        <div *ngFor="let tarea of tareasPaginadas" class="admin-card request-card">
+        <div
+          *ngFor="let tarea of tareasPaginadas"
+          class="admin-card request-card"
+        >
           <div class="request-header">
             <div class="request-title">
               <span class="request-id">#{{ tarea.id.slice(-6) }}</span>
-              <span class="request-type">{{ tarea.proyecto }} <span style="opacity:.6;font-size:11px">({{ tarea.projectCode }})</span></span>
+              <span class="request-type"
+                >{{ tarea.proyecto }}
+                <span style="opacity: 0.6; font-size: 11px"
+                  >({{ tarea.projectCode }})</span
+                ></span
+              >
             </div>
             <span class="status-pill" [ngClass]="tarea.estado.toLowerCase()">
               {{ getStatusTranslation(tarea.estado) | translate }}
@@ -312,8 +435,23 @@
           </div>
 
           <div class="tarea-jira-row" *ngIf="tarea.jiraTask">
-            <mat-icon style="font-size:14px;width:14px;height:14px;vertical-align:middle;color:#64b5f6">link</mat-icon>
-            <a [href]="tarea.jiraTask" target="_blank" rel="noopener" class="jira-link">{{ tarea.jiraTask }}</a>
+            <mat-icon
+              style="
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+                vertical-align: middle;
+                color: #64b5f6;
+              "
+              >link</mat-icon
+            >
+            <a
+              [href]="tarea.jiraTask"
+              target="_blank"
+              rel="noopener"
+              class="jira-link"
+              >{{ tarea.jiraTask }}</a
+            >
           </div>
 
           <div class="request-meta" *ngIf="tarea.asignado">
@@ -323,12 +461,35 @@
 
           <p class="request-note">{{ tarea.comentario }}</p>
 
-          <div class="request-actions" *ngIf="tarea.estado === 'PENDIENTE'">
-            <button class="btn-emoji confirm" (click)="aprobarTarea(tarea)" [disabled]="!canEdit" title="Completar">
-              ✓
-            </button>
-            <button class="btn-emoji cancel" (click)="rechazarTarea(tarea)" [disabled]="!canEdit" title="Rechazar">
-              ✗
+          <div class="request-actions">
+            <div
+              *ngIf="tarea.estado === 'PENDIENTE'"
+              style="display: flex; gap: 10px"
+            >
+              <button
+                class="btn-emoji confirm"
+                (click)="aprobarTarea(tarea)"
+                [disabled]="!canEdit"
+                title="Completar"
+              >
+                ✓
+              </button>
+              <button
+                class="btn-emoji cancel"
+                (click)="rechazarTarea(tarea)"
+                [disabled]="!canEdit"
+                title="Rechazar"
+              >
+                ✗
+              </button>
+            </div>
+
+            <button
+              class="btn-emoji pdf"
+              (click)="descargarPDFTarea(tarea)"
+              title="Descargar PDF"
+            >
+              <mat-icon>picture_as_pdf</mat-icon>
             </button>
           </div>
         </div>
@@ -340,54 +501,80 @@
 
       <!-- Paginación -->
       <div class="pagination-bar" *ngIf="totalPaginasTareas > 1">
-        <button class="page-btn" (click)="cambiarPaginaTareas(paginaActualTareas - 1)" [disabled]="paginaActualTareas === 1">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaTareas(paginaActualTareas - 1)"
+          [disabled]="paginaActualTareas === 1"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
         <button
           *ngFor="let p of paginasArrayTareas"
           class="page-btn"
           [class.active]="p === paginaActualTareas"
-          (click)="cambiarPaginaTareas(p)">
+          (click)="cambiarPaginaTareas(p)"
+        >
           {{ p }}
         </button>
-        <button class="page-btn" (click)="cambiarPaginaTareas(paginaActualTareas + 1)" [disabled]="paginaActualTareas === totalPaginasTareas">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaTareas(paginaActualTareas + 1)"
+          [disabled]="paginaActualTareas === totalPaginasTareas"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
-        <span class="page-info">{{ paginaActualTareas }} / {{ totalPaginasTareas }}</span>
+        <span class="page-info"
+          >{{ paginaActualTareas }} / {{ totalPaginasTareas }}</span
+        >
       </div>
     </div>
-
   </div>
 </div>
 <div class="modal-overlay" *ngIf="mostrarPopup">
   <div class="auth-card">
-    <h2 class="form-title">{{ usuariEditant ? ('ADMIN.EDIT_USER' | translate) : ('ADMIN.NEW_USER' | translate) }}</h2>
-    <hr class="divider">
+    <h2 class="form-title">
+      {{ usuariEditant ? ('ADMIN.EDIT_USER' | translate) : ('ADMIN.NEW_USER' |
+      translate) }}
+    </h2>
+    <hr class="divider" />
 
     <div class="form-content">
       <div class="input-field">
         <label>{{ 'ADMIN.NAME' | translate }}</label>
-        <input type="text" [(ngModel)]="nouUsuari.nombre" placeholder="jlopez" [disabled]="usuariEditant !== null">
+        <input
+          type="text"
+          [(ngModel)]="nouUsuari.nombre"
+          placeholder="jlopez"
+          [disabled]="usuariEditant !== null"
+        />
       </div>
 
       <div class="input-field">
         <label>{{ 'ADMIN.EMAIL' | translate }}</label>
-        <input type="email" [(ngModel)]="nouUsuari.email" placeholder="jlopez@minsait.com">
+        <input
+          type="email"
+          [(ngModel)]="nouUsuari.email"
+          placeholder="jlopez@minsait.com"
+        />
       </div>
 
       <div class="input-field">
         <label>{{ 'ADMIN.PASSWORD' | translate }}</label>
-        <input type="password" [(ngModel)]="nouUsuari.contrasenya" [placeholder]="usuariEditant ? ('ADMIN.KEEP_PASSWORD' | translate) : ('ADMIN.ENTER_PASSWORD' | translate)">
+        <input
+          type="password"
+          [(ngModel)]="nouUsuari.contrasenya"
+          [placeholder]="usuariEditant ? ('ADMIN.KEEP_PASSWORD' | translate) : ('ADMIN.ENTER_PASSWORD' | translate)"
+        />
       </div>
 
-      <hr class="divider">
+      <hr class="divider" />
 
       <label class="section-label">{{ 'ADMIN.USER_ROLES' | translate }}</label>
-      
+
       <div class="roles-grid">
         <div class="switch-item">
           <label class="custom-switch">
-            <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.admin" />
             <span class="custom-slider"></span>
           </label>
           <span class="role-text">{{ 'ADMIN.ADMINISTRATOR' | translate }}</span>
@@ -395,7 +582,7 @@
 
         <div class="switch-item">
           <label class="custom-switch">
-            <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.consultor" />
             <span class="custom-slider"></span>
           </label>
           <span class="role-text">{{ 'ADMIN.CONSULTANT' | translate }}</span>
@@ -403,18 +590,30 @@
 
         <div class="switch-item">
           <label class="custom-switch">
-            <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.devops" />
             <span class="custom-slider"></span>
           </label>
           <span class="role-text">{{ 'ADMIN.DEVOPS' | translate }}</span>
         </div>
       </div>
 
-      <hr class="divider">
+      <hr class="divider" />
 
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="tancarPopup()" [title]="'ADMIN.CANCEL' | translate">✗</button>
-        <button class="btn-emoji confirm" (click)="guardarUsuari()" [title]="'ADMIN.SAVE' | translate">✓</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="tancarPopup()"
+          [title]="'ADMIN.CANCEL' | translate"
+        >
+          ✗
+        </button>
+        <button
+          class="btn-emoji confirm"
+          (click)="guardarUsuari()"
+          [title]="'ADMIN.SAVE' | translate"
+        >
+          ✓
+        </button>
       </div>
     </div>
   </div>
@@ -424,43 +623,82 @@
 <div class="modal-overlay" *ngIf="mostrarPopupDelete">
   <div class="auth-card">
     <h2 class="form-title">{{ 'ADMIN.DELETE_USER' | translate }}</h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
-      <p>{{ 'ADMIN.DELETE_CONFIRMATION' | translate }} <strong>{{ usuariAEsborrar?.fullName }}</strong>?</p>
-      <p style="color: #ff6b6b; font-size: 0.9em;">{{ 'ADMIN.IRREVERSIBLE_ACTION' | translate }}</p>
-      <hr class="divider">
+      <p>
+        {{ 'ADMIN.DELETE_CONFIRMATION' | translate }}
+        <strong>{{ usuariAEsborrar?.fullName }}</strong>?
+      </p>
+      <p style="color: #ff6b6b; font-size: 0.9em">
+        {{ 'ADMIN.IRREVERSIBLE_ACTION' | translate }}
+      </p>
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cancelarInhabilitar()" [title]="'ADMIN.CANCEL' | translate">✗</button>
-        <button class="btn-emoji confirm" (click)="inhabilitarUsuari()" [title]="'ADMIN.DELETE' | translate">✓</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="cancelarInhabilitar()"
+          [title]="'ADMIN.CANCEL' | translate"
+        >
+          ✗
+        </button>
+        <button
+          class="btn-emoji confirm"
+          (click)="inhabilitarUsuari()"
+          [title]="'ADMIN.DELETE' | translate"
+        >
+          ✓
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Popup credenciales usuario creado (al aprobar solicitud) -->
-<div class="modal-overlay" *ngIf="mostrarPopupCredenciales && credencialesNuevas">
+<div
+  class="modal-overlay"
+  *ngIf="mostrarPopupCredenciales && credencialesNuevas"
+>
   <div class="auth-card">
     <h2 class="form-title">Usuario creado</h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
-      <p style="color: #cfd8dc; margin-bottom: 16px;">Se ha creado el usuario con las siguientes credenciales:</p>
+      <p style="color: #cfd8dc; margin-bottom: 16px">
+        Se ha creado el usuario con las siguientes credenciales:
+      </p>
       <div class="input-field">
         <label>Usuario</label>
-        <input type="text" [value]="credencialesNuevas.username" readonly style="background:#0f1116; color: #ffd54f; font-weight: bold;">
+        <input
+          type="text"
+          [value]="credencialesNuevas.username"
+          readonly
+          style="background: #0f1116; color: #ffd54f; font-weight: bold"
+        />
       </div>
       <div class="input-field">
         <label>Contraseña autogenerada</label>
-        <input type="text" [value]="credencialesNuevas.password" readonly style="background:#0f1116; color: #ffd54f; font-weight: bold;">
+        <input
+          type="text"
+          [value]="credencialesNuevas.password"
+          readonly
+          style="background: #0f1116; color: #ffd54f; font-weight: bold"
+        />
       </div>
-      <p style="color: #ff6b6b; font-size: 0.85em; margin-top: 12px;">⚠️ Guarda esta contraseña, no se volverá a mostrar.</p>
-      <hr class="divider">
+      <p style="color: #ff6b6b; font-size: 0.85em; margin-top: 12px">
+        ⚠️ Guarda esta contraseña, no se volverá a mostrar.
+      </p>
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji confirm" (click)="cerrarPopupCredenciales()" title="Cerrar">✓</button>
+        <button
+          class="btn-emoji confirm"
+          (click)="cerrarPopupCredenciales()"
+          title="Cerrar"
+        >
+          ✓
+        </button>
       </div>
     </div>
   </div>
 </div>
-
 
 <!-- Popup Borrado Físico -->
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
@@ -469,15 +707,27 @@
       <span class="title-emoji">🗑️</span>
       {{ 'ADMIN.PHYSICAL_DELETE' | translate }}
     </h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
-
       <!-- Buscador + Seleccionar todas -->
       <div class="popup-search-row">
-        <app-buscador (buscar)="filtroColeccionesBorrado = $event" style="flex:1; min-width:0"></app-buscador>
-        <button class="jenkins-add-btn" (click)="toggleSeleccionarTodasBorrado()" [disabled]="cargandoColeccionesDB">
-          <mat-icon>{{ selectedCollectionsBorrado.size === listaColeccionesActiva.length ? 'deselect' : 'select_all' }}</mat-icon>
-          {{ selectedCollectionsBorrado.size === listaColeccionesActiva.length ? ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) : ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
+        <app-buscador
+          (buscar)="filtroColeccionesBorrado = $event"
+          style="flex: 1; min-width: 0"
+        ></app-buscador>
+        <button
+          class="jenkins-add-btn"
+          (click)="toggleSeleccionarTodasBorrado()"
+          [disabled]="cargandoColeccionesDB"
+        >
+          <mat-icon
+            >{{ selectedCollectionsBorrado.size ===
+            listaColeccionesActiva.length ? 'deselect' : 'select_all'
+            }}</mat-icon
+          >
+          {{ selectedCollectionsBorrado.size === listaColeccionesActiva.length ?
+          ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) :
+          ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
         </button>
       </div>
 
@@ -486,47 +736,83 @@
         <span>Cargando colecciones...</span>
       </div>
 
-      <div *ngIf="errorColeccionesDB && !cargandoColeccionesDB" class="db-error-state">
+      <div
+        *ngIf="errorColeccionesDB && !cargandoColeccionesDB"
+        class="db-error-state"
+      >
         <mat-icon>error_outline</mat-icon>
-        <span>No se pudo conectar con el servidor. Asegúrate de que el backend está en marcha.</span>
+        <span
+          >No se pudo conectar con el servidor. Asegúrate de que el backend está
+          en marcha.</span
+        >
         <button class="jenkins-add-btn" (click)="cargarColeccionesDB()">
           <mat-icon>refresh</mat-icon> Reintentar
         </button>
       </div>
 
-      <div class="colecciones-grid" *ngIf="!cargandoColeccionesDB && !errorColeccionesDB">
+      <div
+        class="colecciones-grid"
+        *ngIf="!cargandoColeccionesDB && !errorColeccionesDB"
+      >
         <div
           *ngFor="let col of coleccionesBorradoFiltradas"
           class="coleccion-card"
           [class.selected]="selectedCollectionsBorrado.has(col.id)"
           (click)="toggleColeccionBorrado(col.id)"
         >
-          <span class="col-check-mark" *ngIf="selectedCollectionsBorrado.has(col.id)">✓</span>
+          <span
+            class="col-check-mark"
+            *ngIf="selectedCollectionsBorrado.has(col.id)"
+            >✓</span
+          >
           <span class="col-icon">{{ col.icon }}</span>
           <span class="col-label">{{ col.label | translate }}</span>
           <span class="col-desc">{{ col.descripcion | translate }}</span>
-          <span class="col-count" *ngIf="col.registros > 0">{{ col.registros }} docs</span>
+          <span class="col-count" *ngIf="col.registros > 0"
+            >{{ col.registros }} docs</span
+          >
         </div>
       </div>
 
       <div class="db-action-bar" *ngIf="!errorColeccionesDB">
-        <span class="db-selected-count" *ngIf="selectedCollectionsBorrado.size > 0">
-          {{ selectedCollectionsBorrado.size }} {{ 'ADMIN.COLS_SELECTED' | translate }}
+        <span
+          class="db-selected-count"
+          *ngIf="selectedCollectionsBorrado.size > 0"
+        >
+          {{ selectedCollectionsBorrado.size }} {{ 'ADMIN.COLS_SELECTED' |
+          translate }}
         </span>
-        <span class="db-selected-count" *ngIf="selectedCollectionsBorrado.size === 0"></span>
-        <p class="warning-text" style="margin:0" *ngIf="selectedCollectionsBorrado.size > 0">
+        <span
+          class="db-selected-count"
+          *ngIf="selectedCollectionsBorrado.size === 0"
+        ></span>
+        <p
+          class="warning-text"
+          style="margin: 0"
+          *ngIf="selectedCollectionsBorrado.size > 0"
+        >
           <mat-icon>warning</mat-icon>
           {{ 'ADMIN.PERMANENT_DELETE' | translate }}
         </p>
-        <button class="jenkins-add-btn db-danger-btn" (click)="ejecutarBorradoFisicoColecciones()" [disabled]="selectedCollectionsBorrado.size === 0">
+        <button
+          class="jenkins-add-btn db-danger-btn"
+          (click)="ejecutarBorradoFisicoColecciones()"
+          [disabled]="selectedCollectionsBorrado.size === 0"
+        >
           <mat-icon>delete_forever</mat-icon>
           {{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}
         </button>
       </div>
 
-      <hr class="divider">
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CLOSE' | translate">✗</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="cerrarPopupBBDD()"
+          [title]="'ADMIN.CLOSE' | translate"
+        >
+          ✗
+        </button>
       </div>
     </div>
   </div>
@@ -539,15 +825,20 @@
       <mat-icon class="title-icon">restore</mat-icon>
       {{ 'ADMIN.RESTORE_DATABASE' | translate }}
     </h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
-
       <!-- Buscador de versiones -->
       <div class="popup-search-row">
-        <app-buscador (buscar)="filtroVersionesRestore = $event" style="flex:1; min-width:0"></app-buscador>
+        <app-buscador
+          (buscar)="filtroVersionesRestore = $event"
+          style="flex: 1; min-width: 0"
+        ></app-buscador>
       </div>
 
-      <div class="version-cards-list" *ngIf="versionesRestoreFiltradas.length > 0">
+      <div
+        class="version-cards-list"
+        *ngIf="versionesRestoreFiltradas.length > 0"
+      >
         <div
           *ngFor="let version of versionesRestoreFiltradas"
           class="coleccion-card version-card"
@@ -557,35 +848,55 @@
           <div class="version-card-header">
             <span class="col-icon">💾</span>
             <span class="version-tipo-badge" [class]="'tipo-' + version.tipo">
-              {{ version.tipo === 'completo' ? '🗄️ Completo' : version.tipo === 'parcial' ? '📦 Parcial' : '📄 Colección' }}
+              {{ version.tipo === 'completo' ? '🗄️ Completo' : version.tipo ===
+              'parcial' ? '📦 Parcial' : '📄 Colección' }}
             </span>
-            <span class="col-check-mark" *ngIf="selectedRestore === version.id">✓</span>
+            <span class="col-check-mark" *ngIf="selectedRestore === version.id"
+              >✓</span
+            >
           </div>
           <div class="version-card-body">
             <span class="version-fecha">📅 {{ version.fecha }}</span>
             <span class="version-tamano">⚖️ {{ version.tamanoKb }} KB</span>
-            <div class="version-colecciones" *ngIf="version.colecciones && version.colecciones.length > 0">
+            <div
+              class="version-colecciones"
+              *ngIf="version.colecciones && version.colecciones.length > 0"
+            >
               <span class="version-col-title">Colecciones:</span>
-              <span class="version-col-tag" *ngFor="let col of version.colecciones">{{ col }}</span>
+              <span
+                class="version-col-tag"
+                *ngFor="let col of version.colecciones"
+                >{{ col }}</span
+              >
             </div>
-            <div class="version-colecciones" *ngIf="version.tipo === 'completo'">
+            <div
+              class="version-colecciones"
+              *ngIf="version.tipo === 'completo'"
+            >
               <span class="version-col-title">Alcance:</span>
-              <span class="version-col-tag version-col-all">Toda la base de datos</span>
+              <span class="version-col-tag version-col-all"
+                >Toda la base de datos</span
+              >
             </div>
           </div>
           <div class="version-card-footer">
-            <span class="version-filename" title="{{ version.descripcion }}">📁 {{ version.descripcion }}</span>
+            <span class="version-filename" title="{{ version.descripcion }}"
+              >📁 {{ version.descripcion }}</span
+            >
           </div>
         </div>
       </div>
 
-      <div class="db-empty-state" *ngIf="versionesRestoreFiltradas.length === 0">
+      <div
+        class="db-empty-state"
+        *ngIf="versionesRestoreFiltradas.length === 0"
+      >
         <mat-icon>cloud_off</mat-icon>
         <p>{{ 'ADMIN.NO_VERSIONS' | translate }}</p>
       </div>
 
       <div class="db-action-bar" *ngIf="selectedRestore">
-        <p class="warning-text" style="margin:0; flex:1">
+        <p class="warning-text" style="margin: 0; flex: 1">
           <mat-icon>warning</mat-icon>
           {{ 'ADMIN.RESTORE_STATE' | translate }} {{ fechaRestoreSeleccionada }}
         </p>
@@ -597,42 +908,76 @@
 
       <!-- Log de backups recientes -->
       <ng-container *ngIf="logBackups.length > 0">
-        <hr class="divider">
+        <hr class="divider" />
         <div class="log-backup-header">
           <mat-icon>history</mat-icon>
           <span>{{ 'ADMIN.BACKUP_LOG' | translate }}</span>
-          <span style="font-size:11px; color:#78909c; font-weight:400; text-transform:none">&nbsp;— Haz clic en un backup para restaurarlo</span>
+          <span
+            style="
+              font-size: 11px;
+              color: #78909c;
+              font-weight: 400;
+              text-transform: none;
+            "
+            >&nbsp;— Haz clic en un backup para restaurarlo</span
+          >
         </div>
         <div class="log-backup-list">
-          <div *ngFor="let entry of logBackups"
-               class="log-backup-card"
-               [class.selected]="selectedRestoreLogId === entry.id"
-               (click)="selectedRestoreLogId = selectedRestoreLogId === entry.id ? '' : entry.id">
-            <span class="col-check-mark" *ngIf="selectedRestoreLogId === entry.id">✓</span>
+          <div
+            *ngFor="let entry of logBackups"
+            class="log-backup-card"
+            [class.selected]="selectedRestoreLogId === entry.id"
+            (click)="selectedRestoreLogId = selectedRestoreLogId === entry.id ? '' : entry.id"
+          >
+            <span
+              class="col-check-mark"
+              *ngIf="selectedRestoreLogId === entry.id"
+              >✓</span
+            >
             <div class="log-card-top">
-              <span class="backup-type-badge" [ngClass]="entry.tipo === 'completo' ? 'full' : 'partial'">
-                {{ entry.tipo === 'completo' ? ('ADMIN.BACKUP_COMPLETE' | translate) : ('ADMIN.BACKUP_PARTIAL' | translate) }}
+              <span
+                class="backup-type-badge"
+                [ngClass]="entry.tipo === 'completo' ? 'full' : 'partial'"
+              >
+                {{ entry.tipo === 'completo' ? ('ADMIN.BACKUP_COMPLETE' |
+                translate) : ('ADMIN.BACKUP_PARTIAL' | translate) }}
               </span>
               <span class="log-card-fecha">📅 {{ entry.fecha }}</span>
             </div>
             <div class="log-card-archivo">
-              <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle">folder_zip</mat-icon>
+              <mat-icon
+                style="
+                  font-size: 14px;
+                  height: 14px;
+                  width: 14px;
+                  vertical-align: middle;
+                "
+                >folder_zip</mat-icon
+              >
               {{ entry.descripcion }}
             </div>
             <div class="log-card-colecciones" *ngIf="entry.colecciones.length">
-              <span class="log-col-pill" *ngFor="let col of entry.colecciones">{{ col }}</span>
+              <span class="log-col-pill" *ngFor="let col of entry.colecciones"
+                >{{ col }}</span
+              >
             </div>
           </div>
         </div>
 
         <div class="db-action-bar" *ngIf="selectedRestoreLogId">
-          <p class="warning-text" style="margin:0; flex:1">
+          <p class="warning-text" style="margin: 0; flex: 1">
             <mat-icon>warning</mat-icon>
             <span *ngIf="logEntrySeleccionada?.tipo === 'completo'">
-              Se restaurarán <strong>todas las colecciones</strong> desde "{{ logEntrySeleccionada?.descripcion }}"
+              Se restaurarán <strong>todas las colecciones</strong> desde "{{
+              logEntrySeleccionada?.descripcion }}"
             </span>
             <span *ngIf="logEntrySeleccionada?.tipo === 'parcial'">
-              Restore parcial: <strong>{{ logEntrySeleccionada?.colecciones?.length }} colección(es)</strong> desde "{{ logEntrySeleccionada?.descripcion }}"
+              Restore parcial:
+              <strong
+                >{{ logEntrySeleccionada?.colecciones?.length }}
+                colección(es)</strong
+              >
+              desde "{{ logEntrySeleccionada?.descripcion }}"
             </span>
           </p>
           <button class="jenkins-add-btn" (click)="ejecutarRestoreLog()">
@@ -642,9 +987,15 @@
         </div>
       </ng-container>
 
-      <hr class="divider">
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CANCEL' | translate">✗</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="cerrarPopupBBDD()"
+          [title]="'ADMIN.CANCEL' | translate"
+        >
+          ✗
+        </button>
       </div>
     </div>
   </div>
@@ -657,15 +1008,26 @@
       <mat-icon class="title-icon">backup</mat-icon>
       {{ 'ADMIN.GENERATE_BACKUP' | translate }}
     </h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
-
       <!-- Buscador + Seleccionar todas -->
       <div class="popup-search-row">
-        <app-buscador (buscar)="filtroColeccionesBackup = $event" style="flex:1; min-width:0"></app-buscador>
-        <button class="jenkins-add-btn" (click)="toggleSeleccionarTodasBackup()" [disabled]="cargandoColeccionesDB">
-          <mat-icon>{{ selectedCollectionsBackup.size === listaColeccionesActiva.length ? 'deselect' : 'select_all' }}</mat-icon>
-          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length ? ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) : ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
+        <app-buscador
+          (buscar)="filtroColeccionesBackup = $event"
+          style="flex: 1; min-width: 0"
+        ></app-buscador>
+        <button
+          class="jenkins-add-btn"
+          (click)="toggleSeleccionarTodasBackup()"
+          [disabled]="cargandoColeccionesDB"
+        >
+          <mat-icon
+            >{{ selectedCollectionsBackup.size === listaColeccionesActiva.length
+            ? 'deselect' : 'select_all' }}</mat-icon
+          >
+          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length ?
+          ('ADMIN.DESELECT_ALL_COLLECTIONS' | translate) :
+          ('ADMIN.SELECT_ALL_COLLECTIONS' | translate) }}
         </button>
       </div>
 
@@ -676,12 +1038,24 @@
         [class.partial]="selectedCollectionsBackup.size > 0 && selectedCollectionsBackup.size < listaColeccionesActiva.length"
         [class.none]="selectedCollectionsBackup.size === 0"
       >
-        <mat-icon style="font-size:14px;width:14px;height:14px">
-          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0 ? 'cloud_done' : selectedCollectionsBackup.size > 0 ? 'filter_list' : 'cloud_off' }}
+        <mat-icon style="font-size: 14px; width: 14px; height: 14px">
+          {{ selectedCollectionsBackup.size === listaColeccionesActiva.length &&
+          listaColeccionesActiva.length > 0 ? 'cloud_done' :
+          selectedCollectionsBackup.size > 0 ? 'filter_list' : 'cloud_off' }}
         </mat-icon>
-        <span *ngIf="selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0">{{ 'ADMIN.BACKUP_TYPE_FULL' | translate }}</span>
-        <span *ngIf="selectedCollectionsBackup.size > 0 && selectedCollectionsBackup.size < listaColeccionesActiva.length">{{ 'ADMIN.BACKUP_TYPE_PARTIAL' | translate }} &mdash; {{ selectedCollectionsBackup.size }}/{{ listaColeccionesActiva.length }}</span>
-        <span *ngIf="selectedCollectionsBackup.size === 0">{{ 'ADMIN.BACKUP_TYPE_NONE' | translate }}</span>
+        <span
+          *ngIf="selectedCollectionsBackup.size === listaColeccionesActiva.length && listaColeccionesActiva.length > 0"
+          >{{ 'ADMIN.BACKUP_TYPE_FULL' | translate }}</span
+        >
+        <span
+          *ngIf="selectedCollectionsBackup.size > 0 && selectedCollectionsBackup.size < listaColeccionesActiva.length"
+          >{{ 'ADMIN.BACKUP_TYPE_PARTIAL' | translate }} &mdash; {{
+          selectedCollectionsBackup.size }}/{{ listaColeccionesActiva.length
+          }}</span
+        >
+        <span *ngIf="selectedCollectionsBackup.size === 0"
+          >{{ 'ADMIN.BACKUP_TYPE_NONE' | translate }}</span
+        >
       </div>
 
       <div *ngIf="cargandoColeccionesDB" class="db-loading-state">
@@ -689,54 +1063,91 @@
         <span>Cargando colecciones...</span>
       </div>
 
-      <div *ngIf="errorColeccionesDB && !cargandoColeccionesDB" class="db-error-state">
+      <div
+        *ngIf="errorColeccionesDB && !cargandoColeccionesDB"
+        class="db-error-state"
+      >
         <mat-icon>error_outline</mat-icon>
-        <span>No se pudo conectar con el servidor. Asegúrate de que el backend está en marcha.</span>
+        <span
+          >No se pudo conectar con el servidor. Asegúrate de que el backend está
+          en marcha.</span
+        >
         <button class="jenkins-add-btn" (click)="cargarColeccionesDB()">
           <mat-icon>refresh</mat-icon> Reintentar
         </button>
       </div>
 
-      <div class="colecciones-grid" *ngIf="!cargandoColeccionesDB && !errorColeccionesDB">
+      <div
+        class="colecciones-grid"
+        *ngIf="!cargandoColeccionesDB && !errorColeccionesDB"
+      >
         <div
           *ngFor="let col of coleccionesBackupFiltradas"
           class="coleccion-card"
           [class.selected]="selectedCollectionsBackup.has(col.id)"
           (click)="toggleColeccionBackup(col.id)"
         >
-          <span class="col-check-mark" *ngIf="selectedCollectionsBackup.has(col.id)">✓</span>
+          <span
+            class="col-check-mark"
+            *ngIf="selectedCollectionsBackup.has(col.id)"
+            >✓</span
+          >
           <span class="col-icon">{{ col.icon }}</span>
           <span class="col-label">{{ col.label | translate }}</span>
           <span class="col-desc">{{ col.descripcion | translate }}</span>
-          <span class="col-count" *ngIf="col.registros > 0">{{ col.registros }} docs</span>
+          <span class="col-count" *ngIf="col.registros > 0"
+            >{{ col.registros }} docs</span
+          >
         </div>
       </div>
 
       <div class="db-action-bar">
-        <span class="db-selected-count" *ngIf="selectedCollectionsBackup.size > 0">
-          {{ selectedCollectionsBackup.size }} {{ 'ADMIN.COLS_SELECTED' | translate }}
+        <span
+          class="db-selected-count"
+          *ngIf="selectedCollectionsBackup.size > 0"
+        >
+          {{ selectedCollectionsBackup.size }} {{ 'ADMIN.COLS_SELECTED' |
+          translate }}
         </span>
-        <span class="db-selected-count" *ngIf="selectedCollectionsBackup.size === 0"></span>
+        <span
+          class="db-selected-count"
+          *ngIf="selectedCollectionsBackup.size === 0"
+        ></span>
         <button
           class="jenkins-add-btn"
           (click)="ejecutarBackupColecciones()"
           [disabled]="selectedCollectionsBackup.size === 0 || backupCompletoEnProgreso"
         >
           <mat-icon>backup</mat-icon>
-          {{ selectedCollectionsBackup.size === 0 ? ('ADMIN.SELECT_AND_GENERATE' | translate) : ('ADMIN.BACKUP' | translate) + ' (' + selectedCollectionsBackup.size + ')' }}
+          {{ selectedCollectionsBackup.size === 0 ? ('ADMIN.SELECT_AND_GENERATE'
+          | translate) : ('ADMIN.BACKUP' | translate) + ' (' +
+          selectedCollectionsBackup.size + ')' }}
         </button>
-        <button class="jenkins-add-btn db-full-backup-btn" (click)="ejecutarBackupCompleto()" [disabled]="backupCompletoEnProgreso">
+        <button
+          class="jenkins-add-btn db-full-backup-btn"
+          (click)="ejecutarBackupCompleto()"
+          [disabled]="backupCompletoEnProgreso"
+        >
           <mat-icon>cloud_download</mat-icon>
-          {{ backupCompletoEnProgreso ? ('ADMIN.GENERATING' | translate) : ('ADMIN.FULL_BACKUP' | translate) }}
+          {{ backupCompletoEnProgreso ? ('ADMIN.GENERATING' | translate) :
+          ('ADMIN.FULL_BACKUP' | translate) }}
         </button>
       </div>
 
-      <hr class="divider">
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji cancel" (click)="cerrarPopupBBDD()" [title]="'ADMIN.CLOSE' | translate">✗</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="cerrarPopupBBDD()"
+          [title]="'ADMIN.CLOSE' | translate"
+        >
+          ✗
+        </button>
       </div>
     </div>
   </div>
 </div>
 <!-- Toast notification -->
-<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>
+<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">
+  {{ toastMsg }}
+</div>

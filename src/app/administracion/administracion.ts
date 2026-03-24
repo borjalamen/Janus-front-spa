@@ -11,6 +11,8 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ApiService } from '../api.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface UsuariBackend {
   id?: string;
@@ -1468,4 +1470,69 @@ export class AdministracionComponent implements OnInit {
     clearTimeout(this._toastTimer);
     this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
   }
+  descargarPDF(peticion: PeticionAdmin) {
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text(`Petición #${peticion.id}`, 14, 20);
+
+  autoTable(doc, {
+    startY: 30,
+    head: [['Campo', 'Valor']],
+    body: [
+      ['Solicitante', peticion.solicitante],
+      ['Tipo', peticion.tipo],
+      ['Fecha', peticion.fecha],
+      ['Estado', this.getStatusTranslation(peticion.estado)],
+    ],
+    styles: { fontSize: 11 },
+    headStyles: { fillColor: [33, 33, 33] }
+  });
+
+  const finalY = (doc as any).lastAutoTable.finalY || 40;
+
+  doc.setFontSize(11);
+  doc.text('Comentario:', 14, finalY + 10);
+
+  const comentario = peticion.comentario || '';
+  const splitComentario = doc.splitTextToSize(comentario, 180);
+  doc.text(splitComentario, 14, finalY + 17);
+
+  doc.save(`peticion_${peticion.id}.pdf`);
+}
+descargarPDFTarea(tarea: PeticionTareaAdmin) {
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text(`Petición de tarea #${tarea.id.slice(-6)}`, 14, 20);
+
+  autoTable(doc, {
+    startY: 30,
+    head: [['Campo', 'Valor']],
+    body: [
+      ['Solicitante', tarea.solicitante],
+      ['Email', tarea.email],
+      ['Proyecto', tarea.proyecto],
+      ['Project Code', tarea.projectCode],
+      ['JIRA', tarea.jiraTask],
+      ['Asignado', tarea.asignado || 'Cualquiera'],
+      ['Deadline', tarea.deadline || '—'],
+      ['Estado', this.getStatusTranslation(tarea.estado)],
+    ],
+    styles: { fontSize: 11 },
+    headStyles: { fillColor: [33, 33, 33] }
+  });
+
+  const finalY = (doc as any).lastAutoTable.finalY || 40;
+
+  doc.setFontSize(11);
+  doc.text('Comentario:', 14, finalY + 10);
+
+  const comentario = tarea.comentario || '';
+  const splitComentario = doc.splitTextToSize(comentario, 180);
+  doc.text(splitComentario, 14, finalY + 17);
+
+  doc.save(`tarea_${tarea.id}.pdf`);
+}
+
 }

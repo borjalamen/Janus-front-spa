@@ -536,17 +536,3 @@
 }
 
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .unete-root {
-    padding: 24px 10px;
-    justify-content: center;
-  }
-
-
-  .main-container {
-    padding: 25px;
-    border-radius: 12px;
-    margin: auto 0;
-  
-  }
