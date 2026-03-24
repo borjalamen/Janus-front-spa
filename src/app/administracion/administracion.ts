@@ -519,17 +519,21 @@ export class AdministracionComponent implements OnInit {
   this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe(
     {
       next: (data) => {
+        console.log('TAREAS RAW', data);
         // Invertir orden: más nuevas arriba
         this.peticionsTareas = data
           .reverse()
           .map((p) => this.mapPeticionTarea(p));
         this.aplicarFiltrosTareas();
+        console.log('TAREAS ADMIN', this.peticionsTareas);
       },
+      
       error: (err) => {
         console.error('Error cargando peticiones de tarea: ', err);
         this.peticionsTareas = [];
         this.aplicarFiltrosTareas();
       },
+      
     }
   );
 }
