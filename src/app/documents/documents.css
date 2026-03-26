@@ -229,6 +229,10 @@ body {
   color: #4fc3f7;
 }
 
+.download-btn:hover {
+  color: #81c784;
+}
+
 .edit-btn:hover {
   color: #ffd54f;
 }

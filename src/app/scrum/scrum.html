@@ -1,4 +1,23 @@
 <div class="scrum-root">
+  <div class="buscador-container scrum-search">
+    <div class="buscador-wrapper">
+      <div class="scrum-search-field">
+        <input
+          [(ngModel)]="searchQuery"
+          (input)="filtrar(searchQuery)"
+          [placeholder]="'SEARCH.PLACEHOLDER' | translate"
+        />
+        <div class="buscador-icons">
+          <button class="buscador-btn btn-cross" *ngIf="searchQuery" (click)="clearSearch()" title="Limpiar">
+            ✗
+          </button>
+          <button class="buscador-btn btn-lupa" title="Buscar">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <h2>{{ 'SCRUM.TITLE' | translate }}</h2>
   <p class="lead">{{ 'SCRUM.DESCRIPTION' | translate }}</p>
 
@@ -98,48 +117,63 @@
               <ng-container *ngIf="t.assignee">
                 · {{ t.assignee }}
               </ng-container>
-              <div class="desc" *ngIf="t.description">
-                {{ t.description }}
-              </div>
             </span>
+          </div>
+
+          <div class="desc" *ngIf="editingId !== t.id && t.description">
+            {{ t.description }}
           </div>
 
           <div class="todo-edit-wrapper" *ngIf="editingId === t.id">
             <div class="edit-fields todo-edit-grid">
-              <input
-                class="edit-estimate field-estimate"
-                [(ngModel)]="editBuffer.estimate"
-                placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}"
-              />
+              <div class="todo-edit-left">
+                <input
+                  class="edit-estimate field-estimate"
+                  [(ngModel)]="editBuffer.estimate"
+                  placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}"
+                />
 
-              <select class="edit-assignee field-assignee" [(ngModel)]="editBuffer.assignee">
-                <option [ngValue]="null">
-                  {{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}
-                </option>
-                <option *ngFor="let a of assignees" [ngValue]="a">
-                  {{ a }}
-                </option>
-              </select>
+                <input
+                  class="edit-priority field-priority"
+                  type="number"
+                  min="0"
+                  max="150"
+                  [(ngModel)]="editBuffer.priority"
+                  placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}"
+                />
 
-              <input
-                class="edit-priority field-priority"
-                type="number"
-                min="0"
-                max="150"
-                [(ngModel)]="editBuffer.priority"
-                placeholder="{{ 'SCRUM.PLACEHOLDER_PRIORITY' | translate }}"
-              />
+                <select class="edit-assignee field-assignee" [(ngModel)]="editBuffer.assignee">
+                  <option [ngValue]="null">
+                    {{ 'SCRUM.ASSIGNEE_PLACEHOLDER' | translate }}
+                  </option>
+                  <option *ngFor="let a of assignees" [ngValue]="a">
+                    {{ a }}
+                  </option>
+                </select>
+              </div>
 
-              <textarea
-                class="field-description"
-                [(ngModel)]="editBuffer.description"
-                rows="2"
-                placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}"
-              ></textarea>
+              <div class="todo-edit-right">
+                <textarea
+                  class="field-description"
+                  [(ngModel)]="editBuffer.description"
+                  rows="2"
+                  placeholder="{{ 'SCRUM.PLACEHOLDER_DESC' | translate }}"
+                ></textarea>
+              </div>
             </div>
           </div>
 
           <div class="card-actions">
+            <button
+              *ngIf="editingId !== t.id"
+              class="comments-btn"
+              (click)="toggleComments(t.id)"
+              [title]="'SCRUM.COMMENTS_TITLE' | translate"
+            >
+              💬
+              <span class="comments-badge" *ngIf="commentCount(t) > 0">{{ commentCount(t) }}</span>
+            </button>
+
             <button
               *ngIf="editingId !== t.id"
               (click)="startEdit(t)"
@@ -190,6 +224,31 @@
               ✗
             </button>
           </div>
+
+          <div class="task-comments-panel" *ngIf="openCommentsTaskId === t.id">
+            <div class="task-comment-composer">
+              <input
+                [ngModel]="getCommentDraft(t.id)"
+                (ngModelChange)="setCommentDraft(t.id, $event)"
+                (keyup.enter)="addComment(t)"
+                [placeholder]="'SCRUM.PLACEHOLDER_COMMENTS' | translate"
+              />
+              <button class="task-comment-send" (click)="addComment(t)" [title]="'SCRUM.COMMENTS_ADD' | translate">➤</button>
+            </div>
+
+            <div *ngIf="commentCount(t) === 0" class="task-comments-empty">
+              {{ 'SCRUM.COMMENTS_EMPTY' | translate }}
+            </div>
+
+            <div class="task-comment-item" *ngFor="let c of t.comments || []">
+              <div class="task-comment-meta">
+                <strong>{{ c.author }}</strong>
+                <span>{{ formatCommentDate(c.createdAt) }}</span>
+              </div>
+              <p>{{ c.text }}</p>
+              <button class="task-comment-delete" (click)="removeComment(t, c.id)">{{ 'SCRUM.COMMENTS_DELETE' | translate }}</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -218,7 +277,12 @@
               </ng-container>
             </span>
           </div>
+          <div class="desc" *ngIf="t.description">{{ t.description }}</div>
           <div class="card-actions">
+            <button class="comments-btn" (click)="toggleComments(t.id)" [title]="'SCRUM.COMMENTS_TITLE' | translate">
+              💬
+              <span class="comments-badge" *ngIf="commentCount(t) > 0">{{ commentCount(t) }}</span>
+            </button>
             <button class="progress-btn" (click)="moveTask(t.id, 'todo')">
               ←
             </button>
@@ -228,6 +292,27 @@
             <button class="danger" (click)="removeTask(t.id)">
               ✗
             </button>
+          </div>
+
+          <div class="task-comments-panel" *ngIf="openCommentsTaskId === t.id">
+            <div class="task-comment-composer">
+              <input
+                [ngModel]="getCommentDraft(t.id)"
+                (ngModelChange)="setCommentDraft(t.id, $event)"
+                (keyup.enter)="addComment(t)"
+                [placeholder]="'SCRUM.PLACEHOLDER_COMMENTS' | translate"
+              />
+              <button class="task-comment-send" (click)="addComment(t)" [title]="'SCRUM.COMMENTS_ADD' | translate">➤</button>
+            </div>
+            <div *ngIf="commentCount(t) === 0" class="task-comments-empty">{{ 'SCRUM.COMMENTS_EMPTY' | translate }}</div>
+            <div class="task-comment-item" *ngFor="let c of t.comments || []">
+              <div class="task-comment-meta">
+                <strong>{{ c.author }}</strong>
+                <span>{{ formatCommentDate(c.createdAt) }}</span>
+              </div>
+              <p>{{ c.text }}</p>
+              <button class="task-comment-delete" (click)="removeComment(t, c.id)">{{ 'SCRUM.COMMENTS_DELETE' | translate }}</button>
+            </div>
           </div>
         </div>
       </div>
@@ -257,7 +342,12 @@
               </ng-container>
             </span>
           </div>
+          <div class="desc" *ngIf="t.description">{{ t.description }}</div>
           <div class="card-actions">
+            <button class="comments-btn" (click)="toggleComments(t.id)" [title]="'SCRUM.COMMENTS_TITLE' | translate">
+              💬
+              <span class="comments-badge" *ngIf="commentCount(t) > 0">{{ commentCount(t) }}</span>
+            </button>
             <button class="progress-btn" (click)="moveTask(t.id, 'todo')">
               ←
             </button>
@@ -267,6 +357,27 @@
             <button class="danger" (click)="removeTask(t.id)">
               ✗
             </button>
+          </div>
+
+          <div class="task-comments-panel" *ngIf="openCommentsTaskId === t.id">
+            <div class="task-comment-composer">
+              <input
+                [ngModel]="getCommentDraft(t.id)"
+                (ngModelChange)="setCommentDraft(t.id, $event)"
+                (keyup.enter)="addComment(t)"
+                [placeholder]="'SCRUM.PLACEHOLDER_COMMENTS' | translate"
+              />
+              <button class="task-comment-send" (click)="addComment(t)" [title]="'SCRUM.COMMENTS_ADD' | translate">➤</button>
+            </div>
+            <div *ngIf="commentCount(t) === 0" class="task-comments-empty">{{ 'SCRUM.COMMENTS_EMPTY' | translate }}</div>
+            <div class="task-comment-item" *ngFor="let c of t.comments || []">
+              <div class="task-comment-meta">
+                <strong>{{ c.author }}</strong>
+                <span>{{ formatCommentDate(c.createdAt) }}</span>
+              </div>
+              <p>{{ c.text }}</p>
+              <button class="task-comment-delete" (click)="removeComment(t, c.id)">{{ 'SCRUM.COMMENTS_DELETE' | translate }}</button>
+            </div>
           </div>
         </div>
       </div>

@@ -11,6 +11,81 @@
   color: #FBC02D;
 }
 
+.scrum-search {
+  margin-bottom: 18px;
+}
+
+.scrum-search-field {
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid #ffffff;
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.scrum-search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #ffd740;
+  font-size: 1rem;
+  padding: 6px 8px;
+}
+
+.scrum-search-field input::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.buscador-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.buscador-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s ease;
+}
+
+.buscador-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #555, #333) !important;
+}
+
+.btn-lupa {
+  color: #FBC02D !important;
+}
+
+.btn-lupa mat-icon {
+  color: #FBC02D !important;
+}
+
+.btn-cross {
+  color: #E53935 !important;
+}
+
 .scrum-root .lead {
   color: #cfcfcf;
   margin-bottom: 20px;
@@ -305,11 +380,18 @@
 
 .todo-card .edit-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(180px, 0.85fr) minmax(0, 1.15fr);
   column-gap: 12px;
   row-gap: 10px;
   align-items: stretch;
   margin-top: 0;
+}
+
+.todo-card .todo-edit-left,
+.todo-card .todo-edit-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .todo-card .todo-edit-wrapper {
@@ -330,14 +412,21 @@
 
 .todo-card .todo-edit-grid .field-description {
   width: 100%;
-  min-height: 78px;
+  min-height: 74px;
+  margin-top: 0;
+}
+
+.todo-card .todo-edit-grid .field-comments {
+  width: 100%;
+  min-height: 74px;
   margin-top: 0;
 }
 
 .card-head {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   gap: 10px;
   margin-bottom: 10px;
 }
@@ -368,12 +457,147 @@
   color: #cfcfcf;
   font-style: italic;
   font-size: 0.9rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.card .desc.comments {
+  margin-top: 8px;
+  border-left: 3px solid rgba(251, 192, 45, 0.45);
+  font-style: normal;
+}
+
+.comments-btn {
+  position: relative;
+  border: 0 !important;
+  background: transparent !important;
+  color: #d9d9d9;
+  font-size: 20px !important;
+  margin-right: auto;
+}
+
+.comments-btn:hover {
+  color: #e6f7ff !important;
+}
+
+.comments-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #e53935;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  border: 1px solid #0f1113;
+}
+
+.task-comments-panel {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-comment-composer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.task-comment-composer input {
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #4a5568;
+  background: #1a1d21;
+  color: #e0e0e0;
+  padding: 8px 10px;
+}
+
+.task-comment-composer input:focus {
+  outline: none;
+  border-color: #fbc02d;
+}
+
+.task-comment-send {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid rgba(251, 192, 45, 0.4);
+  background: rgba(251, 192, 45, 0.12);
+  color: #fbc02d;
+  cursor: pointer;
+}
+
+.task-comment-send:hover {
+  background: rgba(251, 192, 45, 0.24);
+}
+
+.task-comments-empty {
+  margin-top: 8px;
+  color: #a9b1b7;
+  font-size: 12px;
+}
+
+.task-comment-item {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-comment-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.task-comment-meta strong {
+  font-size: 12px;
+  color: #e6eff4;
+}
+
+.task-comment-meta span {
+  font-size: 11px;
+  color: #93a2ac;
+}
+
+.task-comment-item p {
+  margin: 0;
+  color: #d7dfe5;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+.task-comment-delete {
+  margin-top: 4px;
+  border: 0;
+  background: transparent;
+  color: #ff9a9a;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.task-comment-delete:hover {
+  color: #ffd4d4;
+  text-decoration: underline;
 }
 
 .meta {
+  display: block;
+  width: 100%;
   color: #bdbdbd;
   font-size: 13px;
-  margin-left: 8px;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* ===== CARD INPUTS (EDIT MODE) ===== */

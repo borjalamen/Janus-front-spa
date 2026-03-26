@@ -553,8 +553,11 @@
                 </div>
               </div>
 
-              <!-- Botón de eliminar bajo la preview -->
+              <!-- Acciones bajo la preview -->
               <div class="doc-actions-below-preview">
+                <button class="btn-download-doc" (click)="downloadProjectDocument(doc.nombre)">
+                  📥 Descargar
+                </button>
                 <button class="jh-btn jh-btn-secondary btn-delete-doc" (click)="removeProjectDocument(i)">
                   🗑️ Eliminar documento
                 </button>

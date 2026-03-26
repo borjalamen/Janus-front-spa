@@ -27,7 +27,14 @@
     <!-- Sección principal: Avatar e info básica -->
     <div class="profile-main-card">
       <div class="profile-avatar">
-        <span class="avatar-initials">{{ getInitials() }}</span>
+        <img
+          *ngIf="avatarUrlToRender && !avatarLoadError"
+          [src]="avatarUrlToRender"
+          [alt]="user.fullName"
+          class="avatar-image"
+          (error)="onAvatarError()"
+        />
+        <mat-icon *ngIf="!avatarUrlToRender || avatarLoadError" class="avatar-fallback-icon">person</mat-icon>
       </div>
       
       <div class="profile-basic-info">

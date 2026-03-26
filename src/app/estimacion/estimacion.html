@@ -111,6 +111,17 @@
             <mat-icon>save</mat-icon>
             {{ saveButtonText }}
           </button>
+
+          <button
+            type="button"
+            class="comments-toggle-btn"
+            (click)="toggleCommentsPanel()"
+            [attr.aria-label]="'ESTIMATION.COMMENTS_TITLE' | translate"
+            [title]="'ESTIMATION.COMMENTS_TITLE' | translate"
+          >
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <span class="comments-notification-badge" *ngIf="comments.length > 0">{{ comments.length }}</span>
+          </button>
         </div>
 
         <!-- BOTONS EXPORT / IMPORT / MAIL – ICON-BTN MODERNS -->
@@ -247,6 +258,46 @@
             </tr>
           </tfoot>
         </table>
+      </div>
+
+      <div class="comment-vision-panel" *ngIf="showCommentsPanel">
+        <div class="comment-vision-header">
+          <h3>{{ 'ESTIMATION.COMMENTS_TITLE' | translate }}</h3>
+          <span class="comments-count">{{ comments.length }}</span>
+        </div>
+
+        <div class="comment-mini-composer">
+          <input
+            type="text"
+            [placeholder]="'ESTIMATION.COMMENTS_PLACEHOLDER' | translate"
+            [(ngModel)]="newCommentText"
+            (ngModelChange)="onFormChange()"
+            (keyup.enter)="addComment()"
+          />
+          <button type="button" class="comment-send-btn" (click)="addComment()" [title]="'ESTIMATION.COMMENTS_ADD' | translate">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+
+        <div class="trello-comments-list" *ngIf="comments.length > 0; else noCommentsYet">
+          <div class="trello-comment-item" *ngFor="let c of comments">
+            <div class="comment-avatar">{{ (c.author || 'U').charAt(0) | uppercase }}</div>
+            <div class="comment-content">
+              <div class="comment-meta">
+                <strong>{{ c.author }}</strong>
+                <span>{{ formatCommentDate(c.createdAt) }}</span>
+              </div>
+              <p>{{ c.text }}</p>
+              <button type="button" class="comment-delete" (click)="deleteComment(c.id)">
+                {{ 'ESTIMATION.COMMENTS_DELETE' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noCommentsYet>
+          <p class="trello-empty">{{ 'ESTIMATION.COMMENTS_EMPTY' | translate }}</p>
+        </ng-template>
       </div>
     </mat-tab>
 

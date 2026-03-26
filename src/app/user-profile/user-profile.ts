@@ -27,6 +27,9 @@ interface UserProfile {
   bio?: string;
   joinDate?: string;
   proyectos?: number;
+  avatarUrl?: string;
+  avatarPath?: string;
+  image?: string;
 }
 
 @Component({
@@ -40,6 +43,10 @@ export class UserProfileComponent implements OnInit {
   user: UserProfile | null = null;
   loading = true;
   error = false;
+  avatarLoadError = false;
+  avatarUrlToRender: string | null = null;
+  private avatarCandidates: string[] = [];
+  private avatarCandidateIndex = 0;
 
   private baseUrl = `${environment.baseUrl}users`;
 
@@ -193,6 +200,7 @@ export class UserProfileComponent implements OnInit {
     const demoUser = this.usuariosDemoCV.find(u => u.id === userId);
     if (demoUser) {
       this.user = demoUser;
+      this.setupAvatarCandidates();
       this.loading = false;
       return;
     }
@@ -201,6 +209,7 @@ export class UserProfileComponent implements OnInit {
     this.http.get<UserProfile>(`${this.baseUrl}/${userId}`).subscribe({
       next: (data) => {
         this.user = data;
+        this.setupAvatarCandidates();
         this.loading = false;
       },
       error: (err) => {
@@ -237,5 +246,58 @@ export class UserProfileComponent implements OnInit {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
     return parts[0][0]?.toUpperCase() || '?';
+  }
+
+  private setupAvatarCandidates(): void {
+    this.avatarLoadError = false;
+    this.avatarCandidateIndex = 0;
+    this.avatarCandidates = [];
+    this.avatarUrlToRender = null;
+
+    const username = (this.user?.username || '').trim();
+    if (!username) {
+      this.avatarLoadError = true;
+      return;
+    }
+
+    const apiOrigin = this.getApiOrigin();
+    const encodedUser = encodeURIComponent(username);
+    const cacheBust = Date.now();
+
+    this.avatarCandidates.push(`${environment.baseUrl}profile/image?username=${encodedUser}&t=${cacheBust}`);
+
+    const normalizedUploadsBase = apiOrigin ? `${apiOrigin}/uploads` : '/uploads';
+    const avatarBase = `${normalizedUploadsBase}/${encodedUser}/avatar`;
+    this.avatarCandidates.push(`${avatarBase}.png?t=${cacheBust}`);
+    this.avatarCandidates.push(`${avatarBase}.jpg?t=${cacheBust}`);
+    this.avatarCandidates.push(`${avatarBase}.jpeg?t=${cacheBust}`);
+    this.avatarCandidates.push(`${avatarBase}.webp?t=${cacheBust}`);
+    this.avatarCandidates.push(`${avatarBase}.gif?t=${cacheBust}`);
+
+    this.avatarUrlToRender = this.avatarCandidates[0] || null;
+  }
+
+  private getApiOrigin(): string {
+    const base = (environment.baseUrl || '').trim();
+    if (!base) return '';
+    if (base.startsWith('http://') || base.startsWith('https://')) {
+      try {
+        return new URL(base).origin;
+      } catch {
+        return '';
+      }
+    }
+    return '';
+  }
+
+  onAvatarError(): void {
+    this.avatarCandidateIndex += 1;
+    if (this.avatarCandidateIndex < this.avatarCandidates.length) {
+      this.avatarUrlToRender = this.avatarCandidates[this.avatarCandidateIndex];
+      return;
+    }
+
+    this.avatarUrlToRender = null;
+    this.avatarLoadError = true;
   }
 }

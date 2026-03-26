@@ -632,9 +632,14 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   save() {
     if (!this.proyecto || !this.proyecto.id) return;
     const p = this.proyecto;
-    
-    // Guardar documentos actuales antes de modificar
-    const documentsBackup = p.documents ? [...p.documents] : [];
+
+    // Usar la lista visible en UI como fuente de verdad para no perder docs recién subidos.
+    const documentsSnapshot = (this.projectDocumentsFromCreation || []).map(doc => ({
+      nombre: doc.nombre,
+      descripcion: doc.descripcion || '',
+      tipo: doc.tipo || '',
+      path: doc.path
+    }));
     
     try {
       p.ip = (this.ipString || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -655,9 +660,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       p.horaDaily = p.horaDaily || null;
       p.devMachines = this.devMachines as any;
       
-      // IMPORTANTE: Mantener documentos actuales SIN duplicarlos
-      // Solo actualizar documentación, NO los archivos adjuntos
-      p.documents = documentsBackup;
+      p.documents = documentsSnapshot as any;
     } catch (e) { /* ignore */ }
 
     const projectId = p.id;
@@ -665,10 +668,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.projectService.update(projectId, p).subscribe({
       next: (updated) => {
         this.proyecto = updated as Proyecto;
-        // Mantener lista de documentos (no recargar desde backend)
         this.projectDocumentsFromCreation = (updated as any).documents && Array.isArray((updated as any).documents)
           ? (updated as any).documents
-          : this.projectDocumentsFromCreation; // Mantener lista actual si no viene del servidor
+          : this.projectDocumentsFromCreation;
         this.loadDocumentPreviews();
         this.loadProjectDocuments();
         this.editing = false;
@@ -971,6 +973,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
           if (response.document) {
             // Agregar el documento a la lista
             this.projectDocumentsFromCreation = [...this.projectDocumentsFromCreation, response.document];
+            if (this.proyecto) {
+              (this.proyecto as any).documents = [...this.projectDocumentsFromCreation];
+            }
             console.log('📄 Lista actualizada de documentos:', this.projectDocumentsFromCreation);
             
             // Cargar preview del nuevo documento
@@ -1009,6 +1014,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       next: () => {
         // Eliminar de la lista local
         this.projectDocumentsFromCreation.splice(index, 1);
+        if (this.proyecto) {
+          (this.proyecto as any).documents = [...this.projectDocumentsFromCreation];
+        }
         this.loadProjectDocuments();
         this.loadDocumentPreviews();
         

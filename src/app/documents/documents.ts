@@ -75,12 +75,13 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
     const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as string | null;
 
-    this.searchQuery = savedFilter || '';
+    // Evita filtros invisibles persistidos que pueden ocultar proyectos al abrir la vista.
+    this.searchQuery = '';
+    this.storage.set(this.STORAGE_KEY_FILTER, '');
 
-    this.loadProjectsWithUiState(savedFilter, savedSelected);
+    this.loadProjectsWithUiState('', savedSelected);
   }
 
   ngOnDestroy(): void {
@@ -104,18 +105,23 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         })
       )
     }).subscribe(({ ids, projects }) => {
-      console.log('📁 Carpetes rebudes:', ids);
-      if (!ids || ids.length === 0) {
-        console.log('⚠️ No hi ha carpetes');
+      const nameMap = this.buildProjectNameMap(projects || []);
+      const projectIds = (projects || [])
+        .map(p => p.id)
+        .filter((id): id is string => !!id);
+
+      // Mostrar solo proyectos activos (no eliminados) devueltos por /projects/all.
+      // Las carpetas huérfanas no deben aparecer en la vista de Documentos.
+      const allIds = Array.from(new Set(projectIds));
+
+      if (allIds.length === 0) {
         this.projects = [];
         this.projectsFiltrats = [];
         this.selectedProjectId = null;
         return;
       }
 
-      const nameMap = this.buildProjectNameMap(projects || []);
-
-      const requests = ids.map(id =>
+      const requests = allIds.map(id =>
         this.documentService.getAllFiles(id).pipe(
           map((files: BackendDocument[]) => {
             const docs: BackendDocument[] = files || [];
@@ -127,7 +133,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
             } as Project;
           }),
           catchError(err => {
-            console.error('Error carregant fitxers project', id, err);
+            // Si el proyecto no tiene carpeta de docs, debe seguir apareciendo con lista vacía.
             return of({
               projectId: id,
               name: nameMap.get(String(id)) || `Project ${id}`,
@@ -325,6 +331,22 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         URL.revokeObjectURL(url);
       },
       error: (err: any) => console.error('❌ Error visualitzant document', err)
+    });
+  }
+
+  downloadDocument(project: Project, doc: BackendDocument) {
+    this.documentService.downloadFile(project.projectId, doc).subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.resolveDocumentName(doc);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      },
+      error: (err: any) => console.error('❌ Error descarregant document', err)
     });
   }
 
