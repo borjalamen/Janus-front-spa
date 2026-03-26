@@ -525,6 +525,17 @@ export class AdministracionComponent implements OnInit {
       });
   }
 
+  reenviarConfirmacion(tarea: PeticionTareaAdmin) {
+  this.http.put(`${this.peticionsTareasUrl}/${tarea.id}/resend-confirmation`, {})
+    .subscribe({
+      next: () => this.showToast('✅ Correo de confirmación reenviado'),
+      error: err => {
+        console.error('Error reenviando confirmación', err);
+        this.showToast('❌ Error al reenviar el correo', false);
+      }
+    });
+}
+
   private cargarPeticionsTareas() {
   this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe(
     {

@@ -327,6 +327,8 @@
                 ✗
               </button>
             </div>
+
+
             
             
           </div>
@@ -496,6 +498,15 @@
                 ✗
               </button>
             </div>
+
+            <button
+              class="btn-emoji"
+              *ngIf="tarea.estado === 'INICIADA'"
+              (click)="reenviarConfirmacion(tarea)"
+              title="Reenviar confirmación de correo"
+            >
+              <mat-icon>forward_to_inbox</mat-icon>
+            </button>
 
             <button
               class="btn-emoji pdf"
