@@ -279,6 +279,55 @@ p {
   color: #666;
 }
 
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #14161d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #90a4ae;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: rgba(255, 213, 79, 0.4);
+  color: #ffd54f;
+}
+
+.page-btn.active {
+  background: rgba(255, 213, 79, 0.15);
+  border-color: #ffd54f;
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.page-info {
+  font-size: 12px;
+  color: #546e7a;
+  margin-left: 4px;
+}
+
 .no-results mat-icon {
   font-size: 64px;
   width: 64px;

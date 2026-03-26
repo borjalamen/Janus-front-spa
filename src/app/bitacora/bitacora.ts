@@ -14,7 +14,7 @@ import { LocalStorageService } from '../local-storage.service';
 interface Solucion {
   numero: number;
   descripcion: string;
-  entorno: 'minsait' | 'preproduccion' | 'produccion';
+  entorno: 'minsait' | 'preproduccion' | 'produccion' | string[];
   archivoNombre?: string;
   archivoBase64?: string;
   archivoTipo?: string;
@@ -59,6 +59,9 @@ export class BitacoraComponent implements OnInit {
 
   errores: Bitacora[] = [];
   erroresFiltrados: Bitacora[] = [];
+
+  paginaActualBitacora = 1;
+  readonly bitacorasPorPagina = 10;
 
   // Sistema de pestañas
   activeTab: 'crear' | 'listar' | 'solucion' = 'listar';
@@ -143,6 +146,25 @@ export class BitacoraComponent implements OnInit {
     this.cargarBitacoras();
   }
 
+  get bitacorasPaginadas(): Bitacora[] {
+    const inicio = (this.paginaActualBitacora - 1) * this.bitacorasPorPagina;
+    return this.erroresFiltrados.slice(inicio, inicio + this.bitacorasPorPagina);
+  }
+
+  get totalPaginasBitacora(): number {
+    return Math.ceil(this.erroresFiltrados.length / this.bitacorasPorPagina);
+  }
+
+  get paginasArrayBitacora(): number[] {
+    return Array.from({ length: this.totalPaginasBitacora }, (_, i) => i + 1);
+  }
+
+  cambiarPaginaBitacora(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginasBitacora) {
+      this.paginaActualBitacora = pagina;
+    }
+  }
+
   private getEmptyBitacora(): Bitacora {
     return {
       contexto: '',
@@ -221,9 +243,14 @@ export class BitacoraComponent implements OnInit {
         // Normalize entorno: backend stores as comma-string, frontend uses string[]
         this.errores = data.map(e => ({
           ...e,
-          entorno: this.normalizeEntorno(e.entorno)
+          entorno: this.normalizeEntorno(e.entorno),
+          soluciones: (e.soluciones || []).map((s: any) => ({
+            ...s,
+            entorno: this.normalizeSolucionEntorno(s?.entorno)
+          }))
         }));
         this.erroresFiltrados = [...this.errores];
+        this.paginaActualBitacora = 1;
 
         if (this.searchText && this.searchText.trim()) {
           this.filtrar(this.searchText);
@@ -243,6 +270,32 @@ export class BitacoraComponent implements OnInit {
   /** Convert string[] to comma-separated string for the backend */
   private serializeEntorno(arr: string[]): string {
     return (arr || []).join(',');
+  }
+
+  /** Backend can return entorno as array in soluciones. UI works with a single value. */
+  private normalizeSolucionEntorno(raw: any): 'minsait' | 'preproduccion' | 'produccion' {
+    if (Array.isArray(raw)) {
+      return ((raw[0] || 'minsait') as any);
+    }
+    return ((raw || 'minsait') as any);
+  }
+
+  /** Backend model expects List<String> for solucion.entorno. */
+  private serializeSolucionEntorno(raw: any): string[] {
+    if (Array.isArray(raw)) {
+      return raw.filter((x: any) => typeof x === 'string' && x.trim().length > 0);
+    }
+    if (typeof raw === 'string' && raw.trim().length > 0) {
+      return [raw.trim()];
+    }
+    return [];
+  }
+
+  private entornoTexto(raw: any): string {
+    if (Array.isArray(raw)) {
+      return raw.join(' ');
+    }
+    return String(raw || '');
   }
 
   // ===== CANVI DE PESTANYA (amb persistència) =====
@@ -277,6 +330,7 @@ export class BitacoraComponent implements OnInit {
     const v = this.searchText;
     if (!v) {
       this.erroresFiltrados = [...this.errores];
+      this.paginaActualBitacora = 1;
       return;
     }
 
@@ -287,11 +341,12 @@ export class BitacoraComponent implements OnInit {
 
       const solucionesMatch = e.soluciones?.some((sol: any) =>
         sol.descripcion?.toLowerCase().includes(v) ||
-        sol.entorno?.toLowerCase().includes(v)
+        this.entornoTexto(sol.entorno).toLowerCase().includes(v)
       );
 
       return contextMatch || errorMatch || tagsMatch || solucionesMatch;
     });
+    this.paginaActualBitacora = 1;
   }
 
   // ===== POPUP CREAR =====
@@ -366,7 +421,7 @@ export class BitacoraComponent implements OnInit {
       soluciones: (this.formBitacoraInline.soluciones || []).map((s: any) => ({
         numero: s.numero,
         descripcion: s.descripcion,
-        entorno: s.entorno,
+        entorno: this.serializeSolucionEntorno(s.entorno),
         archivoNombre: s.archivoNombre || null,
         archivoTipo: s.archivoTipo || null,
         archivoBase64: s.archivoBase64 || null
@@ -480,7 +535,7 @@ export class BitacoraComponent implements OnInit {
         soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
           numero: s.numero,
           descripcion: s.descripcion,
-          entorno: s.entorno,
+          entorno: this.serializeSolucionEntorno(s.entorno),
           archivoNombre: s.archivoNombre || null,
           archivoTipo: s.archivoTipo || null,
           archivoBase64: s.archivoBase64 || null
@@ -497,7 +552,7 @@ export class BitacoraComponent implements OnInit {
         soluciones: (this.formBitacora.soluciones || []).map((s: any) => ({
           numero: s.numero,
           descripcion: s.descripcion,
-          entorno: s.entorno,
+          entorno: this.serializeSolucionEntorno(s.entorno),
           archivoNombre: s.archivoNombre || null,
           archivoTipo: s.archivoTipo || null,
           archivoBase64: s.archivoBase64 || null
@@ -621,12 +676,14 @@ export class BitacoraComponent implements OnInit {
     }
   }
 
-  getColorEntorno(entorno: string): string {
-    return this.coloresEntorno[entorno as keyof typeof this.coloresEntorno] || '#2196F3';
+  getColorEntorno(entorno: string | string[]): string {
+    const key = this.normalizeSolucionEntorno(entorno);
+    return this.coloresEntorno[key as keyof typeof this.coloresEntorno] || '#2196F3';
   }
 
-  getNombreEntorno(entorno: string): string {
-    switch (entorno) {
+  getNombreEntorno(entorno: string | string[]): string {
+    const key = this.normalizeSolucionEntorno(entorno);
+    switch (key) {
       case 'minsait':
         return 'Minsait';
       case 'preproduccion':
@@ -634,7 +691,7 @@ export class BitacoraComponent implements OnInit {
       case 'produccion':
         return 'Producción';
       default:
-        return entorno;
+        return String(key);
     }
   }
 

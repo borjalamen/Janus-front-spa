@@ -23,6 +23,9 @@ export class ProcedimientosComponent implements OnInit {
   procedures: Procedure[] = [];
   procedimientosFiltrados: Procedure[] = [];
 
+  paginaActualProcedimientos = 1;
+  readonly procedimientosPorPagina = 10;
+
   // crear / editar
   editando: Procedure | null = null;
   modoForm: 'crear' | 'editar' = 'crear';
@@ -78,6 +81,25 @@ export class ProcedimientosComponent implements OnInit {
   ngOnInit(): void {
     this.restoreFromLocalStorage();
     this.cargarProcedimientos();
+  }
+
+  get procedimientosPaginados(): Procedure[] {
+    const inicio = (this.paginaActualProcedimientos - 1) * this.procedimientosPorPagina;
+    return this.procedimientosFiltrados.slice(inicio, inicio + this.procedimientosPorPagina);
+  }
+
+  get totalPaginasProcedimientos(): number {
+    return Math.ceil(this.procedimientosFiltrados.length / this.procedimientosPorPagina);
+  }
+
+  get paginasArrayProcedimientos(): number[] {
+    return Array.from({ length: this.totalPaginasProcedimientos }, (_, i) => i + 1);
+  }
+
+  cambiarPaginaProcedimientos(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginasProcedimientos) {
+      this.paginaActualProcedimientos = pagina;
+    }
   }
 
   // ===== LOCAL STORAGE =====
@@ -183,6 +205,7 @@ export class ProcedimientosComponent implements OnInit {
       next: data => {
         this.procedures = data;
         this.procedimientosFiltrados = [...this.procedures];
+        this.paginaActualProcedimientos = 1;
       },
       error: err => console.error('Error carregant procediments', err)
     });
@@ -191,15 +214,24 @@ export class ProcedimientosComponent implements OnInit {
   filtrar(valor: string) {
     if (!valor) {
       this.procedimientosFiltrados = [...this.procedures];
+      this.paginaActualProcedimientos = 1;
       return;
     }
     const v = valor.toLowerCase();
-    this.procedimientosFiltrados = this.procedures.filter(
-      p =>
-        (p.titulo || '').toLowerCase().includes(v) ||
-        (p.departamento || '').toLowerCase().includes(v) ||
-        (p.steps?.[0]?.responsable || '').toLowerCase().includes(v)
-    );
+    this.procedimientosFiltrados = this.procedures.filter(p => {
+      const stepsText = (p.steps || [])
+        .map(
+          s =>
+            `${s.titulo || ''} ${s.descripcion || ''} ${s.responsable || ''} ${s.metodo || ''} ${(s.tags || []).join(' ')} ${s.orden || ''} ${s.entorno || ''}`
+        )
+        .join(' ');
+
+      const haystack = `${p.titulo || ''} ${p.descripcion || ''} ${p.departamento || ''} ${p.entorno || ''} ${(p.tags || []).join(' ')} ${stepsText}`
+        .toLowerCase();
+
+      return haystack.includes(v);
+    });
+    this.paginaActualProcedimientos = 1;
   }
 
   // ==== CREATE / UPDATE ====

@@ -306,6 +306,11 @@ export class AppComponent implements OnDestroy, OnInit {
     this.speak(content);
   }
 
+  onAvatarLoadError() {
+    // Si la imagen de avatar falla al cargar, mostrar el icono por defecto
+    this.avatarPreview = null;
+  }
+
   loadVersion() {
     this.http.get<any>(`${environment.baseUrl}config/all`).subscribe({
       next: (data) => {

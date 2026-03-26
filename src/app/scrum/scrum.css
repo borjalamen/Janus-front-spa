@@ -182,6 +182,158 @@
   border-color: rgba(76, 175, 80, 0.3);
 }
 
+.todo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.todo-card .card-head {
+  margin-bottom: 0;
+}
+
+.todo-card .card-actions {
+  margin-top: 2px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+}
+
+.todo-card .card-actions button {
+  min-width: 52px;
+  height: 32px;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-card .card-actions button:not(.btn-save):not(.btn-cancel):not(.danger):not(.done-btn) {
+  border: 0;
+  background: transparent;
+  color: #d9d9d9;
+  font-size: 22px;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.todo-card .card-actions button:not(.btn-save):not(.btn-cancel):not(.danger):not(.done-btn):hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #243242, #1d2732) !important;
+  color: #dfe9f3;
+  box-shadow: 0 6px 16px rgba(40, 52, 66, 0.5), 0 0 14px rgba(40, 52, 66, 0.35);
+}
+
+.todo-card .card-actions .done-btn {
+  color: #4CAF50;
+}
+
+.todo-card .card-actions .done-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.todo-card .card-actions .danger {
+  color: #E53935;
+}
+
+.todo-card .card-actions .danger:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+.card:not(.todo-card) .card-actions button {
+  min-width: 52px;
+  height: 32px;
+  border-radius: 8px;
+  border: 0;
+  background: transparent;
+  color: #d9d9d9;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.card:not(.todo-card) .card-actions .progress-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #243242, #1d2732) !important;
+  color: #dfe9f3;
+  box-shadow: 0 6px 16px rgba(40, 52, 66, 0.5), 0 0 14px rgba(40, 52, 66, 0.35);
+}
+
+.card:not(.todo-card) .card-actions .done-btn {
+  color: #4CAF50;
+}
+
+.card:not(.todo-card) .card-actions .done-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.card:not(.todo-card) .card-actions .danger {
+  color: #E53935;
+}
+
+.card:not(.todo-card) .card-actions .danger:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+.todo-card .card-actions .btn-save,
+.todo-card .card-actions .btn-cancel {
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  align-self: auto;
+}
+
+.todo-card .edit-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: stretch;
+  margin-top: 0;
+}
+
+.todo-card .todo-edit-wrapper {
+  margin-top: -2px;
+}
+
+.todo-card .todo-edit-grid > input,
+.todo-card .todo-edit-grid > select,
+.todo-card .todo-edit-grid > textarea,
+.todo-card .edit-estimate,
+.todo-card .edit-priority,
+.todo-card .edit-assignee {
+  width: 100%;
+  min-width: 0;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+.todo-card .todo-edit-grid .field-description {
+  width: 100%;
+  min-height: 78px;
+  margin-top: 0;
+}
+
 .card-head {
   display: flex;
   justify-content: space-between;
@@ -390,54 +542,54 @@
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.3);
+  border: 0;
+  background: transparent;
   color: #4CAF50 !important;
   font-size: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: 0;
+  box-shadow: none;
 }
 
 .card-actions .btn-save:hover {
+  transform: scale(1.15) translateY(-2px);
   background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-              0 0 20px rgba(76, 175, 80, 0.5) !important;
-  border: 1px solid rgba(76, 175, 80, 0.5) !important;
-  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
 }
 
 .card-actions .btn-cancel {
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.3);
+  border: 0;
+  background: transparent;
   color: #E53935 !important;
   font-size: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: 0;
+  box-shadow: none;
 }
 
 .card-actions .btn-cancel:hover {
+  transform: scale(1.15) translateY(-2px);
   background: linear-gradient(145deg, #E53935, #c62828) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-              0 0 20px rgba(229, 57, 53, 0.4) !important;
-  border: 1px solid rgba(229, 57, 53, 0.5) !important;
-  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+@media (max-width: 1100px) {
+  .todo-card .edit-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===== SELECT STYLING ===== */

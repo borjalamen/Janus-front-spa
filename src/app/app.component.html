@@ -139,7 +139,7 @@
       <div class="user-dropdown-container">
         <div class="user-icon" (click)="username ? userMenuOpen = !userMenuOpen : openLoginDialog()">
           <ng-container *ngIf="avatarPreview; else defaultUserIcon">
-            <img [src]="avatarPreview" alt="Avatar" class="user-avatar-img" />
+            <img [src]="avatarPreview" alt="Avatar" class="user-avatar-img" (error)="onAvatarLoadError()" />
           </ng-container>
           <ng-template #defaultUserIcon>
             <mat-icon>person</mat-icon>
