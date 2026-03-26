@@ -44,7 +44,7 @@ interface PeticionAdmin {
   tipo: string;
   fecha: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA'| 'INICIADA';
 }
 
 interface PeticionUneteBackend {
@@ -87,7 +87,7 @@ interface PeticionTareaAdmin {
   asignado: string;
   deadline: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA';
 }
 
 @Component({
@@ -159,7 +159,7 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
-  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' = 'TODAS';
 
   // Paginación peticiones
   paginaActualPeticiones = 1;
@@ -168,7 +168,7 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES DE TAREA
   peticionsTareas: PeticionTareaAdmin[] = [];
   peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
-  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' = 'TODAS';
   searchTareas = '';
 
   // Paginación tareas
@@ -219,6 +219,16 @@ export class AdministracionComponent implements OnInit {
   get tareasRechazadas(): number {
     return this.peticionsTareas.filter(p => p.estado === 'RECHAZADA').length;
   }
+
+  get peticionesIniciadas(): number {
+  return this.peticiones.filter(p => p.estado === 'INICIADA').length;
+  }
+
+  get tareasIniciadas(): number {
+  return this.peticionsTareas.filter(p => p.estado === 'INICIADA').length;
+  }
+
+
 
   cambiarPaginaTareas(pagina: number) {
     if (pagina >= 1 && pagina <= this.totalPaginasTareas) {
@@ -453,7 +463,7 @@ export class AdministracionComponent implements OnInit {
     this.router.navigate(['/peticion']);
   }
 
-  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA') {
     this.filtroEstadoTareas = estado;
     this.aplicarFiltrosTareas();
   }
@@ -553,7 +563,7 @@ export class AdministracionComponent implements OnInit {
     };
   }
 
-  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA') {
     this.filtroEstadoPeticiones = estado;
     this.aplicarFiltrosPeticiones();
   }
@@ -601,7 +611,8 @@ export class AdministracionComponent implements OnInit {
     const statusMap: { [key: string]: string } = {
       'PENDIENTE': 'ADMIN.STATUS_PENDING',
       'APROBADA': 'ADMIN.STATUS_APPROVED',
-      'RECHAZADA': 'ADMIN.STATUS_REJECTED'
+      'RECHAZADA': 'ADMIN.STATUS_REJECTED',
+      'INICIADA': 'ADMIN.STATUS_INITIATED'
     };
     return statusMap[estado] || estado;
   }
@@ -688,12 +699,12 @@ export class AdministracionComponent implements OnInit {
   }
 
   private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
-    const normalized = (estado || 'PENDIENTE').toUpperCase();
-    if (normalized === 'APROBADA' || normalized === 'RECHAZADA') {
-      return normalized;
-    }
-    return 'PENDIENTE';
+  const normalized = (estado || 'PENDIENTE').toUpperCase();
+  if (normalized === 'APROBADA' || normalized === 'RECHAZADA' || normalized === 'INICIADA') {
+    return normalized;
   }
+  return 'PENDIENTE';
+}
 
   private formatFecha(value?: string): string {
     if (!value) return '';

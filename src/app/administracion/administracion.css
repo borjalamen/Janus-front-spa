@@ -2448,3 +2448,16 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
   padding: 1px 6px;
   margin-top: 2px;
 }
+
+.status-pill.iniciada {
+  border-color: #42a5f5;
+  color: #42a5f5;
+}
+
+.status-pill.iniciada.active {
+  background: #42a5f5;
+  color: #0F1115;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(66, 165, 245, 0.4);
+  transform: scale(1.05);
+}

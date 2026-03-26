@@ -240,6 +240,15 @@
         <h2>{{ 'ADMIN.REQUESTS' | translate }}</h2>
         <div class="requests-summary">
           <span
+            class="status-pill iniciada"
+            [class.active]="filtroEstadoPeticiones === 'INICIADA'"
+            (click)="filtrarPorEstado('INICIADA')"
+            style="cursor: pointer"
+          >
+            {{ peticionesIniciadas }} Iniciadas
+          </span>
+
+          <span
             class="status-pill pendiente"
             [class.active]="filtroEstadoPeticiones === 'PENDIENTE'"
             (click)="filtrarPorEstado('PENDIENTE')"
@@ -362,6 +371,16 @@
       <div class="documents-header">
         <h2>{{ 'ADMIN.TAB_PETICIONES' | translate }}</h2>
         <div class="requests-summary">
+
+          <span
+            class="status-pill iniciada"
+            [class.active]="filtroEstadoTareas === 'INICIADA'"
+            (click)="filtrarPorEstadoTareas('INICIADA')"
+            style="cursor: pointer"
+          >
+            {{ tareasIniciadas }} Iniciadas
+          </span>
+
           <span
             class="status-pill pendiente"
             [class.active]="filtroEstadoTareas === 'PENDIENTE'"
