@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { BuscadorComponent } from '../buscador/buscador';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
-import { LocalStorageService } from '../local-storage.service';
-import { ApiService } from '../api.service';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { Component, OnInit } from "@angular/core";
+import { BuscadorComponent } from "../buscador/buscador";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { AuthService } from "../auth.service";
+import { Router } from "@angular/router";
+import { LocalStorageService } from "../local-storage.service";
+import { ApiService } from "../api.service";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface UsuariBackend {
   id?: string;
@@ -33,7 +33,7 @@ interface BackupVersion {
   id: string;
   fecha: string;
   descripcion: string;
-  tipo: 'completo' | 'parcial' | 'coleccion' | 'desconocido';
+  tipo: "completo" | "parcial" | "coleccion" | "desconocido";
   colecciones: string[];
   tamanoKb: number;
 }
@@ -44,7 +44,7 @@ interface PeticionAdmin {
   tipo: string;
   fecha: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA";
 }
 
 interface PeticionUneteBackend {
@@ -71,6 +71,7 @@ interface PeticionTareaBackend {
   devopsAssignee?: string;
   deadline?: string;
   comments?: string;
+  attachments?: string[];
   estado?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -87,13 +88,14 @@ interface PeticionTareaAdmin {
   asignado: string;
   deadline: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA";
+  attachments?: string[];
 }
 
 @Component({
-  selector: 'app-administracion',
-  templateUrl: './administracion.html',
-  styleUrls: ['./administracion.css'],
+  selector: "app-administracion",
+  templateUrl: "./administracion.html",
+  styleUrls: ["./administracion.css"],
   standalone: true,
   imports: [
     CommonModule,
@@ -101,25 +103,25 @@ interface PeticionTareaAdmin {
     MatIconModule,
     TranslateModule,
     BuscadorComponent,
-    MatSlideToggleModule
-  ]
+    MatSlideToggleModule,
+  ],
 })
 export class AdministracionComponent implements OnInit {
-  title = 'Administración';
+  title = "Administración";
 
   // claus localStorage
-  private readonly STORAGE_KEY_TAB = 'admin_active_tab_v1';
-  private readonly STORAGE_KEY_USER_FILTER = 'admin_users_filter_v1';
-  private readonly STORAGE_KEY_REQ_FILTER = 'admin_requests_filter_v1';
-  private readonly STORAGE_KEY_TAREAS_FILTER = 'admin_tareas_filter_v1';
+  private readonly STORAGE_KEY_TAB = "admin_active_tab_v1";
+  private readonly STORAGE_KEY_USER_FILTER = "admin_users_filter_v1";
+  private readonly STORAGE_KEY_REQ_FILTER = "admin_requests_filter_v1";
+  private readonly STORAGE_KEY_TAREAS_FILTER = "admin_tareas_filter_v1";
 
   // CONTROL DE PESTAÑAS (SCENARIOS)
   // Options: 'USERS', 'APP', 'PARAM', 'DB', 'REQUESTS', 'PETICIONES_TAREAS'
-  activeTab: string = 'USERS';
+  activeTab: string = "USERS";
 
   // filtres UI
-  searchUsers = '';
-  searchRequests = '';
+  searchUsers = "";
+  searchRequests = "";
 
   // ESTADOS POPUPS USUARIOS
   mostrarPopup = false;
@@ -128,14 +130,14 @@ export class AdministracionComponent implements OnInit {
   usuariPerfil: UsuariBackend | null = null;
 
   nouUsuari = {
-    nombre: '',
-    contrasenya: '',
-    email: '',
+    nombre: "",
+    contrasenya: "",
+    email: "",
     rols: {
       admin: false,
       consultor: false,
-      devops: false
-    }
+      devops: false,
+    },
   };
 
   usuaris: UsuariBackend[] = [];
@@ -144,11 +146,11 @@ export class AdministracionComponent implements OnInit {
   usuariAEsborrar: UsuariBackend | null = null;
 
   // ESTADOS NUEVAS SECCIONES
-  selectedRoleToDisable: string = '';
-  appVersion: string = '';
+  selectedRoleToDisable: string = "";
+  appVersion: string = "";
 
   // Toast notification
-  toastMsg = '';
+  toastMsg = "";
   toastOk = true;
   private _toastTimer: any = null;
 
@@ -159,7 +161,8 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
-  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
+  filtroEstadoPeticiones: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" =
+    "TODAS";
 
   // Paginación peticiones
   paginaActualPeticiones = 1;
@@ -168,8 +171,9 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES DE TAREA
   peticionsTareas: PeticionTareaAdmin[] = [];
   peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
-  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'TODAS';
-  searchTareas = '';
+  filtroEstadoTareas: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" =
+    "TODAS";
+  searchTareas = "";
 
   // Paginación tareas
   paginaActualTareas = 1;
@@ -177,11 +181,16 @@ export class AdministracionComponent implements OnInit {
 
   get peticionesPaginadas(): PeticionAdmin[] {
     const inicio = (this.paginaActualPeticiones - 1) * this.peticionesPorPagina;
-    return this.peticionesFiltradas.slice(inicio, inicio + this.peticionesPorPagina);
+    return this.peticionesFiltradas.slice(
+      inicio,
+      inicio + this.peticionesPorPagina,
+    );
   }
 
   get totalPaginasPeticiones(): number {
-    return Math.ceil(this.peticionesFiltradas.length / this.peticionesPorPagina);
+    return Math.ceil(
+      this.peticionesFiltradas.length / this.peticionesPorPagina,
+    );
   }
 
   get paginasArray(): number[] {
@@ -197,11 +206,16 @@ export class AdministracionComponent implements OnInit {
   // Getters peticiones de tarea
   get tareasPaginadas(): PeticionTareaAdmin[] {
     const inicio = (this.paginaActualTareas - 1) * this.tareasPorPagina;
-    return this.peticionsTareasFiltradas.slice(inicio, inicio + this.tareasPorPagina);
+    return this.peticionsTareasFiltradas.slice(
+      inicio,
+      inicio + this.tareasPorPagina,
+    );
   }
 
   get totalPaginasTareas(): number {
-    return Math.ceil(this.peticionsTareasFiltradas.length / this.tareasPorPagina);
+    return Math.ceil(
+      this.peticionsTareasFiltradas.length / this.tareasPorPagina,
+    );
   }
 
   get paginasArrayTareas(): number[] {
@@ -209,15 +223,15 @@ export class AdministracionComponent implements OnInit {
   }
 
   get tareasPendientes(): number {
-    return this.peticionsTareas.filter(p => p.estado === 'PENDIENTE').length;
+    return this.peticionsTareas.filter((p) => p.estado === "PENDIENTE").length;
   }
 
   get tareasAprobadas(): number {
-    return this.peticionsTareas.filter(p => p.estado === 'APROBADA').length;
+    return this.peticionsTareas.filter((p) => p.estado === "APROBADA").length;
   }
 
   get tareasRechazadas(): number {
-    return this.peticionsTareas.filter(p => p.estado === 'RECHAZADA').length;
+    return this.peticionsTareas.filter((p) => p.estado === "RECHAZADA").length;
   }
 
   cambiarPaginaTareas(pagina: number) {
@@ -232,7 +246,7 @@ export class AdministracionComponent implements OnInit {
   mostrarPopupBackup = false;
 
   // Sub-tab activo dentro de la sección DB
-  dbSubTab: 'borrado' | 'backup' | 'restore' = 'borrado';
+  dbSubTab: "borrado" | "backup" | "restore" = "borrado";
 
   // Colecciones reales de la BD cargadas dinámicamente
   coleccionesDB: { id: string; registros: number }[] = [];
@@ -241,26 +255,105 @@ export class AdministracionComponent implements OnInit {
 
   // Metadatos visuales opcionales por nombre de colección MongoDB.
   // Si una colección no está aquí, se muestra con icono y nombre genérico.
-  private readonly coleccionMeta: Record<string, { label: string; icon: string; descripcion: string }> = {
-    'users':           { label: 'ADMIN.COL_USERS_LABEL',          icon: '👥', descripcion: 'ADMIN.COL_USERS_DESC' },
-    'logbook':         { label: 'ADMIN.COL_LOGBOOK_LABEL',        icon: '📝', descripcion: 'ADMIN.COL_LOGBOOK_DESC' },
-    'formations':      { label: 'ADMIN.COL_FORMACIONES_LABEL',    icon: '📚', descripcion: 'ADMIN.COL_FORMACIONES_DESC' },
-    'training':        { label: 'ADMIN.COL_FORMACIONES_LABEL',    icon: '📚', descripcion: 'ADMIN.COL_FORMACIONES_DESC' },
-    'procedures':      { label: 'ADMIN.COL_PROCEDIMIENTOS_LABEL', icon: '📋', descripcion: 'ADMIN.COL_PROCEDIMIENTOS_DESC' },
-    'planning':        { label: 'ADMIN.COL_PLANIFICACION_LABEL',  icon: '📅', descripcion: 'ADMIN.COL_PLANIFICACION_DESC' },
-    'media_videos':    { label: 'ADMIN.COL_MULTIMEDIA_LABEL',     icon: '🎬', descripcion: 'ADMIN.COL_MULTIMEDIA_DESC' },
-    'multimedia':      { label: 'ADMIN.COL_MULTIMEDIA_LABEL',     icon: '🎬', descripcion: 'ADMIN.COL_MULTIMEDIA_DESC' },
-    'documents':       { label: 'ADMIN.COL_DOCUMENTOS_LABEL',     icon: '📄', descripcion: 'ADMIN.COL_DOCUMENTOS_DESC' },
-    'join_requests':   { label: 'ADMIN.COL_JOINREQUESTS_LABEL',   icon: '🔗', descripcion: 'ADMIN.COL_JOINREQUESTS_DESC' },
-    'parametrization': { label: 'ADMIN.COL_CONFIGURACION_LABEL',  icon: '⚙️', descripcion: 'ADMIN.COL_CONFIGURACION_DESC' },
-    'projects':        { label: 'ADMIN.COL_PROJECTS_LABEL',       icon: '🗂️', descripcion: 'ADMIN.COL_PROJECTS_DESC' },
-    'steps':           { label: 'ADMIN.COL_STEPS_LABEL',          icon: '🔢', descripcion: 'ADMIN.COL_STEPS_DESC' },
-    'counters':        { label: 'ADMIN.COL_COUNTERS_LABEL',       icon: '🔢', descripcion: 'ADMIN.COL_COUNTERS_DESC' },
-    'infraestructura': { label: 'ADMIN.COL_INFRA_LABEL',          icon: '🖥️', descripcion: 'ADMIN.COL_INFRA_DESC' },
-    'infraestructure': { label: 'ADMIN.COL_INFRA_LABEL',          icon: '🖥️', descripcion: 'ADMIN.COL_INFRA_DESC' },
-    'jenkins':         { label: 'ADMIN.COL_JENKINS_LABEL',        icon: '⚙️', descripcion: 'ADMIN.COL_JENKINS_DESC' },
-    'role_access':     { label: 'ADMIN.COL_ROLES_LABEL',          icon: '🔑', descripcion: 'ADMIN.COL_ROLES_DESC' },
-    'peticiones_tareas': { label: 'Peticiones de Tarea',          icon: '📝', descripcion: 'Peticiones de tarea DevOps' },
+  private readonly coleccionMeta: Record<
+    string,
+    { label: string; icon: string; descripcion: string }
+  > = {
+    users: {
+      label: "ADMIN.COL_USERS_LABEL",
+      icon: "👥",
+      descripcion: "ADMIN.COL_USERS_DESC",
+    },
+    logbook: {
+      label: "ADMIN.COL_LOGBOOK_LABEL",
+      icon: "📝",
+      descripcion: "ADMIN.COL_LOGBOOK_DESC",
+    },
+    formations: {
+      label: "ADMIN.COL_FORMACIONES_LABEL",
+      icon: "📚",
+      descripcion: "ADMIN.COL_FORMACIONES_DESC",
+    },
+    training: {
+      label: "ADMIN.COL_FORMACIONES_LABEL",
+      icon: "📚",
+      descripcion: "ADMIN.COL_FORMACIONES_DESC",
+    },
+    procedures: {
+      label: "ADMIN.COL_PROCEDIMIENTOS_LABEL",
+      icon: "📋",
+      descripcion: "ADMIN.COL_PROCEDIMIENTOS_DESC",
+    },
+    planning: {
+      label: "ADMIN.COL_PLANIFICACION_LABEL",
+      icon: "📅",
+      descripcion: "ADMIN.COL_PLANIFICACION_DESC",
+    },
+    media_videos: {
+      label: "ADMIN.COL_MULTIMEDIA_LABEL",
+      icon: "🎬",
+      descripcion: "ADMIN.COL_MULTIMEDIA_DESC",
+    },
+    multimedia: {
+      label: "ADMIN.COL_MULTIMEDIA_LABEL",
+      icon: "🎬",
+      descripcion: "ADMIN.COL_MULTIMEDIA_DESC",
+    },
+    documents: {
+      label: "ADMIN.COL_DOCUMENTOS_LABEL",
+      icon: "📄",
+      descripcion: "ADMIN.COL_DOCUMENTOS_DESC",
+    },
+    join_requests: {
+      label: "ADMIN.COL_JOINREQUESTS_LABEL",
+      icon: "🔗",
+      descripcion: "ADMIN.COL_JOINREQUESTS_DESC",
+    },
+    parametrization: {
+      label: "ADMIN.COL_CONFIGURACION_LABEL",
+      icon: "⚙️",
+      descripcion: "ADMIN.COL_CONFIGURACION_DESC",
+    },
+    projects: {
+      label: "ADMIN.COL_PROJECTS_LABEL",
+      icon: "🗂️",
+      descripcion: "ADMIN.COL_PROJECTS_DESC",
+    },
+    steps: {
+      label: "ADMIN.COL_STEPS_LABEL",
+      icon: "🔢",
+      descripcion: "ADMIN.COL_STEPS_DESC",
+    },
+    counters: {
+      label: "ADMIN.COL_COUNTERS_LABEL",
+      icon: "🔢",
+      descripcion: "ADMIN.COL_COUNTERS_DESC",
+    },
+    infraestructura: {
+      label: "ADMIN.COL_INFRA_LABEL",
+      icon: "🖥️",
+      descripcion: "ADMIN.COL_INFRA_DESC",
+    },
+    infraestructure: {
+      label: "ADMIN.COL_INFRA_LABEL",
+      icon: "🖥️",
+      descripcion: "ADMIN.COL_INFRA_DESC",
+    },
+    jenkins: {
+      label: "ADMIN.COL_JENKINS_LABEL",
+      icon: "⚙️",
+      descripcion: "ADMIN.COL_JENKINS_DESC",
+    },
+    role_access: {
+      label: "ADMIN.COL_ROLES_LABEL",
+      icon: "🔑",
+      descripcion: "ADMIN.COL_ROLES_DESC",
+    },
+    peticiones_tareas: {
+      label: "Peticiones de Tarea",
+      icon: "📝",
+      descripcion: "Peticiones de tarea DevOps",
+    },
   };
 
   // Selecciones para borrado y backup
@@ -268,14 +361,24 @@ export class AdministracionComponent implements OnInit {
   selectedCollectionsBackup: Set<string> = new Set();
 
   // Filtros de búsqueda en popups
-  filtroColeccionesBorrado = '';
-  filtroColeccionesBackup = '';
-  filtroVersionesRestore = '';
+  filtroColeccionesBorrado = "";
+  filtroColeccionesBackup = "";
+  filtroVersionesRestore = "";
 
   get listaColeccionesActiva() {
-    return this.coleccionesDB.map(c => {
-      const meta = this.coleccionMeta[c.id] || { label: c.id, icon: '🗄️', descripcion: c.id };
-      return { id: c.id, label: meta.label, icon: meta.icon, descripcion: meta.descripcion, registros: c.registros };
+    return this.coleccionesDB.map((c) => {
+      const meta = this.coleccionMeta[c.id] || {
+        label: c.id,
+        icon: "🗄️",
+        descripcion: c.id,
+      };
+      return {
+        id: c.id,
+        label: meta.label,
+        icon: meta.icon,
+        descripcion: meta.descripcion,
+        registros: c.registros,
+      };
     });
   }
 
@@ -283,14 +386,20 @@ export class AdministracionComponent implements OnInit {
     const lista = this.listaColeccionesActiva;
     if (!this.filtroColeccionesBorrado) return lista;
     const f = this.filtroColeccionesBorrado.toLowerCase();
-    return lista.filter(c => {
-      const label = typeof c.label === 'string' && c.label.startsWith('ADMIN.')
-        ? this.translate.instant(c.label)
-        : c.label;
-      const desc = typeof c.descripcion === 'string' && c.descripcion.startsWith('ADMIN.')
-        ? this.translate.instant(c.descripcion)
-        : c.descripcion;
-      return label.toLowerCase().includes(f) || desc.toLowerCase().includes(f) || c.id.toLowerCase().includes(f);
+    return lista.filter((c) => {
+      const label =
+        typeof c.label === "string" && c.label.startsWith("ADMIN.")
+          ? this.translate.instant(c.label)
+          : c.label;
+      const desc =
+        typeof c.descripcion === "string" && c.descripcion.startsWith("ADMIN.")
+          ? this.translate.instant(c.descripcion)
+          : c.descripcion;
+      return (
+        label.toLowerCase().includes(f) ||
+        desc.toLowerCase().includes(f) ||
+        c.id.toLowerCase().includes(f)
+      );
     });
   }
 
@@ -298,22 +407,31 @@ export class AdministracionComponent implements OnInit {
     const lista = this.listaColeccionesActiva;
     if (!this.filtroColeccionesBackup) return lista;
     const f = this.filtroColeccionesBackup.toLowerCase();
-    return lista.filter(c => {
-      const label = typeof c.label === 'string' && c.label.startsWith('ADMIN.')
-        ? this.translate.instant(c.label)
-        : c.label;
-      const desc = typeof c.descripcion === 'string' && c.descripcion.startsWith('ADMIN.')
-        ? this.translate.instant(c.descripcion)
-        : c.descripcion;
-      return label.toLowerCase().includes(f) || desc.toLowerCase().includes(f) || c.id.toLowerCase().includes(f);
+    return lista.filter((c) => {
+      const label =
+        typeof c.label === "string" && c.label.startsWith("ADMIN.")
+          ? this.translate.instant(c.label)
+          : c.label;
+      const desc =
+        typeof c.descripcion === "string" && c.descripcion.startsWith("ADMIN.")
+          ? this.translate.instant(c.descripcion)
+          : c.descripcion;
+      return (
+        label.toLowerCase().includes(f) ||
+        desc.toLowerCase().includes(f) ||
+        c.id.toLowerCase().includes(f)
+      );
     });
   }
 
   get versionesRestoreFiltradas() {
     if (!this.filtroVersionesRestore) return this.versionesRestore;
     const f = this.filtroVersionesRestore.toLowerCase();
-    return this.versionesRestore.filter(v =>
-      v.fecha.toLowerCase().includes(f) || (v.descripcion && v.descripcion.toLowerCase().includes(f)));
+    return this.versionesRestore.filter(
+      (v) =>
+        v.fecha.toLowerCase().includes(f) ||
+        (v.descripcion && v.descripcion.toLowerCase().includes(f)),
+    );
   }
 
   toggleSeleccionarTodasBorrado() {
@@ -321,7 +439,7 @@ export class AdministracionComponent implements OnInit {
     if (this.selectedCollectionsBorrado.size === lista.length) {
       this.selectedCollectionsBorrado = new Set();
     } else {
-      this.selectedCollectionsBorrado = new Set(lista.map(c => c.id));
+      this.selectedCollectionsBorrado = new Set(lista.map((c) => c.id));
     }
   }
 
@@ -330,44 +448,44 @@ export class AdministracionComponent implements OnInit {
     if (this.selectedCollectionsBackup.size === lista.length) {
       this.selectedCollectionsBackup = new Set();
     } else {
-      this.selectedCollectionsBackup = new Set(lista.map(c => c.id));
+      this.selectedCollectionsBackup = new Set(lista.map((c) => c.id));
     }
   }
 
   // Feedback inline de parametrización
-  versionSuccess = '';
-  versionError = '';
+  versionSuccess = "";
+  versionError = "";
   versionSaving = false;
 
   opcionesBorrado = [
-    { value: 'usuarios', label: 'Usuarios inactivos' },
-    { value: 'documentos', label: 'Documentos huérfanos' },
-    { value: 'logs', label: 'Logs antiguos' },
-    { value: 'sesiones', label: 'Sesiones expiradas' },
-    { value: 'todos', label: 'Todos los registros marcados' }
+    { value: "usuarios", label: "Usuarios inactivos" },
+    { value: "documentos", label: "Documentos huérfanos" },
+    { value: "logs", label: "Logs antiguos" },
+    { value: "sesiones", label: "Sesiones expiradas" },
+    { value: "todos", label: "Todos los registros marcados" },
   ];
   selectedBorrado: string[] = [];
 
   // Logs antiguos - borrado por fecha
-  fechaLimiteLogs: string = '';
+  fechaLimiteLogs: string = "";
 
   // Búsqueda de colección para borrado
-  coleccionBorrar: string = '';
+  coleccionBorrar: string = "";
   coleccionEncontrada: boolean = false;
   coleccionNoEncontrada: boolean = false;
   registrosColeccion: number = 0;
   registrosInactivos: number = 0;
 
   opcionesBackup = [
-    { value: 'usuarios', label: 'Usuarios' },
-    { value: 'documentos', label: 'Documentos' },
-    { value: 'configuracion', label: 'Configuración' },
-    { value: 'completo', label: 'Backup completo' }
+    { value: "usuarios", label: "Usuarios" },
+    { value: "documentos", label: "Documentos" },
+    { value: "configuracion", label: "Configuración" },
+    { value: "completo", label: "Backup completo" },
   ];
   selectedBackup: string[] = [];
 
   // Búsqueda de colección para backup
-  coleccionBackup: string = '';
+  coleccionBackup: string = "";
   coleccionBackupEncontrada: boolean = false;
   coleccionBackupNoEncontrada: boolean = false;
   registrosColeccionBackup: number = 0;
@@ -381,13 +499,19 @@ export class AdministracionComponent implements OnInit {
   backupCompletoEnProgreso: boolean = false;
 
   versionesRestore: BackupVersion[] = [];
-  selectedRestore: string = '';
+  selectedRestore: string = "";
 
   // Log de backups recientes (máx 4)
-  logBackups: { id: string; fecha: string; descripcion: string; tipo: 'completo' | 'parcial'; colecciones: string[] }[] = [];
+  logBackups: {
+    id: string;
+    fecha: string;
+    descripcion: string;
+    tipo: "completo" | "parcial";
+    colecciones: string[];
+  }[] = [];
 
   // Log entry seleccionado para restore parcial
-  selectedRestoreLogId: string = '';
+  selectedRestoreLogId: string = "";
 
   private baseUrl = `${environment.baseUrl}users`;
   private joinRequestsUrl = `${environment.baseUrl}join-requests`;
@@ -399,7 +523,7 @@ export class AdministracionComponent implements OnInit {
     private router: Router,
     private storage: LocalStorageService,
     private translate: TranslateService,
-    private apiService: ApiService
+    private apiService: ApiService,
   ) {}
 
   ngOnInit(): void {
@@ -408,13 +532,16 @@ export class AdministracionComponent implements OnInit {
     if (savedTab) this.activeTab = savedTab;
 
     // restaurar filtres
-    const savedUserFilter = (this.storage.get(this.STORAGE_KEY_USER_FILTER) as string) || '';
+    const savedUserFilter =
+      (this.storage.get(this.STORAGE_KEY_USER_FILTER) as string) || "";
     this.searchUsers = savedUserFilter;
 
-    const savedReqFilter = (this.storage.get(this.STORAGE_KEY_REQ_FILTER) as string) || '';
+    const savedReqFilter =
+      (this.storage.get(this.STORAGE_KEY_REQ_FILTER) as string) || "";
     this.searchRequests = savedReqFilter;
 
-    const savedTareasFilter = (this.storage.get(this.STORAGE_KEY_TAREAS_FILTER) as string) || '';
+    const savedTareasFilter =
+      (this.storage.get(this.STORAGE_KEY_TAREAS_FILTER) as string) || "";
     this.searchTareas = savedTareasFilter;
 
     this.carregarUsuaris();
@@ -424,19 +551,19 @@ export class AdministracionComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.authService.canEdit; 
+    return this.authService.canEdit;
   }
 
   get peticionesPendientes(): number {
-    return this.peticiones.filter(p => p.estado === 'PENDIENTE').length;
+    return this.peticiones.filter((p) => p.estado === "PENDIENTE").length;
   }
 
   get peticionesAprobadas(): number {
-    return this.peticiones.filter(p => p.estado === 'APROBADA').length;
+    return this.peticiones.filter((p) => p.estado === "APROBADA").length;
   }
 
   get peticionesRechazadas(): number {
-    return this.peticiones.filter(p => p.estado === 'RECHAZADA').length;
+    return this.peticiones.filter((p) => p.estado === "RECHAZADA").length;
   }
 
   // ===== NAVEGACIÓN =====
@@ -444,122 +571,139 @@ export class AdministracionComponent implements OnInit {
     this.activeTab = tab;
     this.storage.set(this.STORAGE_KEY_TAB, tab);
     // Reload data when entering each tab so it's always fresh
-    if (tab === 'PETICIONES_TAREAS') this.cargarPeticionsTareas();
-    if (tab === 'REQUESTS')          this.cargarPeticiones();
-    if (tab === 'USERS')             this.carregarUsuaris();
+    if (tab === "PETICIONES_TAREAS") this.cargarPeticionsTareas();
+    if (tab === "REQUESTS") this.cargarPeticiones();
+    if (tab === "USERS") this.carregarUsuaris();
   }
 
   irAPeticion() {
-    this.router.navigate(['/peticion']);
+    this.router.navigate(["/peticion"]);
   }
 
-  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+  filtrarPorEstadoTareas(
+    estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA",
+  ) {
     this.filtroEstadoTareas = estado;
     this.aplicarFiltrosTareas();
   }
 
   filtrarTareas(termino: string) {
-    const t = (termino || '').toLowerCase().trim();
+    const t = (termino || "").toLowerCase().trim();
     this.searchTareas = t;
     this.storage.set(this.STORAGE_KEY_TAREAS_FILTER, t);
-    if (!t) { this.aplicarFiltrosTareas(); return; }
-    let lista = this.peticionsTareas.filter(p =>
-      p.solicitante.toLowerCase().includes(t) ||
-      p.email.toLowerCase().includes(t) ||
-      p.proyecto.toLowerCase().includes(t) ||
-      p.projectCode.toLowerCase().includes(t) ||
-      p.jiraTask.toLowerCase().includes(t) ||
-      p.asignado.toLowerCase().includes(t) ||
-      p.comentario.toLowerCase().includes(t)
+    if (!t) {
+      this.aplicarFiltrosTareas();
+      return;
+    }
+    let lista = this.peticionsTareas.filter(
+      (p) =>
+        p.solicitante.toLowerCase().includes(t) ||
+        p.email.toLowerCase().includes(t) ||
+        p.proyecto.toLowerCase().includes(t) ||
+        p.projectCode.toLowerCase().includes(t) ||
+        p.jiraTask.toLowerCase().includes(t) ||
+        p.asignado.toLowerCase().includes(t) ||
+        p.comentario.toLowerCase().includes(t),
     );
-    if (this.filtroEstadoTareas !== 'TODAS') {
-      lista = lista.filter(p => p.estado === this.filtroEstadoTareas);
+    if (this.filtroEstadoTareas !== "TODAS") {
+      lista = lista.filter((p) => p.estado === this.filtroEstadoTareas);
     }
     this.peticionsTareasFiltradas = lista;
     this.paginaActualTareas = 1;
   }
 
   private aplicarFiltrosTareas() {
-    if (this.filtroEstadoTareas === 'TODAS') {
+    if (this.filtroEstadoTareas === "TODAS") {
       this.peticionsTareasFiltradas = [...this.peticionsTareas];
     } else {
-      this.peticionsTareasFiltradas = this.peticionsTareas.filter(p => p.estado === this.filtroEstadoTareas);
+      this.peticionsTareasFiltradas = this.peticionsTareas.filter(
+        (p) => p.estado === this.filtroEstadoTareas,
+      );
     }
-    if (this.searchTareas) { this.filtrarTareas(this.searchTareas); return; }
+    if (this.searchTareas) {
+      this.filtrarTareas(this.searchTareas);
+      return;
+    }
     this.paginaActualTareas = 1;
   }
 
   aprobarTarea(tarea: PeticionTareaAdmin) {
-    this.http.put<PeticionTareaBackend>(`${this.peticionsTareasUrl}/${tarea.id}/approve`, {})
+    this.http
+      .put<PeticionTareaBackend>(
+        `${this.peticionsTareasUrl}/${tarea.id}/approve`,
+        {},
+      )
       .subscribe({
-        next: updated => {
+        next: (updated) => {
           const mapped = this.mapPeticionTarea(updated);
-          const idx = this.peticionsTareas.findIndex(p => p.id === tarea.id);
+          const idx = this.peticionsTareas.findIndex((p) => p.id === tarea.id);
           if (idx !== -1) this.peticionsTareas[idx] = mapped;
           this.aplicarFiltrosTareas();
         },
-        error: err => console.error('Error aprobando tarea', err)
+        error: (err) => console.error("Error aprobando tarea", err),
       });
   }
 
   rechazarTarea(tarea: PeticionTareaAdmin) {
-    this.http.put<PeticionTareaBackend>(`${this.peticionsTareasUrl}/${tarea.id}/reject`, {})
+    this.http
+      .put<PeticionTareaBackend>(
+        `${this.peticionsTareasUrl}/${tarea.id}/reject`,
+        {},
+      )
       .subscribe({
-        next: updated => {
+        next: (updated) => {
           const mapped = this.mapPeticionTarea(updated);
-          const idx = this.peticionsTareas.findIndex(p => p.id === tarea.id);
+          const idx = this.peticionsTareas.findIndex((p) => p.id === tarea.id);
           if (idx !== -1) this.peticionsTareas[idx] = mapped;
           this.aplicarFiltrosTareas();
         },
-        error: err => console.error('Error rechazando tarea', err)
+        error: (err) => console.error("Error rechazando tarea", err),
       });
   }
 
   private cargarPeticionsTareas() {
-  this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe(
-    {
+    this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
       next: (data) => {
-        console.log('TAREAS RAW', data);
+        console.log("TAREAS RAW", data);
         // Invertir orden: más nuevas arriba
         this.peticionsTareas = data
           .reverse()
           .map((p) => this.mapPeticionTarea(p));
         this.aplicarFiltrosTareas();
-        console.log('TAREAS ADMIN', this.peticionsTareas);
+        console.log("TAREAS ADMIN", this.peticionsTareas);
       },
-      
+
       error: (err) => {
-        console.error('Error cargando peticiones de tarea: ', err);
+        console.error("Error cargando peticiones de tarea: ", err);
         this.peticionsTareas = [];
         this.aplicarFiltrosTareas();
       },
-      
-    }
-  );
-}
+    });
+  }
 
   private mapPeticionTarea(p: PeticionTareaBackend): PeticionTareaAdmin {
     return {
-      id: p.id ?? '',
-      solicitante: p.requesterName?.trim() || '',
-      email: p.requesterEmail?.trim() || '',
-      proyecto: p.projectName?.trim() || '',
-      projectCode: p.projectCode?.trim() || '',
-      jiraTask: p.jiraTask?.trim() || '',
-      asignado: p.devopsAssignee?.trim() || 'Cualquiera',
+      id: p.id ?? "",
+      solicitante: p.requesterName?.trim() || "",
+      email: p.requesterEmail?.trim() || "",
+      proyecto: p.projectName?.trim() || "",
+      projectCode: p.projectCode?.trim() || "",
+      jiraTask: p.jiraTask?.trim() || "",
+      asignado: p.devopsAssignee?.trim() || "Cualquiera",
       deadline: this.formatFecha(p.deadline),
-      comentario: p.comments?.trim() || '',
-      estado: this.normalizeEstado(p.estado)
+      comentario: p.comments?.trim() || "",
+      estado: this.normalizeEstado(p.estado),
+      attachments: p.attachments ?? [],
     };
   }
 
-  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA') {
+  filtrarPorEstado(estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA") {
     this.filtroEstadoPeticiones = estado;
     this.aplicarFiltrosPeticiones();
   }
 
   filtrarPeticiones(termino: string) {
-    const t = (termino || '').toLowerCase().trim();
+    const t = (termino || "").toLowerCase().trim();
     this.searchRequests = t;
     this.storage.set(this.STORAGE_KEY_REQ_FILTER, this.searchRequests);
 
@@ -567,27 +711,32 @@ export class AdministracionComponent implements OnInit {
       this.aplicarFiltrosPeticiones();
       return;
     }
-    
-    let peticionesFiltradas = this.peticiones.filter(p =>
-      p.solicitante.toLowerCase().includes(t) ||
-      p.tipo.toLowerCase().includes(t) ||
-      p.comentario.toLowerCase().includes(t) ||
-      p.id.toLowerCase().includes(t)
+
+    let peticionesFiltradas = this.peticiones.filter(
+      (p) =>
+        p.solicitante.toLowerCase().includes(t) ||
+        p.tipo.toLowerCase().includes(t) ||
+        p.comentario.toLowerCase().includes(t) ||
+        p.id.toLowerCase().includes(t),
     );
-    
-    if (this.filtroEstadoPeticiones !== 'TODAS') {
-      peticionesFiltradas = peticionesFiltradas.filter(p => p.estado === this.filtroEstadoPeticiones);
+
+    if (this.filtroEstadoPeticiones !== "TODAS") {
+      peticionesFiltradas = peticionesFiltradas.filter(
+        (p) => p.estado === this.filtroEstadoPeticiones,
+      );
     }
-    
+
     this.peticionesFiltradas = peticionesFiltradas;
     this.paginaActualPeticiones = 1;
   }
 
   private aplicarFiltrosPeticiones() {
-    if (this.filtroEstadoPeticiones === 'TODAS') {
+    if (this.filtroEstadoPeticiones === "TODAS") {
       this.peticionesFiltradas = [...this.peticiones];
     } else {
-      this.peticionesFiltradas = this.peticiones.filter(p => p.estado === this.filtroEstadoPeticiones);
+      this.peticionesFiltradas = this.peticiones.filter(
+        (p) => p.estado === this.filtroEstadoPeticiones,
+      );
     }
 
     if (this.searchRequests) {
@@ -599,104 +748,118 @@ export class AdministracionComponent implements OnInit {
 
   getStatusTranslation(estado: string): string {
     const statusMap: { [key: string]: string } = {
-      'PENDIENTE': 'ADMIN.STATUS_PENDING',
-      'APROBADA': 'ADMIN.STATUS_APPROVED',
-      'RECHAZADA': 'ADMIN.STATUS_REJECTED'
+      PENDIENTE: "ADMIN.STATUS_PENDING",
+      APROBADA: "ADMIN.STATUS_APPROVED",
+      RECHAZADA: "ADMIN.STATUS_REJECTED",
     };
     return statusMap[estado] || estado;
   }
 
   aprobarPeticion(peticion: PeticionAdmin) {
-    this.actualizarEstadoPeticion(peticion, 'APROBADA');
+    this.actualizarEstadoPeticion(peticion, "APROBADA");
   }
 
   rechazarPeticion(peticion: PeticionAdmin) {
-    this.actualizarEstadoPeticion(peticion, 'RECHAZADA');
+    this.actualizarEstadoPeticion(peticion, "RECHAZADA");
   }
 
-  private actualizarEstadoPeticion(peticion: PeticionAdmin, estado: PeticionAdmin['estado']) {
-    const action = estado === 'APROBADA' ? 'approve' : 'reject';
-    this.http.put<any>(`${this.joinRequestsUrl}/${peticion.id}/${action}`, {})
+  private actualizarEstadoPeticion(
+    peticion: PeticionAdmin,
+    estado: PeticionAdmin["estado"],
+  ) {
+    const action = estado === "APROBADA" ? "approve" : "reject";
+    this.http
+      .put<any>(`${this.joinRequestsUrl}/${peticion.id}/${action}`, {})
       .subscribe({
-        next: response => {
+        next: (response) => {
           // Si es aprobación, la respuesta incluye las credenciales del usuario creado
-          if (estado === 'APROBADA' && response.credentials) {
+          if (estado === "APROBADA" && response.credentials) {
             const cred = response.credentials;
-            this.credencialesNuevas = { username: cred.username, password: cred.password };
+            this.credencialesNuevas = {
+              username: cred.username,
+              password: cred.password,
+            };
             this.mostrarPopupCredenciales = true;
-          } else if (estado === 'APROBADA') {
-            this.showToast('✅ Solicitud aprobada. Usuario creado exitosamente.');
+          } else if (estado === "APROBADA") {
+            this.showToast(
+              "✅ Solicitud aprobada. Usuario creado exitosamente.",
+            );
           } else {
-            this.showToast('✅ Solicitud rechazada.');
+            this.showToast("✅ Solicitud rechazada.");
           }
-          
+
           // Actualizar la lista de peticiones
           const updated = response.request || response;
           const mapped = this.mapJoinRequest(updated);
-          const idx = this.peticiones.findIndex(p => p.id === peticion.id);
+          const idx = this.peticiones.findIndex((p) => p.id === peticion.id);
           if (idx !== -1) {
             this.peticiones[idx] = mapped;
           }
           this.aplicarFiltrosPeticiones();
         },
-        error: err => {
-          let mensaje = 'Error actualizando petición';
-          
+        error: (err) => {
+          let mensaje = "Error actualizando petición";
+
           // Manejar errores específicos
           if (err.status === 409) {
-            mensaje = '⚠️ Error: ' + (err.error?.message || 'No se pudo crear el usuario. Verifica que el email no esté registrado.');
+            mensaje =
+              "⚠️ Error: " +
+              (err.error?.message ||
+                "No se pudo crear el usuario. Verifica que el email no esté registrado.");
           } else if (err.status === 400) {
-            mensaje = '⚠️ ' + (err.error?.message || 'Error en los datos de la solicitud.');
+            mensaje =
+              "⚠️ " +
+              (err.error?.message || "Error en los datos de la solicitud.");
           } else if (err.error?.message) {
-            mensaje = '❌ ' + err.error.message;
+            mensaje = "❌ " + err.error.message;
           }
-          
+
           this.showToast(mensaje, false);
-          console.error('Error actualizando petición', err);
-        }
+          console.error("Error actualizando petición", err);
+        },
       });
   }
 
   private cargarPeticiones() {
-  this.http.get<PeticionUneteBackend[]>(this.joinRequestsUrl).subscribe(
-    {
+    this.http.get<PeticionUneteBackend[]>(this.joinRequestsUrl).subscribe({
       next: (data) => {
         // Invertir orden: más nuevas arriba
-        this.peticiones = data
-          .reverse()
-          .map((req) => this.mapJoinRequest(req));
+        this.peticiones = data.reverse().map((req) => this.mapJoinRequest(req));
         this.aplicarFiltrosPeticiones();
       },
       error: (err) => {
-        console.error('Error cargando peticiones de Unete: ', err);
+        console.error("Error cargando peticiones de Unete: ", err);
         this.peticiones = [];
         this.aplicarFiltrosPeticiones();
       },
-    }
-  );
-}
+    });
+  }
 
   private mapJoinRequest(req: PeticionUneteBackend): PeticionAdmin {
     return {
-      id: req.id ?? '',
-      solicitante: req.fullName?.trim() || req.email?.trim() || '',
-      tipo: req.role?.trim() || req.projectName?.trim() || req.projectCode?.trim() || '',
+      id: req.id ?? "",
+      solicitante: req.fullName?.trim() || req.email?.trim() || "",
+      tipo:
+        req.role?.trim() ||
+        req.projectName?.trim() ||
+        req.projectCode?.trim() ||
+        "",
       fecha: this.formatFecha(req.createdAt),
-      comentario: req.comments?.trim() || req.adminComment?.trim() || '',
-      estado: this.normalizeEstado(req.estado)
+      comentario: req.comments?.trim() || req.adminComment?.trim() || "",
+      estado: this.normalizeEstado(req.estado),
     };
   }
 
-  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
-    const normalized = (estado || 'PENDIENTE').toUpperCase();
-    if (normalized === 'APROBADA' || normalized === 'RECHAZADA') {
+  private normalizeEstado(estado?: string): PeticionAdmin["estado"] {
+    const normalized = (estado || "PENDIENTE").toUpperCase();
+    if (normalized === "APROBADA" || normalized === "RECHAZADA") {
       return normalized;
     }
-    return 'PENDIENTE';
+    return "PENDIENTE";
   }
 
   private formatFecha(value?: string): string {
-    if (!value) return '';
+    if (!value) return "";
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) {
       return value;
@@ -707,7 +870,7 @@ export class AdministracionComponent implements OnInit {
   // ===== LOGICA USUARIOS (Scenario 1) =====
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
-      next: data => {
+      next: (data) => {
         this.usuaris = [...data];
         this.usuarisFiltrats = [...this.usuaris];
 
@@ -715,11 +878,11 @@ export class AdministracionComponent implements OnInit {
           this.filtrar(this.searchUsers);
         }
       },
-      error: err => {
-        console.error('Error carregant usuaris', err);
+      error: (err) => {
+        console.error("Error carregant usuaris", err);
         this.usuaris = [];
         this.usuarisFiltrats = [...this.usuaris];
-      }
+      },
     });
   }
 
@@ -727,9 +890,9 @@ export class AdministracionComponent implements OnInit {
     const rolsSeleccionats = Object.entries(this.nouUsuari.rols)
       .filter(([_, v]) => v)
       .map(([k]) => {
-        if (k === 'admin') return 'ADMIN';
-        if (k === 'consultor') return 'CONSULTOR';
-        return 'DEVOPS';
+        if (k === "admin") return "ADMIN";
+        if (k === "consultor") return "CONSULTOR";
+        return "DEVOPS";
       });
 
     // En modo edición, permitir cambiar otros campos sin tocar username y fullName
@@ -739,32 +902,36 @@ export class AdministracionComponent implements OnInit {
         fullName: this.usuariEditant.fullName, // Mantener fullName original
         email: this.nouUsuari.email || this.usuariEditant.email,
         roles: rolsSeleccionats,
-        status: 'ACTIVE'
+        status: "ACTIVE",
       };
-      
+
       // Incluir password solo si se proporciona una nueva
       if (this.nouUsuari.contrasenya && this.nouUsuari.contrasenya.trim()) {
         body.password = this.nouUsuari.contrasenya;
       }
 
-      this.http.put<UsuariBackend>(`${this.baseUrl}/update/${this.usuariEditant.id}`, body)
+      this.http
+        .put<UsuariBackend>(
+          `${this.baseUrl}/update/${this.usuariEditant.id}`,
+          body,
+        )
         .subscribe({
-          next: updated => {
-            const idx = this.usuaris.findIndex(u => u.id === updated.id);
+          next: (updated) => {
+            const idx = this.usuaris.findIndex((u) => u.id === updated.id);
             if (idx !== -1) this.usuaris[idx] = updated;
-            this.filtrar(''); 
+            this.filtrar("");
             this.tancarPopup();
-            this.showToast('Usuario actualizado correctamente', true);
+            this.showToast("Usuario actualizado correctamente", true);
           },
-          error: err => {
-            console.error('Error actualitzant usuari', err);
-            this.showToast('Error al actualizar el usuario', false);
-          }
+          error: (err) => {
+            console.error("Error actualitzant usuari", err);
+            this.showToast("Error al actualizar el usuario", false);
+          },
         });
     } else {
       // En modo creación, requerir nombre
       if (!this.nouUsuari.nombre.trim()) {
-        this.showToast('El nombre es requerido para crear un usuario', false);
+        this.showToast("El nombre es requerido para crear un usuario", false);
         return;
       }
 
@@ -772,22 +939,24 @@ export class AdministracionComponent implements OnInit {
         username: this.nouUsuari.nombre,
         password: this.nouUsuari.contrasenya,
         fullName: this.nouUsuari.nombre,
-        email: this.nouUsuari.email || `${this.nouUsuari.nombre.toLowerCase()}@minsait.com`,
+        email:
+          this.nouUsuari.email ||
+          `${this.nouUsuari.nombre.toLowerCase()}@minsait.com`,
         roles: rolsSeleccionats,
-        status: 'ACTIVE'
+        status: "ACTIVE",
       };
 
       this.http.post<UsuariBackend>(`${this.baseUrl}/create`, body).subscribe({
-        next: created => {
+        next: (created) => {
           this.usuaris.push(created);
-          this.filtrar('');
+          this.filtrar("");
           this.tancarPopup();
-          this.showToast('Usuario creado correctamente', true);
+          this.showToast("Usuario creado correctamente", true);
         },
-        error: err => {
-          console.error('Error creant usuari', err);
-          this.showToast('Error al crear el usuario', false);
-        }
+        error: (err) => {
+          console.error("Error creant usuari", err);
+          this.showToast("Error al crear el usuario", false);
+        },
       });
     }
   }
@@ -797,29 +966,34 @@ export class AdministracionComponent implements OnInit {
       this.mostrarPopupDelete = false;
       return;
     }
-    this.http.delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`).subscribe({
-      next: () => {
-        this.usuaris = this.usuaris.filter(u => u.id !== this.usuariAEsborrar!.id);
-        this.filtrar('');
-        this.mostrarPopupDelete = false;
-        this.usuariAEsborrar = null;
-      },
-      error: err => console.error('Error inhabilitando usuari', err)
-    });
+    this.http
+      .delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`)
+      .subscribe({
+        next: () => {
+          this.usuaris = this.usuaris.filter(
+            (u) => u.id !== this.usuariAEsborrar!.id,
+          );
+          this.filtrar("");
+          this.mostrarPopupDelete = false;
+          this.usuariAEsborrar = null;
+        },
+        error: (err) => console.error("Error inhabilitando usuari", err),
+      });
   }
 
   filtrar(valor: string) {
-    const v = (valor || '').toLowerCase();
+    const v = (valor || "").toLowerCase();
     this.searchUsers = v;
     this.storage.set(this.STORAGE_KEY_USER_FILTER, this.searchUsers);
 
     if (!v) {
       this.usuarisFiltrats = [...this.usuaris];
     } else {
-      this.usuarisFiltrats = this.usuaris.filter(u =>
-        u.fullName.toLowerCase().includes(v) ||
-        u.roles.join(', ').toLowerCase().includes(v) ||
-        u.email.toLowerCase().includes(v)
+      this.usuarisFiltrats = this.usuaris.filter(
+        (u) =>
+          u.fullName.toLowerCase().includes(v) ||
+          u.roles.join(", ").toLowerCase().includes(v) ||
+          u.email.toLowerCase().includes(v),
       );
     }
   }
@@ -827,10 +1001,10 @@ export class AdministracionComponent implements OnInit {
   obrirPopupCrear() {
     this.usuariEditant = null;
     this.nouUsuari = {
-      nombre: '',
-      contrasenya: '',
-      email: '',
-      rols: { admin: false, consultor: false, devops: false }
+      nombre: "",
+      contrasenya: "",
+      email: "",
+      rols: { admin: false, consultor: false, devops: false },
     };
     this.mostrarPopup = true;
   }
@@ -839,13 +1013,13 @@ export class AdministracionComponent implements OnInit {
     this.usuariEditant = usuari;
     this.nouUsuari = {
       nombre: usuari.username,
-      contrasenya: '',
+      contrasenya: "",
       email: usuari.email,
       rols: {
-        admin: usuari.roles.includes('ADMIN'),
-        consultor: usuari.roles.includes('CONSULTOR'),
-        devops: usuari.roles.includes('DEV')
-      }
+        admin: usuari.roles.includes("ADMIN"),
+        consultor: usuari.roles.includes("CONSULTOR"),
+        devops: usuari.roles.includes("DEV"),
+      },
     };
     this.mostrarPopup = true;
   }
@@ -868,119 +1042,137 @@ export class AdministracionComponent implements OnInit {
   // ===== NUEVAS FUNCIONES =====
   inhabilitarPorRol() {
     if (!this.selectedRoleToDisable) {
-      this.showToast('⚠️ Por favor, selecciona un rol para inhabilitar', false);
+      this.showToast("⚠️ Por favor, selecciona un rol para inhabilitar", false);
       return;
     }
 
-    const usuariosConRol = this.usuaris.filter(u => u.roles.includes(this.selectedRoleToDisable));
-    
+    const usuariosConRol = this.usuaris.filter((u) =>
+      u.roles.includes(this.selectedRoleToDisable),
+    );
+
     if (usuariosConRol.length === 0) {
-      this.showToast(`⚠️ No hay usuarios con el rol ${this.selectedRoleToDisable}`, false);
+      this.showToast(
+        `⚠️ No hay usuarios con el rol ${this.selectedRoleToDisable}`,
+        false,
+      );
       return;
     }
 
     let completados = 0;
     let errores = 0;
 
-    usuariosConRol.forEach(usuari => {
-      const nuevosRoles = usuari.roles.filter(r => r !== this.selectedRoleToDisable);
-      
+    usuariosConRol.forEach((usuari) => {
+      const nuevosRoles = usuari.roles.filter(
+        (r) => r !== this.selectedRoleToDisable,
+      );
+
       const body = {
         username: usuari.username,
         fullName: usuari.fullName,
         email: usuari.email,
-        roles: nuevosRoles.length > 0 ? nuevosRoles : ['CONSULTOR'],
-        status: usuari.status
+        roles: nuevosRoles.length > 0 ? nuevosRoles : ["CONSULTOR"],
+        status: usuari.status,
       };
 
-      this.http.put<UsuariBackend>(`${this.baseUrl}/update/${usuari.id}`, body)
+      this.http
+        .put<UsuariBackend>(`${this.baseUrl}/update/${usuari.id}`, body)
         .subscribe({
-          next: updated => {
-            const idx = this.usuaris.findIndex(u => u.id === updated.id);
+          next: (updated) => {
+            const idx = this.usuaris.findIndex((u) => u.id === updated.id);
             if (idx !== -1) this.usuaris[idx] = updated;
             completados++;
             if (completados + errores === usuariosConRol.length) {
-              this.filtrar('');
-              this.showToast(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ''}`, errores === 0);
-              this.selectedRoleToDisable = '';
+              this.filtrar("");
+              this.showToast(
+                `Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s)${errores > 0 ? `. Errores: ${errores}` : ""}`,
+                errores === 0,
+              );
+              this.selectedRoleToDisable = "";
             }
           },
-          error: err => {
-            console.error('Error actualizando usuario', err);
+          error: (err) => {
+            console.error("Error actualizando usuario", err);
             errores++;
             if (completados + errores === usuariosConRol.length) {
-              this.filtrar('');
-              this.showToast(`Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`, false);
+              this.filtrar("");
+              this.showToast(
+                `Rol ${this.selectedRoleToDisable} eliminado de ${completados} usuario(s). Errores: ${errores}`,
+                false,
+              );
             }
-          }
+          },
         });
     });
   }
 
   // Scenario 3: Parametrización
   cambiarVersion() {
-    if (!this.appVersion || this.appVersion.trim() === '') {
-      this.versionError = 'Introduce una versión válida (ej: 1.2.0)';
+    if (!this.appVersion || this.appVersion.trim() === "") {
+      this.versionError = "Introduce una versión válida (ej: 1.2.0)";
       return;
     }
-    this.versionError = '';
-    this.versionSuccess = '';
+    this.versionError = "";
+    this.versionSuccess = "";
     this.versionSaving = true;
 
     const body = { version: this.appVersion.trim() };
 
-    this.http.put<any>(`${environment.baseUrl}config/version`, body)
-      .subscribe({
-        next: () => {
-          this.versionSaving = false;
-          const newVersion = this.appVersion.trim();
-          this.versionSuccess = `Versión actualizada a ${newVersion}`;
-          this.apiService.setVersion(newVersion);
-          this.appVersion = '';
-          setTimeout(() => this.versionSuccess = '', 3000);
-        },
-        error: err => {
-          this.versionSaving = false;
-          this.versionError = 'Error al actualizar: ' + (err?.error?.message || err?.message || 'Error del servidor');
-          console.error('Error actualizando versión', err);
-        }
-      });
+    this.http.put<any>(`${environment.baseUrl}config/version`, body).subscribe({
+      next: () => {
+        this.versionSaving = false;
+        const newVersion = this.appVersion.trim();
+        this.versionSuccess = `Versión actualizada a ${newVersion}`;
+        this.apiService.setVersion(newVersion);
+        this.appVersion = "";
+        setTimeout(() => (this.versionSuccess = ""), 3000);
+      },
+      error: (err) => {
+        this.versionSaving = false;
+        this.versionError =
+          "Error al actualizar: " +
+          (err?.error?.message || err?.message || "Error del servidor");
+        console.error("Error actualizando versión", err);
+      },
+    });
   }
 
   cargarVersion() {
-    this.http.get<string>(`${environment.baseUrl}/config/parametrization/version`, { responseType: 'text' as 'json' })
+    this.http
+      .get<string>(`${environment.baseUrl}/config/parametrization/version`, {
+        responseType: "text" as "json",
+      })
       .subscribe({
-        next: version => {
+        next: (version) => {
           this.appVersion = version;
         },
-        error: err => console.error('Error cargando versión', err)
+        error: (err) => console.error("Error cargando versión", err),
       });
   }
 
   // Scenario 4: BBDD
   accionBBDD(tipo: string) {
-    if (tipo === 'borrado') {
+    if (tipo === "borrado") {
       this.selectedBorrado = [];
       this.cargarColeccionesDB();
       this.mostrarPopupBorrado = true;
-    } else if (tipo === 'restore') {
+    } else if (tipo === "restore") {
       this.cargarVersionesRestore();
-      this.selectedRestore = '';
+      this.selectedRestore = "";
       this.mostrarPopupRestore = true;
-    } else if (tipo === 'backup') {
+    } else if (tipo === "backup") {
       this.selectedBackup = [];
       this.cargarColeccionesDB();
       this.mostrarPopupBackup = true;
     }
   }
 
-  setDbSubTab(tab: 'borrado' | 'backup' | 'restore') {
+  setDbSubTab(tab: "borrado" | "backup" | "restore") {
     this.dbSubTab = tab;
-    if (tab === 'restore') {
+    if (tab === "restore") {
       this.cargarVersionesRestore();
-      this.selectedRestore = '';
+      this.selectedRestore = "";
     }
-    if (tab === 'borrado' || tab === 'backup') {
+    if (tab === "borrado" || tab === "backup") {
       this.cargarColeccionesDB();
     }
   }
@@ -988,18 +1180,22 @@ export class AdministracionComponent implements OnInit {
   cargarColeccionesDB() {
     this.cargandoColeccionesDB = true;
     this.errorColeccionesDB = false;
-    this.http.get<{ id: string; registros: number }[]>(`${environment.baseUrl}db/colecciones`).subscribe({
-      next: (data) => {
-        this.cargandoColeccionesDB = false;
-        this.errorColeccionesDB = false;
-        this.coleccionesDB = data;
-      },
-      error: (err) => {
-        this.cargandoColeccionesDB = false;
-        this.errorColeccionesDB = true;
-        console.error('Error cargando colecciones de la BD', err);
-      }
-    });
+    this.http
+      .get<
+        { id: string; registros: number }[]
+      >(`${environment.baseUrl}db/colecciones`)
+      .subscribe({
+        next: (data) => {
+          this.cargandoColeccionesDB = false;
+          this.errorColeccionesDB = false;
+          this.coleccionesDB = data;
+        },
+        error: (err) => {
+          this.cargandoColeccionesDB = false;
+          this.errorColeccionesDB = true;
+          console.error("Error cargando colecciones de la BD", err);
+        },
+      });
   }
 
   toggleColeccionBorrado(id: string) {
@@ -1022,12 +1218,16 @@ export class AdministracionComponent implements OnInit {
     if (this.selectedCollectionsBorrado.size === 0) return;
     const cols = Array.from(this.selectedCollectionsBorrado);
 
-    this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: cols }).subscribe({
-      next: () => {
-        this.showToast(`✅ Borrado físico ejecutado en ${cols.length} colección(es)`);
-        this.selectedCollectionsBorrado.clear();
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/borrado-fisico`, { tipos: cols })
+      .subscribe({
+        next: () => {
+          this.showToast(
+            `✅ Borrado físico ejecutado en ${cols.length} colección(es)`,
+          );
+          this.selectedCollectionsBorrado.clear();
+        },
+      });
   }
 
   ejecutarBackupColecciones() {
@@ -1036,140 +1236,194 @@ export class AdministracionComponent implements OnInit {
     const allSelected = cols.length === this.listaColeccionesActiva.length;
 
     this.backupCompletoEnProgreso = true;
-    const endpoint = allSelected ? 'db/backup-completo' : 'db/backup';
+    const endpoint = allSelected ? "db/backup-completo" : "db/backup";
     const body = allSelected ? {} : { colecciones: cols };
 
     this.http.post(`${environment.baseUrl}${endpoint}`, body).subscribe({
       next: (res: any) => {
         this.backupCompletoEnProgreso = false;
-        const archivo = res?.archivo || 'backup_' + new Date().toISOString().split('T')[0] + '.json';
+        const archivo =
+          res?.archivo ||
+          "backup_" + new Date().toISOString().split("T")[0] + ".json";
         const coleccionesRes: string[] = res?.colecciones || cols;
-        this.showToast(`✅ Backup generado para ${coleccionesRes.length} colección(es) — Archivo: ${archivo}`);
-        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: (allSelected ? 'completo' : 'parcial') as 'completo' | 'parcial', colecciones: coleccionesRes };
+        this.showToast(
+          `✅ Backup generado para ${coleccionesRes.length} colección(es) — Archivo: ${archivo}`,
+        );
+        const entry = {
+          id: archivo.replace(".json", ""),
+          fecha: new Date().toLocaleString(),
+          descripcion: archivo,
+          tipo: (allSelected ? "completo" : "parcial") as
+            | "completo"
+            | "parcial",
+          colecciones: coleccionesRes,
+        };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
         this.selectedCollectionsBackup.clear();
       },
       error: (err) => {
         this.backupCompletoEnProgreso = false;
-        console.error('Error generando backup', err);
-        const archivo = 'backup_' + new Date().toISOString().split('T')[0] + '.json';
-        this.showToast('❌ Error al generar el backup. Revisa el servidor.', false);
-      }
+        console.error("Error generando backup", err);
+        const archivo =
+          "backup_" + new Date().toISOString().split("T")[0] + ".json";
+        this.showToast(
+          "❌ Error al generar el backup. Revisa el servidor.",
+          false,
+        );
+      },
     });
   }
 
   cargarVersionesRestore() {
-    this.http.get<BackupVersion[]>(`${environment.baseUrl}db/backups`).subscribe({
-      next: versions => {
-        this.versionesRestore = versions;
-      },
-      error: err => {
-        console.error('Error cargando backups', err);
-        this.versionesRestore = [];
-      }
-    });
+    this.http
+      .get<BackupVersion[]>(`${environment.baseUrl}db/backups`)
+      .subscribe({
+        next: (versions) => {
+          this.versionesRestore = versions;
+        },
+        error: (err) => {
+          console.error("Error cargando backups", err);
+          this.versionesRestore = [];
+        },
+      });
   }
 
   ejecutarBorrado() {
     if (this.selectedBorrado.length === 0) {
-      this.showToast('⚠️ Selecciona al menos un tipo de registro para borrar', false);
+      this.showToast(
+        "⚠️ Selecciona al menos un tipo de registro para borrar",
+        false,
+      );
       return;
     }
-    this.http.post(`${environment.baseUrl}db/borrado-fisico`, { tipos: this.selectedBorrado }).subscribe({
-      next: () => {
-        this.showToast('✅ Borrado físico ejecutado correctamente');
-        this.mostrarPopupBorrado = false;
-      },
-      error: err => {
-        console.error('Error en borrado físico', err);
-        this.showToast('❌ Error al ejecutar el borrado físico', false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/borrado-fisico`, {
+        tipos: this.selectedBorrado,
+      })
+      .subscribe({
+        next: () => {
+          this.showToast("✅ Borrado físico ejecutado correctamente");
+          this.mostrarPopupBorrado = false;
+        },
+        error: (err) => {
+          console.error("Error en borrado físico", err);
+          this.showToast("❌ Error al ejecutar el borrado físico", false);
+        },
+      });
   }
 
   get logEntrySeleccionada() {
-    return this.logBackups.find(e => e.id === this.selectedRestoreLogId) || null;
+    return (
+      this.logBackups.find((e) => e.id === this.selectedRestoreLogId) || null
+    );
   }
 
   ejecutarRestoreLog() {
     const entry = this.logEntrySeleccionada;
     if (!entry) return;
-    const esCompleto = entry.tipo === 'completo';
+    const esCompleto = entry.tipo === "completo";
 
-    this.http.post(`${environment.baseUrl}db/restore`, {
-      backupId: entry.id,
-      archivo: entry.descripcion,
-      colecciones: esCompleto ? [] : entry.colecciones
-    }).subscribe({
-      next: (res: any) => {
-        const restauradas: string[] = res?.restauradas || [];
-        const errores: string[] = res?.errores || [];
-        if (errores.length > 0) {
-          this.showToast(`⚠️ Restore completado con errores: ${errores.length} error(es)`, false);
-        } else {
-          this.showToast(`✅ Restore completado — ${restauradas.length} colección(es) restauradas`);
-        }
-        this.mostrarPopupRestore = false;
-        this.selectedRestoreLogId = '';
-      },
-      error: err => {
-        const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
-        console.error('Error en restore desde log', err);
-        this.showToast(`❌ Error al restaurar: ${msg}`, false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/restore`, {
+        backupId: entry.id,
+        archivo: entry.descripcion,
+        colecciones: esCompleto ? [] : entry.colecciones,
+      })
+      .subscribe({
+        next: (res: any) => {
+          const restauradas: string[] = res?.restauradas || [];
+          const errores: string[] = res?.errores || [];
+          if (errores.length > 0) {
+            this.showToast(
+              `⚠️ Restore completado con errores: ${errores.length} error(es)`,
+              false,
+            );
+          } else {
+            this.showToast(
+              `✅ Restore completado — ${restauradas.length} colección(es) restauradas`,
+            );
+          }
+          this.mostrarPopupRestore = false;
+          this.selectedRestoreLogId = "";
+        },
+        error: (err) => {
+          const msg =
+            err?.error?.error || err?.error?.mensaje || "Error desconocido";
+          console.error("Error en restore desde log", err);
+          this.showToast(`❌ Error al restaurar: ${msg}`, false);
+        },
+      });
   }
 
   ejecutarRestore() {
     if (!this.selectedRestore) {
-      this.showToast('⚠️ Selecciona una versión para restaurar', false);
+      this.showToast("⚠️ Selecciona una versión para restaurar", false);
       return;
     }
-    const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
+    const version = this.versionesRestore.find(
+      (v) => v.id === this.selectedRestore,
+    );
 
-    this.http.post(`${environment.baseUrl}db/restore`, { backupId: this.selectedRestore }).subscribe({
-      next: (res: any) => {
-        const restauradas: string[] = res?.restauradas || [];
-        const errores: string[] = res?.errores || [];
-        if (errores.length > 0) {
-          this.showToast(`⚠️ Restore completado con errores: ${errores.length} error(es)`, false);
-        } else {
-          this.showToast(`✅ Restore completado — ${restauradas.length} colección(es) restauradas`);
-        }
-        this.mostrarPopupRestore = false;
-      },
-      error: err => {
-        const msg = err?.error?.error || err?.error?.mensaje || 'Error desconocido';
-        console.error('Error en restore', err);
-        this.showToast(`❌ Error al restaurar: ${msg}`, false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/restore`, {
+        backupId: this.selectedRestore,
+      })
+      .subscribe({
+        next: (res: any) => {
+          const restauradas: string[] = res?.restauradas || [];
+          const errores: string[] = res?.errores || [];
+          if (errores.length > 0) {
+            this.showToast(
+              `⚠️ Restore completado con errores: ${errores.length} error(es)`,
+              false,
+            );
+          } else {
+            this.showToast(
+              `✅ Restore completado — ${restauradas.length} colección(es) restauradas`,
+            );
+          }
+          this.mostrarPopupRestore = false;
+        },
+        error: (err) => {
+          const msg =
+            err?.error?.error || err?.error?.mensaje || "Error desconocido";
+          console.error("Error en restore", err);
+          this.showToast(`❌ Error al restaurar: ${msg}`, false);
+        },
+      });
   }
 
   ejecutarBackup() {
     if (this.selectedBackup.length === 0) {
-      this.showToast('⚠️ Selecciona al menos un elemento para incluir en el backup', false);
+      this.showToast(
+        "⚠️ Selecciona al menos un elemento para incluir en el backup",
+        false,
+      );
       return;
     }
 
-    this.http.post(`${environment.baseUrl}db/backup`, { elementos: this.selectedBackup }).subscribe({
-      next: () => {
-        this.showToast('✅ Backup generado correctamente');
-        this.mostrarPopupBackup = false;
-      },
-      error: err => {
-        console.error('Error generando backup', err);
-        this.showToast('❌ Error al generar el backup', false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/backup`, {
+        elementos: this.selectedBackup,
+      })
+      .subscribe({
+        next: () => {
+          this.showToast("✅ Backup generado correctamente");
+          this.mostrarPopupBackup = false;
+        },
+        error: (err) => {
+          console.error("Error generando backup", err);
+          this.showToast("❌ Error al generar el backup", false);
+        },
+      });
   }
 
   cerrarPopupBBDD() {
     this.mostrarPopupBorrado = false;
     this.mostrarPopupRestore = false;
     this.mostrarPopupBackup = false;
-    this.selectedRestoreLogId = '';
+    this.selectedRestoreLogId = "";
   }
 
   toggleSeleccionBorrado(valor: string) {
@@ -1192,24 +1446,28 @@ export class AdministracionComponent implements OnInit {
 
   borrarLogsAntiguos() {
     if (!this.fechaLimiteLogs) {
-      this.showToast('⚠️ Selecciona una fecha límite', false);
+      this.showToast("⚠️ Selecciona una fecha límite", false);
       return;
     }
-    this.http.post(`${environment.baseUrl}db/borrar-logs`, { fechaLimite: this.fechaLimiteLogs }).subscribe({
-      next: () => {
-        this.showToast('✅ Logs antiguos eliminados correctamente');
-        this.fechaLimiteLogs = '';
-      },
-      error: err => {
-        console.error('Error borrando logs', err);
-        this.showToast('❌ Error al eliminar los logs antiguos', false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/borrar-logs`, {
+        fechaLimite: this.fechaLimiteLogs,
+      })
+      .subscribe({
+        next: () => {
+          this.showToast("✅ Logs antiguos eliminados correctamente");
+          this.fechaLimiteLogs = "";
+        },
+        error: (err) => {
+          console.error("Error borrando logs", err);
+          this.showToast("❌ Error al eliminar los logs antiguos", false);
+        },
+      });
   }
 
   buscarColeccion() {
     if (!this.coleccionBorrar) return;
-    
+
     this.coleccionEncontrada = false;
     this.coleccionNoEncontrada = false;
     this.registrosInactivos = 0;
@@ -1217,26 +1475,33 @@ export class AdministracionComponent implements OnInit {
     this.registrosSeleccionadosBorrar.clear();
     this.cargandoRegistrosInactivos = true;
 
-    this.http.get<{existe: boolean, registros: number, inactivos: any[]}>(`${environment.baseUrl}db/buscar-coleccion/${this.coleccionBorrar}`).subscribe({
-      next: (res) => {
-        this.cargandoRegistrosInactivos = false;
-        if (res.existe) {
+    this.http
+      .get<{
+        existe: boolean;
+        registros: number;
+        inactivos: any[];
+      }>(`${environment.baseUrl}db/buscar-coleccion/${this.coleccionBorrar}`)
+      .subscribe({
+        next: (res) => {
+          this.cargandoRegistrosInactivos = false;
+          if (res.existe) {
+            this.coleccionEncontrada = true;
+            this.registrosColeccion = res.registros;
+            this.registrosInactivosColeccion = res.inactivos || [];
+            this.registrosInactivos = this.registrosInactivosColeccion.length;
+          } else {
+            this.coleccionNoEncontrada = true;
+          }
+        },
+        error: () => {
+          this.cargandoRegistrosInactivos = false;
           this.coleccionEncontrada = true;
-          this.registrosColeccion = res.registros;
-          this.registrosInactivosColeccion = res.inactivos || [];
+          this.registrosColeccion = Math.floor(Math.random() * 500) + 50;
+          this.registrosInactivosColeccion =
+            this.generarRegistrosInactivosDemo();
           this.registrosInactivos = this.registrosInactivosColeccion.length;
-        } else {
-          this.coleccionNoEncontrada = true;
-        }
-      },
-      error: () => {
-        this.cargandoRegistrosInactivos = false;
-        this.coleccionEncontrada = true;
-        this.registrosColeccion = Math.floor(Math.random() * 500) + 50;
-        this.registrosInactivosColeccion = this.generarRegistrosInactivosDemo();
-        this.registrosInactivos = this.registrosInactivosColeccion.length;
-      }
-    });
+        },
+      });
   }
 
   private generarRegistrosInactivosDemo(): any[] {
@@ -1245,40 +1510,60 @@ export class AdministracionComponent implements OnInit {
     const registros: any[] = [];
 
     for (let i = 1; i <= cantidad; i++) {
-      if (coleccion === 'usuarios' || coleccion === 'users') {
+      if (coleccion === "usuarios" || coleccion === "users") {
         registros.push({
-          id: `usr_${i.toString().padStart(3, '0')}`,
+          id: `usr_${i.toString().padStart(3, "0")}`,
           nombre: `Usuario Inactivo ${i}`,
           descripcion: `usuario_inactivo_${i}@email.com`,
-          fechaInactivacion: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          fechaInactivacion: new Date(
+            Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split("T")[0],
         });
-      } else if (coleccion === 'documentos' || coleccion === 'documents') {
+      } else if (coleccion === "documentos" || coleccion === "documents") {
         registros.push({
-          id: `doc_${i.toString().padStart(3, '0')}`,
+          id: `doc_${i.toString().padStart(3, "0")}`,
           nombre: `Documento Huérfano ${i}`,
           descripcion: `documento_v${i}.pdf`,
-          fechaInactivacion: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          fechaInactivacion: new Date(
+            Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split("T")[0],
         });
-      } else if (coleccion === 'logs') {
+      } else if (coleccion === "logs") {
         registros.push({
-          id: `log_${i.toString().padStart(3, '0')}`,
+          id: `log_${i.toString().padStart(3, "0")}`,
           nombre: `Log Antiguo ${i}`,
           descripcion: `ERROR - Sesión expirada`,
-          fechaInactivacion: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          fechaInactivacion: new Date(
+            Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split("T")[0],
         });
-      } else if (coleccion === 'sesiones' || coleccion === 'sessions') {
+      } else if (coleccion === "sesiones" || coleccion === "sessions") {
         registros.push({
-          id: `ses_${i.toString().padStart(3, '0')}`,
+          id: `ses_${i.toString().padStart(3, "0")}`,
           nombre: `Sesión Expirada ${i}`,
           descripcion: `Token: ...${Math.random().toString(36).substring(2, 8)}`,
-          fechaInactivacion: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          fechaInactivacion: new Date(
+            Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split("T")[0],
         });
       } else {
         registros.push({
-          id: `reg_${i.toString().padStart(3, '0')}`,
+          id: `reg_${i.toString().padStart(3, "0")}`,
           nombre: `Registro Inactivo ${i}`,
           descripcion: `Elemento de ${coleccion}`,
-          fechaInactivacion: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          fechaInactivacion: new Date(
+            Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split("T")[0],
         });
       }
     }
@@ -1294,10 +1579,13 @@ export class AdministracionComponent implements OnInit {
   }
 
   seleccionarTodosRegistros() {
-    if (this.registrosSeleccionadosBorrar.size === this.registrosInactivosColeccion.length) {
+    if (
+      this.registrosSeleccionadosBorrar.size ===
+      this.registrosInactivosColeccion.length
+    ) {
       this.registrosSeleccionadosBorrar.clear();
     } else {
-      this.registrosInactivosColeccion.forEach(r => {
+      this.registrosInactivosColeccion.forEach((r) => {
         if (r.id) this.registrosSeleccionadosBorrar.add(r.id);
       });
     }
@@ -1305,31 +1593,46 @@ export class AdministracionComponent implements OnInit {
 
   borrarRegistrosSeleccionados() {
     if (this.registrosSeleccionadosBorrar.size === 0) {
-      this.showToast('⚠️ Selecciona al menos un registro para eliminar', false);
+      this.showToast("⚠️ Selecciona al menos un registro para eliminar", false);
       return;
     }
 
     const idsABorrar = Array.from(this.registrosSeleccionadosBorrar);
-    this.http.post(`${environment.baseUrl}db/coleccion/${this.coleccionBorrar}/borrar-registros`, { ids: idsABorrar }).subscribe({
-      next: (res: any) => {
-        const eliminados = res?.eliminados || idsABorrar.length;
-        this.showToast(`✅ Se eliminaron ${eliminados} registro(s) de "${this.coleccionBorrar}"`);
-        this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
-        this.registrosInactivos = this.registrosInactivosColeccion.length;
-        this.registrosSeleccionadosBorrar.clear();
-      },
-      error: err => {
-        console.error('Error borrando registros', err);
-        this.showToast(`✅ Se eliminaron ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"`);
-        this.registrosInactivosColeccion = this.registrosInactivosColeccion.filter(r => !this.registrosSeleccionadosBorrar.has(r.id));
-        this.registrosInactivos = this.registrosInactivosColeccion.length;
-        this.registrosSeleccionadosBorrar.clear();
-      }
-    });
+    this.http
+      .post(
+        `${environment.baseUrl}db/coleccion/${this.coleccionBorrar}/borrar-registros`,
+        { ids: idsABorrar },
+      )
+      .subscribe({
+        next: (res: any) => {
+          const eliminados = res?.eliminados || idsABorrar.length;
+          this.showToast(
+            `✅ Se eliminaron ${eliminados} registro(s) de "${this.coleccionBorrar}"`,
+          );
+          this.registrosInactivosColeccion =
+            this.registrosInactivosColeccion.filter(
+              (r) => !this.registrosSeleccionadosBorrar.has(r.id),
+            );
+          this.registrosInactivos = this.registrosInactivosColeccion.length;
+          this.registrosSeleccionadosBorrar.clear();
+        },
+        error: (err) => {
+          console.error("Error borrando registros", err);
+          this.showToast(
+            `✅ Se eliminaron ${idsABorrar.length} registro(s) de "${this.coleccionBorrar}"`,
+          );
+          this.registrosInactivosColeccion =
+            this.registrosInactivosColeccion.filter(
+              (r) => !this.registrosSeleccionadosBorrar.has(r.id),
+            );
+          this.registrosInactivos = this.registrosInactivosColeccion.length;
+          this.registrosSeleccionadosBorrar.clear();
+        },
+      });
   }
 
   limpiarBusquedaColeccion() {
-    this.coleccionBorrar = '';
+    this.coleccionBorrar = "";
     this.coleccionEncontrada = false;
     this.coleccionNoEncontrada = false;
     this.registrosInactivosColeccion = [];
@@ -1339,75 +1642,96 @@ export class AdministracionComponent implements OnInit {
 
   borrarColeccion() {
     if (!this.coleccionBorrar) return;
-    
-    this.http.delete(`${environment.baseUrl}db/coleccion/${this.coleccionBorrar}`).subscribe({
-      next: () => {
-        this.showToast(`✅ Colección "${this.coleccionBorrar}" eliminada correctamente`);
-        this.coleccionBorrar = '';
-        this.coleccionEncontrada = false;
-        this.registrosColeccion = 0;
-      },
-      error: err => {
-        console.error('Error borrando colección', err);
-        this.showToast('❌ Error al eliminar la colección', false);
-      }
-    });
+
+    this.http
+      .delete(`${environment.baseUrl}db/coleccion/${this.coleccionBorrar}`)
+      .subscribe({
+        next: () => {
+          this.showToast(
+            `✅ Colección "${this.coleccionBorrar}" eliminada correctamente`,
+          );
+          this.coleccionBorrar = "";
+          this.coleccionEncontrada = false;
+          this.registrosColeccion = 0;
+        },
+        error: (err) => {
+          console.error("Error borrando colección", err);
+          this.showToast("❌ Error al eliminar la colección", false);
+        },
+      });
   }
 
   ejecutarBorradoInactivos() {
     this.http.delete(`${environment.baseUrl}db/borrar-inactivos`).subscribe({
       next: (res: any) => {
-        const mensaje = res?.mensaje || 'Registros inactivos eliminados correctamente';
+        const mensaje =
+          res?.mensaje || "Registros inactivos eliminados correctamente";
         const eliminados = res?.eliminados || 0;
         this.showToast(`✅ ${mensaje} — Registros eliminados: ${eliminados}`);
         this.cerrarPopupBBDD();
       },
-      error: err => {
-        console.error('Error borrando inactivos', err);
+      error: (err) => {
+        console.error("Error borrando inactivos", err);
         const eliminados = Math.floor(Math.random() * 200) + 20;
-        this.showToast(`✅ Borrado completado — Registros eliminados: ${eliminados}`);
+        this.showToast(
+          `✅ Borrado completado — Registros eliminados: ${eliminados}`,
+        );
         this.cerrarPopupBBDD();
-      }
+      },
     });
   }
 
   buscarColeccionBackup() {
     if (!this.coleccionBackup) return;
-    
+
     this.coleccionBackupEncontrada = false;
     this.coleccionBackupNoEncontrada = false;
 
-    this.http.get<{existe: boolean, registros: number}>(`${environment.baseUrl}db/buscar-coleccion/${this.coleccionBackup}`).subscribe({
-      next: (res) => {
-        if (res.existe) {
+    this.http
+      .get<{
+        existe: boolean;
+        registros: number;
+      }>(`${environment.baseUrl}db/buscar-coleccion/${this.coleccionBackup}`)
+      .subscribe({
+        next: (res) => {
+          if (res.existe) {
+            this.coleccionBackupEncontrada = true;
+            this.registrosColeccionBackup = res.registros;
+          } else {
+            this.coleccionBackupNoEncontrada = true;
+          }
+        },
+        error: () => {
           this.coleccionBackupEncontrada = true;
-          this.registrosColeccionBackup = res.registros;
-        } else {
-          this.coleccionBackupNoEncontrada = true;
-        }
-      },
-      error: () => {
-        this.coleccionBackupEncontrada = true;
-        this.registrosColeccionBackup = Math.floor(Math.random() * 1000) + 50;
-      }
-    });
+          this.registrosColeccionBackup = Math.floor(Math.random() * 1000) + 50;
+        },
+      });
   }
 
   backupColeccion() {
     if (!this.coleccionBackup) return;
 
-    this.http.post(`${environment.baseUrl}db/backup-coleccion`, { coleccion: this.coleccionBackup }).subscribe({
-      next: () => {
-        this.showToast(`✅ Backup de la colección "${this.coleccionBackup}" generado correctamente`);
-        this.coleccionBackup = '';
-        this.coleccionBackupEncontrada = false;
-        this.registrosColeccionBackup = 0;
-      },
-      error: err => {
-        console.error('Error generando backup de colección', err);
-        this.showToast('❌ Error al generar el backup de la colección', false);
-      }
-    });
+    this.http
+      .post(`${environment.baseUrl}db/backup-coleccion`, {
+        coleccion: this.coleccionBackup,
+      })
+      .subscribe({
+        next: () => {
+          this.showToast(
+            `✅ Backup de la colección "${this.coleccionBackup}" generado correctamente`,
+          );
+          this.coleccionBackup = "";
+          this.coleccionBackupEncontrada = false;
+          this.registrosColeccionBackup = 0;
+        },
+        error: (err) => {
+          console.error("Error generando backup de colección", err);
+          this.showToast(
+            "❌ Error al generar el backup de la colección",
+            false,
+          );
+        },
+      });
   }
 
   ejecutarBackupCompleto() {
@@ -1416,34 +1740,67 @@ export class AdministracionComponent implements OnInit {
     this.http.post(`${environment.baseUrl}db/backup-completo`, {}).subscribe({
       next: (res: any) => {
         this.backupCompletoEnProgreso = false;
-        const colecciones = res?.colecciones || ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos'];
-        const archivo = res?.archivo || 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
+        const colecciones = res?.colecciones || [
+          "usuarios",
+          "documentos",
+          "configuracion",
+          "logs",
+          "sesiones",
+          "procedimientos",
+        ];
+        const archivo =
+          res?.archivo ||
+          "backup_completo_" + new Date().toISOString().split("T")[0] + ".zip";
         this.showToast(`✅ Backup completo generado — Archivo: ${archivo}`);
-        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        const entry = {
+          id: archivo.replace(".json", ""),
+          fecha: new Date().toLocaleString(),
+          descripcion: archivo,
+          tipo: "completo" as const,
+          colecciones,
+        };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
       },
-      error: err => {
+      error: (err) => {
         this.backupCompletoEnProgreso = false;
-        console.error('Error generando backup completo', err);
-        const colecciones = ['usuarios', 'documentos', 'configuracion', 'logs', 'sesiones', 'procedimientos', 'formaciones', 'multimedia'];
-        const archivo = 'backup_completo_' + new Date().toISOString().split('T')[0] + '.zip';
+        console.error("Error generando backup completo", err);
+        const colecciones = [
+          "usuarios",
+          "documentos",
+          "configuracion",
+          "logs",
+          "sesiones",
+          "procedimientos",
+          "formaciones",
+          "multimedia",
+        ];
+        const archivo =
+          "backup_completo_" + new Date().toISOString().split("T")[0] + ".zip";
         this.showToast(`✅ Backup completo generado — Archivo: ${archivo}`);
-        const entry = { id: archivo.replace('.json', ''), fecha: new Date().toLocaleString(), descripcion: archivo, tipo: 'completo' as const, colecciones };
+        const entry = {
+          id: archivo.replace(".json", ""),
+          fecha: new Date().toLocaleString(),
+          descripcion: archivo,
+          tipo: "completo" as const,
+          colecciones,
+        };
         this.logBackups.unshift(entry);
         if (this.logBackups.length > 1) this.logBackups.pop();
-      }
+      },
     });
   }
 
   get fechaRestoreSeleccionada(): string {
-    const version = this.versionesRestore.find(v => v.id === this.selectedRestore);
-    return version?.fecha || '';
+    const version = this.versionesRestore.find(
+      (v) => v.id === this.selectedRestore,
+    );
+    return version?.fecha || "";
   }
 
   verCV(usuari: UsuariBackend) {
     if (usuari.cvPath) {
-      window.open(`${environment.baseUrl}files/cv/${usuari.id}`, '_blank');
+      window.open(`${environment.baseUrl}files/cv/${usuari.id}`, "_blank");
     }
   }
 
@@ -1459,7 +1816,7 @@ export class AdministracionComponent implements OnInit {
 
   verPerfil(usuari: UsuariBackend) {
     if (usuari.id) {
-      this.router.navigate(['/user-profile', usuari.id]);
+      this.router.navigate(["/user-profile", usuari.id]);
     }
   }
 
@@ -1472,71 +1829,73 @@ export class AdministracionComponent implements OnInit {
     this.toastMsg = msg;
     this.toastOk = ok;
     clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => this.toastMsg = '', 3500);
+    this._toastTimer = setTimeout(() => (this.toastMsg = ""), 3500);
   }
   descargarPDF(peticion: PeticionAdmin) {
-  const doc = new jsPDF();
+    const doc = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text(`Petición #${peticion.id}`, 14, 20);
+    doc.setFontSize(16);
+    doc.text(`Petición #${peticion.id}`, 14, 20);
 
-  autoTable(doc, {
-    startY: 30,
-    head: [['Campo', 'Valor']],
-    body: [
-      ['Solicitante', peticion.solicitante],
-      ['Tipo', peticion.tipo],
-      ['Fecha', peticion.fecha],
-      ['Estado', this.getStatusTranslation(peticion.estado)],
-    ],
-    styles: { fontSize: 11 },
-    headStyles: { fillColor: [33, 33, 33] }
-  });
+    autoTable(doc, {
+      startY: 30,
+      head: [["Campo", "Valor"]],
+      body: [
+        ["Solicitante", peticion.solicitante],
+        ["Tipo", peticion.tipo],
+        ["Fecha", peticion.fecha],
+        ["Estado", this.getStatusTranslation(peticion.estado)],
+      ],
+      styles: { fontSize: 11 },
+      headStyles: { fillColor: [33, 33, 33] },
+    });
 
-  const finalY = (doc as any).lastAutoTable.finalY || 40;
+    const finalY = (doc as any).lastAutoTable.finalY || 40;
 
-  doc.setFontSize(11);
-  doc.text('Comentario:', 14, finalY + 10);
+    doc.setFontSize(11);
+    doc.text("Comentario:", 14, finalY + 10);
 
-  const comentario = peticion.comentario || '';
-  const splitComentario = doc.splitTextToSize(comentario, 180);
-  doc.text(splitComentario, 14, finalY + 17);
+    const comentario = peticion.comentario || "";
+    const splitComentario = doc.splitTextToSize(comentario, 180);
+    doc.text(splitComentario, 14, finalY + 17);
 
-  doc.save(`peticion_${peticion.id}.pdf`);
-}
-descargarPDFTarea(tarea: PeticionTareaAdmin) {
-  const doc = new jsPDF();
+    doc.save(`peticion_${peticion.id}.pdf`);
+  }
+  descargarPDFTarea(tarea: PeticionTareaAdmin) {
+    const doc = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text(`Petición de tarea #${tarea.id.slice(-6)}`, 14, 20);
+    doc.setFontSize(16);
+    doc.text(`Petición de tarea #${tarea.id.slice(-6)}`, 14, 20);
 
-  autoTable(doc, {
-    startY: 30,
-    head: [['Campo', 'Valor']],
-    body: [
-      ['Solicitante', tarea.solicitante],
-      ['Email', tarea.email],
-      ['Proyecto', tarea.proyecto],
-      ['Project Code', tarea.projectCode],
-      ['JIRA', tarea.jiraTask],
-      ['Asignado', tarea.asignado || 'Cualquiera'],
-      ['Deadline', tarea.deadline || '—'],
-      ['Estado', this.getStatusTranslation(tarea.estado)],
-    ],
-    styles: { fontSize: 11 },
-    headStyles: { fillColor: [33, 33, 33] }
-  });
+    autoTable(doc, {
+      startY: 30,
+      head: [["Campo", "Valor"]],
+      body: [
+        ["Solicitante", tarea.solicitante],
+        ["Email", tarea.email],
+        ["Proyecto", tarea.proyecto],
+        ["Project Code", tarea.projectCode],
+        ["JIRA", tarea.jiraTask],
+        ["Asignado", tarea.asignado || "Cualquiera"],
+        ["Deadline", tarea.deadline || "—"],
+        ["Estado", this.getStatusTranslation(tarea.estado)],
+      ],
+      styles: { fontSize: 11 },
+      headStyles: { fillColor: [33, 33, 33] },
+    });
 
-  const finalY = (doc as any).lastAutoTable.finalY || 40;
+    const finalY = (doc as any).lastAutoTable.finalY || 40;
 
-  doc.setFontSize(11);
-  doc.text('Comentario:', 14, finalY + 10);
+    doc.setFontSize(11);
+    doc.text("Comentario:", 14, finalY + 10);
 
-  const comentario = tarea.comentario || '';
-  const splitComentario = doc.splitTextToSize(comentario, 180);
-  doc.text(splitComentario, 14, finalY + 17);
+    const comentario = tarea.comentario || "";
+    const splitComentario = doc.splitTextToSize(comentario, 180);
+    doc.text(splitComentario, 14, finalY + 17);
 
-  doc.save(`tarea_${tarea.id}.pdf`);
-}
-
+    doc.save(`tarea_${tarea.id}.pdf`);
+  }
+  getAttachmentUrl(tarea: PeticionTareaAdmin, filename: string): string {
+    return `${this.peticionsTareasUrl}/${tarea.id}/attachments/${encodeURIComponent(filename)}`;
+  }
 }

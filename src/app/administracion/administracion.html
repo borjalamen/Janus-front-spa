@@ -318,8 +318,6 @@
                 ✗
               </button>
             </div>
-            
-            
           </div>
         </div>
 
@@ -454,6 +452,18 @@
           </div>
 
           <p class="request-note">{{ tarea.comentario }}</p>
+
+          <div class="request-attachments" *ngIf="tarea.attachments?.length">
+            <a
+              *ngFor="let att of tarea.attachments"
+              [href]="getAttachmentUrl(tarea, att)"
+              target="_blank"
+              rel="noopener"
+              class="attachment-link"
+            >
+              📎 {{ att }}
+            </a>
+          </div>
 
           <div class="request-actions">
             <div
