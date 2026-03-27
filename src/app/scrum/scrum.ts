@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,15 +11,23 @@ type ScrumTask = {
   estimate?: string;
   priority?: number;
   description?: string;
+  comments?: ScrumComment[];
   assignee?: string | null;
   color?: string;
   status: 'todo'|'doing'|'done';
 };
 
+type ScrumComment = {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+};
+
 @Component({
   selector: 'app-scrum',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, MatIconModule],
+  imports: [CommonModule, NgIf, NgFor, FormsModule, TranslateModule, MatIconModule],
   templateUrl: './scrum.html',
   styleUrls: ['./scrum.css']
 })
@@ -33,6 +41,7 @@ export class ScrumComponent {
   newDescription = '';
   newPriority: number = 50;
   newAssignee: string | null = null;
+  currentUserName = 'Usuario';
   assignees = [
     'Fernando Silvano Gil',
     'Raúl Gallego',
@@ -42,8 +51,13 @@ export class ScrumComponent {
 
   editingId: string | null = null;
   editBuffer: Partial<ScrumTask> = {};
+  openCommentsTaskId: string | null = null;
+  commentDrafts: Record<string, string> = {};
+  searchQuery = '';
 
   constructor(private storage: LocalStorageService) {
+    this.currentUserName = this.resolveCurrentUserName();
+
     // carregar tasques
     try {
       const raw = this.storage.get(this.STORAGE_TASKS_KEY);
@@ -69,6 +83,18 @@ export class ScrumComponent {
             t.priority = 50;
           }
           if (t.description === undefined) t.description = '';
+          if (!Array.isArray(t.comments)) {
+            if (typeof t.comments === 'string' && t.comments.trim()) {
+              t.comments = [{
+                id: this.generateCommentId(),
+                author: 'Usuario',
+                text: t.comments.trim(),
+                createdAt: new Date().toISOString()
+              }];
+            } else {
+              t.comments = [];
+            }
+          }
           if (t.assignee === undefined) t.assignee = null;
           if (!t.id || typeof t.id !== 'string') t.id = this.generateReadableId();
           if (!t.color) t.color = this.pickCoolColor();
@@ -136,6 +162,10 @@ export class ScrumComponent {
     return `T-${date}-${time}-${suffix}`;
   }
 
+  generateCommentId() {
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  }
+
   pickCoolColor() {
     const hue = Math.floor(Math.random() * (260 - 180 + 1)) + 180;
     const sat = 50 + Math.floor(Math.random() * 16);
@@ -164,6 +194,7 @@ export class ScrumComponent {
       estimate: this.newEstimate || '',
       priority: this.newPriority,
       description: this.newDescription || '',
+      comments: [],
       assignee: this.newAssignee || null,
       color: this.pickCoolColor(),
       status: 'todo'
@@ -225,6 +256,81 @@ export class ScrumComponent {
   }
 
   tasksBy(status: ScrumTask['status']) {
-    return this.tasks.filter(t => t.status === status);
+    const q = (this.searchQuery || '').trim().toLowerCase();
+    return this.tasks.filter(t => {
+      if (t.status !== status) return false;
+      if (!q) return true;
+
+      const commentsText = (t.comments || []).map(c => `${c.author} ${c.text}`).join(' ');
+      const haystack = `${t.title || ''} ${t.estimate || ''} ${t.priority ?? ''} ${t.description || ''} ${t.assignee || ''} ${commentsText}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }
+
+  filtrar(valor: string) {
+    this.searchQuery = valor || '';
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+  }
+
+  toggleComments(taskId: string) {
+    this.openCommentsTaskId = this.openCommentsTaskId === taskId ? null : taskId;
+  }
+
+  commentCount(task: ScrumTask): number {
+    return Array.isArray(task.comments) ? task.comments.length : 0;
+  }
+
+  getCommentDraft(taskId: string): string {
+    return this.commentDrafts[taskId] || '';
+  }
+
+  setCommentDraft(taskId: string, value: string) {
+    this.commentDrafts[taskId] = value;
+  }
+
+  addComment(task: ScrumTask) {
+    const text = (this.getCommentDraft(task.id) || '').trim();
+    if (!text) return;
+
+    const comment: ScrumComment = {
+      id: this.generateCommentId(),
+      author: this.currentUserName,
+      text,
+      createdAt: new Date().toISOString()
+    };
+
+    if (!Array.isArray(task.comments)) task.comments = [];
+    task.comments = [comment, ...task.comments];
+    this.commentDrafts[task.id] = '';
+    this.saveStore();
+  }
+
+  removeComment(task: ScrumTask, commentId: string) {
+    if (!Array.isArray(task.comments)) return;
+    task.comments = task.comments.filter(c => c.id !== commentId);
+    this.saveStore();
+  }
+
+  formatCommentDate(iso: string): string {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleString();
+  }
+
+  private resolveCurrentUserName(): string {
+    const fromUserObj = this.storage.getObject<{ fullName?: string; username?: string }>('user');
+    const fullName = (fromUserObj?.fullName || '').trim();
+    if (fullName) return fullName;
+
+    const username = (fromUserObj?.username || '').trim();
+    if (username) return username;
+
+    const fromKey = String(this.storage.get('username') || '').trim();
+    if (fromKey) return fromKey;
+
+    return 'Usuario';
   }
 }

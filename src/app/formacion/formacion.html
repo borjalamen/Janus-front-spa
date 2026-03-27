@@ -9,6 +9,7 @@
       [class.active]="activeTab === 'all'"
       (click)="setTab('all')"
     >
+      <mat-icon inline="true">list</mat-icon>
       {{ 'TRAINING.TABS.ALL' | translate }}
     </button>
     <button
@@ -18,6 +19,7 @@
       [class.active]="activeTab === 'paths'"
       (click)="setTab('paths')"
     >
+      <mat-icon inline="true">account_tree</mat-icon>
       {{ 'TRAINING.TABS.PATHS' | translate }}
     </button>
   </div>
@@ -79,16 +81,11 @@
         <div class="path-header">
           <h3>{{ selectedPath.name }}</h3>
           <button
-            class="jenkins-add-btn csv-btn-small"
+            class="icon-btn csv-image-btn"
             (click)="exportPathToCsv()"
             title="{{ 'TRAINING.EXPORT' | translate }}"
           >
-            <mat-icon
-              inline="true"
-              style="font-size: 16px; width: 16px; height: 16px;"
-              >download</mat-icon
-            >
-            <span>CSV</span>
+            <img src="assets/images/ExportarCSV.png" alt="Exportar CSV" class="csv-export-image" />
           </button>
         </div>
 
@@ -211,19 +208,17 @@
     <!-- All courses full-width panel -->
     <div class="all-courses" *ngIf="isTab('all')">
       <div class="left" style="width:100%">
-        <div class="left-header">
+        <div class="left-header all-courses-header">
           <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
-          <div>
-            <button
-              *ngIf="!isConsultor"
-              type="button"
-              class="jenkins-add-btn"
-              (click)="addCourseFromAll()"
-            >
-              <mat-icon inline="true">add</mat-icon>
-              <span>{{ 'TRAINING.NEW_COURSE' | translate }}</span>
-            </button>
-          </div>
+          <button
+            *ngIf="!isConsultor"
+            type="button"
+            class="jenkins-add-btn"
+            (click)="addCourseFromAll()"
+          >
+            <mat-icon inline="true">add</mat-icon>
+            <span>{{ 'TRAINING.NEW_COURSE' | translate }}</span>
+          </button>
         </div>
 
         <ul class="paths-list">

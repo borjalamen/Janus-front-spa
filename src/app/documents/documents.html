@@ -47,6 +47,13 @@
                 title="Visualizar">
                 👁️
               </button>
+              <!-- Descargar -->
+              <button
+                class="action-btn download-btn"
+                (click)="downloadDocument(project, doc)"
+                title="Descargar">
+                📥
+              </button>
               <!-- Eliminar -->
               <button
                 class="action-btn delete-btn"
@@ -133,5 +140,15 @@
         ✓
       </button>
     </div>
+  </div>
+</div>
+
+<!-- Popup previsualitzacio imatge -->
+<div class="image-popup-backdrop" *ngIf="imagePreviewPopupOpen && imagePreviewUrl" (click)="closeImagePreview()">
+  <div class="image-popup-container" (click)="$event.stopPropagation()">
+    <button class="image-popup-close-btn" (click)="closeImagePreview()" title="Cerrar">
+      ✕
+    </button>
+    <img [src]="imagePreviewUrl" [alt]="imagePreviewName || 'Imagen ampliada'" class="image-popup-img" />
   </div>
 </div>

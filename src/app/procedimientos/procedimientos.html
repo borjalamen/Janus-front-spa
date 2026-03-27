@@ -247,7 +247,7 @@
       </p>
 
       <div class="procedures-list" *ngIf="procedimientosFiltrados.length > 0">
-        <div *ngFor="let p of procedimientosFiltrados" class="procedure-row">
+        <div *ngFor="let p of procedimientosPaginados" class="procedure-row">
           <!-- Cub entorn procediment -->
           <div
             class="procedure-icon"
@@ -315,7 +315,7 @@
                 (click)="verSteps(p)"
                 title="Veure steps"
                 *ngIf="p.steps && p.steps.length > 0">
-                <mat-icon>visibility</mat-icon>
+                👁️
               </button>
               <button
                 class="procedure-action-btn procedure-edit-btn"
@@ -337,6 +337,34 @@
       <div *ngIf="procedimientosFiltrados.length === 0" class="procedures-no-results">
         <mat-icon>search_off</mat-icon>
         <p>{{ 'PROCEDURES_SECTION.NO_RESULTS' | translate }}</p>
+      </div>
+
+      <div class="pagination-bar" *ngIf="totalPaginasProcedimientos > 1">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaProcedimientos(paginaActualProcedimientos - 1)"
+          [disabled]="paginaActualProcedimientos === 1"
+          aria-label="Anterior">
+          ‹
+        </button>
+
+        <button
+          class="page-btn"
+          *ngFor="let p of paginasArrayProcedimientos"
+          [class.active]="p === paginaActualProcedimientos"
+          (click)="cambiarPaginaProcedimientos(p)">
+          {{ p }}
+        </button>
+
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaProcedimientos(paginaActualProcedimientos + 1)"
+          [disabled]="paginaActualProcedimientos === totalPaginasProcedimientos"
+          aria-label="Siguiente">
+          ›
+        </button>
+
+        <span class="page-info">{{ paginaActualProcedimientos }} / {{ totalPaginasProcedimientos }}</span>
       </div>
     </ng-container>
 

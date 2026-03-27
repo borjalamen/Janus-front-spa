@@ -37,37 +37,54 @@
 }
 
 .procedures-tab {
-  background: #14161d;
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 8px 14px;
-  border-radius: 999px;
-  color: rgba(220,220,220,0.8);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: rgba(207, 207, 207, 0.7);
   cursor: pointer;
   position: relative;
   font-weight: 600;
-  transition: all 150ms ease;
+  transition: all 160ms ease;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .procedures-tab mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .procedures-tab:hover {
   color: #FBC02D;
-  border-color: rgba(251,192,45,0.8);
-  box-shadow: 0 0 12px rgba(251,192,45,0.2);
+  background: rgba(251, 192, 45, 0.1);
+}
+
+.procedures-tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(251, 192, 45, 0.18);
 }
 
 .procedures-tab.active {
-  background: radial-gradient(circle at 20% 0, rgba(251,192,45,0.35), #14161d);
+  background: linear-gradient(180deg, rgba(251, 192, 45, 0.18), rgba(251, 192, 45, 0.08));
   color: #FBC02D;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
+}
+
+.procedures-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -2px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #FBC02D, #F9A825);
+  box-shadow: 0 6px 20px rgba(251, 192, 45, 0.32);
 }
 
 .procedures-tab-panel {
@@ -239,6 +256,55 @@
 .procedure-info {
   flex: 1;
   min-width: 0;
+}
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #14161d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #90a4ae;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: rgba(255, 213, 79, 0.4);
+  color: #ffd54f;
+}
+
+.page-btn.active {
+  background: rgba(255, 213, 79, 0.15);
+  border-color: #ffd54f;
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.page-info {
+  font-size: 12px;
+  color: #546e7a;
+  margin-left: 4px;
 }
 
 .procedure-title-row {

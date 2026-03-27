@@ -21,6 +21,13 @@ interface Task {
   estimates: number[]; // hours per week
 }
 
+interface EstimationComment {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+}
+
 @Component({
   selector: 'app-estimacion',
   templateUrl: './estimacion.html',
@@ -61,6 +68,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   requesterEmail = '';
   notes = '';
   started = true; // enabled by default
+  comments: EstimationComment[] = [];
+  newCommentText = '';
+  showCommentsPanel = false;
 
   // persistence
   private STORAGE_KEY = 'estimations_v1';
@@ -93,6 +103,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       requester: this.requester,
       requesterEmail: this.requesterEmail,
       notes: this.notes,
+      comments: this.comments,
       weeks: this.weeks,
       tasks: this.tasks,
       newTaskTitle: this.newTaskTitle
@@ -112,6 +123,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       requester: string;
       requesterEmail: string;
       notes: string;
+      comments: EstimationComment[];
       weeks: string[];
       tasks: Task[];
       newTaskTitle: string;
@@ -124,6 +136,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       this.requester = draft.requester || '';
       this.requesterEmail = draft.requesterEmail || '';
       this.notes = draft.notes || '';
+      this.comments = Array.isArray(draft.comments) ? [...draft.comments] : [];
       this.weeks = draft.weeks && draft.weeks.length ? [...draft.weeks] : ['1'];
       this.tasks = draft.tasks ? JSON.parse(JSON.stringify(draft.tasks)) : [];
       this.newTaskTitle = draft.newTaskTitle || '';
@@ -263,6 +276,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       requester: this.requester,
       requesterEmail: this.requesterEmail,
       notes: this.notes,
+      comments: JSON.parse(JSON.stringify(this.comments)),
       weeks: [...this.weeks],
       tasks: JSON.parse(JSON.stringify(this.tasks)),
       createdAt: new Date().toISOString()
@@ -348,6 +362,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.requester = s.requester || '';
     this.requesterEmail = s.requesterEmail || '';
     this.notes = s.notes || '';
+    this.comments = Array.isArray(s.comments) ? JSON.parse(JSON.stringify(s.comments)) : [];
     this.weeks = s.weeks ? [...s.weeks] : ['1'];
     this.tasks = s.tasks ? JSON.parse(JSON.stringify(s.tasks)) : [];
     this.started = true;
@@ -376,6 +391,38 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   grandTotal() {
     return this.tasks.reduce((s, t) => s + this.totalForTask(t), 0);
+  }
+
+  addComment() {
+    const text = (this.newCommentText || '').trim();
+    if (!text) return;
+
+    const comment: EstimationComment = {
+      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      author: this.myName || 'User',
+      text,
+      createdAt: new Date().toISOString()
+    };
+
+    this.comments = [comment, ...this.comments];
+    this.newCommentText = '';
+    this.saveFormDraft();
+  }
+
+  toggleCommentsPanel() {
+    this.showCommentsPanel = !this.showCommentsPanel;
+  }
+
+  deleteComment(commentId: string) {
+    this.comments = this.comments.filter(c => c.id !== commentId);
+    this.saveFormDraft();
+  }
+
+  formatCommentDate(iso: string): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleString();
   }
 
   exportCsv() {

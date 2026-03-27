@@ -113,10 +113,10 @@ export class Jenkins implements OnInit, OnDestroy {
     if (!q) {
       this.filteredJenkins = [...this.customJenkins];
     } else {
-      this.filteredJenkins = this.customJenkins.filter(jk =>
-        jk.name.toLowerCase().includes(q) ||
-        jk.url.toLowerCase().includes(q)
-      );
+      this.filteredJenkins = this.customJenkins.filter(jk => {
+        const haystack = `${jk.id || ''} ${jk.name || ''} ${jk.url || ''}`.toLowerCase();
+        return haystack.includes(q);
+      });
     }
   }
 

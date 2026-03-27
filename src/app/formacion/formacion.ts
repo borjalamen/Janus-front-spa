@@ -145,11 +145,14 @@ export class FormacionComponent {
         this.filteredPaths = this.paths;
         return;
       }
-      this.filteredPaths = this.paths.filter(p =>
-        p.name.toLowerCase().includes(v) ||
-        (p.audience && p.audience.toLowerCase().includes(v)) ||
-        (p.objectives && p.objectives.toLowerCase().includes(v))
-      );
+      this.filteredPaths = this.paths.filter(p => {
+        const itemsText = (p.items || [])
+          .map(i => `${i.name || ''} ${i.description || ''} ${i.link || ''} ${(i.tags || []).join(' ')}`)
+          .join(' ');
+        const haystack = `${p.name || ''} ${p.audience || ''} ${p.objectives || ''} ${p.prerequisites || ''} ${itemsText}`
+          .toLowerCase();
+        return haystack.includes(v);
+      });
     }
   }
 

@@ -391,10 +391,32 @@ export class ProjectsComponent implements OnInit {
     }
     const v = valor.toLowerCase();
     this.projectesFiltrats = this.projectes.filter(p => {
-      const nombre = (p.nombre || '').toLowerCase();
-      const codigo = (p.codigoProyecto || '').toLowerCase();
-      const resp = (p.responsableProyecto || '').toLowerCase();
-      return nombre.includes(v) || codigo.includes(v) || resp.includes(v);
+      const haystack = JSON.stringify({
+        id: p.id,
+        codigoProyecto: p.codigoProyecto,
+        nombre: p.nombre,
+        codigoImputacion: p.codigoImputacion,
+        lote: p.lote,
+        departamento: p.departamento,
+        responsableProyecto: p.responsableProyecto,
+        responsableTecnico: p.responsableTecnico,
+        horaDaily: p.horaDaily,
+        notasGenerales: p.notasGenerales,
+        ip: p.ip,
+        tareas: p.tareas,
+        herramientas: p.herramientas,
+        jenkinsNodes: p.jenkinsNodes,
+        dockerImages: p.dockerImages,
+        pipelines: p.pipelines,
+        repositorios: p.repositorios,
+        bbdd: p.bbdd,
+        openshift: p.openshift,
+        usuarios: p.usuarios,
+        equipoMinsait: p.equipoMinsait,
+        herramientasMind: p.herramientasMind,
+        devMachines: p.devMachines
+      }).toLowerCase();
+      return haystack.includes(v);
     });
   }
 
@@ -408,6 +430,16 @@ export class ProjectsComponent implements OnInit {
 
     if (!partial.nombre || !partial.nombre.trim()) {
       this.showToast('⚠️ El nombre del proyecto es obligatorio', false);
+      return;
+    }
+
+    if (!partial.codigoProyecto || !partial.codigoProyecto.trim()) {
+      this.showToast('⚠️ El código del proyecto es obligatorio', false);
+      return;
+    }
+
+    if (!/^\d+$/.test(partial.codigoProyecto.trim())) {
+      this.showToast('⚠️ El código del proyecto debe contener solo números', false);
       return;
     }
 
@@ -445,21 +477,18 @@ export class ProjectsComponent implements OnInit {
       devMachines: this.newProjectDevMachines.filter(m => m.ip || m.identifier) as any
     };
 
-    if (!proyecto.codigoProyecto) {
-      this.showToast('⚠️ El código del proyecto es obligatorio', false);
-      return;
-    }
-
     // Check si es creación o actualización
     const isEdit = partial.id !== undefined && partial.id !== '';
 
-    // Unicidad del código
-    const codeConflict = this.projectes.find(p =>
-      p.codigoProyecto === proyecto.codigoProyecto && p.id !== (partial as any).id
-    );
-    if (codeConflict) {
-      this.showToast(`⚠️ El código "${proyecto.codigoProyecto}" ya está en uso por otro proyecto`, false);
-      return;
+    // Unicidad del código (solo validar en frontend para edición, en creación se valida en backend)
+    if (isEdit) {
+      const codeConflict = this.projectes.find(p =>
+        p.codigoProyecto === proyecto.codigoProyecto && p.id !== (partial as any).id
+      );
+      if (codeConflict) {
+        this.showToast(`⚠️ El código "${proyecto.codigoProyecto}" ya está en uso por otro proyecto`, false);
+        return;
+      }
     }
     
     if (isEdit) {
@@ -484,7 +513,8 @@ export class ProjectsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al actualizar proyecto:', err);
-          this.showToast('❌ Error al actualizar el proyecto', false);
+          const errorMsg = err.error?.error || 'Error desconocido al actualizar el proyecto';
+          this.showToast(`❌ ${errorMsg}`, false);
         }
       });
     } else {
@@ -506,7 +536,8 @@ export class ProjectsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al guardar proyecto:', err);
-          this.showToast('❌ Error al guardar el proyecto', false);
+          const errorMsg = err.error?.error || 'Error desconocido al guardar el proyecto';
+          this.showToast(`❌ ${errorMsg}`, false);
         }
       });
     }

@@ -111,6 +111,17 @@
             <mat-icon>save</mat-icon>
             {{ saveButtonText }}
           </button>
+
+          <button
+            type="button"
+            class="comments-toggle-btn"
+            (click)="toggleCommentsPanel()"
+            [attr.aria-label]="'ESTIMATION.COMMENTS_TITLE' | translate"
+            [title]="'ESTIMATION.COMMENTS_TITLE' | translate"
+          >
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <span class="comments-notification-badge" *ngIf="comments.length > 0">{{ comments.length }}</span>
+          </button>
         </div>
 
         <!-- BOTONS EXPORT / IMPORT / MAIL – ICON-BTN MODERNS -->
@@ -248,6 +259,46 @@
           </tfoot>
         </table>
       </div>
+
+      <div class="comment-vision-panel" *ngIf="showCommentsPanel">
+        <div class="comment-vision-header">
+          <h3>{{ 'ESTIMATION.COMMENTS_TITLE' | translate }}</h3>
+          <span class="comments-count">{{ comments.length }}</span>
+        </div>
+
+        <div class="comment-mini-composer">
+          <input
+            type="text"
+            [placeholder]="'ESTIMATION.COMMENTS_PLACEHOLDER' | translate"
+            [(ngModel)]="newCommentText"
+            (ngModelChange)="onFormChange()"
+            (keyup.enter)="addComment()"
+          />
+          <button type="button" class="comment-send-btn" (click)="addComment()" [title]="'ESTIMATION.COMMENTS_ADD' | translate">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+
+        <div class="trello-comments-list" *ngIf="comments.length > 0; else noCommentsYet">
+          <div class="trello-comment-item" *ngFor="let c of comments">
+            <div class="comment-avatar">{{ (c.author || 'U').charAt(0) | uppercase }}</div>
+            <div class="comment-content">
+              <div class="comment-meta">
+                <strong>{{ c.author }}</strong>
+                <span>{{ formatCommentDate(c.createdAt) }}</span>
+              </div>
+              <p>{{ c.text }}</p>
+              <button type="button" class="comment-delete" (click)="deleteComment(c.id)">
+                {{ 'ESTIMATION.COMMENTS_DELETE' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noCommentsYet>
+          <p class="trello-empty">{{ 'ESTIMATION.COMMENTS_EMPTY' | translate }}</p>
+        </ng-template>
+      </div>
     </mat-tab>
 
     <!-- List tab -->
@@ -292,12 +343,24 @@
               <td>{{ s.projectCode }} - {{ s.projectName }}</td>
               <td>{{ s.requester }} ({{ s.requesterEmail }})</td>
               <td>{{ s.createdAt | date:'short' }}</td>
-              <td>
-                <button mat-stroked-button (click)="loadSavedIntoCurrent(s.id)">
-                  {{ 'ESTIMATION.LIST_LOAD' | translate }}
+              <td class="list-actions-cell">
+                <button
+                  type="button"
+                  class="list-action-btn list-load-btn"
+                  (click)="loadSavedIntoCurrent(s.id)"
+                  [attr.aria-label]="'ESTIMATION.LIST_LOAD' | translate"
+                  [title]="'ESTIMATION.LIST_LOAD' | translate"
+                >
+                  📥
                 </button>
-                <button mat-stroked-button color="warn" (click)="deleteSavedEstimation(s.id)">
-                  {{ 'ESTIMATION.LIST_DELETE' | translate }}
+                <button
+                  type="button"
+                  class="list-action-btn list-delete-btn"
+                  (click)="deleteSavedEstimation(s.id)"
+                  [attr.aria-label]="'ESTIMATION.LIST_DELETE' | translate"
+                  [title]="'ESTIMATION.LIST_DELETE' | translate"
+                >
+                  🗑️
                 </button>
               </td>
             </tr>
@@ -317,11 +380,11 @@
               [(ngModel)]="liveTaskInput"
             />
           </mat-form-field>
-          <div class="row actions">
-            <button mat-stroked-button color="primary" (click)="startLiveEstimation()">
+          <div class="row actions live-actions-row">
+            <button mat-stroked-button color="primary" class="live-action-btn live-primary-btn" (click)="startLiveEstimation()">
               {{ 'ESTIMATION.LIVE.START' | translate }}
             </button>
-            <button mat-stroked-button (click)="joinCurrentSession()">
+            <button mat-stroked-button class="live-action-btn" (click)="joinCurrentSession()">
               {{ 'ESTIMATION.LIVE.JOIN' | translate }}
             </button>
           </div>
@@ -329,8 +392,8 @@
         </div>
 
         <div *ngIf="liveSession" class="live-session">
-          <h3>{{ liveSession.task }}</h3>
-          <p>
+          <h3 class="live-session-title">{{ liveSession.task }}</h3>
+          <p class="live-session-owner">
             {{ 'ESTIMATION.LIVE.OWNER' | translate }}:
             <strong>
               {{
@@ -341,10 +404,10 @@
             </strong>
           </p>
 
-          <mat-card>
+          <mat-card class="live-participants-card">
             <mat-card-content>
-              <mat-list>
-                <mat-list-item *ngFor="let p of liveSession.participants">
+              <mat-list class="live-participants-list">
+                <mat-list-item class="live-participant-row" *ngFor="let p of liveSession.participants">
                   <div>{{ p.name }}</div>
                   <div class="spacer"></div>
                   <div class="vote-cell">
@@ -365,6 +428,7 @@
           <div class="cards">
             <button
               mat-flat-button
+              class="live-card-btn"
               *ngFor="let c of liveCards"
               (click)="castVote(c)"
               [class.selected]="myVote==c"
@@ -373,10 +437,11 @@
             </button>
           </div>
 
-          <div class="row actions">
+          <div class="row actions live-actions-row">
             <button
               mat-stroked-button
               color="primary"
+              class="live-action-btn live-primary-btn"
               (click)="revealNow()"
               *ngIf="liveSession.ownerId===myId && !liveSession.revealed"
             >
@@ -385,6 +450,7 @@
             <button
               mat-stroked-button
               color="primary"
+              class="live-action-btn live-primary-btn"
               (click)="acceptSessionResult()"
               *ngIf="liveSession.revealed && !liveSession.accepted"
             >
@@ -393,6 +459,7 @@
             <button
               mat-stroked-button
               color="warn"
+              class="live-action-btn live-danger-btn"
               (click)="liveService.abort(liveSession)"
             >
               {{ 'ESTIMATION.LIVE.ABORT' | translate }}

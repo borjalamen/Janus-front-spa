@@ -1,5 +1,5 @@
 // src/app/documents/documents.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +33,7 @@ interface Project {
   templateUrl: './documents.html',
   styleUrls: ['./documents.css']
 })
-export class DocumentsComponent implements OnInit {
+export class DocumentsComponent implements OnInit, OnDestroy {
   title = 'Documentos';
   showAddPopup = false;
 
@@ -63,6 +63,11 @@ export class DocumentsComponent implements OnInit {
   deleteProjectPopupOpen = false;
   projectToDelete: Project | null = null;
 
+  // popup previsualitzacio imatge
+  imagePreviewPopupOpen = false;
+  imagePreviewUrl: string | null = null;
+  imagePreviewName = '';
+
   constructor(
     private documentService: DocumentService,
     private projectService: ProjectService,
@@ -70,12 +75,17 @@ export class DocumentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const savedFilter = (this.storage.get(this.STORAGE_KEY_FILTER) as string) || '';
     const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as string | null;
 
-    this.searchQuery = savedFilter || '';
+    // Evita filtros invisibles persistidos que pueden ocultar proyectos al abrir la vista.
+    this.searchQuery = '';
+    this.storage.set(this.STORAGE_KEY_FILTER, '');
 
-    this.loadProjectsWithUiState(savedFilter, savedSelected);
+    this.loadProjectsWithUiState('', savedSelected);
+  }
+
+  ngOnDestroy(): void {
+    this.releaseImagePreviewUrl();
   }
 
   // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
@@ -95,18 +105,23 @@ export class DocumentsComponent implements OnInit {
         })
       )
     }).subscribe(({ ids, projects }) => {
-      console.log('📁 Carpetes rebudes:', ids);
-      if (!ids || ids.length === 0) {
-        console.log('⚠️ No hi ha carpetes');
+      const nameMap = this.buildProjectNameMap(projects || []);
+      const projectIds = (projects || [])
+        .map(p => p.id)
+        .filter((id): id is string => !!id);
+
+      // Mostrar solo proyectos activos (no eliminados) devueltos por /projects/all.
+      // Las carpetas huérfanas no deben aparecer en la vista de Documentos.
+      const allIds = Array.from(new Set(projectIds));
+
+      if (allIds.length === 0) {
         this.projects = [];
         this.projectsFiltrats = [];
         this.selectedProjectId = null;
         return;
       }
 
-      const nameMap = this.buildProjectNameMap(projects || []);
-
-      const requests = ids.map(id =>
+      const requests = allIds.map(id =>
         this.documentService.getAllFiles(id).pipe(
           map((files: BackendDocument[]) => {
             const docs: BackendDocument[] = files || [];
@@ -118,7 +133,7 @@ export class DocumentsComponent implements OnInit {
             } as Project;
           }),
           catchError(err => {
-            console.error('Error carregant fitxers project', id, err);
+            // Si el proyecto no tiene carpeta de docs, debe seguir apareciendo con lista vacía.
             return of({
               projectId: id,
               name: nameMap.get(String(id)) || `Project ${id}`,
@@ -199,11 +214,11 @@ export class DocumentsComponent implements OnInit {
       this.projectsFiltrats = [...this.projects];
     } else {
       const lower = valor.toLowerCase();
-      this.projectsFiltrats = this.projects.filter(
-        p =>
-          String(p.projectId).toLowerCase().includes(lower) ||
-          p.name.toLowerCase().includes(lower)
-      );
+      this.projectsFiltrats = this.projects.filter(p => {
+        const docsText = (p.documents || []).map(d => String(d || '')).join(' ');
+        const haystack = `${p.projectId || ''} ${p.name || ''} ${docsText}`.toLowerCase();
+        return haystack.includes(lower);
+      });
     }
   }
 
@@ -299,19 +314,77 @@ export class DocumentsComponent implements OnInit {
       next: (blob: Blob) => {
         console.log('✅ Blob rebut:', blob.type, blob.size);
         const url = URL.createObjectURL(blob);
+        if (this.isImageDocument(blob, doc)) {
+          this.openImagePreview(url, doc);
+          return;
+        }
+
         const newWindow = window.open(url, '_blank');
         if (!newWindow) {
           console.warn('⚠️ Popup bloquejat. Descarregant arxiu...');
           const link = document.createElement('a');
           link.href = url;
-          // adapta això al teu tipus real de BackendDocument
-          // @ts-ignore
-          link.download = typeof doc === 'string' ? doc : (doc.name || 'document');
+          link.download = this.resolveDocumentName(doc);
           link.click();
-          URL.revokeObjectURL(url);
         }
+
+        URL.revokeObjectURL(url);
       },
       error: (err: any) => console.error('❌ Error visualitzant document', err)
     });
+  }
+
+  downloadDocument(project: Project, doc: BackendDocument) {
+    this.documentService.downloadFile(project.projectId, doc).subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.resolveDocumentName(doc);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      },
+      error: (err: any) => console.error('❌ Error descarregant document', err)
+    });
+  }
+
+  closeImagePreview() {
+    this.imagePreviewPopupOpen = false;
+    this.imagePreviewName = '';
+    this.releaseImagePreviewUrl();
+  }
+
+  private openImagePreview(url: string, doc: BackendDocument) {
+    this.releaseImagePreviewUrl();
+    this.imagePreviewUrl = url;
+    this.imagePreviewName = this.resolveDocumentName(doc);
+    this.imagePreviewPopupOpen = true;
+  }
+
+  private releaseImagePreviewUrl() {
+    if (this.imagePreviewUrl) {
+      URL.revokeObjectURL(this.imagePreviewUrl);
+      this.imagePreviewUrl = null;
+    }
+  }
+
+  private isImageDocument(blob: Blob, doc: BackendDocument): boolean {
+    if (blob.type && blob.type.startsWith('image/')) {
+      return true;
+    }
+
+    const fileName = this.resolveDocumentName(doc).toLowerCase();
+    return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileName);
+  }
+
+  private resolveDocumentName(doc: BackendDocument): string {
+    if (typeof doc === 'string') {
+      return doc;
+    }
+
+    const name = (doc as { name?: string }).name;
+    return name || 'document';
   }
 }

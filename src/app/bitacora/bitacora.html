@@ -245,7 +245,7 @@
     <!-- LIST MODE -->
     <ng-container *ngIf="!mostrarDetallSteps; else detallStepsTpl">
       <div class="bitacora-list" *ngIf="erroresFiltrados.length > 0">
-        <div *ngFor="let e of erroresFiltrados" class="bitacora-row" [class.editing]="bitacoraEditandoId === e.id">
+        <div *ngFor="let e of bitacorasPaginadas" class="bitacora-row" [class.editing]="bitacoraEditandoId === e.id">
           <!-- VISTA NORMAL -->
           <ng-container *ngIf="bitacoraEditandoId !== e.id">
             <div
@@ -454,6 +454,34 @@
       <div *ngIf="erroresFiltrados.length === 0" class="no-results">
         <mat-icon>search_off</mat-icon>
         <p>{{ 'ERRORS.NO_RESULTS' | translate }}</p>
+      </div>
+
+      <div class="pagination-bar" *ngIf="totalPaginasBitacora > 1">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaBitacora(paginaActualBitacora - 1)"
+          [disabled]="paginaActualBitacora === 1"
+          aria-label="Anterior">
+          ‹
+        </button>
+
+        <button
+          class="page-btn"
+          *ngFor="let p of paginasArrayBitacora"
+          [class.active]="p === paginaActualBitacora"
+          (click)="cambiarPaginaBitacora(p)">
+          {{ p }}
+        </button>
+
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaBitacora(paginaActualBitacora + 1)"
+          [disabled]="paginaActualBitacora === totalPaginasBitacora"
+          aria-label="Siguiente">
+          ›
+        </button>
+
+        <span class="page-info">{{ paginaActualBitacora }} / {{ totalPaginasBitacora }}</span>
       </div>
     </ng-container>
 

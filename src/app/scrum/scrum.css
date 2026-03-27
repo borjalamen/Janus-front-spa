@@ -11,6 +11,81 @@
   color: #FBC02D;
 }
 
+.scrum-search {
+  margin-bottom: 18px;
+}
+
+.scrum-search-field {
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid #ffffff;
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.scrum-search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #ffd740;
+  font-size: 1rem;
+  padding: 6px 8px;
+}
+
+.scrum-search-field input::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.buscador-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.buscador-btn {
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s ease;
+}
+
+.buscador-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #555, #333) !important;
+}
+
+.btn-lupa {
+  color: #FBC02D !important;
+}
+
+.btn-lupa mat-icon {
+  color: #FBC02D !important;
+}
+
+.btn-cross {
+  color: #E53935 !important;
+}
+
 .scrum-root .lead {
   color: #cfcfcf;
   margin-bottom: 20px;
@@ -182,10 +257,176 @@
   border-color: rgba(76, 175, 80, 0.3);
 }
 
+.todo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.todo-card .card-head {
+  margin-bottom: 0;
+}
+
+.todo-card .card-actions {
+  margin-top: 2px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+}
+
+.todo-card .card-actions button {
+  min-width: 52px;
+  height: 32px;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-card .card-actions button:not(.btn-save):not(.btn-cancel):not(.danger):not(.done-btn) {
+  border: 0;
+  background: transparent;
+  color: #d9d9d9;
+  font-size: 22px;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.todo-card .card-actions button:not(.btn-save):not(.btn-cancel):not(.danger):not(.done-btn):hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #243242, #1d2732) !important;
+  color: #dfe9f3;
+  box-shadow: 0 6px 16px rgba(40, 52, 66, 0.5), 0 0 14px rgba(40, 52, 66, 0.35);
+}
+
+.todo-card .card-actions .done-btn {
+  color: #4CAF50;
+}
+
+.todo-card .card-actions .done-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.todo-card .card-actions .danger {
+  color: #E53935;
+}
+
+.todo-card .card-actions .danger:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+.card:not(.todo-card) .card-actions button {
+  min-width: 52px;
+  height: 32px;
+  border-radius: 8px;
+  border: 0;
+  background: transparent;
+  color: #d9d9d9;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.card:not(.todo-card) .card-actions .progress-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #243242, #1d2732) !important;
+  color: #dfe9f3;
+  box-shadow: 0 6px 16px rgba(40, 52, 66, 0.5), 0 0 14px rgba(40, 52, 66, 0.35);
+}
+
+.card:not(.todo-card) .card-actions .done-btn {
+  color: #4CAF50;
+}
+
+.card:not(.todo-card) .card-actions .done-btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+}
+
+.card:not(.todo-card) .card-actions .danger {
+  color: #E53935;
+}
+
+.card:not(.todo-card) .card-actions .danger:hover {
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+.todo-card .card-actions .btn-save,
+.todo-card .card-actions .btn-cancel {
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  align-self: auto;
+}
+
+.todo-card .edit-fields {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.85fr) minmax(0, 1.15fr);
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: stretch;
+  margin-top: 0;
+}
+
+.todo-card .todo-edit-left,
+.todo-card .todo-edit-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo-card .todo-edit-wrapper {
+  margin-top: -2px;
+}
+
+.todo-card .todo-edit-grid > input,
+.todo-card .todo-edit-grid > select,
+.todo-card .todo-edit-grid > textarea,
+.todo-card .edit-estimate,
+.todo-card .edit-priority,
+.todo-card .edit-assignee {
+  width: 100%;
+  min-width: 0;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+.todo-card .todo-edit-grid .field-description {
+  width: 100%;
+  min-height: 74px;
+  margin-top: 0;
+}
+
+.todo-card .todo-edit-grid .field-comments {
+  width: 100%;
+  min-height: 74px;
+  margin-top: 0;
+}
+
 .card-head {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   gap: 10px;
   margin-bottom: 10px;
 }
@@ -216,12 +457,147 @@
   color: #cfcfcf;
   font-style: italic;
   font-size: 0.9rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.card .desc.comments {
+  margin-top: 8px;
+  border-left: 3px solid rgba(251, 192, 45, 0.45);
+  font-style: normal;
+}
+
+.comments-btn {
+  position: relative;
+  border: 0 !important;
+  background: transparent !important;
+  color: #d9d9d9;
+  font-size: 20px !important;
+  margin-right: auto;
+}
+
+.comments-btn:hover {
+  color: #e6f7ff !important;
+}
+
+.comments-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #e53935;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  border: 1px solid #0f1113;
+}
+
+.task-comments-panel {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-comment-composer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.task-comment-composer input {
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #4a5568;
+  background: #1a1d21;
+  color: #e0e0e0;
+  padding: 8px 10px;
+}
+
+.task-comment-composer input:focus {
+  outline: none;
+  border-color: #fbc02d;
+}
+
+.task-comment-send {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid rgba(251, 192, 45, 0.4);
+  background: rgba(251, 192, 45, 0.12);
+  color: #fbc02d;
+  cursor: pointer;
+}
+
+.task-comment-send:hover {
+  background: rgba(251, 192, 45, 0.24);
+}
+
+.task-comments-empty {
+  margin-top: 8px;
+  color: #a9b1b7;
+  font-size: 12px;
+}
+
+.task-comment-item {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-comment-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.task-comment-meta strong {
+  font-size: 12px;
+  color: #e6eff4;
+}
+
+.task-comment-meta span {
+  font-size: 11px;
+  color: #93a2ac;
+}
+
+.task-comment-item p {
+  margin: 0;
+  color: #d7dfe5;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+.task-comment-delete {
+  margin-top: 4px;
+  border: 0;
+  background: transparent;
+  color: #ff9a9a;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.task-comment-delete:hover {
+  color: #ffd4d4;
+  text-decoration: underline;
 }
 
 .meta {
+  display: block;
+  width: 100%;
   color: #bdbdbd;
   font-size: 13px;
-  margin-left: 8px;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* ===== CARD INPUTS (EDIT MODE) ===== */
@@ -390,54 +766,54 @@
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.3);
+  border: 0;
+  background: transparent;
   color: #4CAF50 !important;
   font-size: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: 0;
+  box-shadow: none;
 }
 
 .card-actions .btn-save:hover {
+  transform: scale(1.15) translateY(-2px);
   background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-              0 0 20px rgba(76, 175, 80, 0.5) !important;
-  border: 1px solid rgba(76, 175, 80, 0.5) !important;
-  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
 }
 
 .card-actions .btn-cancel {
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.3);
+  border: 0;
+  background: transparent;
   color: #E53935 !important;
   font-size: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   padding: 0;
+  box-shadow: none;
 }
 
 .card-actions .btn-cancel:hover {
+  transform: scale(1.15) translateY(-2px);
   background: linear-gradient(145deg, #E53935, #c62828) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-              0 0 20px rgba(229, 57, 53, 0.4) !important;
-  border: 1px solid rgba(229, 57, 53, 0.5) !important;
-  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+@media (max-width: 1100px) {
+  .todo-card .edit-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===== SELECT STYLING ===== */
