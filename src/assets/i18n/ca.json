@@ -928,7 +928,10 @@
     "DELETE_CONFIRMATION_MSG": "No hi ha peticions per revisar.",
     "STATUS_PENDING": "Pendent",
     "STATUS_APPROVED": "Aprovada",
-    "STATUS_REJECTED": "Rebutjada"
+    "STATUS_REJECTED": "Rebutjada",
+    "INITIATED": "Iniciades",
+    "STATUS_INITIATED": "Iniciada",
+    "NO_TASK_REQUESTS": "No hi ha peticions de tasca per revisar."
   },
   "PETICION": {
   "TITLE": "Nova petició DevOps",

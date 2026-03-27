@@ -1007,7 +1007,10 @@
     "DELETE_CONFIRMATION_MSG": "No requests to review.",
     "STATUS_PENDING": "Pending",
     "STATUS_APPROVED": "Approved",
-    "STATUS_REJECTED": "Rejected"
+    "STATUS_REJECTED": "Rejected",
+    "INITIATED": "Initiated",
+    "STATUS_INITIATED": "Initiated",
+    "NO_TASK_REQUESTS": "No task requests to review."
   },
   "PETICION": {
   "TITLE": "New DevOps request",
