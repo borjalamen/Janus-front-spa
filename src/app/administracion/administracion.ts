@@ -1947,7 +1947,10 @@ export class AdministracionComponent implements OnInit {
         ["JIRA", tarea.jiraTask],
         ["Asignado", tarea.asignado || "Cualquiera"],
         ["Deadline", tarea.deadline || "—"],
-        ["Estado", this.getStatusTranslation(tarea.estado)],
+        [
+          "Estado",
+          this.translate.instant(this.getStatusTranslation(tarea.estado)),
+        ],
       ],
       styles: { fontSize: 10, cellPadding: 4 },
       headStyles: {

@@ -375,7 +375,8 @@
             (click)="filtrarPorEstadoTareas('INICIADA')"
             style="cursor: pointer"
           >
-            {{ tareasIniciadas }} Iniciadas
+            {{ tareasIniciadas }} {{ 'ADMIN.INITIATED' | translate | uppercase
+            }}
           </span>
 
           <span
@@ -384,31 +385,36 @@
             (click)="filtrarPorEstadoTareas('PENDIENTE')"
             style="cursor: pointer"
           >
-            {{ tareasPendientes }} Pendientes
+            {{ tareasPendientes }} {{ 'ADMIN.PENDING' | translate | uppercase }}
           </span>
+
           <span
             class="status-pill aprobada"
             [class.active]="filtroEstadoTareas === 'APROBADA'"
             (click)="filtrarPorEstadoTareas('APROBADA')"
             style="cursor: pointer"
           >
-            {{ tareasAprobadas }} Completadas
+            {{ tareasAprobadas }} {{ 'ADMIN.APPROVED' | translate | uppercase }}
           </span>
+
           <span
             class="status-pill rechazada"
             [class.active]="filtroEstadoTareas === 'RECHAZADA'"
             (click)="filtrarPorEstadoTareas('RECHAZADA')"
             style="cursor: pointer"
           >
-            {{ tareasRechazadas }} Rechazadas
+            {{ tareasRechazadas }} {{ 'ADMIN.REJECTED' | translate | uppercase
+            }}
           </span>
+
           <span
             class="status-pill"
             [class.active]="filtroEstadoTareas === 'TODAS'"
             (click)="filtrarPorEstadoTareas('TODAS')"
             style="cursor: pointer"
           >
-            {{ peticionsTareas.length }} {{ 'ADMIN.ALL' | translate }}
+            {{ peticionsTareas.length }} {{ 'ADMIN.ALL' | translate | uppercase
+            }}
           </span>
         </div>
       </div>
