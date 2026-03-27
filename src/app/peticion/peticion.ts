@@ -52,6 +52,7 @@ export class PeticionComponent implements OnInit {
   };
 
   deadline: Date | null = null;
+  deadlineTime: string = "";
   sending = false;
 
   // Opcions del select (es carreguen des de l’API)
@@ -174,6 +175,7 @@ export class PeticionComponent implements OnInit {
     };
     this.attachments = [];
     this.deadline = null;
+    this.deadlineTime = "";
     this.showErrors = false;
     this.sending = false;
     this.storage.remove(this.STORAGE_KEY);
@@ -198,6 +200,7 @@ export class PeticionComponent implements OnInit {
     const dialogRef = this.dialog.open(PeticionConfirmDialog, {
       data: {
         deadline: this.deadline,
+        deadlineTime: this.deadlineTime,
       },
       width: "420px",
       panelClass: "peticion-confirm-panel",
@@ -227,6 +230,9 @@ export class PeticionComponent implements OnInit {
 
     if (this.deadline) {
       formData.append("deadline", this.deadline.toISOString());
+    }
+    if (this.deadlineTime) {
+      formData.append("deadlineTime", this.deadlineTime); // "HH:mm"
     }
 
     this.attachments.forEach((a) => {
@@ -283,7 +289,10 @@ export class PeticionComponent implements OnInit {
       <div class="peticion-dialog-info">
         <strong>Fecha límite:</strong>
         {{
-          data?.deadline ? (data.deadline | date: "dd/MM/yyyy") : "No indicada"
+          data?.deadline
+            ? (data.deadline | date: "dd/MM/yyyy") +
+              (data.deadlineTime ? " " + data.deadlineTime : "")
+            : "No indicada"
         }}
       </div>
       <div class="dialog-actions">

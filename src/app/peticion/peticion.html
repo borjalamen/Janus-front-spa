@@ -151,7 +151,7 @@
         </mat-form-field>
       </div>
 
-      <!-- Fila 4: Data (opcional) -->
+      <!-- Fila 4: Data + Hora (opcionales) -->
       <div class="peticion-row">
         <mat-form-field appearance="outline" class="peticion-date-field">
           <mat-label>{{ 'PETICION.DEADLINE' | translate }}</mat-label>
@@ -161,6 +161,7 @@
             [(ngModel)]="deadline"
             (dateChange)="onFormChange()"
             [placeholder]="'PETICION.DEADLINE_PH' | translate"
+            name="deadline"
           />
           <mat-datepicker-toggle
             matSuffix
@@ -172,7 +173,16 @@
           ></mat-datepicker>
         </mat-form-field>
 
-        <div></div>
+        <mat-form-field appearance="outline" class="peticion-time-field">
+          <mat-label>{{ 'PETICION.DEADLINE_TIME' | translate }}</mat-label>
+          <input
+            matInput
+            type="time"
+            [(ngModel)]="deadlineTime"
+            (ngModelChange)="onFormChange()"
+            name="deadlineTime"
+          />
+        </mat-form-field>
       </div>
 
       <!-- Fila 5: Comentaris (opcional) -->
@@ -205,12 +215,12 @@
                 <div class="upload-icon-ring"></div>
               </div>
               <div class="upload-zone-text">
-                <span class="upload-title"
-                  >{{ 'PETICION.UPLOAD_TITLE' | translate }}</span
-                >
-                <span class="upload-subtitle"
-                  >{{ 'PETICION.UPLOAD_SUBTITLE' | translate }}</span
-                >
+                <span class="upload-title">
+                  {{ 'PETICION.UPLOAD_TITLE' | translate }}
+                </span>
+                <span class="upload-subtitle">
+                  {{ 'PETICION.UPLOAD_SUBTITLE' | translate }}
+                </span>
               </div>
               <div class="upload-badge">
                 <mat-icon>add</mat-icon>
@@ -229,9 +239,9 @@
               </div>
               <div class="file-info">
                 <span class="peticion-file-name">{{ a.name }}</span>
-                <span class="peticion-file-size"
-                  >{{ (a.size / 1024).toFixed(1) }} KB</span
-                >
+                <span class="peticion-file-size">
+                  {{ (a.size / 1024).toFixed(1) }} KB
+                </span>
               </div>
               <button
                 type="button"
@@ -264,8 +274,11 @@
             {{ sending ? 'sync' : 'send' }}
           </mat-icon>
           <span>
-            {{ sending ? ('PETICION.SENDING' | translate) : ('PETICION.SEND' |
-            translate) }}
+            {{
+              sending
+                ? ('PETICION.SENDING' | translate)
+                : ('PETICION.SEND' | translate)
+            }}
           </span>
         </button>
 
@@ -275,7 +288,9 @@
           (click)="resetForm()"
           [disabled]="sending"
         >
-          <span class="limpiar-label">{{ 'PETICION.RESET' | translate }}</span>
+          <span class="limpiar-label">
+            {{ 'PETICION.RESET' | translate }}
+          </span>
           <img
             src="assets/images/Escova.png"
             class="btn-custom-img"

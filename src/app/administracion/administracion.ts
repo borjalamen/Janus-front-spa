@@ -44,7 +44,7 @@ interface PeticionAdmin {
   tipo: string;
   fecha: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA'| 'INICIADA';
+  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA";
 }
 
 interface PeticionUneteBackend {
@@ -70,6 +70,7 @@ interface PeticionTareaBackend {
   jiraTask?: string;
   devopsAssignee?: string;
   deadline?: string;
+  deadlineTime?: string;
   comments?: string;
   attachments?: string[];
   estado?: string;
@@ -88,7 +89,8 @@ interface PeticionTareaAdmin {
   asignado: string;
   deadline: string;
   comentario: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA';
+  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA";
+  attachments?: string[];
 }
 
 @Component({
@@ -160,7 +162,12 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
-  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' = 'TODAS';
+  filtroEstadoPeticiones:
+    | "TODAS"
+    | "PENDIENTE"
+    | "APROBADA"
+    | "RECHAZADA"
+    | "INICIADA" = "TODAS";
 
   // Paginación peticiones
   paginaActualPeticiones = 1;
@@ -169,8 +176,13 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES DE TAREA
   peticionsTareas: PeticionTareaAdmin[] = [];
   peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
-  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' = 'TODAS';
-  searchTareas = '';
+  filtroEstadoTareas:
+    | "TODAS"
+    | "PENDIENTE"
+    | "APROBADA"
+    | "RECHAZADA"
+    | "INICIADA" = "TODAS";
+  searchTareas = "";
 
   // Paginación tareas
   paginaActualTareas = 1;
@@ -232,14 +244,12 @@ export class AdministracionComponent implements OnInit {
   }
 
   get peticionesIniciadas(): number {
-  return this.peticiones.filter(p => p.estado === 'INICIADA').length;
+    return this.peticiones.filter((p) => p.estado === "INICIADA").length;
   }
 
   get tareasIniciadas(): number {
-  return this.peticionsTareas.filter(p => p.estado === 'INICIADA').length;
+    return this.peticionsTareas.filter((p) => p.estado === "INICIADA").length;
   }
-
-
 
   cambiarPaginaTareas(pagina: number) {
     if (pagina >= 1 && pagina <= this.totalPaginasTareas) {
@@ -587,7 +597,9 @@ export class AdministracionComponent implements OnInit {
     this.router.navigate(["/peticion"]);
   }
 
-  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA') {
+  filtrarPorEstadoTareas(
+    estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA",
+  ) {
     this.filtroEstadoTareas = estado;
     this.aplicarFiltrosTareas();
   }
@@ -667,15 +679,16 @@ export class AdministracionComponent implements OnInit {
   }
 
   reenviarConfirmacion(tarea: PeticionTareaAdmin) {
-  this.http.put(`${this.peticionsTareasUrl}/${tarea.id}/resend-confirmation`, {})
-    .subscribe({
-      next: () => this.showToast('✅ Correo de confirmación reenviado'),
-      error: err => {
-        console.error('Error reenviando confirmación', err);
-        this.showToast('❌ Error al reenviar el correo', false);
-      }
-    });
-}
+    this.http
+      .put(`${this.peticionsTareasUrl}/${tarea.id}/resend-confirmation`, {})
+      .subscribe({
+        next: () => this.showToast("✅ Correo de confirmación reenviado"),
+        error: (err) => {
+          console.error("Error reenviando confirmación", err);
+          this.showToast("❌ Error al reenviar el correo", false);
+        },
+      });
+  }
 
   private cargarPeticionsTareas() {
     this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
@@ -698,6 +711,9 @@ export class AdministracionComponent implements OnInit {
   }
 
   private mapPeticionTarea(p: PeticionTareaBackend): PeticionTareaAdmin {
+    const fecha = this.formatFecha(p.deadline);
+    const hora = p.deadlineTime?.slice(0, 5) || "";
+
     return {
       id: p.id ?? "",
       solicitante: p.requesterName?.trim() || "",
@@ -706,14 +722,16 @@ export class AdministracionComponent implements OnInit {
       projectCode: p.projectCode?.trim() || "",
       jiraTask: p.jiraTask?.trim() || "",
       asignado: p.devopsAssignee?.trim() || "Cualquiera",
-      deadline: this.formatFecha(p.deadline),
+      deadline: hora ? `${fecha} ${hora}` : fecha,
       comentario: p.comments?.trim() || "",
       estado: this.normalizeEstado(p.estado),
       attachments: p.attachments ?? [],
     };
   }
 
-  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA') {
+  filtrarPorEstado(
+    estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA",
+  ) {
     this.filtroEstadoPeticiones = estado;
     this.aplicarFiltrosPeticiones();
   }
@@ -764,10 +782,10 @@ export class AdministracionComponent implements OnInit {
 
   getStatusTranslation(estado: string): string {
     const statusMap: { [key: string]: string } = {
-      'PENDIENTE': 'ADMIN.STATUS_PENDING',
-      'APROBADA': 'ADMIN.STATUS_APPROVED',
-      'RECHAZADA': 'ADMIN.STATUS_REJECTED',
-      'INICIADA': 'ADMIN.STATUS_INITIATED'
+      PENDIENTE: "ADMIN.STATUS_PENDING",
+      APROBADA: "ADMIN.STATUS_APPROVED",
+      RECHAZADA: "ADMIN.STATUS_REJECTED",
+      INICIADA: "ADMIN.STATUS_INITIATED",
     };
     return statusMap[estado] || estado;
   }
@@ -867,13 +885,17 @@ export class AdministracionComponent implements OnInit {
     };
   }
 
-  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
-  const normalized = (estado || 'PENDIENTE').toUpperCase();
-  if (normalized === 'APROBADA' || normalized === 'RECHAZADA' || normalized === 'INICIADA') {
-    return normalized;
+  private normalizeEstado(estado?: string): PeticionAdmin["estado"] {
+    const normalized = (estado || "PENDIENTE").toUpperCase();
+    if (
+      normalized === "APROBADA" ||
+      normalized === "RECHAZADA" ||
+      normalized === "INICIADA"
+    ) {
+      return normalized;
+    }
+    return "PENDIENTE";
   }
-  return 'PENDIENTE';
-}
 
   private formatFecha(value?: string): string {
     if (!value) return "";
@@ -1880,12 +1902,42 @@ export class AdministracionComponent implements OnInit {
   }
   descargarPDFTarea(tarea: PeticionTareaAdmin) {
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
-    doc.setFontSize(16);
-    doc.text(`Petición de tarea #${tarea.id.slice(-6)}`, 14, 20);
+    const logoUrl = "/assets/images/7dRimV7.png";
 
+    // TÍTOL A L'ESQUERRA
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(22, 63, 107);
+    doc.text("Petición de tarea", 14, 28);
+
+    // SUBTÍTOL sota el títol
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(80, 80, 80);
+    doc.text(`#${tarea.id.slice(-6)}`, 14, 42);
+    if (tarea.projectCode || tarea.proyecto) {
+      const projectLine =
+        `${tarea.projectCode || ""} ${tarea.proyecto || ""}`.trim();
+      if (projectLine) {
+        doc.text(projectLine, 14, 54);
+      }
+    }
+
+    // LOGO A LA DRETA
+    try {
+      const imgW = 40;
+      const imgH = 40;
+      doc.addImage(logoUrl, "PNG", pageWidth - imgW - 14, 14, imgW, imgH);
+    } catch (e) {
+      console.warn("Logo no disponible en PDF de tarea");
+    }
+
+    // a partir d'aquí deixa el que ja tens:
     autoTable(doc, {
-      startY: 30,
+      startY: 70,
       head: [["Campo", "Valor"]],
       body: [
         ["Solicitante", tarea.solicitante],
@@ -1897,18 +1949,41 @@ export class AdministracionComponent implements OnInit {
         ["Deadline", tarea.deadline || "—"],
         ["Estado", this.getStatusTranslation(tarea.estado)],
       ],
-      styles: { fontSize: 11 },
-      headStyles: { fillColor: [33, 33, 33] },
+      styles: { fontSize: 10, cellPadding: 4 },
+      headStyles: {
+        fillColor: [22, 63, 107],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+      },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+      margin: { left: 14, right: 14 },
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY || 40;
+    const finalY = (doc as any).lastAutoTable.finalY + 12;
 
-    doc.setFontSize(11);
-    doc.text("Comentario:", 14, finalY + 10);
+    // COMENTARI
+    if (tarea.comentario && tarea.comentario.trim()) {
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(22, 63, 107);
+      doc.text("Comentario:", 14, finalY);
 
-    const comentario = tarea.comentario || "";
-    const splitComentario = doc.splitTextToSize(comentario, 180);
-    doc.text(splitComentario, 14, finalY + 17);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      const splitComentario = doc.splitTextToSize(
+        tarea.comentario,
+        pageWidth - 28,
+      );
+      doc.text(splitComentario, 14, finalY + 10);
+    }
+
+    // PEU DE PÀGINA
+    const footerText = `Petición gestionada en JanusHub · ${new Date().toLocaleDateString("es-ES")}`;
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(120, 120, 120);
+    doc.text(footerText, 14, pageHeight - 14);
 
     doc.save(`tarea_${tarea.id}.pdf`);
   }
