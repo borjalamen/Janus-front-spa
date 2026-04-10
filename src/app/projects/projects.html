@@ -122,9 +122,8 @@
         </button>
         <button class="new-project-tab" 
                 [class.active]="newProjectTab === 'documentos'" 
-                (click)="cambiarNewProjectTab('documentos')"
-                title="{{ 'PROJECTS.TAB_DOCUMENTOS' | translate }}">
-          📂 Documentos
+                (click)="cambiarNewProjectTab('documentos')">
+          📂 {{ 'PROJECTS.TAB_DOCUMENTOS' | translate }}
         </button>
       </div>
 
