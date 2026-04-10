@@ -373,6 +373,7 @@
     "SELECT_FILE_BTN": "Seleccionar arxiu",
     "NO_FILE_SELECTED": "Sense arxiu seleccionat",
     "DOC_DESC_PLACEHOLDER": "Descripció (opcional)",
+    "DOCUMENT_DESCRIPTION_PLACEHOLDER": "Descripció del document...",
     "ADD_DOCUMENT": "Afegir document",
     "NO_DOCUMENTS_LOADED": "Sense documents carregats",
     "URLS_SECTION": "URLs d'Entorns",

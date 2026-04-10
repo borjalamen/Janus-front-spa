@@ -385,6 +385,7 @@
     "SELECT_FILE_BTN": "Seleccionar archivo",
     "NO_FILE_SELECTED": "Sin archivo seleccionado",
     "DOC_DESC_PLACEHOLDER": "Descripción (opcional)",
+    "DOCUMENT_DESCRIPTION_PLACEHOLDER": "Descripción del documento...",
     "ADD_DOCUMENT": "Agregar documento",
     "NO_DOCUMENTS_LOADED": "Sin documentos cargados",
     "URLS_SECTION": "URLs de Entornos",
