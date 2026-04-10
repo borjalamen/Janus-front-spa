@@ -444,13 +444,13 @@
 
       <!-- Sub-tab: Documentos -->
       <div *ngIf="activeTab === $any('docs')" class="admin-card new-project-section section-docs-bg">
-        <h3 class="section-subtitle">📂 Documentación del Proyecto</h3>
+        <h3 class="section-subtitle">📂 {{ 'PROJECTS.DOCS_TITLE' | translate }}</h3>
 
         <div class="documents-section">
           <!-- Formulario de carga de archivo -->
           <div class="document-upload-form">
             <div class="form-row">
-              <label>Seleccionar archivo</label>
+              <label>{{ 'PROJECTS.SELECT_FILE' | translate }}</label>
               <div class="file-input-wrapper">
                 <input type="file" 
                        #fileInputDetail
@@ -459,17 +459,17 @@
                        (change)="onDetailDocumentSelected($event)"
                        accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
                 <button class="btn-round btn-secondary" (click)="fileInputDetail.click()">
-                  📁 Seleccionar archivo
+                  📁 {{ 'PROJECTS.SELECT_FILE_BTN' | translate }}
                 </button>
-                <span class="file-name">{{ detailFileInput?.name || 'Sin archivo seleccionado' }}</span>
+                <span class="file-name">{{ detailFileInput?.name || ('PROJECTS.NO_FILE_SELECTED' | translate) }}</span>
               </div>
             </div>
 
             <div class="form-row">
-              <label>Descripción del documento</label>
+              <label>{{ 'PROJECTS.DOCUMENT_DESCRIPTION' | translate }}</label>
               <textarea 
                 [(ngModel)]="detailFileDescription"
-                placeholder="Descripción (opcional)"
+                placeholder="{{ 'PROJECTS.DOCUMENT_DESCRIPTION_PLACEHOLDER' | translate }}"
                 rows="2"
                 class="doc-description-textarea"></textarea>
             </div>
@@ -478,14 +478,14 @@
               <button class="btn-round btn-primary" 
                       (click)="addDetailDocument()"
                       [disabled]="!detailFileInput">
-                ➕ Agregar documento
+                ➕ {{ 'PROJECTS.ADD_DOCUMENT' | translate }}
               </button>
             </div>
           </div>
 
           <!-- Documentos cargados -->
           <div *ngIf="!projectDocumentsFromCreation || projectDocumentsFromCreation.length === 0" class="empty-list-msg">
-            Sin documentos cargados
+            {{ 'PROJECTS.NO_DOCUMENTS_LOADED' | translate }}
           </div>
 
           <div *ngIf="projectDocumentsFromCreation && projectDocumentsFromCreation.length > 0" class="project-documents-grid">
@@ -511,7 +511,7 @@
                        style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
                   <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder image">
                     <mat-icon>image</mat-icon>
-                    <p>Cargando imagen...</p>
+                    <p>{{ 'PROJECTS.LOADING_IMAGE' | translate }}</p>
                   </div>
                 </div>
                 
@@ -523,7 +523,7 @@
                           frameborder="0"></iframe>
                   <div *ngIf="!getDocumentPreviewUrl(doc)" class="preview-placeholder pdf">
                     <mat-icon>picture_as_pdf</mat-icon>
-                    <p>Cargando PDF...</p>
+                    <p>{{ 'PROJECTS.LOADING_PDF' | translate }}</p>
                   </div>
                 </div>
                 
@@ -542,7 +542,7 @@
                   </div>
                   <div *ngIf="!getDocumentCsvContent(doc)" class="preview-placeholder csv">
                     <mat-icon>table_chart</mat-icon>
-                    <p>Cargando CSV...</p>
+                    <p>{{ 'PROJECTS.LOADING_CSV' | translate }}</p>
                   </div>
                 </div>
                 
@@ -556,10 +556,10 @@
               <!-- Acciones bajo la preview -->
               <div class="doc-actions-below-preview">
                 <button class="btn-download-doc" (click)="downloadProjectDocument(doc.nombre)">
-                  📥 Descargar
+                  📥 {{ 'PROJECTS.DOWNLOAD' | translate }}
                 </button>
                 <button class="jh-btn jh-btn-secondary btn-delete-doc" (click)="removeProjectDocument(i)">
-                  🗑️ Eliminar documento
+                  🗑️ {{ 'PROJECTS.DELETE_DOCUMENT' | translate }}
                 </button>
               </div>
             </div>

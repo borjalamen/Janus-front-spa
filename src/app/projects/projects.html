@@ -75,8 +75,8 @@
 
         <div *ngIf="projectesFiltrats.length === 0" class="empty-state">
           <span class="empty-emoji">📂</span>
-          <p>No hay proyectos disponibles</p>
-          <p class="empty-hint">Usa la pestaña "Nuevo" para crear un proyecto</p>
+          <p>{{ 'PROJECTS.NO_PROJECTS_AVAILABLE' | translate }}</p>
+          <p class="empty-hint">{{ 'PROJECTS.NEW_PROJECT_HINT' | translate }}</p>
         </div>
       </ng-container>
 
@@ -122,7 +122,8 @@
         </button>
         <button class="new-project-tab" 
                 [class.active]="newProjectTab === 'documentos'" 
-                (click)="cambiarNewProjectTab('documentos')">
+                (click)="cambiarNewProjectTab('documentos')"
+                title="{{ 'PROJECTS.TAB_DOCUMENTOS' | translate }}">
           📂 Documentos
         </button>
       </div>
@@ -168,7 +169,7 @@
             <select
                    [(ngModel)]="editingProject.departamento"
                    (ngModelChange)="saveDraft()">
-              <option value="">Selecciona un departamento</option>
+              <option value="">{{ 'PROJECTS.SELECT_DEPARTMENT' | translate }}</option>
               <option value="Agricultura">Agricultura</option>
               <option value="Cultura">Cultura</option>
               <option value="Policía">Policía</option>
@@ -178,7 +179,7 @@
         </div>
 
         <div class="form-divider"></div>
-        <h4 class="subsection-title">URLs de Entornos</h4>
+        <h4 class="subsection-title">{{ 'PROJECTS.URLS_SECTION' | translate }}</h4>
 
         <div class="form-grid four-col">
           <div class="input-field">
@@ -272,7 +273,7 @@
             <button class="btn-remove" (click)="removeNewProjectMember(i)">✕</button>
           </div>
           <div *ngIf="newProjectMinsaitMembers.length === 0" class="empty-list-msg">
-            No hay miembros añadidos
+            {{ 'PROJECTS.NO_MEMBERS' | translate }}
           </div>
         </div>
       </div>
@@ -347,7 +348,7 @@
             </div>
           </div>
           <div *ngIf="newProjectDevMachines.length === 0" class="empty-list-msg">
-            No hay máquinas de desarrollo añadidas
+            {{ 'PROJECTS.NO_DEV_MACHINES' | translate }}
           </div>
         </div>
 
@@ -391,7 +392,7 @@
                       (click)="removeNewProjectCodeRepo(i)">✕</button>
             </div>
             <div *ngIf="newProjectCodeRepos.length === 0" class="empty-list-msg">
-              Sin repositorios
+              {{ 'PROJECTS.NO_CODE_REPOS' | translate }}
             </div>
           </div>
         </div>
@@ -422,7 +423,7 @@
                       (click)="removeNewProjectArtifactRepo(i)">✕</button>
             </div>
             <div *ngIf="newProjectArtifactRepos.length === 0" class="empty-list-msg">
-              Sin repositorios de artefactos
+              {{ 'PROJECTS.NO_ARTIFACT_REPOS' | translate }}
             </div>
           </div>
         </div>
@@ -453,7 +454,7 @@
                       (click)="removeNewProjectJenkins(i)">✕</button>
             </div>
             <div *ngIf="newProjectJenkinsList.length === 0" class="empty-list-msg">
-              Sin Jenkins configurados
+              {{ 'PROJECTS.NO_JENKINS' | translate }}
             </div>
           </div>
         </div>
@@ -494,7 +495,7 @@
                       (click)="removeNewProjectSonar(i)">✕</button>
             </div>
             <div *ngIf="newProjectSonarList.length === 0" class="empty-list-msg">
-              Sin Sonar configurado
+              {{ 'PROJECTS.NO_SONAR' | translate }}
             </div>
           </div>
         </div>
@@ -502,13 +503,14 @@
 
       <!-- Sub-tab: Documentos -->
       <div *ngIf="newProjectTab === 'documentos'" class="admin-card new-project-section section-docs-bg">
-        <h3 class="section-subtitle">📂 Documentación del Proyecto</h3>
+        <h3 class="section-subtitle">📂 {{ 'PROJECTS.DOCS_TITLE' | translate }}</h3>
+
 
         <div class="documents-section">
           <!-- Formulario de carga de archivo -->
           <div class="document-upload-form">
             <div class="form-row">
-              <label>Seleccionar archivo</label>
+              <label>{{ 'PROJECTS.SELECT_FILE' | translate }}</label>
               <div class="file-input-wrapper">
                 <input type="file" 
                        #fileInputProject
@@ -517,17 +519,17 @@
                        (change)="onDocumentSelected($event)"
                        accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
                 <button class="btn-round btn-secondary" (click)="fileInputProject.click()">
-                  📁 Seleccionar archivo
+                  📁 {{ 'PROJECTS.SELECT_FILE_BTN' | translate }}
                 </button>
-                <span class="file-name">{{ projectFileInput?.name || 'Sin archivo seleccionado' }}</span>
+                <span class="file-name">{{ projectFileInput?.name || ('PROJECTS.NO_FILE_SELECTED' | translate) }}</span>
               </div>
             </div>
 
             <div class="form-row">
-              <label>Descripción del documento</label>
+              <label>{{ 'PROJECTS.DOCUMENT_DESCRIPTION' | translate }}</label>
               <textarea 
                 [(ngModel)]="projectFileDescription"
-                placeholder="Descripción (opcional)"
+                placeholder="{{ 'PROJECTS.DOCUMENT_DESCRIPTION_PLACEHOLDER' | translate }}"
                 rows="2"
                 class="doc-description-textarea"></textarea>
             </div>
@@ -536,14 +538,14 @@
               <button class="btn-round btn-primary" 
                       (click)="addNewProjectDocument()"
                       [disabled]="!projectFileInput">
-                ➕ Agregar documento
+                ➕ {{ 'PROJECTS.ADD_DOCUMENT' | translate }}
               </button>
             </div>
           </div>
 
           <!-- Documentos cargados -->
           <div *ngIf="newProjectDocuments.length === 0" class="empty-list-msg">
-            Sin documentos cargados
+            {{ 'PROJECTS.NO_DOCUMENTS_LOADED' | translate }}
           </div>
 
           <div *ngIf="newProjectDocuments.length > 0" class="project-documents-grid">
@@ -582,7 +584,7 @@
                 <!-- CSV (mostrar como icono porque no tenemos el contenido aún) -->
                 <div *ngIf="doc.tipo === 'text/csv'" class="preview-placeholder csv">
                   <mat-icon>table_chart</mat-icon>
-                  <p>CSV - Se subirá al guardar</p>
+                  <p>{{ 'PROJECTS.CSV_UPLOAD_NOTE' | translate }}</p>
                 </div>
                 
                 <!-- OTROS ARCHIVOS -->
@@ -599,10 +601,10 @@
       <!-- Botones de acción -->
       <div class="action-buttons-right new-project-actions">
         <button class="btn-round btn-secondary" (click)="limpiarFormulario()">
-          <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" /> Limpiar
+          <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" /> {{ 'PROJECTS.LIMPIAR' | translate }}
         </button>
         <button class="btn-round btn-primary" (click)="saveProject()">
-          💾 Guardar Proyecto
+          💾 {{ 'PROJECTS.GUARDAR_PROYECTO' | translate }}
         </button>
       </div>
     </div>

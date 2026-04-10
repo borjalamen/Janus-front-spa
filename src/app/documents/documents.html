@@ -41,24 +41,26 @@
 
             <div class="doc-actions">
               <!-- Visualizar -->
-              <button
+            <button
                 class="action-btn view-btn"
                 (click)="viewDocument(project, doc)"
-                title="Visualizar">
+                title="{{ 'DOCUMENTS.VIEW' | translate }}">
                 👁️
               </button>
+                
+              
               <!-- Descargar -->
               <button
                 class="action-btn download-btn"
                 (click)="downloadDocument(project, doc)"
-                title="Descargar">
+                title="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}">
                 📥
               </button>
               <!-- Eliminar -->
               <button
                 class="action-btn delete-btn"
                 (click)="confirmDeleteDocument(project, doc)"
-                title="Eliminar">
+                title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}">
                 🗑️
               </button>
             </div>
@@ -66,7 +68,7 @@
         </div>
         
         <div *ngIf="!project.documents || project.documents.length === 0" class="no-docs">
-          <span>Sin documentos</span>
+          <span>{{ 'DOCUMENTS.NO_DOCS' | translate }}</span>
         </div>
       </div>
     </div>
@@ -74,7 +76,7 @@
   
   <div *ngIf="projectsFiltrats.length === 0" class="no-results">
     <mat-icon>folder_off</mat-icon>
-    <p>No hay proyectos</p>
+    <p>{{ 'DOCUMENTS.NO_PROJECTS' | translate }}</p>
   </div>
 </div>
 
@@ -85,25 +87,25 @@
 
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
-      <input type="number" [(ngModel)]="projectId" placeholder="ID del proyecto" />
+      <input type="number" [(ngModel)]="projectId" placeholder="{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}" />
     </div>
 
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}</label>
-      <input type="text" [(ngModel)]="name" placeholder="Nombre del documento" />
+      <input type="text" [(ngModel)]="name" placeholder="{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}" />
       <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" />
     </div>
 
     <div class="popup-actions">
-      <button class="file-btn" type="button" (click)="fileInput.click()" title="Examinar archivo">
+      <button class="file-btn" type="button" (click)="fileInput.click()" title="{{ 'DOCUMENTS.BROWSE' | translate }}">
         <img src="assets/images/File.png" alt="Archivo">
       </button>
       
       <div class="popup-actions-right">
-        <button class="cancelar-btn" (click)="toggleAddPopup()" title="Cancelar">
+        <button class="cancelar-btn" (click)="toggleAddPopup()" title="{{ 'DOCUMENTS.CANCEL' | translate }}">
           ✗
         </button>
-        <button class="guardar-btn" (click)="addDocument()" title="Guardar">
+        <button class="guardar-btn" (click)="addDocument()" title="{{ 'DOCUMENTS.SAVE' | translate }}">
           ✓
         </button>
       </div>
