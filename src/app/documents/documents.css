@@ -1,7 +1,7 @@
 body {
-  background: #0F1115;
-  color: #E0E0E0;
-  font-family: 'Roboto', Arial, sans-serif;
+  background: #0f1115;
+  color: #e0e0e0;
+  font-family: "Roboto", Arial, sans-serif;
   margin: 0;
 }
 
@@ -10,7 +10,9 @@ body {
   padding: 24px;
   background: #16181c;
   border-radius: 10px;
-  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
+  box-shadow:
+    0 2px 8px #e53935,
+    0 0 20px rgba(229, 57, 53, 0.15);
   margin: 20px;
 }
 
@@ -23,7 +25,7 @@ body {
 }
 
 .documents-header h2 {
-  color: #FBC02D;
+  color: #fbc02d;
   font-weight: bold;
   margin: 0;
 }
@@ -34,7 +36,7 @@ body {
   border-radius: 999px;
   border: 0;
   background: transparent;
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-weight: bold;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -42,8 +44,11 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 20px;
-  transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
@@ -81,7 +86,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 16px;
   box-sizing: border-box;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -140,7 +148,7 @@ body {
 }
 
 .project-id-value {
-  color: #FBC02D;
+  color: #fbc02d;
   font-weight: 700;
   font-size: 14px;
 }
@@ -196,7 +204,7 @@ body {
 }
 
 .doc-name {
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
@@ -216,8 +224,11 @@ body {
   background: transparent;
   cursor: pointer;
   font-size: 18px;
-  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
-  color: #E0E0E0;
+  transition:
+    background 0.12s ease,
+    transform 0.12s ease,
+    color 0.12s ease;
+  color: #e0e0e0;
 }
 
 .action-btn:hover {
@@ -292,8 +303,10 @@ body {
   width: 480px !important;
   max-height: 80vh !important;
   overflow: auto !important;
-  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
-  border: 2px solid #FBC02D !important;
+  box-shadow:
+    0 0 30px rgba(251, 192, 45, 0.4),
+    0 0 50px rgba(251, 192, 45, 0.2) !important;
+  border: 2px solid #fbc02d !important;
 }
 
 .popup-container h3 {
@@ -335,9 +348,28 @@ body {
   transition: border-color 0.2s ease;
 }
 
+/* Select del popup (projectes) */
+.form-field select {
+  background: #141516 !important;
+  color: #eee !important;
+  border: 1px solid #2e3236 !important;
+  padding: 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+/* separació inputs/select */
+.form-field input,
+.form-field select {
+  margin-top: 2px;
+}
+
 .form-field input:focus,
-.form-field textarea:focus {
-  border-color: #FBC02D !important;
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #fbc02d !important;
 }
 
 .form-field input::placeholder,
@@ -373,7 +405,9 @@ body {
 .file-btn:hover {
   transform: scale(1.15) translateY(-2px);
   background: linear-gradient(145deg, #1e84a3, #155f7a) !important;
-  box-shadow: 0 6px 16px rgba(30, 132, 163, 0.6), 0 0 20px rgba(30, 132, 163, 0.5) !important;
+  box-shadow:
+    0 6px 16px rgba(30, 132, 163, 0.6),
+    0 0 20px rgba(30, 132, 163, 0.5) !important;
 }
 
 .file-btn:active {
@@ -422,26 +456,30 @@ body {
 }
 
 .guardar-btn {
-  color: #4CAF50 !important;
+  color: #4caf50 !important;
 }
 
 .guardar-btn:hover {
   background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+  box-shadow:
+    0 6px 16px rgba(76, 175, 80, 0.6),
+    0 0 20px rgba(76, 175, 80, 0.5) !important;
 }
 
 .cancelar-btn {
-  color: #E53935 !important;
+  color: #e53935 !important;
 }
 
 .cancelar-btn:hover {
-  background: linear-gradient(145deg, #E53935, #c62828) !important;
+  background: linear-gradient(145deg, #e53935, #c62828) !important;
   color: #fff !important;
-  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+  box-shadow:
+    0 6px 16px rgba(229, 57, 53, 0.6),
+    0 0 20px rgba(229, 57, 53, 0.4) !important;
 }
 
-/* ===== IMAGE POPUP (igual que Bitacora Steps) ===== */
+/* ===== IMAGE POPUP ===== */
 .image-popup-backdrop {
   position: fixed;
   inset: 0;
@@ -490,4 +528,43 @@ body {
 
 .image-popup-close-btn:hover {
   background: rgba(200, 0, 0, 0.7);
+}
+
+/* ========================= */
+/*        TOAST GLOBAL       */
+/* ========================= */
+
+.app-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #2e7d32; /* verd OK */
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 3000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-toast.toast-error {
+  background: #c62828; /* vermell error */
+}
+
+/* ========================= */
+/*   VALIDACIONS FORM        */
+/* ========================= */
+
+.field-error {
+  color: #ff5252;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Nom de fitxer seleccionat al popup */
+.selected-file-name {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #bdbdbd;
 }

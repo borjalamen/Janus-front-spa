@@ -2050,6 +2050,7 @@ export class HerramientasComponent implements OnInit {
     }
     return name || code || '-';
   }
+  
 
   private getEmptyTool(): Tool {
     return {
@@ -2063,6 +2064,7 @@ export class HerramientasComponent implements OnInit {
       projectsString: ''
     };
   }
+  
 }
 
 export { HerramientasComponent as Herramientas };
