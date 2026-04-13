@@ -5,7 +5,7 @@ body {
   margin: 0;
 }
 
-/* Section general con GLOW ROJO */
+/* SECTION GENERAL */
 .section-container {
   padding: 24px;
   background: #16181c;
@@ -16,7 +16,11 @@ body {
   margin: 20px;
 }
 
-/* Header documents + botó */
+.documents-wrapper {
+  position: relative;
+}
+
+/* HEADER */
 .documents-header {
   display: flex;
   justify-content: space-between;
@@ -30,12 +34,12 @@ body {
   margin: 0;
 }
 
-/* Botó estil Jenkins */
+/* BOTÓ ADD */
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 0;
-  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
   color: #e0e0e0;
   font-weight: bold;
   letter-spacing: 0.5px;
@@ -48,38 +52,25 @@ body {
     background 0.2s ease,
     color 0.2s ease,
     transform 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #ffd54f;
-  transform: translateY(-2px);
-}
-
-/* Estilo específico para el botón principal de añadir */
-.documents-header .jenkins-add-btn {
-  border: 2px solid rgba(255, 255, 255, 0.04);
-  background: #0f1113;
-}
-
-.documents-header .jenkins-add-btn:hover {
   border-color: #ffd54f;
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-4px) scale(1.02);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* ========================= */
-/*   LISTA DE PROJECTES      */
-/* ========================= */
-
+/* LLISTA PROJECTES */
 .projects-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Project card como lista */
 .project-container {
   background: #0f1113;
   border-radius: 10px;
@@ -101,7 +92,6 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Icono carpeta a la izquierda */
 .project-icon {
   display: flex;
   align-items: center;
@@ -114,13 +104,12 @@ body {
 }
 
 .project-icon .folder-img {
-  width: 64px !important;
-  height: 64px !important;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   display: block;
 }
 
-/* Info del proyecto */
 .project-info {
   flex: 1;
   min-width: 0;
@@ -132,6 +121,7 @@ body {
 .project-header-line {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -140,17 +130,7 @@ body {
   display: flex;
   align-items: baseline;
   gap: 8px;
-}
-
-.project-id-label {
-  color: #888;
-  font-size: 12px;
-}
-
-.project-id-value {
-  color: #fbc02d;
-  font-weight: 700;
-  font-size: 14px;
+  cursor: pointer;
 }
 
 .project-name-label {
@@ -164,7 +144,7 @@ body {
   font-size: 16px;
 }
 
-/* Lista de documentos */
+/* DOCUMENTS */
 .documents-list {
   display: flex;
   flex-direction: column;
@@ -196,8 +176,8 @@ body {
 }
 
 .doc-info .file-img {
-  width: 28px !important;
-  height: 28px !important;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   flex-shrink: 0;
   display: block;
@@ -216,7 +196,7 @@ body {
   gap: 4px;
 }
 
-/* Botones de acción (estilo procedimientos) */
+/* BOTONS ACCIONS */
 .action-btn {
   padding: 6px 10px;
   border-radius: 6px;
@@ -244,15 +224,11 @@ body {
   color: #81c784;
 }
 
-.edit-btn:hover {
-  color: #ffd54f;
-}
-
 .delete-btn:hover {
   color: #ff5252;
 }
 
-/* No docs / no results */
+/* ESTATS BUITS */
 .no-docs {
   color: #666;
   font-size: 13px;
@@ -269,7 +245,7 @@ body {
   font-size: 64px;
   width: 64px;
   height: 64px;
-  color: #444 !important;
+  color: #444;
   margin-bottom: 16px;
 }
 
@@ -278,35 +254,31 @@ body {
   font-size: 16px;
 }
 
-/* ========================= */
-/*           POPUPS          */
-/* ========================= */
-
+/* POPUPS */
 .popup-fons {
   position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85) !important;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2147483000 !important;
+  z-index: 2000;
+  padding: 16px;
 }
 
 .popup-container {
-  background: #0f1113 !important;
-  color: #eee !important;
-  padding: 22px !important;
-  border-radius: 8px !important;
-  width: 480px !important;
-  max-height: 80vh !important;
-  overflow: auto !important;
+  background: #0f1113;
+  color: #eee;
+  padding: 22px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow: auto;
   box-shadow:
     0 0 30px rgba(251, 192, 45, 0.4),
-    0 0 50px rgba(251, 192, 45, 0.2) !important;
-  border: 2px solid #fbc02d !important;
+    0 0 50px rgba(251, 192, 45, 0.2);
+  border: 2px solid #fbc02d;
 }
 
 .popup-container h3 {
@@ -337,53 +309,41 @@ body {
 }
 
 .form-field input,
-.form-field textarea {
-  background: #141516 !important;
-  color: #eee !important;
-  border: 1px solid #2e3236 !important;
-  padding: 10px !important;
-  border-radius: 6px !important;
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  background: #141516;
+  color: #eee;
+  border: 1px solid #2e3236;
+  padding: 10px;
+  border-radius: 6px;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease;
-}
-
-/* Select del popup (projectes) */
-.form-field select {
-  background: #141516 !important;
-  color: #eee !important;
-  border: 1px solid #2e3236 !important;
-  padding: 10px !important;
-  border-radius: 6px !important;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-/* separació inputs/select */
-.form-field input,
-.form-field select {
-  margin-top: 2px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
-  border-color: #fbc02d !important;
+  border-color: #fbc02d;
+  box-shadow: 0 0 0 3px rgba(251, 192, 45, 0.15);
 }
 
 .form-field input::placeholder,
 .form-field textarea::placeholder {
-  color: #7c8084 !important;
+  color: #7c8084;
 }
 
-/* Botón examinar archivo */
+/* BOTÓ FITXER */
 .file-btn {
-  background: transparent !important;
-  color: #999 !important;
-  border: 0 !important;
-  padding: 8px !important;
-  border-radius: 8px !important;
+  background: transparent;
+  color: #999;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   min-width: 48px;
@@ -403,21 +363,19 @@ body {
 }
 
 .file-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-  background: linear-gradient(145deg, #1e84a3, #155f7a) !important;
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #1e84a3, #155f7a);
   box-shadow:
     0 6px 16px rgba(30, 132, 163, 0.6),
-    0 0 20px rgba(30, 132, 163, 0.5) !important;
+    0 0 20px rgba(30, 132, 163, 0.5);
 }
 
-.file-btn:active {
-  transform: scale(0.95);
-}
-
+/* ACCIONS POPUP */
 .popup-actions {
   display: flex;
   gap: 12px;
   justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -428,11 +386,10 @@ body {
 
 .cancelar-btn,
 .guardar-btn {
-  background: transparent !important;
-  color: #999 !important;
-  border: 0 !important;
-  padding: 8px !important;
-  border-radius: 8px !important;
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   font-size: 28px;
@@ -447,39 +404,34 @@ body {
 
 .cancelar-btn:hover,
 .guardar-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-}
-
-.cancelar-btn:active,
-.guardar-btn:active {
-  transform: scale(0.95);
+  transform: scale(1.12) translateY(-2px);
 }
 
 .guardar-btn {
-  color: #4caf50 !important;
+  color: #4caf50;
 }
 
 .guardar-btn:hover {
-  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
-  color: #fff !important;
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c);
+  color: #fff;
   box-shadow:
     0 6px 16px rgba(76, 175, 80, 0.6),
-    0 0 20px rgba(76, 175, 80, 0.5) !important;
+    0 0 20px rgba(76, 175, 80, 0.5);
 }
 
 .cancelar-btn {
-  color: #e53935 !important;
+  color: #e53935;
 }
 
 .cancelar-btn:hover {
-  background: linear-gradient(145deg, #e53935, #c62828) !important;
-  color: #fff !important;
+  background: linear-gradient(145deg, #e53935, #c62828);
+  color: #fff;
   box-shadow:
     0 6px 16px rgba(229, 57, 53, 0.6),
-    0 0 20px rgba(229, 57, 53, 0.4) !important;
+    0 0 20px rgba(229, 57, 53, 0.4);
 }
 
-/* ===== IMAGE POPUP ===== */
+/* IMAGE POPUP */
 .image-popup-backdrop {
   position: fixed;
   inset: 0;
@@ -487,7 +439,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 2100;
 }
 
 .image-popup-container {
@@ -530,41 +482,93 @@ body {
   background: rgba(200, 0, 0, 0.7);
 }
 
-/* ========================= */
-/*        TOAST GLOBAL       */
-/* ========================= */
-
+/* TOAST */
 .app-toast {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #2e7d32; /* verd OK */
-  color: #ffffff;
+  left: auto;
+  bottom: auto;
+  width: auto;
+  max-width: 420px;
+  min-width: 220px;
+  height: auto;
   padding: 10px 16px;
+  background: #2e7d32;
+  color: #ffffff;
   border-radius: 8px;
   font-size: 14px;
-  z-index: 3000;
+  line-height: 1.4;
+  z-index: 5000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
 }
 
 .app-toast.toast-error {
-  background: #c62828; /* vermell error */
+  background: #c62828;
 }
 
-/* ========================= */
-/*   VALIDACIONS FORM        */
-/* ========================= */
-
+/* VALIDACIONS */
 .field-error {
   color: #ff5252;
   font-size: 12px;
   margin-top: 4px;
 }
 
-/* Nom de fitxer seleccionat al popup */
 .selected-file-name {
   margin-top: 4px;
   font-size: 12px;
   color: #bdbdbd;
+  word-break: break-word;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .section-container {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .documents-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .project-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .project-icon .folder-img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .document-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doc-actions {
+    justify-content: flex-end;
+  }
+
+  .popup-container {
+    max-width: 100%;
+  }
+
+  .app-toast {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+    min-width: 0;
+  }
 }

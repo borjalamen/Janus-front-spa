@@ -1,12 +1,15 @@
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
-
+<!-- TOAST FORA DE TOT -->
 <div class="app-toast" *ngIf="toastMsg" [class.toast-error]="!toastOk">
   {{ toastMsg }}
 </div>
 
+<!-- Buscador -->
+<app-buscador (buscar)="filtrar($event)"></app-buscador>
+
 <div class="section-container documents-wrapper">
   <div class="documents-header">
     <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
+
     <button class="jenkins-add-btn" (click)="toggleAddPopup()">
       <mat-icon inline="true">add</mat-icon>
       <span>{{ 'DOCUMENTS.ADD_BUTTON' | translate }}</span>
@@ -21,11 +24,11 @@
 
       <div class="project-info">
         <div class="project-header-line">
-          <div class="project-details">
-            <span class="project-name-label"
-              >{{ 'DOCUMENTS.PROJECT_NAME' | translate }}:</span
-            >
-            <span class="project-name-value">{{ project.name }}</span>
+          <div class="project-details" (click)="selectProject(project)">
+            <span class="project-name-label">
+              {{ 'DOCUMENTS.PROJECT_NAME' | translate }}:
+            </span>
+            <span class="project-name-value"> {{ project.name }} </span>
           </div>
 
           <button
@@ -95,6 +98,7 @@
   </div>
 </div>
 
+<!-- POPUP AFEGIR DOCUMENT -->
 <div class="popup-fons" *ngIf="showAddPopup" (click)="toggleAddPopup()">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>{{ 'DOCUMENTS.ADD_POPUP_TITLE' | translate }}</h3>
@@ -102,17 +106,10 @@
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
 
-      <input
-        type="number"
-        [(ngModel)]="projectId"
-        (input)="validateProjectId()"
-        placeholder="{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}"
-      />
-
       <select [(ngModel)]="projectId" (change)="onProjectChange()">
-        <option [ngValue]="''" disabled>Selecciona un proyecto</option>
+        <option [ngValue]="''" disabled>Selecciona un projecte</option>
         <option *ngFor="let p of projects" [ngValue]="p.projectId">
-          {{ p.projectId }} - {{ p.name }}
+          {{ p.name }}
         </option>
       </select>
 
@@ -161,6 +158,7 @@
         >
           ✗
         </button>
+
         <button
           class="guardar-btn"
           (click)="addDocument()"
@@ -173,6 +171,7 @@
   </div>
 </div>
 
+<!-- POPUP ELIMINAR DOCUMENT -->
 <div
   class="popup-fons"
   *ngIf="deleteDocPopupOpen && docToDelete"
@@ -199,6 +198,7 @@
   </div>
 </div>
 
+<!-- POPUP ELIMINAR PROJECTE -->
 <div
   class="popup-fons"
   *ngIf="deleteProjectPopupOpen && projectToDelete"
@@ -225,6 +225,7 @@
   </div>
 </div>
 
+<!-- POPUP PREVIEW IMATGE -->
 <div
   class="image-popup-backdrop"
   *ngIf="imagePreviewPopupOpen && imagePreviewUrl"
