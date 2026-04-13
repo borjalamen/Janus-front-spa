@@ -355,6 +355,15 @@
                 </button>
                 <button
                   type="button"
+                  class="list-action-btn list-edit-btn"
+                  (click)="openEditSavedEstimation(s)"
+                  aria-label="Editar estimación"
+                  title="Editar estimación"
+                >
+                  ✏️
+                </button>
+                <button
+                  type="button"
                   class="list-action-btn list-delete-btn"
                   (click)="deleteSavedEstimation(s.id)"
                   [attr.aria-label]="'ESTIMATION.LIST_DELETE' | translate"
@@ -469,4 +478,60 @@
       </div>
     </mat-tab>
   </mat-tab-group>
+
+  <div class="est-modal-backdrop" *ngIf="showEditModal" (click)="closeEditSavedEstimation()">
+    <div class="est-modal" (click)="$event.stopPropagation()">
+      <h3>Editar estimación</h3>
+
+      <div class="est-modal-grid">
+        <div class="est-modal-field">
+          <label>Nombre</label>
+          <input type="text" [(ngModel)]="editDraft.estimationName" />
+        </div>
+
+        <div class="est-modal-field">
+          <label>Código de proyecto</label>
+          <input type="text" [(ngModel)]="editDraft.projectCode" />
+        </div>
+
+        <div class="est-modal-field">
+          <label>Proyecto</label>
+          <input type="text" [(ngModel)]="editDraft.projectName" />
+        </div>
+
+        <div class="est-modal-field">
+          <label>Solicitante</label>
+          <input type="text" [(ngModel)]="editDraft.requester" />
+        </div>
+
+        <div class="est-modal-field full">
+          <label>Email solicitante</label>
+          <input type="text" [(ngModel)]="editDraft.requesterEmail" />
+        </div>
+
+        <div class="est-modal-field full">
+          <label>Notas</label>
+          <textarea rows="4" [(ngModel)]="editDraft.notes"></textarea>
+        </div>
+      </div>
+
+      <div class="est-modal-actions action-buttons">
+        <button
+          type="button"
+          class="btn-emoji cancel"
+          (click)="closeEditSavedEstimation()"
+          title="Cancelar"
+          aria-label="Cancelar"
+        >✗</button>
+        <button
+          type="button"
+          class="btn-emoji confirm"
+          (click)="saveEditedEstimation()"
+          [disabled]="isEditSaving"
+          [title]="isEditSaving ? 'Guardando...' : 'Guardar cambios'"
+          [attr.aria-label]="isEditSaving ? 'Guardando...' : 'Guardar cambios'"
+        >✓</button>
+      </div>
+    </div>
+  </div>
 </div>

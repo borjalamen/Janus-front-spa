@@ -658,6 +658,17 @@
   color: #ff9e9e;
 }
 
+.list-edit-btn {
+  color: #8fd9ff;
+}
+
+.list-edit-btn:hover {
+  color: #d7f2ff;
+  background: rgba(23, 162, 184, 0.16);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(23, 162, 184, 0.28);
+}
+
 .list-delete-btn:hover {
   color: #ffd9d9;
   background: rgba(229, 57, 53, 0.16);
@@ -1098,6 +1109,141 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+}
+
+.est-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(4, 7, 10, 0.76);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.est-modal {
+  width: min(760px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  background: #101317;
+  border: 2px solid #FBC02D;
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 22px 50px rgba(0, 0, 0, 0.55);
+  padding: 18px;
+}
+
+.est-modal h3 {
+  margin: 0 0 14px;
+  color: #ffd54f;
+  font-size: 1.08rem;
+}
+
+.est-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.est-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.est-modal-field.full {
+  grid-column: 1 / -1;
+}
+
+.est-modal-field label {
+  color: #9bb3bd;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.est-modal-field input,
+.est-modal-field textarea {
+  width: 100%;
+  background: #161a1f;
+  border: 1px solid #2e3740;
+  border-radius: 9px;
+  color: #dfe9ed;
+  padding: 10px 11px;
+  font-size: 0.92rem;
+}
+
+.est-modal-field textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+
+.est-modal-field input:focus,
+.est-modal-field textarea:focus {
+  outline: none;
+  border-color: #FBC02D;
+  box-shadow: 0 0 0 2px rgba(251, 192, 45, 0.22);
+}
+
+.est-modal-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-emoji {
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.btn-emoji.cancel {
+  color: #E53935;
+}
+
+.btn-emoji.cancel:hover {
+  background: linear-gradient(145deg, #E53935, #c62828);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6);
+}
+
+.btn-emoji.confirm {
+  color: #4CAF50;
+}
+
+.btn-emoji.confirm:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6);
+}
+
+.btn-emoji[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .est-modal-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .comment-send-btn:hover {
