@@ -8,15 +8,17 @@ import { forkJoin, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 
 import { BuscadorComponent } from "../buscador/buscador";
-import { DocumentService, BackendDocument } from "../document.service";
+import { DocumentService } from "../document.service";
 import { ProjectService, Project as BackendProject } from "../project.service";
 import { LocalStorageService } from "../local-storage.service";
+
+type DocItem = any;
 
 interface ProjectView {
   projectId: string | number;
   name: string;
   date: string;
-  documents: BackendDocument[];
+  documents: DocItem[];
 }
 
 @Component({
@@ -56,11 +58,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   fileError = "";
 
   deleteDocPopupOpen = false;
-  docToDelete: { project: ProjectView; document: BackendDocument } | null =
-    null;
-
-  deleteProjectPopupOpen = false;
-  projectToDelete: ProjectView | null = null;
+  docToDelete: { project: ProjectView; document: DocItem } | null = null;
 
   imagePreviewPopupOpen = false;
   imagePreviewUrl: string | null = null;
@@ -112,97 +110,69 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     savedFilter: string,
     savedSelected: string | null,
   ): void {
-    forkJoin({
-      folders: this.documentService.getAllFolders().pipe(
-        catchError((err) => {
-          console.error("Error carregant carpetes", err);
-          return of([] as Array<string | number>);
-        }),
-      ),
-      projects: this.projectService.getAll().pipe(
-        catchError((err) => {
-          console.error("Error carregant projectes", err);
-          return of([] as BackendProject[]);
-        }),
-      ),
-    }).subscribe(({ folders, projects }) => {
-      const nameMap = this.buildProjectNameMap(projects || []);
+    this.projectService.getAll().subscribe({
+      next: (projects: BackendProject[]) => {
+        const realProjects = (projects || []).filter((p) => !!p.id);
 
-      const projectIdsFromProjects = (projects || [])
-        .map((p) => p.id)
-        .filter((id): id is string => !!id);
+        if (realProjects.length === 0) {
+          this.projects = [];
+          this.projectsFiltrats = [];
+          this.selectedProjectId = null;
+          return;
+        }
 
-      const projectIdsFromFolders = (folders || []).map((f) => String(f));
+        const requests = realProjects.map((p) =>
+          this.documentService.getAllFiles(String(p.id)).pipe(
+            map((files: any[]) => ({
+              projectId: String(p.id),
+              name: p.nombre || p.codigoProyecto || String(p.id),
+              date: "",
+              documents: Array.isArray(files) ? files : [],
+            })),
+            catchError((err: unknown) => {
+              console.error(
+                `Error carregant documents del projecte ${p.id}`,
+                err,
+              );
+              return of({
+                projectId: String(p.id),
+                name: p.nombre || p.codigoProyecto || String(p.id),
+                date: "",
+                documents: [],
+              } as ProjectView);
+            }),
+          ),
+        );
 
-      const allIds = Array.from(
-        new Set([...projectIdsFromProjects, ...projectIdsFromFolders]),
-      );
+        forkJoin(requests).subscribe((projectsWithDocs: ProjectView[]) => {
+          this.projects = projectsWithDocs;
+          this.projectsFiltrats = [...projectsWithDocs];
 
-      if (allIds.length === 0) {
+          if (savedFilter && savedFilter.trim()) {
+            this.filtrar(savedFilter);
+          }
+
+          if (savedSelected != null) {
+            const found = this.projects.find(
+              (p) => String(p.projectId) === String(savedSelected),
+            );
+
+            if (found) {
+              this.selectedProjectId = found.projectId;
+            } else {
+              this.selectedProjectId = null;
+              this.storage.set(this.STORAGE_KEY_SELECTED, "");
+            }
+          }
+        });
+      },
+      error: (err: unknown) => {
+        console.error("Error carregant projectes", err);
         this.projects = [];
         this.projectsFiltrats = [];
         this.selectedProjectId = null;
-        return;
-      }
-
-      const requests = allIds.map((id) =>
-        this.documentService.getAllFiles(id).pipe(
-          map((files: BackendDocument[]) => ({
-            projectId: id,
-            name: nameMap.get(String(id)) || `Project ${id}`,
-            date: "",
-            documents: files || [],
-          })),
-          catchError((err) => {
-            console.error(`Error carregant documents del projecte ${id}`, err);
-            return of({
-              projectId: id,
-              name: nameMap.get(String(id)) || `Project ${id}`,
-              date: "",
-              documents: [],
-            } as ProjectView);
-          }),
-        ),
-      );
-
-      forkJoin(requests).subscribe((projectsWithDocs) => {
-        this.projects = projectsWithDocs;
-        this.projectsFiltrats = [...projectsWithDocs];
-
-        if (savedFilter && savedFilter.trim()) {
-          this.filtrar(savedFilter);
-        }
-
-        if (savedSelected != null) {
-          const found = this.projects.find(
-            (p) => String(p.projectId) === String(savedSelected),
-          );
-
-          if (found) {
-            this.selectedProjectId = found.projectId;
-          } else {
-            this.selectedProjectId = null;
-            this.storage.set(this.STORAGE_KEY_SELECTED, "");
-          }
-        }
-      });
+      },
     });
-  }
-
-  private buildProjectNameMap(projects: BackendProject[]): Map<string, string> {
-    const map = new Map<string, string>();
-
-    projects.forEach((p) => {
-      if (p.id) {
-        map.set(String(p.id), p.nombre || p.codigoProyecto || String(p.id));
-      }
-
-      if (p.codigoProyecto) {
-        map.set(String(p.codigoProyecto), p.nombre || p.codigoProyecto);
-      }
-    });
-
-    return map;
   }
 
   loadProjects(): void {
@@ -288,213 +258,129 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   selectProject(project: ProjectView): void {
     this.selectedProjectId = project.projectId;
-    this.storage.set(this.STORAGE_KEY_SELECTED, String(project.projectId));
+    this.storage.set(
+      this.STORAGE_KEY_SELECTED,
+      String(this.selectedProjectId ?? ""),
+    );
   }
 
-  /**
-   * Pujar document al projecte
-   */
   addDocument(): void {
-    this.projectError = "";
-    this.fileError = "";
-
     const validProject = this.validateProjectId();
 
     if (!this.selectedFile) {
       this.fileError = "Debes seleccionar un archivo";
+    } else {
+      this.fileError = "";
     }
 
     if (!validProject || !this.selectedFile) {
-      this.showToast("Revisa los campos obligatorios", false);
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", this.selectedFile);
-    formData.append("descripcion", "");
-
-    this.projectService
-      .uploadProjectDocument(String(this.projectId), formData)
+    this.documentService
+      .uploadDocument(String(this.projectId), this.selectedFile)
       .subscribe({
-        next: (response: any) => {
-          console.log("Documento subido al proyecto", response);
-
-          const targetProject = this.projects.find(
-            (p) => String(p.projectId) === String(this.projectId),
-          );
-
-          if (targetProject && response?.document) {
-            targetProject.documents = [
-              ...(targetProject.documents || []),
-              response.document,
-            ];
-          }
-
-          this.projectsFiltrats = [...this.projects];
-
-          this.showToast("Documento subido correctamente al proyecto", true);
+        next: () => {
+          this.showToast("Documento subido correctamente", true);
           this.toggleAddPopup();
           this.loadProjects();
         },
-        error: (err) => {
-          console.error("Error subiendo documento al proyecto", err);
-          this.showToast("Error al subir el documento al proyecto", false);
+        error: (err: unknown) => {
+          console.error("Error subiendo documento", err);
+          this.showToast("Error al subir el documento", false);
         },
       });
   }
 
-  confirmDeleteDocument(project: ProjectView, doc: BackendDocument): void {
-    this.docToDelete = { project, document: doc };
+  confirmDeleteDocument(project: ProjectView, document: DocItem): void {
+    this.docToDelete = { project, document };
     this.deleteDocPopupOpen = true;
   }
 
   cancelDeleteDocument(): void {
-    this.deleteDocPopupOpen = false;
     this.docToDelete = null;
+    this.deleteDocPopupOpen = false;
   }
 
-  /**
-   * Esborrar document del projecte
-   */
   deleteDocument(): void {
     if (!this.docToDelete) return;
 
     const { project, document } = this.docToDelete;
+    const fileName = this.extractFileName(document);
 
-    // Fem servir el mateix nom que veus al popup
-    const displayName = this.resolveDocumentName(document);
-
-    if (!displayName) {
-      console.error("No s'ha pogut determinar el nom del fitxer per esborrar");
-      this.showToast("Error al eliminar el documento", false);
-      return;
-    }
-
-    this.projectService
-      .deleteProjectDocument(String(project.projectId), displayName)
+    this.documentService
+      .deleteDocument(String(project.projectId), fileName)
       .subscribe({
         next: () => {
-          // Traiem-lo de la llista local
-          project.documents = (project.documents || []).filter(
-            (d) => this.resolveDocumentName(d) !== displayName,
-          );
-
-          this.projectsFiltrats = [...this.projects];
-
-          this.loadProjects();
-          this.cancelDeleteDocument();
           this.showToast("Documento eliminado correctamente", true);
+          this.cancelDeleteDocument();
+          this.loadProjects();
         },
-        error: (err) => {
-          console.error("Error esborrant document (projecte)", err);
+        error: (err: unknown) => {
+          console.error("Error eliminando documento", err);
           this.showToast("Error al eliminar el documento", false);
         },
       });
   }
 
-  confirmDeleteProject(project: ProjectView): void {
-    this.projectToDelete = project;
-    this.deleteProjectPopupOpen = true;
+  viewDocument(project: ProjectView, doc: DocItem): void {
+    const fileName = this.extractFileName(doc);
+
+    this.documentService
+      .getFile(String(project.projectId), fileName)
+      .subscribe({
+        next: (blob: Blob) => {
+          const mime = this.getMimeType(doc, blob);
+
+          if (mime.startsWith("image/")) {
+            this.releaseImagePreviewUrl();
+            this.imagePreviewUrl = URL.createObjectURL(blob);
+            this.imagePreviewName = this.resolveDocumentName(doc);
+            this.imagePreviewPopupOpen = true;
+            return;
+          }
+
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+          }, 10000);
+        },
+        error: (err: unknown) => {
+          console.error("Error visualizando documento", err);
+          this.showToast("Error al abrir el documento", false);
+        },
+      });
   }
 
-  cancelDeleteProject(): void {
-    this.deleteProjectPopupOpen = false;
-    this.projectToDelete = null;
-  }
+  downloadDocument(project: ProjectView, doc: DocItem): void {
+    const fileName = this.extractFileName(doc);
 
-  deleteProject(): void {
-    if (!this.projectToDelete) return;
-
-    const id = this.projectToDelete.projectId;
-
-    this.documentService.deleteProjectFiles(id).subscribe({
-      next: () => {
-        this.projects = this.projects.filter(
-          (p) => String(p.projectId) !== String(id),
-        );
-        this.projectsFiltrats = this.projectsFiltrats.filter(
-          (p) => String(p.projectId) !== String(id),
-        );
-
-        if (
-          this.selectedProjectId &&
-          String(this.selectedProjectId) === String(id)
-        ) {
-          this.selectedProjectId = null;
-          this.storage.set(this.STORAGE_KEY_SELECTED, "");
-        }
-
-        this.cancelDeleteProject();
-        this.showToast("Proyecto eliminado correctamente", true);
-      },
-      error: (err) => {
-        console.error("Error esborrant projecte", err);
-        this.showToast("Error al eliminar el proyecto", false);
-      },
-    });
-  }
-
-  viewDocument(project: ProjectView, doc: BackendDocument): void {
-    this.documentService.downloadFile(project.projectId, doc).subscribe({
-      next: (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-
-        if (this.isImageDocument(blob, doc)) {
-          this.openImagePreview(url, doc);
-          return;
-        }
-
-        const newWindow = window.open(url, "_blank");
-
-        if (!newWindow) {
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = this.resolveDocumentName(doc);
-          link.click();
-        }
-
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      },
-      error: (err) => {
-        console.error("Error visualitzant document", err);
-        this.showToast("Error al visualizar el documento", false);
-      },
-    });
-  }
-
-  downloadDocument(project: ProjectView, doc: BackendDocument): void {
-    this.documentService.downloadFile(project.projectId, doc).subscribe({
-      next: (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-
-        link.href = url;
-        link.download = this.resolveDocumentName(doc);
-
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error("Error descarregant document", err);
-        this.showToast("Error al descargar el documento", false);
-      },
-    });
+    this.documentService
+      .getFile(String(project.projectId), fileName)
+      .subscribe({
+        next: (blob: Blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = this.resolveDocumentName(doc);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err: unknown) => {
+          console.error("Error descargando documento", err);
+          this.showToast("Error al descargar el documento", false);
+        },
+      });
   }
 
   closeImagePreview(): void {
     this.imagePreviewPopupOpen = false;
     this.imagePreviewName = "";
     this.releaseImagePreviewUrl();
-  }
-
-  private openImagePreview(url: string, doc: BackendDocument): void {
-    this.releaseImagePreviewUrl();
-    this.imagePreviewUrl = url;
-    this.imagePreviewName = this.resolveDocumentName(doc);
-    this.imagePreviewPopupOpen = true;
   }
 
   private releaseImagePreviewUrl(): void {
@@ -504,26 +390,77 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private isImageDocument(blob: Blob, doc: BackendDocument): boolean {
-    if (blob.type && blob.type.startsWith("image/")) {
-      return true;
-    }
-
-    const fileName = this.resolveDocumentName(doc).toLowerCase();
-    return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileName);
-  }
-
-  resolveDocumentName(doc: BackendDocument): string {
+  resolveDocumentName(doc: DocItem): string {
     if (typeof doc === "string") {
       return doc;
     }
 
-    const anyDoc = doc as any;
     return (
-      anyDoc?.name ||
-      anyDoc?.nombre ||
-      anyDoc?.path?.split("/").pop() ||
-      "document"
+      doc?.name ||
+      doc?.nombre ||
+      doc?.originalName ||
+      this.extractFileName(doc) ||
+      "Documento"
     );
+  }
+
+  private extractFileName(doc: DocItem): string {
+    if (typeof doc === "string") {
+      return doc;
+    }
+
+    const path = doc?.path || doc?.storedPath || doc?.url || "";
+
+    if (path && String(path).includes("/")) {
+      return String(path).split("/").pop() || this.fallbackDocumentName(doc);
+    }
+
+    if (path) {
+      return String(path);
+    }
+
+    return this.fallbackDocumentName(doc);
+  }
+
+  private fallbackDocumentName(doc: DocItem): string {
+    if (typeof doc === "string") {
+      return doc;
+    }
+
+    return doc?.name || doc?.nombre || doc?.originalName || "documento";
+  }
+
+  private getMimeType(doc: DocItem, blob: Blob): string {
+    if (typeof doc === "string") {
+      return blob.type || this.guessMimeFromName(doc);
+    }
+
+    return (
+      doc?.contentType ||
+      doc?.tipo ||
+      blob.type ||
+      this.guessMimeFromName(this.resolveDocumentName(doc))
+    );
+  }
+
+  private guessMimeFromName(name: string): string {
+    const lower = (name || "").toLowerCase();
+
+    if (
+      lower.endsWith(".png") ||
+      lower.endsWith(".jpg") ||
+      lower.endsWith(".jpeg") ||
+      lower.endsWith(".gif") ||
+      lower.endsWith(".webp") ||
+      lower.endsWith(".svg")
+    ) {
+      return "image/*";
+    }
+
+    if (lower.endsWith(".pdf")) {
+      return "application/pdf";
+    }
+
+    return "";
   }
 }
