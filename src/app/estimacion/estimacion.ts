@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EstimacionService } from './estimacion.service';
 
 interface Task {
   id: string;
@@ -26,6 +27,21 @@ interface EstimationComment {
   author: string;
   text: string;
   createdAt: string;
+}
+
+interface SavedEstimationRecord {
+  id: string;
+  estimationName?: string;
+  projectCode?: string;
+  projectName?: string;
+  requester?: string;
+  requesterEmail?: string;
+  notes?: string;
+  comments?: EstimationComment[];
+  weeks?: string[];
+  tasks?: Task[];
+  createdAt?: string;
+  visible?: boolean;
 }
 
 @Component({
@@ -53,7 +69,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     public liveService: LiveEstimationService,
     private snackBar: MatSnackBar,
     private translate: TranslateService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private estimacionService: EstimacionService
   ) {}
 
   weeks: string[] = ['1'];
@@ -73,12 +90,20 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   showCommentsPanel = false;
 
   // persistence
-  private STORAGE_KEY = 'estimations_v1';
   private STORAGE_KEY_DRAFT = 'estimations_form_draft_v1';
-  savedEstimations: any[] = [];
+  private readonly LEGACY_SAVED_STORAGE_KEYS = [
+    'estimations_saved_v1',
+    'estimaciones_saved_v1',
+    'estimacion_saved_v1',
+    'saved_estimaciones'
+  ];
+  savedEstimations: SavedEstimationRecord[] = [];
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
   saveButtonText = '';
+  showEditModal = false;
+  isEditSaving = false;
+  editDraft: any = {};
 
   // clear controls
   clearMeta = false;
@@ -258,18 +283,30 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   // ===== Persistence of saved estimations =====
 
+  private isPersistedBackendRecord(record: any): record is SavedEstimationRecord {
+    const id = (record?.id || '').toString().trim();
+    return !!id && record?.visible !== false;
+  }
+
+  private clearLegacySavedEstimationsStorage(): void {
+    this.LEGACY_SAVED_STORAGE_KEYS.forEach((key) => this.storage.remove(key));
+  }
+
   loadSavedEstimations() {
-    try {
-      const raw = this.storage.get(this.STORAGE_KEY);
-      this.savedEstimations = raw ? JSON.parse(raw) : [];
-    } catch (e) { this.savedEstimations = []; }
+    this.estimacionService.getAll().subscribe({
+      next: (data) => {
+        const backendRecords = Array.isArray(data) ? data : [];
+        this.savedEstimations = backendRecords.filter((record) => this.isPersistedBackendRecord(record));
+      },
+      error: (err) => {
+        console.error('Error loading estimaciones from backend:', err);
+        this.savedEstimations = [];
+      }
+    });
   }
 
   saveCurrentEstimation() {
-    this.loadSavedEstimations();
-    const id = Date.now().toString(36);
     const obj = {
-      id,
       estimationName: this.estimationName,
       projectCode: this.projectCode,
       projectName: this.projectName,
@@ -281,20 +318,29 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       tasks: JSON.parse(JSON.stringify(this.tasks)),
       createdAt: new Date().toISOString()
     };
-    this.savedEstimations.push(obj);
-    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
 
-    const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
-    this.snackBar.open(savedMsg, undefined, { duration: 2500 });
+    this.estimacionService.create(obj).subscribe({
+      next: () => {
+        this.loadSavedEstimations();
+        const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
+        this.snackBar.open(savedMsg, undefined, { duration: 2500 });
 
-    const prev = this.saveButtonText;
-    this.saveButtonText = savedMsg;
-    setTimeout(() => { this.saveButtonText = prev; }, 2000);
+        const prev = this.saveButtonText;
+        this.saveButtonText = savedMsg;
+        setTimeout(() => { this.saveButtonText = prev; }, 2000);
 
-    this.selectedTab = 1;
+        this.selectedTab = 1;
+      },
+      error: (err) => {
+        console.error('Error saving estimacion in backend:', err);
+        const msg = this.translate.instant('ESTIMATION.ERROR_SAVE') || 'No se ha podido guardar la estimación';
+        this.snackBar.open(msg, undefined, { duration: 3000 });
+      }
+    });
   }
 
   ngOnInit(): void {
+    this.clearLegacySavedEstimationsStorage();
     this.loadSavedEstimations();
     this.restoreFormDraft();
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
@@ -349,8 +395,56 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   deleteSavedEstimation(id: string) {
-    this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
-    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
+    this.estimacionService.delete(id).subscribe({
+      next: () => {
+        this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
+      },
+      error: (err) => {
+        console.error('Error deleting estimacion from backend:', err);
+      }
+    });
+  }
+
+  openEditSavedEstimation(estimation: any) {
+    this.editDraft = this.normalizeSavedEstimationForUpdate(estimation);
+    this.showEditModal = true;
+    this.isEditSaving = false;
+  }
+
+  closeEditSavedEstimation() {
+    this.showEditModal = false;
+    this.isEditSaving = false;
+    this.editDraft = {};
+  }
+
+  saveEditedEstimation() {
+    const payload = this.normalizeSavedEstimationForUpdate(this.editDraft);
+    if (!payload?.id) return;
+
+    this.isEditSaving = true;
+    this.estimacionService.update(payload.id, payload).subscribe({
+      next: () => {
+        this.isEditSaving = false;
+        this.closeEditSavedEstimation();
+        this.loadSavedEstimations();
+        this.snackBar.open('Estimación actualizada', undefined, { duration: 2200 });
+      },
+      error: (err) => {
+        this.isEditSaving = false;
+        console.error('Error updating estimacion in backend:', err);
+        this.snackBar.open('No se ha podido actualizar la estimación', undefined, { duration: 3000 });
+      }
+    });
+  }
+
+  private normalizeSavedEstimationForUpdate(source: any): any {
+    const clone = JSON.parse(JSON.stringify(source || {}));
+    clone.comments = Array.isArray(clone.comments) ? clone.comments : [];
+    clone.weeks = Array.isArray(clone.weeks) ? clone.weeks : [];
+    clone.tasks = Array.isArray(clone.tasks) ? clone.tasks : [];
+    clone.visible = clone.visible === undefined || clone.visible === null ? true : !!clone.visible;
+    clone.createdAt = clone.createdAt || new Date().toISOString();
+    return clone;
   }
 
   loadSavedIntoCurrent(id: string) {

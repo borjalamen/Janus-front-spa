@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LocalStorageService } from '../local-storage.service';
+import { ScrumService } from './scrum.service';
 
 type ScrumTask = {
   id: string;
@@ -32,7 +33,6 @@ type ScrumComment = {
   styleUrls: ['./scrum.css']
 })
 export class ScrumComponent {
-  private readonly STORAGE_TASKS_KEY = 'janus_scrum_tasks';
   private readonly STORAGE_DRAFT_KEY = 'janus_scrum_draft';
 
   tasks: ScrumTask[] = [];
@@ -55,58 +55,71 @@ export class ScrumComponent {
   commentDrafts: Record<string, string> = {};
   searchQuery = '';
 
-  constructor(private storage: LocalStorageService) {
+  constructor(
+    private storage: LocalStorageService,
+    private scrumService: ScrumService
+  ) {
     this.currentUserName = this.resolveCurrentUserName();
 
-    // carregar tasques
-    try {
-      const raw = this.storage.get(this.STORAGE_TASKS_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as any[];
-        this.tasks = parsed.map(p => {
-          const t: any = p;
-          if (t && t.priority !== undefined && t.priority !== null) {
-            if (typeof t.priority === 'string') {
-              const s = (t.priority || '').toLowerCase();
-              if (s === 'low') t.priority = 25;
-              else if (s === 'medium') t.priority = 75;
-              else if (s === 'high') t.priority = 125;
-              else {
-                const n = parseInt(t.priority, 10);
-                t.priority = isNaN(n) ? 50 : n;
-              }
-            } else if (typeof t.priority === 'number') {
-              if (t.priority < 0) t.priority = 0;
-              if (t.priority > 150) t.priority = 150;
-            }
-          } else {
-            t.priority = 50;
-          }
-          if (t.description === undefined) t.description = '';
-          if (!Array.isArray(t.comments)) {
-            if (typeof t.comments === 'string' && t.comments.trim()) {
-              t.comments = [{
-                id: this.generateCommentId(),
-                author: 'Usuario',
-                text: t.comments.trim(),
-                createdAt: new Date().toISOString()
-              }];
-            } else {
-              t.comments = [];
-            }
-          }
-          if (t.assignee === undefined) t.assignee = null;
-          if (!t.id || typeof t.id !== 'string') t.id = this.generateReadableId();
-          if (!t.color) t.color = this.pickCoolColor();
-          return t as ScrumTask;
-        });
-      }
-    } catch (e) {
-      this.tasks = [];
-    }
+    this.loadTasksFromBackend();
 
     // carregar draft del formulari
     this.restoreDraft();
+  }
+
+  private normalizeTask(raw: any): ScrumTask {
+    const t: any = { ...(raw || {}) };
+
+    if (t && t.priority !== undefined && t.priority !== null) {
+      if (typeof t.priority === 'string') {
+        const s = (t.priority || '').toLowerCase();
+        if (s === 'low') t.priority = 25;
+        else if (s === 'medium') t.priority = 75;
+        else if (s === 'high') t.priority = 125;
+        else {
+          const n = parseInt(t.priority, 10);
+          t.priority = isNaN(n) ? 50 : n;
+        }
+      } else if (typeof t.priority === 'number') {
+        if (t.priority < 0) t.priority = 0;
+        if (t.priority > 150) t.priority = 150;
+      }
+    } else {
+      t.priority = 50;
+    }
+
+    if (t.description === undefined) t.description = '';
+    if (!Array.isArray(t.comments)) {
+      if (typeof t.comments === 'string' && t.comments.trim()) {
+        t.comments = [{
+          id: this.generateCommentId(),
+          author: 'Usuario',
+          text: t.comments.trim(),
+          createdAt: new Date().toISOString()
+        }];
+      } else {
+        t.comments = [];
+      }
+    }
+
+    if (t.assignee === undefined) t.assignee = null;
+    if (!t.id || typeof t.id !== 'string') t.id = this.generateReadableId();
+    if (!t.color) t.color = this.pickCoolColor();
+    if (!t.status) t.status = 'todo';
+
+    return t as ScrumTask;
+  }
+
+  private loadTasksFromBackend() {
+    this.scrumService.getAll().subscribe({
+      next: (tasks) => {
+        this.tasks = (tasks || []).map(t => this.normalizeTask(t));
+      },
+      error: (err) => {
+        console.error('Error loading scrum tasks from backend:', err);
+        this.tasks = [];
+      }
+    });
   }
 
   // ========== AUTOSAVE FORM DRAFT ==========
@@ -178,12 +191,6 @@ export class ScrumComponent {
     return `linear-gradient(180deg, ${c1}, ${c2})`;
   }
 
-  // ========== STORAGE DE TASKS ==========
-
-  saveStore() {
-    try { this.storage.setObject(this.STORAGE_TASKS_KEY, this.tasks); } catch(e) {}
-  }
-
   // ========== CRUD ==========
 
   addTask() {
@@ -199,14 +206,21 @@ export class ScrumComponent {
       color: this.pickCoolColor(),
       status: 'todo'
     };
-    this.tasks.push(t);
-    this.newTitle = '';
-    this.newEstimate = '';
-    this.newPriority = 50;
-    this.newDescription = '';
-    this.newAssignee = null;
-    this.saveStore();
-    this.clearDraft();   // un cop afegida, netegem draft
+
+    this.scrumService.create(t as any).subscribe({
+      next: (created) => {
+        this.tasks.push(this.normalizeTask(created));
+        this.newTitle = '';
+        this.newEstimate = '';
+        this.newPriority = 50;
+        this.newDescription = '';
+        this.newAssignee = null;
+        this.clearDraft();
+      },
+      error: (err) => {
+        console.error('Error creating scrum task in backend:', err);
+      }
+    });
   }
 
   startEdit(task: ScrumTask) {
@@ -234,7 +248,15 @@ export class ScrumComponent {
     }
     t.description = (this.editBuffer.description as string) || t.description || '';
     t.assignee = (this.editBuffer.assignee as string) || null;
-    this.saveStore();
+    this.scrumService.update(t.id, t as any).subscribe({
+      next: (updated) => {
+        const idx = this.tasks.findIndex(x => x.id === t.id);
+        if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+      },
+      error: (err) => {
+        console.error('Error updating scrum task in backend:', err);
+      }
+    });
     this.cancelEdit();
   }
 
@@ -247,12 +269,26 @@ export class ScrumComponent {
     const t = this.tasks.find(x => x.id === id);
     if (!t) return;
     t.status = to;
-    this.saveStore();
+    this.scrumService.update(t.id, t as any).subscribe({
+      next: (updated) => {
+        const idx = this.tasks.findIndex(x => x.id === t.id);
+        if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+      },
+      error: (err) => {
+        console.error('Error moving scrum task in backend:', err);
+      }
+    });
   }
 
   removeTask(id: string) {
-    this.tasks = this.tasks.filter(x => x.id !== id);
-    this.saveStore();
+    this.scrumService.delete(id).subscribe({
+      next: () => {
+        this.tasks = this.tasks.filter(x => x.id !== id);
+      },
+      error: (err) => {
+        console.error('Error deleting scrum task from backend:', err);
+      }
+    });
   }
 
   tasksBy(status: ScrumTask['status']) {
@@ -305,13 +341,29 @@ export class ScrumComponent {
     if (!Array.isArray(task.comments)) task.comments = [];
     task.comments = [comment, ...task.comments];
     this.commentDrafts[task.id] = '';
-    this.saveStore();
+    this.scrumService.update(task.id, task as any).subscribe({
+      next: (updated) => {
+        const idx = this.tasks.findIndex(x => x.id === task.id);
+        if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+      },
+      error: (err) => {
+        console.error('Error saving scrum comment in backend:', err);
+      }
+    });
   }
 
   removeComment(task: ScrumTask, commentId: string) {
     if (!Array.isArray(task.comments)) return;
     task.comments = task.comments.filter(c => c.id !== commentId);
-    this.saveStore();
+    this.scrumService.update(task.id, task as any).subscribe({
+      next: (updated) => {
+        const idx = this.tasks.findIndex(x => x.id === task.id);
+        if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+      },
+      error: (err) => {
+        console.error('Error deleting scrum comment in backend:', err);
+      }
+    });
   }
 
   formatCommentDate(iso: string): string {
