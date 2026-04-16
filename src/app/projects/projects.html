@@ -1,72 +1,94 @@
 <div class="section-container projects-layout projects-top-tabs">
-  
-  <!-- Top Tabs Navigation -->
   <div class="projects-top-nav">
-    <h2 class="top-title">📁 Proyectos</h2>
+    <h2 class="top-title">📁 {{ 'PROJECTS.TITLE' | translate }}</h2>
     <div class="top-tabs-bar">
-      <button class="top-tab-btn" 
-              [class.active]="activeTab === 'LIST'" 
-              (click)="cambiarTab('LIST')">
+      <button
+        class="top-tab-btn"
+        [class.active]="activeTab === 'LIST'"
+        (click)="cambiarTab('LIST')"
+      >
         <span class="tab-emoji">📋</span> {{ 'PROJECTS.LIST_TAB' | translate }}
       </button>
-      
-      <button class="top-tab-btn" 
-              [class.active]="activeTab === 'NEW'" 
-              (click)="cambiarTab('NEW')">
+
+      <button
+        *ngIf="authService.isAdmin"
+        class="top-tab-btn"
+        [class.active]="activeTab === 'NEW'"
+        (click)="cambiarTab('NEW')"
+      >
         <span class="tab-emoji">➕</span> {{ 'PROJECTS.NEW_TAB' | translate }}
       </button>
-      
-      <button class="top-tab-btn" 
-              [class.active]="activeTab === 'IMPORT'" 
-              (click)="cambiarTab('IMPORT')">
+
+      <button
+        *ngIf="authService.isAdmin"
+        class="top-tab-btn"
+        [class.active]="activeTab === 'IMPORT'"
+        (click)="cambiarTab('IMPORT')"
+      >
         <span class="tab-emoji">📥</span> {{ 'PROJECTS.IMPORT' | translate }}
       </button>
-      
-      <button class="top-tab-btn" 
-              [class.active]="activeTab === 'STATS'" 
-              (click)="cambiarTab('STATS')">
+
+      <button
+        class="top-tab-btn"
+        [class.active]="activeTab === 'STATS'"
+        (click)="cambiarTab('STATS')"
+      >
         <span class="tab-emoji">📊</span> {{ 'PROJECTS.STATS' | translate }}
       </button>
     </div>
   </div>
 
   <div class="projects-content">
-
-    <!-- TAB: Lista de Proyectos o Detalle -->
     <div *ngIf="activeTab === 'LIST'" class="tab-content fade-in">
-      <!-- VISTA LISTA -->
       <ng-container *ngIf="!showDetailModal">
         <div class="documents-header">
           <h2>{{ 'PROJECTS.TITLE' | translate }}</h2>
         </div>
 
-        <app-buscador (buscar)="filtrar($event)" style="margin-bottom: 20px; display: block;"></app-buscador>
+        <app-buscador
+          (buscar)="filtrar($event)"
+          style="margin-bottom: 20px; display: block"
+        ></app-buscador>
 
         <div class="projects-grid">
           <div class="project-card" *ngFor="let p of projectesFiltrats">
             <div class="project-top">
               <div class="project-title">
-                {{ (p.codigoProyecto || '-') + ' | ' + (p.nombre || ( 'PROJECTS.UNTITLED' | translate)) }}
+                {{ (p.codigoProyecto || '-') + ' | ' + (p.nombre ||
+                ('PROJECTS.UNTITLED' | translate)) }}
               </div>
             </div>
+
             <div class="project-meta">
-              {{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; | &nbsp;
-              {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento || '-' }}
+              {{ 'PROJECTS.LOTE' | translate }}: {{ p.lote || '-' }} &nbsp; |
+              &nbsp; {{ 'PROJECTS.DEPARTMENT' | translate }}: {{ p.departamento
+              || '-' }}
             </div>
+
             <div class="project-actions">
-              <button class="icon-btn view"
-                      title="{{ 'PROJECTS.VIEW' | translate }}"
-                      (click)="openProjectDetail(p, 'view'); $event.stopPropagation()">
+              <button
+                class="icon-btn view"
+                title="{{ 'PROJECTS.VIEW' | translate }}"
+                (click)="openProjectDetail(p, 'view'); $event.stopPropagation()"
+              >
                 <span class="emoji-icon">👁️</span>
               </button>
-              <button class="icon-btn edit"
-                      title="{{ 'PROJECTS.EDIT' | translate }}"
-                      (click)="openProjectDetail(p, 'edit'); $event.stopPropagation()">
+
+              <button
+                *ngIf="authService.isAdmin"
+                class="icon-btn edit"
+                title="{{ 'PROJECTS.EDIT' | translate }}"
+                (click)="openProjectDetail(p, 'edit'); $event.stopPropagation()"
+              >
                 <span class="emoji-icon">✏️</span>
               </button>
-              <button class="icon-btn delete"
-                      title="{{ 'PROJECTS.DELETE' | translate }}"
-                      (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()">
+
+              <button
+                *ngIf="authService.isAdmin"
+                class="icon-btn delete"
+                title="{{ 'PROJECTS.DELETE' | translate }}"
+                (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()"
+              >
                 <span class="emoji-icon">🗑️</span>
               </button>
             </div>
@@ -76,99 +98,128 @@
         <div *ngIf="projectesFiltrats.length === 0" class="empty-state">
           <span class="empty-emoji">📂</span>
           <p>{{ 'PROJECTS.NO_PROJECTS_AVAILABLE' | translate }}</p>
-          <p class="empty-hint">{{ 'PROJECTS.NEW_PROJECT_HINT' | translate }}</p>
+          <p class="empty-hint">
+            {{ 'PROJECTS.NEW_PROJECT_HINT' | translate }}
+          </p>
         </div>
       </ng-container>
 
-      <!-- VISTA DETALLE -->
       <ng-container *ngIf="showDetailModal">
-        <app-project-detail 
-          [proyecto]="selectedProjectForDetail" 
+        <app-project-detail
+          [proyecto]="selectedProjectForDetail"
           [mode]="detailMode"
-          (close)="closeProjectDetail()">
+          (close)="closeProjectDetail()"
+        >
         </app-project-detail>
       </ng-container>
     </div>
 
-    <!-- TAB: Nuevo Proyecto -->
-    <div *ngIf="activeTab === 'NEW'" class="tab-content fade-in">
+    <div
+      *ngIf="activeTab === 'NEW' && authService.isAdmin"
+      class="tab-content fade-in"
+    >
       <div class="documents-header">
         <h2>
-          {{ editingProject.codigoProyecto ? ('PROJECTS.EDIT' | translate) : ('PROJECTS.NEW' | translate) }}
+          {{ editingProject.codigoProyecto ? ('PROJECTS.EDIT' | translate) :
+          ('PROJECTS.NEW' | translate) }}
         </h2>
       </div>
 
-      <!-- Sub-tabs para nuevo proyecto -->
       <div class="new-project-tabs">
-        <button class="new-project-tab" 
-                [class.active]="newProjectTab === 'info'" 
-                (click)="cambiarNewProjectTab('info')">
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'info'"
+          (click)="cambiarNewProjectTab('info')"
+        >
           📋 {{ 'PROJECTS.TAB_INFO' | translate }}
         </button>
-        <button class="new-project-tab" 
-                [class.active]="newProjectTab === 'minsait'" 
-                (click)="cambiarNewProjectTab('minsait')">
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'minsait'"
+          (click)="cambiarNewProjectTab('minsait')"
+        >
           👥 {{ 'PROJECTS.TAB_MINSAIT' | translate }}
         </button>
-        <button class="new-project-tab" 
-                [class.active]="newProjectTab === 'dev'" 
-                (click)="cambiarNewProjectTab('dev')">
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'dev'"
+          (click)="cambiarNewProjectTab('dev')"
+        >
           🖥️ {{ 'PROJECTS.TAB_DEV' | translate }}
         </button>
-        <button class="new-project-tab" 
-                [class.active]="newProjectTab === 'mind'" 
-                (click)="cambiarNewProjectTab('mind')">
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'mind'"
+          (click)="cambiarNewProjectTab('mind')"
+        >
           🔧 {{ 'PROJECTS.TAB_MIND' | translate }}
         </button>
-        <button class="new-project-tab" 
-                [class.active]="newProjectTab === 'documentos'" 
-                (click)="cambiarNewProjectTab('documentos')">
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'documentos'"
+          (click)="cambiarNewProjectTab('documentos')"
+        >
           📂 {{ 'PROJECTS.TAB_DOCUMENTOS' | translate }}
         </button>
       </div>
 
-      <!-- Sub-tab: Info -->
-      <div *ngIf="newProjectTab === 'info'" class="admin-card new-project-section">
-        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_GENERAL' | translate }}</h3>
-        
+      <div
+        *ngIf="newProjectTab === 'info'"
+        class="admin-card new-project-section"
+      >
+        <h3 class="section-subtitle">
+          {{ 'PROJECTS.SECTION_GENERAL' | translate }}
+        </h3>
+
         <div class="form-grid three-col">
           <div class="input-field">
             <label>{{ 'PROJECTS.CODE' | translate }} *</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.codigoProyecto"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.codigoProyecto"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.CODE_PLACEHOLDER' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.NAME' | translate }} *</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.nombre"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.nombre"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.NAME_PLACEHOLDER' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.CODIGO_IMPUTACION' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.codigoImputacion"
-                   (ngModelChange)="saveDraft()">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.codigoImputacion"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.LOTE' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.lote"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.lote"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.LOTE_PLACEHOLDER' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.DEPARTMENT' | translate }}</label>
             <select
-                   [(ngModel)]="editingProject.departamento"
-                   (ngModelChange)="saveDraft()">
-              <option value="">{{ 'PROJECTS.SELECT_DEPARTMENT' | translate }}</option>
+              [(ngModel)]="editingProject.departamento"
+              (ngModelChange)="saveDraft()"
+            >
+              <option value="">
+                {{ 'PROJECTS.SELECT_DEPARTMENT' | translate }}
+              </option>
               <option value="Agricultura">Agricultura</option>
               <option value="Cultura">Cultura</option>
               <option value="Policía">Policía</option>
@@ -178,175 +229,246 @@
         </div>
 
         <div class="form-divider"></div>
-        <h4 class="subsection-title">{{ 'PROJECTS.URLS_SECTION' | translate }}</h4>
+        <h4 class="subsection-title">
+          {{ 'PROJECTS.URLS_SECTION' | translate }}
+        </h4>
 
         <div class="form-grid four-col">
           <div class="input-field">
             <label>{{ 'PROJECTS.URL_ENTORNO_DESARROLLO' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.urlEntornoDesarrollo"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.urlEntornoDesarrollo"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.URL_ENTORNO_INTEGRACION' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.urlEntornoIntegracion"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.urlEntornoIntegracion"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.URL_ENTORNO_PREPROD' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.urlEntornoPreproduccion"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.urlEntornoPreproduccion"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.URL_ENTORNO_PRODUCCION' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.urlEntornoProduccion"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.urlEntornoProduccion"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.PLACEHOLDER_URL' | translate }}"
+            />
           </div>
         </div>
       </div>
 
-      <!-- Sub-tab: Equipo Minsait -->
-      <div *ngIf="newProjectTab === 'minsait'" class="admin-card new-project-section section-minsait-bg">
-        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MINSAIT' | translate }}</h3>
-        
+      <div
+        *ngIf="newProjectTab === 'minsait'"
+        class="admin-card new-project-section section-minsait-bg"
+      >
+        <h3 class="section-subtitle">
+          {{ 'PROJECTS.SECTION_MINSAIT' | translate }}
+        </h3>
+
         <div class="form-grid">
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.responsableProyecto"
-                   (ngModelChange)="saveDraft()">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.responsableProyecto"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
-            <input type="text"
-                   [(ngModel)]="editingProject.responsableTecnico"
-                   (ngModelChange)="saveDraft()">
+            <input
+              type="text"
+              [(ngModel)]="editingProject.responsableTecnico"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
-            <input type="time"
-                   [(ngModel)]="editingProject.horaDaily"
-                   (ngModelChange)="saveDraft()">
+            <input
+              type="time"
+              [(ngModel)]="editingProject.horaDaily"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
         </div>
 
         <div class="form-divider"></div>
         <div class="members-header">
-          <h4 class="subsection-title">{{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}</h4>
-          <button class="btn-round btn-small btn-add"
-                  (click)="addNewProjectMember()">
+          <h4 class="subsection-title">
+            {{ 'PROJECTS.MINSAIT_MEMBERS' | translate }}
+          </h4>
+          <button
+            class="btn-round btn-small btn-add"
+            (click)="addNewProjectMember()"
+          >
             + {{ 'PROJECTS.ADD_MEMBER' | translate }}
           </button>
         </div>
 
         <div class="members-list">
-          <div *ngFor="let member of newProjectMinsaitMembers; let i = index"
-               class="member-row-new">
-            <input type="text"
-                   [(ngModel)]="member.nombre"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}"
-                   class="member-input">
-            <input type="text"
-                   [(ngModel)]="member.rol"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}"
-                   class="member-input">
-            <input type="email"
-                   [(ngModel)]="member.email"
-                   (ngModelChange)="saveDraft()"
-                   placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}"
-                   class="member-input">
-            <button class="btn-remove" (click)="removeNewProjectMember(i)">✕</button>
+          <div
+            *ngFor="let member of newProjectMinsaitMembers; let i = index"
+            class="member-row-new"
+          >
+            <input
+              type="text"
+              [(ngModel)]="member.nombre"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate }}"
+              class="member-input"
+            />
+            <input
+              type="text"
+              [(ngModel)]="member.rol"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.MEMBER_ROLE_PLACEHOLDER' | translate }}"
+              class="member-input"
+            />
+            <input
+              type="email"
+              [(ngModel)]="member.email"
+              (ngModelChange)="saveDraft()"
+              placeholder="{{ 'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate }}"
+              class="member-input"
+            />
+            <button class="btn-remove" (click)="removeNewProjectMember(i)">
+              ✕
+            </button>
           </div>
-          <div *ngIf="newProjectMinsaitMembers.length === 0" class="empty-list-msg">
+
+          <div
+            *ngIf="newProjectMinsaitMembers.length === 0"
+            class="empty-list-msg"
+          >
             {{ 'PROJECTS.NO_MEMBERS' | translate }}
           </div>
         </div>
       </div>
 
-      <!-- Sub-tab: Entorno de Desarrollo -->
-      <div *ngIf="newProjectTab === 'dev'" class="admin-card new-project-section section-dev-bg">
-        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_DEV' | translate }}</h3>
+      <div
+        *ngIf="newProjectTab === 'dev'"
+        class="admin-card new-project-section section-dev-bg"
+      >
+        <h3 class="section-subtitle">
+          {{ 'PROJECTS.SECTION_DEV' | translate }}
+        </h3>
 
         <div class="members-header">
-          <h4 class="subsection-title">{{ 'PROJECTS.DEV_MACHINES' | translate }}</h4>
-          <button class="btn-round btn-small btn-add"
-                  (click)="addNewProjectDevMachine()">
+          <h4 class="subsection-title">
+            {{ 'PROJECTS.DEV_MACHINES' | translate }}
+          </h4>
+          <button
+            class="btn-round btn-small btn-add"
+            (click)="addNewProjectDevMachine()"
+          >
             + {{ 'PROJECTS.ADD_DEV_MACHINE' | translate }}
           </button>
         </div>
 
         <div class="dev-machines-list">
-          <div *ngFor="let machine of newProjectDevMachines; let i = index"
-               class="dev-machine-card-new">
+          <div
+            *ngFor="let machine of newProjectDevMachines; let i = index"
+            class="dev-machine-card-new"
+          >
             <div class="dev-machine-header">
               <span class="machine-number">#{{ i + 1 }}</span>
-              <button class="btn-remove"
-                      (click)="removeNewProjectDevMachine(i)">✕</button>
+              <button
+                class="btn-remove"
+                (click)="removeNewProjectDevMachine(i)"
+              >
+                ✕
+              </button>
             </div>
+
             <div class="form-grid three-col">
               <div class="input-field">
                 <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.identifier"
-                       (ngModelChange)="saveDraft()"
-                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.identifier"
+                  (ngModelChange)="saveDraft()"
+                  placeholder="{{ 'PROJECTS.PLACEHOLDER_DEV_ID' | translate }}"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_IP' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.ip"
-                       (ngModelChange)="saveDraft()">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.ip"
+                  (ngModelChange)="saveDraft()"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_USER' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.user"
-                       (ngModelChange)="saveDraft()">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.user"
+                  (ngModelChange)="saveDraft()"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.password"
-                       (ngModelChange)="saveDraft()">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.password"
+                  (ngModelChange)="saveDraft()"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.ram"
-                       (ngModelChange)="saveDraft()"
-                       placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.ram"
+                  (ngModelChange)="saveDraft()"
+                  placeholder="{{ 'PROJECTS.DEV_RAM_PLACEHOLDER' | translate }}"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.cpu"
-                       (ngModelChange)="saveDraft()"
-                       placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.cpu"
+                  (ngModelChange)="saveDraft()"
+                  placeholder="{{ 'PROJECTS.DEV_CPU_PLACEHOLDER' | translate }}"
+                />
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.disk"
-                       (ngModelChange)="saveDraft()"
-                       placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}">
+                <input
+                  type="text"
+                  [(ngModel)]="machine.disk"
+                  (ngModelChange)="saveDraft()"
+                  placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}"
+                />
               </div>
             </div>
           </div>
-          <div *ngIf="newProjectDevMachines.length === 0" class="empty-list-msg">
+
+          <div
+            *ngIf="newProjectDevMachines.length === 0"
+            class="empty-list-msg"
+          >
             {{ 'PROJECTS.NO_DEV_MACHINES' | translate }}
           </div>
         </div>
@@ -354,240 +476,351 @@
         <div class="form-divider"></div>
         <div class="input-field full-width">
           <label>{{ 'PROJECTS.NOTES' | translate }}</label>
-          <textarea rows="4"
-                    [(ngModel)]="editingProject.notasGenerales"
-                    (ngModelChange)="saveDraft()"
-                    placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+          <textarea
+            rows="4"
+            [(ngModel)]="editingProject.notasGenerales"
+            (ngModelChange)="saveDraft()"
+            placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"
+          ></textarea>
         </div>
       </div>
 
-      <!-- Sub-tab: MIND (Herramientas) -->
-      <div *ngIf="newProjectTab === 'mind'" class="admin-card new-project-section section-mind-bg">
-        <h3 class="section-subtitle">{{ 'PROJECTS_MIND.TITLE' | translate }}</h3>
+      <div
+        *ngIf="newProjectTab === 'mind'"
+        class="admin-card new-project-section section-mind-bg"
+      >
+        <h3 class="section-subtitle">
+          {{ 'PROJECTS_MIND.TITLE' | translate }}
+        </h3>
 
-        <!-- Repositorios de código -->
         <div class="mind-block">
           <div class="members-header">
-            <h4 class="subsection-title">{{ 'PROJECTS_MIND.CODE_REPOS' | translate }}</h4>
-            <button class="btn-round btn-small btn-add"
-                    (click)="addNewProjectCodeRepo()">
+            <h4 class="subsection-title">
+              {{ 'PROJECTS_MIND.CODE_REPOS' | translate }}
+            </h4>
+            <button
+              class="btn-round btn-small btn-add"
+              (click)="addNewProjectCodeRepo()"
+            >
               + {{ 'PROJECTS_ACTIONS.ADD_REPO' | translate }}
             </button>
           </div>
           <div class="repo-list-new">
-            <div *ngFor="let repo of newProjectCodeRepos; let i = index"
-                 class="repo-row-new">
-              <input type="text"
-                     [(ngModel)]="repo.name"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
-                     class="repo-input">
-              <input type="text"
-                     [(ngModel)]="repo.url"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
-                     class="repo-input">
-              <button class="btn-remove"
-                      (click)="removeNewProjectCodeRepo(i)">✕</button>
+            <div
+              *ngFor="let repo of newProjectCodeRepos; let i = index"
+              class="repo-row-new"
+            >
+              <input
+                type="text"
+                [(ngModel)]="repo.name"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                class="repo-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="repo.url"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                class="repo-input"
+              />
+              <button class="btn-remove" (click)="removeNewProjectCodeRepo(i)">
+                ✕
+              </button>
             </div>
-            <div *ngIf="newProjectCodeRepos.length === 0" class="empty-list-msg">
+            <div
+              *ngIf="newProjectCodeRepos.length === 0"
+              class="empty-list-msg"
+            >
               {{ 'PROJECTS.NO_CODE_REPOS' | translate }}
             </div>
           </div>
         </div>
 
-        <!-- Repositorios de artefactos -->
         <div class="mind-block">
           <div class="members-header">
-            <h4 class="subsection-title">{{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}</h4>
-            <button class="btn-round btn-small btn-add"
-                    (click)="addNewProjectArtifactRepo()">
+            <h4 class="subsection-title">
+              {{ 'PROJECTS_MIND_EXTRA.ARTIFACT_REPOS' | translate }}
+            </h4>
+            <button
+              class="btn-round btn-small btn-add"
+              (click)="addNewProjectArtifactRepo()"
+            >
               + {{ 'PROJECTS_ACTIONS.ADD_ARTIFACT' | translate }}
             </button>
           </div>
           <div class="repo-list-new">
-            <div *ngFor="let repo of newProjectArtifactRepos; let i = index"
-                 class="repo-row-new">
-              <input type="text"
-                     [(ngModel)]="repo.name"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
-                     class="repo-input">
-              <input type="text"
-                     [(ngModel)]="repo.url"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
-                     class="repo-input">
-              <button class="btn-remove"
-                      (click)="removeNewProjectArtifactRepo(i)">✕</button>
+            <div
+              *ngFor="let repo of newProjectArtifactRepos; let i = index"
+              class="repo-row-new"
+            >
+              <input
+                type="text"
+                [(ngModel)]="repo.name"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                class="repo-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="repo.url"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                class="repo-input"
+              />
+              <button
+                class="btn-remove"
+                (click)="removeNewProjectArtifactRepo(i)"
+              >
+                ✕
+              </button>
             </div>
-            <div *ngIf="newProjectArtifactRepos.length === 0" class="empty-list-msg">
+            <div
+              *ngIf="newProjectArtifactRepos.length === 0"
+              class="empty-list-msg"
+            >
               {{ 'PROJECTS.NO_ARTIFACT_REPOS' | translate }}
             </div>
           </div>
         </div>
 
-        <!-- Jenkins -->
         <div class="mind-block">
           <div class="members-header">
-            <h4 class="subsection-title">{{ 'PROJECTS_MIND.JENKINS' | translate }}</h4>
-            <button class="btn-round btn-small btn-add"
-                    (click)="addNewProjectJenkins()">
+            <h4 class="subsection-title">
+              {{ 'PROJECTS_MIND.JENKINS' | translate }}
+            </h4>
+            <button
+              class="btn-round btn-small btn-add"
+              (click)="addNewProjectJenkins()"
+            >
               + Jenkins
             </button>
           </div>
           <div class="repo-list-new">
-            <div *ngFor="let jenkins of newProjectJenkinsList; let i = index"
-                 class="repo-row-new">
-              <input type="text"
-                     [(ngModel)]="jenkins.name"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
-                     class="repo-input">
-              <input type="text"
-                     [(ngModel)]="jenkins.url"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
-                     class="repo-input">
-              <button class="btn-remove"
-                      (click)="removeNewProjectJenkins(i)">✕</button>
+            <div
+              *ngFor="let jenkins of newProjectJenkinsList; let i = index"
+              class="repo-row-new"
+            >
+              <input
+                type="text"
+                [(ngModel)]="jenkins.name"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_NAME' | translate }}"
+                class="repo-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="jenkins.url"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_URL_SIMPLE' | translate }}"
+                class="repo-input"
+              />
+              <button class="btn-remove" (click)="removeNewProjectJenkins(i)">
+                ✕
+              </button>
             </div>
-            <div *ngIf="newProjectJenkinsList.length === 0" class="empty-list-msg">
+            <div
+              *ngIf="newProjectJenkinsList.length === 0"
+              class="empty-list-msg"
+            >
               {{ 'PROJECTS.NO_JENKINS' | translate }}
             </div>
           </div>
         </div>
 
-        <!-- Sonar -->
         <div class="mind-block">
           <div class="members-header">
-            <h4 class="subsection-title">{{ 'PROJECTS_MIND.SONAR' | translate }}</h4>
-            <button class="btn-round btn-small btn-add"
-                    (click)="addNewProjectSonar()">
+            <h4 class="subsection-title">
+              {{ 'PROJECTS_MIND.SONAR' | translate }}
+            </h4>
+            <button
+              class="btn-round btn-small btn-add"
+              (click)="addNewProjectSonar()"
+            >
               + Sonar
             </button>
           </div>
           <div class="repo-list-new">
-            <div *ngFor="let sonar of newProjectSonarList; let i = index"
-                 class="sonar-row-new">
-              <input type="text"
-                     [(ngModel)]="sonar.prefix"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}"
-                     class="sonar-input">
-              <input type="text"
-                     [(ngModel)]="sonar.url"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}"
-                     class="sonar-input">
-              <input type="text"
-                     [(ngModel)]="sonar.tokenUser"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}"
-                     class="sonar-input">
-              <input type="text"
-                     [(ngModel)]="sonar.tokenValue"
-                     (ngModelChange)="saveDraft()"
-                     placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}"
-                     class="sonar-input">
-              <button class="btn-remove"
-                      (click)="removeNewProjectSonar(i)">✕</button>
+            <div
+              *ngFor="let sonar of newProjectSonarList; let i = index"
+              class="sonar-row-new"
+            >
+              <input
+                type="text"
+                [(ngModel)]="sonar.prefix"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_PREFIX' | translate }}"
+                class="sonar-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="sonar.url"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_URL' | translate }}"
+                class="sonar-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="sonar.tokenUser"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_USER' | translate }}"
+                class="sonar-input"
+              />
+              <input
+                type="text"
+                [(ngModel)]="sonar.tokenValue"
+                (ngModelChange)="saveDraft()"
+                placeholder="{{ 'PROJECTS.PLACEHOLDER_SONAR_TOKEN' | translate }}"
+                class="sonar-input"
+              />
+              <button class="btn-remove" (click)="removeNewProjectSonar(i)">
+                ✕
+              </button>
             </div>
-            <div *ngIf="newProjectSonarList.length === 0" class="empty-list-msg">
+            <div
+              *ngIf="newProjectSonarList.length === 0"
+              class="empty-list-msg"
+            >
               {{ 'PROJECTS.NO_SONAR' | translate }}
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Sub-tab: Documentos -->
-      <div *ngIf="newProjectTab === 'documentos'" class="admin-card new-project-section section-docs-bg">
-        <h3 class="section-subtitle">📂 {{ 'PROJECTS.DOCS_TITLE' | translate }}</h3>
-
+      <div
+        *ngIf="newProjectTab === 'documentos'"
+        class="admin-card new-project-section section-docs-bg"
+      >
+        <h3 class="section-subtitle">
+          📂 {{ 'PROJECTS.DOCS_TITLE' | translate }}
+        </h3>
 
         <div class="documents-section">
-          <!-- Formulario de carga de archivo -->
           <div class="document-upload-form">
             <div class="form-row">
               <label>{{ 'PROJECTS.SELECT_FILE' | translate }}</label>
               <div class="file-input-wrapper">
-                <input type="file" 
-                       #fileInputProject
-                       id="fileInputProject"
-                       style="display: none;"
-                       (change)="onDocumentSelected($event)"
-                       accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt">
-                <button class="btn-round btn-secondary" (click)="fileInputProject.click()">
+                <input
+                  type="file"
+                  #fileInputProject
+                  id="fileInputProject"
+                  style="display: none"
+                  (change)="onDocumentSelected($event)"
+                  accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.pptx,.ppt"
+                />
+                <button
+                  class="btn-round btn-secondary"
+                  (click)="fileInputProject.click()"
+                >
                   📁 {{ 'PROJECTS.SELECT_FILE_BTN' | translate }}
                 </button>
-                <span class="file-name">{{ projectFileInput?.name || ('PROJECTS.NO_FILE_SELECTED' | translate) }}</span>
+                <span class="file-name"
+                  >{{ projectFileInput?.name || ('PROJECTS.NO_FILE_SELECTED' |
+                  translate) }}</span
+                >
               </div>
             </div>
 
             <div class="form-row">
               <label>{{ 'PROJECTS.DOCUMENT_DESCRIPTION' | translate }}</label>
-              <textarea 
+              <textarea
                 [(ngModel)]="projectFileDescription"
                 placeholder="{{ 'PROJECTS.DOCUMENT_DESCRIPTION_PLACEHOLDER' | translate }}"
                 rows="2"
-                class="doc-description-textarea"></textarea>
+                class="doc-description-textarea"
+              ></textarea>
             </div>
 
             <div class="form-row">
-              <button class="btn-round btn-primary" 
-                      (click)="addNewProjectDocument()"
-                      [disabled]="!projectFileInput">
+              <button
+                class="btn-round btn-primary"
+                (click)="addNewProjectDocument()"
+                [disabled]="!projectFileInput"
+              >
                 ➕ {{ 'PROJECTS.ADD_DOCUMENT' | translate }}
               </button>
             </div>
           </div>
 
-          <!-- Documentos cargados -->
           <div *ngIf="newProjectDocuments.length === 0" class="empty-list-msg">
             {{ 'PROJECTS.NO_DOCUMENTS_LOADED' | translate }}
           </div>
 
-          <div *ngIf="newProjectDocuments.length > 0" class="project-documents-grid">
-            <div *ngFor="let doc of newProjectDocuments; let i = index" class="doc-card-new-project">
-              <!-- Información del documento -->
+          <div
+            *ngIf="newProjectDocuments.length > 0"
+            class="project-documents-grid"
+          >
+            <div
+              *ngFor="let doc of newProjectDocuments; let i = index"
+              class="doc-card-new-project"
+            >
               <div class="doc-header">
                 <span class="doc-icon">{{ getDocumentIcon(doc) }}</span>
                 <span class="doc-filename">{{ doc.nombre }}</span>
-                <span class="doc-type-badge">{{ getDocumentTypeName(doc) }}</span>
-                <button class="btn-remove-doc" (click)="removeNewProjectDocument(i)">✕</button>
+                <span class="doc-type-badge"
+                  >{{ getDocumentTypeName(doc) }}</span
+                >
+                <button
+                  class="btn-remove-doc"
+                  (click)="removeNewProjectDocument(i)"
+                >
+                  ✕
+                </button>
               </div>
 
-              <!-- Descripción -->
-              <textarea 
+              <textarea
                 [(ngModel)]="doc.descripcion"
                 (ngModelChange)="saveDraft()"
                 placeholder="Descripción del documento..."
                 class="doc-description-textarea"
-                rows="2"></textarea>
+                rows="2"
+              ></textarea>
 
-              <!-- Vista previa VISUAL -->
               <div class="doc-preview">
-                <!-- IMAGEN -->
-                <div *ngIf="doc.tipo && doc.tipo.startsWith('image/')" class="preview-container">
-                  <img [src]="getDocumentPreviewUrl(doc)" alt="{{ doc.nombre }}" 
-                       style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px;">
+                <div
+                  *ngIf="doc.tipo && doc.tipo.startsWith('image/')"
+                  class="preview-container"
+                >
+                  <img
+                    [src]="getDocumentPreviewUrl(doc)"
+                    alt="{{ doc.nombre }}"
+                    style="
+                      max-width: 100%;
+                      max-height: 400px;
+                      object-fit: contain;
+                      border-radius: 4px;
+                    "
+                  />
                 </div>
-                
-                <!-- PDF -->
-                <div *ngIf="doc.tipo === 'application/pdf'" class="preview-container">
-                  <iframe [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'" 
-                          style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 4px;"
-                          frameborder="0"></iframe>
+
+                <div
+                  *ngIf="doc.tipo === 'application/pdf'"
+                  class="preview-container"
+                >
+                  <iframe
+                    [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'"
+                    style="
+                      width: 100%;
+                      height: 500px;
+                      border: 1px solid #ddd;
+                      border-radius: 4px;
+                    "
+                    frameborder="0"
+                  ></iframe>
                 </div>
-                
-                <!-- CSV (mostrar como icono porque no tenemos el contenido aún) -->
-                <div *ngIf="doc.tipo === 'text/csv'" class="preview-placeholder csv">
+
+                <div
+                  *ngIf="doc.tipo === 'text/csv'"
+                  class="preview-placeholder csv"
+                >
                   <mat-icon>table_chart</mat-icon>
                   <p>{{ 'PROJECTS.CSV_UPLOAD_NOTE' | translate }}</p>
                 </div>
-                
-                <!-- OTROS ARCHIVOS -->
-                <div *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv')" class="preview-placeholder other">
+
+                <div
+                  *ngIf="!doc.tipo || (!doc.tipo.startsWith('image/') && doc.tipo !== 'application/pdf' && doc.tipo !== 'text/csv')"
+                  class="preview-placeholder other"
+                >
                   <mat-icon>insert_drive_file</mat-icon>
                   <p>{{ getDocumentTypeName(doc) }}</p>
                 </div>
@@ -597,10 +830,14 @@
         </div>
       </div>
 
-      <!-- Botones de acción -->
       <div class="action-buttons-right new-project-actions">
         <button class="btn-round btn-secondary" (click)="limpiarFormulario()">
-          <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" /> {{ 'PROJECTS.LIMPIAR' | translate }}
+          <img
+            src="assets/images/Escova.png"
+            class="btn-custom-img"
+            alt="Limpiar"
+          />
+          {{ 'PROJECTS.LIMPIAR' | translate }}
         </button>
         <button class="btn-round btn-primary" (click)="saveProject()">
           💾 {{ 'PROJECTS.GUARDAR_PROYECTO' | translate }}
@@ -608,8 +845,10 @@
       </div>
     </div>
 
-    <!-- TAB: Importar -->
-    <div *ngIf="activeTab === 'IMPORT'" class="tab-content fade-in">
+    <div
+      *ngIf="activeTab === 'IMPORT' && authService.isAdmin"
+      class="tab-content fade-in"
+    >
       <div class="documents-header">
         <h2>📥 {{ 'PROJECTS.IMPORT_TITLE' | translate }}</h2>
       </div>
@@ -617,22 +856,32 @@
       <div class="admin-card">
         <h3>📄 {{ 'PROJECTS.IMPORT_CSV_TITLE' | translate }}</h3>
         <p>{{ 'PROJECTS.IMPORT_CSV_DESC' | translate }}</p>
-        
+
         <div class="import-area">
-          <input type="file"
-                 id="csvFile"
-                 accept=".csv"
-                 (change)="onCsvFileSelected($event)"
-                 hidden>
+          <input
+            type="file"
+            id="csvFile"
+            accept=".csv"
+            (change)="onCsvFileSelected($event)"
+            hidden
+          />
           <label for="csvFile" class="import-dropzone">
-            <img src="assets/images/Folder.png" alt="Folder" class="import-folder-icon">
-            <span class="import-text">{{ 'PROJECTS.IMPORT_DRAG_DROP' | translate }}</span>
+            <img
+              src="assets/images/Folder.png"
+              alt="Folder"
+              class="import-folder-icon"
+            />
+            <span class="import-text"
+              >{{ 'PROJECTS.IMPORT_DRAG_DROP' | translate }}</span
+            >
           </label>
         </div>
 
-        <div *ngIf="importResult"
-             class="import-result"
-             [class.success]="importResult.success">
+        <div
+          *ngIf="importResult"
+          class="import-result"
+          [class.success]="importResult.success"
+        >
           <p>{{ importResult.message }}</p>
         </div>
       </div>
@@ -640,24 +889,27 @@
       <div class="admin-card">
         <h3>📋 {{ 'PROJECTS.IMPORT_TEXT_TITLE' | translate }}</h3>
         <p>{{ 'PROJECTS.IMPORT_TEXT_DESC' | translate }}</p>
-        
+
         <div class="input-field">
-          <textarea rows="10"
-                    [(ngModel)]="csvTextImport"
-                    [placeholder]="'PROJECTS.IMPORT_PASTE_PLACEHOLDER' | translate"></textarea>
+          <textarea
+            rows="10"
+            [(ngModel)]="csvTextImport"
+            [placeholder]="'PROJECTS.IMPORT_PASTE_PLACEHOLDER' | translate"
+          ></textarea>
         </div>
 
         <div class="action-buttons-right">
-          <button class="btn-round btn-primary"
-                  (click)="importFromText()"
-                  [disabled]="!csvTextImport">
+          <button
+            class="btn-round btn-primary"
+            (click)="importFromText()"
+            [disabled]="!csvTextImport"
+          >
             📥 {{ 'PROJECTS.IMPORT_BTN' | translate }}
           </button>
         </div>
       </div>
     </div>
 
-    <!-- TAB: Estadísticas -->
     <div *ngIf="activeTab === 'STATS'" class="tab-content fade-in">
       <div class="documents-header">
         <h2>📊 {{ 'PROJECTS.STATS_TITLE' | translate }}</h2>
@@ -665,10 +917,16 @@
 
       <div class="stats-grid">
         <div class="stat-card">
-          <img src="assets/images/Folder.png" alt="Folder" class="stat-folder-icon">
+          <img
+            src="assets/images/Folder.png"
+            alt="Folder"
+            class="stat-folder-icon"
+          />
           <div class="stat-info">
             <span class="stat-value">{{ projectes.length }}</span>
-            <span class="stat-label">{{ 'PROJECTS.STATS_TOTAL_PROJECTS' | translate }}</span>
+            <span class="stat-label"
+              >{{ 'PROJECTS.STATS_TOTAL_PROJECTS' | translate }}</span
+            >
           </div>
         </div>
 
@@ -676,7 +934,9 @@
           <span class="stat-emoji">🏢</span>
           <div class="stat-info">
             <span class="stat-value">{{ getDepartamentosUnicos() }}</span>
-            <span class="stat-label">{{ 'PROJECTS.STATS_DEPARTMENTS' | translate }}</span>
+            <span class="stat-label"
+              >{{ 'PROJECTS.STATS_DEPARTMENTS' | translate }}</span
+            >
           </div>
         </div>
 
@@ -684,7 +944,9 @@
           <span class="stat-emoji">📦</span>
           <div class="stat-info">
             <span class="stat-value">{{ getLotesUnicos() }}</span>
-            <span class="stat-label">{{ 'PROJECTS.STATS_LOTS' | translate }}</span>
+            <span class="stat-label"
+              >{{ 'PROJECTS.STATS_LOTS' | translate }}</span
+            >
           </div>
         </div>
 
@@ -692,7 +954,9 @@
           <span class="stat-emoji">✅</span>
           <div class="stat-info">
             <span class="stat-value">{{ getTotalTareas() }}</span>
-            <span class="stat-label">{{ 'PROJECTS.STATS_TOTAL_TASKS' | translate }}</span>
+            <span class="stat-label"
+              >{{ 'PROJECTS.STATS_TOTAL_TASKS' | translate }}</span
+            >
           </div>
         </div>
       </div>
@@ -700,36 +964,51 @@
       <div class="admin-card" *ngIf="projectes.length > 0">
         <h3>📋 {{ 'PROJECTS.STATS_SUMMARY' | translate }}</h3>
         <div class="summary-list">
-          <div *ngFor="let dept of getResumenDepartamentos()" class="summary-item">
-            <span class="summary-name">{{ dept.nombre || ('PROJECTS.STATS_NO_DEPT' | translate) }}</span>
-            <span class="summary-count">{{ dept.count }} {{ 'PROJECTS.STATS_PROJECT_UNIT' | translate }}</span>
+          <div
+            *ngFor="let dept of getResumenDepartamentos()"
+            class="summary-item"
+          >
+            <span class="summary-name"
+              >{{ dept.nombre || ('PROJECTS.STATS_NO_DEPT' | translate) }}</span
+            >
+            <span class="summary-count"
+              >{{ dept.count }} {{ 'PROJECTS.STATS_PROJECT_UNIT' | translate
+              }}</span
+            >
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- Confirm modal -->
 <div class="modal-overlay" *ngIf="showConfirm">
   <div class="auth-card">
     <h2 class="form-title">{{ 'PROJECTS.CONFIRM_TITLE' | translate }}</h2>
-    <hr class="divider">
+    <hr class="divider" />
     <div class="form-content">
       <p class="modal-body">{{ confirmMessage }}</p>
-      <hr class="divider">
+      <hr class="divider" />
       <div class="action-buttons">
-        <button class="btn-emoji cancel"
-                (click)="confirmCancel()"
-                title="{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}">✗</button>
-        <button class="btn-emoji confirm"
-                (click)="confirmOk()"
-                title="{{ 'PROJECTS.CONFIRM_OK' | translate }}">✓</button>
+        <button
+          class="btn-emoji cancel"
+          (click)="confirmCancel()"
+          title="{{ 'PROJECTS.CONFIRM_CANCEL' | translate }}"
+        >
+          ✗
+        </button>
+        <button
+          class="btn-emoji confirm"
+          (click)="confirmOk()"
+          title="{{ 'PROJECTS.CONFIRM_OK' | translate }}"
+        >
+          ✓
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Toast notification -->
-<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">{{ toastMsg }}</div>
+<div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">
+  {{ toastMsg }}
+</div>

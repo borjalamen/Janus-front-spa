@@ -17,7 +17,7 @@
   </div>
 
   <div class="projects-list">
-    <div *ngFor="let project of projectsFiltrats" class="project-container">
+    <div *ngFor="let project of projectsPaginats" class="project-container">
       <div class="project-icon">
         <img src="assets/images/Folder.png" alt="Folder" class="folder-img" />
       </div>
@@ -28,7 +28,7 @@
             <span class="project-name-label">
               {{ 'DOCUMENTS.PROJECT_NAME' | translate }}:
             </span>
-            <span class="project-name-value"> {{ project.name }} </span>
+            <span class="project-name-value">{{ project.name }}</span>
           </div>
         </div>
 
@@ -64,6 +64,7 @@
               </button>
 
               <button
+                *ngIf="authService.isAdmin"
                 class="action-btn delete-btn"
                 (click)="confirmDeleteDocument(project, doc)"
                 title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
@@ -88,6 +89,39 @@
     <mat-icon>folder_off</mat-icon>
     <p>{{ 'DOCUMENTS.NO_PROJECTS' | translate }}</p>
   </div>
+
+  <div class="pagination-bar" *ngIf="totalPaginasProjects > 1">
+    <button
+      class="page-btn"
+      (click)="cambiarPaginaProjects(paginaActualProjects - 1)"
+      [disabled]="paginaActualProjects === 1"
+      aria-label="Anterior"
+    >
+      ‹
+    </button>
+
+    <button
+      class="page-btn"
+      *ngFor="let p of paginasArrayProjects"
+      [class.active]="p === paginaActualProjects"
+      (click)="cambiarPaginaProjects(p)"
+    >
+      {{ p }}
+    </button>
+
+    <button
+      class="page-btn"
+      (click)="cambiarPaginaProjects(paginaActualProjects + 1)"
+      [disabled]="paginaActualProjects === totalPaginasProjects"
+      aria-label="Siguiente"
+    >
+      ›
+    </button>
+
+    <span class="page-info">
+      {{ paginaActualProjects }} / {{ totalPaginasProjects }}
+    </span>
+  </div>
 </div>
 
 <!-- POPUP AFEGIR DOCUMENT -->
@@ -98,10 +132,21 @@
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
 
+      <input
+        type="text"
+        class="project-search-input"
+        [(ngModel)]="projectSearch"
+        (input)="filterProjectsForPopup()"
+        placeholder="Buscar por código o nombre del proyecto"
+      />
+
       <select [(ngModel)]="projectId" (change)="onProjectChange()">
         <option [ngValue]="''" disabled>Selecciona un projecte</option>
-        <option *ngFor="let p of projects" [ngValue]="p.projectId">
-          {{ p.name }}
+        <option
+          *ngFor="let p of filteredProjectsForPopup"
+          [ngValue]="p.projectId"
+        >
+          {{ p.projectId }} - {{ p.name }}
         </option>
       </select>
 

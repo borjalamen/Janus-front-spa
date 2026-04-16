@@ -11,6 +11,7 @@ import { BuscadorComponent } from "../buscador/buscador";
 import { DocumentService } from "../document.service";
 import { ProjectService, Project as BackendProject } from "../project.service";
 import { LocalStorageService } from "../local-storage.service";
+import { AuthService } from "../auth.service";
 
 type DocItem = any;
 
@@ -68,10 +69,17 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   toastOk = true;
   private toastTimeout: any;
 
+  projectSearch = "";
+  filteredProjectsForPopup: ProjectView[] = [];
+
+  paginaActualProjects = 1;
+  itemsPerPageProjects = 5;
+
   constructor(
     private documentService: DocumentService,
     private projectService: ProjectService,
     private storage: LocalStorageService,
+    public authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -117,7 +125,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         if (realProjects.length === 0) {
           this.projects = [];
           this.projectsFiltrats = [];
+          this.filteredProjectsForPopup = [];
           this.selectedProjectId = null;
+          this.paginaActualProjects = 1;
           return;
         }
 
@@ -147,6 +157,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         forkJoin(requests).subscribe((projectsWithDocs: ProjectView[]) => {
           this.projects = projectsWithDocs;
           this.projectsFiltrats = [...projectsWithDocs];
+          this.filteredProjectsForPopup = [...projectsWithDocs];
+          this.paginaActualProjects = 1;
 
           if (savedFilter && savedFilter.trim()) {
             this.filtrar(savedFilter);
@@ -170,7 +182,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         console.error("Error carregant projectes", err);
         this.projects = [];
         this.projectsFiltrats = [];
+        this.filteredProjectsForPopup = [];
         this.selectedProjectId = null;
+        this.paginaActualProjects = 1;
       },
     });
   }
@@ -185,8 +199,13 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   toggleAddPopup(): void {
     this.showAddPopup = !this.showAddPopup;
 
-    if (!this.showAddPopup) {
+    if (this.showAddPopup) {
+      this.projectSearch = "";
+      this.filteredProjectsForPopup = [...this.projects];
+    } else {
       this.resetForm();
+      this.projectSearch = "";
+      this.filteredProjectsForPopup = [...this.projects];
     }
   }
 
@@ -197,6 +216,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.selectedFile = undefined;
     this.projectError = "";
     this.fileError = "";
+    this.projectSearch = "";
+    this.filteredProjectsForPopup = [...this.projects];
   }
 
   onFileSelected(event: Event): void {
@@ -239,6 +260,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
     if (!valor) {
       this.projectsFiltrats = [...this.projects];
+      this.paginaActualProjects = 1;
       return;
     }
 
@@ -253,6 +275,23 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         `${project.projectId || ""} ${project.name || ""} ${docsText}`.toLowerCase();
 
       return haystack.includes(lower);
+    });
+
+    this.paginaActualProjects = 1;
+  }
+
+  filterProjectsForPopup(): void {
+    const term = (this.projectSearch || "").trim().toLowerCase();
+
+    if (!term) {
+      this.filteredProjectsForPopup = [...this.projects];
+      return;
+    }
+
+    this.filteredProjectsForPopup = this.projects.filter((p) => {
+      const code = String(p.projectId || "").toLowerCase();
+      const name = String(p.name || "").toLowerCase();
+      return code.includes(term) || name.includes(term);
     });
   }
 
@@ -293,6 +332,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   confirmDeleteDocument(project: ProjectView, document: DocItem): void {
+    if (!this.authService.isAdmin) {
+      this.showToast("No tienes permisos para eliminar documentos", false);
+      return;
+    }
+
     this.docToDelete = { project, document };
     this.deleteDocPopupOpen = true;
   }
@@ -303,6 +347,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   deleteDocument(): void {
+    if (!this.authService.isAdmin) {
+      this.showToast("No tienes permisos para eliminar documentos", false);
+      return;
+    }
+
     if (!this.docToDelete) return;
 
     const { project, document } = this.docToDelete;
@@ -462,5 +511,26 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     }
 
     return "";
+  }
+
+  get totalPaginasProjects(): number {
+    return (
+      Math.ceil(this.projectsFiltrats.length / this.itemsPerPageProjects) || 1
+    );
+  }
+
+  get paginasArrayProjects(): number[] {
+    return Array.from({ length: this.totalPaginasProjects }, (_, i) => i + 1);
+  }
+
+  get projectsPaginats(): ProjectView[] {
+    const start = (this.paginaActualProjects - 1) * this.itemsPerPageProjects;
+    const end = start + this.itemsPerPageProjects;
+    return this.projectsFiltrats.slice(start, end);
+  }
+
+  cambiarPaginaProjects(page: number): void {
+    if (page < 1 || page > this.totalPaginasProjects) return;
+    this.paginaActualProjects = page;
   }
 }

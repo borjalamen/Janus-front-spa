@@ -5,7 +5,8 @@ body {
   margin: 0;
 }
 
-/* SECTION GENERAL */
+/* CONTENIDOR GENERAL DOCUMENTS */
+
 .section-container {
   padding: 24px;
   background: #16181c;
@@ -20,12 +21,14 @@ body {
   position: relative;
 }
 
-/* HEADER */
+/* HEADER DOCUMENTS */
+
 .documents-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  gap: 12px;
 }
 
 .documents-header h2 {
@@ -34,7 +37,6 @@ body {
   margin: 0;
 }
 
-/* BOTÓ ADD */
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
@@ -64,7 +66,40 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* LLISTA PROJECTES */
+/* TOAST */
+
+.documents-toast {
+  margin: 0 0 18px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(46, 125, 50, 0.18);
+  color: #c8f7cf;
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  animation: fadeSlideIn 0.25s ease;
+}
+
+.documents-toast.toast-error {
+  background: rgba(198, 40, 40, 0.18);
+  color: #ffc9c9;
+  border: 1px solid rgba(229, 57, 53, 0.45);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* LLISTAT PROJECTES */
+
 .projects-list {
   display: flex;
   flex-direction: column;
@@ -131,6 +166,7 @@ body {
   align-items: baseline;
   gap: 8px;
   cursor: pointer;
+  flex-wrap: wrap;
 }
 
 .project-name-label {
@@ -144,7 +180,8 @@ body {
   font-size: 16px;
 }
 
-/* DOCUMENTS */
+/* LLISTAT DOCUMENTS */
+
 .documents-list {
   display: flex;
   flex-direction: column;
@@ -196,7 +233,6 @@ body {
   gap: 4px;
 }
 
-/* BOTONS ACCIONS */
 .action-btn {
   padding: 6px 10px;
   border-radius: 6px;
@@ -228,12 +264,13 @@ body {
   color: #ff5252;
 }
 
-/* ESTATS BUITS */
 .no-docs {
   color: #666;
   font-size: 13px;
   padding: 8px 0;
 }
+
+/* SENSE RESULTATS */
 
 .no-results {
   text-align: center;
@@ -254,7 +291,8 @@ body {
   font-size: 16px;
 }
 
-/* POPUPS */
+/* POPUPS GENERALS */
+
 .popup-fons {
   position: fixed;
   inset: 0;
@@ -294,6 +332,8 @@ body {
   color: #ccc;
   margin-bottom: 20px;
 }
+
+/* FORMULARI POPUP */
 
 .form-field {
   display: flex;
@@ -337,7 +377,8 @@ body {
   color: #7c8084;
 }
 
-/* BOTÓ FITXER */
+/* BOTÓ TRIAR FITXER */
+
 .file-btn {
   background: transparent;
   color: #999;
@@ -370,7 +411,8 @@ body {
     0 0 20px rgba(30, 132, 163, 0.5);
 }
 
-/* ACCIONS POPUP */
+/* BOTONS POPUP GUARDAR / CANCEL·LAR */
+
 .popup-actions {
   display: flex;
   gap: 12px;
@@ -431,7 +473,8 @@ body {
     0 0 20px rgba(229, 57, 53, 0.4);
 }
 
-/* IMAGE POPUP */
+/* POPUP PREVIEW IMATGE */
+
 .image-popup-backdrop {
   position: fixed;
   inset: 0;
@@ -482,34 +525,8 @@ body {
   background: rgba(200, 0, 0, 0.7);
 }
 
-/* TOAST */
-.app-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  left: auto;
-  bottom: auto;
-  width: auto;
-  max-width: 420px;
-  min-width: 220px;
-  height: auto;
-  padding: 10px 16px;
-  background: #2e7d32;
-  color: #ffffff;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.4;
-  z-index: 5000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-sizing: border-box;
-}
+/* ERRORS DE CAMP */
 
-.app-toast.toast-error {
-  background: #c62828;
-}
-
-/* VALIDACIONS */
 .field-error {
   color: #ff5252;
   font-size: 12px;
@@ -523,7 +540,62 @@ body {
   word-break: break-word;
 }
 
+/* PAGINACIÓ DOCUMENTS */
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #14161d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #90a4ae;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: rgba(255, 213, 79, 0.4);
+  color: #ffd54f;
+}
+
+.page-btn.active {
+  background: rgba(255, 213, 79, 0.15);
+  border-color: #ffd54f;
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.page-info {
+  font-size: 12px;
+  color: #546e7a;
+  margin-left: 4px;
+}
+
 /* RESPONSIVE */
+
 @media (max-width: 768px) {
   .section-container {
     margin: 12px;
@@ -533,7 +605,6 @@ body {
   .documents-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
   }
 
   .project-container {
@@ -564,11 +635,8 @@ body {
     max-width: 100%;
   }
 
-  .app-toast {
-    top: 16px;
-    right: 16px;
-    left: 16px;
-    max-width: none;
-    min-width: 0;
+  .documents-toast {
+    font-size: 13px;
+    padding: 10px 12px;
   }
 }
