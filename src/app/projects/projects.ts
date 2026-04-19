@@ -10,7 +10,6 @@ import { ProjectDetailComponent } from "./project-detail";
 import { SafePipe } from "../safe.pipe";
 import { AuthService } from "../auth.service";
 
-// ===== MODELS =====
 export interface Task {
   titulo: string;
   prioridad?: string;
@@ -64,10 +63,8 @@ export interface Proyecto extends Project {
 export class ProjectsComponent implements OnInit {
   title = "";
 
-  // Pestanyes principals
   activeTab: "LIST" | "NEW" | "IMPORT" | "STATS" = "LIST";
 
-  // Claus de storage
   private readonly STORAGE_DRAFT_KEY = "projects_draft";
   private readonly STORAGE_TAB_KEY = "projects_active_tab";
 
@@ -75,17 +72,14 @@ export class ProjectsComponent implements OnInit {
   projectesFiltrats: Proyecto[] = this.projectes;
   isLoading = false;
 
-  // Toast notification
   toastMsg = "";
   toastOk = true;
   private _toastTimer: any = null;
 
-  // Vista del detalle del proyecto
   showDetailModal = false;
   selectedProjectForDetail: Proyecto | undefined = undefined;
   detailMode: "view" | "edit" = "view";
 
-  // Estat UI
   showProjectModal = false;
   editingProject: Partial<Proyecto> & {
     ipString?: string;
@@ -95,24 +89,21 @@ export class ProjectsComponent implements OnInit {
     readonly?: boolean;
   } = {};
 
-  // Confirm
   showConfirm = false;
   confirmMessage = "";
   private confirmAction: (() => void) | null = null;
 
-  // Import
   csvTextImport = "";
   importResult: { success: boolean; message: string } | null = null;
 
-  // Sub‑tabs “Nou projecte”
   newProjectTab: "info" | "minsait" | "dev" | "mind" | "documentos" = "info";
 
-  // Dades extres del formulari de “Nou projecte”
   newProjectMinsaitMembers: Array<{
     nombre: string;
     rol: string;
     email: string;
   }> = [];
+
   newProjectDevMachines: Array<{
     identifier: string;
     ip: string;
@@ -122,6 +113,7 @@ export class ProjectsComponent implements OnInit {
     cpu: string;
     disk: string;
   }> = [];
+
   newProjectCodeRepos: Array<{ name: string; url: string }> = [];
   newProjectArtifactRepos: Array<{ name: string; url: string }> = [];
   newProjectJenkinsList: Array<{ name: string; url: string }> = [];
@@ -132,7 +124,6 @@ export class ProjectsComponent implements OnInit {
     tokenValue: string;
   }> = [];
 
-  // Documentos del proyecto
   newProjectDocuments: Array<{
     file: File;
     nombre: string;
@@ -140,7 +131,6 @@ export class ProjectsComponent implements OnInit {
     tipo: string;
   }> = [];
 
-  // Para cargar archivos desde formulario
   projectFileInput: File | null = null;
   projectFileDescription: string = "";
 
@@ -167,7 +157,7 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     if (
-      !this.authService.isAdmin &&
+      !this.authService.canManageProjects &&
       (this.activeTab === "NEW" || this.activeTab === "IMPORT")
     ) {
       this.activeTab = "LIST";
@@ -177,7 +167,6 @@ export class ProjectsComponent implements OnInit {
     this.loadProjects();
   }
 
-  // ===== CARGAR PROYECTOS DEL BACKEND =====
   private loadProjects() {
     this.isLoading = true;
     console.log("🔄 Cargando proyectos desde API...");
@@ -201,9 +190,8 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  // ===== ABRIR PROYECTO EN DETALLE =====
   openProjectDetail(project: Proyecto, mode: "view" | "edit" = "view") {
-    if (mode === "edit" && !this.authService.isAdmin) {
+    if (mode === "edit" && !this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per editar projectes", false);
       return;
     }
@@ -243,7 +231,6 @@ export class ProjectsComponent implements OnInit {
     this.selectedProjectForDetail = undefined;
   }
 
-  // ===== DRAFT NOU PROJECTE =====
   saveDraft(): void {
     const draft = {
       editingProject: this.editingProject,
@@ -285,9 +272,11 @@ export class ProjectsComponent implements OnInit {
     this.storage.remove(this.STORAGE_DRAFT_KEY);
   }
 
-  // ===== PESTANYES PRINCIPALS =====
   cambiarTab(tab: "LIST" | "NEW" | "IMPORT" | "STATS") {
-    if (!this.authService.isAdmin && (tab === "NEW" || tab === "IMPORT")) {
+    if (
+      !this.authService.canManageProjects &&
+      (tab === "NEW" || tab === "IMPORT")
+    ) {
       this.showToast(
         "❌ No tens permisos per accedir a aquesta pestanya",
         false,
@@ -300,9 +289,8 @@ export class ProjectsComponent implements OnInit {
     this.importResult = null;
   }
 
-  // Botó “Nuevo” per començar de zero
   newProject() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per crear projectes", false);
       return;
     }
@@ -313,11 +301,10 @@ export class ProjectsComponent implements OnInit {
     this.saveDraft();
   }
 
-  // ===== SUB‑TABS NOU PROJECTE =====
   cambiarNewProjectTab(
     tab: "info" | "minsait" | "dev" | "mind" | "documentos",
   ) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per editar projectes", false);
       return;
     }
@@ -327,7 +314,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   limpiarFormulario() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per netejar el formulari", false);
       return;
     }
@@ -364,9 +351,8 @@ export class ProjectsComponent implements OnInit {
     this.clearDraft();
   }
 
-  // Helpers nou projecte
   addNewProjectMember() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -375,7 +361,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectMember(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -384,7 +370,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectDevMachine() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -401,7 +387,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectDevMachine(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -410,7 +396,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectCodeRepo() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -419,7 +405,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectCodeRepo(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -428,7 +414,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectArtifactRepo() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -437,7 +423,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectArtifactRepo(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -446,7 +432,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectJenkins() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -455,7 +441,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectJenkins(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -464,7 +450,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectSonar() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -478,7 +464,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectSonar(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per modificar el projecte", false);
       return;
     }
@@ -486,9 +472,8 @@ export class ProjectsComponent implements OnInit {
     this.saveDraft();
   }
 
-  // Manejo de documentos
   onDocumentSelected(event: Event) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per afegir documents", false);
       return;
     }
@@ -501,7 +486,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   addNewProjectDocument() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast(
         "❌ No tens permisos per afegir documents al projecte",
         false,
@@ -534,7 +519,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   removeNewProjectDocument(i: number) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast(
         "❌ No tens permisos per eliminar documents del projecte",
         false,
@@ -602,7 +587,6 @@ export class ProjectsComponent implements OnInit {
     return ext;
   }
 
-  // ===== Llista / filtrat =====
   filtrar(valor: string) {
     if (!valor) {
       this.projectesFiltrats = this.projectes;
@@ -639,9 +623,8 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  // ===== Guardar projecte nou =====
   saveProject() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per guardar projectes", false);
       return;
     }
@@ -786,7 +769,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   private uploadProjectDocuments(projectId: string) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per pujar documents", false);
       return;
     }
@@ -798,7 +781,7 @@ export class ProjectsComponent implements OnInit {
 
     console.log(`📤 Subiendo ${totalDocs} documento(s)...`);
 
-    this.newProjectDocuments.forEach((doc, index) => {
+    this.newProjectDocuments.forEach((doc) => {
       const formData = new FormData();
       formData.append("file", doc.file);
       formData.append("descripcion", doc.descripcion);
@@ -872,9 +855,8 @@ export class ProjectsComponent implements OnInit {
       .filter((t) => t.titulo);
   }
 
-  // ===== Confirm / delete =====
   confirmDeleteProject(code?: string, name?: string) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per eliminar projectes", false);
       return;
     }
@@ -885,7 +867,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   deleteProject(code?: string) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per eliminar projectes", false);
       return;
     }
@@ -926,9 +908,8 @@ export class ProjectsComponent implements OnInit {
     this.confirmAction = null;
   }
 
-  // ===== Import i estadístiques =====
   onCsvFileSelected(event: Event) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
         message: "❌ No tens permisos per importar projectes",
@@ -957,7 +938,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   importFromText() {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
         message: "❌ No tens permisos per importar projectes",
@@ -973,13 +954,11 @@ export class ProjectsComponent implements OnInit {
   }
 
   parseCsvToProyectos(csv: string): Proyecto[] {
-    // el teu parser exactament igual...
-    // (no l’allargo més per no fer això etern, copia’l del fitxer original)
     return [];
   }
 
   private processCsvImport(content: string) {
-    if (!this.authService.isAdmin) {
+    if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
         message: "❌ No tens permisos per importar projectes",

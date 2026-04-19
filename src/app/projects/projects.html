@@ -11,7 +11,7 @@
       </button>
 
       <button
-        *ngIf="authService.isAdmin"
+        *ngIf="authService.canManageProjects"
         class="top-tab-btn"
         [class.active]="activeTab === 'NEW'"
         (click)="cambiarTab('NEW')"
@@ -20,7 +20,7 @@
       </button>
 
       <button
-        *ngIf="authService.isAdmin"
+        *ngIf="authService.canManageProjects"
         class="top-tab-btn"
         [class.active]="activeTab === 'IMPORT'"
         (click)="cambiarTab('IMPORT')"
@@ -75,7 +75,7 @@
               </button>
 
               <button
-                *ngIf="authService.isAdmin"
+                *ngIf="authService.canManageProjects"
                 class="icon-btn edit"
                 title="{{ 'PROJECTS.EDIT' | translate }}"
                 (click)="openProjectDetail(p, 'edit'); $event.stopPropagation()"
@@ -84,7 +84,7 @@
               </button>
 
               <button
-                *ngIf="authService.isAdmin"
+                *ngIf="authService.canManageProjects"
                 class="icon-btn delete"
                 title="{{ 'PROJECTS.DELETE' | translate }}"
                 (click)="confirmDeleteProject(p.codigoProyecto, p.nombre); $event.stopPropagation()"
@@ -115,7 +115,7 @@
     </div>
 
     <div
-      *ngIf="activeTab === 'NEW' && authService.isAdmin"
+      *ngIf="activeTab === 'NEW' && authService.canManageProjects"
       class="tab-content fade-in"
     >
       <div class="documents-header">
@@ -846,7 +846,7 @@
     </div>
 
     <div
-      *ngIf="activeTab === 'IMPORT' && authService.isAdmin"
+      *ngIf="activeTab === 'IMPORT' && authService.canManageProjects"
       class="tab-content fade-in"
     >
       <div class="documents-header">
