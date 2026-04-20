@@ -1,8 +1,8 @@
 // src/app/services/project.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../environments/environment';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { environment } from "../environments/environment";
 
 export interface Task {
   titulo: string;
@@ -68,6 +68,11 @@ export interface HerramientasMind {
   sonarList?: SonarConfig[];
 }
 
+export interface Department {
+  id?: string;
+  name: string;
+}
+
 export interface Project {
   id?: string;
   codigoProyecto?: string;
@@ -75,18 +80,18 @@ export interface Project {
   codigoImputacion?: string | null;
   lote?: string | null;
   departamento?: string | null;
-  
+
   // URLs de entorno
   urlEntornoDesarrollo?: string | null;
   urlEntornoIntegracion?: string | null;
   urlEntornoPreproduccion?: string | null;
   urlEntornoProduccion?: string | null;
-  
+
   // Responsables
   responsableProyecto?: string | null;
   responsableTecnico?: string | null;
   horaDaily?: string | null;
-  
+
   // Listas
   ip?: string[];
   tareas?: Task[];
@@ -98,15 +103,15 @@ export interface Project {
   bbdd?: DatabaseInfo[];
   openshift?: OpenShiftInfo[];
   usuarios?: string[];
-  
+
   // Información adicional
   notasGenerales?: string | null;
   entornoNotas?: string | null;
-  
+
   // Equipos
   equipoMinsait?: MinsaitMember[];
   devMachines?: DevMachine[];
-  
+
   // Herramientas MIND
   herramientasMind?: HerramientasMind;
 
@@ -132,9 +137,10 @@ export interface ProjectStats {
   totalTasks: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ProjectService {
   private baseUrl = `${environment.baseUrl}projects`;
+  private departmentsUrl = `${environment.baseUrl}departments`;
 
   constructor(private http: HttpClient) {}
 
@@ -159,7 +165,9 @@ export class ProjectService {
    * Obtener proyecto por código
    */
   getByCode(code: string): Observable<Project> {
-    return this.http.get<Project>(`${this.baseUrl}/code/${encodeURIComponent(code)}`);
+    return this.http.get<Project>(
+      `${this.baseUrl}/code/${encodeURIComponent(code)}`,
+    );
   }
 
   /**
@@ -167,7 +175,9 @@ export class ProjectService {
    * Buscar proyectos por nombre
    */
   searchByName(name: string): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.baseUrl}/search/name/${encodeURIComponent(name)}`);
+    return this.http.get<Project[]>(
+      `${this.baseUrl}/search/name/${encodeURIComponent(name)}`,
+    );
   }
 
   /**
@@ -199,7 +209,9 @@ export class ProjectService {
    * Marcar proyecto como eliminado (soft delete)
    */
   softDelete(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/soft-delete/${id}`, { responseType: 'text' });
+    return this.http.delete(`${this.baseUrl}/soft-delete/${id}`, {
+      responseType: "text",
+    });
   }
 
   /**
@@ -214,8 +226,14 @@ export class ProjectService {
    * POST /api/projects/{id}/documents/upload
    * Subir documento a un proyecto
    */
-  uploadProjectDocument(projectId: string, formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/${projectId}/documents/upload`, formData);
+  uploadProjectDocument(
+    projectId: string,
+    formData: FormData,
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/${projectId}/documents/upload`,
+      formData,
+    );
   }
 
   /**
@@ -224,7 +242,7 @@ export class ProjectService {
    */
   deleteProjectDocument(projectId: string, fileName: string): Observable<any> {
     return this.http.delete<any>(
-      `${this.baseUrl}/${projectId}/documents/delete?fileName=${encodeURIComponent(fileName)}`
+      `${this.baseUrl}/${projectId}/documents/delete?fileName=${encodeURIComponent(fileName)}`,
     );
   }
 
@@ -232,10 +250,51 @@ export class ProjectService {
    * GET /api/projects/{id}/documents/download
    * Descargar documento de un proyecto
    */
-  downloadProjectDocument(projectId: string, fileName: string): Observable<Blob> {
+  downloadProjectDocument(
+    projectId: string,
+    fileName: string,
+  ): Observable<Blob> {
     return this.http.get(
       `${this.baseUrl}/${projectId}/documents/download?fileName=${encodeURIComponent(fileName)}`,
-      { responseType: 'blob' }
+      { responseType: "blob" },
     );
+  }
+
+  /**
+   * GET /api/departments
+   * Obtener todos los departamentos
+   */
+  getDepartments(): Observable<Department[]> {
+    return this.http.get<Department[]>(this.departmentsUrl);
+  }
+
+  /**
+   * POST /api/departments
+   * Crear nuevo departamento
+   */
+  createDepartment(department: Partial<Department>): Observable<Department> {
+    return this.http.post<Department>(this.departmentsUrl, department);
+  }
+
+  /**
+   * PUT /api/departments/{id}
+   * Actualizar departamento
+   */
+  updateDepartment(
+    id: string,
+    department: Partial<Department>,
+  ): Observable<Department> {
+    return this.http.put<Department>(
+      `${this.departmentsUrl}/${id}`,
+      department,
+    );
+  }
+
+  /**
+   * DELETE /api/departments/{id}
+   * Eliminar departamento
+   */
+  deleteDepartment(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.departmentsUrl}/${id}`);
   }
 }

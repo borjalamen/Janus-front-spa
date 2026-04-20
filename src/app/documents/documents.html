@@ -10,7 +10,11 @@
   <div class="documents-header">
     <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
 
-    <button class="jenkins-add-btn" (click)="toggleAddPopup()">
+    <button
+      *ngIf="canManageDocuments"
+      class="jenkins-add-btn"
+      (click)="toggleAddPopup()"
+    >
       <mat-icon inline="true">add</mat-icon>
       <span>{{ 'DOCUMENTS.ADD_BUTTON' | translate }}</span>
     </button>
@@ -64,7 +68,7 @@
               </button>
 
               <button
-                *ngIf="authService.isAdmin"
+                *ngIf="canManageDocuments"
                 class="action-btn delete-btn"
                 (click)="confirmDeleteDocument(project, doc)"
                 title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"

@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
-import { ProjectService, Project } from "../project.service";
+import { ProjectService, Project, Department } from "../project.service";
 import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
 import { SafePipe } from "../safe.pipe";
@@ -72,6 +72,35 @@ export class ProjectsComponent implements OnInit {
   projectesFiltrats: Proyecto[] = this.projectes;
   isLoading = false;
 
+  // 🔵 PAGINACIÓ
+  pageSize = 8;
+  currentPage = 0;
+
+  get totalPages(): number {
+    return Math.max(
+      1,
+      Math.ceil(this.projectesFiltrats.length / this.pageSize),
+    );
+  }
+
+  get pagedProjectesFiltrats(): Proyecto[] {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    return this.projectesFiltrats.slice(start, end);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+    }
+  }
+
   toastMsg = "";
   toastOk = true;
   private _toastTimer: any = null;
@@ -93,7 +122,8 @@ export class ProjectsComponent implements OnInit {
   confirmMessage = "";
   private confirmAction: (() => void) | null = null;
 
-  csvTextImport = "";
+  jsonTextImport = "";
+  projectJsonFile: File | null = null;
   importResult: { success: boolean; message: string } | null = null;
 
   newProjectTab: "info" | "minsait" | "dev" | "mind" | "documentos" = "info";
@@ -133,6 +163,7 @@ export class ProjectsComponent implements OnInit {
 
   projectFileInput: File | null = null;
   projectFileDescription: string = "";
+  departments: Department[] = [];
 
   constructor(
     private translate: TranslateService,
@@ -165,6 +196,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     this.loadProjects();
+    this.loadDepartments();
   }
 
   private loadProjects() {
@@ -175,6 +207,7 @@ export class ProjectsComponent implements OnInit {
         console.log("✅ Proyectos cargados:", projects);
         this.projectes = projects as Proyecto[];
         this.projectesFiltrats = [...this.projectes];
+        this.currentPage = 0; // 🔵 reiniciar pàgina
         this.isLoading = false;
       },
       error: (err) => {
@@ -185,7 +218,22 @@ export class ProjectsComponent implements OnInit {
         );
         this.projectes = [];
         this.projectesFiltrats = [];
+        this.currentPage = 0; // 🔵 reiniciar pàgina encara que falle
         this.isLoading = false;
+      },
+    });
+  }
+
+  private loadDepartments() {
+    this.projectService.getDepartments().subscribe({
+      next: (departments) => {
+        this.departments = departments;
+        console.log("✅ Departamentos cargados:", departments);
+      },
+      error: (err) => {
+        console.error("❌ Error al cargar departamentos:", err);
+        this.departments = [];
+        this.showToast("❌ Error al carregar els departaments", false);
       },
     });
   }
@@ -534,7 +582,7 @@ export class ProjectsComponent implements OnInit {
   getDocumentIcon(doc: any): string {
     if (doc.tipo && doc.tipo.startsWith("image/")) return "🖼️";
     if (doc.tipo === "application/pdf") return "📄";
-    if (doc.tipo === "text/csv") return "📊";
+    if (doc.tipo === "application/json") return "🧩";
     if (
       doc.nombre.toLowerCase().endsWith(".docx") ||
       doc.nombre.toLowerCase().endsWith(".doc")
@@ -575,7 +623,7 @@ export class ProjectsComponent implements OnInit {
 
     if (tipo.startsWith("image/")) return "Imagen";
     if (tipo === "application/pdf" || nombre.endsWith(".pdf")) return "PDF";
-    if (tipo === "text/csv" || nombre.endsWith(".csv")) return "CSV";
+    if (tipo === "application/json" || nombre.endsWith(".json")) return "JSON";
     if (nombre.endsWith(".docx") || nombre.endsWith(".doc")) return "Word";
     if (nombre.endsWith(".xlsx") || nombre.endsWith(".xls")) return "Excel";
     if (nombre.endsWith(".pptx") || nombre.endsWith(".ppt"))
@@ -589,7 +637,8 @@ export class ProjectsComponent implements OnInit {
 
   filtrar(valor: string) {
     if (!valor) {
-      this.projectesFiltrats = this.projectes;
+      this.projectesFiltrats = [...this.projectes];
+      this.currentPage = 0;
       return;
     }
     const v = valor.toLowerCase();
@@ -621,6 +670,7 @@ export class ProjectsComponent implements OnInit {
       }).toLowerCase();
       return haystack.includes(v);
     });
+    this.currentPage = 0;
   }
 
   saveProject() {
@@ -882,6 +932,7 @@ export class ProjectsComponent implements OnInit {
           (p) => p.codigoProyecto !== code,
         );
         this.projectesFiltrats = [...this.projectes];
+        this.currentPage = 0; // opcional: tornar a primera pàgina després de borrar
         this.showToast("✅ Proyecto eliminado correctamente");
       },
       error: (err) => {
@@ -908,7 +959,7 @@ export class ProjectsComponent implements OnInit {
     this.confirmAction = null;
   }
 
-  onCsvFileSelected(event: Event) {
+  onJsonFileSelected(event: Event) {
     if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
@@ -919,25 +970,27 @@ export class ProjectsComponent implements OnInit {
 
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
+
     const file = input.files[0];
+    this.projectJsonFile = file;
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      this.processCsvImport(content);
+      this.processJsonImport(content);
     };
 
     reader.onerror = () => {
       this.importResult = {
         success: false,
-        message: "❌ Error al leer el archivo",
+        message: "❌ Error al leer el archivo JSON",
       };
     };
 
     reader.readAsText(file);
   }
 
-  importFromText() {
+  importFromJsonText() {
     if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
@@ -946,18 +999,27 @@ export class ProjectsComponent implements OnInit {
       return;
     }
 
-    if (!this.csvTextImport.trim()) {
-      this.importResult = { success: false, message: "❌ El texto está vacío" };
+    if (!this.jsonTextImport.trim()) {
+      this.importResult = {
+        success: false,
+        message: "❌ El texto JSON está vacío",
+      };
       return;
     }
-    this.processCsvImport(this.csvTextImport);
+
+    this.processJsonImport(this.jsonTextImport);
   }
 
-  parseCsvToProyectos(csv: string): Proyecto[] {
-    return [];
+  parseJsonToProyectos(json: string): Proyecto[] {
+    const data = JSON.parse(json);
+    const proyectos = Array.isArray(data) ? data : data.projects;
+
+    if (!Array.isArray(proyectos)) return [];
+
+    return proyectos as Proyecto[];
   }
 
-  private processCsvImport(content: string) {
+  private processJsonImport(content: string) {
     if (!this.authService.canManageProjects) {
       this.importResult = {
         success: false,
@@ -967,11 +1029,11 @@ export class ProjectsComponent implements OnInit {
     }
 
     try {
-      const proyectos = this.parseCsvToProyectos(content);
+      const proyectos = this.parseJsonToProyectos(content);
       if (proyectos.length === 0) {
         this.importResult = {
           success: false,
-          message: "❌ No se encontraron proyectos en el archivo",
+          message: "❌ No se encontraron proyectos en el archivo JSON",
         };
         return;
       }
@@ -989,11 +1051,13 @@ export class ProjectsComponent implements OnInit {
             imported++;
             if (imported === proyectos.length) {
               this.projectesFiltrats = [...this.projectes];
+              this.currentPage = 0;
               this.importResult = {
                 success: true,
                 message: `✅ Se importaron ${proyectos.length} proyecto(s) correctamente`,
               };
-              this.csvTextImport = "";
+              this.jsonTextImport = "";
+              this.projectJsonFile = null;
             }
           },
           error: (err) => {
@@ -1004,7 +1068,7 @@ export class ProjectsComponent implements OnInit {
     } catch {
       this.importResult = {
         success: false,
-        message: "❌ Error al procesar el archivo CSV",
+        message: "❌ Error al procesar el archivo JSON",
       };
     }
   }

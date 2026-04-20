@@ -82,6 +82,10 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     public authService: AuthService,
   ) {}
 
+  get canManageDocuments(): boolean {
+    return this.authService.isAdmin || this.authService.isDevOps;
+  }
+
   ngOnInit(): void {
     const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as
       | string
@@ -197,6 +201,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   toggleAddPopup(): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para gestionar documentos", false);
+      return;
+    }
+
     this.showAddPopup = !this.showAddPopup;
 
     if (this.showAddPopup) {
@@ -304,6 +313,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   addDocument(): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para subir documentos", false);
+      return;
+    }
+
     const validProject = this.validateProjectId();
 
     if (!this.selectedFile) {
@@ -332,7 +346,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   confirmDeleteDocument(project: ProjectView, document: DocItem): void {
-    if (!this.authService.isAdmin) {
+    if (!this.canManageDocuments) {
       this.showToast("No tienes permisos para eliminar documentos", false);
       return;
     }
@@ -347,7 +361,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   deleteDocument(): void {
-    if (!this.authService.isAdmin) {
+    if (!this.canManageDocuments) {
       this.showToast("No tienes permisos para eliminar documentos", false);
       return;
     }
