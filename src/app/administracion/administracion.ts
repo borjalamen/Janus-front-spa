@@ -888,10 +888,18 @@ export class AdministracionComponent implements OnInit {
   }
 
   // ===== LOGICA USUARIOS (Scenario 1) =====
+  private isActiveStatus(status?: string): boolean {
+    const normalized = String(status || "ACTIVE").toUpperCase().trim();
+    return normalized !== "INACTIVE" && normalized !== "DISABLED";
+  }
+
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
-        this.usuaris = [...data];
+        const activeUsers = (data || []).filter((u) =>
+          this.isActiveStatus(u.status),
+        );
+        this.usuaris = [...activeUsers];
         this.usuarisFiltrats = [...this.usuaris];
 
         if (this.searchUsers) {
@@ -986,18 +994,24 @@ export class AdministracionComponent implements OnInit {
       this.mostrarPopupDelete = false;
       return;
     }
+
+    const userId = this.usuariAEsborrar.id;
     this.http
-      .delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`)
+      .put<UsuariBackend>(`${this.baseUrl}/status/${userId}`, {
+        status: "INACTIVE",
+      })
       .subscribe({
         next: () => {
-          this.usuaris = this.usuaris.filter(
-            (u) => u.id !== this.usuariAEsborrar!.id,
-          );
+          this.usuaris = this.usuaris.filter((u) => u.id !== userId);
           this.filtrar("");
           this.mostrarPopupDelete = false;
           this.usuariAEsborrar = null;
+          this.showToast("Usuario inhabilitado correctamente", true);
         },
-        error: (err) => console.error("Error inhabilitando usuari", err),
+        error: (err) => {
+          console.error("Error inhabilitando usuari", err);
+          this.showToast("Error al inhabilitar el usuario", false);
+        },
       });
   }
 
@@ -1127,20 +1141,29 @@ export class AdministracionComponent implements OnInit {
 
   // Scenario 3: Parametrización
   cambiarVersion() {
-    if (!this.appVersion || this.appVersion.trim() === "") {
+    const newVersion = this.appVersion.trim();
+    const versionPattern = /^\d+\.\d+\.\d+$/;
+
+    if (!newVersion) {
       this.versionError = "Introduce una versión válida (ej: 1.2.0)";
       return;
     }
+
+    if (!versionPattern.test(newVersion)) {
+      this.versionError =
+        "La versión debe tener formato X.Y.Z (3 números separados por puntos)";
+      return;
+    }
+
     this.versionError = "";
     this.versionSuccess = "";
     this.versionSaving = true;
 
-    const body = { version: this.appVersion.trim() };
+    const body = { version: newVersion };
 
     this.http.put<any>(`${environment.baseUrl}config/version`, body).subscribe({
       next: () => {
         this.versionSaving = false;
-        const newVersion = this.appVersion.trim();
         this.versionSuccess = `Versión actualizada a ${newVersion}`;
         this.apiService.setVersion(newVersion);
         this.appVersion = "";
@@ -1819,9 +1842,12 @@ export class AdministracionComponent implements OnInit {
   }
 
   verCV(usuari: UsuariBackend) {
-    if (usuari.cvPath) {
+    if (usuari.cvPath && usuari.id) {
       window.open(`${environment.baseUrl}files/cv/${usuari.id}`, "_blank");
+      return;
     }
+
+    this.showToast("⚠️ Este usuario no tiene CV subido", false);
   }
 
   abrirPerfilCV(usuari: UsuariBackend) {

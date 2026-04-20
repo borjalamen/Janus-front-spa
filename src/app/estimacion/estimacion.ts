@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { EstimacionService } from './estimacion.service';
+import { EstimacionRecord, EstimacionService } from './estimacion.service';
 
 interface Task {
   id: string;
@@ -101,9 +101,12 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
   saveButtonText = '';
-  showEditModal = false;
-  isEditSaving = false;
-  editDraft: any = {};
+  isSavingEstimation = false;
+  private loadedEstimationNameIdentifier: string | null = null;
+  private loadedFromSavedRecord = false;
+  showDeleteConfirmPopup = false;
+  deleteCandidateEstimation: SavedEstimationRecord | null = null;
+  isDeletingEstimation = false;
 
   // clear controls
   clearMeta = false;
@@ -113,7 +116,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
   myId = 'u' + Math.random().toString(36).slice(2,8);
-  myName = (this.storage.get('username') as string) || ('User-' + this.myId.slice(-4));
+  myName = 'Usuario';
   myVote: string | number | null = null;
   liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
   private liveSub: Subscription | null = null;
@@ -292,6 +295,28 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.LEGACY_SAVED_STORAGE_KEYS.forEach((key) => this.storage.remove(key));
   }
 
+  private refreshSaveButtonText(): void {
+    this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Desar estimacio';
+  }
+
+  private normalizeEstimationNameForIdentifier(value: string): string {
+    return (value || '').trim().toLowerCase();
+  }
+
+  private getEstimationNameIdentifier(value: string | undefined | null): string {
+    return (value || '').toString().trim();
+  }
+
+  private findSavedEstimationByName(estimationName: string): SavedEstimationRecord | null {
+    const normalizedEstimationName = this.normalizeEstimationNameForIdentifier(estimationName);
+    if (!normalizedEstimationName) return null;
+
+    return this.savedEstimations.find((record) => {
+      const recordEstimationName = this.getEstimationNameIdentifier(record.estimationName);
+      return this.normalizeEstimationNameForIdentifier(recordEstimationName) === normalizedEstimationName;
+    }) || null;
+  }
+
   loadSavedEstimations() {
     this.estimacionService.getAll().subscribe({
       next: (data) => {
@@ -306,7 +331,26 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   saveCurrentEstimation() {
-    const obj = {
+    const estimationNameIdentifier = this.getEstimationNameIdentifier(this.estimationName);
+    if (!estimationNameIdentifier) {
+      this.snackBar.open('Debes indicar nombre de estimación para guardar.', undefined, { duration: 3000 });
+      return;
+    }
+
+    const normalizedCurrentName = this.normalizeEstimationNameForIdentifier(estimationNameIdentifier);
+    const normalizedLoadedName = this.normalizeEstimationNameForIdentifier(this.loadedEstimationNameIdentifier || '');
+    const estimationNameChangedFromLoaded = this.loadedFromSavedRecord
+      && !!normalizedLoadedName
+      && normalizedCurrentName !== normalizedLoadedName;
+
+    const existingRecord = this.findSavedEstimationByName(estimationNameIdentifier);
+    const existingRecordId = (existingRecord?.id || '').toString().trim();
+    const existingCreatedAt = (existingRecord?.createdAt || '').toString().trim();
+
+    const shouldForceCreate = estimationNameChangedFromLoaded;
+    const isUpdating = !shouldForceCreate && !!existingRecordId;
+
+    const payload: EstimacionRecord = {
       estimationName: this.estimationName,
       projectCode: this.projectCode,
       projectName: this.projectName,
@@ -316,35 +360,83 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       comments: JSON.parse(JSON.stringify(this.comments)),
       weeks: [...this.weeks],
       tasks: JSON.parse(JSON.stringify(this.tasks)),
-      createdAt: new Date().toISOString()
+      createdAt: isUpdating ? (existingCreatedAt || new Date().toISOString()) : new Date().toISOString(),
+      visible: true
     };
 
-    this.estimacionService.create(obj).subscribe({
+    const request$ = isUpdating
+      ? this.estimacionService.update(existingRecordId, payload)
+      : this.estimacionService.create(payload);
+
+    this.isSavingEstimation = true;
+
+    request$.subscribe({
       next: () => {
+        this.isSavingEstimation = false;
         this.loadSavedEstimations();
-        const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
+
+        this.loadedEstimationNameIdentifier = estimationNameIdentifier;
+        this.loadedFromSavedRecord = true;
+
+        const savedMsg = isUpdating
+          ? (this.translate.instant('ESTIMATION.UPDATED') || 'Estimacio actualitzada')
+          : (this.translate.instant('ESTIMATION.SAVED') || 'Estimacio desada');
         this.snackBar.open(savedMsg, undefined, { duration: 2500 });
 
-        const prev = this.saveButtonText;
         this.saveButtonText = savedMsg;
-        setTimeout(() => { this.saveButtonText = prev; }, 2000);
-
-        this.selectedTab = 1;
+        setTimeout(() => { this.refreshSaveButtonText(); }, 2000);
       },
       error: (err) => {
+        this.isSavingEstimation = false;
         console.error('Error saving estimacion in backend:', err);
-        const msg = this.translate.instant('ESTIMATION.ERROR_SAVE') || 'No se ha podido guardar la estimación';
+        const msg = isUpdating
+          ? (this.translate.instant('ESTIMATION.ERROR_UPDATE') || 'No s ha pogut actualitzar l estimacio')
+          : (this.translate.instant('ESTIMATION.ERROR_SAVE') || 'No s ha pogut desar l estimacio');
         this.snackBar.open(msg, undefined, { duration: 3000 });
       }
     });
   }
 
   ngOnInit(): void {
+    this.myName = this.resolveCurrentUserName();
     this.clearLegacySavedEstimationsStorage();
     this.loadSavedEstimations();
     this.restoreFormDraft();
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
-    this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Guardar estimación';
+    this.refreshSaveButtonText();
+  }
+
+  private resolveCurrentUserName(): string {
+    const fromUserObj = this.storage.getObject<{ fullName?: string; username?: string }>('user');
+    const fullName = (fromUserObj?.fullName || '').trim();
+    if (fullName) return fullName;
+
+    const username = (fromUserObj?.username || '').trim();
+    if (username) return username;
+
+    const fromKey = String(this.storage.get('username') || '').trim();
+    if (fromKey) return fromKey;
+
+    return 'Usuario';
+  }
+
+  private applySavedEstimationToForm(source: SavedEstimationRecord): void {
+    this.estimationName = source.estimationName || '';
+    this.projectCode = source.projectCode || '';
+    this.projectName = source.projectName || '';
+    this.requester = source.requester || '';
+    this.requesterEmail = source.requesterEmail || '';
+    this.notes = source.notes || '';
+    this.comments = Array.isArray(source.comments) ? JSON.parse(JSON.stringify(source.comments)) : [];
+    this.weeks = source.weeks && source.weeks.length ? [...source.weeks] : ['1'];
+    this.tasks = Array.isArray(source.tasks) ? JSON.parse(JSON.stringify(source.tasks)) : [];
+    this.loadedEstimationNameIdentifier = this.getEstimationNameIdentifier(source.estimationName);
+    this.loadedFromSavedRecord = true;
+    this.started = true;
+
+    this.selectedTab = 0;
+    this.saveFormDraft();
+    this.refreshSaveButtonText();
   }
 
   clearSelected() {
@@ -362,6 +454,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       this.tasks = [];
       this.weeks = ['1'];
       this.newTaskTitle = '';
+      this.loadedEstimationNameIdentifier = null;
+      this.loadedFromSavedRecord = false;
       cleared.push(this.translate.instant('ESTIMATION.CLEAR_ESTIMATION') || 'estimation');
     }
     if (cleared.length === 0) {
@@ -394,51 +488,51 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteSavedEstimation(id: string) {
+  private deleteSavedEstimation(id: string) {
     this.estimacionService.delete(id).subscribe({
       next: () => {
         this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
+
+        this.isDeletingEstimation = false;
+        this.showDeleteConfirmPopup = false;
+        this.deleteCandidateEstimation = null;
+
+        const msg = this.translate.instant('ESTIMATION.DELETED') || 'Estimacio eliminada';
+        this.snackBar.open(msg, undefined, { duration: 2200 });
       },
       error: (err) => {
         console.error('Error deleting estimacion from backend:', err);
+        this.isDeletingEstimation = false;
+        const msg = this.translate.instant('ESTIMATION.ERROR_DELETE') || 'No s ha pogut eliminar l estimacio';
+        this.snackBar.open(msg, undefined, { duration: 3000 });
       }
     });
   }
 
-  openEditSavedEstimation(estimation: any) {
-    this.editDraft = this.normalizeSavedEstimationForUpdate(estimation);
-    this.showEditModal = true;
-    this.isEditSaving = false;
+  openDeleteSavedEstimation(estimation: SavedEstimationRecord) {
+    this.deleteCandidateEstimation = estimation;
+    this.showDeleteConfirmPopup = true;
   }
 
-  closeEditSavedEstimation() {
-    this.showEditModal = false;
-    this.isEditSaving = false;
-    this.editDraft = {};
+  cancelDeleteSavedEstimation() {
+    if (this.isDeletingEstimation) return;
+    this.showDeleteConfirmPopup = false;
+    this.deleteCandidateEstimation = null;
   }
 
-  saveEditedEstimation() {
-    const payload = this.normalizeSavedEstimationForUpdate(this.editDraft);
-    if (!payload?.id) return;
+  confirmDeleteSavedEstimation() {
+    const id = (this.deleteCandidateEstimation?.id || '').trim();
+    if (!id) {
+      this.cancelDeleteSavedEstimation();
+      return;
+    }
 
-    this.isEditSaving = true;
-    this.estimacionService.update(payload.id, payload).subscribe({
-      next: () => {
-        this.isEditSaving = false;
-        this.closeEditSavedEstimation();
-        this.loadSavedEstimations();
-        this.snackBar.open('Estimación actualizada', undefined, { duration: 2200 });
-      },
-      error: (err) => {
-        this.isEditSaving = false;
-        console.error('Error updating estimacion in backend:', err);
-        this.snackBar.open('No se ha podido actualizar la estimación', undefined, { duration: 3000 });
-      }
-    });
+    this.isDeletingEstimation = true;
+    this.deleteSavedEstimation(id);
   }
 
-  private normalizeSavedEstimationForUpdate(source: any): any {
-    const clone = JSON.parse(JSON.stringify(source || {}));
+  private normalizeSavedEstimationForUpdate(source: any): SavedEstimationRecord {
+    const clone: SavedEstimationRecord = JSON.parse(JSON.stringify(source || {}));
     clone.comments = Array.isArray(clone.comments) ? clone.comments : [];
     clone.weeks = Array.isArray(clone.weeks) ? clone.weeks : [];
     clone.tasks = Array.isArray(clone.tasks) ? clone.tasks : [];
@@ -448,20 +542,11 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   loadSavedIntoCurrent(id: string) {
-    const s = this.savedEstimations.find(x => x.id === id);
-    if (!s) return;
-    this.estimationName = s.estimationName || '';
-    this.projectCode = s.projectCode || '';
-    this.projectName = s.projectName || '';
-    this.requester = s.requester || '';
-    this.requesterEmail = s.requesterEmail || '';
-    this.notes = s.notes || '';
-    this.comments = Array.isArray(s.comments) ? JSON.parse(JSON.stringify(s.comments)) : [];
-    this.weeks = s.weeks ? [...s.weeks] : ['1'];
-    this.tasks = s.tasks ? JSON.parse(JSON.stringify(s.tasks)) : [];
-    this.started = true;
-    this.selectedTab = 0;
-    this.saveFormDraft();
+    const selected = this.savedEstimations.find(x => x.id === id);
+    if (!selected) return;
+
+    const normalized = this.normalizeSavedEstimationForUpdate(selected);
+    this.applySavedEstimationToForm(normalized);
   }
 
   removeTask(id: string) {
@@ -491,9 +576,12 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     const text = (this.newCommentText || '').trim();
     if (!text) return;
 
+    const authorName = this.resolveCurrentUserName();
+    this.myName = authorName;
+
     const comment: EstimationComment = {
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-      author: this.myName || 'User',
+      author: authorName,
       text,
       createdAt: new Date().toISOString()
     };
@@ -501,6 +589,18 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.comments = [comment, ...this.comments];
     this.newCommentText = '';
     this.saveFormDraft();
+  }
+
+  getCommentAuthorDisplay(author: string | undefined | null): string {
+    const raw = (author || '').trim();
+    if (!raw) return this.resolveCurrentUserName();
+
+    const looksLikeGeneratedId = /^(user|usuario)-[a-z0-9]+$/i.test(raw);
+    if (looksLikeGeneratedId) {
+      return this.resolveCurrentUserName();
+    }
+
+    return raw;
   }
 
   toggleCommentsPanel() {

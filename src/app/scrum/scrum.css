@@ -107,15 +107,17 @@
 
 /* Header con título/estimación y botón */
 .controls-header {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  display: block;
 }
 
 .main-inputs {
-  flex: 1;
   display: flex;
   gap: 16px;
+}
+
+.controls-actions {
+  display: flex;
+  justify-content: flex-start;
 }
 
 /* Fila secundaria con prioridad y asignación */

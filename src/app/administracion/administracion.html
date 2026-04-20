@@ -90,11 +90,12 @@
 
           <div class="actions">
             <button
-              class="icon-btn view-profile"
-              (click)="verPerfil(usuari)"
-              [title]="'ADMIN.VIEW_FULL_PROFILE' | translate"
+              class="icon-btn download-cv"
+              (click)="verCV(usuari)"
+              [disabled]="!usuari.cvPath"
+              [title]="'ADMIN.DOWNLOAD_CV' | translate"
             >
-              <span class="emoji-icon">👁️</span>
+              <mat-icon>download</mat-icon>
             </button>
             <button
               class="icon-btn edit"

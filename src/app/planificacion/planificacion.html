@@ -254,19 +254,18 @@
         (click)="closeModal()"
         title="{{ 'PLANNING.CANCEL' | translate }}"
       >
-        ✖️
+        ✗
       </button>
       <button
         class="guardar-btn"
         (click)="saveModal()"
         title="{{ 'PLANNING.SAVE' | translate }}"
       >
-        ✔️
+        ✓
       </button>
       <button
         *ngIf="editing"
-        class="guardar-btn"
-        style="background: #E53935 !important;"
+        class="delete-btn"
         (click)="removeFromModal()"
         title="{{ 'PLANNING.DELETE' | translate }}"
       >
@@ -287,14 +286,14 @@
         (click)="confirmCancel()"
         title="{{ 'PLANNING.CANCEL' | translate }}"
       >
-        ✖️
+        ✗
       </button>
       <button
         class="guardar-btn"
         (click)="confirmOk()"
         title="Confirmar"
       >
-        ✔️
+        ✓
       </button>
     </div>
   </div>

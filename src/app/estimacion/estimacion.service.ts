@@ -41,6 +41,10 @@ export class EstimacionService {
     return this.http.get<EstimacionRecord[]>(`${this.baseUrl}/all`);
   }
 
+  getById(id: string): Observable<EstimacionRecord> {
+    return this.http.get<EstimacionRecord>(`${this.baseUrl}/${id}`);
+  }
+
   create(payload: EstimacionRecord): Observable<EstimacionRecord> {
     return this.http.post<EstimacionRecord>(`${this.baseUrl}/create`, payload);
   }

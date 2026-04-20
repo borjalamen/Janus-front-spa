@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LocalStorageService } from '../local-storage.service';
-import { ScrumService } from './scrum.service';
+import { RegisteredUserRecord, ScrumService } from './scrum.service';
 
 type ScrumTask = {
   id: string;
@@ -32,7 +32,7 @@ type ScrumComment = {
   templateUrl: './scrum.html',
   styleUrls: ['./scrum.css']
 })
-export class ScrumComponent {
+export class ScrumComponent implements OnInit {
   private readonly STORAGE_DRAFT_KEY = 'janus_scrum_draft';
 
   tasks: ScrumTask[] = [];
@@ -41,13 +41,9 @@ export class ScrumComponent {
   newDescription = '';
   newPriority: number = 50;
   newAssignee: string | null = null;
-  currentUserName = 'Usuario';
-  assignees = [
-    'Fernando Silvano Gil',
-    'Raúl Gallego',
-    'Rubén Planté',
-    'Borja Lara'
-  ];
+  currentUserName = 'Usuari';
+  assignees: string[] = [];
+  private registeredDevopsAssignees: string[] = [];
 
   editingId: string | null = null;
   editBuffer: Partial<ScrumTask> = {};
@@ -60,11 +56,56 @@ export class ScrumComponent {
     private scrumService: ScrumService
   ) {
     this.currentUserName = this.resolveCurrentUserName();
+  }
 
+  ngOnInit(): void {
     this.loadTasksFromBackend();
-
-    // carregar draft del formulari
+    this.loadDevopsAssigneesFromBackend();
     this.restoreDraft();
+  }
+
+  private loadDevopsAssigneesFromBackend(): void {
+    this.scrumService.getRegisteredUsers().subscribe({
+      next: (users) => {
+        const devopsNames = (users || [])
+          .filter((u) => this.isActiveUser(u) && this.hasDevopsRole(u))
+          .map((u) => (u.fullName || u.username || '').trim())
+          .filter((name) => !!name);
+
+        this.registeredDevopsAssignees = Array.from(new Set(devopsNames));
+        this.refreshAssignees();
+      },
+      error: (err) => {
+        console.error('Error loading DevOps users from backend:', err);
+        this.registeredDevopsAssignees = [];
+        this.refreshAssignees();
+      }
+    });
+  }
+
+  private hasDevopsRole(user: RegisteredUserRecord): boolean {
+    const roles = (user.roles || []).map((r) => (r || '').toUpperCase().trim());
+    return roles.includes('DEVOPS') || roles.includes('DEV');
+  }
+
+  private isActiveUser(user: RegisteredUserRecord): boolean {
+    const status = (user.status || 'ACTIVE').toUpperCase().trim();
+    return status !== 'INACTIVE' && status !== 'DISABLED';
+  }
+
+  private refreshAssignees(): void {
+    const taskAssignees = this.tasks
+      .map((t) => (t.assignee || '').trim())
+      .filter((name) => !!name);
+
+    this.assignees = Array.from(new Set([
+      ...this.registeredDevopsAssignees,
+      ...taskAssignees
+    ])).sort((a, b) => a.localeCompare(b, 'ca'));
+
+    if (this.newAssignee && !this.assignees.includes(this.newAssignee)) {
+      this.newAssignee = null;
+    }
   }
 
   private normalizeTask(raw: any): ScrumTask {
@@ -114,10 +155,12 @@ export class ScrumComponent {
     this.scrumService.getAll().subscribe({
       next: (tasks) => {
         this.tasks = (tasks || []).map(t => this.normalizeTask(t));
+        this.refreshAssignees();
       },
       error: (err) => {
         console.error('Error loading scrum tasks from backend:', err);
         this.tasks = [];
+        this.refreshAssignees();
       }
     });
   }
@@ -210,6 +253,7 @@ export class ScrumComponent {
     this.scrumService.create(t as any).subscribe({
       next: (created) => {
         this.tasks.push(this.normalizeTask(created));
+        this.refreshAssignees();
         this.newTitle = '';
         this.newEstimate = '';
         this.newPriority = 50;
@@ -252,6 +296,7 @@ export class ScrumComponent {
       next: (updated) => {
         const idx = this.tasks.findIndex(x => x.id === t.id);
         if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+        this.refreshAssignees();
       },
       error: (err) => {
         console.error('Error updating scrum task in backend:', err);
@@ -273,6 +318,7 @@ export class ScrumComponent {
       next: (updated) => {
         const idx = this.tasks.findIndex(x => x.id === t.id);
         if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+        this.refreshAssignees();
       },
       error: (err) => {
         console.error('Error moving scrum task in backend:', err);
@@ -283,7 +329,14 @@ export class ScrumComponent {
   removeTask(id: string) {
     this.scrumService.delete(id).subscribe({
       next: () => {
-        this.tasks = this.tasks.filter(x => x.id !== id);
+        if (this.openCommentsTaskId === id) {
+          this.openCommentsTaskId = null;
+        }
+        if (this.editingId === id) {
+          this.cancelEdit();
+        }
+
+        this.loadTasksFromBackend();
       },
       error: (err) => {
         console.error('Error deleting scrum task from backend:', err);
@@ -345,6 +398,7 @@ export class ScrumComponent {
       next: (updated) => {
         const idx = this.tasks.findIndex(x => x.id === task.id);
         if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+        this.refreshAssignees();
       },
       error: (err) => {
         console.error('Error saving scrum comment in backend:', err);
@@ -359,6 +413,7 @@ export class ScrumComponent {
       next: (updated) => {
         const idx = this.tasks.findIndex(x => x.id === task.id);
         if (idx !== -1) this.tasks[idx] = this.normalizeTask(updated);
+        this.refreshAssignees();
       },
       error: (err) => {
         console.error('Error deleting scrum comment in backend:', err);
@@ -383,6 +438,6 @@ export class ScrumComponent {
     const fromKey = String(this.storage.get('username') || '').trim();
     if (fromKey) return fromKey;
 
-    return 'Usuario';
+    return 'Usuari';
   }
 }

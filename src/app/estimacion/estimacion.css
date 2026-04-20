@@ -11,6 +11,49 @@
   font-size: 1.8rem;
 }
 
+.est-edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(251, 192, 45, 0.45);
+  background: rgba(251, 192, 45, 0.08);
+  color: #ffe082;
+}
+
+.est-edit-banner-text {
+  font-size: 0.92rem;
+}
+
+.est-edit-banner-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.est-edit-banner-close:hover {
+  border-color: rgba(251, 192, 45, 0.7);
+  color: #ffd54f;
+}
+
+.saving-spin {
+  animation: estSpin 0.9s linear infinite;
+}
+
+@keyframes estSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* ===== METADATA FORM ===== */
 .metadata-form {
   margin-bottom: 24px;
@@ -1138,6 +1181,25 @@
   margin: 0 0 14px;
   color: #ffd54f;
   font-size: 1.08rem;
+}
+
+.est-delete-modal {
+  width: min(520px, 94vw);
+  text-align: center;
+}
+
+.est-delete-modal p {
+  margin: 8px 0;
+}
+
+.est-delete-warning {
+  color: #ffb4b4;
+  font-size: 0.92rem;
+}
+
+.est-delete-target {
+  color: #f5f7fa;
+  word-break: break-word;
 }
 
 .est-modal-grid {

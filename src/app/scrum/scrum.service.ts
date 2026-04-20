@@ -27,9 +27,18 @@ export interface ScrumTaskRecord {
   visible?: boolean;
 }
 
+export interface RegisteredUserRecord {
+  id?: string;
+  username?: string;
+  fullName?: string;
+  roles?: string[];
+  status?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ScrumService {
   private readonly baseUrl = `${environment.baseUrl}scrum`;
+  private readonly usersUrl = `${environment.baseUrl}users`;
 
   constructor(private http: HttpClient) {}
 
@@ -47,5 +56,9 @@ export class ScrumService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
+  }
+
+  getRegisteredUsers(): Observable<RegisteredUserRecord[]> {
+    return this.http.get<RegisteredUserRecord[]>(`${this.usersUrl}/all`);
   }
 }

@@ -96,14 +96,21 @@ export class PeticionComponent implements OnInit {
       next: (users) => {
         console.log("USUARIOS API", users);
 
-        const devopsUsers = users.filter(
-          (u) => Array.isArray(u.roles) && u.roles.includes("DEVOPS"),
-        );
+        const devopsUsers = (users || []).filter((u) => {
+          const roles = Array.isArray(u?.roles)
+            ? u.roles.map((r: string) => String(r || "").toUpperCase().trim())
+            : [];
+          const status = String(u?.status || "ACTIVE").toUpperCase().trim();
+          const isDevops = roles.includes("DEVOPS") || roles.includes("DEV");
+          const isActive = status !== "INACTIVE" && status !== "DISABLED";
+          return isDevops && isActive;
+        });
 
-        this.devopsOptions = [
-          "Cualquiera",
-          ...devopsUsers.map((u) => u.fullName),
-        ];
+        const names = devopsUsers
+          .map((u) => String(u?.fullName || u?.username || "").trim())
+          .filter((n) => !!n);
+
+        this.devopsOptions = ["Cualquiera", ...Array.from(new Set(names))];
 
         if (!this.devopsOptions.includes(this.form.devopsAssignee)) {
           this.form.devopsAssignee = "Cualquiera";
