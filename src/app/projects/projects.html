@@ -27,14 +27,6 @@
       >
         <span class="tab-emoji">📥</span> {{ 'PROJECTS.IMPORT' | translate }}
       </button>
-
-      <button
-        class="top-tab-btn"
-        [class.active]="activeTab === 'STATS'"
-        (click)="cambiarTab('STATS')"
-      >
-        <span class="tab-emoji">📊</span> {{ 'PROJECTS.STATS' | translate }}
-      </button>
     </div>
   </div>
 
@@ -104,7 +96,6 @@
           </p>
         </div>
 
-        <!-- PAGINACIÓ TRADUÏDA -->
         <div
           *ngIf="projectesFiltrats.length > pageSize"
           class="projects-pagination"
@@ -951,76 +942,6 @@
           >
             📥 {{ 'PROJECTS.IMPORT_JSON_BTN' | translate }}
           </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div *ngIf="activeTab === 'STATS'" class="tab-content fade-in">
-      <div class="documents-header">
-        <h2>📊 {{ 'PROJECTS.STATS_TITLE' | translate }}</h2>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card">
-          <img
-            src="assets/images/Folder.png"
-            alt="Folder"
-            class="stat-folder-icon"
-          />
-          <div class="stat-info">
-            <span class="stat-value">{{ projectes.length }}</span>
-            <span class="stat-label">
-              {{ 'PROJECTS.STATS_TOTAL_PROJECTS' | translate }}
-            </span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-emoji">🏢</span>
-          <div class="stat-info">
-            <span class="stat-value">{{ getDepartamentosUnicos() }}</span>
-            <span class="stat-label">
-              {{ 'PROJECTS.STATS_DEPARTMENTS' | translate }}
-            </span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-emoji">📦</span>
-          <div class="stat-info">
-            <span class="stat-value">{{ getLotesUnicos() }}</span>
-            <span class="stat-label">
-              {{ 'PROJECTS.STATS_LOTS' | translate }}
-            </span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-emoji">✅</span>
-          <div class="stat-info">
-            <span class="stat-value">{{ getTotalTareas() }}</span>
-            <span class="stat-label">
-              {{ 'PROJECTS.STATS_TOTAL_TASKS' | translate }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-card" *ngIf="projectes.length > 0">
-        <h3>📋 {{ 'PROJECTS.STATS_SUMMARY' | translate }}</h3>
-        <div class="summary-list">
-          <div
-            *ngFor="let dept of getResumenDepartamentos()"
-            class="summary-item"
-          >
-            <span class="summary-name">
-              {{ dept.nombre || ('PROJECTS.STATS_NO_DEPT' | translate) }}
-            </span>
-            <span class="summary-count">
-              {{ dept.count }} {{ 'PROJECTS.STATS_PROJECT_UNIT' | translate }}
-            </span>
-          </div>
         </div>
       </div>
     </div>

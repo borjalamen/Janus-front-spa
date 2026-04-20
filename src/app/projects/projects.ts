@@ -63,16 +63,18 @@ export interface Proyecto extends Project {
 export class ProjectsComponent implements OnInit {
   title = "";
 
-  activeTab: "LIST" | "NEW" | "IMPORT" | "STATS" = "LIST";
+  activeTab: "LIST" | "NEW" | "IMPORT" = "LIST";
 
   private readonly STORAGE_DRAFT_KEY = "projects_draft";
   private readonly STORAGE_TAB_KEY = "projects_active_tab";
+  private readonly STORAGE_LAST_PROJECT_KEY = "projects_last_project_code";
+  private readonly STORAGE_LAST_CREATED_PROJECT_KEY =
+    "projects_last_created_project_code";
 
   projectes: Proyecto[] = [];
   projectesFiltrats: Proyecto[] = this.projectes;
   isLoading = false;
 
-  // 🔵 PAGINACIÓ
   pageSize = 8;
   currentPage = 0;
 
@@ -174,12 +176,7 @@ export class ProjectsComponent implements OnInit {
     this.title = this.translate.instant("PROJECTS.TITLE");
 
     const savedTab = this.storage.get(this.STORAGE_TAB_KEY) as any;
-    if (
-      savedTab === "LIST" ||
-      savedTab === "NEW" ||
-      savedTab === "IMPORT" ||
-      savedTab === "STATS"
-    ) {
+    if (savedTab === "LIST" || savedTab === "NEW" || savedTab === "IMPORT") {
       this.activeTab = savedTab;
     }
 
@@ -202,13 +199,26 @@ export class ProjectsComponent implements OnInit {
   private loadProjects() {
     this.isLoading = true;
     console.log("🔄 Cargando proyectos desde API...");
+
     this.projectService.getAll().subscribe({
       next: (projects) => {
         console.log("✅ Proyectos cargados:", projects);
-        this.projectes = projects as Proyecto[];
+
+        const sorted = (projects as Proyecto[])
+          .slice()
+          .sort((a, b) => Number(b.id) - Number(a.id));
+
+        this.projectes = sorted;
+
+        // Posem primer l'últim projecte creat
+        this.prioritizeLastCreatedProject();
+
         this.projectesFiltrats = [...this.projectes];
-        this.currentPage = 0; // 🔵 reiniciar pàgina
+        this.currentPage = 0;
         this.isLoading = false;
+
+        // Restaurar l'últim projecte obert
+        this.restoreLastProject();
       },
       error: (err) => {
         console.error("❌ Error al cargar proyectos:", err);
@@ -218,7 +228,7 @@ export class ProjectsComponent implements OnInit {
         );
         this.projectes = [];
         this.projectesFiltrats = [];
-        this.currentPage = 0; // 🔵 reiniciar pàgina encara que falle
+        this.currentPage = 0;
         this.isLoading = false;
       },
     });
@@ -238,6 +248,36 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  private restoreLastProject(): void {
+    const lastCode = this.storage.get(this.STORAGE_LAST_PROJECT_KEY) as
+      | string
+      | null;
+
+    if (!lastCode || !this.projectes?.length) return;
+
+    const project = this.projectes.find((p) => p.codigoProyecto === lastCode);
+    if (!project) return;
+
+    this.openProjectDetail(project, "view");
+  }
+
+  private prioritizeLastCreatedProject(): void {
+    const lastCreatedCode = this.storage.get(
+      this.STORAGE_LAST_CREATED_PROJECT_KEY,
+    ) as string | null;
+
+    if (!lastCreatedCode || !this.projectes?.length) return;
+
+    const index = this.projectes.findIndex(
+      (p) => p.codigoProyecto === lastCreatedCode,
+    );
+
+    if (index <= 0) return;
+
+    const [project] = this.projectes.splice(index, 1);
+    this.projectes.unshift(project);
+  }
+
   openProjectDetail(project: Proyecto, mode: "view" | "edit" = "view") {
     if (mode === "edit" && !this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per editar projectes", false);
@@ -247,6 +287,10 @@ export class ProjectsComponent implements OnInit {
     console.log(
       `📖 Cargando proyecto completo ${project.codigoProyecto} desde backend...`,
     );
+
+    if (project.codigoProyecto) {
+      this.storage.set(this.STORAGE_LAST_PROJECT_KEY, project.codigoProyecto);
+    }
 
     if (project.id) {
       this.projectService.getById(project.id).subscribe({
@@ -320,7 +364,7 @@ export class ProjectsComponent implements OnInit {
     this.storage.remove(this.STORAGE_DRAFT_KEY);
   }
 
-  cambiarTab(tab: "LIST" | "NEW" | "IMPORT" | "STATS") {
+  cambiarTab(tab: "LIST" | "NEW" | "IMPORT") {
     if (
       !this.authService.canManageProjects &&
       (tab === "NEW" || tab === "IMPORT")
@@ -755,6 +799,7 @@ export class ProjectsComponent implements OnInit {
           p.codigoProyecto === proyecto.codigoProyecto &&
           p.id !== (partial as any).id,
       );
+
       if (codeConflict) {
         this.showToast(
           `⚠️ El código "${proyecto.codigoProyecto}" ya está en uso por otro proyecto`,
@@ -768,9 +813,14 @@ export class ProjectsComponent implements OnInit {
       this.projectService.update(partial.id!, proyecto).subscribe({
         next: (updated) => {
           const idx = this.projectes.findIndex((p) => p.id === updated.id);
+
           if (idx !== -1) {
             this.projectes[idx] = updated as Proyecto;
           }
+
+          this.projectes = [...this.projectes].sort(
+            (a, b) => Number(b.id) - Number(a.id),
+          );
           this.projectesFiltrats = [...this.projectes];
 
           if (this.newProjectDocuments.length > 0) {
@@ -794,7 +844,20 @@ export class ProjectsComponent implements OnInit {
     } else {
       this.projectService.create(proyecto).subscribe({
         next: (created) => {
-          this.projectes.push(created as Proyecto);
+          if (created.codigoProyecto) {
+            this.storage.set(
+              this.STORAGE_LAST_CREATED_PROJECT_KEY,
+              created.codigoProyecto,
+            );
+          }
+
+          this.projectes.unshift(created as Proyecto);
+          this.projectes = [...this.projectes].sort(
+            (a, b) => Number(b.id) - Number(a.id),
+          );
+
+          this.prioritizeLastCreatedProject();
+
           this.projectesFiltrats = [...this.projectes];
 
           if (this.newProjectDocuments.length > 0 && created.id) {
@@ -932,8 +995,20 @@ export class ProjectsComponent implements OnInit {
           (p) => p.codigoProyecto !== code,
         );
         this.projectesFiltrats = [...this.projectes];
-        this.currentPage = 0; // opcional: tornar a primera pàgina després de borrar
+        this.currentPage = 0;
         this.showToast("✅ Proyecto eliminado correctamente");
+
+        const lastCode = this.storage.get(this.STORAGE_LAST_PROJECT_KEY);
+        if (lastCode === code) {
+          this.storage.remove(this.STORAGE_LAST_PROJECT_KEY);
+        }
+
+        const lastCreatedCode = this.storage.get(
+          this.STORAGE_LAST_CREATED_PROJECT_KEY,
+        );
+        if (lastCreatedCode === code) {
+          this.storage.remove(this.STORAGE_LAST_CREATED_PROJECT_KEY);
+        }
       },
       error: (err) => {
         console.error("Error al eliminar proyecto:", err);
@@ -1050,6 +1125,9 @@ export class ProjectsComponent implements OnInit {
             this.projectes.push(created as Proyecto);
             imported++;
             if (imported === proyectos.length) {
+              this.projectes = [...this.projectes].sort(
+                (a, b) => Number(b.id) - Number(a.id),
+              );
               this.projectesFiltrats = [...this.projectes];
               this.currentPage = 0;
               this.importResult = {
