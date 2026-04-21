@@ -79,7 +79,7 @@
       ></app-buscador>
 
       <div class="users-list">
-        <div *ngFor="let usuari of usuarisFiltrats" class="usuari-item">
+        <div *ngFor="let usuari of usuariosPaginados" class="usuari-item">
           <div>
             <div class="usuari-nom">
               <b>{{ usuari.fullName }}</b>
@@ -91,8 +91,7 @@
           <div class="actions">
             <button
               class="icon-btn download-cv"
-              (click)="verCV(usuari)"
-              [disabled]="!usuari.cvPath"
+              (click)="descargarCV(usuari)"
               [title]="'ADMIN.DOWNLOAD_CV' | translate"
             >
               <mat-icon>download</mat-icon>
@@ -115,6 +114,34 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="pagination-bar" *ngIf="totalPaginasUsuarios > 1">
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaUsuarios(paginaActualUsuarios - 1)"
+          [disabled]="paginaActualUsuarios === 1"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let p of paginasArrayUsuarios"
+          class="page-btn"
+          [class.active]="p === paginaActualUsuarios"
+          (click)="cambiarPaginaUsuarios(p)"
+        >
+          {{ p }}
+        </button>
+        <button
+          class="page-btn"
+          (click)="cambiarPaginaUsuarios(paginaActualUsuarios + 1)"
+          [disabled]="paginaActualUsuarios === totalPaginasUsuarios"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <span class="page-info"
+          >{{ paginaActualUsuarios }} / {{ totalPaginasUsuarios }}</span
+        >
       </div>
     </div>
 
@@ -162,7 +189,10 @@
           <input
             type="text"
             [(ngModel)]="appVersion"
+            (ngModelChange)="validarVersionEnEdicion($event)"
             placeholder="Ej: 1.0.0"
+            pattern="^\d+\.\d+\.\d+$"
+            inputmode="numeric"
             [disabled]="versionSaving"
           />
         </div>
@@ -180,7 +210,7 @@
           <button
             class="jenkins-add-btn"
             (click)="cambiarVersion()"
-            [disabled]="versionSaving"
+            [disabled]="versionSaving || !versionInputValida"
           >
             <mat-icon
               >{{ versionSaving ? 'hourglass_empty' : 'update' }}</mat-icon
@@ -198,7 +228,7 @@
       </div>
 
       <div class="db-grid">
-        <!-- Borrado Físico -->
+        <!-- Borrado Lógico -->
         <div class="admin-card db-card">
           <span class="big-emoji">🗑️</span>
           <h3>{{ 'ADMIN.PHYSICAL_DELETE' | translate }}</h3>
@@ -207,7 +237,7 @@
             class="jenkins-add-btn db-danger-btn"
             (click)="accionBBDD('borrado')"
           >
-            <mat-icon>delete_forever</mat-icon>
+            <mat-icon>remove_circle_outline</mat-icon>
             {{ 'ADMIN.PHYSICAL_DELETE' | translate }}
           </button>
         </div>
@@ -399,6 +429,15 @@
           </span>
 
           <span
+            class="status-pill finalizada"
+            [class.active]="filtroEstadoTareas === 'FINALIZADA'"
+            (click)="filtrarPorEstadoTareas('FINALIZADA')"
+            style="cursor: pointer"
+          >
+            {{ tareasFinalizadas }} FINALIZADAS
+          </span>
+
+          <span
             class="status-pill rechazada"
             [class.active]="filtroEstadoTareas === 'RECHAZADA'"
             (click)="filtrarPorEstadoTareas('RECHAZADA')"
@@ -514,12 +553,32 @@
             </div>
 
             <button
+              class="btn-emoji start"
+              *ngIf="tarea.estado === 'APROBADA'"
+              (click)="iniciarTarea(tarea)"
+              [disabled]="!canEdit"
+              title="Iniciar petición"
+            >
+              <mat-icon>play_circle</mat-icon>
+            </button>
+
+            <button
               class="btn-emoji"
               *ngIf="tarea.estado === 'INICIADA'"
               (click)="reenviarConfirmacion(tarea)"
               title="Reenviar confirmación de correo"
             >
               <mat-icon>forward_to_inbox</mat-icon>
+            </button>
+
+            <button
+              class="btn-emoji finish"
+              *ngIf="tarea.estado === 'INICIADA'"
+              (click)="finalizarTarea(tarea)"
+              [disabled]="!canEdit"
+              title="Finalizar petición"
+            >
+              <mat-icon>task_alt</mat-icon>
             </button>
 
             <button
@@ -738,7 +797,7 @@
   </div>
 </div>
 
-<!-- Popup Borrado Físico -->
+<!-- Popup Borrado Lógico -->
 <div class="modal-overlay" *ngIf="mostrarPopupBorrado">
   <div class="auth-card db-popup db-popup-large">
     <h2 class="form-title">
@@ -834,10 +893,10 @@
         </p>
         <button
           class="jenkins-add-btn db-danger-btn"
-          (click)="ejecutarBorradoFisicoColecciones()"
+          (click)="ejecutarBorradoLogicoColecciones()"
           [disabled]="selectedCollectionsBorrado.size === 0"
         >
-          <mat-icon>delete_forever</mat-icon>
+          <mat-icon>remove_circle_outline</mat-icon>
           {{ 'ADMIN.SELECT_AND_EXECUTE' | translate }}
         </button>
       </div>
