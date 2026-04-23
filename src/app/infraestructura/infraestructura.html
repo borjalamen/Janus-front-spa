@@ -2,12 +2,43 @@
   <div class="infra-container">
     <div class="infra-header">
       <h2 class="infra-title">{{ 'INFRA.TITLE' | translate }}</h2>
+      <div class="infra-search">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          class="search-input"
+          type="text"
+          [(ngModel)]="filterText"
+          placeholder="Buscar proyecto..."
+          autocomplete="off"
+        />
+        <button class="search-clear" *ngIf="filterText" (click)="filterText = ''" title="Limpiar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
 
-    <div class="infra-grid">
-      <div class="infra-card" *ngFor="let p of projects" (click)="openProject(p)">
+    <!-- Loading -->
+    <div class="infra-loading" *ngIf="loading">
+      <span class="loading-dot"></span>
+      <span class="loading-dot"></span>
+      <span class="loading-dot"></span>
+    </div>
+
+    <!-- Error -->
+    <div class="infra-error" *ngIf="error && !loading">
+      <mat-icon>warning_amber</mat-icon>
+      <span>No se pudieron cargar los proyectos</span>
+      <button (click)="loadProjects()">Reintentar</button>
+    </div>
+
+    <!-- Grid de proyectos -->
+    <div class="infra-grid" *ngIf="!loading && !error">
+      <div class="infra-card" *ngFor="let p of filteredProjects">
         <div class="infra-top">
-          <div class="project-name"><strong>{{ p.name }}</strong></div>
+          <div class="project-name">
+            <strong>{{ p.name }}</strong>
+            <span class="project-code" *ngIf="p.code">{{ p.code }}</span>
+          </div>
           <div
             class="traffic-light"
             [ngClass]="{
@@ -28,6 +59,12 @@
           <span class="status-label">{{ p.status }}</span>
         </div>
       </div>
+    </div>
+
+    <!-- Sin proyectos -->
+    <div class="infra-empty" *ngIf="!loading && !error && filteredProjects.length === 0">
+      <ng-container *ngIf="projects.length === 0">No hay proyectos disponibles</ng-container>
+      <ng-container *ngIf="projects.length > 0">No hay resultados para "{{ filterText }}"</ng-container>
     </div>
   </div>
 </section>

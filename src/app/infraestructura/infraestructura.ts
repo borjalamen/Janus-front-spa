@@ -1,66 +1,73 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { LocalStorageService } from '../local-storage.service';
+import { MatIconModule } from '@angular/material/icon';
+import { ProjectService } from '../project.service';
+
+type TrafficStatus = 'UP' | 'WARN' | 'DOWN';
 
 interface ProjectItem {
   id?: string;
   name: string;
-  url?: string;
-  status: 'UP' | 'WARN' | 'DOWN';
+  code?: string;
+  status: TrafficStatus;
+}
+
+const STATUSES: TrafficStatus[] = ['UP', 'WARN', 'DOWN'];
+
+function randomStatus(): TrafficStatus {
+  return STATUSES[Math.floor(Math.random() * STATUSES.length)];
 }
 
 @Component({
   selector: 'app-infraestructura',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, MatIconModule],
   templateUrl: './infraestructura.html',
   styleUrls: ['./infraestructura.css'],
 })
 export class Infraestructura {
 
   projects: ProjectItem[] = [];
-  private baseUrl = `${environment.baseUrl}infra`;
-  private readonly STORAGE_KEY = 'infra_projects';
+  loading = true;
+  error = false;
+  filterText = '';
 
-  constructor(
-    private http: HttpClient,
-    private storage: LocalStorageService
-  ) {
-    // primer intentem carregar del cache
-    const cached = this.storage.getObject<ProjectItem[]>(this.STORAGE_KEY);
-    if (cached && cached.length) {
-      this.projects = cached;
-    }
+  get filteredProjects(): ProjectItem[] {
+    const q = this.filterText.trim().toLowerCase();
+    if (!q) return this.projects;
+    return this.projects.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      (p.code ?? '').toLowerCase().includes(q)
+    );
+  }
+
+  constructor(private projectService: ProjectService) {
     this.loadProjects();
   }
 
   loadProjects() {
-    this.http.get<ProjectItem[]>(`${this.baseUrl}/projects`).subscribe({
+    this.loading = true;
+    this.error = false;
+    this.projectService.getAll().subscribe({
       next: (data) => {
-        this.projects = data;
-        this.storage.setObject(this.STORAGE_KEY, this.projects);
+        this.projects = data
+          .filter(p => p.visible !== false && p.deleted !== true)
+          .map(p => ({
+            id: p.id,
+            name: p.nombre ?? p.codigoProyecto ?? '—',
+            code: p.codigoProyecto,
+            status: randomStatus(),
+          }));
+        this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading projects, using fallback', err);
-        // si hi ha cache, el mantenim; si no, fem fallback de mostra
-        if (!this.projects || this.projects.length === 0) {
-          this.projects = [
-            { name: 'PROY-ALPHA', status: 'UP', url: '#' },
-            { name: 'PROY-BETA', status: 'WARN', url: '#' },
-            { name: 'PROY-GAMMA', status: 'DOWN', url: '#' },
-            { name: 'PROY-DELTA', status: 'UP', url: '#' }
-          ];
-        }
+        console.error('Error loading projects', err);
+        this.error = true;
+        this.loading = false;
       }
     });
   }
-
-  openProject(p: ProjectItem) {
-    if (p.url && p.url !== '#') {
-      window.open(p.url, '_blank');
-    }
-  }
 }
+
