@@ -14,6 +14,7 @@
       *ngIf="canManageDocuments"
       class="jenkins-add-btn"
       (click)="toggleAddPopup()"
+      title="{{ 'DOCUMENTS.ADD_BUTTON' | translate }}"
     >
       <mat-icon inline="true">add</mat-icon>
       <span>{{ 'DOCUMENTS.ADD_BUTTON' | translate }}</span>
@@ -23,7 +24,11 @@
   <div class="projects-list">
     <div *ngFor="let project of projectsPaginats" class="project-container">
       <div class="project-icon">
-        <img src="assets/images/Folder.png" alt="Folder" class="folder-img" />
+        <img
+          src="assets/images/Folder.png"
+          alt="{{ 'DOCUMENTS.FOLDER_ALT' | translate }}"
+          class="folder-img"
+        />
       </div>
 
       <div class="project-info">
@@ -44,7 +49,7 @@
             <div class="doc-info">
               <img
                 src="assets/images/File.png"
-                alt="File"
+                alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
                 class="doc-icon file-img"
               />
               <span class="doc-name">{{ resolveDocumentName(doc) }}</span>
@@ -55,6 +60,7 @@
                 class="action-btn view-btn"
                 (click)="viewDocument(project, doc)"
                 title="{{ 'DOCUMENTS.VIEW' | translate }}"
+                aria-label="{{ 'DOCUMENTS.VIEW' | translate }}"
               >
                 👁️
               </button>
@@ -63,6 +69,7 @@
                 class="action-btn download-btn"
                 (click)="downloadDocument(project, doc)"
                 title="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
+                aria-label="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
               >
                 📥
               </button>
@@ -72,6 +79,7 @@
                 class="action-btn delete-btn"
                 (click)="confirmDeleteDocument(project, doc)"
                 title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
+                aria-label="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
               >
                 🗑️
               </button>
@@ -99,7 +107,7 @@
       class="page-btn"
       (click)="cambiarPaginaProjects(paginaActualProjects - 1)"
       [disabled]="paginaActualProjects === 1"
-      aria-label="Anterior"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_PREVIOUS' | translate }}"
     >
       ‹
     </button>
@@ -109,6 +117,7 @@
       *ngFor="let p of paginasArrayProjects"
       [class.active]="p === paginaActualProjects"
       (click)="cambiarPaginaProjects(p)"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_GOTO' | translate:{ page: p } }}"
     >
       {{ p }}
     </button>
@@ -117,13 +126,14 @@
       class="page-btn"
       (click)="cambiarPaginaProjects(paginaActualProjects + 1)"
       [disabled]="paginaActualProjects === totalPaginasProjects"
-      aria-label="Siguiente"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_NEXT' | translate }}"
     >
       ›
     </button>
 
     <span class="page-info">
-      {{ paginaActualProjects }} / {{ totalPaginasProjects }}
+      {{ 'DOCUMENTS.PAGINATION_INFO' | translate:{ current:
+      paginaActualProjects, total: totalPaginasProjects } }}
     </span>
   </div>
 </div>
@@ -141,11 +151,13 @@
         class="project-search-input"
         [(ngModel)]="projectSearch"
         (input)="filterProjectsForPopup()"
-        placeholder="Buscar por código o nombre del proyecto"
+        [placeholder]="'DOCUMENTS.FIELD_PROJECT_SEARCH_PLACEHOLDER' | translate"
       />
 
       <select [(ngModel)]="projectId" (change)="onProjectChange()">
-        <option [ngValue]="''" disabled>Selecciona un projecte</option>
+        <option [ngValue]="''" disabled>
+          {{ 'DOCUMENTS.FIELD_PROJECT_SELECT_PLACEHOLDER' | translate }}
+        </option>
         <option
           *ngFor="let p of filteredProjectsForPopup"
           [ngValue]="p.projectId"
@@ -163,7 +175,7 @@
       <input
         type="text"
         [(ngModel)]="name"
-        placeholder="{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}"
+        [placeholder]="'DOCUMENTS.FIELD_DOC_NAME' | translate"
         readonly
       />
 
@@ -175,7 +187,7 @@
       />
 
       <div class="selected-file-name" *ngIf="selectedFile">
-        Archivo seleccionado: {{ selectedFile.name }}
+        {{ 'DOCUMENTS.SELECTED_FILE' | translate }}: {{ selectedFile.name }}
       </div>
 
       <div class="field-error" *ngIf="fileError">{{ fileError }}</div>
@@ -187,8 +199,12 @@
         type="button"
         (click)="fileInput.click()"
         title="{{ 'DOCUMENTS.BROWSE' | translate }}"
+        aria-label="{{ 'DOCUMENTS.BROWSE' | translate }}"
       >
-        <img src="assets/images/File.png" alt="Archivo" />
+        <img
+          src="assets/images/File.png"
+          alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
+        />
       </button>
 
       <div class="popup-actions-right">
@@ -196,6 +212,7 @@
           class="cancelar-btn"
           (click)="toggleAddPopup()"
           title="{{ 'DOCUMENTS.CANCEL' | translate }}"
+          aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
         >
           ✗
         </button>
@@ -204,6 +221,7 @@
           class="guardar-btn"
           (click)="addDocument()"
           title="{{ 'DOCUMENTS.SAVE' | translate }}"
+          aria-label="{{ 'DOCUMENTS.SAVE' | translate }}"
         >
           ✓
         </button>
@@ -228,11 +246,17 @@
       <button
         class="cancelar-btn"
         (click)="cancelDeleteDocument()"
-        title="Cancelar"
+        title="{{ 'DOCUMENTS.CANCEL' | translate }}"
+        aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
       >
         ✗
       </button>
-      <button class="guardar-btn" (click)="deleteDocument()" title="Eliminar">
+      <button
+        class="guardar-btn"
+        (click)="deleteDocument()"
+        title="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
+        aria-label="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
+      >
         ✓
       </button>
     </div>
@@ -249,13 +273,14 @@
     <button
       class="image-popup-close-btn"
       (click)="closeImagePreview()"
-      title="Cerrar"
+      title="{{ 'DOCUMENTS.CLOSE' | translate }}"
+      aria-label="{{ 'DOCUMENTS.CLOSE' | translate }}"
     >
       ✕
     </button>
     <img
       [src]="imagePreviewUrl"
-      [alt]="imagePreviewName || 'Imagen ampliada'"
+      [alt]="imagePreviewName || ('DOCUMENTS.IMAGE_PREVIEW_ALT' | translate)"
       class="image-popup-img"
     />
   </div>

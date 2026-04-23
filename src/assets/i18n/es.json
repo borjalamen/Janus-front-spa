@@ -418,9 +418,9 @@
     "PROJECTS_LIST": "Listado de proyectos",
     "DOCS_SECTION": "Documentos del proyecto",
     "PAGINATION_PAGE": "Página",
-  "PAGINATION_OF": "de",
-  "PAGINATION_PREVIOUS": "Anterior",
-  "PAGINATION_NEXT": "Siguiente"
+    "PAGINATION_OF": "de",
+    "PAGINATION_PREVIOUS": "Anterior",
+    "PAGINATION_NEXT": "Siguiente"
   },
   "PROCEDURES_SECTION": {
     "TITLE": "Procedimientos",
@@ -613,24 +613,34 @@
   "DOCUMENTS": {
     "TITLE": "Documentos",
     "ADD_BUTTON": "Añadir documento",
-    "PROJECT_ID": "ID:",
-    "PROJECT_NAME": "Nombre:",
+    "PROJECT_NAME": "Nombre del proyecto",
+    "NO_DOCS": "Sin documentos",
+    "NO_PROJECTS": "No hay proyectos",
     "ADD_POPUP_TITLE": "Añadir documento",
-    "FIELD_PROJECT_ID": "ID Proyecto:",
-    "FIELD_DOC_NAME": "Nombre del documento:",
+    "FIELD_PROJECT_ID": "ID del proyecto",
+    "FIELD_DOC_NAME": "Nombre del documento",
+    "FIELD_PROJECT_SEARCH_PLACEHOLDER": "Buscar por código o nombre del proyecto",
+    "FIELD_PROJECT_SELECT_PLACEHOLDER": "Selecciona un proyecto",
+    "SELECTED_FILE": "Archivo seleccionado",
     "BROWSE": "Examinar",
     "SAVE": "Guardar",
     "CANCEL": "Cancelar",
-    "DELETE_DOC_TITLE": "Eliminar documento",
-    "DELETE_DOC_QUESTION": "¿Estás seguro que deseas eliminar el documento \"{{name}}\"?",
-    "DELETE_PROJECT_TITLE": "Eliminar proyecto",
-    "DELETE_PROJECT_QUESTION": "¿Estás seguro que deseas eliminar el proyecto \"{{name}}\" y sus documentos?",
-    "DELETE": "Eliminar",
-    "NO_DOCS": "Sin documentos",
-    "NO_PROJECTS": "No hay proyectos",
-    "VIEW": "Visualizar",
+    "VIEW": "Ver",
     "DOWNLOAD_BTN": "Descargar",
-    "DELETE_BTN": "Eliminar"
+    "DELETE_BTN": "Eliminar",
+    "DELETE_DOC_TITLE": "Eliminar documento",
+    "DELETE_DOC_QUESTION": "¿Seguro que quieres eliminar el documento {{name}}?",
+    "CONFIRM_DELETE": "Eliminar",
+    "CLOSE": "Cerrar",
+    "FOLDER_ALT": "Carpeta",
+    "FILE_ALT": "Archivo",
+    "IMAGE_PREVIEW_ALT": "Imagen ampliada",
+    "DEFAULT_DOCUMENT_NAME": "Documento",
+    "ERRORS": {
+      "PROJECT_REQUIRED": "El proyecto es obligatorio",
+      "PROJECT_NOT_EXISTS": "El código del proyecto no existe",
+      "FILE_REQUIRED": "Debes seleccionar un archivo"
+    }
   },
   "SEARCH": {
     "PLACEHOLDER": "Escribe para buscar..."
@@ -1102,47 +1112,16 @@
     "SENDING": "Enviando...",
     "RESET": "Reiniciar"
   },
-  "DOCUMENTS": {
-    "TITLE": "Documentos",
-    "ADD_BUTTON": "Añadir documento",
-    "PROJECT_NAME": "Nombre del proyecto",
-    "NO_DOCS": "Sin documentos",
-    "NO_PROJECTS": "No hay proyectos",
-    "ADD_POPUP_TITLE": "Añadir documento",
-    "FIELD_PROJECT_ID": "ID Proyecto",
-    "FIELD_DOC_NAME": "Nombre del documento",
-    "SEARCH_PROJECT_PLACEHOLDER": "Buscar proyecto...",
-    "SELECT_PROJECT": "Selecciona un proyecto",
-    "SELECTED_FILE": "Archivo seleccionado",
-    "BROWSE": "Examinar",
-    "SAVE": "Guardar",
-    "CANCEL": "Cancelar",
-    "VIEW": "Visualizar",
-    "DOWNLOAD_BTN": "Descargar",
-    "DELETE_BTN": "Eliminar",
-    "DELETE_DOC_TITLE": "Eliminar documento",
-    "DELETE_DOC_QUESTION": "¿Estás seguro de que quieres eliminar el documento {{name}}?",
-    "CONFIRM_DELETE": "Eliminar",
-    "CLOSE": "Cerrar",
-    "FOLDER_ALT": "Carpeta",
-    "FILE_ALT": "Archivo",
-    "IMAGE_PREVIEW_ALT": "Imagen ampliada",
-    "DEFAULT_DOCUMENT_NAME": "Documento",
-    "ERRORS": {
-      "PROJECT_REQUIRED": "El proyecto es obligatorio",
-      "PROJECT_NOT_EXISTS": "El código de proyecto no existe",
-      "FILE_REQUIRED": "Debes seleccionar un archivo"
-    },
-    "TOAST": {
-      "LOAD_PROJECTS_ERROR": "Error al cargar proyectos",
-      "UPLOAD_SUCCESS": "Documento subido correctamente",
-      "UPLOAD_ERROR": "Error al subir el documento",
-      "DELETE_SUCCESS": "Documento eliminado correctamente",
-      "DELETE_ERROR": "Error al eliminar el documento",
-      "OPEN_ERROR": "Error al abrir el documento",
-      "DOWNLOAD_ERROR": "Error al descargar el documento",
-      "NO_PERMISSION_DELETE": "No tienes permisos para eliminar documentos",
-      "NO_PERMISSION_ADD": "No tienes permisos para añadir documentos"
-    }
+
+  "TOAST": {
+    "LOAD_PROJECTS_ERROR": "Error al cargar proyectos",
+    "UPLOAD_SUCCESS": "Documento subido correctamente",
+    "UPLOAD_ERROR": "Error al subir el documento",
+    "DELETE_SUCCESS": "Documento eliminado correctamente",
+    "DELETE_ERROR": "Error al eliminar el documento",
+    "OPEN_ERROR": "Error al abrir el documento",
+    "DOWNLOAD_ERROR": "Error al descargar el documento",
+    "NO_PERMISSION_DELETE": "No tienes permisos para eliminar documentos",
+    "NO_PERMISSION_ADD": "No tienes permisos para añadir documentos"
   }
 }

@@ -622,16 +622,34 @@
     "BROWSE": "Browse",
     "SAVE": "Save",
     "CANCEL": "Cancel",
+
     "DELETE_DOC_TITLE": "Delete document",
     "DELETE_DOC_QUESTION": "Are you sure you want to delete the document \"{{name}}\"?",
     "DELETE_PROJECT_TITLE": "Delete project",
     "DELETE_PROJECT_QUESTION": "Are you sure you want to delete the project \"{{name}}\" and its documents?",
     "DELETE": "Delete",
+
     "NO_DOCS": "No documents",
     "NO_PROJECTS": "No projects",
     "VIEW": "View",
     "DOWNLOAD_BTN": "Download",
-    "DELETE_BTN": "Delete"
+    "DELETE_BTN": "Delete",
+
+    "FOLDER_ALT": "Project folder",
+    "FILE_ICON_ALT": "File",
+
+    "FIELD_PROJECT_SEARCH_PLACEHOLDER": "Search by project code or name",
+    "FIELD_PROJECT_SELECT_PLACEHOLDER": "Select a project",
+    "SELECTED_FILE": "Selected file",
+
+    "PAGINATION_PREVIOUS": "Previous",
+    "PAGINATION_NEXT": "Next",
+    "PAGINATION_GOTO": "Go to page {{page}}",
+    "PAGINATION_INFO": "{{current}} / {{total}}",
+
+    "DELETE_CONFIRM": "Delete",
+    "CLOSE": "Close",
+    "IMAGE_PREVIEW_ALT": "Enlarged image"
   },
   "SEARCH": {
     "PLACEHOLDER": "Type to search..."
@@ -1115,47 +1133,16 @@
     "SENDING": "Sending...",
     "RESET": "Reset"
   },
-  "DOCUMENTS": {
-    "TITLE": "Documents",
-    "ADD_BUTTON": "Add document",
-    "PROJECT_NAME": "Project name",
-    "NO_DOCS": "No documents",
-    "NO_PROJECTS": "No projects",
-    "ADD_POPUP_TITLE": "Add document",
-    "FIELD_PROJECT_ID": "Project ID",
-    "FIELD_DOC_NAME": "Document name",
-    "SEARCH_PROJECT_PLACEHOLDER": "Search project...",
-    "SELECT_PROJECT": "Select a project",
-    "SELECTED_FILE": "Selected file",
-    "BROWSE": "Browse",
-    "SAVE": "Save",
-    "CANCEL": "Cancel",
-    "VIEW": "View",
-    "DOWNLOAD_BTN": "Download",
-    "DELETE_BTN": "Delete",
-    "DELETE_DOC_TITLE": "Delete document",
-    "DELETE_DOC_QUESTION": "Are you sure you want to delete the document {{name}}?",
-    "CONFIRM_DELETE": "Delete",
-    "CLOSE": "Close",
-    "FOLDER_ALT": "Folder",
-    "FILE_ALT": "File",
-    "IMAGE_PREVIEW_ALT": "Expanded image",
-    "DEFAULT_DOCUMENT_NAME": "Document",
-    "ERRORS": {
-      "PROJECT_REQUIRED": "Project is required",
-      "PROJECT_NOT_EXISTS": "The project code does not exist",
-      "FILE_REQUIRED": "You must select a file"
-    },
-    "TOAST": {
-      "LOAD_PROJECTS_ERROR": "Error loading projects",
-      "UPLOAD_SUCCESS": "Document uploaded successfully",
-      "UPLOAD_ERROR": "Error uploading document",
-      "DELETE_SUCCESS": "Document deleted successfully",
-      "DELETE_ERROR": "Error deleting document",
-      "OPEN_ERROR": "Error opening document",
-      "DOWNLOAD_ERROR": "Error downloading document",
-      "NO_PERMISSION_DELETE": "You do not have permission to delete documents",
-      "NO_PERMISSION_ADD": "You do not have permission to add documents"
-    }
+
+  "TOAST": {
+    "LOAD_PROJECTS_ERROR": "Error loading projects",
+    "UPLOAD_SUCCESS": "Document uploaded successfully",
+    "UPLOAD_ERROR": "Error uploading document",
+    "DELETE_SUCCESS": "Document deleted successfully",
+    "DELETE_ERROR": "Error deleting document",
+    "OPEN_ERROR": "Error opening document",
+    "DOWNLOAD_ERROR": "Error downloading document",
+    "NO_PERMISSION_DELETE": "You do not have permission to delete documents",
+    "NO_PERMISSION_ADD": "You do not have permission to add documents"
   }
 }
