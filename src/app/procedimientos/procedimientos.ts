@@ -17,60 +17,38 @@ import { LocalStorageService } from '../local-storage.service';
 })
 export class ProcedimientosComponent implements OnInit {
   title = 'Procedimientos';
+  activeTab: string = 'listar'; // Control de pestanyes
 
-  activeTab: 'crear' | 'listar' = 'listar';
-
+  // Dades i filtrat
   procedures: Procedure[] = [];
   procedimientosFiltrados: Procedure[] = [];
-
   paginaActualProcedimientos = 1;
   readonly procedimientosPorPagina = 10;
 
-  // crear / editar
-  editando: Procedure | null = null;
+  // Formulari Crear/Editar
   modoForm: 'crear' | 'editar' = 'crear';
-
-  procForm: Procedure = {
-    titulo: '',
-    descripcion: '',
-    departamento: '',
-    entorno: 'minsait',
-    tags: [],
-    steps: [],
-    visible: true,
-    deleted: false
-  };
-
+  procForm: Procedure = this.initEmptyProcedure();
   primerResponsable = '';
 
-  // eliminar
+  // Modals i Estats de Vista
   mostrarPopupDelete = false;
   procAEliminar: Procedure | null = null;
+  showImagePopup = false;
+  imagePopupUrl: string | null = null;
+  
+  // Detall i Carrusel
+  procDetall: Procedure | null = null;
+  mostrarDetallSteps = false;
+  currentStepIndex = 0;
+  slideDirection: 'left' | 'right' = 'right';
 
-  // Toast notification
+  // Feedback (Toast)
   toastMsg = '';
   toastOk = true;
   private _toastTimer: any = null;
 
-  // vista de steps dins la mateixa pantalla
-  procDetall: Procedure | null = null;
-  mostrarDetallSteps = false;
-
-  // carrusel steps
-  currentStepIndex = 0;
-  slideDirection: 'left' | 'right' = 'right';
-
-  coloresEntorno = {
-    minsait: '#1E88E5',
-    preproduccion: '#FBC02D',
-    produccion: '#E53935'
-  };
-
-  private readonly STORAGE_KEY_FORM = 'procedimientos_form';
-  private readonly STORAGE_KEY_TAB = 'procedimientos_tab';
-
-  showImagePopup = false;
-  imagePopupUrl: string | null = null;
+  // Keys per LocalStorage
+  private readonly STORAGE_KEY_FORM = 'procedimientos_form_state';
 
   constructor(
     private proceduresService: ProceduresService,
@@ -79,10 +57,201 @@ export class ProcedimientosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.restoreFromLocalStorage();
     this.cargarProcedimientos();
+    this.restoreFromLocalStorage();
   }
 
+  // ===== CARREGA I DADES =====
+
+  cargarProcedimientos(): void {
+    this.proceduresService.getAll().subscribe({
+      next: (data) => {
+        this.procedures = data;
+        this.procedimientosFiltrados = [...this.procedures];
+      },
+      error: (err) => console.error('Error carregant procediments', err)
+    });
+  }
+
+  initEmptyProcedure(): Procedure {
+    return {
+      titulo: '',
+      descripcion: '',
+      departamento: '',
+      entorno: 'minsait',
+      tags: [],
+      steps: [],
+      visible: true,
+      deleted: false
+    };
+  }
+
+  // ===== GESTIÓ FORMULARI (AUTOSAVE) =====
+
+  private restoreFromLocalStorage(): void {
+    const saved = this.storage.getObject<any>(this.STORAGE_KEY_FORM);
+    if (saved) {
+      this.procForm = saved.procForm;
+      this.primerResponsable = saved.primerResponsable;
+      this.modoForm = saved.modoForm;
+      this.activeTab = 'crear';
+    }
+  }
+
+  saveFormToLocalStorage(): void {
+    this.storage.setObject(this.STORAGE_KEY_FORM, {
+      procForm: this.procForm,
+      primerResponsable: this.primerResponsable,
+      modoForm: this.modoForm
+    });
+  }
+
+  private clearFormLocalStorage(): void {
+    this.storage.remove(this.STORAGE_KEY_FORM);
+  }
+
+  // ===== ACCIONS PRINCIPALS =====
+
+  obrirPopupCrear(): void {
+    this.modoForm = 'crear';
+    this.procForm = this.initEmptyProcedure();
+    this.primerResponsable = '';
+    this.activeTab = 'crear';
+    this.saveFormToLocalStorage();
+  }
+
+  obrirPopupEditar(proc: Procedure): void {
+    this.modoForm = 'editar';
+    this.procForm = JSON.parse(JSON.stringify(proc)); // Deep copy
+    this.primerResponsable = this.procForm.steps?.[0]?.responsable || '';
+    this.activeTab = 'crear';
+    this.saveFormToLocalStorage();
+  }
+
+  tancarPopup(): void {
+    this.activeTab = 'listar';
+    this.clearFormLocalStorage();
+  }
+
+  guardarProcedimiento(): void {
+    if (!this.procForm.titulo) {
+      this.showToast('⚠️ El títol és obligatori', false);
+      return;
+    }
+
+    const obs = this.modoForm === 'editar' && this.procForm.id
+      ? this.proceduresService.update(this.procForm.id, this.procForm)
+      : this.proceduresService.create(this.procForm);
+
+    obs.subscribe({
+      next: () => {
+        this.showToast(this.modoForm === 'editar' ? '✅ Actualitzat' : '✅ Creat');
+        this.cargarProcedimientos();
+        this.tancarPopup();
+      },
+      error: () => this.showToast('❌ Error al guardar', false)
+    });
+  }
+
+  // ===== GESTIÓ DE STEPS =====
+
+  afegirStep(): void {
+    const nouStep: ProcedureStep = {
+      id: `step-${Date.now()}`,
+      titulo: '',
+      descripcion: '',
+      responsable: this.primerResponsable || '',
+      metodo: '',
+      orden: (this.procForm.steps?.length || 0) + 1,
+      tags: [],
+      entorno: (this.procForm.entorno as any) || 'minsait',
+      imageUrl: ''
+    };
+    this.procForm.steps = [...(this.procForm.steps || []), nouStep];
+    this.saveFormToLocalStorage();
+  }
+
+  eliminarStep(idx: number): void {
+    this.procForm.steps?.splice(idx, 1);
+    this.saveFormToLocalStorage();
+  }
+
+  // ===== GESTIÓ DE TAGS (CORRECCIÓ) =====
+
+  onProcTagsChange(value: string): void {
+    this.procForm.tags = value.split(',').map(t => t.trim()).filter(t => t !== '');
+    this.saveFormToLocalStorage();
+  }
+
+  onStepTagsChange(value: string, index: number): void {
+    if (this.procForm.steps) {
+      this.procForm.steps[index].tags = value.split(',').map(t => t.trim()).filter(t => t !== '');
+      this.saveFormToLocalStorage();
+    }
+  }
+
+  // ===== IMATGES =====
+
+  onStepImageSelected(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.[0]) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (this.procForm.steps) {
+          this.procForm.steps[index].imageUrl = reader.result as string;
+          this.saveFormToLocalStorage();
+        }
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  onClickFileIcon(fileInput: HTMLInputElement): void { fileInput.click(); }
+
+  openImagePopup(url: string): void {
+    this.imagePopupUrl = url;
+    this.showImagePopup = true;
+  }
+
+  closeImagePopup(): void { this.showImagePopup = false; }
+
+  // ===== CARRUSEL / VISTA DETALL =====
+
+  verSteps(p: Procedure): void {
+    this.procDetall = p;
+    this.mostrarDetallSteps = true;
+    this.currentStepIndex = 0;
+  }
+
+  tancarDetallSteps(): void {
+    this.mostrarDetallSteps = false;
+    this.procDetall = null;
+  }
+
+  nextStep(): void {
+    if (this.procDetall?.steps && this.currentStepIndex < this.procDetall.steps.length - 1) {
+      this.slideDirection = 'right';
+      this.currentStepIndex++;
+    }
+  }
+
+  prevStep(): void {
+    if (this.currentStepIndex > 0) {
+      this.slideDirection = 'left';
+      this.currentStepIndex--;
+    }
+  }
+
+  // ===== FILTRAT I PAGINACIÓ =====
+
+  filtrar(valor: string): void {
+    const v = valor.toLowerCase();
+    this.procedimientosFiltrados = this.procedures.filter(p =>
+      (p.titulo?.toLowerCase() || '').includes(v) ||
+      (p.descripcion?.toLowerCase() || '').includes(v)
+    );
+    this.paginaActualProcedimientos = 1;
+  }
   get procedimientosPaginados(): Procedure[] {
     const inicio = (this.paginaActualProcedimientos - 1) * this.procedimientosPorPagina;
     return this.procedimientosFiltrados.slice(inicio, inicio + this.procedimientosPorPagina);
@@ -102,451 +271,62 @@ export class ProcedimientosComponent implements OnInit {
     }
   }
 
-  // ===== LOCAL STORAGE =====
-
-  private restoreFromLocalStorage(): void {
-    // tab
-    const savedTab = this.storage.get(this.STORAGE_KEY_TAB);
-    if (savedTab === 'crear' || savedTab === 'listar') {
-      this.activeTab = savedTab as any;
-    }
-
-    // formulari
-    let savedForm: (Procedure & { primerResponsable?: string }) | null = null;
-    try {
-      savedForm = this.storage.getObject<Procedure & { primerResponsable?: string }>(
-        this.STORAGE_KEY_FORM
-      );
-    } catch (e) {
-      console.error('Error parsejant procedimientos_form, esborro clau', e);
-      this.storage.remove(this.STORAGE_KEY_FORM);
-      savedForm = null;
-    }
-
-    if (!savedForm) return;
-
-    this.procForm = {
-      titulo: savedForm.titulo || '',
-      descripcion: savedForm.descripcion || '',
-      departamento: savedForm.departamento || '',
-      entorno: (savedForm.entorno as any) || 'minsait',
-      tags: savedForm.tags || [],
-      steps: savedForm.steps || [],
-      visible: savedForm.visible ?? true,
-      deleted: savedForm.deleted ?? false,
-      id: savedForm.id,
-      createdAt: savedForm.createdAt,
-      updatedAt: savedForm.updatedAt
-    };
-    this.primerResponsable =
-      savedForm.primerResponsable || savedForm.steps?.[0]?.responsable || '';
-    this.modoForm = savedForm.id ? 'editar' : 'crear';
-  }
-
-  saveFormToLocalStorage(): void {
-    const data: Procedure & { primerResponsable?: string } = {
-      ...this.procForm,
-      steps: [...(this.procForm.steps || [])],
-      tags: [...(this.procForm.tags || [])],
-      primerResponsable: this.primerResponsable
-    };
-    this.storage.setObject(this.STORAGE_KEY_FORM, data);
-    this.storage.set(this.STORAGE_KEY_TAB, this.activeTab);
-  }
-
-  private clearFormLocalStorage(): void {
-    this.storage.remove(this.STORAGE_KEY_FORM);
-  }
-
-  get canEdit(): boolean {
-    return this.authService.canEdit;
-  }
-
-  // COLORS ENTORN
+  // ===== HELPERS VISTA =====
 
   getColorEntorno(entorno: string): string {
-    const key = (entorno || '').toLowerCase().trim();
+    const key = (entorno || '').toLowerCase();
     if (key.includes('minsait')) return '#1E88E5';
     if (key.includes('preprod')) return '#FBC02D';
     if (key.includes('produc')) return '#E53935';
-    return '#FBC02D';
+    return '#757575';
   }
 
   getNombreEntorno(entorno: string): string {
-    switch ((entorno || '').toLowerCase()) {
-      case 'minsait':
-        return 'Minsait';
-      case 'preproduccion':
-        return 'Preproducció';
-      case 'produccion':
-        return 'Producció';
-      default:
-        return entorno;
-    }
+    if (entorno === 'minsait') return 'Minsait';
+    if (entorno === 'preproduccion') return 'Preproducció';
+    if (entorno === 'produccion') return 'Producció';
+    return entorno;
   }
 
   getNumeroDepartamento(entorno: string): number {
-    switch ((entorno || '').toLowerCase()) {
-      case 'minsait':
-        return 1;
-      case 'preproduccion':
-        return 2;
-      case 'produccion':
-        return 3;
-      default:
-        return 0;
-    }
+    if (entorno === 'minsait') return 1;
+    if (entorno === 'preproduccion') return 2;
+    if (entorno === 'produccion') return 3;
+    return 0;
   }
 
-  // ===== BACKEND =====
-
-  cargarProcedimientos() {
-    this.proceduresService.getAll().subscribe({
-      next: data => {
-        this.procedures = data;
-        this.procedimientosFiltrados = [...this.procedures];
-        this.paginaActualProcedimientos = 1;
-      },
-      error: err => console.error('Error carregant procediments', err)
-    });
+  showToast(msg: string, ok = true): void {
+    this.toastMsg = msg;
+    this.toastOk = ok;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => (this.toastMsg = ''), 3000);
   }
 
-  filtrar(valor: string) {
-    if (!valor) {
-      this.procedimientosFiltrados = [...this.procedures];
-      this.paginaActualProcedimientos = 1;
-      return;
-    }
-    const v = valor.toLowerCase();
-    this.procedimientosFiltrados = this.procedures.filter(p => {
-      const stepsText = (p.steps || [])
-        .map(
-          s =>
-            `${s.titulo || ''} ${s.descripcion || ''} ${s.responsable || ''} ${s.metodo || ''} ${(s.tags || []).join(' ')} ${s.orden || ''} ${s.entorno || ''}`
-        )
-        .join(' ');
+  // Handlers canvi inputs simples per autosave
+  onTituloChange(v: string) { this.procForm.titulo = v; this.saveFormToLocalStorage(); }
+  onDescripcionChange(v: string) { this.procForm.descripcion = v; this.saveFormToLocalStorage(); }
+  onPrimerResponsableChange(v: string) { this.primerResponsable = v; this.saveFormToLocalStorage(); }
+  onStepTituloChange(v: string, i: number) { if(this.procForm.steps) this.procForm.steps[i].titulo = v; this.saveFormToLocalStorage(); }
+  onStepResponsableChange(v: string, i: number) { if(this.procForm.steps) this.procForm.steps[i].responsable = v; this.saveFormToLocalStorage(); }
+  onStepDescripcionChange(v: string, i: number) { if(this.procForm.steps) this.procForm.steps[i].descripcion = v; this.saveFormToLocalStorage(); }
 
-      const haystack = `${p.titulo || ''} ${p.descripcion || ''} ${p.departamento || ''} ${p.entorno || ''} ${(p.tags || []).join(' ')} ${stepsText}`
-        .toLowerCase();
-
-      return haystack.includes(v);
-    });
-    this.paginaActualProcedimientos = 1;
-  }
-
-  // ==== CREATE / UPDATE ====
-
-  obrirPopupCrear() {
-    this.editando = null;
-    this.modoForm = 'crear';
-    this.procForm = {
-      titulo: '',
-      descripcion: '',
-      departamento: '',
-      entorno: 'minsait',
-      tags: [],
-      steps: [],
-      visible: true,
-      deleted: false
-    };
-    this.primerResponsable = '';
-    this.activeTab = 'crear';
-    this.saveFormToLocalStorage();
-  }
-
-  obrirPopupEditar(proc: Procedure) {
-    this.editando = proc;
-    this.modoForm = 'editar';
-    this.procForm = {
-      id: proc.id,
-      titulo: proc.titulo ?? '',
-      descripcion: proc.descripcion ?? '',
-      departamento: proc.departamento ?? '',
-      entorno: (proc.entorno as any) ?? 'minsait',
-      tags: proc.tags ?? [],
-      steps: proc.steps
-        ? proc.steps.map((s: any, idx: number): ProcedureStep => ({
-            id: s.id ?? `step-${idx + 1}`,
-            titulo: s.titulo ?? '',
-            descripcion: s.descripcion ?? '',
-            responsable: s.responsable ?? '',
-            metodo: s.metodo ?? '',
-            orden: s.orden ?? (idx + 1),
-            tags: s.tags ?? [],
-            entorno: (s.entorno as any) ?? (proc.entorno as any) ?? 'minsait',
-            imageUrl: s.imageUrl ?? ''
-          }))
-        : [],
-      visible: proc.visible ?? true,
-      deleted: proc.deleted ?? false,
-      createdAt: proc.createdAt,
-      updatedAt: proc.updatedAt
-    };
-    this.primerResponsable = proc.steps?.[0]?.responsable || '';
-    this.activeTab = 'crear';
-    this.saveFormToLocalStorage();
-  }
-
-  tancarPopup() {
-    this.editando = null;
-    this.modoForm = 'crear';
-    this.activeTab = 'listar';
-    this.clearFormLocalStorage();
-  }
-
-  guardarProcedimiento() {
-    if (!this.procForm.titulo || !this.procForm.descripcion) {
-      this.showToast('⚠️ Falta títol o descripció', false);
-      return;
-    }
-
-    // primer step amb responsable
-    if ((!this.procForm.steps || this.procForm.steps.length === 0) && this.primerResponsable) {
-      const step: ProcedureStep = {
-        id: 'step-1',
-        titulo: 'Pas inicial',
-        descripcion: 'Primer pas del procediment',
-        responsable: this.primerResponsable,
-        metodo: '',
-        orden: 1,
-        tags: [],
-        entorno: (this.procForm.entorno as any) || 'minsait',
-        imageUrl: ''
-      };
-      this.procForm.steps = [step];
-    } else if (this.procForm.steps && this.procForm.steps.length > 0 && this.primerResponsable) {
-      this.procForm.steps[0].responsable = this.primerResponsable;
-    }
-
-    const body: any = {
-      titulo: this.procForm.titulo,
-      descripcion: this.procForm.descripcion,
-      departamento: this.procForm.departamento,
-      entorno: this.procForm.entorno,
-      tags: this.procForm.tags ?? [],
-      steps: this.procForm.steps ?? [],
-      isVisible: this.procForm.visible ?? true
-    };
-
-    if (this.editando && this.editando.id) {
-      this.proceduresService.update(this.editando.id, body).subscribe({
-        next: updated => {
-          const idx = this.procedures.findIndex(p => p.id === updated.id);
-          if (idx !== -1) this.procedures[idx] = updated;
-          this.procedimientosFiltrados = [...this.procedures];
-          this.tancarPopup();
-        },
-        error: err => console.error('Error actualitzant procediment', err)
-      });
-    } else {
-      this.proceduresService.create(body).subscribe({
-        next: created => {
-          this.procedures.push(created);
-          this.procedimientosFiltrados = [...this.procedures];
-          this.tancarPopup();
-        },
-        error: err => console.error('Error creant procediment', err)
-      });
-    }
-  }
-
-  // ==== DELETE ====
-
-  confirmarEliminar(proc: Procedure) {
+  confirmarEliminar(proc: Procedure): void {
     this.procAEliminar = proc;
     this.mostrarPopupDelete = true;
   }
 
-  cancelarEliminar() {
+  cancelarEliminar(): void {
     this.mostrarPopupDelete = false;
     this.procAEliminar = null;
   }
 
-  eliminarProcedimiento() {
-    if (!this.procAEliminar?.id) {
-      this.mostrarPopupDelete = false;
-      return;
-    }
-
-    this.proceduresService.delete(this.procAEliminar.id).subscribe({
-      next: () => {
-        this.procedures = this.procedures.filter(p => p.id !== this.procAEliminar!.id);
-        this.procedimientosFiltrados = [...this.procedures];
+  eliminarProcedimiento(): void {
+    if (this.procAEliminar?.id) {
+      this.proceduresService.delete(this.procAEliminar.id).subscribe(() => {
+        this.cargarProcedimientos();
         this.cancelarEliminar();
-      },
-      error: err => console.error('Error eliminant procediment', err)
-    });
-  }
-
-  // ==== STEPS (formulari) ====
-
-  afegirStep() {
-    const nouIndex = (this.procForm.steps?.length || 0) + 1;
-    const nouStep: ProcedureStep = {
-      id: `step-${nouIndex}`,
-      titulo: this.procForm.titulo || '',
-      descripcion: '',
-      responsable: this.primerResponsable || '',
-      metodo: '',
-      orden: nouIndex,
-      tags: [],
-      entorno: (this.procForm.entorno as any) || 'minsait',
-      imageUrl: ''
-    };
-    this.procForm.steps = [...(this.procForm.steps || []), nouStep];
-    this.saveFormToLocalStorage();
-  }
-
-  eliminarStep(idx: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps.splice(idx, 1);
-    this.saveFormToLocalStorage();
-  }
-
-  obrirImatgeNovaFinestra(url?: string) {
-    if (!url) return;
-    window.open(url, '_blank');
-  }
-
-  // ==== VISTA DE STEPS + CARRUSEL ====
-
-  verSteps(p: Procedure) {
-    this.procDetall = p;
-    this.mostrarDetallSteps = true;
-    this.resetCarousel();
-  }
-
-  tancarDetallSteps() {
-    this.mostrarDetallSteps = false;
-    this.procDetall = null;
-  }
-
-  nextStep() {
-    if (!this.procDetall?.steps) return;
-    if (this.currentStepIndex < this.procDetall.steps.length - 1) {
-      this.slideDirection = 'right';
-      this.currentStepIndex++;
+        this.showToast('Eliminat correctament');
+      });
     }
-  }
-
-  prevStep() {
-    if (this.currentStepIndex > 0 && this.procDetall?.steps) {
-      this.slideDirection = 'left';
-      this.currentStepIndex--;
-    }
-  }
-
-  resetCarousel() {
-    this.currentStepIndex = 0;
-    this.slideDirection = 'right';
-  }
-
-  // ==== AUTOSAVE EN ESCRIURE ====
-
-  onTituloChange(value: string) {
-    this.procForm.titulo = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onDescripcionChange(value: string) {
-    this.procForm.descripcion = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onDepartamentoChange(value: string) {
-    this.procForm.departamento = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onEntornoChange(value: string) {
-    this.procForm.entorno = value as any;
-    this.saveFormToLocalStorage();
-  }
-
-  onPrimerResponsableChange(value: string) {
-    this.primerResponsable = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onProcTagsChange(value: string) {
-    this.procForm.tags = value
-      .split(',')
-      .map(t => t.trim())
-      .filter(t => t.length > 0);
-    this.saveFormToLocalStorage();
-  }
-
-  onStepTituloChange(value: string, index: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps[index].titulo = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onStepResponsableChange(value: string, index: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps[index].responsable = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onStepDescripcionChange(value: string, index: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps[index].descripcion = value;
-    this.saveFormToLocalStorage();
-  }
-
-  onStepTagsChange(value: string, index: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps[index].tags = value
-      .split(',')
-      .map(t => t.trim())
-      .filter(t => t.length > 0);
-    this.saveFormToLocalStorage();
-  }
-
-  onStepEntornoClick(value: string, index: number) {
-    if (!this.procForm.steps) return;
-    this.procForm.steps[index].entorno = value as any;
-    this.saveFormToLocalStorage();
-  }
-
-  // ==== IMATGE STEP DES D'ARXIU (Base64) ====
-
-  onStepImageSelected(event: Event, index: number) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-
-    const file = input.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const dataUrl = reader.result as string; // data:image/png;base64,...
-      if (!this.procForm.steps) this.procForm.steps = [];
-      this.procForm.steps[index].imageUrl = dataUrl;
-      this.saveFormToLocalStorage();
-    };
-
-    reader.readAsDataURL(file);
-  }
-
-  onClickFileIcon(fileInput: HTMLInputElement): void {
-    fileInput.click();
-  }
-
-  openImagePopup(url?: string) {
-    if (!url) return;
-    this.imagePopupUrl = url;
-    this.showImagePopup = true;
-  }
-
-  closeImagePopup() {
-    this.showImagePopup = false;
-    this.imagePopupUrl = null;
-  }
-
-  showToast(msg: string, ok = true) {
-    this.toastMsg = msg;
-    this.toastOk = ok;
-    clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => (this.toastMsg = ''), 3500);
   }
 }
