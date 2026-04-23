@@ -1095,3 +1095,18 @@
   text-align: center;
 }
 
+.procedure-step-number-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 192, 45, 0.15);
+  border: 1px solid rgba(251, 192, 45, 0.4);
+  color: #FBC02D;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+

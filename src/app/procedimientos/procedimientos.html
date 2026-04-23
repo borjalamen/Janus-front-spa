@@ -96,48 +96,10 @@
             <p>{{ 'PROCEDURES_SECTION.NO_STEPS' | translate }}</p>
           </div>
 
-          <div *ngFor="let s of procForm.steps; let i = index" class="procedure-step-edit-item">
+         <div *ngFor="let s of procForm.steps; let i = index" class="procedure-step-edit-item">
             <div class="procedure-step-edit-header">
               <div class="procedure-step-edit-left">
-                <span class="procedure-step-edit-number">
-                  #{{ i + 1 }}
-                </span>
-                <div
-                  class="procedure-step-env-cube"
-                  [style.background]="'linear-gradient(135deg, '
-                    + getColorEntorno(s.entorno || '') + ', '
-                    + getColorEntorno(s.entorno || '') + 'cc)'">
-                  <span class="procedure-step-env-number">
-                    {{ i + 1 }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="procedure-step-env-buttons">
-                <button
-                  type="button"
-                  class="entorno-btn"
-                  [class.active]="s.entorno === 'minsait'"
-                  (click)="onStepEntornoClick('minsait', i)"
-                  [style.--color]="'#1E88E5'">
-                  M
-                </button>
-                <button
-                  type="button"
-                  class="entorno-btn"
-                  [class.active]="s.entorno === 'preproduccion'"
-                  (click)="onStepEntornoClick('preproduccion', i)"
-                  [style.--color]="'#FBC02D'">
-                  PRE
-                </button>
-                <button
-                  type="button"
-                  class="entorno-btn"
-                  [class.active]="s.entorno === 'produccion'"
-                  (click)="onStepEntornoClick('produccion', i)"
-                  [style.--color]="'#E53935'">
-                  PROD
-                </button>
+                <span class="procedure-step-edit-number">#{{ i + 1 }}</span>
               </div>
 
               <button
@@ -155,7 +117,7 @@
                 type="text"
                 [ngModel]="s.titulo"
                 (ngModelChange)="onStepTituloChange($event, i)"
-                placeholder=""
+                placeholder="{{ 'PROCEDURES_SECTION.FIELD_TITLE' | translate }}"
                 class="procedure-step-edit-input" />
 
               <input
@@ -165,15 +127,15 @@
                 placeholder="Responsable"
                 class="procedure-step-edit-input" />
             </div>
-
             <!-- Tags step -->
             <div class="procedure-step-edit-grid">
               <input
                 type="text"
                 [ngModel]="s.tags?.join(', ')"
                 (ngModelChange)="onStepTagsChange($event, i)"
-                placeholder="tags del step, separats per comes"
-                class="procedure-step-edit-input" />
+                placeholder="tag1, tag2 (només lletres, números i guions)"
+                class="procedure-step-edit-input"
+                pattern="^[a-zA-Z0-9À-ÿ\s,\-_]*$" />
             </div>
 
             <!-- Imatge step: URL + arxiu -->
@@ -421,15 +383,9 @@
               <ng-container *ngIf="procDetall.steps[currentStepIndex] as s; else noStep">
                 <div class="procedure-step-detail-item">
                   <div class="procedure-step-detail-header">
-                    <div
-                      class="procedure-step-env-cube"
-                      [style.background]="'linear-gradient(135deg, '
-                        + getColorEntorno(s.entorno || '') + ', '
-                        + getColorEntorno(s.entorno || '') + 'cc)'">
-                      <span class="procedure-step-env-number">
-                        {{ currentStepIndex + 1 }}
-                      </span>
-                    </div>
+                    <div class="procedure-step-number-badge">
+                    {{ currentStepIndex + 1 }}
+                  </div>
                     <div class="procedure-step-detail-title">
                       <strong>
                         <ng-container *ngIf="s.titulo; else fallbackTitle">
