@@ -161,6 +161,17 @@
       </div>
     </mat-toolbar>
 
+    <!-- BARRA DE FRASES CÉLEBRES -->
+    <div class="quote-bar" *ngIf="currentQuote">
+      <div class="quote-content" [class.quote-visible]="quoteVisible">
+        <span class="quote-mark">&ldquo;</span>
+        <span class="quote-text">{{ currentQuote.quote }}</span>
+        <span class="quote-mark">&rdquo;</span>
+        <span class="quote-separator">—</span>
+        <span class="quote-author">{{ currentQuote.author }}</span>
+      </div>
+    </div>
+
     <!-- CONTENIDO INTERIOR -->
     <div class="main-content menu-content-scroll">
       <router-outlet></router-outlet>

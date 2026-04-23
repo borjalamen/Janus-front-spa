@@ -296,6 +296,88 @@ mat-toolbar.main-toolbar {
 }
 
 /* ─────────────────────────────────────────── */
+/* BARRA DE FRASES CÉLEBRES                  */
+/* ─────────────────────────────────────────── */
+.quote-bar {
+  background: linear-gradient(90deg, #062e3d 0%, #0a4a62 50%, #062e3d 100%);
+  border-bottom: 1px solid #1e84a3;
+  padding: 9px 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 38px;
+  overflow: hidden;
+  position: relative;
+}
+
+.quote-bar::before,
+.quote-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.quote-bar::before {
+  left: 0;
+  background: linear-gradient(to right, #062e3d, transparent);
+}
+
+.quote-bar::after {
+  right: 0;
+  background: linear-gradient(to left, #062e3d, transparent);
+}
+
+.quote-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+  text-align: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quote-content.quote-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quote-mark {
+  color: #1e84a3;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.quote-text {
+  color: #d4eaf0;
+  font-style: italic;
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+}
+
+.quote-separator {
+  color: #1e84a3;
+  font-size: 0.9rem;
+  margin: 0 2px;
+}
+
+.quote-author {
+  color: #FBC02D;
+  font-weight: 600;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  text-shadow: 0 0 8px #fbc02d50;
+}
+
+/* ─────────────────────────────────────────── */
 /* FOOTER */
 /* ─────────────────────────────────────────── */
 .footer {

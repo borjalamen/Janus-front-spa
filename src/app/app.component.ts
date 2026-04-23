@@ -65,6 +65,12 @@ export class AppComponent implements OnDestroy, OnInit {
 
   avatarPreview: string | null = null;
 
+  quotes: { quote: string; author: string }[] = [];
+  currentQuote: { quote: string; author: string } | null = null;
+  quoteVisible = false;
+  private quoteIndex = 0;
+  private quoteTimer?: ReturnType<typeof setTimeout>;
+
   private authSubscription?: Subscription;
   private versionSubscription?: Subscription;
   private avatarSub?: Subscription;
@@ -166,12 +172,33 @@ export class AppComponent implements OnDestroy, OnInit {
     this.avatarSub = this.avatarService.avatar$.subscribe(url => {
       this.avatarPreview = url;
     });
+    // Frases célebres
+    this.http.get<{ quote: string; author: string }[]>('assets/quotes.json').subscribe(data => {
+      this.quotes = data.sort(() => Math.random() - 0.5);
+      if (this.quotes.length > 0) {
+        this.currentQuote = this.quotes[0];
+        this.quoteVisible = true;
+        this.scheduleNextQuote();
+      }
+    });
   }
+
+  private scheduleNextQuote(): void {
+    this.quoteTimer = setTimeout(() => {
+      this.quoteVisible = false;
+      setTimeout(() => {
+        this.quoteIndex = (this.quoteIndex + 1) % this.quotes.length;
+        this.currentQuote = this.quotes[this.quoteIndex];
+        this.quoteVisible = true;
+        this.scheduleNextQuote();
+      }, 900);
+    }, 6000);  }
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
     this.versionSubscription?.unsubscribe();
     this.avatarSub?.unsubscribe();
+    if (this.quoteTimer) clearTimeout(this.quoteTimer);
   }
 
   isGroupOpen(id: string): boolean {
