@@ -12,6 +12,7 @@ interface ProjectItem {
   name: string;
   code?: string;
   status: TrafficStatus;
+  checking?: boolean;
 }
 
 const STATUSES: TrafficStatus[] = ['UP', 'WARN', 'DOWN'];
@@ -45,6 +46,14 @@ export class Infraestructura {
 
   constructor(private projectService: ProjectService) {
     this.loadProjects();
+  }
+
+  checkProject(p: ProjectItem): void {
+    p.checking = true;
+    setTimeout(() => {
+      p.status = randomStatus();
+      p.checking = false;
+    }, 1200);
   }
 
   loadProjects() {

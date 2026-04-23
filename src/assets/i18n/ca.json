@@ -485,6 +485,15 @@
   },
   "INFRA": {
     "TITLE": "Estat de Projectes",
+    "SEARCH_PLACEHOLDER": "Cercar projecte...",
+    "SEARCH_CLEAR": "Netejar",
+    "ERROR_MSG": "No s'han pogut carregar els projectes",
+    "RETRY": "Reintentar",
+    "CHECK": "Comprovar",
+    "CHECKING": "Comprovant...",
+    "CHECK_TITLE": "Comprovar connectivitat",
+    "EMPTY": "No hi ha projectes disponibles",
+    "NO_RESULTS": "No hi ha resultats per a",
     "STATUS_UP": "UP",
     "STATUS_WARN": "WARN",
     "STATUS_DOWN": "DOWN"

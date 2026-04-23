@@ -153,8 +153,65 @@
 .traffic-light.down .light.yellow { fill: #222; }
 .traffic-light.down .light.green { fill: #222; }
 
-.infra-meta { margin-top: 12px; }
-.status-label { color: #cfd8dc; font-size: 13px; background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 6px; }
+.infra-meta {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.status-label {
+  color: #cfd8dc;
+  font-size: 13px;
+  background: rgba(255,255,255,0.02);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.check-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid #1e84a3;
+  border-radius: 6px;
+  color: #1e84a3;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 9px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.check-btn:hover:not(:disabled) {
+  background: #1e84a3;
+  color: #0F1115;
+  box-shadow: 0 0 8px #1e84a360;
+}
+
+.check-btn:disabled {
+  border-color: #546e7a;
+  color: #546e7a;
+  cursor: default;
+}
+
+.check-btn .check-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  color: inherit !important;
+}
+
+.check-btn.checking .check-icon {
+  animation: spinIcon 1s linear infinite;
+}
+
+@keyframes spinIcon {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 /* Responsive tweaks */
 @media (max-width: 520px) {

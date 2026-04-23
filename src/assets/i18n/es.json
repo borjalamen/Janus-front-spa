@@ -494,6 +494,15 @@
   },
   "INFRA": {
     "TITLE": "Estado de Proyectos",
+    "SEARCH_PLACEHOLDER": "Buscar proyecto...",
+    "SEARCH_CLEAR": "Limpiar",
+    "ERROR_MSG": "No se pudieron cargar los proyectos",
+    "RETRY": "Reintentar",
+    "CHECK": "Comprobar",
+    "CHECKING": "Comprobando...",
+    "CHECK_TITLE": "Comprobar conectividad",
+    "EMPTY": "No hay proyectos disponibles",
+    "NO_RESULTS": "No hay resultados para",
     "STATUS_UP": "UP",
     "STATUS_WARN": "WARN",
     "STATUS_DOWN": "DOWN"

@@ -8,10 +8,10 @@
           class="search-input"
           type="text"
           [(ngModel)]="filterText"
-          placeholder="Buscar proyecto..."
+          [placeholder]="'INFRA.SEARCH_PLACEHOLDER' | translate"
           autocomplete="off"
         />
-        <button class="search-clear" *ngIf="filterText" (click)="filterText = ''" title="Limpiar">
+        <button class="search-clear" *ngIf="filterText" (click)="filterText = ''" [title]="'INFRA.SEARCH_CLEAR' | translate">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -27,8 +27,8 @@
     <!-- Error -->
     <div class="infra-error" *ngIf="error && !loading">
       <mat-icon>warning_amber</mat-icon>
-      <span>No se pudieron cargar los proyectos</span>
-      <button (click)="loadProjects()">Reintentar</button>
+      <span>{{ 'INFRA.ERROR_MSG' | translate }}</span>
+      <button (click)="loadProjects()">{{ 'INFRA.RETRY' | translate }}</button>
     </div>
 
     <!-- Grid de proyectos -->
@@ -56,15 +56,24 @@
         </div>
 
         <div class="infra-meta">
-          <span class="status-label">{{ p.status }}</span>
+          <span class="status-label">{{ ('INFRA.STATUS_' + p.status) | translate }}</span>
+          <button
+            class="check-btn"
+            [class.checking]="p.checking"
+            [disabled]="p.checking"
+            (click)="checkProject(p)"
+            [title]="'INFRA.CHECK_TITLE' | translate">
+            <mat-icon class="check-icon">{{ p.checking ? 'hourglass_top' : 'wifi_tethering' }}</mat-icon>
+            <span>{{ (p.checking ? 'INFRA.CHECKING' : 'INFRA.CHECK') | translate }}</span>
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Sin proyectos -->
     <div class="infra-empty" *ngIf="!loading && !error && filteredProjects.length === 0">
-      <ng-container *ngIf="projects.length === 0">No hay proyectos disponibles</ng-container>
-      <ng-container *ngIf="projects.length > 0">No hay resultados para "{{ filterText }}"</ng-container>
+      <ng-container *ngIf="projects.length === 0">{{ 'INFRA.EMPTY' | translate }}</ng-container>
+      <ng-container *ngIf="projects.length > 0">{{ 'INFRA.NO_RESULTS' | translate }} "{{ filterText }}"</ng-container>
     </div>
   </div>
 </section>
