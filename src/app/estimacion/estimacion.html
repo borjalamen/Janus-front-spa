@@ -106,9 +106,10 @@
             type="button"
             class="action-btn"
             (click)="saveCurrentEstimation()"
+            [disabled]="isSavingEstimation"
             aria-label="{{ 'ESTIMATION.SAVE' | translate }}"
           >
-            <mat-icon>save</mat-icon>
+            <mat-icon [class.saving-spin]="isSavingEstimation">{{ isSavingEstimation ? 'sync' : 'save' }}</mat-icon>
             {{ saveButtonText }}
           </button>
 
@@ -198,8 +199,8 @@
             aria-label="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
             title="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}"
           >
-            <span class="limpiar-label">Limpiar</span>
-            <img src="assets/images/Escova.png" class="btn-custom-img" alt="Limpiar" />
+            <span class="limpiar-label">{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}</span>
+            <img src="assets/images/Escova.png" class="btn-custom-img" alt="{{ 'ESTIMATION.CLEAR_SELECTED' | translate }}" />
           </button>
         </div>
       </div>
@@ -284,7 +285,7 @@
             <div class="comment-avatar">{{ (c.author || 'U').charAt(0) | uppercase }}</div>
             <div class="comment-content">
               <div class="comment-meta">
-                <strong>{{ c.author }}</strong>
+                <strong>{{ getCommentAuthorDisplay(c.author) }}</strong>
                 <span>{{ formatCommentDate(c.createdAt) }}</span>
               </div>
               <p>{{ c.text }}</p>
@@ -351,12 +352,12 @@
                   [attr.aria-label]="'ESTIMATION.LIST_LOAD' | translate"
                   [title]="'ESTIMATION.LIST_LOAD' | translate"
                 >
-                  📥
+                  <mat-icon>download</mat-icon>
                 </button>
                 <button
                   type="button"
                   class="list-action-btn list-delete-btn"
-                  (click)="deleteSavedEstimation(s.id)"
+                  (click)="openDeleteSavedEstimation(s)"
                   [attr.aria-label]="'ESTIMATION.LIST_DELETE' | translate"
                   [title]="'ESTIMATION.LIST_DELETE' | translate"
                 >
@@ -469,4 +470,45 @@
       </div>
     </mat-tab>
   </mat-tab-group>
+
+  <div
+    class="est-modal-backdrop"
+    *ngIf="showDeleteConfirmPopup"
+    (click)="cancelDeleteSavedEstimation()"
+  >
+    <div class="est-modal est-delete-modal" (click)="$event.stopPropagation()">
+      <h3>{{ 'ESTIMATION.LIST_DELETE' | translate }}</h3>
+
+      <p>{{ 'ESTIMATION.DELETE_CONFIRM_1' | translate }}</p>
+      <p class="est-delete-warning">{{ 'ESTIMATION.DELETE_CONFIRM_2' | translate }}</p>
+
+      <p class="est-delete-target" *ngIf="deleteCandidateEstimation">
+        <strong>{{ deleteCandidateEstimation.estimationName || deleteCandidateEstimation.id }}</strong>
+      </p>
+
+      <div class="action-buttons">
+        <button
+          type="button"
+          class="btn-emoji cancel"
+          (click)="cancelDeleteSavedEstimation()"
+          [disabled]="isDeletingEstimation"
+          [title]="'COMMON.CANCEL' | translate"
+          [attr.aria-label]="'COMMON.CANCEL' | translate"
+        >
+          ✗
+        </button>
+
+        <button
+          type="button"
+          class="btn-emoji confirm"
+          (click)="confirmDeleteSavedEstimation()"
+          [disabled]="isDeletingEstimation"
+          [title]="'ESTIMATION.LIST_DELETE' | translate"
+          [attr.aria-label]="'ESTIMATION.LIST_DELETE' | translate"
+        >
+          ✓
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

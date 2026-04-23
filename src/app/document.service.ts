@@ -1,18 +1,20 @@
 // src/app/document.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../environments/environment';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { environment } from "../environments/environment";
 
 // cada document és només el nom del fitxer
 export type BackendDocument = string;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class DocumentService {
   // http://localhost:8080/api/ + documentos = http://localhost:8080/api/documentos
-  private baseUrl = `${environment.baseUrl}documentos`;
+  private baseUrl = "http://localhost:8080/api/documentos";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log("DocumentService baseUrl =", this.baseUrl);
+  }
 
   // GET /getAllFolders
   getAllFolders(): Observable<(string | number)[]> {
@@ -21,30 +23,32 @@ export class DocumentService {
 
   // GET /getAllFiles?idProyecto=...
   getAllFiles(projectId: string | number): Observable<BackendDocument[]> {
-    const params = new HttpParams().set('idProyecto', String(projectId));
-    return this.http.get<BackendDocument[]>(`${this.baseUrl}\/getAllFiles`, { params });
+    const params = new HttpParams().set("idProyecto", String(projectId));
+    return this.http.get<BackendDocument[]>(`${this.baseUrl}\/getAllFiles`, {
+      params,
+    });
   }
 
   // POST /uploadDoc  (idProyecto + documento)
   uploadDocument(projectId: string | number, file: File) {
     const formData = new FormData();
-    formData.append('idProyecto', String(projectId));
-    formData.append('documento', file);
+    formData.append("idProyecto", String(projectId));
+    formData.append("documento", file);
 
     return this.http.post(`${this.baseUrl}\/uploadDoc`, formData, {
-      responseType: 'text'
+      responseType: "text",
     });
   }
 
   // DELETE /deleteFile?idProyecto=...&nombreArchivo=...
   deleteDocument(projectId: string | number, fileName: string) {
     const params = new HttpParams()
-      .set('idProyecto', String(projectId))
-      .set('nombreArchivo', fileName);
+      .set("idProyecto", String(projectId))
+      .set("nombreArchivo", fileName);
 
     return this.http.delete(`${this.baseUrl}\/deleteFile`, {
       params,
-      responseType: 'text'
+      responseType: "text",
     });
   }
 
@@ -52,24 +56,27 @@ export class DocumentService {
   // returns file blob for download/preview
   downloadFile(projectId: string | number, fileName: string) {
     const params = new HttpParams()
-      .set('idProyecto', String(projectId))
-      .set('nombreArchivo', fileName);
-    return this.http.get(`${this.baseUrl}\/getFile`, { params, responseType: 'blob' });
+      .set("idProyecto", String(projectId))
+      .set("nombreArchivo", fileName);
+    return this.http.get(`${this.baseUrl}\/getFile`, {
+      params,
+      responseType: "blob",
+    });
   }
 
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
-    const params = new HttpParams().set('idProyecto', String(projectId));
+    const params = new HttpParams().set("idProyecto", String(projectId));
     return this.http.delete(`${this.baseUrl}\/deleteAllFiles`, {
       params,
-      responseType: 'text'
+      responseType: "text",
     });
   }
 
   // GET /getFolderInfo?idProyecto=...
   // returns array of file metadata: { name, size, contentType, lastModified }
   getFolderInfo(projectId: string | number): Observable<any[]> {
-    const params = new HttpParams().set('idProyecto', String(projectId));
+    const params = new HttpParams().set("idProyecto", String(projectId));
     return this.http.get<any[]>(`${this.baseUrl}\/getFolderInfo`, { params });
   }
 
@@ -77,8 +84,11 @@ export class DocumentService {
   // Descargar archivo usando el endpoint de documentos (alternativa)
   getFile(projectId: string | number, fileName: string): Observable<Blob> {
     const params = new HttpParams()
-      .set('idProyecto', String(projectId))
-      .set('nombreArchivo', fileName);
-    return this.http.get(`${this.baseUrl}\/getFile`, { params, responseType: 'blob' });
+      .set("idProyecto", String(projectId))
+      .set("nombreArchivo", fileName);
+    return this.http.get(`${this.baseUrl}\/getFile`, {
+      params,
+      responseType: "blob",
+    });
   }
 }

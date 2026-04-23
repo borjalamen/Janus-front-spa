@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EstimacionRecord, EstimacionService } from './estimacion.service';
 
 interface Task {
   id: string;
@@ -26,6 +27,21 @@ interface EstimationComment {
   author: string;
   text: string;
   createdAt: string;
+}
+
+interface SavedEstimationRecord {
+  id: string;
+  estimationName?: string;
+  projectCode?: string;
+  projectName?: string;
+  requester?: string;
+  requesterEmail?: string;
+  notes?: string;
+  comments?: EstimationComment[];
+  weeks?: string[];
+  tasks?: Task[];
+  createdAt?: string;
+  visible?: boolean;
 }
 
 @Component({
@@ -53,7 +69,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     public liveService: LiveEstimationService,
     private snackBar: MatSnackBar,
     private translate: TranslateService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private estimacionService: EstimacionService
   ) {}
 
   weeks: string[] = ['1'];
@@ -73,12 +90,23 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   showCommentsPanel = false;
 
   // persistence
-  private STORAGE_KEY = 'estimations_v1';
   private STORAGE_KEY_DRAFT = 'estimations_form_draft_v1';
-  savedEstimations: any[] = [];
+  private readonly LEGACY_SAVED_STORAGE_KEYS = [
+    'estimations_saved_v1',
+    'estimaciones_saved_v1',
+    'estimacion_saved_v1',
+    'saved_estimaciones'
+  ];
+  savedEstimations: SavedEstimationRecord[] = [];
   searchQuery = '';
   selectedTab = 0; // 0: realizar, 1: listado
   saveButtonText = '';
+  isSavingEstimation = false;
+  private loadedEstimationNameIdentifier: string | null = null;
+  private loadedFromSavedRecord = false;
+  showDeleteConfirmPopup = false;
+  deleteCandidateEstimation: SavedEstimationRecord | null = null;
+  isDeletingEstimation = false;
 
   // clear controls
   clearMeta = false;
@@ -88,7 +116,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   liveTaskInput = '';
   liveSession: LiveSession | null = null;
   myId = 'u' + Math.random().toString(36).slice(2,8);
-  myName = (this.storage.get('username') as string) || ('User-' + this.myId.slice(-4));
+  myName = 'Usuario';
   myVote: string | number | null = null;
   liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
   private liveSub: Subscription | null = null;
@@ -258,18 +286,71 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   // ===== Persistence of saved estimations =====
 
+  private isPersistedBackendRecord(record: any): record is SavedEstimationRecord {
+    const id = (record?.id || '').toString().trim();
+    return !!id && record?.visible !== false;
+  }
+
+  private clearLegacySavedEstimationsStorage(): void {
+    this.LEGACY_SAVED_STORAGE_KEYS.forEach((key) => this.storage.remove(key));
+  }
+
+  private refreshSaveButtonText(): void {
+    this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Desar estimacio';
+  }
+
+  private normalizeEstimationNameForIdentifier(value: string): string {
+    return (value || '').trim().toLowerCase();
+  }
+
+  private getEstimationNameIdentifier(value: string | undefined | null): string {
+    return (value || '').toString().trim();
+  }
+
+  private findSavedEstimationByName(estimationName: string): SavedEstimationRecord | null {
+    const normalizedEstimationName = this.normalizeEstimationNameForIdentifier(estimationName);
+    if (!normalizedEstimationName) return null;
+
+    return this.savedEstimations.find((record) => {
+      const recordEstimationName = this.getEstimationNameIdentifier(record.estimationName);
+      return this.normalizeEstimationNameForIdentifier(recordEstimationName) === normalizedEstimationName;
+    }) || null;
+  }
+
   loadSavedEstimations() {
-    try {
-      const raw = this.storage.get(this.STORAGE_KEY);
-      this.savedEstimations = raw ? JSON.parse(raw) : [];
-    } catch (e) { this.savedEstimations = []; }
+    this.estimacionService.getAll().subscribe({
+      next: (data) => {
+        const backendRecords = Array.isArray(data) ? data : [];
+        this.savedEstimations = backendRecords.filter((record) => this.isPersistedBackendRecord(record));
+      },
+      error: (err) => {
+        console.error('Error loading estimaciones from backend:', err);
+        this.savedEstimations = [];
+      }
+    });
   }
 
   saveCurrentEstimation() {
-    this.loadSavedEstimations();
-    const id = Date.now().toString(36);
-    const obj = {
-      id,
+    const estimationNameIdentifier = this.getEstimationNameIdentifier(this.estimationName);
+    if (!estimationNameIdentifier) {
+      this.snackBar.open('Debes indicar nombre de estimación para guardar.', undefined, { duration: 3000 });
+      return;
+    }
+
+    const normalizedCurrentName = this.normalizeEstimationNameForIdentifier(estimationNameIdentifier);
+    const normalizedLoadedName = this.normalizeEstimationNameForIdentifier(this.loadedEstimationNameIdentifier || '');
+    const estimationNameChangedFromLoaded = this.loadedFromSavedRecord
+      && !!normalizedLoadedName
+      && normalizedCurrentName !== normalizedLoadedName;
+
+    const existingRecord = this.findSavedEstimationByName(estimationNameIdentifier);
+    const existingRecordId = (existingRecord?.id || '').toString().trim();
+    const existingCreatedAt = (existingRecord?.createdAt || '').toString().trim();
+
+    const shouldForceCreate = estimationNameChangedFromLoaded;
+    const isUpdating = !shouldForceCreate && !!existingRecordId;
+
+    const payload: EstimacionRecord = {
       estimationName: this.estimationName,
       projectCode: this.projectCode,
       projectName: this.projectName,
@@ -279,26 +360,83 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       comments: JSON.parse(JSON.stringify(this.comments)),
       weeks: [...this.weeks],
       tasks: JSON.parse(JSON.stringify(this.tasks)),
-      createdAt: new Date().toISOString()
+      createdAt: isUpdating ? (existingCreatedAt || new Date().toISOString()) : new Date().toISOString(),
+      visible: true
     };
-    this.savedEstimations.push(obj);
-    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
 
-    const savedMsg = this.translate.instant('ESTIMATION.SAVED') || 'Estimación guardada';
-    this.snackBar.open(savedMsg, undefined, { duration: 2500 });
+    const request$ = isUpdating
+      ? this.estimacionService.update(existingRecordId, payload)
+      : this.estimacionService.create(payload);
 
-    const prev = this.saveButtonText;
-    this.saveButtonText = savedMsg;
-    setTimeout(() => { this.saveButtonText = prev; }, 2000);
+    this.isSavingEstimation = true;
 
-    this.selectedTab = 1;
+    request$.subscribe({
+      next: () => {
+        this.isSavingEstimation = false;
+        this.loadSavedEstimations();
+
+        this.loadedEstimationNameIdentifier = estimationNameIdentifier;
+        this.loadedFromSavedRecord = true;
+
+        const savedMsg = isUpdating
+          ? (this.translate.instant('ESTIMATION.UPDATED') || 'Estimacio actualitzada')
+          : (this.translate.instant('ESTIMATION.SAVED') || 'Estimacio desada');
+        this.snackBar.open(savedMsg, undefined, { duration: 2500 });
+
+        this.saveButtonText = savedMsg;
+        setTimeout(() => { this.refreshSaveButtonText(); }, 2000);
+      },
+      error: (err) => {
+        this.isSavingEstimation = false;
+        console.error('Error saving estimacion in backend:', err);
+        const msg = isUpdating
+          ? (this.translate.instant('ESTIMATION.ERROR_UPDATE') || 'No s ha pogut actualitzar l estimacio')
+          : (this.translate.instant('ESTIMATION.ERROR_SAVE') || 'No s ha pogut desar l estimacio');
+        this.snackBar.open(msg, undefined, { duration: 3000 });
+      }
+    });
   }
 
   ngOnInit(): void {
+    this.myName = this.resolveCurrentUserName();
+    this.clearLegacySavedEstimationsStorage();
     this.loadSavedEstimations();
     this.restoreFormDraft();
     this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
-    this.saveButtonText = this.translate.instant('ESTIMATION.SAVE') || 'Guardar estimación';
+    this.refreshSaveButtonText();
+  }
+
+  private resolveCurrentUserName(): string {
+    const fromUserObj = this.storage.getObject<{ fullName?: string; username?: string }>('user');
+    const fullName = (fromUserObj?.fullName || '').trim();
+    if (fullName) return fullName;
+
+    const username = (fromUserObj?.username || '').trim();
+    if (username) return username;
+
+    const fromKey = String(this.storage.get('username') || '').trim();
+    if (fromKey) return fromKey;
+
+    return 'Usuario';
+  }
+
+  private applySavedEstimationToForm(source: SavedEstimationRecord): void {
+    this.estimationName = source.estimationName || '';
+    this.projectCode = source.projectCode || '';
+    this.projectName = source.projectName || '';
+    this.requester = source.requester || '';
+    this.requesterEmail = source.requesterEmail || '';
+    this.notes = source.notes || '';
+    this.comments = Array.isArray(source.comments) ? JSON.parse(JSON.stringify(source.comments)) : [];
+    this.weeks = source.weeks && source.weeks.length ? [...source.weeks] : ['1'];
+    this.tasks = Array.isArray(source.tasks) ? JSON.parse(JSON.stringify(source.tasks)) : [];
+    this.loadedEstimationNameIdentifier = this.getEstimationNameIdentifier(source.estimationName);
+    this.loadedFromSavedRecord = true;
+    this.started = true;
+
+    this.selectedTab = 0;
+    this.saveFormDraft();
+    this.refreshSaveButtonText();
   }
 
   clearSelected() {
@@ -316,6 +454,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       this.tasks = [];
       this.weeks = ['1'];
       this.newTaskTitle = '';
+      this.loadedEstimationNameIdentifier = null;
+      this.loadedFromSavedRecord = false;
       cleared.push(this.translate.instant('ESTIMATION.CLEAR_ESTIMATION') || 'estimation');
     }
     if (cleared.length === 0) {
@@ -348,26 +488,65 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteSavedEstimation(id: string) {
-    this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
-    this.storage.setObject(this.STORAGE_KEY, this.savedEstimations);
+  private deleteSavedEstimation(id: string) {
+    this.estimacionService.delete(id).subscribe({
+      next: () => {
+        this.savedEstimations = this.savedEstimations.filter(s => s.id !== id);
+
+        this.isDeletingEstimation = false;
+        this.showDeleteConfirmPopup = false;
+        this.deleteCandidateEstimation = null;
+
+        const msg = this.translate.instant('ESTIMATION.DELETED') || 'Estimacio eliminada';
+        this.snackBar.open(msg, undefined, { duration: 2200 });
+      },
+      error: (err) => {
+        console.error('Error deleting estimacion from backend:', err);
+        this.isDeletingEstimation = false;
+        const msg = this.translate.instant('ESTIMATION.ERROR_DELETE') || 'No s ha pogut eliminar l estimacio';
+        this.snackBar.open(msg, undefined, { duration: 3000 });
+      }
+    });
+  }
+
+  openDeleteSavedEstimation(estimation: SavedEstimationRecord) {
+    this.deleteCandidateEstimation = estimation;
+    this.showDeleteConfirmPopup = true;
+  }
+
+  cancelDeleteSavedEstimation() {
+    if (this.isDeletingEstimation) return;
+    this.showDeleteConfirmPopup = false;
+    this.deleteCandidateEstimation = null;
+  }
+
+  confirmDeleteSavedEstimation() {
+    const id = (this.deleteCandidateEstimation?.id || '').trim();
+    if (!id) {
+      this.cancelDeleteSavedEstimation();
+      return;
+    }
+
+    this.isDeletingEstimation = true;
+    this.deleteSavedEstimation(id);
+  }
+
+  private normalizeSavedEstimationForUpdate(source: any): SavedEstimationRecord {
+    const clone: SavedEstimationRecord = JSON.parse(JSON.stringify(source || {}));
+    clone.comments = Array.isArray(clone.comments) ? clone.comments : [];
+    clone.weeks = Array.isArray(clone.weeks) ? clone.weeks : [];
+    clone.tasks = Array.isArray(clone.tasks) ? clone.tasks : [];
+    clone.visible = clone.visible === undefined || clone.visible === null ? true : !!clone.visible;
+    clone.createdAt = clone.createdAt || new Date().toISOString();
+    return clone;
   }
 
   loadSavedIntoCurrent(id: string) {
-    const s = this.savedEstimations.find(x => x.id === id);
-    if (!s) return;
-    this.estimationName = s.estimationName || '';
-    this.projectCode = s.projectCode || '';
-    this.projectName = s.projectName || '';
-    this.requester = s.requester || '';
-    this.requesterEmail = s.requesterEmail || '';
-    this.notes = s.notes || '';
-    this.comments = Array.isArray(s.comments) ? JSON.parse(JSON.stringify(s.comments)) : [];
-    this.weeks = s.weeks ? [...s.weeks] : ['1'];
-    this.tasks = s.tasks ? JSON.parse(JSON.stringify(s.tasks)) : [];
-    this.started = true;
-    this.selectedTab = 0;
-    this.saveFormDraft();
+    const selected = this.savedEstimations.find(x => x.id === id);
+    if (!selected) return;
+
+    const normalized = this.normalizeSavedEstimationForUpdate(selected);
+    this.applySavedEstimationToForm(normalized);
   }
 
   removeTask(id: string) {
@@ -397,9 +576,12 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     const text = (this.newCommentText || '').trim();
     if (!text) return;
 
+    const authorName = this.resolveCurrentUserName();
+    this.myName = authorName;
+
     const comment: EstimationComment = {
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-      author: this.myName || 'User',
+      author: authorName,
       text,
       createdAt: new Date().toISOString()
     };
@@ -407,6 +589,18 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.comments = [comment, ...this.comments];
     this.newCommentText = '';
     this.saveFormDraft();
+  }
+
+  getCommentAuthorDisplay(author: string | undefined | null): string {
+    const raw = (author || '').trim();
+    if (!raw) return this.resolveCurrentUserName();
+
+    const looksLikeGeneratedId = /^(user|usuario)-[a-z0-9]+$/i.test(raw);
+    if (looksLikeGeneratedId) {
+      return this.resolveCurrentUserName();
+    }
+
+    return raw;
   }
 
   toggleCommentsPanel() {

@@ -8,10 +8,10 @@
         [placeholder]="'SEARCH.PLACEHOLDER' | translate"
       >
       <div matSuffix class="buscador-icons">
-        <button class="buscador-btn btn-cross" *ngIf="valorBusqueda" (click)="clearBusqueda()" title="Limpiar">
+        <button type="button" class="buscador-btn btn-cross" *ngIf="valorBusqueda" (click)="clearBusqueda()" title="Limpiar">
           ✗
         </button>
-        <button class="buscador-btn btn-lupa" title="Buscar">
+        <button type="button" class="buscador-btn btn-lupa" (click)="onBuscar()" title="Buscar">
           <mat-icon>search</mat-icon>
         </button>
       </div>

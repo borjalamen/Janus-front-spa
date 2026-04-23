@@ -3,7 +3,7 @@ import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorComponent } from '../buscador/buscador';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PlanningService, EventItem, Env, EventType } from './planning.service';
+import { PlanningService, EventItem, Env, EventType, RegisteredUserRecord } from './planning.service';
 import { forkJoin } from 'rxjs';
 import { LocalStorageService } from '../local-storage.service';
 
@@ -36,7 +36,7 @@ export class PlanificacionComponent implements OnInit {
   confirmMessage = '';
   private confirmAction: (() => void) | null = null;
 
-  devOpsList: string[] = [];
+  devOpsList: string[] = ['PLANNING.UNASSIGNED'];
   validationError: string | null = null;
 
   private readonly STORAGE_KEY_WEEK = 'planning_weekStart';
@@ -51,16 +51,52 @@ export class PlanificacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.restoreFromLocalStorage();
-
-    this.devOpsList = [
-      'PLANNING.UNASSIGNED',
-      'Borja Lara',
-      'Rubén Planté',
-      'Raúl Gallego',
-      'Fernando Gil'
-    ];
-
+    this.loadDevopsUsersFromBackend();
     this.loadEvents();
+  }
+
+  private loadDevopsUsersFromBackend(): void {
+    this.planningService.getRegisteredUsers().subscribe({
+      next: (users) => {
+        const devopsNames = (users || [])
+          .filter((u) => this.isActiveUser(u) && this.hasDevopsRole(u))
+          .map((u) => (u.fullName || u.username || '').trim())
+          .filter((name) => !!name)
+          .sort((a, b) => a.localeCompare(b, 'ca'));
+
+        this.devOpsList = ['PLANNING.UNASSIGNED', ...Array.from(new Set(devopsNames))];
+        this.ensureDraftDevopsValue();
+      },
+      error: (err) => {
+        console.error('Error cargando usuarios DevOps para planificación:', err);
+        this.devOpsList = ['PLANNING.UNASSIGNED'];
+        this.ensureDraftDevopsValue();
+      }
+    });
+  }
+
+  private hasDevopsRole(user: RegisteredUserRecord): boolean {
+    const roles = (user.roles || []).map((r) => (r || '').toUpperCase().trim());
+    return roles.includes('DEVOPS') || roles.includes('DEV');
+  }
+
+  private isActiveUser(user: RegisteredUserRecord): boolean {
+    const status = (user.status || 'ACTIVE').toUpperCase().trim();
+    return status !== 'INACTIVE' && status !== 'DISABLED';
+  }
+
+  private ensureDraftDevopsValue(): void {
+    if (!this.showModal) return;
+    const current = (this.draft.devOps || '').trim();
+    if (!current) {
+      this.draft.devOps = this.devOpsList[0] || '';
+      this.saveDraft();
+      return;
+    }
+
+    if (!this.devOpsList.includes(current)) {
+      this.devOpsList = [...this.devOpsList, current];
+    }
   }
 
   // ===== LOCAL STORAGE =====

@@ -21,12 +21,21 @@ export interface EventItem {
   eventType?: EventType;
 }
 
+export interface RegisteredUserRecord {
+  id?: string;
+  username?: string;
+  fullName?: string;
+  roles?: string[];
+  status?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class PlanningService {
   // URL del backend - usa el proxy de Angular (proxy.conf.json redirige /api a localhost:8080)
   private apiUrl = '/api/planificacion'; 
+  private usersUrl = '/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -53,5 +62,10 @@ export class PlanningService {
   // DELETE: Borrar evento
   deleteEvent(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // GET: Obtener usuarios registrados para asignaciones DevOps
+  getRegisteredUsers(): Observable<RegisteredUserRecord[]> {
+    return this.http.get<RegisteredUserRecord[]>(`${this.usersUrl}/all`);
   }
 }

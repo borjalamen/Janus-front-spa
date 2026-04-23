@@ -245,6 +245,13 @@
   font-weight: bold;
 }
 
+.modal-body {
+  text-align: center;
+  font-style: normal;
+  transform: none;
+  margin: 6px 0 12px;
+}
+
 .form-row { 
   display: flex; 
   gap: 8px; 
@@ -288,7 +295,8 @@
 
 /* Botones guardar/cancelar */
 .cancelar-btn,
-.guardar-btn {
+.guardar-btn,
+.delete-btn {
   background: transparent !important;
   color: #999 !important;
   border: 0 !important;
@@ -307,12 +315,14 @@
 }
 
 .cancelar-btn:hover,
-.guardar-btn:hover {
+.guardar-btn:hover,
+.delete-btn:hover {
   transform: scale(1.15) translateY(-2px);
 }
 
 .cancelar-btn:active,
-.guardar-btn:active {
+.guardar-btn:active,
+.delete-btn:active {
   transform: scale(0.95);
 }
 
@@ -334,6 +344,17 @@
   background: linear-gradient(145deg, #E53935, #c62828) !important;
   color: #fff !important;
   box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+}
+
+.delete-btn {
+  color: #c7c7c7 !important;
+}
+
+.delete-btn:hover {
+  background: transparent !important;
+  color: #f2f2f2 !important;
+  border: 1px solid #8a8a8a !important;
+  box-shadow: none !important;
 }
 
 @media (max-width: 900px) {

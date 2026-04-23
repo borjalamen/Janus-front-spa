@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
-import { LocalStorageService } from './local-storage.service';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { Router } from "@angular/router";
+import { LocalStorageService } from "./local-storage.service";
 
-export type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
+export type Rol = "invitado" | "consultor" | "devops" | "admin";
 
 export interface User {
   id: string;
@@ -18,7 +18,7 @@ export interface User {
   roles?: string[];
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> =
@@ -26,29 +26,29 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
   ) {
-    const userStr = this.storage.get('user');
+    const userStr = this.storage.get("user");
     if (userStr) {
       try {
         const user: User = JSON.parse(userStr);
         this.currentUserSubject.next(user);
       } catch (e) {
-        console.error('Error carregant usuari', e);
+        console.error("Error carregant usuari", e);
       }
     }
   }
 
   // REP el user COMPLET (amb id) i el guarda
   setLoggedUser(user: User) {
-    this.storage.setObject('user', user);
+    this.storage.setObject("user", user);
     this.currentUserSubject.next(user);
   }
 
   logout() {
-    this.storage.remove('user');
+    this.storage.remove("user");
     this.currentUserSubject.next(null);
-    this.router.navigate(['/home']);
+    this.router.navigate(["/home"]);
   }
 
   get currentUserValue(): User | null {
@@ -56,15 +56,27 @@ export class AuthService {
   }
 
   get isAdmin(): boolean {
-    return this.currentUserValue?.rol === 'admin';
+    return this.currentUserValue?.rol === "admin";
   }
 
   get isDevOps(): boolean {
-    return this.currentUserValue?.rol === 'devops';
+    return this.currentUserValue?.rol === "devops";
   }
 
   get canEdit(): boolean {
     const rol = this.currentUserValue?.rol;
-    return rol === 'admin' || rol === 'devops';
+    return rol === "admin" || rol === "devops";
+  }
+  hasRole(role: Rol): boolean {
+    return this.currentUserValue?.rol === role;
+  }
+
+  hasAnyRole(roles: Rol[]): boolean {
+    const currentRol = this.currentUserValue?.rol;
+    return !!currentRol && roles.includes(currentRol);
+  }
+
+  get canManageProjects(): boolean {
+    return this.hasAnyRole(["admin", "devops"]);
   }
 }

@@ -8,10 +8,10 @@
           [placeholder]="'SEARCH.PLACEHOLDER' | translate"
         />
         <div class="buscador-icons">
-          <button class="buscador-btn btn-cross" *ngIf="searchQuery" (click)="clearSearch()" title="Limpiar">
+          <button class="buscador-btn btn-cross" *ngIf="searchQuery" (click)="clearSearch()">
             ✗
           </button>
-          <button class="buscador-btn btn-lupa" title="Buscar">
+          <button class="buscador-btn btn-lupa">
             <mat-icon>search</mat-icon>
           </button>
         </div>
@@ -38,10 +38,6 @@
           placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}"
         />
       </div>
-      <button class="jenkins-add-btn" (click)="addTask()">
-        <mat-icon inline="true">add</mat-icon>
-        <span>{{ 'SCRUM.ADD_BUTTON' | translate }}</span>
-      </button>
     </div>
 
     <div class="secondary-inputs">
@@ -79,6 +75,13 @@
 
     <div class="priority-hint">
       {{ 'SCRUM.PRI_SCALE_HINT' | translate }}
+    </div>
+
+    <div class="controls-actions">
+      <button class="jenkins-add-btn" (click)="addTask()">
+        <mat-icon inline="true">add</mat-icon>
+        <span>{{ 'SCRUM.ADD_BUTTON' | translate }}</span>
+      </button>
     </div>
   </div>
 

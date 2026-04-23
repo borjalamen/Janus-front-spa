@@ -309,6 +309,19 @@ body {
   transform: scale(1.05);
 }
 
+.status-pill.finalizada {
+  border-color: #26a69a;
+  color: #26a69a;
+}
+
+.status-pill.finalizada.active {
+  background: #26a69a;
+  color: #0F1115;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(38, 166, 154, 0.4);
+  transform: scale(1.05);
+}
+
 .status-pill.active {
   background: #7986cb;
   color: #0F1115;
@@ -953,12 +966,36 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
   border: 1px solid rgba(229, 57, 53, 0.5) !important;
 }
 
-/* ===== ESTILOS PARA ICONO VER CV ===== */
-.icon-btn.view-cv {
-  color: #4CAF50;
+.btn-emoji.start {
+  color: #42a5f5 !important;
 }
 
-.icon-btn.view-cv:hover {
+.btn-emoji.start:hover {
+  background: linear-gradient(145deg, #42a5f5, #1e88e5) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(66, 165, 245, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(66, 165, 245, 0.4) !important;
+  border: 1px solid rgba(66, 165, 245, 0.5) !important;
+}
+
+.btn-emoji.finish {
+  color: #26a69a !important;
+}
+
+.btn-emoji.finish:hover {
+  background: linear-gradient(145deg, #26a69a, #00897b) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(38, 166, 154, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(38, 166, 154, 0.4) !important;
+  border: 1px solid rgba(38, 166, 154, 0.5) !important;
+}
+
+/* ===== ESTILOS PARA ICONO DESCARGAR CV ===== */
+.icon-btn.download-cv:hover {
   background: rgba(76, 175, 80, 0.15);
 }
 
@@ -1476,7 +1513,7 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
   height: 18px;
 }
 
-/* Estilos para Borrado Físico de Inactivos */
+/* Estilos para Borrado Lógico de Inactivos */
 .info-box {
   background: rgba(255, 193, 7, 0.1);
   border: 1px solid rgba(255, 193, 7, 0.3);
@@ -1516,7 +1553,7 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
    ESTILOS PARA BORRADO DE USUARIOS Y BACKUP COMPLETO
    ======================================== */
 
-/* Popup más grande para borrado físico */
+/* Popup más grande para borrado lógico */
 .db-popup-large {
   max-width: 600px !important;
   width: 90%;

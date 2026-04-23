@@ -230,8 +230,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   downloadCV(): void {
-    if (this.user?.cvPath && this.user?.id) {
-      window.open(`${environment.baseUrl}files/cv/${this.user.id}`, '_blank');
+    const username = this.user?.username?.trim();
+    if (this.user?.cvPath && username) {
+      window.open(
+        `${environment.baseUrl}profile/cv?username=${encodeURIComponent(username)}`,
+        '_blank'
+      );
     }
   }
 

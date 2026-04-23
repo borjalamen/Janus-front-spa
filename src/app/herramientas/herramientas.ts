@@ -7,6 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BuscadorComponent } from '../buscador/buscador';
 import { LocalStorageService } from '../local-storage.service';
 import { ProjectService, Project } from '../project.service';
+import { HerramientasService } from './herramientas.service';
 
 type Tool = {
   id: string;
@@ -31,7 +32,6 @@ type ToolStep = {
   attachments: ToolAttachment[];
 };
 
-const STORAGE_KEY = 'tools_v1';
 const STORAGE_DRAFT_KEY = 'tools_draft_v1';
 
 @Component({
@@ -1650,6 +1650,7 @@ export class HerramientasComponent implements OnInit {
   constructor(
     private localStorage: LocalStorageService,
     private projectService: ProjectService,
+    private herramientasService: HerramientasService,
     private translate: TranslateService
   ) {}
 
@@ -1678,14 +1679,23 @@ export class HerramientasComponent implements OnInit {
   }
 
   private loadTools() {
-    const stored = this.localStorage.get(STORAGE_KEY);
-    const parsed = stored ? JSON.parse(stored) : [];
-    this.tools = (parsed || []).map((t: Tool) => ({
-      ...t,
-      installSteps: this.normalizeInstallSteps((t as any).installSteps)
-    }));
-    this.filteredTools = [...this.tools];
-    this.paginaActualTools = 1;
+    this.herramientasService.getAll().subscribe({
+      next: (data) => {
+        this.tools = (data || []).map((t: any) => ({
+          ...t,
+          id: t?.id || '',
+          installSteps: this.normalizeInstallSteps(t?.installSteps)
+        }));
+        this.filteredTools = [...this.tools];
+        this.paginaActualTools = 1;
+      },
+      error: (error) => {
+        console.error('Error loading herramientas:', error);
+        this.tools = [];
+        this.filteredTools = [];
+        this.paginaActualTools = 1;
+      }
+    });
   }
 
   private loadProjects() {
@@ -1752,21 +1762,34 @@ export class HerramientasComponent implements OnInit {
       projectsString
     };
 
+    const afterSave = () => {
+      this.localStorage.remove(STORAGE_DRAFT_KEY);
+      this.loadTools();
+      this.clearForm();
+      this.activeTab = 'listar';
+    };
+
     if (this.editingTool.id) {
-      const index = this.tools.findIndex(t => t.id === this.editingTool.id);
-      if (index >= 0) {
-        this.tools[index] = toolToSave;
-      }
-    } else {
-      toolToSave.id = 'tool-' + Date.now();
-      this.tools.push(toolToSave);
+      this.herramientasService.update(this.editingTool.id, toolToSave as any).subscribe({
+        next: () => afterSave(),
+        error: (error) => {
+          console.error('Error updating herramienta:', error);
+          alert(this.translate.instant('HERRAMIENTAS.ERROR_SAVE') || 'No se ha podido guardar la herramienta.');
+        }
+      });
+      return;
     }
 
-    this.localStorage.set(STORAGE_KEY, JSON.stringify(this.tools));
-    this.localStorage.remove(STORAGE_DRAFT_KEY);
-    this.loadTools();
-    this.clearForm();
-    this.activeTab = 'listar';
+    const createPayload: any = { ...toolToSave };
+    delete createPayload.id;
+
+    this.herramientasService.create(createPayload).subscribe({
+      next: () => afterSave(),
+      error: (error) => {
+        console.error('Error creating herramienta:', error);
+        alert(this.translate.instant('HERRAMIENTAS.ERROR_SAVE') || 'No se ha podido guardar la herramienta.');
+      }
+    });
   }
 
   clearForm() {
@@ -1795,10 +1818,17 @@ export class HerramientasComponent implements OnInit {
   confirmDelete() {
     if (!this.confirmAction) return;
 
-    this.tools = this.tools.filter(t => t.id !== this.confirmAction!.id);
-    this.localStorage.set(STORAGE_KEY, JSON.stringify(this.tools));
-    this.loadTools();
-    this.confirmAction = null;
+    const id = this.confirmAction.id;
+    this.herramientasService.delete(id).subscribe({
+      next: () => {
+        this.loadTools();
+        this.confirmAction = null;
+      },
+      error: (error) => {
+        console.error('Error deleting herramienta:', error);
+        this.confirmAction = null;
+      }
+    });
   }
 
   cancelDelete() {
@@ -2050,6 +2080,7 @@ export class HerramientasComponent implements OnInit {
     }
     return name || code || '-';
   }
+  
 
   private getEmptyTool(): Tool {
     return {
@@ -2063,6 +2094,7 @@ export class HerramientasComponent implements OnInit {
       projectsString: ''
     };
   }
+  
 }
 
 export { HerramientasComponent as Herramientas };

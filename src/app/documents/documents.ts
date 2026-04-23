@@ -1,390 +1,550 @@
-// src/app/documents/documents.ts
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { BuscadorComponent } from '../buscador/buscador';
-import { TranslateModule } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
-import { DocumentService, BackendDocument } from '../document.service';
-import { ProjectService, Project as BackendProject } from '../project.service';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { LocalStorageService } from '../local-storage.service';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { TranslateModule } from "@ngx-translate/core";
+import { forkJoin, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
-interface Project {
+import { BuscadorComponent } from "../buscador/buscador";
+import { DocumentService } from "../document.service";
+import { ProjectService, Project as BackendProject } from "../project.service";
+import { LocalStorageService } from "../local-storage.service";
+import { AuthService } from "../auth.service";
+
+type DocItem = any;
+
+interface ProjectView {
   projectId: string | number;
   name: string;
   date: string;
-  documents: BackendDocument[];
+  documents: DocItem[];
 }
 
 @Component({
-  selector: 'app-documents',
+  selector: "app-documents",
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
     MatIconModule,
+    MatButtonModule,
+    TranslateModule,
     BuscadorComponent,
-    TranslateModule
   ],
-  templateUrl: './documents.html',
-  styleUrls: ['./documents.css']
+  templateUrl: "./documents.html",
+  styleUrls: ["./documents.css"],
 })
 export class DocumentsComponent implements OnInit, OnDestroy {
-  title = 'Documentos';
+  title = "Documentos";
+
   showAddPopup = false;
 
-  projects: Project[] = [];
-  projectsFiltrats: Project[] = [];
+  projects: ProjectView[] = [];
+  projectsFiltrats: ProjectView[] = [];
 
-  // estat UI
-  searchQuery = '';
+  searchQuery = "";
   selectedProjectId: string | number | null = null;
 
-  // claus localStorage
-  private readonly STORAGE_KEY_FILTER = 'documents_filter_v1';
-  private readonly STORAGE_KEY_SELECTED = 'documents_selected_project_v1';
+  private readonly STORAGE_KEY_FILTER = "documents_filter_v1";
+  private readonly STORAGE_KEY_SELECTED = "documents_selected_project_v1";
 
-  // popup afegir
-  projectId!: string | number;
-  name = '';
-  date = '';
-
+  projectId: string | number = "";
+  name = "";
+  date = "";
   selectedFile?: File;
 
-  // popup eliminar document
+  projectError = "";
+  fileError = "";
+
   deleteDocPopupOpen = false;
-  docToDelete: { project: Project; document: BackendDocument } | null = null;
+  docToDelete: { project: ProjectView; document: DocItem } | null = null;
 
-  // popup eliminar projecte
-  deleteProjectPopupOpen = false;
-  projectToDelete: Project | null = null;
-
-  // popup previsualitzacio imatge
   imagePreviewPopupOpen = false;
   imagePreviewUrl: string | null = null;
-  imagePreviewName = '';
+  imagePreviewName = "";
+
+  toastMsg = "";
+  toastOk = true;
+  private toastTimeout: any;
+
+  projectSearch = "";
+  filteredProjectsForPopup: ProjectView[] = [];
+
+  paginaActualProjects = 1;
+  itemsPerPageProjects = 5;
 
   constructor(
     private documentService: DocumentService,
     private projectService: ProjectService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    public authService: AuthService,
   ) {}
 
+  get canManageDocuments(): boolean {
+    return this.authService.isAdmin || this.authService.isDevOps;
+  }
+
   ngOnInit(): void {
-    const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as string | null;
+    const savedSelected = this.storage.get(this.STORAGE_KEY_SELECTED) as
+      | string
+      | null;
 
-    // Evita filtros invisibles persistidos que pueden ocultar proyectos al abrir la vista.
-    this.searchQuery = '';
-    this.storage.set(this.STORAGE_KEY_FILTER, '');
+    this.searchQuery = "";
+    this.storage.set(this.STORAGE_KEY_FILTER, "");
 
-    this.loadProjectsWithUiState('', savedSelected);
+    this.loadProjectsWithUiState("", savedSelected);
   }
 
   ngOnDestroy(): void {
     this.releaseImagePreviewUrl();
+
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
   }
 
-  // ===== CARREGAR PROJECTES + DOCUMENTS DEL BACK =====
-  private loadProjectsWithUiState(savedFilter: string, savedSelected: string | null) {
-    console.log('🔍 Carregant projectes...');
-    forkJoin({
-      ids: this.documentService.getAllFolders().pipe(
-        catchError(err => {
-          console.error('❌ Error carregant carpetes', err);
-          return of([] as Array<string | number>);
-        })
-      ),
-      projects: this.projectService.getAll().pipe(
-        catchError(err => {
-          console.error('❌ Error carregant projectes', err);
-          return of([] as BackendProject[]);
-        })
-      )
-    }).subscribe(({ ids, projects }) => {
-      const nameMap = this.buildProjectNameMap(projects || []);
-      const projectIds = (projects || [])
-        .map(p => p.id)
-        .filter((id): id is string => !!id);
+  private showToast(msg: string, ok: boolean = true): void {
+    this.toastMsg = msg;
+    this.toastOk = ok;
 
-      // Mostrar solo proyectos activos (no eliminados) devueltos por /projects/all.
-      // Las carpetas huérfanas no deben aparecer en la vista de Documentos.
-      const allIds = Array.from(new Set(projectIds));
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
 
-      if (allIds.length === 0) {
+    this.toastTimeout = setTimeout(() => {
+      this.toastMsg = "";
+    }, 3000);
+  }
+
+  private loadProjectsWithUiState(
+    savedFilter: string,
+    savedSelected: string | null,
+  ): void {
+    this.projectService.getAll().subscribe({
+      next: (projects: BackendProject[]) => {
+        const realProjects = (projects || []).filter((p) => !!p.id);
+
+        if (realProjects.length === 0) {
+          this.projects = [];
+          this.projectsFiltrats = [];
+          this.filteredProjectsForPopup = [];
+          this.selectedProjectId = null;
+          this.paginaActualProjects = 1;
+          return;
+        }
+
+        const requests = realProjects.map((p) =>
+          this.documentService.getAllFiles(String(p.id)).pipe(
+            map((files: any[]) => ({
+              projectId: String(p.id),
+              name: p.nombre || p.codigoProyecto || String(p.id),
+              date: "",
+              documents: Array.isArray(files) ? files : [],
+            })),
+            catchError((err: unknown) => {
+              console.error(
+                `Error carregant documents del projecte ${p.id}`,
+                err,
+              );
+              return of({
+                projectId: String(p.id),
+                name: p.nombre || p.codigoProyecto || String(p.id),
+                date: "",
+                documents: [],
+              } as ProjectView);
+            }),
+          ),
+        );
+
+        forkJoin(requests).subscribe((projectsWithDocs: ProjectView[]) => {
+          this.projects = projectsWithDocs;
+          this.projectsFiltrats = [...projectsWithDocs];
+          this.filteredProjectsForPopup = [...projectsWithDocs];
+          this.paginaActualProjects = 1;
+
+          if (savedFilter && savedFilter.trim()) {
+            this.filtrar(savedFilter);
+          }
+
+          if (savedSelected != null) {
+            const found = this.projects.find(
+              (p) => String(p.projectId) === String(savedSelected),
+            );
+
+            if (found) {
+              this.selectedProjectId = found.projectId;
+            } else {
+              this.selectedProjectId = null;
+              this.storage.set(this.STORAGE_KEY_SELECTED, "");
+            }
+          }
+        });
+      },
+      error: (err: unknown) => {
+        console.error("Error carregant projectes", err);
         this.projects = [];
         this.projectsFiltrats = [];
+        this.filteredProjectsForPopup = [];
         this.selectedProjectId = null;
-        return;
-      }
-
-      const requests = allIds.map(id =>
-        this.documentService.getAllFiles(id).pipe(
-          map((files: BackendDocument[]) => {
-            const docs: BackendDocument[] = files || [];
-            return {
-              projectId: id,
-              name: nameMap.get(String(id)) || `Project ${id}`,
-              date: '',
-              documents: docs
-            } as Project;
-          }),
-          catchError(err => {
-            // Si el proyecto no tiene carpeta de docs, debe seguir apareciendo con lista vacía.
-            return of({
-              projectId: id,
-              name: nameMap.get(String(id)) || `Project ${id}`,
-              date: '',
-              documents: []
-            } as Project);
-          })
-        )
-      );
-
-      forkJoin(requests).subscribe(projectsWithDocs => {
-        console.log('✅ Projectes carregats:', projectsWithDocs);
-        this.projects = projectsWithDocs;
-        this.projectsFiltrats = [...projectsWithDocs];
-
-        if (savedFilter && savedFilter.trim()) {
-          this.filtrar(savedFilter);
-        }
-
-        if (savedSelected != null) {
-          const found = this.projects.find(
-            p => String(p.projectId) === String(savedSelected)
-          );
-          if (found) {
-            this.selectedProjectId = found.projectId;
-          } else {
-            this.selectedProjectId = null;
-            this.storage.set(this.STORAGE_KEY_SELECTED, '');
-          }
-        }
-      });
+        this.paginaActualProjects = 1;
+      },
     });
   }
 
-  private buildProjectNameMap(projects: BackendProject[]): Map<string, string> {
-    const map = new Map<string, string>();
-    projects.forEach(p => {
-      if (p.id) map.set(String(p.id), p.nombre || p.codigoProyecto || String(p.id));
-      if (p.codigoProyecto) map.set(String(p.codigoProyecto), p.nombre || p.codigoProyecto);
-    });
-    return map;
-  }
-
-  // accessible si vols refrescar sense perdre estat UI
-  loadProjects() {
+  loadProjects(): void {
     this.loadProjectsWithUiState(
-      this.searchQuery || '',
-      this.selectedProjectId ? String(this.selectedProjectId) : null
+      this.searchQuery || "",
+      this.selectedProjectId ? String(this.selectedProjectId) : null,
     );
   }
 
-  // ===== POPUP AFEGIR =====
-  toggleAddPopup() {
+  toggleAddPopup(): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para gestionar documentos", false);
+      return;
+    }
+
     this.showAddPopup = !this.showAddPopup;
-    if (!this.showAddPopup) {
-      this.projectId = '';
-      this.name = '';
-      this.date = '';
-      this.selectedFile = undefined;
+
+    if (this.showAddPopup) {
+      this.projectSearch = "";
+      this.filteredProjectsForPopup = [...this.projects];
+    } else {
+      this.resetForm();
+      this.projectSearch = "";
+      this.filteredProjectsForPopup = [...this.projects];
     }
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
+  private resetForm(): void {
+    this.projectId = "";
+    this.name = "";
+    this.date = "";
+    this.selectedFile = undefined;
+    this.projectError = "";
+    this.fileError = "";
+    this.projectSearch = "";
+    this.filteredProjectsForPopup = [...this.projects];
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
     if (file) {
       this.selectedFile = file;
       this.name = file.name;
-      console.log('FITXER SELECCIONAT', this.selectedFile);
+      this.fileError = "";
     }
   }
 
-  // filtre per id o nom (amb persistència)
-  filtrar(valor: string) {
-    this.searchQuery = valor || '';
+  onProjectChange(): void {
+    this.validateProjectId();
+  }
+
+  validateProjectId(): boolean {
+    if (!this.projectId && this.projectId !== 0) {
+      this.projectError = "El proyecto es obligatorio";
+      return false;
+    }
+
+    const exists = this.projects.some(
+      (p) => String(p.projectId) === String(this.projectId),
+    );
+
+    if (!exists) {
+      this.projectError = "El código de proyecto no existe";
+      return false;
+    }
+
+    this.projectError = "";
+    return true;
+  }
+
+  filtrar(valor: string): void {
+    this.searchQuery = valor || "";
     this.storage.set(this.STORAGE_KEY_FILTER, this.searchQuery);
 
     if (!valor) {
       this.projectsFiltrats = [...this.projects];
-    } else {
-      const lower = valor.toLowerCase();
-      this.projectsFiltrats = this.projects.filter(p => {
-        const docsText = (p.documents || []).map(d => String(d || '')).join(' ');
-        const haystack = `${p.projectId || ''} ${p.name || ''} ${docsText}`.toLowerCase();
-        return haystack.includes(lower);
-      });
-    }
-  }
-
-  // seleccionar projecte (per remarcar a la UI, opcional)
-  selectProject(p: Project) {
-    this.selectedProjectId = p.projectId;
-    this.storage.set(this.STORAGE_KEY_SELECTED, String(p.projectId));
-  }
-
-  // ===== AFEGIR DOCUMENT =====
-  addDocument() {
-    console.log('ADD', this.projectId, this.selectedFile);
-
-    if (!this.projectId || !this.selectedFile) {
-      console.warn('Falten projectId o fitxer');
+      this.paginaActualProjects = 1;
       return;
     }
 
-    this.documentService.uploadDocument(this.projectId, this.selectedFile).subscribe({
-      next: () => {
-        this.loadProjects();
-        this.toggleAddPopup();
-      },
-      error: err => console.error('Error pujant document', err)
+    const lower = valor.toLowerCase();
+
+    this.projectsFiltrats = this.projects.filter((project) => {
+      const docsText = (project.documents || [])
+        .map((doc) => this.resolveDocumentName(doc))
+        .join(" ");
+
+      const haystack =
+        `${project.projectId || ""} ${project.name || ""} ${docsText}`.toLowerCase();
+
+      return haystack.includes(lower);
+    });
+
+    this.paginaActualProjects = 1;
+  }
+
+  filterProjectsForPopup(): void {
+    const term = (this.projectSearch || "").trim().toLowerCase();
+
+    if (!term) {
+      this.filteredProjectsForPopup = [...this.projects];
+      return;
+    }
+
+    this.filteredProjectsForPopup = this.projects.filter((p) => {
+      const code = String(p.projectId || "").toLowerCase();
+      const name = String(p.name || "").toLowerCase();
+      return code.includes(term) || name.includes(term);
     });
   }
 
-  // ===== DOCUMENTS =====
-  confirmDeleteDocument(project: Project, doc: BackendDocument) {
-    this.docToDelete = { project, document: doc };
+  selectProject(project: ProjectView): void {
+    this.selectedProjectId = project.projectId;
+    this.storage.set(
+      this.STORAGE_KEY_SELECTED,
+      String(this.selectedProjectId ?? ""),
+    );
+  }
+
+  addDocument(): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para subir documentos", false);
+      return;
+    }
+
+    const validProject = this.validateProjectId();
+
+    if (!this.selectedFile) {
+      this.fileError = "Debes seleccionar un archivo";
+    } else {
+      this.fileError = "";
+    }
+
+    if (!validProject || !this.selectedFile) {
+      return;
+    }
+
+    this.documentService
+      .uploadDocument(String(this.projectId), this.selectedFile)
+      .subscribe({
+        next: () => {
+          this.showToast("Documento subido correctamente", true);
+          this.toggleAddPopup();
+          this.loadProjects();
+        },
+        error: (err: unknown) => {
+          console.error("Error subiendo documento", err);
+          this.showToast("Error al subir el documento", false);
+        },
+      });
+  }
+
+  confirmDeleteDocument(project: ProjectView, document: DocItem): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para eliminar documentos", false);
+      return;
+    }
+
+    this.docToDelete = { project, document };
     this.deleteDocPopupOpen = true;
   }
 
-  cancelDeleteDocument() {
-    this.deleteDocPopupOpen = false;
+  cancelDeleteDocument(): void {
     this.docToDelete = null;
+    this.deleteDocPopupOpen = false;
   }
 
-  deleteDocument() {
+  deleteDocument(): void {
+    if (!this.canManageDocuments) {
+      this.showToast("No tienes permisos para eliminar documentos", false);
+      return;
+    }
+
     if (!this.docToDelete) return;
 
     const { project, document } = this.docToDelete;
+    const fileName = this.extractFileName(document);
 
-    console.log('DELETE DOC', project.projectId, document);
-
-    this.documentService.deleteDocument(project.projectId, document).subscribe({
-      next: () => {
-        this.loadProjects();
-        this.cancelDeleteDocument();
-      },
-      error: err => console.error('Error esborrant document', err)
-    });
+    this.documentService
+      .deleteDocument(String(project.projectId), fileName)
+      .subscribe({
+        next: () => {
+          this.showToast("Documento eliminado correctamente", true);
+          this.cancelDeleteDocument();
+          this.loadProjects();
+        },
+        error: (err: unknown) => {
+          console.error("Error eliminando documento", err);
+          this.showToast("Error al eliminar el documento", false);
+        },
+      });
   }
 
-  // ===== PROJECTES =====
-  confirmDeleteProject(project: Project) {
-    this.projectToDelete = project;
-    this.deleteProjectPopupOpen = true;
+  viewDocument(project: ProjectView, doc: DocItem): void {
+    const fileName = this.extractFileName(doc);
+
+    this.documentService
+      .getFile(String(project.projectId), fileName)
+      .subscribe({
+        next: (blob: Blob) => {
+          const mime = this.getMimeType(doc, blob);
+
+          if (mime.startsWith("image/")) {
+            this.releaseImagePreviewUrl();
+            this.imagePreviewUrl = URL.createObjectURL(blob);
+            this.imagePreviewName = this.resolveDocumentName(doc);
+            this.imagePreviewPopupOpen = true;
+            return;
+          }
+
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+          }, 10000);
+        },
+        error: (err: unknown) => {
+          console.error("Error visualizando documento", err);
+          this.showToast("Error al abrir el documento", false);
+        },
+      });
   }
 
-  cancelDeleteProject() {
-    this.deleteProjectPopupOpen = false;
-    this.projectToDelete = null;
+  downloadDocument(project: ProjectView, doc: DocItem): void {
+    const fileName = this.extractFileName(doc);
+
+    this.documentService
+      .getFile(String(project.projectId), fileName)
+      .subscribe({
+        next: (blob: Blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = this.resolveDocumentName(doc);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err: unknown) => {
+          console.error("Error descargando documento", err);
+          this.showToast("Error al descargar el documento", false);
+        },
+      });
   }
 
-  deleteProject() {
-    if (!this.projectToDelete) return;
-
-    const id = this.projectToDelete.projectId;
-
-    console.log('DELETE PROJECT', id);
-
-    this.documentService.deleteProjectFiles(id).subscribe({
-      next: () => {
-        this.projects = this.projects.filter(p => p.projectId !== id);
-        this.projectsFiltrats = this.projects.filter(p => p.projectId !== id);
-
-        if (this.selectedProjectId && String(this.selectedProjectId) === String(id)) {
-          this.selectedProjectId = null;
-          this.storage.set(this.STORAGE_KEY_SELECTED, '');
-        }
-
-        this.cancelDeleteProject();
-      },
-      error: err => console.error('Error esborrant projecte', err)
-    });
-  }
-
-  // ===== VISUALITZAR DOCUMENT =====
-  viewDocument(project: Project, doc: BackendDocument) {
-    console.log('📄 Visualitzant document:', project.projectId, doc);
-    this.documentService.downloadFile(project.projectId, doc).subscribe({
-      next: (blob: Blob) => {
-        console.log('✅ Blob rebut:', blob.type, blob.size);
-        const url = URL.createObjectURL(blob);
-        if (this.isImageDocument(blob, doc)) {
-          this.openImagePreview(url, doc);
-          return;
-        }
-
-        const newWindow = window.open(url, '_blank');
-        if (!newWindow) {
-          console.warn('⚠️ Popup bloquejat. Descarregant arxiu...');
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = this.resolveDocumentName(doc);
-          link.click();
-        }
-
-        URL.revokeObjectURL(url);
-      },
-      error: (err: any) => console.error('❌ Error visualitzant document', err)
-    });
-  }
-
-  downloadDocument(project: Project, doc: BackendDocument) {
-    this.documentService.downloadFile(project.projectId, doc).subscribe({
-      next: (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = this.resolveDocumentName(doc);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-      },
-      error: (err: any) => console.error('❌ Error descarregant document', err)
-    });
-  }
-
-  closeImagePreview() {
+  closeImagePreview(): void {
     this.imagePreviewPopupOpen = false;
-    this.imagePreviewName = '';
+    this.imagePreviewName = "";
     this.releaseImagePreviewUrl();
   }
 
-  private openImagePreview(url: string, doc: BackendDocument) {
-    this.releaseImagePreviewUrl();
-    this.imagePreviewUrl = url;
-    this.imagePreviewName = this.resolveDocumentName(doc);
-    this.imagePreviewPopupOpen = true;
-  }
-
-  private releaseImagePreviewUrl() {
+  private releaseImagePreviewUrl(): void {
     if (this.imagePreviewUrl) {
       URL.revokeObjectURL(this.imagePreviewUrl);
       this.imagePreviewUrl = null;
     }
   }
 
-  private isImageDocument(blob: Blob, doc: BackendDocument): boolean {
-    if (blob.type && blob.type.startsWith('image/')) {
-      return true;
-    }
-
-    const fileName = this.resolveDocumentName(doc).toLowerCase();
-    return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileName);
-  }
-
-  private resolveDocumentName(doc: BackendDocument): string {
-    if (typeof doc === 'string') {
+  resolveDocumentName(doc: DocItem): string {
+    if (typeof doc === "string") {
       return doc;
     }
 
-    const name = (doc as { name?: string }).name;
-    return name || 'document';
+    return (
+      doc?.name ||
+      doc?.nombre ||
+      doc?.originalName ||
+      this.extractFileName(doc) ||
+      "Documento"
+    );
+  }
+
+  private extractFileName(doc: DocItem): string {
+    if (typeof doc === "string") {
+      return doc;
+    }
+
+    const path = doc?.path || doc?.storedPath || doc?.url || "";
+
+    if (path && String(path).includes("/")) {
+      return String(path).split("/").pop() || this.fallbackDocumentName(doc);
+    }
+
+    if (path) {
+      return String(path);
+    }
+
+    return this.fallbackDocumentName(doc);
+  }
+
+  private fallbackDocumentName(doc: DocItem): string {
+    if (typeof doc === "string") {
+      return doc;
+    }
+
+    return doc?.name || doc?.nombre || doc?.originalName || "documento";
+  }
+
+  private getMimeType(doc: DocItem, blob: Blob): string {
+    if (typeof doc === "string") {
+      return blob.type || this.guessMimeFromName(doc);
+    }
+
+    return (
+      doc?.contentType ||
+      doc?.tipo ||
+      blob.type ||
+      this.guessMimeFromName(this.resolveDocumentName(doc))
+    );
+  }
+
+  private guessMimeFromName(name: string): string {
+    const lower = (name || "").toLowerCase();
+
+    if (
+      lower.endsWith(".png") ||
+      lower.endsWith(".jpg") ||
+      lower.endsWith(".jpeg") ||
+      lower.endsWith(".gif") ||
+      lower.endsWith(".webp") ||
+      lower.endsWith(".svg")
+    ) {
+      return "image/*";
+    }
+
+    if (lower.endsWith(".pdf")) {
+      return "application/pdf";
+    }
+
+    return "";
+  }
+
+  get totalPaginasProjects(): number {
+    return (
+      Math.ceil(this.projectsFiltrats.length / this.itemsPerPageProjects) || 1
+    );
+  }
+
+  get paginasArrayProjects(): number[] {
+    return Array.from({ length: this.totalPaginasProjects }, (_, i) => i + 1);
+  }
+
+  get projectsPaginats(): ProjectView[] {
+    const start = (this.paginaActualProjects - 1) * this.itemsPerPageProjects;
+    const end = start + this.itemsPerPageProjects;
+    return this.projectsFiltrats.slice(start, end);
+  }
+
+  cambiarPaginaProjects(page: number): void {
+    if (page < 1 || page > this.totalPaginasProjects) return;
+    this.paginaActualProjects = page;
   }
 }

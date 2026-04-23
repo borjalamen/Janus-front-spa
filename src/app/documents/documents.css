@@ -1,40 +1,48 @@
 body {
-  background: #0F1115;
-  color: #E0E0E0;
-  font-family: 'Roboto', Arial, sans-serif;
+  background: #0f1115;
+  color: #e0e0e0;
+  font-family: "Roboto", Arial, sans-serif;
   margin: 0;
 }
 
-/* Section general con GLOW ROJO */
+/* CONTENIDOR GENERAL DOCUMENTS */
+
 .section-container {
   padding: 24px;
   background: #16181c;
   border-radius: 10px;
-  box-shadow: 0 2px 8px #E53935, 0 0 20px rgba(229, 57, 53, 0.15);
+  box-shadow:
+    0 2px 8px #e53935,
+    0 0 20px rgba(229, 57, 53, 0.15);
   margin: 20px;
 }
 
-/* Header documents + botó */
+.documents-wrapper {
+  position: relative;
+}
+
+/* HEADER DOCUMENTS */
+
 .documents-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  gap: 12px;
 }
 
 .documents-header h2 {
-  color: #FBC02D;
+  color: #fbc02d;
   font-weight: bold;
   margin: 0;
 }
 
-/* Botó estil Jenkins */
 .jenkins-add-btn {
   padding: 8px 16px;
   border-radius: 999px;
-  border: 0;
-  background: transparent;
-  color: #E0E0E0;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  background: #0f1113;
+  color: #e0e0e0;
   font-weight: bold;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -42,31 +50,55 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 20px;
-  transition: background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .jenkins-add-btn:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #ffd54f;
-  transform: translateY(-2px);
-}
-
-/* Estilo específico para el botón principal de añadir */
-.documents-header .jenkins-add-btn {
-  border: 2px solid rgba(255, 255, 255, 0.04);
-  background: #0f1113;
-}
-
-.documents-header .jenkins-add-btn:hover {
   border-color: #ffd54f;
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-4px) scale(1.02);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* ========================= */
-/*   LISTA DE PROJECTES      */
-/* ========================= */
+/* TOAST */
+
+.documents-toast {
+  margin: 0 0 18px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(46, 125, 50, 0.18);
+  color: #c8f7cf;
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  animation: fadeSlideIn 0.25s ease;
+}
+
+.documents-toast.toast-error {
+  background: rgba(198, 40, 40, 0.18);
+  color: #ffc9c9;
+  border: 1px solid rgba(229, 57, 53, 0.45);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* LLISTAT PROJECTES */
 
 .projects-list {
   display: flex;
@@ -74,14 +106,16 @@ body {
   gap: 12px;
 }
 
-/* Project card como lista */
 .project-container {
   background: #0f1113;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 16px;
   box-sizing: border-box;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -93,7 +127,6 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Icono carpeta a la izquierda */
 .project-icon {
   display: flex;
   align-items: center;
@@ -106,13 +139,12 @@ body {
 }
 
 .project-icon .folder-img {
-  width: 64px !important;
-  height: 64px !important;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   display: block;
 }
 
-/* Info del proyecto */
 .project-info {
   flex: 1;
   min-width: 0;
@@ -124,6 +156,7 @@ body {
 .project-header-line {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -132,17 +165,8 @@ body {
   display: flex;
   align-items: baseline;
   gap: 8px;
-}
-
-.project-id-label {
-  color: #888;
-  font-size: 12px;
-}
-
-.project-id-value {
-  color: #FBC02D;
-  font-weight: 700;
-  font-size: 14px;
+  cursor: pointer;
+  flex-wrap: wrap;
 }
 
 .project-name-label {
@@ -156,7 +180,8 @@ body {
   font-size: 16px;
 }
 
-/* Lista de documentos */
+/* LLISTAT DOCUMENTS */
+
 .documents-list {
   display: flex;
   flex-direction: column;
@@ -188,15 +213,15 @@ body {
 }
 
 .doc-info .file-img {
-  width: 28px !important;
-  height: 28px !important;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   flex-shrink: 0;
   display: block;
 }
 
 .doc-name {
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
@@ -208,7 +233,6 @@ body {
   gap: 4px;
 }
 
-/* Botones de acción (estilo procedimientos) */
 .action-btn {
   padding: 6px 10px;
   border-radius: 6px;
@@ -216,8 +240,11 @@ body {
   background: transparent;
   cursor: pointer;
   font-size: 18px;
-  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
-  color: #E0E0E0;
+  transition:
+    background 0.12s ease,
+    transform 0.12s ease,
+    color 0.12s ease;
+  color: #e0e0e0;
 }
 
 .action-btn:hover {
@@ -233,20 +260,17 @@ body {
   color: #81c784;
 }
 
-.edit-btn:hover {
-  color: #ffd54f;
-}
-
 .delete-btn:hover {
   color: #ff5252;
 }
 
-/* No docs / no results */
 .no-docs {
   color: #666;
   font-size: 13px;
   padding: 8px 0;
 }
+
+/* SENSE RESULTATS */
 
 .no-results {
   text-align: center;
@@ -258,7 +282,7 @@ body {
   font-size: 64px;
   width: 64px;
   height: 64px;
-  color: #444 !important;
+  color: #444;
   margin-bottom: 16px;
 }
 
@@ -267,33 +291,32 @@ body {
   font-size: 16px;
 }
 
-/* ========================= */
-/*           POPUPS          */
-/* ========================= */
+/* POPUPS GENERALS */
 
 .popup-fons {
   position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85) !important;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2147483000 !important;
+  z-index: 2000;
+  padding: 16px;
 }
 
 .popup-container {
-  background: #0f1113 !important;
-  color: #eee !important;
-  padding: 22px !important;
-  border-radius: 8px !important;
-  width: 480px !important;
-  max-height: 80vh !important;
-  overflow: auto !important;
-  box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2) !important;
-  border: 2px solid #FBC02D !important;
+  background: #0f1113;
+  color: #eee;
+  padding: 22px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow:
+    0 0 30px rgba(251, 192, 45, 0.4),
+    0 0 50px rgba(251, 192, 45, 0.2);
+  border: 2px solid #fbc02d;
 }
 
 .popup-container h3 {
@@ -310,6 +333,8 @@ body {
   margin-bottom: 20px;
 }
 
+/* FORMULARI POPUP */
+
 .form-field {
   display: flex;
   flex-direction: column;
@@ -324,34 +349,42 @@ body {
 }
 
 .form-field input,
-.form-field textarea {
-  background: #141516 !important;
-  color: #eee !important;
-  border: 1px solid #2e3236 !important;
-  padding: 10px !important;
-  border-radius: 6px !important;
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  background: #141516;
+  color: #eee;
+  border: 1px solid #2e3236;
+  padding: 10px;
+  border-radius: 6px;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-field input:focus,
-.form-field textarea:focus {
-  border-color: #FBC02D !important;
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #fbc02d;
+  box-shadow: 0 0 0 3px rgba(251, 192, 45, 0.15);
 }
 
 .form-field input::placeholder,
 .form-field textarea::placeholder {
-  color: #7c8084 !important;
+  color: #7c8084;
 }
 
-/* Botón examinar archivo */
+/* BOTÓ TRIAR FITXER */
+
 .file-btn {
-  background: transparent !important;
-  color: #999 !important;
-  border: 0 !important;
-  padding: 8px !important;
-  border-radius: 8px !important;
+  background: transparent;
+  color: #999;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   min-width: 48px;
@@ -371,19 +404,20 @@ body {
 }
 
 .file-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-  background: linear-gradient(145deg, #1e84a3, #155f7a) !important;
-  box-shadow: 0 6px 16px rgba(30, 132, 163, 0.6), 0 0 20px rgba(30, 132, 163, 0.5) !important;
+  transform: scale(1.12) translateY(-2px);
+  background: linear-gradient(145deg, #1e84a3, #155f7a);
+  box-shadow:
+    0 6px 16px rgba(30, 132, 163, 0.6),
+    0 0 20px rgba(30, 132, 163, 0.5);
 }
 
-.file-btn:active {
-  transform: scale(0.95);
-}
+/* BOTONS POPUP GUARDAR / CANCEL·LAR */
 
 .popup-actions {
   display: flex;
   gap: 12px;
   justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -394,11 +428,10 @@ body {
 
 .cancelar-btn,
 .guardar-btn {
-  background: transparent !important;
-  color: #999 !important;
-  border: 0 !important;
-  padding: 8px !important;
-  border-radius: 8px !important;
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   font-size: 28px;
@@ -413,35 +446,35 @@ body {
 
 .cancelar-btn:hover,
 .guardar-btn:hover {
-  transform: scale(1.15) translateY(-2px);
-}
-
-.cancelar-btn:active,
-.guardar-btn:active {
-  transform: scale(0.95);
+  transform: scale(1.12) translateY(-2px);
 }
 
 .guardar-btn {
-  color: #4CAF50 !important;
+  color: #4caf50;
 }
 
 .guardar-btn:hover {
-  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
-  color: #fff !important;
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6), 0 0 20px rgba(76, 175, 80, 0.5) !important;
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c);
+  color: #fff;
+  box-shadow:
+    0 6px 16px rgba(76, 175, 80, 0.6),
+    0 0 20px rgba(76, 175, 80, 0.5);
 }
 
 .cancelar-btn {
-  color: #E53935 !important;
+  color: #e53935;
 }
 
 .cancelar-btn:hover {
-  background: linear-gradient(145deg, #E53935, #c62828) !important;
-  color: #fff !important;
-  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.6), 0 0 20px rgba(229, 57, 53, 0.4) !important;
+  background: linear-gradient(145deg, #e53935, #c62828);
+  color: #fff;
+  box-shadow:
+    0 6px 16px rgba(229, 57, 53, 0.6),
+    0 0 20px rgba(229, 57, 53, 0.4);
 }
 
-/* ===== IMAGE POPUP (igual que Bitacora Steps) ===== */
+/* POPUP PREVIEW IMATGE */
+
 .image-popup-backdrop {
   position: fixed;
   inset: 0;
@@ -449,7 +482,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 2100;
 }
 
 .image-popup-container {
@@ -490,4 +523,120 @@ body {
 
 .image-popup-close-btn:hover {
   background: rgba(200, 0, 0, 0.7);
+}
+
+/* ERRORS DE CAMP */
+
+.field-error {
+  color: #ff5252;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.selected-file-name {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #bdbdbd;
+  word-break: break-word;
+}
+
+/* PAGINACIÓ DOCUMENTS */
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #14161d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #90a4ae;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: rgba(255, 213, 79, 0.4);
+  color: #ffd54f;
+}
+
+.page-btn.active {
+  background: rgba(255, 213, 79, 0.15);
+  border-color: #ffd54f;
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.page-info {
+  font-size: 12px;
+  color: #546e7a;
+  margin-left: 4px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .section-container {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .documents-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .project-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .project-icon .folder-img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .document-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doc-actions {
+    justify-content: flex-end;
+  }
+
+  .popup-container {
+    max-width: 100%;
+  }
+
+  .documents-toast {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
 }

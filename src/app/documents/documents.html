@@ -1,109 +1,228 @@
+<!-- TOAST FORA DE TOT -->
+<div class="app-toast" *ngIf="toastMsg" [class.toast-error]="!toastOk">
+  {{ toastMsg }}
+</div>
+
 <!-- Buscador -->
 <app-buscador (buscar)="filtrar($event)"></app-buscador>
 
 <div class="section-container documents-wrapper">
   <div class="documents-header">
     <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
-    <button class="jenkins-add-btn" (click)="toggleAddPopup()">
+
+    <button
+      *ngIf="canManageDocuments"
+      class="jenkins-add-btn"
+      (click)="toggleAddPopup()"
+      title="{{ 'DOCUMENTS.ADD_BUTTON' | translate }}"
+    >
       <mat-icon inline="true">add</mat-icon>
       <span>{{ 'DOCUMENTS.ADD_BUTTON' | translate }}</span>
     </button>
   </div>
 
   <div class="projects-list">
-    <div *ngFor="let project of projectsFiltrats" class="project-container">
+    <div *ngFor="let project of projectsPaginats" class="project-container">
       <div class="project-icon">
-        <img src="assets/images/Folder.png" alt="Folder" class="folder-img">
+        <img
+          src="assets/images/Folder.png"
+          alt="{{ 'DOCUMENTS.FOLDER_ALT' | translate }}"
+          class="folder-img"
+        />
       </div>
 
       <div class="project-info">
         <div class="project-header-line">
-          <div class="project-details">
-            <span class="project-name-label">{{ 'DOCUMENTS.PROJECT_NAME' | translate }}:</span>
+          <div class="project-details" (click)="selectProject(project)">
+            <span class="project-name-label">
+              {{ 'DOCUMENTS.PROJECT_NAME' | translate }}:
+            </span>
             <span class="project-name-value">{{ project.name }}</span>
           </div>
-
-          <!-- PAPERERA de CARPETA (deleteAllFiles) -->
-          <button
-            class="action-btn delete-btn"
-            (click)="confirmDeleteProject(project)"
-            title="Eliminar proyecto">
-            🗑️
-          </button>
         </div>
 
-        <div *ngIf="project.documents && project.documents.length" class="documents-list">
+        <div
+          *ngIf="project.documents && project.documents.length"
+          class="documents-list"
+        >
           <div *ngFor="let doc of project.documents" class="document-row">
             <div class="doc-info">
-              <img src="assets/images/File.png" alt="File" class="doc-icon file-img">
-              <span class="doc-name">{{ doc }}</span>
+              <img
+                src="assets/images/File.png"
+                alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
+                class="doc-icon file-img"
+              />
+              <span class="doc-name">{{ resolveDocumentName(doc) }}</span>
             </div>
 
             <div class="doc-actions">
-              <!-- Visualizar -->
               <button
                 class="action-btn view-btn"
                 (click)="viewDocument(project, doc)"
-                title="Visualizar">
+                title="{{ 'DOCUMENTS.VIEW' | translate }}"
+                aria-label="{{ 'DOCUMENTS.VIEW' | translate }}"
+              >
                 👁️
               </button>
-              <!-- Descargar -->
+
               <button
                 class="action-btn download-btn"
                 (click)="downloadDocument(project, doc)"
-                title="Descargar">
+                title="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
+                aria-label="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
+              >
                 📥
               </button>
-              <!-- Eliminar -->
+
               <button
+                *ngIf="canManageDocuments"
                 class="action-btn delete-btn"
                 (click)="confirmDeleteDocument(project, doc)"
-                title="Eliminar">
+                title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
+                aria-label="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
+              >
                 🗑️
               </button>
             </div>
           </div>
         </div>
-        
-        <div *ngIf="!project.documents || project.documents.length === 0" class="no-docs">
-          <span>Sin documentos</span>
+
+        <div
+          *ngIf="!project.documents || project.documents.length === 0"
+          class="no-docs"
+        >
+          <span>{{ 'DOCUMENTS.NO_DOCS' | translate }}</span>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="projectsFiltrats.length === 0" class="no-results">
     <mat-icon>folder_off</mat-icon>
-    <p>No hay proyectos</p>
+    <p>{{ 'DOCUMENTS.NO_PROJECTS' | translate }}</p>
+  </div>
+
+  <div class="pagination-bar" *ngIf="totalPaginasProjects > 1">
+    <button
+      class="page-btn"
+      (click)="cambiarPaginaProjects(paginaActualProjects - 1)"
+      [disabled]="paginaActualProjects === 1"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_PREVIOUS' | translate }}"
+    >
+      ‹
+    </button>
+
+    <button
+      class="page-btn"
+      *ngFor="let p of paginasArrayProjects"
+      [class.active]="p === paginaActualProjects"
+      (click)="cambiarPaginaProjects(p)"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_GOTO' | translate:{ page: p } }}"
+    >
+      {{ p }}
+    </button>
+
+    <button
+      class="page-btn"
+      (click)="cambiarPaginaProjects(paginaActualProjects + 1)"
+      [disabled]="paginaActualProjects === totalPaginasProjects"
+      aria-label="{{ 'DOCUMENTS.PAGINATION_NEXT' | translate }}"
+    >
+      ›
+    </button>
+
+    <span class="page-info">
+      {{ 'DOCUMENTS.PAGINATION_INFO' | translate:{ current:
+      paginaActualProjects, total: totalPaginasProjects } }}
+    </span>
   </div>
 </div>
 
-<!-- Popup afegir document -->
+<!-- POPUP AFEGIR DOCUMENT -->
 <div class="popup-fons" *ngIf="showAddPopup" (click)="toggleAddPopup()">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>{{ 'DOCUMENTS.ADD_POPUP_TITLE' | translate }}</h3>
 
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
-      <input type="number" [(ngModel)]="projectId" placeholder="ID del proyecto" />
+
+      <input
+        type="text"
+        class="project-search-input"
+        [(ngModel)]="projectSearch"
+        (input)="filterProjectsForPopup()"
+        [placeholder]="'DOCUMENTS.FIELD_PROJECT_SEARCH_PLACEHOLDER' | translate"
+      />
+
+      <select [(ngModel)]="projectId" (change)="onProjectChange()">
+        <option [ngValue]="''" disabled>
+          {{ 'DOCUMENTS.FIELD_PROJECT_SELECT_PLACEHOLDER' | translate }}
+        </option>
+        <option
+          *ngFor="let p of filteredProjectsForPopup"
+          [ngValue]="p.projectId"
+        >
+          {{ p.projectId }} - {{ p.name }}
+        </option>
+      </select>
+
+      <div class="field-error" *ngIf="projectError">{{ projectError }}</div>
     </div>
 
     <div class="form-field">
       <label>{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}</label>
-      <input type="text" [(ngModel)]="name" placeholder="Nombre del documento" />
-      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" />
+
+      <input
+        type="text"
+        [(ngModel)]="name"
+        [placeholder]="'DOCUMENTS.FIELD_DOC_NAME' | translate"
+        readonly
+      />
+
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+
+      <div class="selected-file-name" *ngIf="selectedFile">
+        {{ 'DOCUMENTS.SELECTED_FILE' | translate }}: {{ selectedFile.name }}
+      </div>
+
+      <div class="field-error" *ngIf="fileError">{{ fileError }}</div>
     </div>
 
     <div class="popup-actions">
-      <button class="file-btn" type="button" (click)="fileInput.click()" title="Examinar archivo">
-        <img src="assets/images/File.png" alt="Archivo">
+      <button
+        class="file-btn"
+        type="button"
+        (click)="fileInput.click()"
+        title="{{ 'DOCUMENTS.BROWSE' | translate }}"
+        aria-label="{{ 'DOCUMENTS.BROWSE' | translate }}"
+      >
+        <img
+          src="assets/images/File.png"
+          alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
+        />
       </button>
-      
+
       <div class="popup-actions-right">
-        <button class="cancelar-btn" (click)="toggleAddPopup()" title="Cancelar">
+        <button
+          class="cancelar-btn"
+          (click)="toggleAddPopup()"
+          title="{{ 'DOCUMENTS.CANCEL' | translate }}"
+          aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
+        >
           ✗
         </button>
-        <button class="guardar-btn" (click)="addDocument()" title="Guardar">
+
+        <button
+          class="guardar-btn"
+          (click)="addDocument()"
+          title="{{ 'DOCUMENTS.SAVE' | translate }}"
+          aria-label="{{ 'DOCUMENTS.SAVE' | translate }}"
+        >
           ✓
         </button>
       </div>
@@ -111,44 +230,58 @@
   </div>
 </div>
 
-<!-- Popup eliminar DOCUMENT -->
-<div class="popup-fons" *ngIf="deleteDocPopupOpen && docToDelete" (click)="cancelDeleteDocument()">
+<!-- POPUP ELIMINAR DOCUMENT -->
+<div
+  class="popup-fons"
+  *ngIf="deleteDocPopupOpen && docToDelete"
+  (click)="cancelDeleteDocument()"
+>
   <div class="popup-container" (click)="$event.stopPropagation()">
     <h3>{{ 'DOCUMENTS.DELETE_DOC_TITLE' | translate }}</h3>
-    <p>{{ 'DOCUMENTS.DELETE_DOC_QUESTION' | translate:{ name: docToDelete.document } }}</p>
+    <p>
+      {{ 'DOCUMENTS.DELETE_DOC_QUESTION' | translate:{ name:
+      resolveDocumentName(docToDelete.document) } }}
+    </p>
     <div class="popup-actions">
-      <button class="cancelar-btn" (click)="cancelDeleteDocument()" title="Cancelar">
+      <button
+        class="cancelar-btn"
+        (click)="cancelDeleteDocument()"
+        title="{{ 'DOCUMENTS.CANCEL' | translate }}"
+        aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
+      >
         ✗
       </button>
-      <button class="guardar-btn" (click)="deleteDocument()" title="Eliminar">
+      <button
+        class="guardar-btn"
+        (click)="deleteDocument()"
+        title="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
+        aria-label="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
+      >
         ✓
       </button>
     </div>
   </div>
 </div>
 
-<!-- Popup eliminar PROJECTE -->
-<div class="popup-fons" *ngIf="deleteProjectPopupOpen && projectToDelete" (click)="cancelDeleteProject()">
-  <div class="popup-container" (click)="$event.stopPropagation()">
-    <h3>{{ 'DOCUMENTS.DELETE_PROJECT_TITLE' | translate }}</h3>
-    <p>{{ 'DOCUMENTS.DELETE_PROJECT_QUESTION' | translate:{ name: projectToDelete.name } }}</p>
-    <div class="popup-actions">
-      <button class="cancelar-btn" (click)="cancelDeleteProject()" title="Cancelar">
-        ✗
-      </button>
-      <button class="guardar-btn" (click)="deleteProject()" title="Eliminar">
-        ✓
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Popup previsualitzacio imatge -->
-<div class="image-popup-backdrop" *ngIf="imagePreviewPopupOpen && imagePreviewUrl" (click)="closeImagePreview()">
+<!-- POPUP PREVIEW IMATGE -->
+<div
+  class="image-popup-backdrop"
+  *ngIf="imagePreviewPopupOpen && imagePreviewUrl"
+  (click)="closeImagePreview()"
+>
   <div class="image-popup-container" (click)="$event.stopPropagation()">
-    <button class="image-popup-close-btn" (click)="closeImagePreview()" title="Cerrar">
+    <button
+      class="image-popup-close-btn"
+      (click)="closeImagePreview()"
+      title="{{ 'DOCUMENTS.CLOSE' | translate }}"
+      aria-label="{{ 'DOCUMENTS.CLOSE' | translate }}"
+    >
       ✕
     </button>
-    <img [src]="imagePreviewUrl" [alt]="imagePreviewName || 'Imagen ampliada'" class="image-popup-img" />
+    <img
+      [src]="imagePreviewUrl"
+      [alt]="imagePreviewName || ('DOCUMENTS.IMAGE_PREVIEW_ALT' | translate)"
+      class="image-popup-img"
+    />
   </div>
 </div>

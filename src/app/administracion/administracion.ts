@@ -21,6 +21,8 @@ interface UsuariBackend {
   email: string;
   roles: string[];
   status: string;
+  createdAt?: string;
+  updatedAt?: string;
   cvPath?: string;
   puesto?: string;
   experiencia?: string;
@@ -70,7 +72,6 @@ interface PeticionTareaBackend {
   jiraTask?: string;
   devopsAssignee?: string;
   deadline?: string;
-  deadlineTime?: string;
   comments?: string;
   attachments?: string[];
   estado?: string;
@@ -89,8 +90,8 @@ interface PeticionTareaAdmin {
   asignado: string;
   deadline: string;
   comentario: string;
-  estado: "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA";
-  attachments?: string[];
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA';
+  attachments: string[];
 }
 
 @Component({
@@ -146,6 +147,10 @@ export class AdministracionComponent implements OnInit {
   usuariEditant: UsuariBackend | null = null;
   usuariAEsborrar: UsuariBackend | null = null;
 
+  // Paginación usuarios
+  paginaActualUsuarios = 1;
+  readonly usuariosPorPagina = 10;
+
   // ESTADOS NUEVAS SECCIONES
   selectedRoleToDisable: string = "";
   appVersion: string = "";
@@ -162,12 +167,7 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
-  filtroEstadoPeticiones:
-    | "TODAS"
-    | "PENDIENTE"
-    | "APROBADA"
-    | "RECHAZADA"
-    | "INICIADA" = "TODAS";
+  filtroEstadoPeticiones: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' = 'TODAS';
 
   // Paginación peticiones
   paginaActualPeticiones = 1;
@@ -176,17 +176,31 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS PETICIONES DE TAREA
   peticionsTareas: PeticionTareaAdmin[] = [];
   peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
-  filtroEstadoTareas:
-    | "TODAS"
-    | "PENDIENTE"
-    | "APROBADA"
-    | "RECHAZADA"
-    | "INICIADA" = "TODAS";
-  searchTareas = "";
+  filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA' = 'TODAS';
+  searchTareas = '';
 
   // Paginación tareas
   paginaActualTareas = 1;
   readonly tareasPorPagina = 10;
+
+  get usuariosPaginados(): UsuariBackend[] {
+    const inicio = (this.paginaActualUsuarios - 1) * this.usuariosPorPagina;
+    return this.usuarisFiltrats.slice(inicio, inicio + this.usuariosPorPagina);
+  }
+
+  get totalPaginasUsuarios(): number {
+    return Math.ceil(this.usuarisFiltrats.length / this.usuariosPorPagina);
+  }
+
+  get paginasArrayUsuarios(): number[] {
+    return Array.from({ length: this.totalPaginasUsuarios }, (_, i) => i + 1);
+  }
+
+  cambiarPaginaUsuarios(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginasUsuarios) {
+      this.paginaActualUsuarios = pagina;
+    }
+  }
 
   get peticionesPaginadas(): PeticionAdmin[] {
     const inicio = (this.paginaActualPeticiones - 1) * this.peticionesPorPagina;
@@ -243,13 +257,19 @@ export class AdministracionComponent implements OnInit {
     return this.peticionsTareas.filter((p) => p.estado === "RECHAZADA").length;
   }
 
+  get tareasFinalizadas(): number {
+    return this.peticionsTareas.filter((p) => p.estado === "FINALIZADA").length;
+  }
+
   get peticionesIniciadas(): number {
-    return this.peticiones.filter((p) => p.estado === "INICIADA").length;
+  return this.peticiones.filter(p => p.estado === 'INICIADA').length;
   }
 
   get tareasIniciadas(): number {
-    return this.peticionsTareas.filter((p) => p.estado === "INICIADA").length;
+  return this.peticionsTareas.filter(p => p.estado === 'INICIADA').length;
   }
+
+
 
   cambiarPaginaTareas(pagina: number) {
     if (pagina >= 1 && pagina <= this.totalPaginasTareas) {
@@ -473,6 +493,7 @@ export class AdministracionComponent implements OnInit {
   versionSuccess = "";
   versionError = "";
   versionSaving = false;
+  private readonly versionPattern = /^\d+\.\d+\.\d+$/;
 
   opcionesBorrado = [
     { value: "usuarios", label: "Usuarios inactivos" },
@@ -507,7 +528,7 @@ export class AdministracionComponent implements OnInit {
   coleccionBackupNoEncontrada: boolean = false;
   registrosColeccionBackup: number = 0;
 
-  // Borrado físico de registros inactivos de colección
+  // Borrado de registros inactivos de colección
   registrosInactivosColeccion: any[] = [];
   registrosSeleccionadosBorrar: Set<string> = new Set();
   cargandoRegistrosInactivos: boolean = false;
@@ -597,9 +618,7 @@ export class AdministracionComponent implements OnInit {
     this.router.navigate(["/peticion"]);
   }
 
-  filtrarPorEstadoTareas(
-    estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA",
-  ) {
+  filtrarPorEstadoTareas(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA') {
     this.filtroEstadoTareas = estado;
     this.aplicarFiltrosTareas();
   }
@@ -678,17 +697,60 @@ export class AdministracionComponent implements OnInit {
       });
   }
 
-  reenviarConfirmacion(tarea: PeticionTareaAdmin) {
+  iniciarTarea(tarea: PeticionTareaAdmin) {
     this.http
-      .put(`${this.peticionsTareasUrl}/${tarea.id}/resend-confirmation`, {})
+      .put<PeticionTareaBackend>(
+        `${this.peticionsTareasUrl}/${tarea.id}/start`,
+        {},
+      )
       .subscribe({
-        next: () => this.showToast("✅ Correo de confirmación reenviado"),
+        next: (updated) => {
+          const mapped = this.mapPeticionTarea(updated);
+          const idx = this.peticionsTareas.findIndex((p) => p.id === tarea.id);
+          if (idx !== -1) this.peticionsTareas[idx] = mapped;
+          this.aplicarFiltrosTareas();
+          this.showToast("✅ Petición iniciada");
+        },
         error: (err) => {
-          console.error("Error reenviando confirmación", err);
-          this.showToast("❌ Error al reenviar el correo", false);
+          console.error("Error iniciando tarea", err);
+          this.showToast("❌ Error al iniciar la petición", false);
         },
       });
   }
+
+  finalizarTarea(tarea: PeticionTareaAdmin) {
+    this.http
+      .put<PeticionTareaBackend>(
+        `${this.peticionsTareasUrl}/${tarea.id}/finish`,
+        {},
+      )
+      .subscribe({
+        next: (updated) => {
+          const mapped = this.mapPeticionTarea(updated);
+          const idx = this.peticionsTareas.findIndex((p) => p.id === tarea.id);
+          if (idx !== -1) this.peticionsTareas[idx] = mapped;
+          this.aplicarFiltrosTareas();
+          this.showToast("✅ Petición finalizada");
+        },
+        error: (err) => {
+          console.error("Error finalizando tarea", err);
+          this.showToast("❌ Error al finalizar la petición", false);
+        },
+      });
+  }
+
+  reenviarConfirmacion(tarea: PeticionTareaAdmin) {
+  this.http.put(`${this.peticionsTareasUrl}/${tarea.id}/resend-confirmation`, {})
+    .subscribe({
+      next: () => this.showToast('✅ Correo de confirmación reenviado'),
+      error: err => {
+        console.error('Error reenviando confirmación', err);
+        this.showToast('❌ Error al reenviar el correo', false);
+      }
+    });
+}
+
+
 
   private cargarPeticionsTareas() {
     this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
@@ -711,9 +773,6 @@ export class AdministracionComponent implements OnInit {
   }
 
   private mapPeticionTarea(p: PeticionTareaBackend): PeticionTareaAdmin {
-    const fecha = this.formatFecha(p.deadline);
-    const hora = p.deadlineTime?.slice(0, 5) || "";
-
     return {
       id: p.id ?? "",
       solicitante: p.requesterName?.trim() || "",
@@ -722,16 +781,14 @@ export class AdministracionComponent implements OnInit {
       projectCode: p.projectCode?.trim() || "",
       jiraTask: p.jiraTask?.trim() || "",
       asignado: p.devopsAssignee?.trim() || "Cualquiera",
-      deadline: hora ? `${fecha} ${hora}` : fecha,
+      deadline: this.formatFecha(p.deadline),
       comentario: p.comments?.trim() || "",
-      estado: this.normalizeEstado(p.estado),
+      estado: this.normalizeEstadoTarea(p.estado),
       attachments: p.attachments ?? [],
     };
   }
 
-  filtrarPorEstado(
-    estado: "TODAS" | "PENDIENTE" | "APROBADA" | "RECHAZADA" | "INICIADA",
-  ) {
+  filtrarPorEstado(estado: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA') {
     this.filtroEstadoPeticiones = estado;
     this.aplicarFiltrosPeticiones();
   }
@@ -782,10 +839,11 @@ export class AdministracionComponent implements OnInit {
 
   getStatusTranslation(estado: string): string {
     const statusMap: { [key: string]: string } = {
-      PENDIENTE: "ADMIN.STATUS_PENDING",
-      APROBADA: "ADMIN.STATUS_APPROVED",
-      RECHAZADA: "ADMIN.STATUS_REJECTED",
-      INICIADA: "ADMIN.STATUS_INITIATED",
+      'PENDIENTE': 'ADMIN.STATUS_PENDING',
+      'APROBADA': 'ADMIN.STATUS_APPROVED',
+      'RECHAZADA': 'ADMIN.STATUS_REJECTED',
+      'INICIADA': 'ADMIN.STATUS_INITIATED',
+      'FINALIZADA': 'FINALIZADA'
     };
     return statusMap[estado] || estado;
   }
@@ -885,16 +943,26 @@ export class AdministracionComponent implements OnInit {
     };
   }
 
-  private normalizeEstado(estado?: string): PeticionAdmin["estado"] {
-    const normalized = (estado || "PENDIENTE").toUpperCase();
+  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
+  const normalized = (estado || 'PENDIENTE').toUpperCase();
+  if (normalized === 'APROBADA' || normalized === 'RECHAZADA' || normalized === 'INICIADA') {
+    return normalized;
+  }
+  return 'PENDIENTE';
+}
+
+  private normalizeEstadoTarea(estado?: string): PeticionTareaAdmin['estado'] {
+    const normalized = (estado || 'PENDIENTE').toUpperCase();
     if (
-      normalized === "APROBADA" ||
-      normalized === "RECHAZADA" ||
-      normalized === "INICIADA"
+      normalized === 'PENDIENTE' ||
+      normalized === 'APROBADA' ||
+      normalized === 'RECHAZADA' ||
+      normalized === 'INICIADA' ||
+      normalized === 'FINALIZADA'
     ) {
       return normalized;
     }
-    return "PENDIENTE";
+    return 'PENDIENTE';
   }
 
   private formatFecha(value?: string): string {
@@ -907,20 +975,56 @@ export class AdministracionComponent implements OnInit {
   }
 
   // ===== LOGICA USUARIOS (Scenario 1) =====
+  private isActiveStatus(status?: string): boolean {
+    const normalized = String(status || "ACTIVE").toUpperCase().trim();
+    return normalized !== "INACTIVE" && normalized !== "DISABLED";
+  }
+
+  private getObjectIdTimestamp(id?: string): number {
+    const normalized = String(id || "").trim();
+    if (!/^[a-fA-F0-9]{24}$/.test(normalized)) {
+      return 0;
+    }
+
+    const seconds = Number.parseInt(normalized.slice(0, 8), 16);
+    return Number.isFinite(seconds) ? seconds * 1000 : 0;
+  }
+
+  private getUserCreationTimestamp(user: UsuariBackend): number {
+    const createdAtTs = new Date(user.createdAt || "").getTime();
+    if (!Number.isNaN(createdAtTs) && createdAtTs > 0) {
+      return createdAtTs;
+    }
+
+    return this.getObjectIdTimestamp(user.id);
+  }
+
+  private ordenarUsuariosMasRecientesPrimero(users: UsuariBackend[]): UsuariBackend[] {
+    return [...users].sort(
+      (a, b) => this.getUserCreationTimestamp(b) - this.getUserCreationTimestamp(a),
+    );
+  }
+
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
-        this.usuaris = [...data];
+        const activeUsers = (data || []).filter((u) =>
+          this.isActiveStatus(u.status),
+        );
+        this.usuaris = this.ordenarUsuariosMasRecientesPrimero(activeUsers);
         this.usuarisFiltrats = [...this.usuaris];
 
         if (this.searchUsers) {
           this.filtrar(this.searchUsers);
+        } else {
+          this.paginaActualUsuarios = 1;
         }
       },
       error: (err) => {
         console.error("Error carregant usuaris", err);
         this.usuaris = [];
         this.usuarisFiltrats = [...this.usuaris];
+        this.paginaActualUsuarios = 1;
       },
     });
   }
@@ -958,6 +1062,7 @@ export class AdministracionComponent implements OnInit {
           next: (updated) => {
             const idx = this.usuaris.findIndex((u) => u.id === updated.id);
             if (idx !== -1) this.usuaris[idx] = updated;
+            this.usuaris = this.ordenarUsuariosMasRecientesPrimero(this.usuaris);
             this.filtrar("");
             this.tancarPopup();
             this.showToast("Usuario actualizado correctamente", true);
@@ -987,7 +1092,10 @@ export class AdministracionComponent implements OnInit {
 
       this.http.post<UsuariBackend>(`${this.baseUrl}/create`, body).subscribe({
         next: (created) => {
-          this.usuaris.push(created);
+          this.usuaris = this.ordenarUsuariosMasRecientesPrimero([
+            ...this.usuaris,
+            created,
+          ]);
           this.filtrar("");
           this.tancarPopup();
           this.showToast("Usuario creado correctamente", true);
@@ -1005,23 +1113,29 @@ export class AdministracionComponent implements OnInit {
       this.mostrarPopupDelete = false;
       return;
     }
+
+    const userId = this.usuariAEsborrar.id;
     this.http
-      .delete(`${this.baseUrl}/delete/${this.usuariAEsborrar.id}`)
+      .put<UsuariBackend>(`${this.baseUrl}/status/${userId}`, {
+        status: "INACTIVE",
+      })
       .subscribe({
         next: () => {
-          this.usuaris = this.usuaris.filter(
-            (u) => u.id !== this.usuariAEsborrar!.id,
-          );
+          this.usuaris = this.usuaris.filter((u) => u.id !== userId);
           this.filtrar("");
           this.mostrarPopupDelete = false;
           this.usuariAEsborrar = null;
+          this.showToast("Usuario inhabilitado correctamente", true);
         },
-        error: (err) => console.error("Error inhabilitando usuari", err),
+        error: (err) => {
+          console.error("Error inhabilitando usuari", err);
+          this.showToast("Error al inhabilitar el usuario", false);
+        },
       });
   }
 
   filtrar(valor: string) {
-    const v = (valor || "").toLowerCase();
+    const v = String(valor ?? "").toLowerCase().trim();
     this.searchUsers = v;
     this.storage.set(this.STORAGE_KEY_USER_FILTER, this.searchUsers);
 
@@ -1029,12 +1143,23 @@ export class AdministracionComponent implements OnInit {
       this.usuarisFiltrats = [...this.usuaris];
     } else {
       this.usuarisFiltrats = this.usuaris.filter(
-        (u) =>
-          u.fullName.toLowerCase().includes(v) ||
-          u.roles.join(", ").toLowerCase().includes(v) ||
-          u.email.toLowerCase().includes(v),
+        (u) => {
+          const fullName = (u.fullName || "").toLowerCase();
+          const username = (u.username || "").toLowerCase();
+          const email = (u.email || "").toLowerCase();
+          const roles = (u.roles || []).join(", ").toLowerCase();
+
+          return (
+            fullName.includes(v) ||
+            username.includes(v) ||
+            email.includes(v) ||
+            roles.includes(v)
+          );
+        },
       );
     }
+
+    this.paginaActualUsuarios = 1;
   }
 
   obrirPopupCrear() {
@@ -1144,25 +1269,54 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
+  get versionInputValida(): boolean {
+    return this.versionPattern.test(this.appVersion.trim());
+  }
+
+  validarVersionEnEdicion(rawValue: string) {
+    const value = (rawValue || "").trim();
+
+    if (!value) {
+      this.versionError = "";
+      return;
+    }
+
+    if (!this.versionPattern.test(value)) {
+      this.versionError =
+        "La versión debe tener formato X.Y.Z (3 números separados por puntos)";
+      return;
+    }
+
+    this.versionError = "";
+  }
+
   // Scenario 3: Parametrización
   cambiarVersion() {
-    if (!this.appVersion || this.appVersion.trim() === "") {
+    const newVersion = this.appVersion.trim();
+
+    if (!newVersion) {
       this.versionError = "Introduce una versión válida (ej: 1.2.0)";
       return;
     }
+
+    if (!this.versionPattern.test(newVersion)) {
+      this.versionError =
+        "La versión debe tener formato X.Y.Z (3 números separados por puntos)";
+      return;
+    }
+
     this.versionError = "";
     this.versionSuccess = "";
     this.versionSaving = true;
 
-    const body = { version: this.appVersion.trim() };
+    const body = { version: newVersion };
 
     this.http.put<any>(`${environment.baseUrl}config/version`, body).subscribe({
       next: () => {
         this.versionSaving = false;
-        const newVersion = this.appVersion.trim();
         this.versionSuccess = `Versión actualizada a ${newVersion}`;
         this.apiService.setVersion(newVersion);
-        this.appVersion = "";
+        this.appVersion = newVersion;
         setTimeout(() => (this.versionSuccess = ""), 3000);
       },
       error: (err) => {
@@ -1253,18 +1407,23 @@ export class AdministracionComponent implements OnInit {
     }
   }
 
-  ejecutarBorradoFisicoColecciones() {
+  ejecutarBorradoLogicoColecciones() {
     if (this.selectedCollectionsBorrado.size === 0) return;
     const cols = Array.from(this.selectedCollectionsBorrado);
 
     this.http
-      .post(`${environment.baseUrl}db/borrado-fisico`, { tipos: cols })
+      .post(`${environment.baseUrl}db/borrado-logico`, { tipos: cols })
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          const totalAfectados = Number(res?.totalAfectados || 0);
           this.showToast(
-            `✅ Borrado físico ejecutado en ${cols.length} colección(es)`,
+            `✅ Borrado lógico aplicado en ${cols.length} colección(es) — Registros afectados: ${totalAfectados}`,
           );
           this.selectedCollectionsBorrado.clear();
+        },
+        error: (err) => {
+          console.error("Error aplicando borrado lógico", err);
+          this.showToast("❌ Error al aplicar el borrado lógico", false);
         },
       });
   }
@@ -1337,17 +1496,20 @@ export class AdministracionComponent implements OnInit {
       return;
     }
     this.http
-      .post(`${environment.baseUrl}db/borrado-fisico`, {
+      .post(`${environment.baseUrl}db/borrado-logico`, {
         tipos: this.selectedBorrado,
       })
       .subscribe({
-        next: () => {
-          this.showToast("✅ Borrado físico ejecutado correctamente");
+        next: (res: any) => {
+          const totalAfectados = Number(res?.totalAfectados || 0);
+          this.showToast(
+            `✅ Borrado lógico aplicado correctamente — Registros afectados: ${totalAfectados}`,
+          );
           this.mostrarPopupBorrado = false;
         },
         error: (err) => {
-          console.error("Error en borrado físico", err);
-          this.showToast("❌ Error al ejecutar el borrado físico", false);
+          console.error("Error en borrado lógico", err);
+          this.showToast("❌ Error al ejecutar el borrado lógico", false);
         },
       });
   }
@@ -1837,10 +1999,78 @@ export class AdministracionComponent implements OnInit {
     return version?.fecha || "";
   }
 
-  verCV(usuari: UsuariBackend) {
-    if (usuari.cvPath) {
-      window.open(`${environment.baseUrl}files/cv/${usuari.id}`, "_blank");
+  descargarCV(usuari: UsuariBackend) {
+    const username = usuari.username?.trim();
+
+    if (!usuari.cvPath || !username) {
+      this.showToast("No tiene CV", false);
+      return;
     }
+
+    const nombreBase = username || usuari.fullName || "usuario";
+    const fallbackName = `cv_${nombreBase.replace(/\s+/g, "_")}.pdf`;
+
+    this.http
+      .get(
+        `${environment.baseUrl}profile/cv?username=${encodeURIComponent(username)}`,
+        {
+        observe: "response",
+        responseType: "blob",
+        },
+      )
+      .subscribe({
+        next: (response) => {
+          const blob = response.body;
+          if (!blob) {
+            this.showToast("❌ No se pudo descargar el CV", false);
+            return;
+          }
+
+          const contentDisposition = response.headers.get("content-disposition");
+          const fileName = this.obtenerNombreCV(
+            contentDisposition,
+            fallbackName,
+          );
+
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(blobUrl);
+        },
+        error: (err) => {
+          console.error("Error descargando CV", err);
+          this.showToast("❌ Error al descargar el CV", false);
+        },
+      });
+  }
+
+  private obtenerNombreCV(
+    contentDisposition: string | null,
+    fallbackName: string,
+  ): string {
+    if (!contentDisposition) {
+      return fallbackName;
+    }
+
+    const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utf8Match?.[1]) {
+      try {
+        return decodeURIComponent(utf8Match[1]);
+      } catch {
+        return utf8Match[1];
+      }
+    }
+
+    const asciiMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+    if (asciiMatch?.[1]) {
+      return asciiMatch[1];
+    }
+
+    return fallbackName;
   }
 
   abrirPerfilCV(usuari: UsuariBackend) {
@@ -1902,42 +2132,12 @@ export class AdministracionComponent implements OnInit {
   }
   descargarPDFTarea(tarea: PeticionTareaAdmin) {
     const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
 
-    const logoUrl = "/assets/images/7dRimV7.png";
+    doc.setFontSize(16);
+    doc.text(`Petición de tarea #${tarea.id.slice(-6)}`, 14, 20);
 
-    // TÍTOL A L'ESQUERRA
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(22, 63, 107);
-    doc.text("Petición de tarea", 14, 28);
-
-    // SUBTÍTOL sota el títol
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    doc.text(`#${tarea.id.slice(-6)}`, 14, 42);
-    if (tarea.projectCode || tarea.proyecto) {
-      const projectLine =
-        `${tarea.projectCode || ""} ${tarea.proyecto || ""}`.trim();
-      if (projectLine) {
-        doc.text(projectLine, 14, 54);
-      }
-    }
-
-    // LOGO A LA DRETA
-    try {
-      const imgW = 40;
-      const imgH = 40;
-      doc.addImage(logoUrl, "PNG", pageWidth - imgW - 14, 14, imgW, imgH);
-    } catch (e) {
-      console.warn("Logo no disponible en PDF de tarea");
-    }
-
-    // a partir d'aquí deixa el que ja tens:
     autoTable(doc, {
-      startY: 70,
+      startY: 30,
       head: [["Campo", "Valor"]],
       body: [
         ["Solicitante", tarea.solicitante],
@@ -1947,46 +2147,20 @@ export class AdministracionComponent implements OnInit {
         ["JIRA", tarea.jiraTask],
         ["Asignado", tarea.asignado || "Cualquiera"],
         ["Deadline", tarea.deadline || "—"],
-        [
-          "Estado",
-          this.translate.instant(this.getStatusTranslation(tarea.estado)),
-        ],
+        ["Estado", this.getStatusTranslation(tarea.estado)],
       ],
-      styles: { fontSize: 10, cellPadding: 4 },
-      headStyles: {
-        fillColor: [22, 63, 107],
-        textColor: [255, 255, 255],
-        fontStyle: "bold",
-      },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      margin: { left: 14, right: 14 },
+      styles: { fontSize: 11 },
+      headStyles: { fillColor: [33, 33, 33] },
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY + 12;
+    const finalY = (doc as any).lastAutoTable.finalY || 40;
 
-    // COMENTARI
-    if (tarea.comentario && tarea.comentario.trim()) {
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(22, 63, 107);
-      doc.text("Comentario:", 14, finalY);
+    doc.setFontSize(11);
+    doc.text("Comentario:", 14, finalY + 10);
 
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.setTextColor(60, 60, 60);
-      const splitComentario = doc.splitTextToSize(
-        tarea.comentario,
-        pageWidth - 28,
-      );
-      doc.text(splitComentario, 14, finalY + 10);
-    }
-
-    // PEU DE PÀGINA
-    const footerText = `Petición gestionada en JanusHub · ${new Date().toLocaleDateString("es-ES")}`;
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(120, 120, 120);
-    doc.text(footerText, 14, pageHeight - 14);
+    const comentario = tarea.comentario || "";
+    const splitComentario = doc.splitTextToSize(comentario, 180);
+    doc.text(splitComentario, 14, finalY + 17);
 
     doc.save(`tarea_${tarea.id}.pdf`);
   }
