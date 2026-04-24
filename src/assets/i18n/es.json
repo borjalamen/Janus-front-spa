@@ -159,7 +159,8 @@
   },
   "COMMON": {
     "CANCEL": "Cancelar",
-    "SAVE": "Guardar"
+    "SAVE": "Guardar",
+    "OR": "o"
   },
 
   "PROJECTS": {
@@ -794,16 +795,40 @@
     "COMMENTS_DELETE": "Eliminar",
     "COMMENTS_EMPTY": "No hay comentarios todavía.",
     "LIVE": {
+      "CREATE_TITLE": "Crear sesión",
+      "CREATE_HINT": "Se usarán los metadatos de la pestaña Estimación. Las tasks se estiman en vivo.",
+      "JOIN_TITLE": "Unirse a sesión existente",
+      "JOIN_HINT": "Introduce el código que te ha compartido el responsable de la sesión.",
+      "SESSION_CODE": "Código de sesión",
+      "COPY_CODE": "Copiar código",
+      "ID_COPIED": "Código copiado al portapapeles",
+      "META_REQUIRED": "Rellena Nombre, Código proyecto, Nombre proyecto, Solicitante y Email antes de crear una sesión.",
+      "CONNECTING": "Conectando...",
       "NEW_TASK": "Descripción de la tarea...",
       "START": "Crear sesión en vivo",
       "JOIN": "Unirse a sesión",
-      "HINT": "Las sesiones en vivo usan BroadcastChannel para pruebas locales. Para multiusuario real necesitas un servidor WebSocket configurado.",
-      "OWNER": "Propietario",
+      "PARTICIPANTS": "Participantes",
       "YOU": "Tú",
-      "YOU_VOTED": "Has votado",
-      "REVEAL": "Revelar votos",
-      "ACCEPT": "Aceptar estimación",
-      "ABORT": "Cancelar sesión"
+      "WAITING_OWNER": "Esperando a que el responsable inicie la votación...",
+      "WAITING_FINAL": "Esperando a que el responsable acepte la estimación final...",
+      "NEXT_TASK_TITLE": "Descripción de la siguiente tarea",
+      "START_VOTE": "Iniciar votación",
+      "FINISH": "Finalizar sesión",
+      "LEAVE": "Abandonar sesión",
+      "VOTE_PLACEHOLDER": "Tu estimación (horas)...",
+      "VOTE": "Votar",
+      "VOTED_CONFIRM": "Has votado",
+      "REVEAL": "Revelar votos ahora",
+      "FINAL_RESULT_TITLE": "Estimación final acordada",
+      "FINAL_RESULT_PLACEHOLDER": "Horas finales...",
+      "ACCEPT": "Aceptar y continuar",
+      "ESTIMATED_TASKS": "Tareas estimadas",
+      "TOTAL": "Total",
+      "FINISHED_TITLE": "Sesión finalizada",
+      "SAVE_ESTIMATION": "Guardar en estimaciones",
+      "SAVED_OK": "Estimación guardada correctamente",
+      "ERROR_CONNECT": "No se pudo conectar al servidor. Comprueba que el backend está en marcha.",
+      "ERROR_NOT_FOUND": "Sesión no encontrada"
     }
   },
   "ESTIMATION_META": {

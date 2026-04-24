@@ -158,7 +158,8 @@
   },
   "COMMON": {
     "CANCEL": "Cancel·lar",
-    "SAVE": "Desar"
+    "SAVE": "Desar",
+    "OR": "o"
   },
   "PROJECTS": {
     "TITLE": "Projectes",
@@ -780,16 +781,40 @@
     "COMMENTS_DELETE": "Eliminar",
     "COMMENTS_EMPTY": "Encara no hi ha comentaris.",
     "LIVE": {
+      "CREATE_TITLE": "Crear sessió",
+      "CREATE_HINT": "S'usaran les metadades de la pestanya Estimació. Les tasques s'estimen en viu.",
+      "JOIN_TITLE": "Unir-se a sessió existent",
+      "JOIN_HINT": "Introdueix el codi compartit pel responsable de la sessió.",
+      "SESSION_CODE": "Codi de sessió",
+      "COPY_CODE": "Copiar codi",
+      "ID_COPIED": "Codi copiat al portapapers",
+      "META_REQUIRED": "Omple Nom, Codi projecte, Nom projecte, Sol·licitant i Email abans de crear una sessió.",
+      "CONNECTING": "Connectant...",
       "NEW_TASK": "Descripció de la tasca...",
       "START": "Crear sessió en viu",
       "JOIN": "Unir-se a sessió",
-      "HINT": "Les sessions en viu usen BroadcastChannel per proves locals. Per multiusuari real cal un servidor WebSocket configurat.",
-      "OWNER": "Propietari",
+      "PARTICIPANTS": "Participants",
       "YOU": "Tu",
-      "YOU_VOTED": "Has votat",
-      "REVEAL": "Revelar vots",
-      "ACCEPT": "Acceptar estimació",
-      "ABORT": "Cancelar sessió"
+      "WAITING_OWNER": "Esperant que el responsable iniciï la votació...",
+      "WAITING_FINAL": "Esperant que el responsable accepti l'estimació final...",
+      "NEXT_TASK_TITLE": "Descripció de la següent tasca",
+      "START_VOTE": "Iniciar votació",
+      "FINISH": "Finalitzar sessió",
+      "LEAVE": "Abandonar sessió",
+      "VOTE_PLACEHOLDER": "La teva estimació (hores)...",
+      "VOTE": "Votar",
+      "VOTED_CONFIRM": "Has votat",
+      "REVEAL": "Revelar vots ara",
+      "FINAL_RESULT_TITLE": "Estimació final acordada",
+      "FINAL_RESULT_PLACEHOLDER": "Hores finals...",
+      "ACCEPT": "Acceptar i continuar",
+      "ESTIMATED_TASKS": "Tasques estimades",
+      "TOTAL": "Total",
+      "FINISHED_TITLE": "Sessió finalitzada",
+      "SAVE_ESTIMATION": "Desar a estimacions",
+      "SAVED_OK": "Estimació desada correctament",
+      "ERROR_CONNECT": "No s'ha pogut connectar al servidor. Comprova que el backend funciona.",
+      "ERROR_NOT_FOUND": "Sessió no trobada"
     }
   },
   "ESTIMATION_META": {

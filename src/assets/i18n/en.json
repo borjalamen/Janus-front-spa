@@ -163,7 +163,8 @@
   },
   "COMMON": {
     "CANCEL": "Cancel",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "OR": "or"
   },
   "PROJECTS": {
     "TITLE": "Projects",
@@ -798,16 +799,40 @@
     "COMMENTS_DELETE": "Delete",
     "COMMENTS_EMPTY": "No comments yet.",
     "LIVE": {
+      "CREATE_TITLE": "Create session",
+      "CREATE_HINT": "The metadata from the Estimation tab will be used. Tasks are estimated live.",
+      "JOIN_TITLE": "Join existing session",
+      "JOIN_HINT": "Enter the code shared by the session owner.",
+      "SESSION_CODE": "Session code",
+      "COPY_CODE": "Copy code",
+      "ID_COPIED": "Code copied to clipboard",
+      "META_REQUIRED": "Fill in Name, Project Code, Project Name, Requester and Email before creating a session.",
+      "CONNECTING": "Connecting...",
       "NEW_TASK": "Task description...",
       "START": "Create live session",
       "JOIN": "Join session",
-      "HINT": "Live sessions use BroadcastChannel for local testing. For real multi-user you need a WebSocket server configured.",
-      "OWNER": "Owner",
+      "PARTICIPANTS": "Participants",
       "YOU": "You",
-      "YOU_VOTED": "You voted",
-      "REVEAL": "Reveal votes",
-      "ACCEPT": "Accept estimate",
-      "ABORT": "Abort session"
+      "WAITING_OWNER": "Waiting for the owner to start voting...",
+      "WAITING_FINAL": "Waiting for the owner to set the final estimate...",
+      "NEXT_TASK_TITLE": "Next task description",
+      "START_VOTE": "Start voting",
+      "FINISH": "Finish session",
+      "LEAVE": "Leave session",
+      "VOTE_PLACEHOLDER": "Your estimate (hours)...",
+      "VOTE": "Vote",
+      "VOTED_CONFIRM": "You voted",
+      "REVEAL": "Reveal votes now",
+      "FINAL_RESULT_TITLE": "Agreed final estimate",
+      "FINAL_RESULT_PLACEHOLDER": "Final hours...",
+      "ACCEPT": "Accept and continue",
+      "ESTIMATED_TASKS": "Estimated tasks",
+      "TOTAL": "Total",
+      "FINISHED_TITLE": "Session finished",
+      "SAVE_ESTIMATION": "Save to estimations",
+      "SAVED_OK": "Estimation saved successfully",
+      "ERROR_CONNECT": "Could not connect to server. Make sure the backend is running.",
+      "ERROR_NOT_FOUND": "Session not found"
     }
   },
   "ESTIMATION_META": {

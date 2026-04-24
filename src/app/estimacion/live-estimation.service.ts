@@ -1,117 +1,157 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-type Msg = { type: string; sessionId?: string; payload?: any };
-
-export interface Participant {
+export interface LiveParticipant {
   id: string;
   name: string;
-  vote?: string | number | null;
+  vote: number | null;
+}
+
+export interface LiveAcceptedTask {
+  task: string;
+  result: number;
 }
 
 export interface LiveSession {
   id: string;
   ownerId: string;
-  task: string;
-  participants: Participant[];
-  revealed: boolean;
-  accepted?: boolean;
-  result?: number | null;
+  ownerName: string;
+  estimationName: string;
+  projectCode: string;
+  projectName: string;
+  requester: string;
+  requesterEmail: string;
+  notes: string;
+  participants: LiveParticipant[];
+  currentTask: string | null;
+  phase: 'LOBBY' | 'VOTING' | 'REVEALED' | 'FINISHED';
+  votingStart: number | null;
+  acceptedTasks: LiveAcceptedTask[];
 }
+
+// Keep old types for backward-compatibility (unused internally)
+export type Participant = LiveParticipant;
 
 @Injectable({ providedIn: 'root' })
-export class LiveEstimationService {
-  private channelName = 'janus-live-estimation-v1';
-  private bc: BroadcastChannel | null = null;
+export class LiveEstimationService implements OnDestroy {
+
   private ws: WebSocket | null = null;
+
   private readonly _session$ = new BehaviorSubject<LiveSession | null>(null);
+  private readonly _error$ = new BehaviorSubject<string | null>(null);
+  private readonly _connected$ = new BehaviorSubject<boolean>(false);
 
   public session$: Observable<LiveSession | null> = this._session$.asObservable();
+  public error$: Observable<string | null> = this._error$.asObservable();
+  public connected$: Observable<boolean> = this._connected$.asObservable();
 
-  constructor() {
-    try {
-      if ('BroadcastChannel' in window) {
-        this.bc = new BroadcastChannel(this.channelName);
-        this.bc.onmessage = (ev) => this.handleMessage(ev.data as Msg);
-      }
-    } catch (e) {
-      this.bc = null;
-    }
-    // Optional WS: if window['LIVE_WS_URL'] is set, try to connect
-    const url = (window as any).LIVE_WS_URL;
-    if (url) this.connectWs(String(url));
+  /** Derives the WS URL from the environment baseUrl */
+  private get wsUrl(): string {
+    return environment.baseUrl
+      .replace(/^http/, 'ws')
+      .replace(/\/api\/?$/, '/ws/live-estimation');
   }
 
-  private connectWs(url: string) {
-    try {
-      this.ws = new WebSocket(url);
-      this.ws.onmessage = (ev) => {
-        try { const m = JSON.parse(ev.data); this.handleMessage(m); } catch (e) {}
+  // ── Connection ──────────────────────────────────────────────────────────────
+
+  connect(): Promise<void> {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      return Promise.resolve();
+    }
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+    return new Promise((resolve, reject) => {
+      const ws = new WebSocket(this.wsUrl);
+      this.ws = ws;
+
+      ws.onopen = () => {
+        this._connected$.next(true);
+        this._error$.next(null);
+        resolve();
       };
-    } catch (e) { this.ws = null; }
+      ws.onerror = () => {
+        this._connected$.next(false);
+        reject(new Error('No se pudo conectar al servidor WebSocket'));
+      };
+      ws.onclose = () => {
+        this._connected$.next(false);
+      };
+      ws.onmessage = (ev: MessageEvent) => {
+        try {
+          const msg = JSON.parse(ev.data as string);
+          if (msg.type === 'SESSION_UPDATE') {
+            this._session$.next(msg.payload as LiveSession);
+          } else if (msg.type === 'ERROR') {
+            this._error$.next((msg.payload?.message as string) || 'Error desconocido');
+          }
+        } catch (_) {}
+      };
+    });
   }
 
-  private post(msg: Msg) {
-    try { if (this.bc) this.bc.postMessage(msg); } catch (e) {}
-    try { if (this.ws && this.ws.readyState === WebSocket.OPEN) this.ws.send(JSON.stringify(msg)); } catch (e) {}
-  }
-
-  private handleMessage(msg: Msg) {
-    if (!msg || !msg.type) return;
-    if (msg.type === 'session:update') {
-      this._session$.next(msg.payload as LiveSession);
+  disconnect() {
+    this._session$.next(null);
+    this._connected$.next(false);
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
     }
   }
 
-  createSession(task: string, ownerId: string, ownerName: string) {
-    const id = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,6);
-    const s: LiveSession = { id, ownerId, task, participants: [{ id: ownerId, name: ownerName, vote: null }], revealed: false };
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
-    return s;
+  // ── Messages ─────────────────────────────────────────────────────────────────
+
+  private send(type: string, payload: Record<string, unknown>) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type, payload }));
+    }
   }
 
-  joinSession(session: LiveSession, participant: Participant) {
-    // merge participant
-    const s = JSON.parse(JSON.stringify(session)) as LiveSession;
-    const exists = s.participants.find(p => p.id === participant.id);
-    if (!exists) s.participants.push(participant);
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
+  createSession(meta: {
+    userId: string; userName: string;
+    estimationName: string; projectCode: string; projectName: string;
+    requester: string; requesterEmail: string; notes: string;
+  }) {
+    this.send('CREATE', meta as unknown as Record<string, unknown>);
   }
 
-  leave(session: LiveSession, participantId: string) {
-    const s = JSON.parse(JSON.stringify(session)) as LiveSession;
-    s.participants = s.participants.filter(p => p.id !== participantId);
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
+  joinSession(sessionId: string, userId: string, userName: string) {
+    this.send('JOIN', { sessionId, userId, userName });
   }
 
-  vote(session: LiveSession, participantId: string, vote: string | number) {
-    const s = JSON.parse(JSON.stringify(session)) as LiveSession;
-    const p = s.participants.find(x => x.id === participantId);
-    if (p) p.vote = vote;
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
+  setTask(sessionId: string, userId: string, task: string) {
+    this.send('SET_TASK', { sessionId, userId, task });
   }
 
-  reveal(session: LiveSession) {
-    const s = JSON.parse(JSON.stringify(session)) as LiveSession;
-    s.revealed = true;
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
+  vote(sessionId: string, userId: string, vote: number) {
+    this.send('VOTE', { sessionId, userId, vote });
   }
 
-  accept(session: LiveSession, result: number) {
-    const s = JSON.parse(JSON.stringify(session)) as LiveSession;
-    s.accepted = true;
-    s.result = result;
-    this._session$.next(s);
-    this.post({ type: 'session:update', payload: s });
+  reveal(sessionId: string, userId: string) {
+    this.send('REVEAL', { sessionId, userId });
   }
 
-  abort(session: LiveSession) {
+  accept(sessionId: string, userId: string, result: number) {
+    this.send('ACCEPT', { sessionId, userId, result });
+  }
+
+  finish(sessionId: string, userId: string) {
+    this.send('FINISH', { sessionId, userId });
+  }
+
+  leave(sessionId: string, userId: string) {
+    this.send('LEAVE', { sessionId, userId });
     this._session$.next(null);
-    this.post({ type: 'session:update', payload: null });
+  }
+
+  clearError() {
+    this._error$.next(null);
+  }
+
+  ngOnDestroy() {
+    this.disconnect();
   }
 }
+

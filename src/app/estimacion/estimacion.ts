@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { LiveEstimationService, LiveSession, Participant } from './live-estimation.service';
+import { LiveEstimationService, LiveSession, LiveParticipant } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EstimacionRecord, EstimacionService } from './estimacion.service';
@@ -113,13 +113,26 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   clearEstimation = false;
 
   // --- Live estimation state ---
-  liveTaskInput = '';
   liveSession: LiveSession | null = null;
-  myId = 'u' + Math.random().toString(36).slice(2,8);
+  myId = 'u' + Math.random().toString(36).slice(2, 8);
   myName = 'Usuario';
-  myVote: string | number | null = null;
-  liveCards: Array<string | number> = ['0', '½', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?'];
+
+  liveJoinId = '';          // session ID to join
+  liveNextTask = '';        // owner: task description for next round
+  liveFinalResult = '';     // owner: final accepted result (string for input binding)
+  liveMyVoteInput = '';     // participant: vote (string for input binding)
+
+  liveConnecting = false;
+  liveConnected = false;
+  liveError: string | null = null;
+  liveSaving = false;
+
+  liveTimerSeconds = 60;
+  private liveTimerInterval: ReturnType<typeof setInterval> | null = null;
+
   private liveSub: Subscription | null = null;
+  private liveConnSub: Subscription | null = null;
+  private liveErrSub: Subscription | null = null;
 
   // ===== Draft helpers =====
 
@@ -214,74 +227,189 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   // ===== Live estimation helpers =====
 
-  startLiveEstimation() {
-    if (!this.liveTaskInput || !this.liveTaskInput.trim()) return;
-    const s = this.liveService.createSession(this.liveTaskInput.trim(), this.myId, this.myName);
-    this.liveTaskInput = '';
-    this.selectedTab = 0;
+  /** Returns true when all required metadata fields are filled */
+  liveMetaComplete(): boolean {
+    return !!(this.estimationName?.trim()
+      && this.projectCode?.trim()
+      && this.projectName?.trim()
+      && this.requester?.trim()
+      && this.requesterEmail?.trim());
   }
 
-  joinCurrentSession() {
-    const s = (this.liveService as any)['_session$']?.getValue?.();
-    if (!s) return;
-    this.liveService.joinSession(s as LiveSession, { id: this.myId, name: this.myName });
+  get isOwner(): boolean {
+    return this.liveSession?.ownerId === this.myId;
   }
 
-  castVote(card: string | number) {
-    const s = this.liveSession;
-    if (!s) return;
-    this.myVote = card;
-    this.liveService.vote(s, this.myId, card as any);
-    setTimeout(() => this.tryAutoReveal(), 200);
+  get myParticipant(): LiveParticipant | undefined {
+    return this.liveSession?.participants.find(p => p.id === this.myId);
   }
 
-  tryAutoReveal() {
-    const s = this.liveSession;
-    if (!s) return;
-    const total = s.participants.length;
-    const voted = s.participants.filter(p => p.vote !== null && p.vote !== undefined).length;
-    if (voted >= total && total > 0 && !s.revealed) {
-      this.liveService.reveal(s);
+  get liveTotal(): number {
+    return (this.liveSession?.acceptedTasks ?? [])
+      .reduce((acc, t) => acc + t.result, 0);
+  }
+
+  private async ensureConnected(): Promise<boolean> {
+    if (this.liveConnected) return true;
+    this.liveConnecting = true;
+    try {
+      await this.liveService.connect();
+      this.liveConnected = true;
+      return true;
+    } catch (_) {
+      this.liveError = this.translate.instant('ESTIMATION.LIVE.ERROR_CONNECT')
+        || 'No se pudo conectar al servidor WebSocket';
+      return false;
+    } finally {
+      this.liveConnecting = false;
     }
   }
 
-  revealNow() {
-    if (!this.liveSession) return;
-    this.liveService.reveal(this.liveSession);
-  }
-
-  computeResultFromSession(session: LiveSession) {
-    const vals: number[] = [];
-    session.participants.forEach(p => {
-      const v = this.parseCardValue(p.vote);
-      if (v !== null && !isNaN(v)) vals.push(v);
+  async startLiveSession() {
+    if (!this.liveMetaComplete()) return;
+    if (!(await this.ensureConnected())) return;
+    this.myName = this.resolveCurrentUserName();
+    this.liveService.createSession({
+      userId: this.myId,
+      userName: this.myName,
+      estimationName: this.estimationName,
+      projectCode: this.projectCode,
+      projectName: this.projectName,
+      requester: this.requester,
+      requesterEmail: this.requesterEmail,
+      notes: this.notes,
     });
-    if (vals.length === 0) return 0;
-    const sum = vals.reduce((a,b) => a + b, 0);
-    return sum / vals.length;
   }
 
-  acceptSessionResult() {
+  async joinLiveSession() {
+    const id = (this.liveJoinId || '').trim().toUpperCase();
+    if (!id) return;
+    if (!(await this.ensureConnected())) return;
+    this.myName = this.resolveCurrentUserName();
+    this.liveService.joinSession(id, this.myId, this.myName);
+  }
+
+  copySessionId() {
+    if (!this.liveSession) return;
+    navigator.clipboard.writeText(this.liveSession.id).then(() => {
+      this.snackBar.open(
+        this.translate.instant('ESTIMATION.LIVE.ID_COPIED') || 'Código copiado',
+        undefined, { duration: 1800 });
+    });
+  }
+
+  setLiveTask() {
+    const s = this.liveSession;
+    if (!s || !this.liveNextTask.trim()) return;
+    this.liveService.setTask(s.id, this.myId, this.liveNextTask.trim());
+    this.liveNextTask = '';
+    this.liveMyVoteInput = '';
+    this.liveFinalResult = '';
+  }
+
+  submitLiveVote() {
     const s = this.liveSession;
     if (!s) return;
-    const result = this.computeResultFromSession(s);
-    this.liveService.accept(s, result);
-    const t = {
-      id: Date.now().toString(36),
-      title: s.task + ' (live)',
-      estimates: this.weeks.map((_, i) => i === 0 ? Number(result) : 0)
-    } as Task;
-    this.tasks.push(t);
-    this.saveFormDraft();
+    const v = parseFloat(this.liveMyVoteInput);
+    if (isNaN(v) || v < 0) return;
+    this.liveService.vote(s.id, this.myId, v);
+    this.liveMyVoteInput = '';
   }
 
-  parseCardValue(v: any): number | null {
-    if (v === null || v === undefined) return null;
-    if (typeof v === 'number') return v;
-    const s = String(v).replace('½', '0.5').replace(',', '.').trim();
-    if (s === '?' || s.toLowerCase() === 'coffee') return null;
-    const n = parseFloat(s);
-    return isNaN(n) ? null : n;
+  revealLiveNow() {
+    const s = this.liveSession;
+    if (!s) return;
+    this.liveService.reveal(s.id, this.myId);
+  }
+
+  acceptLiveResult() {
+    const s = this.liveSession;
+    if (!s) return;
+    const r = parseFloat(this.liveFinalResult);
+    if (isNaN(r) || r < 0) return;
+    this.liveService.accept(s.id, this.myId, r);
+    this.liveFinalResult = '';
+    this.liveMyVoteInput = '';
+  }
+
+  finishLiveSession() {
+    const s = this.liveSession;
+    if (!s) return;
+    this.liveService.finish(s.id, this.myId);
+  }
+
+  leaveLiveSession() {
+    const s = this.liveSession;
+    if (s) this.liveService.leave(s.id, this.myId);
+    this.stopLiveTimer();
+    this.liveConnected = false;
+    this.liveJoinId = '';
+    this.liveNextTask = '';
+    this.liveFinalResult = '';
+    this.liveMyVoteInput = '';
+  }
+
+  saveLiveEstimation() {
+    const s = this.liveSession;
+    if (!s || s.acceptedTasks.length === 0) return;
+    this.liveSaving = true;
+
+    const tasks: Array<{ id: string; title: string; estimates: number[] }> =
+      s.acceptedTasks.map((t, i) => ({
+        id: 'live-' + i,
+        title: t.task,
+        estimates: [t.result],
+      }));
+
+    const payload: EstimacionRecord = {
+      estimationName: s.estimationName,
+      projectCode: s.projectCode,
+      projectName: s.projectName,
+      requester: s.requester,
+      requesterEmail: s.requesterEmail,
+      notes: s.notes,
+      comments: [],
+      weeks: ['1'],
+      tasks,
+      createdAt: new Date().toISOString(),
+      visible: true,
+    };
+
+    this.estimacionService.create(payload).subscribe({
+      next: () => {
+        this.liveSaving = false;
+        this.loadSavedEstimations();
+        this.snackBar.open(
+          this.translate.instant('ESTIMATION.LIVE.SAVED_OK') || 'Estimación guardada',
+          undefined, { duration: 2500 });
+        this.liveService.disconnect();
+        this.liveConnected = false;
+      },
+      error: () => {
+        this.liveSaving = false;
+        this.snackBar.open(
+          this.translate.instant('ESTIMATION.ERROR_SAVE') || 'No se pudo guardar',
+          undefined, { duration: 3000 });
+      },
+    });
+  }
+
+  private startLiveTimer(votingStart: number) {
+    this.stopLiveTimer();
+    const update = () => {
+      const elapsed = Math.floor((Date.now() - votingStart) / 1000);
+      this.liveTimerSeconds = Math.max(0, 60 - elapsed);
+    };
+    update();
+    this.liveTimerInterval = setInterval(update, 500);
+  }
+
+  private stopLiveTimer() {
+    if (this.liveTimerInterval !== null) {
+      clearInterval(this.liveTimerInterval);
+      this.liveTimerInterval = null;
+    }
+    this.liveTimerSeconds = 60;
   }
 
   // ===== Persistence of saved estimations =====
@@ -402,7 +530,33 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.clearLegacySavedEstimationsStorage();
     this.loadSavedEstimations();
     this.restoreFormDraft();
-    this.liveSub = this.liveService.session$.subscribe(s => { this.liveSession = s; });
+
+    this.liveSub = this.liveService.session$.subscribe(s => {
+      const prev = this.liveSession;
+      this.liveSession = s;
+      if (s?.phase === 'VOTING' && s.votingStart) {
+        this.startLiveTimer(s.votingStart);
+      } else if (prev?.phase === 'VOTING' && s?.phase !== 'VOTING') {
+        this.stopLiveTimer();
+      }
+    });
+    this.liveConnSub = this.liveService.connected$.subscribe(c => {
+      this.liveConnected = c;
+    });
+    this.liveErrSub = this.liveService.error$.subscribe(e => {
+      if (e) {
+        const knownPrefix = 'SESSION_NOT_FOUND:';
+        if (e.startsWith(knownPrefix)) {
+          const id = e.slice(knownPrefix.length);
+          this.liveError = (this.translate.instant('ESTIMATION.LIVE.ERROR_NOT_FOUND') || 'Sesión no encontrada') + ': ' + id;
+        } else {
+          this.liveError = e;
+        }
+      } else {
+        this.liveError = null;
+      }
+    });
+
     this.refreshSaveButtonText();
   }
 
@@ -473,6 +627,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.liveSub) this.liveSub.unsubscribe();
+    if (this.liveConnSub) this.liveConnSub.unsubscribe();
+    if (this.liveErrSub) this.liveErrSub.unsubscribe();
+    this.stopLiveTimer();
   }
 
   get filteredSavedEstimations() {

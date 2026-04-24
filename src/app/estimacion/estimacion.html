@@ -373,100 +373,341 @@
     <!-- Live tab -->
     <mat-tab label="{{ 'ESTIMATION.TAB_LIVE' | translate }}">
       <div class="live-root">
-        <div *ngIf="!liveSession" class="live-setup">
-          <mat-form-field appearance="outline" class="full">
-            <input
-              matInput
-              placeholder="{{ 'ESTIMATION.LIVE.NEW_TASK' | translate }}"
-              [(ngModel)]="liveTaskInput"
-            />
-          </mat-form-field>
-          <div class="row actions live-actions-row">
-            <button mat-stroked-button color="primary" class="live-action-btn live-primary-btn" (click)="startLiveEstimation()">
-              {{ 'ESTIMATION.LIVE.START' | translate }}
-            </button>
-            <button mat-stroked-button class="live-action-btn" (click)="joinCurrentSession()">
-              {{ 'ESTIMATION.LIVE.JOIN' | translate }}
-            </button>
-          </div>
-          <p class="muted">{{ 'ESTIMATION.LIVE.HINT' | translate }}</p>
+
+        <!-- ── Error banner ─────────────────────────────────────────── -->
+        <div class="live-error-banner" *ngIf="liveError">
+          <mat-icon>warning</mat-icon>
+          <span>{{ liveError }}</span>
+          <button class="live-error-close" (click)="liveError = null; liveService.clearError()">✕</button>
         </div>
 
-        <div *ngIf="liveSession" class="live-session">
-          <h3 class="live-session-title">{{ liveSession.task }}</h3>
-          <p class="live-session-owner">
-            {{ 'ESTIMATION.LIVE.OWNER' | translate }}:
-            <strong>
-              {{
-                liveSession.ownerId === myId
-                  ? ('ESTIMATION.LIVE.YOU' | translate)
-                  : liveSession.ownerId
-              }}
-            </strong>
-          </p>
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- NOT IN SESSION                                             -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <ng-container *ngIf="!liveSession">
 
-          <mat-card class="live-participants-card">
-            <mat-card-content>
-              <mat-list class="live-participants-list">
-                <mat-list-item class="live-participant-row" *ngFor="let p of liveSession.participants">
-                  <div>{{ p.name }}</div>
-                  <div class="spacer"></div>
-                  <div class="vote-cell">
-                    <span *ngIf="!liveSession.revealed">
-                      {{
-                        p.id === myId && p.vote
-                          ? ('ESTIMATION.LIVE.YOU_VOTED' | translate)
-                          : (p.vote ? '•' : '-')
-                      }}
-                    </span>
-                    <span *ngIf="liveSession.revealed">{{ p.vote }}</span>
-                  </div>
-                </mat-list-item>
-              </mat-list>
-            </mat-card-content>
-          </mat-card>
-
-          <div class="cards">
-            <button
-              mat-flat-button
-              class="live-card-btn"
-              *ngFor="let c of liveCards"
-              (click)="castVote(c)"
-              [class.selected]="myVote==c"
-            >
-              {{ c }}
-            </button>
+          <!-- Metadata incomplete warning -->
+          <div class="live-meta-warning" *ngIf="!liveMetaComplete()">
+            <mat-icon>info</mat-icon>
+            <span>{{ 'ESTIMATION.LIVE.META_REQUIRED' | translate }}</span>
           </div>
 
-          <div class="row actions live-actions-row">
+          <div class="live-setup-grid">
+
+            <!-- Create card -->
+            <div class="live-setup-card">
+              <div class="live-setup-card-icon">🚀</div>
+              <h4>{{ 'ESTIMATION.LIVE.CREATE_TITLE' | translate }}</h4>
+              <p class="muted">{{ 'ESTIMATION.LIVE.CREATE_HINT' | translate }}</p>
+              <button
+                mat-stroked-button
+                class="live-action-btn live-primary-btn"
+                (click)="startLiveSession()"
+                [disabled]="!liveMetaComplete() || liveConnecting"
+              >
+                <mat-icon>play_circle</mat-icon>
+                {{ liveConnecting ? ('ESTIMATION.LIVE.CONNECTING' | translate) : ('ESTIMATION.LIVE.START' | translate) }}
+              </button>
+              <p class="live-meta-preview" *ngIf="liveMetaComplete()">
+                <strong>{{ estimationName }}</strong> · {{ projectCode }} · {{ projectName }}
+              </p>
+            </div>
+
+            <div class="live-setup-divider">
+              <span>{{ 'COMMON.OR' | translate | uppercase }}</span>
+            </div>
+
+            <!-- Join card -->
+            <div class="live-setup-card">
+              <div class="live-setup-card-icon">🔗</div>
+              <h4>{{ 'ESTIMATION.LIVE.JOIN_TITLE' | translate }}</h4>
+              <p class="muted">{{ 'ESTIMATION.LIVE.JOIN_HINT' | translate }}</p>
+              <mat-form-field appearance="outline" class="full">
+                <input
+                  matInput
+                  [placeholder]="'ESTIMATION.LIVE.SESSION_CODE' | translate"
+                  [(ngModel)]="liveJoinId"
+                  maxlength="8"
+                  (keyup.enter)="joinLiveSession()"
+                />
+              </mat-form-field>
+              <button
+                mat-stroked-button
+                class="live-action-btn"
+                (click)="joinLiveSession()"
+                [disabled]="!liveJoinId.trim() || liveConnecting"
+              >
+                <mat-icon>login</mat-icon>
+                {{ liveConnecting ? ('ESTIMATION.LIVE.CONNECTING' | translate) : ('ESTIMATION.LIVE.JOIN' | translate) }}
+              </button>
+            </div>
+
+          </div>
+        </ng-container>
+
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- IN SESSION                                                 -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <ng-container *ngIf="liveSession">
+
+          <!-- Session header -->
+          <div class="live-session-header">
+            <div class="live-session-id-row">
+              <span class="live-session-id-label">{{ 'ESTIMATION.LIVE.SESSION_CODE' | translate }}:</span>
+              <span class="live-session-id-value">{{ liveSession.id }}</span>
+              <button class="live-copy-btn" (click)="copySessionId()" title="{{ 'ESTIMATION.LIVE.COPY_CODE' | translate }}">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+            <div class="live-session-meta-row">
+              <span>{{ liveSession.estimationName }}</span>
+              <span class="sep">·</span>
+              <span>{{ liveSession.projectCode }}</span>
+              <span class="sep">·</span>
+              <span>{{ liveSession.projectName }}</span>
+            </div>
+          </div>
+
+          <!-- Participants list -->
+          <div class="live-participants-section">
+            <span class="live-participants-label">
+              <mat-icon>group</mat-icon>
+              {{ 'ESTIMATION.LIVE.PARTICIPANTS' | translate }} ({{ liveSession.participants.length }})
+            </span>
+            <div class="live-participant-chips">
+              <div class="live-chip" *ngFor="let p of liveSession.participants"
+                   [class.live-chip-owner]="p.id === liveSession.ownerId"
+                   [class.live-chip-me]="p.id === myId">
+                <span class="chip-avatar">{{ (p.name || 'U').charAt(0).toUpperCase() }}</span>
+                <span class="chip-name">{{ p.name }}</span>
+                <span class="chip-crown" *ngIf="p.id === liveSession.ownerId">👑</span>
+                <span class="chip-you" *ngIf="p.id === myId">{{ 'ESTIMATION.LIVE.YOU' | translate }}</span>
+                <!-- Vote status during VOTING phase -->
+                <span class="chip-voted" *ngIf="liveSession.phase === 'VOTING'">
+                  {{ p.vote !== null && p.vote !== undefined ? '✓' : '⌛' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── LOBBY PHASE ──────────────────────────────────────── -->
+          <ng-container *ngIf="liveSession.phase === 'LOBBY'">
+
+            <!-- Accepted tasks so far -->
+            <div class="live-accepted-list" *ngIf="liveSession.acceptedTasks.length > 0">
+              <h4 class="live-section-title">{{ 'ESTIMATION.LIVE.ESTIMATED_TASKS' | translate }}</h4>
+              <div class="live-accepted-row" *ngFor="let t of liveSession.acceptedTasks; let i = index">
+                <span class="live-accepted-index">{{ i + 1 }}.</span>
+                <span class="live-accepted-task">{{ t.task }}</span>
+                <span class="live-accepted-result">{{ t.result }}h</span>
+              </div>
+              <div class="live-accepted-total">
+                {{ 'ESTIMATION.LIVE.TOTAL' | translate }}: <strong>{{ liveTotal | number:'1.1-1' }}h</strong>
+              </div>
+            </div>
+
+            <!-- Owner: write next task -->
+            <ng-container *ngIf="isOwner">
+              <div class="live-task-composer">
+                <h4 class="live-section-title">{{ 'ESTIMATION.LIVE.NEXT_TASK_TITLE' | translate }}</h4>
+                <mat-form-field appearance="outline" class="full">
+                  <textarea
+                    matInput
+                    rows="3"
+                    [placeholder]="'ESTIMATION.LIVE.NEW_TASK' | translate"
+                    [(ngModel)]="liveNextTask"
+                    (keyup.ctrl.enter)="setLiveTask()"
+                  ></textarea>
+                </mat-form-field>
+                <div class="live-composer-actions">
+                  <button
+                    mat-flat-button
+                    class="live-start-vote-btn"
+                    (click)="setLiveTask()"
+                    [disabled]="!liveNextTask.trim()"
+                  >
+                    <mat-icon>how_to_vote</mat-icon>
+                    {{ 'ESTIMATION.LIVE.START_VOTE' | translate }}
+                  </button>
+                  <button
+                    mat-stroked-button
+                    class="live-action-btn live-danger-btn"
+                    *ngIf="liveSession.acceptedTasks.length > 0"
+                    (click)="finishLiveSession()"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                    {{ 'ESTIMATION.LIVE.FINISH' | translate }}
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Non-owner waiting -->
+            <ng-container *ngIf="!isOwner">
+              <div class="live-waiting-box">
+                <mat-icon class="live-waiting-icon">hourglass_top</mat-icon>
+                <p>{{ 'ESTIMATION.LIVE.WAITING_OWNER' | translate }}</p>
+              </div>
+            </ng-container>
+
+            <!-- Leave button -->
+            <button mat-stroked-button class="live-action-btn live-danger-btn live-leave-btn"
+                    (click)="leaveLiveSession()">
+              <mat-icon>exit_to_app</mat-icon>
+              {{ 'ESTIMATION.LIVE.LEAVE' | translate }}
+            </button>
+          </ng-container>
+
+          <!-- ── VOTING PHASE ────────────────────────────────────── -->
+          <ng-container *ngIf="liveSession.phase === 'VOTING'">
+
+            <div class="live-current-task-box">
+              <mat-icon>assignment</mat-icon>
+              <p class="live-current-task-text">{{ liveSession.currentTask }}</p>
+            </div>
+
+            <div class="live-timer-row">
+              <div class="live-timer" [class.live-timer-urgent]="liveTimerSeconds <= 15">
+                <mat-icon>timer</mat-icon>
+                <span>{{ liveTimerSeconds }}s</span>
+              </div>
+            </div>
+
+            <!-- My vote input (if not voted yet) -->
+            <div class="live-vote-section"
+                 *ngIf="myParticipant?.vote === null || myParticipant?.vote === undefined">
+              <mat-form-field appearance="outline" class="live-vote-field">
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  [placeholder]="'ESTIMATION.LIVE.VOTE_PLACEHOLDER' | translate"
+                  [(ngModel)]="liveMyVoteInput"
+                  (keyup.enter)="submitLiveVote()"
+                />
+              </mat-form-field>
+              <button
+                mat-flat-button
+                class="live-vote-btn"
+                (click)="submitLiveVote()"
+                [disabled]="!liveMyVoteInput && liveMyVoteInput !== '0'"
+              >
+                <mat-icon>send</mat-icon>
+                {{ 'ESTIMATION.LIVE.VOTE' | translate }}
+              </button>
+            </div>
+
+            <div class="live-voted-confirm"
+                 *ngIf="myParticipant?.vote !== null && myParticipant?.vote !== undefined">
+              <mat-icon>check_circle</mat-icon>
+              {{ 'ESTIMATION.LIVE.VOTED_CONFIRM' | translate }}: <strong>{{ myParticipant?.vote }}h</strong>
+            </div>
+
+            <!-- Owner: reveal early -->
             <button
               mat-stroked-button
-              color="primary"
               class="live-action-btn live-primary-btn"
-              (click)="revealNow()"
-              *ngIf="liveSession.ownerId===myId && !liveSession.revealed"
+              *ngIf="isOwner"
+              (click)="revealLiveNow()"
             >
+              <mat-icon>visibility</mat-icon>
               {{ 'ESTIMATION.LIVE.REVEAL' | translate }}
             </button>
-            <button
-              mat-stroked-button
-              color="primary"
-              class="live-action-btn live-primary-btn"
-              (click)="acceptSessionResult()"
-              *ngIf="liveSession.revealed && !liveSession.accepted"
-            >
-              {{ 'ESTIMATION.LIVE.ACCEPT' | translate }}
+          </ng-container>
+
+          <!-- ── REVEALED PHASE ─────────────────────────────────── -->
+          <ng-container *ngIf="liveSession.phase === 'REVEALED'">
+
+            <div class="live-current-task-box">
+              <mat-icon>assignment_turned_in</mat-icon>
+              <p class="live-current-task-text">{{ liveSession.currentTask }}</p>
+            </div>
+
+            <div class="live-results-grid">
+              <div class="live-result-row" *ngFor="let p of liveSession.participants">
+                <div class="live-result-avatar">{{ (p.name || 'U').charAt(0).toUpperCase() }}</div>
+                <div class="live-result-name">{{ p.name }}<span class="chip-crown" *ngIf="p.id === liveSession.ownerId">👑</span></div>
+                <div class="live-result-vote" [class.live-no-vote]="p.vote === null || p.vote === undefined">
+                  {{ p.vote !== null && p.vote !== undefined ? (p.vote + 'h') : '—' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Owner: set final result -->
+            <ng-container *ngIf="isOwner">
+              <div class="live-accept-section">
+                <h4 class="live-section-title">{{ 'ESTIMATION.LIVE.FINAL_RESULT_TITLE' | translate }}</h4>
+                <div class="live-accept-row">
+                  <mat-form-field appearance="outline" class="live-vote-field">
+                    <input
+                      matInput
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      [placeholder]="'ESTIMATION.LIVE.FINAL_RESULT_PLACEHOLDER' | translate"
+                      [(ngModel)]="liveFinalResult"
+                      (keyup.enter)="acceptLiveResult()"
+                    />
+                  </mat-form-field>
+                  <button
+                    mat-flat-button
+                    class="live-vote-btn"
+                    (click)="acceptLiveResult()"
+                    [disabled]="!liveFinalResult && liveFinalResult !== '0'"
+                  >
+                    <mat-icon>check</mat-icon>
+                    {{ 'ESTIMATION.LIVE.ACCEPT' | translate }}
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <div class="live-waiting-box" *ngIf="!isOwner">
+              <mat-icon class="live-waiting-icon">hourglass_top</mat-icon>
+              <p>{{ 'ESTIMATION.LIVE.WAITING_FINAL' | translate }}</p>
+            </div>
+          </ng-container>
+
+          <!-- ── FINISHED PHASE ─────────────────────────────────── -->
+          <ng-container *ngIf="liveSession.phase === 'FINISHED'">
+
+            <div class="live-finished-header">
+              <mat-icon>celebration</mat-icon>
+              <h3>{{ 'ESTIMATION.LIVE.FINISHED_TITLE' | translate }}</h3>
+            </div>
+
+            <div class="live-accepted-list">
+              <div class="live-accepted-row" *ngFor="let t of liveSession.acceptedTasks; let i = index">
+                <span class="live-accepted-index">{{ i + 1 }}.</span>
+                <span class="live-accepted-task">{{ t.task }}</span>
+                <span class="live-accepted-result">{{ t.result }}h</span>
+              </div>
+              <div class="live-accepted-total">
+                {{ 'ESTIMATION.LIVE.TOTAL' | translate }}: <strong>{{ liveTotal | number:'1.1-1' }}h</strong>
+              </div>
+            </div>
+
+            <div class="live-composer-actions" *ngIf="isOwner">
+              <button
+                mat-flat-button
+                class="live-save-btn"
+                (click)="saveLiveEstimation()"
+                [disabled]="liveSaving"
+              >
+                <mat-icon [class.saving-spin]="liveSaving">{{ liveSaving ? 'sync' : 'save' }}</mat-icon>
+                {{ 'ESTIMATION.LIVE.SAVE_ESTIMATION' | translate }}
+              </button>
+            </div>
+
+            <button mat-stroked-button class="live-action-btn live-leave-btn"
+                    (click)="leaveLiveSession()">
+              <mat-icon>exit_to_app</mat-icon>
+              {{ 'ESTIMATION.LIVE.LEAVE' | translate }}
             </button>
-            <button
-              mat-stroked-button
-              color="warn"
-              class="live-action-btn live-danger-btn"
-              (click)="liveService.abort(liveSession)"
-            >
-              {{ 'ESTIMATION.LIVE.ABORT' | translate }}
-            </button>
-          </div>
-        </div>
+          </ng-container>
+
+        </ng-container>
       </div>
     </mat-tab>
   </mat-tab-group>
