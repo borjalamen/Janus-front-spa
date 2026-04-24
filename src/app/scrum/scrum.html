@@ -1,4 +1,30 @@
 <div class="scrum-root">
+
+  <!-- ===== SPRINT BANNER ===== -->
+  <div class="sprint-banner" *ngIf="activeSprint">
+    <div class="sprint-banner-left">
+      <mat-icon class="sprint-icon">flash_on</mat-icon>
+      <div class="sprint-info">
+        <span class="sprint-id">{{ activeSprint.sprintKey || activeSprint.id }}</span>
+        <span class="sprint-date">{{ 'SCRUM.SPRINT_START_DATE' | translate }}: {{ activeSprint.startDate }}</span>
+      </div>
+    </div>
+    <button class="sprint-end-btn jenkins-add-btn" (click)="endSprint()">
+      <mat-icon inline="true">stop_circle</mat-icon>
+      <span>{{ 'SCRUM.SPRINT_END' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="sprint-start-cta" *ngIf="!activeSprint">
+    <div class="sprint-cta-inner">
+      <mat-icon>rocket_launch</mat-icon>
+      <p>{{ 'SCRUM.NO_SPRINT_HINT' | translate }}</p>
+      <button class="jenkins-add-btn sprint-start-btn" (click)="startSprint()">
+        <mat-icon inline="true">play_circle</mat-icon>
+        <span>{{ 'SCRUM.SPRINT_START' | translate }}</span>
+      </button>
+    </div>
+  </div>
   <div class="buscador-container scrum-search">
     <div class="buscador-wrapper">
       <div class="scrum-search-field">
@@ -22,18 +48,20 @@
   <p class="lead">{{ 'SCRUM.DESCRIPTION' | translate }}</p>
 
   <!-- CONTROLS ALTA TASCA -->
-  <div class="scrum-controls">
+  <div class="scrum-controls" [class.sprint-blocked]="!activeSprint">
     <div class="controls-header">
       <div class="main-inputs">
         <input
           class="input-large"
           [(ngModel)]="newTitle"
+          [disabled]="!activeSprint"
           (ngModelChange)="saveDraft()"
           placeholder="{{ 'SCRUM.PLACEHOLDER_TITLE' | translate }}"
         />
         <input
           class="input-medium"
           [(ngModel)]="newEstimate"
+          [disabled]="!activeSprint"
           (ngModelChange)="saveDraft()"
           placeholder="{{ 'SCRUM.PLACEHOLDER_ESTIMATE' | translate }}"
         />
@@ -78,15 +106,60 @@
     </div>
 
     <div class="controls-actions">
-      <button class="jenkins-add-btn" (click)="addTask()">
+      <button class="jenkins-add-btn" [disabled]="!activeSprint" (click)="addTask()">
         <mat-icon inline="true">add</mat-icon>
         <span>{{ 'SCRUM.ADD_BUTTON' | translate }}</span>
       </button>
+
+      <!-- Import/Export buttons -->
+      <button class="jenkins-add-btn scrum-io-btn" [title]="'SCRUM.IMPORT_CSV' | translate"
+              (click)="csvImportRef.click()">
+        <mat-icon inline="true">upload_file</mat-icon>
+        <span>{{ 'SCRUM.IMPORT_CSV' | translate }}</span>
+      </button>
+      <button class="jenkins-add-btn scrum-io-btn" [title]="'SCRUM.IMPORT_PDF' | translate"
+              (click)="pdfImportRef.click()">
+        <mat-icon inline="true">picture_as_pdf</mat-icon>
+        <span>{{ 'SCRUM.IMPORT_PDF' | translate }}</span>
+      </button>
+      <button class="jenkins-add-btn scrum-io-btn" [title]="'SCRUM.EXPORT_CSV' | translate"
+              (click)="exportCsv()">
+        <mat-icon inline="true">download</mat-icon>
+        <span>{{ 'SCRUM.EXPORT_CSV' | translate }}</span>
+      </button>
+      <button class="jenkins-add-btn scrum-io-btn" [title]="'SCRUM.EXPORT_PDF' | translate"
+              (click)="exportPdf()">
+        <mat-icon inline="true">picture_as_pdf</mat-icon>
+        <span>{{ 'SCRUM.EXPORT_PDF' | translate }}</span>
+      </button>
+      <button class="jenkins-add-btn scrum-io-btn scrum-template-btn" [title]="'SCRUM.DOWNLOAD_TEMPLATE' | translate"
+              (click)="downloadCsvTemplate()">
+        <mat-icon inline="true">table_chart</mat-icon>
+        <span>{{ 'SCRUM.DOWNLOAD_TEMPLATE' | translate }}</span>
+      </button>
+
+      <input #csvImportRef type="file" accept=".csv" style="display:none" (change)="importCsvFile($event)">
+      <input #pdfImportRef type="file" accept=".pdf" style="display:none" (change)="importPdfFile($event)">
+    </div>
+
+    <!-- Import error feedback -->
+    <div class="import-error" *ngIf="importError">
+      <mat-icon>error_outline</mat-icon> {{ importError }}
+      <button class="import-error-close" (click)="importError = null">✕</button>
+    </div>
+    <div class="import-loading" *ngIf="importLoading">
+      <mat-icon class="spin">sync</mat-icon> {{ 'SCRUM.IMPORTING' | translate }}
     </div>
   </div>
 
+  <!-- ===== TABS ===== -->
+  <mat-tab-group class="scrum-tabs" animationDuration="200ms">
+
+    <!-- ─── Tab 1: TABLÓN ─── -->
+    <mat-tab [label]="'SCRUM.TAB_BOARD' | translate">
+
   <!-- TAULER -->
-  <div class="board">
+  <div class="board" [class.sprint-blocked]="!activeSprint">
 
     <!-- COL·LUMNA TODO -->
     <div class="col">
@@ -387,4 +460,105 @@
     </div>
 
   </div>
+
+    </mat-tab>
+
+    <!-- ─── Tab 2: GRÁFICAS ─── -->
+    <mat-tab [label]="'SCRUM.TAB_CHARTS' | translate">
+      <div class="charts-section">
+
+        <!-- Burndown -->
+        <div class="chart-wrapper">
+          <h3 class="chart-title">{{ 'SCRUM.CHART_BURNDOWN_TITLE' | translate }}</h3>
+          <p class="chart-subtitle" *ngIf="activeSprint">
+            {{ activeSprint.sprintKey || activeSprint.id }} &nbsp;·&nbsp; {{ 'SCRUM.CHART_DAY' | translate }} {{ burndownChartData.days }}
+          </p>
+          <div class="chart-svg-wrap">
+            <svg viewBox="0 0 500 230" class="chart-svg" preserveAspectRatio="xMidYMid meet">
+              <!-- Grid lines -->
+              <line x1="50" y1="20" x2="50" y2="205" stroke="#2a2d32" stroke-width="1"/>
+              <line x1="50" y1="205" x2="460" y2="205" stroke="#2a2d32" stroke-width="1"/>
+              <line x1="50" y1="110" x2="460" y2="110" stroke="#1e2126" stroke-width="1" stroke-dasharray="3,3"/>
+              <!-- Y labels -->
+              <text x="45" y="24" fill="#666" font-size="9" text-anchor="end">{{ burndownChartData.maxY }}</text>
+              <text x="45" y="114" fill="#666" font-size="9" text-anchor="end">{{ burndownChartData.yMid }}</text>
+              <text x="45" y="209" fill="#666" font-size="9" text-anchor="end">0</text>
+              <!-- X labels -->
+              <text x="50" y="220" fill="#666" font-size="9" text-anchor="middle">{{ 'SCRUM.CHART_DAY' | translate }} 0</text>
+              <text x="460" y="220" fill="#666" font-size="9" text-anchor="middle">{{ 'SCRUM.CHART_DAY' | translate }} {{ burndownChartData.days }}</text>
+              <!-- Axis labels -->
+              <text x="255" y="230" fill="#555" font-size="8" text-anchor="middle">{{ 'SCRUM.CHART_DAY' | translate }}s</text>
+              <text x="10" y="113" fill="#555" font-size="8" text-anchor="middle" transform="rotate(-90, 10, 113)">{{ 'SCRUM.CHART_REMAINING' | translate }}</text>
+              <!-- Ideal line -->
+              <polyline [attr.points]="burndownChartData.idealPoints"
+                        fill="none" stroke="#FBC02D" stroke-width="1.5"
+                        stroke-dasharray="6,3" opacity="0.6"/>
+              <!-- Actual line -->
+              <polyline *ngIf="!burndownChartData.emptyMsg"
+                        [attr.points]="burndownChartData.actualPoints"
+                        fill="none" stroke="#17a2b8" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Dot on last actual point -->
+              <ng-container *ngIf="!burndownChartData.emptyMsg && burndownChartData.actualPoints">
+                <circle [attr.cx]="burndownChartData.actualPoints.split(' ').at(-1)!.split(',')[0]"
+                        [attr.cy]="burndownChartData.actualPoints.split(' ').at(-1)!.split(',')[1]"
+                        r="4" fill="#17a2b8"/>
+              </ng-container>
+              <!-- Empty message -->
+              <text *ngIf="burndownChartData.emptyMsg" x="255" y="115"
+                    fill="#555" font-size="12" text-anchor="middle">
+                {{ 'SCRUM.CHART_NO_DATA_BURNDOWN' | translate }}
+              </text>
+              <!-- Legend -->
+              <line x1="55" y1="228" x2="75" y2="228" stroke="#FBC02D" stroke-width="1.5" stroke-dasharray="4,2"/>
+              <text x="78" y="231" fill="#888" font-size="9">{{ 'SCRUM.CHART_IDEAL' | translate }}</text>
+              <line x1="110" y1="228" x2="130" y2="228" stroke="#17a2b8" stroke-width="2.5"/>
+              <text x="133" y="231" fill="#888" font-size="9">{{ 'SCRUM.CHART_ACTUAL' | translate }}</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Burnup -->
+        <div class="chart-wrapper">
+          <h3 class="chart-title">{{ 'SCRUM.CHART_BURNUP_TITLE' | translate }}</h3>
+          <p class="chart-subtitle">{{ 'SCRUM.CHART_DONE_LABEL' | translate }}</p>
+          <div class="chart-svg-wrap">
+            <svg viewBox="0 0 500 230" class="chart-svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="burnupGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#17a2b8"/>
+                  <stop offset="100%" stop-color="#69f0ae"/>
+                </linearGradient>
+              </defs>
+              <!-- Axes -->
+              <line x1="50" y1="20" x2="50" y2="200" stroke="#2a2d32" stroke-width="1"/>
+              <line x1="50" y1="200" x2="460" y2="200" stroke="#2a2d32" stroke-width="1"/>
+              <!-- Bars -->
+              <ng-container *ngFor="let bar of burnupChartData">
+                <rect [attr.x]="bar.x" [attr.y]="bar.y"
+                      [attr.width]="bar.w" [attr.height]="bar.h"
+                      fill="url(#burnupGrad)" opacity="0.85" rx="3"/>
+                <text [attr.x]="bar.cx" [attr.y]="bar.y - 4"
+                      fill="#17a2b8" font-size="10" text-anchor="middle" font-weight="700">
+                  {{ bar.doneTasks }}
+                </text>
+                <text [attr.x]="bar.cx" [attr.y]="215"
+                      fill="#666" font-size="8" text-anchor="middle">{{ bar.label }}</text>
+              </ng-container>
+              <!-- Empty message -->
+              <text *ngIf="!burnupChartData.length" x="255" y="115"
+                    fill="#555" font-size="12" text-anchor="middle">
+                {{ 'SCRUM.CHART_NO_DATA_BURNUP' | translate }}
+              </text>
+              <text x="10" y="113" fill="#555" font-size="8" text-anchor="middle"
+                    transform="rotate(-90, 10, 113)">{{ 'SCRUM.CHART_DONE_LABEL' | translate }}</text>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
 </div>

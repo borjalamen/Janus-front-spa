@@ -386,12 +386,6 @@
         <!-- ══════════════════════════════════════════════════════════ -->
         <ng-container *ngIf="!liveSession">
 
-          <!-- Metadata incomplete warning -->
-          <div class="live-meta-warning" *ngIf="!liveMetaComplete()">
-            <mat-icon>info</mat-icon>
-            <span>{{ 'ESTIMATION.LIVE.META_REQUIRED' | translate }}</span>
-          </div>
-
           <div class="live-setup-grid">
 
             <!-- Create card -->
@@ -402,15 +396,12 @@
               <button
                 mat-stroked-button
                 class="live-action-btn live-primary-btn"
-                (click)="startLiveSession()"
-                [disabled]="!liveMetaComplete() || liveConnecting"
+                (click)="openCreateLiveModal()"
+                [disabled]="liveConnecting"
               >
                 <mat-icon>play_circle</mat-icon>
                 {{ liveConnecting ? ('ESTIMATION.LIVE.CONNECTING' | translate) : ('ESTIMATION.LIVE.START' | translate) }}
               </button>
-              <p class="live-meta-preview" *ngIf="liveMetaComplete()">
-                <strong>{{ estimationName }}</strong> · {{ projectCode }} · {{ projectName }}
-              </p>
             </div>
 
             <div class="live-setup-divider">
@@ -493,18 +484,47 @@
           <!-- ── LOBBY PHASE ──────────────────────────────────────── -->
           <ng-container *ngIf="liveSession.phase === 'LOBBY'">
 
-            <!-- Accepted tasks so far -->
-            <div class="live-accepted-list" *ngIf="liveSession.acceptedTasks.length > 0">
-              <h4 class="live-section-title">{{ 'ESTIMATION.LIVE.ESTIMATED_TASKS' | translate }}</h4>
-              <div class="live-accepted-row" *ngFor="let t of liveSession.acceptedTasks; let i = index">
-                <span class="live-accepted-index">{{ i + 1 }}.</span>
-                <span class="live-accepted-task">{{ t.task }}</span>
-                <span class="live-accepted-result">{{ t.result }}h</span>
+            <!-- Vote history matrix -->
+            <ng-container *ngIf="liveSession.acceptedTasks.length > 0">
+              <h4 class="live-section-title">{{ 'ESTIMATION.LIVE.VOTE_HISTORY' | translate }}</h4>
+              <div class="live-matrix-scroll">
+                <table class="live-matrix-table">
+                  <thead>
+                    <tr>
+                      <th class="matrix-th-name">{{ 'ESTIMATION.LIVE.PARTICIPANT' | translate }}</th>
+                      <th *ngFor="let t of liveSession.acceptedTasks"
+                          class="matrix-th-task" [title]="t.task">
+                        {{ t.task.length > 22 ? (t.task | slice:0:22) + '…' : t.task }}
+                      </th>
+                      <th class="matrix-th-total">{{ 'ESTIMATION.LIVE.TOTAL' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let p of getLiveMatrixParticipants()">
+                      <td class="matrix-td-name">
+                        {{ p.name }}<span class="chip-you" *ngIf="p.id === myId">&nbsp;({{ 'ESTIMATION.LIVE.YOU' | translate }})</span>
+                      </td>
+                      <td *ngFor="let t of liveSession.acceptedTasks"
+                          class="matrix-td-vote"
+                          [class.vote-cell-min]="isVoteMin(t.votes[p.id], t)"
+                          [class.vote-cell-max]="isVoteMax(t.votes[p.id], t)">
+                        {{ t.votes[p.id] !== undefined ? (t.votes[p.id] + 'h') : '—' }}
+                      </td>
+                      <td class="matrix-td-total">{{ getParticipantTotal(p.id) | number:'1.1-1' }}h</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr class="matrix-footer-row">
+                      <td class="matrix-td-name"><strong>{{ 'ESTIMATION.LIVE.FINAL' | translate }}</strong></td>
+                      <td *ngFor="let t of liveSession.acceptedTasks" class="matrix-td-final">
+                        <strong>{{ t.result }}h</strong>
+                      </td>
+                      <td class="matrix-td-total"><strong>{{ liveTotal | number:'1.1-1' }}h</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
               </div>
-              <div class="live-accepted-total">
-                {{ 'ESTIMATION.LIVE.TOTAL' | translate }}: <strong>{{ liveTotal | number:'1.1-1' }}h</strong>
-              </div>
-            </div>
+            </ng-container>
 
             <!-- Owner: write next task -->
             <ng-container *ngIf="isOwner">
@@ -624,14 +644,34 @@
               <p class="live-current-task-text">{{ liveSession.currentTask }}</p>
             </div>
 
-            <div class="live-results-grid">
-              <div class="live-result-row" *ngFor="let p of liveSession.participants">
-                <div class="live-result-avatar">{{ (p.name || 'U').charAt(0).toUpperCase() }}</div>
-                <div class="live-result-name">{{ p.name }}<span class="chip-crown" *ngIf="p.id === liveSession.ownerId">👑</span></div>
-                <div class="live-result-vote" [class.live-no-vote]="p.vote === null || p.vote === undefined">
-                  {{ p.vote !== null && p.vote !== undefined ? (p.vote + 'h') : '—' }}
-                </div>
-              </div>
+            <!-- Current task vote matrix -->
+            <div class="live-matrix-scroll">
+              <table class="live-matrix-table">
+                <thead>
+                  <tr>
+                    <th class="matrix-th-name">{{ 'ESTIMATION.LIVE.PARTICIPANT' | translate }}</th>
+                    <th class="matrix-th-task" [title]="liveSession.currentTask || ''">
+                      {{ (liveSession.currentTask || '').length > 28
+                        ? ((liveSession.currentTask || '') | slice:0:28) + '…'
+                        : liveSession.currentTask }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of liveSession.participants">
+                    <td class="matrix-td-name">
+                      <span class="chip-crown" *ngIf="p.id === liveSession.ownerId">👑</span>
+                      {{ p.name }}<span class="chip-you" *ngIf="p.id === myId">&nbsp;({{ 'ESTIMATION.LIVE.YOU' | translate }})</span>
+                    </td>
+                    <td class="matrix-td-vote"
+                        [class.vote-cell-min]="isRevealMin(p.vote)"
+                        [class.vote-cell-max]="isRevealMax(p.vote)"
+                        [class.live-no-vote]="p.vote === null || p.vote === undefined">
+                      {{ p.vote !== null && p.vote !== undefined ? (p.vote + 'h') : '—' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <!-- Owner: set final result -->
@@ -677,15 +717,43 @@
               <h3>{{ 'ESTIMATION.LIVE.FINISHED_TITLE' | translate }}</h3>
             </div>
 
-            <div class="live-accepted-list">
-              <div class="live-accepted-row" *ngFor="let t of liveSession.acceptedTasks; let i = index">
-                <span class="live-accepted-index">{{ i + 1 }}.</span>
-                <span class="live-accepted-task">{{ t.task }}</span>
-                <span class="live-accepted-result">{{ t.result }}h</span>
-              </div>
-              <div class="live-accepted-total">
-                {{ 'ESTIMATION.LIVE.TOTAL' | translate }}: <strong>{{ liveTotal | number:'1.1-1' }}h</strong>
-              </div>
+            <!-- Full historical vote matrix -->
+            <div class="live-matrix-scroll">
+              <table class="live-matrix-table">
+                <thead>
+                  <tr>
+                    <th class="matrix-th-name">{{ 'ESTIMATION.LIVE.PARTICIPANT' | translate }}</th>
+                    <th *ngFor="let t of liveSession.acceptedTasks"
+                        class="matrix-th-task" [title]="t.task">
+                      {{ t.task.length > 22 ? (t.task | slice:0:22) + '…' : t.task }}
+                    </th>
+                    <th class="matrix-th-total">{{ 'ESTIMATION.LIVE.TOTAL' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of getLiveMatrixParticipants()">
+                    <td class="matrix-td-name">
+                      {{ p.name }}<span class="chip-you" *ngIf="p.id === myId">&nbsp;({{ 'ESTIMATION.LIVE.YOU' | translate }})</span>
+                    </td>
+                    <td *ngFor="let t of liveSession.acceptedTasks"
+                        class="matrix-td-vote"
+                        [class.vote-cell-min]="isVoteMin(t.votes[p.id], t)"
+                        [class.vote-cell-max]="isVoteMax(t.votes[p.id], t)">
+                      {{ t.votes[p.id] !== undefined ? (t.votes[p.id] + 'h') : '—' }}
+                    </td>
+                    <td class="matrix-td-total">{{ getParticipantTotal(p.id) | number:'1.1-1' }}h</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="matrix-footer-row">
+                    <td class="matrix-td-name"><strong>{{ 'ESTIMATION.LIVE.FINAL' | translate }}</strong></td>
+                    <td *ngFor="let t of liveSession.acceptedTasks" class="matrix-td-final">
+                      <strong>{{ t.result }}h</strong>
+                    </td>
+                    <td class="matrix-td-total"><strong>{{ liveTotal | number:'1.1-1' }}h</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
 
             <div class="live-composer-actions" *ngIf="isOwner">
@@ -708,6 +776,65 @@
           </ng-container>
 
         </ng-container>
+
+        <!-- ── Create session modal ─────────────────────────────── -->
+        <div class="live-modal-backdrop" *ngIf="showLiveCreateModal"
+             (click)="showLiveCreateModal = false">
+          <div class="live-modal" (click)="$event.stopPropagation()">
+            <div class="live-modal-header">
+              <h3>🚀 {{ 'ESTIMATION.LIVE.CREATE_MODAL_TITLE' | translate }}</h3>
+              <button class="live-modal-close" (click)="showLiveCreateModal = false">✕</button>
+            </div>
+            <p class="muted">{{ 'ESTIMATION.LIVE.CREATE_MODAL_HINT' | translate }}</p>
+
+            <div class="live-modal-grid">
+              <mat-form-field appearance="outline">
+                <input matInput
+                  [placeholder]="'ESTIMATION_META.META_NAME' | translate"
+                  [(ngModel)]="liveModalMeta.estimationName" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <input matInput
+                  [placeholder]="'ESTIMATION_META.META_PROJECT_CODE' | translate"
+                  [(ngModel)]="liveModalMeta.projectCode" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="live-modal-full">
+                <input matInput
+                  [placeholder]="'ESTIMATION_META.META_PROJECT_NAME' | translate"
+                  [(ngModel)]="liveModalMeta.projectName" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <input matInput
+                  [placeholder]="'ESTIMATION_META.META_REQUESTER' | translate"
+                  [(ngModel)]="liveModalMeta.requester" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <input matInput
+                  [placeholder]="'ESTIMATION_META.META_REQUESTER_EMAIL' | translate"
+                  [(ngModel)]="liveModalMeta.requesterEmail" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="live-modal-full">
+                <textarea matInput rows="3"
+                  [placeholder]="'ESTIMATION_META.META_NOTES' | translate"
+                  [(ngModel)]="liveModalMeta.notes"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="live-modal-actions">
+              <button mat-stroked-button class="live-action-btn"
+                      (click)="showLiveCreateModal = false">
+                {{ 'COMMON.CANCEL' | translate }}
+              </button>
+              <button mat-flat-button class="live-start-vote-btn"
+                      (click)="confirmCreateLiveSession()"
+                      [disabled]="!isLiveModalMetaComplete() || liveConnecting">
+                <mat-icon>play_circle</mat-icon>
+                {{ liveConnecting ? ('ESTIMATION.LIVE.CONNECTING' | translate) : ('ESTIMATION.LIVE.START' | translate) }}
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </mat-tab>
   </mat-tab-group>

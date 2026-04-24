@@ -11,6 +11,10 @@ export interface LiveParticipant {
 export interface LiveAcceptedTask {
   task: string;
   result: number;
+  /** userId → vote value */
+  votes: Record<string, number>;
+  /** userId → display name */
+  voterNames: Record<string, string>;
 }
 
 export interface LiveSession {

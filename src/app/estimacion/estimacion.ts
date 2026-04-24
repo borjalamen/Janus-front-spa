@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { LiveEstimationService, LiveSession, LiveParticipant } from './live-estimation.service';
+import { LiveEstimationService, LiveSession, LiveParticipant, LiveAcceptedTask } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EstimacionRecord, EstimacionService } from './estimacion.service';
@@ -130,6 +130,17 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   liveTimerSeconds = 60;
   private liveTimerInterval: ReturnType<typeof setInterval> | null = null;
 
+  // Popup para crear sesión
+  showLiveCreateModal = false;
+  liveModalMeta = {
+    estimationName: '',
+    projectCode: '',
+    projectName: '',
+    requester: '',
+    requesterEmail: '',
+    notes: '',
+  };
+
   private liveSub: Subscription | null = null;
   private liveConnSub: Subscription | null = null;
   private liveErrSub: Subscription | null = null;
@@ -236,6 +247,117 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       && this.requesterEmail?.trim());
   }
 
+  isLiveModalMetaComplete(): boolean {
+    const m = this.liveModalMeta;
+    return !!(m.estimationName?.trim() && m.projectCode?.trim()
+      && m.projectName?.trim() && m.requester?.trim() && m.requesterEmail?.trim());
+  }
+
+  openCreateLiveModal() {
+    // Pre-fill from existing form data if available
+    this.liveModalMeta = {
+      estimationName: this.estimationName || '',
+      projectCode: this.projectCode || '',
+      projectName: this.projectName || '',
+      requester: this.requester || '',
+      requesterEmail: this.requesterEmail || '',
+      notes: this.notes || '',
+    };
+    this.showLiveCreateModal = true;
+  }
+
+  async confirmCreateLiveSession() {
+    if (!this.isLiveModalMetaComplete()) return;
+    if (!(await this.ensureConnected())) return;
+    this.showLiveCreateModal = false;
+    this.myName = this.resolveCurrentUserName();
+    this.liveService.createSession({
+      userId: this.myId,
+      userName: this.myName,
+      estimationName: this.liveModalMeta.estimationName,
+      projectCode: this.liveModalMeta.projectCode,
+      projectName: this.liveModalMeta.projectName,
+      requester: this.liveModalMeta.requester,
+      requesterEmail: this.liveModalMeta.requesterEmail,
+      notes: this.liveModalMeta.notes,
+    });
+  }
+
+  // ── Matrix helpers ────────────────────────────────────────────────
+
+  /** All unique participants across all accepted tasks + current session participants */
+  getLiveMatrixParticipants(): Array<{ id: string; name: string }> {
+    const map = new Map<string, string>();
+    // Current participants first (preserves order)
+    this.liveSession?.participants.forEach(p => {
+      if (!map.has(p.id)) map.set(p.id, p.name);
+    });
+    // Historical voters
+    (this.liveSession?.acceptedTasks ?? []).forEach(t => {
+      Object.entries(t.voterNames ?? {}).forEach(([id, name]) => {
+        if (!map.has(id)) map.set(id, name);
+      });
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }
+
+  getMinVote(task: LiveAcceptedTask): number | null {
+    const vals = Object.values(task.votes ?? {}).filter(v => v !== null && v !== undefined);
+    return vals.length ? Math.min(...vals) : null;
+  }
+
+  getMaxVote(task: LiveAcceptedTask): number | null {
+    const vals = Object.values(task.votes ?? {}).filter(v => v !== null && v !== undefined);
+    return vals.length ? Math.max(...vals) : null;
+  }
+
+  getCurrentRevealMin(): number | null {
+    if (!this.liveSession) return null;
+    const vals = this.liveSession.participants
+      .map(p => p.vote).filter(v => v !== null && v !== undefined) as number[];
+    return vals.length ? Math.min(...vals) : null;
+  }
+
+  getCurrentRevealMax(): number | null {
+    if (!this.liveSession) return null;
+    const vals = this.liveSession.participants
+      .map(p => p.vote).filter(v => v !== null && v !== undefined) as number[];
+    return vals.length ? Math.max(...vals) : null;
+  }
+
+  getParticipantTotal(userId: string): number {
+    return (this.liveSession?.acceptedTasks ?? [])
+      .reduce((sum, t) => sum + ((t.votes ?? {})[userId] ?? 0), 0);
+  }
+
+  isVoteMin(voteVal: number | undefined | null, task: LiveAcceptedTask): boolean {
+    if (voteVal === null || voteVal === undefined) return false;
+    const min = this.getMinVote(task);
+    const max = this.getMaxVote(task);
+    return min !== null && max !== null && min !== max && voteVal === min;
+  }
+
+  isVoteMax(voteVal: number | undefined | null, task: LiveAcceptedTask): boolean {
+    if (voteVal === null || voteVal === undefined) return false;
+    const min = this.getMinVote(task);
+    const max = this.getMaxVote(task);
+    return min !== null && max !== null && min !== max && voteVal === max;
+  }
+
+  isRevealMin(vote: number | null | undefined): boolean {
+    if (vote === null || vote === undefined) return false;
+    const min = this.getCurrentRevealMin();
+    const max = this.getCurrentRevealMax();
+    return min !== null && max !== null && min !== max && vote === min;
+  }
+
+  isRevealMax(vote: number | null | undefined): boolean {
+    if (vote === null || vote === undefined) return false;
+    const min = this.getCurrentRevealMin();
+    const max = this.getCurrentRevealMax();
+    return min !== null && max !== null && min !== max && vote === max;
+  }
+
   get isOwner(): boolean {
     return this.liveSession?.ownerId === this.myId;
   }
@@ -266,19 +388,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   async startLiveSession() {
-    if (!this.liveMetaComplete()) return;
-    if (!(await this.ensureConnected())) return;
-    this.myName = this.resolveCurrentUserName();
-    this.liveService.createSession({
-      userId: this.myId,
-      userName: this.myName,
-      estimationName: this.estimationName,
-      projectCode: this.projectCode,
-      projectName: this.projectName,
-      requester: this.requester,
-      requesterEmail: this.requesterEmail,
-      notes: this.notes,
-    });
+    // Delegate to the modal-based flow
+    this.openCreateLiveModal();
   }
 
   async joinLiveSession() {

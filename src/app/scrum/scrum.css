@@ -860,3 +860,244 @@ select:-webkit-autofill {
     min-height: auto;
   }
 }
+
+/* ===== SPRINT BANNER ===== */
+.sprint-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(23,162,184,0.1), rgba(105,240,174,0.06));
+  border: 1px solid rgba(23,162,184,0.3);
+  border-radius: 12px;
+  padding: 10px 18px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.sprint-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sprint-icon {
+  color: #17a2b8;
+  font-size: 1.6rem !important;
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+}
+
+.sprint-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sprint-id {
+  color: #17a2b8;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+}
+
+.sprint-date {
+  color: #7a9da6;
+  font-size: 0.8rem;
+}
+
+.sprint-end-btn {
+  background: rgba(229,57,53,0.12) !important;
+  border-color: rgba(229,57,53,0.35) !important;
+  color: #ff6b6b !important;
+}
+
+.sprint-end-btn:hover {
+  background: rgba(229,57,53,0.25) !important;
+  border-color: #ff6b6b !important;
+  color: #ff9a9a !important;
+  box-shadow: 0 4px 14px rgba(229,57,53,0.3) !important;
+}
+
+/* ===== START SPRINT CTA ===== */
+.sprint-start-cta {
+  border: 2px dashed rgba(251,192,45,0.2);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.sprint-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sprint-cta-inner mat-icon {
+  font-size: 2.4rem !important;
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+  color: #FBC02D;
+}
+
+.sprint-cta-inner p {
+  color: #8a9ba3;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.sprint-start-btn {
+  background: rgba(251,192,45,0.1) !important;
+  border-color: rgba(251,192,45,0.35) !important;
+  color: #FBC02D !important;
+}
+
+.sprint-start-btn:hover {
+  background: rgba(251,192,45,0.2) !important;
+  border-color: #FBC02D !important;
+  box-shadow: 0 4px 18px rgba(251,192,45,0.3) !important;
+}
+
+/* ===== IMPORT/EXPORT BUTTONS ===== */
+.scrum-io-btn {
+  font-size: 14px !important;
+  padding: 6px 12px !important;
+  opacity: 0.85;
+}
+
+.scrum-io-btn:hover { opacity: 1; }
+
+.scrum-template-btn {
+  color: #69f0ae !important;
+  border-color: rgba(105,240,174,0.25) !important;
+}
+
+.scrum-template-btn:hover {
+  border-color: #69f0ae !important;
+  box-shadow: 0 4px 14px rgba(105,240,174,0.2) !important;
+}
+
+.import-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(229,57,53,0.12);
+  border: 1px solid rgba(229,57,53,0.3);
+  color: #ff9a9a;
+  font-size: 0.88rem;
+}
+
+.import-error mat-icon { font-size: 1rem !important; color: #ff6b6b; }
+
+.import-error-close {
+  background: transparent;
+  border: 0;
+  color: #ff6b6b;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 1rem;
+}
+
+.import-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: #17a2b8;
+  font-size: 0.85rem;
+}
+
+.import-loading .spin {
+  animation: spin 1s linear infinite;
+  font-size: 1rem !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ===== SPRINT BLOCKED STATE ===== */
+.sprint-blocked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+  filter: grayscale(0.3);
+}
+
+/* ===== MAT TABS OVERRIDE ===== */
+.scrum-tabs {
+  margin-top: 20px;
+}
+
+::ng-deep .scrum-tabs .mat-mdc-tab-header {
+  background: transparent;
+  border-bottom: 2px solid rgba(251,192,45,0.15);
+  margin-bottom: 16px;
+}
+
+::ng-deep .scrum-tabs .mat-mdc-tab .mdc-tab__text-label {
+  color: #8a9ba3;
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
+}
+
+::ng-deep .scrum-tabs .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #FBC02D;
+}
+
+::ng-deep .scrum-tabs .mdc-tab-indicator__content--underline {
+  border-color: #FBC02D;
+}
+
+::ng-deep .scrum-tabs .mat-mdc-tab-body-wrapper {
+  overflow: visible;
+}
+
+/* ===== CHARTS SECTION ===== */
+.charts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 4px 0 20px;
+}
+
+.chart-wrapper {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.chart-title {
+  color: #FBC02D;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.chart-subtitle {
+  color: #6c7a82;
+  font-size: 0.82rem;
+  margin: 0 0 14px;
+}
+
+.chart-svg-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  min-width: 320px;
+}
+

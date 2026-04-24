@@ -22,6 +22,7 @@ export interface ScrumTaskRecord {
   assignee?: string | null;
   color?: string;
   status: ScrumTaskStatus;
+  sprintId?: string | null;
   createdAt?: string;
   updatedAt?: string;
   visible?: boolean;
@@ -33,6 +34,29 @@ export interface RegisteredUserRecord {
   fullName?: string;
   roles?: string[];
   status?: string;
+}
+
+export interface SprintSnapshotRecord {
+  date: string;
+  remainingTasks: number;
+  doneTasks: number;
+  totalTasks: number;
+  remainingHours: number;
+  doneHours: number;
+  totalHours: number;
+}
+
+export interface ScrumSprintRecord {
+  id?: string;
+  sprintKey?: string;
+  startDate?: string;
+  endDate?: string;
+  active?: boolean;
+  totalTasks?: number;
+  doneTasks?: number;
+  totalHours?: number;
+  doneHours?: number;
+  snapshots?: SprintSnapshotRecord[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -61,4 +85,27 @@ export class ScrumService {
   getRegisteredUsers(): Observable<RegisteredUserRecord[]> {
     return this.http.get<RegisteredUserRecord[]>(`${this.usersUrl}/all`);
   }
+
+  // ── Sprint endpoints ──────────────────────────────────────────────────────
+
+  getActiveSprint(): Observable<ScrumSprintRecord> {
+    return this.http.get<ScrumSprintRecord>(`${this.baseUrl}/sprint/active`);
+  }
+
+  getSprintHistory(): Observable<ScrumSprintRecord[]> {
+    return this.http.get<ScrumSprintRecord[]>(`${this.baseUrl}/sprint/history`);
+  }
+
+  startSprint(payload: ScrumSprintRecord): Observable<ScrumSprintRecord> {
+    return this.http.post<ScrumSprintRecord>(`${this.baseUrl}/sprint/start`, payload);
+  }
+
+  saveSnapshot(sprintId: string, snapshot: SprintSnapshotRecord): Observable<ScrumSprintRecord> {
+    return this.http.put<ScrumSprintRecord>(`${this.baseUrl}/sprint/${sprintId}/snapshot`, snapshot);
+  }
+
+  endSprint(sprintId: string, summary: ScrumSprintRecord): Observable<ScrumSprintRecord> {
+    return this.http.put<ScrumSprintRecord>(`${this.baseUrl}/sprint/${sprintId}/end`, summary);
+  }
 }
+

@@ -1902,3 +1902,186 @@
 }
 .live-finished-header mat-icon { font-size: 2rem; color: #69f0ae; }
 .live-finished-header h3 { margin: 0; color: #69f0ae; font-size: 1.2rem; }
+
+/* ===== VOTE MATRIX TABLE ===== */
+.live-matrix-scroll {
+  overflow-x: auto;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.live-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 280px;
+}
+.live-matrix-table th,
+.live-matrix-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
+}
+.live-matrix-table thead th {
+  background: rgba(23,162,184,0.08);
+  color: #8ecdd6;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(23,162,184,0.2);
+}
+.matrix-th-name {
+  text-align: left;
+  min-width: 130px;
+  position: sticky;
+  left: 0;
+  background: rgba(23,35,40,0.95);
+  z-index: 1;
+}
+.matrix-th-task {
+  text-align: center;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.matrix-th-total {
+  text-align: right;
+  color: #FBC02D !important;
+}
+.matrix-td-name {
+  text-align: left;
+  color: #c5d9e0;
+  font-weight: 600;
+  position: sticky;
+  left: 0;
+  background: rgba(18,22,28,0.97);
+  z-index: 1;
+}
+.matrix-td-vote {
+  text-align: center;
+  font-weight: 700;
+  color: #d0dde2;
+  min-width: 70px;
+}
+.matrix-td-total {
+  text-align: right;
+  font-weight: 700;
+  color: #FBC02D;
+}
+.matrix-td-final {
+  text-align: center;
+  color: #FBC02D;
+}
+
+/* Min vote = green, Max vote = red */
+.vote-cell-min {
+  color: #69f0ae !important;
+  background: rgba(105,240,174,0.08);
+  border-radius: 4px;
+}
+.vote-cell-min::after {
+  content: ' ↓';
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+.vote-cell-max {
+  color: #ff6b6b !important;
+  background: rgba(255,107,107,0.08);
+  border-radius: 4px;
+}
+.vote-cell-max::after {
+  content: ' ↑';
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+
+.matrix-footer-row td {
+  background: rgba(251,192,45,0.05);
+  border-top: 2px solid rgba(251,192,45,0.2);
+  border-bottom: 0;
+}
+
+/* ===== CREATE SESSION MODAL ===== */
+.live-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(4,7,10,0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.live-modal {
+  width: min(680px, 96vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #101317;
+  border: 2px solid rgba(23,162,184,0.5);
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(23,162,184,0.25), 0 24px 60px rgba(0,0,0,0.6);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.live-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.live-modal-header h3 {
+  margin: 0;
+  color: #17a2b8;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.live-modal-close {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #9ab5bc;
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 1rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.live-modal-close:hover { color: #ff6b6b; border-color: rgba(255,107,107,0.4); }
+.live-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.live-modal-full { grid-column: 1 / -1; }
+.live-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+/* Mat fields inside modal */
+::ng-deep .live-modal .mat-mdc-text-field-wrapper {
+  background: #141516 !important;
+  border-radius: 6px !important;
+}
+::ng-deep .live-modal .mat-mdc-form-field-flex {
+  background: #141516 !important;
+  border-radius: 6px !important;
+  border: 1px solid #2e3236 !important;
+}
+::ng-deep .live-modal .mat-mdc-form-field-flex:hover {
+  border-color: rgba(23,162,184,0.5) !important;
+}
+::ng-deep .live-modal .mdc-line-ripple,
+::ng-deep .live-modal .mdc-notched-outline { display: none !important; }
+::ng-deep .live-modal .mat-mdc-input-element { color: #dfe9ed !important; }
+::ng-deep .live-modal .mat-mdc-input-element::placeholder { color: #5a737a !important; }
+
+@media (max-width: 560px) {
+  .live-modal-grid { grid-template-columns: 1fr; }
+  .live-modal-full { grid-column: 1; }
+}
+
