@@ -66,10 +66,18 @@ export class ProcedimientosComponent implements OnInit {
   cargarProcedimientos(): void {
     this.proceduresService.getAll().subscribe({
       next: (data) => {
-        this.procedures = data;
+        this.procedures = this.sortByDate(data);
         this.procedimientosFiltrados = [...this.procedures];
       },
       error: (err) => console.error('Error carregant procediments', err)
+    });
+  }
+
+  private sortByDate(data: Procedure[]): Procedure[] {
+    return data.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
     });
   }
 
@@ -144,10 +152,31 @@ export class ProcedimientosComponent implements OnInit {
       : this.proceduresService.create(this.procForm);
 
     obs.subscribe({
-      next: () => {
+      next: (saved) => {
         this.showToast(this.modoForm === 'editar' ? '✅ Actualitzat' : '✅ Creat');
-        this.cargarProcedimientos();
-        this.tancarPopup();
+
+        this.proceduresService.getAll().subscribe({
+          next: (data) => {
+            this.procedures = data;
+
+            if (this.modoForm === 'crear') {
+              // Ordenar per data de creació descendent i posar el nou al principi
+              this.procedures.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+              });
+            }
+
+            this.procedimientosFiltrados = [...this.procedures];
+            this.paginaActualProcedimientos = 1; // ← torna a la 1a pàgina
+            this.tancarPopup();
+          },
+          error: () => {
+            this.procedimientosFiltrados = [...this.procedures];
+            this.tancarPopup();
+          }
+        });
       },
       error: () => this.showToast('❌ Error al guardar', false)
     });
