@@ -1035,40 +1035,102 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     }
 
     const colWidths = [30, 200, ...this.weeks.map(() => 60), 60];
+    const tableW = colWidths.reduce((a, b) => a + b, 0);
     let x = margin;
+
+    // Header
+    const tableStartY = y;
     doc.setFillColor(22, 63, 107);
     doc.setTextColor(255, 255, 255);
-    doc.rect(x, y, colWidths.reduce((a,b)=>a+b,0), 18, 'F');
+    doc.rect(x, y, tableW, 20, 'F');
     doc.setFontSize(11);
     let cx = x + 6;
-    doc.text('#', cx, y + 13);
+    doc.text('#', cx, y + 14);
     cx += colWidths[0];
-    doc.text('Task', cx, y + 13);
+    doc.text('Task', cx, y + 14);
     cx += colWidths[1];
-    this.weeks.forEach((w, i) => { doc.text(`W${w}`, cx + 6, y + 13); cx += colWidths[i+2]; });
-    doc.text('Total', cx + 6, y + 13);
-    y += 22;
-    doc.setTextColor(0,0,0);
+    this.weeks.forEach((w, i) => { doc.text(`W${w}`, cx + 6, y + 14); cx += colWidths[i+2]; });
+    doc.text('Total', cx + 6, y + 14);
+    y += 20;
+    doc.setTextColor(0, 0, 0);
 
+    const rowPad = 7;
     this.tasks.forEach((t, taskIdx) => {
-      if (y > 760) { doc.addPage(); y = 40; }
+      const titleLines: string[] = doc.splitTextToSize(t.title, colWidths[1] - 10);
+      const rowH = Math.max(22, titleLines.length * lineHeight + rowPad * 2);
+      if (y + rowH > 760) { doc.addPage(); y = 40; }
+
+      // Fondo alternado: filas pares en gris muy suave
+      if (taskIdx % 2 === 0) {
+        doc.setFillColor(245, 247, 250);
+        doc.rect(x, y, tableW, rowH, 'F');
+      }
+
+      // Línea inferior de separación (gris claro)
+      doc.setDrawColor(210, 215, 220);
+      doc.setLineWidth(0.4);
+      doc.line(x, y + rowH, x + tableW, y + rowH);
+
+      // Líneas verticales de separación entre columnas
+      let vx = x + colWidths[0];
+      doc.setDrawColor(220, 225, 230);
+      doc.setLineWidth(0.3);
+      colWidths.slice(1).forEach((cw) => {
+        doc.line(vx, y, vx, y + rowH);
+        vx += cw;
+      });
+
+      const midY = y + rowH / 2 + 4;
+      doc.setTextColor(80, 90, 100);
+      doc.setFontSize(10);
+
       let cx2 = x + 6;
-      doc.text(String(taskIdx + 1), cx2, y + 12);
+      // # ordinal en gris medio
+      doc.text(String(taskIdx + 1), cx2, midY);
       cx2 += colWidths[0];
-      doc.text(t.title, cx2, y + 12);
+
+      // Título de tarea en azul oscuro, con wrap
+      doc.setTextColor(22, 63, 107);
+      doc.setFontSize(10.5);
+      doc.text(titleLines, cx2 + 2, y + rowPad + lineHeight - 3);
+
       cx2 += colWidths[1];
-      t.estimates.forEach((e, idx) => { doc.text(String(e), cx2 + 4, y + 12); cx2 += colWidths[idx+2]; });
-      doc.text(String(this.totalForTask(t)), cx2 + 4, y + 12);
-      y += 18;
+      doc.setTextColor(40, 50, 60);
+      doc.setFontSize(10);
+
+      t.estimates.forEach((e, idx) => {
+        doc.text(String(e), cx2 + 6, midY);
+        cx2 += colWidths[idx + 2];
+      });
+
+      // Total de la fila en azul
+      doc.setTextColor(22, 63, 107);
+      doc.setFontSize(10.5);
+      doc.text(String(this.totalForTask(t)), cx2 + 6, midY);
+
+      y += rowH;
     });
 
-    y += 8;
-    if (y > 760) { doc.addPage(); y = 40; }
+    // Fila de totales con fondo azul oscuro
+    y += 4;
+    if (y + 24 > 760) { doc.addPage(); y = 40; }
+    doc.setFillColor(22, 63, 107);
+    doc.rect(x, y, tableW, 22, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
-    doc.text('Total', x + colWidths[0] + 6, y + 12);
+    doc.text('Total', x + colWidths[0] + 6, y + 15);
     let cx3 = x + colWidths[0] + colWidths[1];
-    this.weeks.forEach((_, i) => { doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 12); cx3 += colWidths[i+2]; });
-    doc.text(String(this.grandTotal()), cx3 + 6, y + 12);
+    this.weeks.forEach((_, i) => {
+      doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 15);
+      cx3 += colWidths[i + 2];
+    });
+    doc.text(String(this.grandTotal()), cx3 + 6, y + 15);
+    y += 22;
+
+    // Borde exterior de la tabla completa
+    doc.setDrawColor(22, 63, 107);
+    doc.setLineWidth(0.8);
+    doc.rect(x, tableStartY, tableW, y - tableStartY, 'S');
 
     // Add branding image and footer on every page
     const pageCount = doc.getNumberOfPages();

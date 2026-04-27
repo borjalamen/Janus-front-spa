@@ -7,6 +7,8 @@ import { LocalStorageService } from '../local-storage.service';
 import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 type TrainingItem = {
   id: string;
@@ -46,7 +48,8 @@ const DRAFT_ITEM_KEY = 'training_item_draft_v1';
     BuscadorComponent,
     TranslateModule,
     DragDropModule,
-    MatIconModule
+    MatIconModule,
+    HttpClientModule
   ],
 })
 export class FormacionComponent {
@@ -99,7 +102,8 @@ export class FormacionComponent {
   constructor(
     private translate: TranslateService,
     private storage: LocalStorageService,
-    private auth: AuthService
+    private auth: AuthService,
+    private http: HttpClient
   ) {
     this.load();
     this.translate.get('TRAINING.TITLE').subscribe(t => (this.title = t));
@@ -551,5 +555,312 @@ export class FormacionComponent {
     this.confirmAction = null;
     this.showConfirm = false;
     this.confirmMessage = '';
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // IMPORT / EXPORT EXCEL — COURSES (tab All courses)
+  // ═══════════════════════════════════════════════════════════════
+
+  showImportModal = false;
+  importResult: { imported: number; skipped: number; errors: string[] } | null = null;
+  isImporting = false;
+  importError = '';
+
+  // ═══════════════════════════════════════════════════════════════
+  // IMPORT / EXPORT EXCEL — TRAINING PATHS (tab Training paths)
+  // ═══════════════════════════════════════════════════════════════
+
+  showImportPathModal = false;
+  importPathResult: { paths: number; courses: number; reused: number; skipped: number; errors: string[] } | null = null;
+  isImportingPath = false;
+  importPathError = '';
+
+  /** Devuelve el curso existente (por nombre exacto, case-insensitive) o null */
+  private findExistingCourse(name: string): TrainingItem | null {
+    const key = name.trim().toLowerCase();
+    for (const p of this.paths) {
+      const found = (p.items || []).find(i => (i.name || '').trim().toLowerCase() === key);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  async downloadPathExcelTemplate() {
+    const XLSX = await import('xlsx');
+    const wb = XLSX.utils.book_new();
+
+    // Hoja 1: Paths
+    const pathHeaders = [['path_name', 'audience', 'objectives', 'prerequisites']];
+    const wsPath = XLSX.utils.aoa_to_sheet(pathHeaders);
+    wsPath['!cols'] = [{ wch: 35 }, { wch: 40 }, { wch: 60 }, { wch: 40 }];
+    XLSX.utils.book_append_sheet(wb, wsPath, 'Paths');
+
+    // Hoja 2: Courses (con columna path_name para agrupar)
+    const courseHeaders = [['path_name', 'name', 'link', 'description', 'tags (semicolon-separated)', 'location']];
+    const wsCourses = XLSX.utils.aoa_to_sheet(courseHeaders);
+    wsCourses['!cols'] = [{ wch: 35 }, { wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, wsCourses, 'Courses');
+
+    XLSX.writeFile(wb, 'training-paths-template.xlsx');
+  }
+
+  triggerImportPathInput() {
+    const input = document.getElementById('excel-import-path-input') as HTMLInputElement;
+    if (input) input.click();
+  }
+
+  async onPathExcelFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (!input) return;
+    input.value = '';
+    if (!file) return;
+
+    this.isImportingPath = true;
+    this.importPathError = '';
+    this.importPathResult = null;
+    this.showImportPathModal = true;
+
+    try {
+      const XLSX = await import('xlsx');
+      const arrayBuffer = await file.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer, { type: 'array' });
+
+      // ── Leer hoja Paths ──────────────────────────────────────────
+      const pathSheetName = wb.SheetNames.find(n => n.toLowerCase().includes('path')) ?? wb.SheetNames[0];
+      const pathRows: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[pathSheetName], { header: 1 });
+
+      // ── Leer hoja Courses ────────────────────────────────────────
+      const courseSheetName = wb.SheetNames.find(n => n.toLowerCase().includes('course') || n.toLowerCase().includes('cours')) ?? wb.SheetNames[1];
+      const courseRows: any[][] = courseSheetName ? XLSX.utils.sheet_to_json(wb.Sheets[courseSheetName], { header: 1 }) : [];
+
+      if (pathRows.length < 2 && courseRows.length < 2) {
+        this.importPathError = 'El fichero no contiene datos en ninguna de las hojas.';
+        this.isImportingPath = false;
+        return;
+      }
+
+      let pathsCreated = 0;
+      let coursesAdded = 0;
+      let reused = 0;
+      let skipped = 0;
+      const errors: string[] = [];
+
+      // Mapa path_name → TrainingPath (existente o nuevo)
+      const pathMap = new Map<string, TrainingPath>();
+
+      // Procesar paths (fila 0 = cabecera)
+      for (const row of pathRows.slice(1)) {
+        const pathName = (row[0] ?? '').toString().trim();
+        if (!pathName) { skipped++; continue; }
+
+        let existing = this.paths.find(p => p.name.trim().toLowerCase() === pathName.toLowerCase());
+        if (!existing) {
+          existing = {
+            id: Math.random().toString(36).slice(2, 9),
+            name: pathName,
+            audience: (row[1] ?? '').toString().trim(),
+            objectives: (row[2] ?? '').toString().trim(),
+            prerequisites: (row[3] ?? '').toString().trim(),
+            items: [],
+            visible: true,
+          };
+          this.paths.push(existing);
+          pathsCreated++;
+        }
+        pathMap.set(pathName.toLowerCase(), existing);
+      }
+
+      // Procesar courses (fila 0 = cabecera)
+      // Columnas: path_name(0), name(1), link(2), description(3), tags(4), location(5)
+      for (const row of courseRows.slice(1)) {
+        const pathName = (row[0] ?? '').toString().trim();
+        const courseName = (row[1] ?? '').toString().trim();
+        if (!courseName) { skipped++; continue; }
+
+        // Buscar el path destino
+        let targetPath = pathMap.get(pathName.toLowerCase());
+        if (!targetPath && pathName) {
+          // Path nombrado en Courses pero no en Paths → crearlo
+          targetPath = this.paths.find(p => p.name.trim().toLowerCase() === pathName.toLowerCase());
+          if (!targetPath) {
+            targetPath = {
+              id: Math.random().toString(36).slice(2, 9),
+              name: pathName,
+              items: [],
+              visible: true,
+            };
+            this.paths.push(targetPath);
+            pathsCreated++;
+          }
+          pathMap.set(pathName.toLowerCase(), targetPath);
+        }
+        if (!targetPath) { skipped++; continue; }
+
+        // Reutilizar curso existente si el nombre ya está en cualquier path
+        let courseItem = this.findExistingCourse(courseName);
+        if (courseItem) {
+          // Añadir referencia (copia con nuevo id) si no está ya en este path
+          const alreadyInPath = targetPath.items.some(
+            i => (i.name || '').trim().toLowerCase() === courseName.toLowerCase()
+          );
+          if (!alreadyInPath) {
+            targetPath.items.push({ ...courseItem, id: Math.random().toString(36).slice(2, 9) });
+            reused++;
+          } else {
+            skipped++;
+          }
+        } else {
+          // Curso nuevo
+          const link = (row[2] ?? '').toString().trim();
+          const description = (row[3] ?? '').toString().trim();
+          const tagsRaw = (row[4] ?? '').toString().trim();
+          const location = (row[5] ?? '').toString().trim();
+          const tags = tagsRaw ? tagsRaw.split(';').map((t: string) => t.trim()).filter(Boolean) : [];
+          const newItem: TrainingItem = {
+            id: Math.random().toString(36).slice(2, 9),
+            name: courseName, link, description, tags, location, visible: true, deleted: false
+          };
+          targetPath.items.push(newItem);
+          coursesAdded++;
+
+          // Enviar al backend (fire-and-forget — errores no bloquean)
+          this.http.post(`${environment.baseUrl}formacion/import`, [{ name: courseName, link, description, tags, location }])
+            .subscribe({ error: (e) => errors.push(`Error guardando "${courseName}" en servidor`) });
+        }
+
+        // Sincronizar el path en this.paths
+        const idx = this.paths.findIndex(p => p.id === targetPath!.id);
+        if (idx !== -1) this.paths[idx] = targetPath!;
+      }
+
+      this.save();
+      this.refreshAllCourses();
+
+      this.importPathResult = { paths: pathsCreated, courses: coursesAdded, reused, skipped, errors };
+      this.isImportingPath = false;
+
+    } catch (e: any) {
+      this.importPathError = 'Error al procesar el fichero: ' + (e?.message ?? e);
+      this.isImportingPath = false;
+    }
+  }
+
+  closeImportPathModal() {
+    this.showImportPathModal = false;
+    this.importPathResult = null;
+    this.importPathError = '';
+  }
+
+  async downloadExcelTemplate() {
+    const XLSX = await import('xlsx');
+    const headers = [['name', 'link', 'description', 'tags (semicolon-separated)', 'location']];
+    const ws = XLSX.utils.aoa_to_sheet(headers);
+    ws['!cols'] = [{ wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Courses');
+    XLSX.writeFile(wb, 'courses-template.xlsx');
+  }
+
+  triggerImportInput() {
+    const input = document.getElementById('excel-import-input') as HTMLInputElement;
+    if (input) input.click();
+  }
+
+  async onExcelFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (!input) return;
+    input.value = '';
+    if (!file) return;
+
+    this.isImporting = true;
+    this.importError = '';
+    this.importResult = null;
+    this.showImportModal = true;
+
+    try {
+      const XLSX = await import('xlsx');
+      const arrayBuffer = await file.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer, { type: 'array' });
+      const wsName = wb.SheetNames[0];
+      const ws = wb.Sheets[wsName];
+      const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+      if (rows.length < 2) {
+        this.importError = 'El fichero no contiene datos (mínimo cabecera + 1 fila).';
+        this.isImporting = false;
+        return;
+      }
+
+      // Cabecera en la fila 0: name(0), link(1), description(2), tags(3), location(4)
+      const dataRows = rows.slice(1);
+      const courses: TrainingItem[] = [];
+      const payloadForBackend: any[] = [];
+
+      for (const row of dataRows) {
+        const name = (row[0] ?? '').toString().trim();
+        if (!name) continue;
+        const link = (row[1] ?? '').toString().trim();
+        const description = (row[2] ?? '').toString().trim();
+        const tagsRaw = (row[3] ?? '').toString().trim();
+        const location = (row[4] ?? '').toString().trim();
+        const tags = tagsRaw ? tagsRaw.split(';').map((t: string) => t.trim()).filter(Boolean) : [];
+
+        courses.push({
+          id: Math.random().toString(36).slice(2, 9),
+          name, link, description, tags, location, visible: true, deleted: false
+        });
+        payloadForBackend.push({ name, link, description, tags, location });
+      }
+
+      if (courses.length === 0) {
+        this.importError = 'No se encontraron filas con datos válidos (la columna "name" es obligatoria).';
+        this.isImporting = false;
+        return;
+      }
+
+      // Guardar en localStorage (path "Importados")
+      const IMPORT_PATH_NAME = 'Importados';
+      let importPath = this.paths.find(p => p.name === IMPORT_PATH_NAME);
+      if (!importPath) {
+        importPath = {
+          id: Math.random().toString(36).slice(2, 9),
+          name: IMPORT_PATH_NAME,
+          items: [],
+          visible: true,
+        };
+        this.paths.push(importPath);
+      }
+      importPath.items.push(...courses);
+      this.save();
+      this.refreshAllCourses();
+
+      // Enviar al backend
+      this.http.post<{ imported: number; skipped: number; errors: string[] }>(
+        `${environment.baseUrl}formacion/import`,
+        payloadForBackend
+      ).subscribe({
+        next: (res) => {
+          this.importResult = res;
+          this.isImporting = false;
+        },
+        error: () => {
+          // Aunque el back falle, los cursos ya están en localStorage
+          this.importResult = { imported: courses.length, skipped: 0, errors: ['No se pudo contactar con el servidor, los cursos se guardaron localmente.'] };
+          this.isImporting = false;
+        }
+      });
+
+    } catch (e: any) {
+      this.importError = 'Error al procesar el fichero: ' + (e?.message ?? e);
+      this.isImporting = false;
+    }
+  }
+
+  closeImportModal() {
+    this.showImportModal = false;
+    this.importResult = null;
+    this.importError = '';
   }
 }

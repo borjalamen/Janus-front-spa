@@ -29,14 +29,41 @@
     <div class="left" *ngIf="isTab('paths')">
       <div class="left-header">
         <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-        <button
-          class="jenkins-add-btn"
-          *ngIf="!isConsultor"
-          (click)="newPath()"
-        >
-          <mat-icon inline="true">add</mat-icon>
-          <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
-        </button>
+        <div class="all-courses-actions">
+          <button
+            class="jenkins-add-btn"
+            *ngIf="!isConsultor"
+            (click)="newPath()"
+          >
+            <mat-icon inline="true">add</mat-icon>
+            <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
+          </button>
+          <button
+            *ngIf="!isConsultor"
+            class="import-excel-btn"
+            (click)="triggerImportPathInput()"
+            title="Importar training paths desde Excel"
+          >
+            <mat-icon inline="true">upload_file</mat-icon>
+            <span>Importar Excel</span>
+          </button>
+          <button
+            *ngIf="!isConsultor"
+            class="template-btn"
+            (click)="downloadPathExcelTemplate()"
+            title="Descargar plantilla Excel de training paths"
+          >
+            <mat-icon inline="true">download</mat-icon>
+            <span>Plantilla</span>
+          </button>
+          <input
+            id="excel-import-path-input"
+            type="file"
+            accept=".xlsx,.xls"
+            style="display:none"
+            (change)="onPathExcelFileSelected($event)"
+          />
+        </div>
       </div>
 
       <ul class="paths-list">
@@ -180,14 +207,41 @@
       <div class="left" style="width: 100%">
         <div class="left-header all-courses-header">
           <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
-          <button
-            *ngIf="!isConsultor"
-            class="jenkins-add-btn"
-            (click)="addCourseFromAll()"
-          >
-            <mat-icon inline="true">add</mat-icon>
-            <span>{{ 'TRAINING.NEW_COURSE' | translate }}</span>
-          </button>
+          <div class="all-courses-actions">
+            <button
+              *ngIf="!isConsultor"
+              class="jenkins-add-btn"
+              (click)="addCourseFromAll()"
+            >
+              <mat-icon inline="true">add</mat-icon>
+              <span>{{ 'TRAINING.NEW_COURSE' | translate }}</span>
+            </button>
+            <button
+              *ngIf="!isConsultor"
+              class="import-excel-btn"
+              (click)="triggerImportInput()"
+              title="Importar cursos desde Excel"
+            >
+              <mat-icon inline="true">upload_file</mat-icon>
+              <span>Importar Excel</span>
+            </button>
+            <button
+              *ngIf="!isConsultor"
+              class="template-btn"
+              (click)="downloadExcelTemplate()"
+              title="Descargar plantilla Excel vacía"
+            >
+              <mat-icon inline="true">download</mat-icon>
+              <span>Plantilla</span>
+            </button>
+            <input
+              id="excel-import-input"
+              type="file"
+              accept=".xlsx,.xls"
+              style="display:none"
+              (change)="onExcelFileSelected($event)"
+            />
+          </div>
         </div>
         <ul class="paths-list">
           <li *ngFor="let c of filteredAllCourses">
@@ -409,6 +463,110 @@
     <div class="modal-actions" style="justify-content: center">
       <button class="cancelar-btn" (click)="confirmCancel()">✗</button>
       <button class="guardar-btn" (click)="confirmOk()">✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTACIÓN EXCEL — TRAINING PATHS -->
+<div class="modal-backdrop" *ngIf="showImportPathModal" (click)="closeImportPathModal()">
+  <div class="modal import-result-modal" (click)="$event.stopPropagation()">
+    <div class="import-modal-header">
+      <mat-icon>account_tree</mat-icon>
+      <h3>Importación de Training Paths</h3>
+    </div>
+
+    <!-- Cargando -->
+    <div class="import-loading" *ngIf="isImportingPath">
+      <div class="import-spinner"></div>
+      <span>Procesando fichero Excel...</span>
+    </div>
+
+    <!-- Error de parseo -->
+    <div class="import-parse-error" *ngIf="!isImportingPath && importPathError">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ importPathError }}</span>
+    </div>
+
+    <!-- Resultado OK -->
+    <div *ngIf="!isImportingPath && !importPathError && importPathResult" class="import-result-body">
+      <div class="import-stat ok">
+        <mat-icon>account_tree</mat-icon>
+        <span>Paths creados: <strong>{{ importPathResult.paths }}</strong></span>
+      </div>
+      <div class="import-stat ok">
+        <mat-icon>check_circle</mat-icon>
+        <span>Cursos nuevos añadidos: <strong>{{ importPathResult.courses }}</strong></span>
+      </div>
+      <div class="import-stat skip" *ngIf="importPathResult.reused > 0">
+        <mat-icon>link</mat-icon>
+        <span>Cursos existentes reutilizados: <strong>{{ importPathResult.reused }}</strong></span>
+      </div>
+      <div class="import-stat skip" *ngIf="importPathResult.skipped > 0">
+        <mat-icon>skip_next</mat-icon>
+        <span>Filas omitidas: <strong>{{ importPathResult.skipped }}</strong></span>
+      </div>
+      <div class="import-stat err" *ngIf="importPathResult.errors.length">
+        <mat-icon>warning</mat-icon>
+        <span>Avisos del servidor:</span>
+        <ul class="import-errors-list">
+          <li *ngFor="let e of importPathResult.errors">{{ e }}</li>
+        </ul>
+      </div>
+      <p class="import-note">
+        El Excel debe tener dos hojas: <strong>Paths</strong> (path_name, audience, objectives, prerequisites) y <strong>Courses</strong> (path_name, name, link, description, tags, location).
+      </p>
+    </div>
+
+    <div class="modal-actions" style="justify-content: center; margin-top: 16px">
+      <button class="guardar-btn" (click)="closeImportPathModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTACIÓN EXCEL — COURSES -->
+<div class="modal-backdrop" *ngIf="showImportModal" (click)="closeImportModal()">
+  <div class="modal import-result-modal" (click)="$event.stopPropagation()">
+    <div class="import-modal-header">
+      <mat-icon>upload_file</mat-icon>
+      <h3>Importación de cursos</h3>
+    </div>
+
+    <!-- Cargando -->
+    <div class="import-loading" *ngIf="isImporting">
+      <div class="import-spinner"></div>
+      <span>Procesando fichero Excel...</span>
+    </div>
+
+    <!-- Error de parseo -->
+    <div class="import-parse-error" *ngIf="!isImporting && importError">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ importError }}</span>
+    </div>
+
+    <!-- Resultado OK -->
+    <div *ngIf="!isImporting && !importError && importResult" class="import-result-body">
+      <div class="import-stat ok">
+        <mat-icon>check_circle</mat-icon>
+        <span>Importados correctamente: <strong>{{ importResult.imported }}</strong></span>
+      </div>
+      <div class="import-stat skip" *ngIf="importResult.skipped > 0">
+        <mat-icon>skip_next</mat-icon>
+        <span>Filas omitidas (sin nombre): <strong>{{ importResult.skipped }}</strong></span>
+      </div>
+      <div class="import-stat err" *ngIf="importResult.errors.length">
+        <mat-icon>warning</mat-icon>
+        <span>Errores del servidor:</span>
+        <ul class="import-errors-list">
+          <li *ngFor="let e of importResult.errors">{{ e }}</li>
+        </ul>
+      </div>
+      <p class="import-note">
+        Los cursos importados están disponibles en el path <strong>"Importados"</strong> y en la vista "All courses".
+      </p>
+    </div>
+
+    <div class="modal-actions" style="justify-content: center; margin-top: 16px">
+      <button class="guardar-btn" (click)="closeImportModal()">Cerrar</button>
     </div>
   </div>
 </div>

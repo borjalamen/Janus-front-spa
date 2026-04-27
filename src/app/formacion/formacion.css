@@ -133,9 +133,11 @@
 
 .left-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 14px;
 }
 
@@ -658,4 +660,184 @@
   border-color: #ffd54f !important;
   transform: translateY(-6px) scale(1.02) !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ===== ALL COURSES HEADER ACTIONS ===== */
+.all-courses-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Botón Importar Excel */
+.import-excel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(23, 162, 184, 0.6);
+  background: rgba(23, 162, 184, 0.08);
+  color: #17a2b8;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.import-excel-btn:hover {
+  background: #17a2b8;
+  color: #fff;
+  border-color: #17a2b8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(23, 162, 184, 0.45);
+}
+
+/* Botón Plantilla */
+.template-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px dashed rgba(251, 192, 45, 0.6);
+  background: rgba(251, 192, 45, 0.06);
+  color: #FBC02D;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.template-btn:hover {
+  background: #FBC02D;
+  color: #111;
+  border-style: solid;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(251, 192, 45, 0.35);
+}
+
+/* ===== IMPORT RESULT MODAL ===== */
+.import-result-modal {
+  min-width: 420px;
+  max-width: 560px;
+}
+
+.import-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: #17a2b8;
+}
+
+.import-modal-header mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.import-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #e0e0e0;
+}
+
+/* Spinner de carga */
+.import-loading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 0;
+  color: #b0bec5;
+  font-size: 0.95rem;
+}
+
+.import-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(23, 162, 184, 0.25);
+  border-top-color: #17a2b8;
+  border-radius: 50%;
+  animation: importSpin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes importSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error de parseo */
+.import-parse-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid rgba(229, 57, 53, 0.35);
+  color: #ff8a80;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.import-parse-error mat-icon {
+  color: #ef5350;
+  flex-shrink: 0;
+}
+
+/* Stats de resultado */
+.import-result-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.import-stat {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+
+.import-stat.ok {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #a5d6a7;
+}
+
+.import-stat.ok mat-icon { color: #66bb6a; flex-shrink: 0; }
+
+.import-stat.skip {
+  background: rgba(251, 192, 45, 0.08);
+  border: 1px solid rgba(251, 192, 45, 0.25);
+  color: #ffe082;
+}
+
+.import-stat.skip mat-icon { color: #FBC02D; flex-shrink: 0; }
+
+.import-stat.err {
+  background: rgba(229, 57, 53, 0.08);
+  border: 1px solid rgba(229, 57, 53, 0.25);
+  color: #ffb4a6;
+  flex-direction: column;
+}
+
+.import-stat.err mat-icon { color: #ef5350; }
+
+.import-errors-list {
+  margin: 6px 0 0 24px;
+  padding: 0;
+  font-size: 0.85rem;
+  color: #ff8a80;
+}
+
+.import-note {
+  font-size: 0.85rem;
+  color: #78909c;
+  margin: 4px 0 0;
+  line-height: 1.5;
 }
