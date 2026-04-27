@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LiveEstimationService, LiveSession, LiveParticipant, LiveAcceptedTask } from './live-estimation.service';
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -61,7 +62,8 @@ interface SavedEstimationRecord {
     MatListModule,
     TranslateModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
   ],
 })
 export class EstimacionComponent implements OnInit, OnDestroy {
@@ -817,6 +819,11 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     this.applySavedEstimationToForm(normalized);
   }
 
+  onTaskDrop(event: CdkDragDrop<Task[]>) {
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+    this.saveFormDraft();
+  }
+
   removeTask(id: string) {
     this.tasks = this.tasks.filter(t => t.id !== id);
     this.saveFormDraft();
@@ -897,15 +904,15 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     rows.push(`"${this.escapeCsv('Notes')}","${this.escapeCsv(this.notes)}"`);
     rows.push('');
 
-    const header = ['Tarea', ...this.weeks.map(w => `Semana ${w}`), 'Total'];
+    const header = ['#', 'Tarea', ...this.weeks.map(w => `Semana ${w}`), 'Total'];
     rows.push(header.map(h => `"${this.escapeCsv(h)}"`).join(','));
 
-    this.tasks.forEach(t => {
-      const r = [this.escapeCsv(t.title), ...t.estimates.map(e => String(e)), String(this.totalForTask(t))];
+    this.tasks.forEach((t, idx) => {
+      const r = [String(idx + 1), this.escapeCsv(t.title), ...t.estimates.map(e => String(e)), String(this.totalForTask(t))];
       rows.push(r.map(c => `"${this.escapeCsv(c)}"`).join(','));
     });
 
-    const totals = ['Total', ...this.weeks.map((_, i) => String(this.totalForWeek(i))), String(this.grandTotal())];
+    const totals = ['', 'Total', ...this.weeks.map((_, i) => String(this.totalForWeek(i))), String(this.grandTotal())];
     rows.push(totals.map(c => `"${this.escapeCsv(c)}"`).join(','));
 
     const csv = rows.join('\n');
@@ -965,15 +972,15 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     html += `<strong>Requester:</strong> ${this.escapeHtml(this.requester)} (${this.escapeHtml(this.requesterEmail)})</p>`;
     if (this.notes) html += `<p><strong>Notes:</strong><br/>${this.escapeHtml(this.notes).replace(/\n/g,'<br/>')}</p>`;
     html += '<table><thead><tr>';
-    html += `<th>Task</th>`;
+    html += `<th>#</th><th>Task</th>`;
     this.weeks.forEach(w => html += `<th>Week ${w}</th>`);
     html += `<th>Total</th></tr></thead><tbody>`;
-    this.tasks.forEach(t => {
-      html += `<tr><td>${this.escapeHtml(t.title)}</td>`;
+    this.tasks.forEach((t, idx) => {
+      html += `<tr><td>${idx + 1}</td><td>${this.escapeHtml(t.title)}</td>`;
       t.estimates.forEach(e => html += `<td>${e}</td>`);
       html += `<td>${this.totalForTask(t)}</td></tr>`;
     });
-    html += `</tbody><tfoot><tr><td><strong>Total</strong></td>`;
+    html += `</tbody><tfoot><tr><td></td><td><strong>Total</strong></td>`;
     this.weeks.forEach((_, i) => html += `<td><strong>${this.totalForWeek(i)}</strong></td>`);
     html += `<td><strong>${this.grandTotal()}</strong></td></tr></tfoot></table>`;
     html += '</body></html>';
@@ -1027,26 +1034,30 @@ export class EstimacionComponent implements OnInit, OnDestroy {
       y += split.length * lineHeight + 6;
     }
 
-    const colWidths = [220, ...this.weeks.map(() => 60), 60];
+    const colWidths = [30, 200, ...this.weeks.map(() => 60), 60];
     let x = margin;
     doc.setFillColor(22, 63, 107);
     doc.setTextColor(255, 255, 255);
     doc.rect(x, y, colWidths.reduce((a,b)=>a+b,0), 18, 'F');
     doc.setFontSize(11);
     let cx = x + 6;
-    doc.text('Task', cx, y + 13);
+    doc.text('#', cx, y + 13);
     cx += colWidths[0];
-    this.weeks.forEach((w, i) => { doc.text(`W${w}`, cx + 6, y + 13); cx += colWidths[i+1]; });
+    doc.text('Task', cx, y + 13);
+    cx += colWidths[1];
+    this.weeks.forEach((w, i) => { doc.text(`W${w}`, cx + 6, y + 13); cx += colWidths[i+2]; });
     doc.text('Total', cx + 6, y + 13);
     y += 22;
     doc.setTextColor(0,0,0);
 
-    this.tasks.forEach(t => {
+    this.tasks.forEach((t, taskIdx) => {
       if (y > 760) { doc.addPage(); y = 40; }
       let cx2 = x + 6;
-      doc.text(t.title, cx2, y + 12);
+      doc.text(String(taskIdx + 1), cx2, y + 12);
       cx2 += colWidths[0];
-      t.estimates.forEach((e, idx) => { doc.text(String(e), cx2 + 4, y + 12); cx2 += colWidths[idx+1]; });
+      doc.text(t.title, cx2, y + 12);
+      cx2 += colWidths[1];
+      t.estimates.forEach((e, idx) => { doc.text(String(e), cx2 + 4, y + 12); cx2 += colWidths[idx+2]; });
       doc.text(String(this.totalForTask(t)), cx2 + 4, y + 12);
       y += 18;
     });
@@ -1054,9 +1065,9 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     y += 8;
     if (y > 760) { doc.addPage(); y = 40; }
     doc.setFontSize(11);
-    doc.text('Total', x + 6, y + 12);
-    let cx3 = x + colWidths[0];
-    this.weeks.forEach((_, i) => { doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 12); cx3 += colWidths[i+1]; });
+    doc.text('Total', x + colWidths[0] + 6, y + 12);
+    let cx3 = x + colWidths[0] + colWidths[1];
+    this.weeks.forEach((_, i) => { doc.text(String(this.totalForWeek(i)), cx3 + 6, y + 12); cx3 += colWidths[i+2]; });
     doc.text(String(this.grandTotal()), cx3 + 6, y + 12);
 
     // Add branding image and footer on every page

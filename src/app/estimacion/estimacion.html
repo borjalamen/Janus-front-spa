@@ -209,6 +209,7 @@
         <table class="est-table">
           <thead>
             <tr>
+              <th class="col-order">#</th>
               <th>{{ 'ESTIMATION.TASK' | translate }}</th>
               <th *ngFor="let w of weeks; let i = index">
                 {{ 'ESTIMATION.WEEK' | translate }} {{ w }}
@@ -219,8 +220,17 @@
             </tr>
           </thead>
 
-          <tbody>
-            <tr *ngFor="let t of tasks">
+          <tbody cdkDropList (cdkDropListDropped)="onTaskDrop($event)">
+            <tr *ngFor="let t of tasks; let taskIdx = index" cdkDrag>
+              <td class="col-order">
+                <span class="drag-handle" cdkDragHandle title="Arrastrar para reordenar">
+                  <mat-icon>drag_indicator</mat-icon>
+                </span>
+                <span class="task-order-num">{{ taskIdx + 1 }}</span>
+                <tr *cdkDragPlaceholder class="drag-placeholder">
+                  <td [attr.colspan]="weeks.length + 3"></td>
+                </tr>
+              </td>
               <td class="task-title">{{ t.title }}</td>
               <td *ngFor="let w of weeks; let i = index">
                 <input
@@ -245,11 +255,20 @@
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
+              <table *cdkDragPreview class="est-drag-preview">
+                <tr>
+                  <td class="col-order">{{ taskIdx + 1 }}</td>
+                  <td class="task-title">{{ t.title }}</td>
+                  <td *ngFor="let e of t.estimates">{{ e }}</td>
+                  <td>{{ totalForTask(t) | number:'1.2-2' }}</td>
+                </tr>
+              </table>
             </tr>
           </tbody>
 
           <tfoot>
             <tr>
+              <td></td>
               <td><strong>{{ 'ESTIMATION.TOTAL' | translate }}</strong></td>
               <td *ngFor="let w of weeks; let i = index">
                 <strong>{{ totalForWeek(i) | number:'1.2-2' }}</strong>
