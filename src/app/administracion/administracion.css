@@ -721,12 +721,39 @@ body {
   color: #eee;
   padding: 22px;
   border-radius: 8px;
+  position: relative;
   width: 500px;
   max-width: 90vw;
   max-height: 80vh;
   overflow: auto;
   box-shadow: 0 0 30px rgba(251, 192, 45, 0.4), 0 0 50px rgba(251, 192, 45, 0.2);
   border: 2px solid #FBC02D;
+}
+
+.compact-popup {
+  width: 420px;
+}
+
+.finalize-popup {
+  width: 620px;
+  max-width: 92vw;
+}
+
+.finalize-popup .input-field textarea {
+  min-height: 180px;
+}
+
+.popup-message {
+  color: #cfd8dc;
+  margin: 0 0 8px 0;
+  line-height: 1.45;
+}
+
+.char-counter {
+  text-align: right;
+  color: #8a9096;
+  font-size: 0.82rem;
+  margin-top: -4px;
 }
 
 .form-content {
@@ -928,6 +955,14 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
               inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   background: linear-gradient(145deg, #555, #333) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-emoji:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.35);
 }
 
 .btn-emoji:focus {
@@ -1390,6 +1425,17 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 .close-btn:hover {
   background: rgba(255,255,255,0.1);
   color: #fff;
+}
+
+.popup-close {
+  top: 10px;
+  right: 10px;
+}
+
+.popup-close mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .cv-body {

@@ -206,13 +206,22 @@
 }
 
 .csv-image-btn {
-  padding: 10px;
+  padding: 14px;
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
   border: 0;
 }
 
+.csv-image-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px) scale(1.04);
+}
+
 .csv-export-image {
-  width: 32px;
-  height: 32px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
   display: block;
   pointer-events: none;
@@ -516,99 +525,82 @@
 }
 
 /* Botó de la Creu (Vermell) */
-.cancelar-btn {
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 12px !important;
-  background: linear-gradient(
-    145deg,
-    #ff5a5a,
-    #e53935
-  ) !important; /* Gradient per donar llum */
-  color: #ffffff !important;
-  font-size: 28px !important;
-  font-weight: bold !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: none !important;
-  cursor: pointer !important;
-  /* Ombra externa (profunditat) + Ombra interna (volum/gruix) */
-  box-shadow:
-    0 6px 12px rgba(0, 0, 0, 0.4),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.3),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.2) !important;
-  transition: all 0.2s ease !important;
-}
-
-/* Botó del Tick (Verd) */
+.cancelar-btn,
 .guardar-btn {
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 12px !important;
-  background: linear-gradient(
-    145deg,
-    #66bb6a,
-    #388e3c
-  ) !important; /* Verd vibrant */
-  color: #ffffff !important;
-  font-size: 28px !important;
-  font-weight: bold !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: none !important;
-  cursor: pointer !important;
-  /* Mateix joc d'ombres que el vermell */
-  box-shadow:
-    0 6px 12px rgba(0, 0, 0, 0.4),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.4),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.2) !important;
-  transition: all 0.2s ease !important;
-}
-
-.cancelar-btn:hover {
-  transform: scale(1.08) translateY(-1px) !important;
-  filter: brightness(1.05) !important;
-}
-
-.guardar-btn:hover {
-  transform: scale(1.12) !important;
-  filter: brightness(1.15) !important;
+  background: transparent !important;
+  color: #999 !important;
+  border: 0 !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: none;
 }
 
 .cancelar-btn:hover,
 .guardar-btn:hover {
-  transform: scale(1.08) translateY(-2px) !important;
-  filter: brightness(1.1) !important;
+  transform: scale(1.15) translateY(-2px);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #555, #333) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Quan el prems (clic) */
+.cancelar-btn:focus,
+.guardar-btn:focus {
+  outline: 2px solid rgba(30, 136, 229, 0.35) !important;
+}
+
 .cancelar-btn:active,
 .guardar-btn:active {
-  transform: scale(0.95) !important;
-  /* L'ombra interna canvia per fer efecte de "premut" */
-  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.5) !important;
+  transform: scale(0.95);
 }
 
-/* Quan el botó guardar està deshabilitat */
+.guardar-btn {
+  color: #4caf50 !important;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(145deg, #2e9e50, #1e7e3c) !important;
+  color: #fff !important;
+  box-shadow:
+    0 6px 16px rgba(76, 175, 80, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(76, 175, 80, 0.5) !important;
+  border: 1px solid rgba(76, 175, 80, 0.5) !important;
+}
+
 .guardar-btn:disabled {
-  background: #444 !important;
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
+  opacity: 0.45;
+  cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.35);
 }
 
-.cancelar-btn *,
-.guardar-btn *,
-.cancelar-btn::before,
-.cancelar-btn::after,
-.guardar-btn::before,
-.guardar-btn::after {
-  color: inherit !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
+.cancelar-btn {
+  color: #e53935 !important;
+}
+
+.cancelar-btn:hover {
+  background: linear-gradient(145deg, #e53935, #c62828) !important;
+  color: #fff !important;
+  box-shadow:
+    0 6px 16px rgba(229, 57, 53, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(229, 57, 53, 0.4) !important;
+  border: 1px solid rgba(229, 57, 53, 0.5) !important;
 }
 
 .toast {

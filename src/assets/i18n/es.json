@@ -1145,6 +1145,7 @@
     "STATUS_REJECTED": "Rechazada",
     "INITIATED": "Iniciadas",
     "STATUS_INITIATED": "Iniciada",
+    "STATUS_FINALIZED": "Finalizada",
     "NO_TASK_REQUESTS": "No hay peticiones de tarea para revisar."
   },
   "PETICION": {

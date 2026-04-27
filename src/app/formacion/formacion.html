@@ -254,7 +254,7 @@
         class="cancelar-btn"
         (click)="showCourseSelector = false"
       >
-        ✖
+        ✗
       </button>
       <button
         type="button"
@@ -262,7 +262,7 @@
         (click)="confirmAddSelectedCourse()"
         [disabled]="!selectedCandidate"
       >
-        ✔
+        ✓
       </button>
     </div>
   </div>
@@ -314,7 +314,7 @@
         class="cancelar-btn"
         (click)="showPathModal = false"
       >
-        ✖
+        ✗
       </button>
       <button
         type="button"
@@ -322,7 +322,7 @@
         *ngIf="!editingPath.readonly"
         (click)="savePath()"
       >
-        ✔
+        ✓
       </button>
     </div>
   </div>
@@ -386,7 +386,7 @@
         class="cancelar-btn"
         (click)="showItemModal = false"
       >
-        ✖
+        ✗
       </button>
       <button
         type="button"
@@ -394,7 +394,7 @@
         *ngIf="!editingItem.readonly"
         (click)="saveItem()"
       >
-        ✔
+        ✓
       </button>
     </div>
   </div>
@@ -407,8 +407,8 @@
       {{ confirmMessage }}
     </div>
     <div class="modal-actions" style="justify-content: center">
-      <button class="cancelar-btn" (click)="confirmCancel()">✖</button>
-      <button class="guardar-btn" (click)="confirmOk()">✔</button>
+      <button class="cancelar-btn" (click)="confirmCancel()">✗</button>
+      <button class="guardar-btn" (click)="confirmOk()">✓</button>
     </div>
   </div>
 </div>

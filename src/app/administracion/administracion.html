@@ -583,6 +583,7 @@
 
             <button
               class="btn-emoji pdf"
+              *ngIf="puedeDescargarPdfTarea(tarea.estado)"
               (click)="descargarPDFTarea(tarea)"
               title="Descargar PDF"
             >
@@ -1244,6 +1245,69 @@
     </div>
   </div>
 </div>
+
+<!-- Popup aviso CV no disponible -->
+<div class="modal-overlay" *ngIf="mostrarPopupSinCv">
+  <div class="auth-card compact-popup">
+    <button class="close-btn popup-close" (click)="cerrarPopupSinCv()" title="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="form-title">CV no disponible</h2>
+    <hr class="divider" />
+    <div class="form-content">
+      <p class="popup-message">{{ mensajePopupSinCv }}</p>
+      <div class="action-buttons">
+        <button class="btn-emoji cancel" (click)="cerrarPopupSinCv()" title="Cerrar">
+          ✗
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup finalizar petición con comentario -->
+<div class="modal-overlay" *ngIf="mostrarPopupFinalizarTarea">
+  <div class="auth-card finalize-popup">
+    <button class="close-btn popup-close" (click)="cerrarPopupFinalizarTarea()" title="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="form-title">Finalizar petición</h2>
+    <hr class="divider" />
+
+    <div class="form-content">
+      <p class="popup-message">
+        Escribe el comentario final que aparecerá en el PDF.
+      </p>
+
+      <div class="input-field">
+        <label>Comentario</label>
+        <textarea
+          [(ngModel)]="comentarioFinalizacion"
+          rows="7"
+          maxlength="2000"
+          placeholder="Escribe aquí el comentario de finalización"
+        ></textarea>
+      </div>
+
+      <div class="char-counter">{{ comentarioFinalizacion.length }}/2000</div>
+
+      <div class="action-buttons">
+        <button class="btn-emoji cancel" (click)="cerrarPopupFinalizarTarea()" title="Cancelar">
+          ✗
+        </button>
+        <button
+          class="btn-emoji confirm"
+          (click)="confirmarFinalizarTarea()"
+          [disabled]="!comentarioFinalizacion.trim()"
+          title="Finalizar"
+        >
+          ✓
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast notification -->
 <div class="app-toast" *ngIf="toastMsg" [class.toast-err]="!toastOk">
   {{ toastMsg }}

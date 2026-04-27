@@ -90,6 +90,7 @@ interface PeticionTareaAdmin {
   asignado: string;
   deadline: string;
   comentario: string;
+  comentarioAdmin: string;
   estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA';
   attachments: string[];
 }
@@ -160,6 +161,10 @@ export class AdministracionComponent implements OnInit {
   toastOk = true;
   private _toastTimer: any = null;
 
+  // Popup sin CV
+  mostrarPopupSinCv = false;
+  mensajePopupSinCv = "";
+
   // Popup credenciales (usado al aceptar una solicitud)
   mostrarPopupCredenciales = false;
   credencialesNuevas: { username: string; password: string } | null = null;
@@ -178,6 +183,9 @@ export class AdministracionComponent implements OnInit {
   peticionsTareasFiltradas: PeticionTareaAdmin[] = [];
   filtroEstadoTareas: 'TODAS' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA' = 'TODAS';
   searchTareas = '';
+  mostrarPopupFinalizarTarea = false;
+  tareaPendienteFinalizar: PeticionTareaAdmin | null = null;
+  comentarioFinalizacion = "";
 
   // Paginación tareas
   paginaActualTareas = 1;
@@ -639,7 +647,8 @@ export class AdministracionComponent implements OnInit {
         p.projectCode.toLowerCase().includes(t) ||
         p.jiraTask.toLowerCase().includes(t) ||
         p.asignado.toLowerCase().includes(t) ||
-        p.comentario.toLowerCase().includes(t),
+        p.comentario.toLowerCase().includes(t) ||
+        p.comentarioAdmin.toLowerCase().includes(t),
     );
     if (this.filtroEstadoTareas !== "TODAS") {
       lista = lista.filter((p) => p.estado === this.filtroEstadoTareas);
@@ -719,10 +728,33 @@ export class AdministracionComponent implements OnInit {
   }
 
   finalizarTarea(tarea: PeticionTareaAdmin) {
+    this.tareaPendienteFinalizar = tarea;
+    this.comentarioFinalizacion = "";
+    this.mostrarPopupFinalizarTarea = true;
+  }
+
+  cerrarPopupFinalizarTarea() {
+    this.mostrarPopupFinalizarTarea = false;
+    this.tareaPendienteFinalizar = null;
+    this.comentarioFinalizacion = "";
+  }
+
+  confirmarFinalizarTarea() {
+    if (!this.tareaPendienteFinalizar) {
+      return;
+    }
+
+    const comentario = this.comentarioFinalizacion.trim();
+    if (!comentario) {
+      this.showToast("⚠️ Debes escribir un comentario para finalizar la petición", false);
+      return;
+    }
+
+    const tarea = this.tareaPendienteFinalizar;
     this.http
       .put<PeticionTareaBackend>(
         `${this.peticionsTareasUrl}/${tarea.id}/finish`,
-        {},
+        { adminComment: comentario },
       )
       .subscribe({
         next: (updated) => {
@@ -730,6 +762,7 @@ export class AdministracionComponent implements OnInit {
           const idx = this.peticionsTareas.findIndex((p) => p.id === tarea.id);
           if (idx !== -1) this.peticionsTareas[idx] = mapped;
           this.aplicarFiltrosTareas();
+          this.cerrarPopupFinalizarTarea();
           this.showToast("✅ Petición finalizada");
         },
         error: (err) => {
@@ -783,6 +816,7 @@ export class AdministracionComponent implements OnInit {
       asignado: p.devopsAssignee?.trim() || "Cualquiera",
       deadline: this.formatFecha(p.deadline),
       comentario: p.comments?.trim() || "",
+      comentarioAdmin: p.adminComment?.trim() || "",
       estado: this.normalizeEstadoTarea(p.estado),
       attachments: p.attachments ?? [],
     };
@@ -838,14 +872,29 @@ export class AdministracionComponent implements OnInit {
   }
 
   getStatusTranslation(estado: string): string {
+    const normalized = this.normalizeEstadoComun(estado);
     const statusMap: { [key: string]: string } = {
       'PENDIENTE': 'ADMIN.STATUS_PENDING',
       'APROBADA': 'ADMIN.STATUS_APPROVED',
       'RECHAZADA': 'ADMIN.STATUS_REJECTED',
       'INICIADA': 'ADMIN.STATUS_INITIATED',
-      'FINALIZADA': 'FINALIZADA'
+      'FINALIZADA': 'ADMIN.STATUS_FINALIZED'
     };
-    return statusMap[estado] || estado;
+    return statusMap[normalized] || 'ADMIN.STATUS_PENDING';
+  }
+
+  private getStatusLabelForPdf(estado: string): string {
+    const statusKey = this.getStatusTranslation(estado);
+    return this.translate.instant(statusKey);
+  }
+
+  puedeDescargarPdfTarea(estado: string): boolean {
+    const normalized = this.normalizeEstadoTarea(estado);
+    return (
+      normalized === "PENDIENTE" ||
+      normalized === "APROBADA" ||
+      normalized === "FINALIZADA"
+    );
   }
 
   aprobarPeticion(peticion: PeticionAdmin) {
@@ -943,26 +992,67 @@ export class AdministracionComponent implements OnInit {
     };
   }
 
-  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
-  const normalized = (estado || 'PENDIENTE').toUpperCase();
-  if (normalized === 'APROBADA' || normalized === 'RECHAZADA' || normalized === 'INICIADA') {
-    return normalized;
-  }
-  return 'PENDIENTE';
-}
+  private normalizeEstadoComun(estado?: string):
+    | 'PENDIENTE'
+    | 'APROBADA'
+    | 'RECHAZADA'
+    | 'INICIADA'
+    | 'FINALIZADA' {
+    const normalized = String(estado || '').toUpperCase().trim();
 
-  private normalizeEstadoTarea(estado?: string): PeticionTareaAdmin['estado'] {
-    const normalized = (estado || 'PENDIENTE').toUpperCase();
+    if (
+      normalized === 'FINALIZADA' ||
+      normalized === 'FINALIZED' ||
+      normalized === 'ADMIN.STATUS_FINALIZED'
+    ) {
+      return 'FINALIZADA';
+    }
+    if (
+      normalized === 'INICIADA' ||
+      normalized === 'INITIATED' ||
+      normalized === 'ADMIN.STATUS_INITIATED'
+    ) {
+      return 'INICIADA';
+    }
+    if (
+      normalized === 'APROBADA' ||
+      normalized === 'APPROVED' ||
+      normalized === 'ADMIN.STATUS_APPROVED'
+    ) {
+      return 'APROBADA';
+    }
+    if (
+      normalized === 'RECHAZADA' ||
+      normalized === 'REJECTED' ||
+      normalized === 'ADMIN.STATUS_REJECTED'
+    ) {
+      return 'RECHAZADA';
+    }
     if (
       normalized === 'PENDIENTE' ||
+      normalized === 'PENDING' ||
+      normalized === 'ADMIN.STATUS_PENDING'
+    ) {
+      return 'PENDIENTE';
+    }
+
+    return 'PENDIENTE';
+  }
+
+  private normalizeEstado(estado?: string): PeticionAdmin['estado'] {
+    const normalized = this.normalizeEstadoComun(estado);
+    if (
       normalized === 'APROBADA' ||
       normalized === 'RECHAZADA' ||
-      normalized === 'INICIADA' ||
-      normalized === 'FINALIZADA'
+      normalized === 'INICIADA'
     ) {
       return normalized;
     }
     return 'PENDIENTE';
+  }
+
+  private normalizeEstadoTarea(estado?: string): PeticionTareaAdmin['estado'] {
+    return this.normalizeEstadoComun(estado);
   }
 
   private formatFecha(value?: string): string {
@@ -2003,7 +2093,7 @@ export class AdministracionComponent implements OnInit {
     const username = usuari.username?.trim();
 
     if (!usuari.cvPath || !username) {
-      this.showToast("No tiene CV", false);
+      this.abrirPopupSinCv(usuari);
       return;
     }
 
@@ -2078,6 +2168,17 @@ export class AdministracionComponent implements OnInit {
     this.mostrarPopupPerfil = true;
   }
 
+  abrirPopupSinCv(usuari: UsuariBackend) {
+    const nombre = usuari.fullName?.trim() || usuari.username?.trim() || "Este usuario";
+    this.mensajePopupSinCv = `${nombre} no tiene CV disponible.`;
+    this.mostrarPopupSinCv = true;
+  }
+
+  cerrarPopupSinCv() {
+    this.mostrarPopupSinCv = false;
+    this.mensajePopupSinCv = "";
+  }
+
   cerrarPopupPerfil() {
     this.mostrarPopupPerfil = false;
     this.usuariPerfil = null;
@@ -2113,7 +2214,7 @@ export class AdministracionComponent implements OnInit {
         ["Solicitante", peticion.solicitante],
         ["Tipo", peticion.tipo],
         ["Fecha", peticion.fecha],
-        ["Estado", this.getStatusTranslation(peticion.estado)],
+        ["Estado", this.getStatusLabelForPdf(peticion.estado)],
       ],
       styles: { fontSize: 11 },
       headStyles: { fillColor: [33, 33, 33] },
@@ -2131,6 +2232,11 @@ export class AdministracionComponent implements OnInit {
     doc.save(`peticion_${peticion.id}.pdf`);
   }
   descargarPDFTarea(tarea: PeticionTareaAdmin) {
+    if (!this.puedeDescargarPdfTarea(tarea.estado)) {
+      this.showToast("⚠️ El PDF solo está disponible en PENDIENTE, APROBADA y FINALIZADA", false);
+      return;
+    }
+
     const doc = new jsPDF();
 
     doc.setFontSize(16);
@@ -2147,7 +2253,7 @@ export class AdministracionComponent implements OnInit {
         ["JIRA", tarea.jiraTask],
         ["Asignado", tarea.asignado || "Cualquiera"],
         ["Deadline", tarea.deadline || "—"],
-        ["Estado", this.getStatusTranslation(tarea.estado)],
+        ["Estado", this.getStatusLabelForPdf(tarea.estado)],
       ],
       styles: { fontSize: 11 },
       headStyles: { fillColor: [33, 33, 33] },
@@ -2158,7 +2264,7 @@ export class AdministracionComponent implements OnInit {
     doc.setFontSize(11);
     doc.text("Comentario:", 14, finalY + 10);
 
-    const comentario = tarea.comentario || "";
+    const comentario = tarea.comentarioAdmin || "Sin comentario de finalización.";
     const splitComentario = doc.splitTextToSize(comentario, 180);
     doc.text(splitComentario, 14, finalY + 17);
 

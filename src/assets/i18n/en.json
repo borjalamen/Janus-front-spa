@@ -1166,6 +1166,7 @@
     "STATUS_REJECTED": "Rejected",
     "INITIATED": "Initiated",
     "STATUS_INITIATED": "Initiated",
+    "STATUS_FINALIZED": "Finalized",
     "NO_TASK_REQUESTS": "No task requests to review."
   },
   "PETICION": {
