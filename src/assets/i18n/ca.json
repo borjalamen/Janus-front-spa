@@ -636,6 +636,7 @@
     "FOLDER_ALT": "Carpeta",
     "FILE_ALT": "Fitxer",
     "IMAGE_PREVIEW_ALT": "Imatge ampliada",
+    "PAGINATION_INFO": "{{current}} / {{total}}",
     "DEFAULT_DOCUMENT_NAME": "Document",
     "ERRORS": {
       "PROJECT_REQUIRED": "El projecte és obligatori",

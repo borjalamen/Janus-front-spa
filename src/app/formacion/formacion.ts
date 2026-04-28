@@ -627,11 +627,11 @@ export class FormacionComponent {
       const wb = XLSX.read(arrayBuffer, { type: 'array' });
 
       // ── Leer hoja Paths ──────────────────────────────────────────
-      const pathSheetName = wb.SheetNames.find(n => n.toLowerCase().includes('path')) ?? wb.SheetNames[0];
+      const pathSheetName = wb.SheetNames.find((n: string) => n.toLowerCase().includes('path')) ?? wb.SheetNames[0];
       const pathRows: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[pathSheetName], { header: 1 });
 
       // ── Leer hoja Courses ────────────────────────────────────────
-      const courseSheetName = wb.SheetNames.find(n => n.toLowerCase().includes('course') || n.toLowerCase().includes('cours')) ?? wb.SheetNames[1];
+      const courseSheetName = wb.SheetNames.find((n: string) => n.toLowerCase().includes('course') || n.toLowerCase().includes('cours')) ?? wb.SheetNames[1];
       const courseRows: any[][] = courseSheetName ? XLSX.utils.sheet_to_json(wb.Sheets[courseSheetName], { header: 1 }) : [];
 
       if (pathRows.length < 2 && courseRows.length < 2) {

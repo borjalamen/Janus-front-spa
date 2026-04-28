@@ -645,6 +645,7 @@
     "FOLDER_ALT": "Carpeta",
     "FILE_ALT": "Archivo",
     "IMAGE_PREVIEW_ALT": "Imagen ampliada",
+    "PAGINATION_INFO": "{{current}} / {{total}}",
     "DEFAULT_DOCUMENT_NAME": "Documento",
     "ERRORS": {
       "PROJECT_REQUIRED": "El proyecto es obligatorio",
