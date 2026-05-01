@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { BuscadorComponent } from '../buscador/buscador';
 import { ProceduresService, Procedure, ProcedureStep } from '../procedure.service';
 import { AuthService } from '../auth.service';
 import { LocalStorageService } from '../local-storage.service';
+import { AgentRefreshService } from '../agent-refresh.service';
 
 @Component({
   selector: 'app-procedimientos',
@@ -15,7 +17,7 @@ import { LocalStorageService } from '../local-storage.service';
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, TranslateModule, BuscadorComponent]
 })
-export class ProcedimientosComponent implements OnInit {
+export class ProcedimientosComponent implements OnInit, OnDestroy {
   title = 'Procedimientos';
   activeTab: string = 'listar'; // Control de pestanyes
 
@@ -49,16 +51,25 @@ export class ProcedimientosComponent implements OnInit {
 
   // Keys per LocalStorage
   private readonly STORAGE_KEY_FORM = 'procedimientos_form_state';
+  private agentRefreshSub!: Subscription;
 
   constructor(
     private proceduresService: ProceduresService,
     private authService: AuthService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private agentRefresh: AgentRefreshService
   ) {}
 
   ngOnInit(): void {
     this.cargarProcedimientos();
     this.restoreFromLocalStorage();
+    this.agentRefreshSub = this.agentRefresh.refresh$.subscribe(entity => {
+      if (entity === 'procedimiento' || entity === 'all') this.cargarProcedimientos();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.agentRefreshSub?.unsubscribe();
   }
 
   // ===== CARREGA I DADES =====

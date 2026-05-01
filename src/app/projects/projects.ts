@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
@@ -9,6 +9,8 @@ import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
 import { SafePipe } from "../safe.pipe";
 import { AuthService } from "../auth.service";
+import { Subscription } from "rxjs";
+import { AgentRefreshService } from "../agent-refresh.service";
 
 export interface Task {
   titulo: string;
@@ -60,7 +62,7 @@ export interface Proyecto extends Project {
     SafePipe,
   ],
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
   title = "";
 
   activeTab: "LIST" | "NEW" | "IMPORT" = "LIST";
@@ -166,12 +168,14 @@ export class ProjectsComponent implements OnInit {
   projectFileInput: File | null = null;
   projectFileDescription: string = "";
   departments: Department[] = [];
+  private agentRefreshSub!: Subscription;
 
   constructor(
     private translate: TranslateService,
     private storage: LocalStorageService,
     private projectService: ProjectService,
     public authService: AuthService,
+    private agentRefresh: AgentRefreshService
   ) {
     this.title = this.translate.instant("PROJECTS.TITLE");
 
@@ -194,6 +198,13 @@ export class ProjectsComponent implements OnInit {
 
     this.loadProjects();
     this.loadDepartments();
+    this.agentRefreshSub = this.agentRefresh.refresh$.subscribe(entity => {
+      if (entity === 'proyecto' || entity === 'all') this.loadProjects();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.agentRefreshSub?.unsubscribe();
   }
 
   private loadProjects() {

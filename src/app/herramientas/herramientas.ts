@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { AgentRefreshService } from '../agent-refresh.service';
 
 import { BuscadorComponent } from '../buscador/buscador';
 import { LocalStorageService } from '../local-storage.service';
@@ -1654,13 +1655,16 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     private localStorage: LocalStorageService,
     private projectService: ProjectService,
     private herramientasService: HerramientasService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private agentRefresh: AgentRefreshService
   ) {}
 
   ngOnInit() {
     this.loadTools();
     this.loadProjects();
-    this.refreshSub = this.herramientasService.refresh$.subscribe(() => this.loadTools());
+    this.refreshSub = this.agentRefresh.refresh$.subscribe(entity => {
+      if (entity === 'herramienta' || entity === 'all') this.loadTools();
+    });
   }
 
   ngOnDestroy() {

@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 import { ProjectService } from '../project.service';
+import { AgentRefreshService } from '../agent-refresh.service';
 
 type TrafficStatus = 'UP' | 'WARN' | 'DOWN';
 
@@ -28,12 +30,13 @@ function randomStatus(): TrafficStatus {
   templateUrl: './infraestructura.html',
   styleUrls: ['./infraestructura.css'],
 })
-export class Infraestructura {
+export class Infraestructura implements OnDestroy {
 
   projects: ProjectItem[] = [];
   loading = true;
   error = false;
   filterText = '';
+  private agentRefreshSub!: Subscription;
 
   get filteredProjects(): ProjectItem[] {
     const q = this.filterText.trim().toLowerCase();
@@ -44,8 +47,15 @@ export class Infraestructura {
     );
   }
 
-  constructor(private projectService: ProjectService) {
+  constructor(private projectService: ProjectService, private agentRefresh: AgentRefreshService) {
     this.loadProjects();
+    this.agentRefreshSub = this.agentRefresh.refresh$.subscribe(entity => {
+      if (entity === 'proyecto' || entity === 'infra' || entity === 'all') this.loadProjects();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.agentRefreshSub?.unsubscribe();
   }
 
   checkProject(p: ProjectItem): void {

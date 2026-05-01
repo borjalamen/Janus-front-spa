@@ -22,7 +22,7 @@ import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
 import { LocalStorageService } from './local-storage.service';
 import { AiService } from './ai.service';
-import { HerramientasService } from './herramientas/herramientas.service';
+import { AgentRefreshService } from './agent-refresh.service';
 import { SpinnerComponent } from './spinner.component';
 import { SpinnerService } from './spinner.service';
 import { MENU_GROUPS } from './menu.groups';
@@ -138,7 +138,7 @@ export class AppComponent implements OnDestroy, OnInit {
     private apiService: ApiService,
     private avatarService: AvatarService,
     public notificationService: NotificationService,
-    private herramientasService: HerramientasService
+    private agentRefresh: AgentRefreshService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = this.storage.get('lang');
@@ -354,8 +354,14 @@ export class AppComponent implements OnDestroy, OnInit {
         this.aiMessages.push({ from: 'ai', text: answer });
         if (res?.actionResult) {
           this.aiMessages.push({ from: 'action', text: res.actionResult });
-          // Refresh async del componente activo sin recargar la página
-          this.herramientasService.refresh$.next();
+          // Determinar qué entidad fue modificada para refrescar solo el componente activo
+          const action = res.actionResult;
+          let entity: import('./agent-refresh.service').AgentEntity = 'all';
+          if (/herramienta/i.test(action))      entity = 'herramienta';
+          else if (/proyecto/i.test(action))    entity = 'proyecto';
+          else if (/procedimiento/i.test(action)) entity = 'procedimiento';
+          else if (/infraestructura/i.test(action)) entity = 'infra';
+          this.agentRefresh.notify(entity);
         }
         setTimeout(() => this.scrollMessagesToBottom(), 10);
         this.speak(answer);
