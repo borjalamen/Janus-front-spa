@@ -1,8 +1,9 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import { BuscadorComponent } from '../buscador/buscador';
 import { LocalStorageService } from '../local-storage.service';
@@ -1619,7 +1620,7 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
     }
   `]
 })
-export class HerramientasComponent implements OnInit {
+export class HerramientasComponent implements OnInit, OnDestroy {
   tools: Tool[] = [];
   filteredTools: Tool[] = [];
   availableProjects: Project[] = [];
@@ -1647,6 +1648,8 @@ export class HerramientasComponent implements OnInit {
   showImagePopup = false;
   imagePopupUrl = '';
 
+  private refreshSub!: Subscription;
+
   constructor(
     private localStorage: LocalStorageService,
     private projectService: ProjectService,
@@ -1657,6 +1660,11 @@ export class HerramientasComponent implements OnInit {
   ngOnInit() {
     this.loadTools();
     this.loadProjects();
+    this.refreshSub = this.herramientasService.refresh$.subscribe(() => this.loadTools());
+  }
+
+  ngOnDestroy() {
+    this.refreshSub?.unsubscribe();
   }
 
   get toolsPaginadas(): Tool[] {

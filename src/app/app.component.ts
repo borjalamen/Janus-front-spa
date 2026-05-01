@@ -22,6 +22,7 @@ import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
 import { LocalStorageService } from './local-storage.service';
 import { AiService } from './ai.service';
+import { HerramientasService } from './herramientas/herramientas.service';
 import { SpinnerComponent } from './spinner.component';
 import { SpinnerService } from './spinner.service';
 import { MENU_GROUPS } from './menu.groups';
@@ -136,7 +137,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private logger: LoggerService,
     private apiService: ApiService,
     private avatarService: AvatarService,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    private herramientasService: HerramientasService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = this.storage.get('lang');
@@ -352,6 +354,8 @@ export class AppComponent implements OnDestroy, OnInit {
         this.aiMessages.push({ from: 'ai', text: answer });
         if (res?.actionResult) {
           this.aiMessages.push({ from: 'action', text: res.actionResult });
+          // Refresh async del componente activo sin recargar la página
+          this.herramientasService.refresh$.next();
         }
         setTimeout(() => this.scrollMessagesToBottom(), 10);
         this.speak(answer);
