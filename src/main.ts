@@ -73,6 +73,7 @@ bootstrapApplication(AppComponent, {
       {path: 'herramientas', component: Herramientas}
       ,{ path: 'scrum', loadComponent: () => import('./app/scrum/scrum').then(m => m.ScrumComponent) }
       ,{ path: 'estimacion', loadComponent: () => import('./app/estimacion/estimacion').then(m => m.EstimacionComponent) }
+      ,{ path: 'verificar', loadComponent: () => import('./app/verificar/verificar').then(m => m.VerificarEmailComponent) }
     ]),
 
     provideHttpClient(withInterceptors([spinnerInterceptor]))

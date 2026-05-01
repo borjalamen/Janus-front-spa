@@ -1,0 +1,33 @@
+<div class="verificar-page">
+
+  <!-- Cargando -->
+  <div *ngIf="estado === 'cargando'" class="card-status cargando">
+    <div class="spinner"></div>
+    <p>{{ 'VERIFICAR.CARGANDO' | translate }}</p>
+  </div>
+
+  <!-- OK: correo verificado, solicitud pasa a PENDIENTE -->
+  <div *ngIf="estado === 'ok'" class="card-status ok">
+    <span class="icon material-icons">check_circle</span>
+    <h2>{{ 'VERIFICAR.OK_TITULO' | translate }}</h2>
+    <p>{{ 'VERIFICAR.OK_DESC' | translate }}</p>
+    <a routerLink="/" class="btn-home">{{ 'VERIFICAR.VOLVER_HOME' | translate }}</a>
+  </div>
+
+  <!-- Ya verificado anteriormente -->
+  <div *ngIf="estado === 'ya-verificado'" class="card-status ya-verificado">
+    <span class="icon material-icons">info</span>
+    <h2>{{ 'VERIFICAR.YA_VERIFICADO_TITULO' | translate }}</h2>
+    <p>{{ 'VERIFICAR.YA_VERIFICADO_DESC' | translate }}</p>
+    <a routerLink="/" class="btn-home">{{ 'VERIFICAR.VOLVER_HOME' | translate }}</a>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="estado === 'error'" class="card-status error">
+    <span class="icon material-icons">error</span>
+    <h2>{{ 'VERIFICAR.ERROR_TITULO' | translate }}</h2>
+    <p>{{ errorMsg | translate }}</p>
+    <a routerLink="/" class="btn-home">{{ 'VERIFICAR.VOLVER_HOME' | translate }}</a>
+  </div>
+
+</div>

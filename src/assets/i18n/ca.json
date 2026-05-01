@@ -1,4 +1,4 @@
-{
+﻿{
   "NOTIF": {
     "TITLE": "Notificacions",
     "EMPTY": "No hi ha notificacions noves",
@@ -1150,5 +1150,17 @@
     "DELETE_ERROR": "Error en eliminar el document",
     "OPEN_ERROR": "Error en obrir el document",
     "DOWNLOAD_ERROR": "Error en descarregar el document"
+  },
+
+  "VERIFICAR": {
+    "CARGANDO": "Verificant el teu correu electronic...",
+    "OK_TITULO": "Correu verificat!",
+    "OK_DESC": "La teva adreca de correu ha estat verificada correctament. La teva solicitud esta sent revisada per l'equip d'administracio.",
+    "YA_VERIFICADO_TITULO": "Correu ja verificat",
+    "YA_VERIFICADO_DESC": "Aquesta solicitud ja va ser verificada anteriorment. Ja esta sent gestionada.",
+    "ERROR_TITULO": "Enlla? no valid",
+    "ERROR_NO_TOKEN": "L'enlla? de verificacio no conte un token valid.",
+    "ERROR_GENERICO": "L'enlla? de verificacio no es valid o ha caducat. Contacta amb l'administrador.",
+    "VOLVER_HOME": "Tornar a l'inici"
   }
 }

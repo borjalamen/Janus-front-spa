@@ -1,4 +1,4 @@
-{
+﻿{
   "NOTIF": {
     "TITLE": "Notificaciones",
     "EMPTY": "No hay notificaciones nuevas",
@@ -1225,5 +1225,17 @@
     "DOWNLOAD_ERROR": "Error al descargar el documento",
     "NO_PERMISSION_DELETE": "No tienes permisos para eliminar documentos",
     "NO_PERMISSION_ADD": "No tienes permisos para añadir documentos"
+  },
+
+  "VERIFICAR": {
+    "CARGANDO": "Verificando tu correo electronico...",
+    "OK_TITULO": "Correo verificado!",
+    "OK_DESC": "Tu direccion de correo ha sido verificada correctamente. Tu solicitud esta siendo revisada por el equipo de administracion.",
+    "YA_VERIFICADO_TITULO": "Correo ya verificado",
+    "YA_VERIFICADO_DESC": "Esta solicitud ya fue verificada anteriormente. Tu solicitud esta siendo gestionada.",
+    "ERROR_TITULO": "Enlace no valido",
+    "ERROR_NO_TOKEN": "El enlace de verificacion no contiene un token valido.",
+    "ERROR_GENERICO": "El enlace de verificacion no es valido o ha expirado. Contacta con el administrador.",
+    "VOLVER_HOME": "Volver al inicio"
   }
 }

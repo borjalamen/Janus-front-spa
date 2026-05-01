@@ -1,4 +1,4 @@
-{
+﻿{
   "NOTIF": {
     "TITLE": "Notifications",
     "EMPTY": "No new notifications",
@@ -1245,5 +1245,17 @@
     "DOWNLOAD_ERROR": "Error downloading document",
     "NO_PERMISSION_DELETE": "You do not have permission to delete documents",
     "NO_PERMISSION_ADD": "You do not have permission to add documents"
+  },
+
+  "VERIFICAR": {
+    "CARGANDO": "Verifying your email address...",
+    "OK_TITULO": "Email verified!",
+    "OK_DESC": "Your email address has been successfully verified. Your request is now being reviewed by the administration team.",
+    "YA_VERIFICADO_TITULO": "Email already verified",
+    "YA_VERIFICADO_DESC": "This request has already been verified previously. It is being processed by the administration team.",
+    "ERROR_TITULO": "Invalid link",
+    "ERROR_NO_TOKEN": "The verification link does not contain a valid token.",
+    "ERROR_GENERICO": "The verification link is invalid or has expired. Please contact the administrator.",
+    "VOLVER_HOME": "Back to home"
   }
 }
