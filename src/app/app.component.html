@@ -54,8 +54,8 @@
         </div>
 
         <div class="messages" #messagesContainer>
-          <div *ngFor="let m of aiMessages" class="message" [ngClass]="{user: m.from==='user', ai: m.from==='ai'}">
-            <div class="msg-from"><strong>{{ m.from==='user' ? ('CLIP.USER' | translate) : ('CLIP.AI' | translate)
+          <div *ngFor="let m of aiMessages" class="message" [ngClass]="{user: m.from==='user', ai: m.from==='ai', action: m.from==='action'}">
+            <div class="msg-from"><strong>{{ m.from==='user' ? ('CLIP.USER' | translate) : m.from==='action' ? '⚙️ Acción ejecutada' : ('CLIP.AI' | translate)
                 }}</strong></div>
             <div class="msg-text">{{ m.text }}</div>
             <button *ngIf="m.from==='ai'" type="button" class="clip-download-btn" (click)="downloadMessage(m.text)" title="Descargar respuesta">&#x2B07; Descargar</button>

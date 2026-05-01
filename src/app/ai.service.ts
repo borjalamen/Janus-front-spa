@@ -16,10 +16,10 @@ export class AiService {
    * El system prompt con toda la documentación de JanusHub
    * se inyecta en el backend (OpenAiService / Groq).
    */
-  query(text: string, username?: string, role?: string): Observable<{ answer: string }> {
+  query(text: string, username?: string, role?: string): Observable<{ answer: string, actionResult?: string }> {
     // X-No-Spinner evita que el interceptor bloquee la UI con el overlay de carga
     const headers = new HttpHeaders({ 'X-No-Spinner': 'true' });
-    return this.http.post<{ answer: string }>(`${this.baseUrl}/query`,
+    return this.http.post<{ answer: string, actionResult?: string }>(`${this.baseUrl}/query`,
       { question: text, username: username ?? '', role: role ?? '' },
       { headers });
   }

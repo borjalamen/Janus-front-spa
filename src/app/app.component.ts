@@ -85,7 +85,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public menuGroups = MENU_GROUPS;
   public expandedGroups: { [id: string]: boolean } = {};
 
-  aiMessages: { from: 'user' | 'ai', text: string }[] = [];
+  aiMessages: { from: 'user' | 'ai' | 'action', text: string }[] = [];
   userInput = '';
   aiLoading = false;
   private greeted = false;
@@ -350,6 +350,9 @@ export class AppComponent implements OnDestroy, OnInit {
         this.aiLoading = false;
         const answer = res?.answer ?? 'No hay respuesta';
         this.aiMessages.push({ from: 'ai', text: answer });
+        if (res?.actionResult) {
+          this.aiMessages.push({ from: 'action', text: res.actionResult });
+        }
         setTimeout(() => this.scrollMessagesToBottom(), 10);
         this.speak(answer);
       },

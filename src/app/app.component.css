@@ -978,6 +978,18 @@ mat-nav-list a[routerLink="/descargables"] {
   color: #fff;
   align-self: flex-end;
 }
+.message.action {
+  background: linear-gradient(135deg, rgba(0,77,99,0.35), rgba(0,111,128,0.25));
+  border: 1px solid rgba(0, 200, 120, 0.45);
+  align-self: stretch;
+  border-radius: 10px;
+}
+.message.action .msg-from {
+  color: #69ffb4;
+}
+.message.action .msg-text {
+  color: #b2ffd8;
+}
 .message .msg-from{font-size:0.78rem;color:#ffeaa7;margin-bottom:6px}
 .message .msg-text{
   white-space: pre-wrap;
