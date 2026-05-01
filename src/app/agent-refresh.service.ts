@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-export type AgentEntity = 'herramienta' | 'proyecto' | 'procedimiento' | 'infra' | 'all';
+export type AgentEntity = 'herramienta' | 'proyecto' | 'procedimiento' | 'infra' | 'formacion' | 'all';
 
 @Injectable({ providedIn: 'root' })
 export class AgentRefreshService {

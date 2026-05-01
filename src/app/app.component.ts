@@ -357,10 +357,11 @@ export class AppComponent implements OnDestroy, OnInit {
           // Determinar qué entidad fue modificada para refrescar solo el componente activo
           const action = res.actionResult;
           let entity: import('./agent-refresh.service').AgentEntity = 'all';
-          if (/herramienta/i.test(action))      entity = 'herramienta';
-          else if (/proyecto/i.test(action))    entity = 'proyecto';
-          else if (/procedimiento/i.test(action)) entity = 'procedimiento';
-          else if (/infraestructura/i.test(action)) entity = 'infra';
+          if (/herramienta/i.test(action))           entity = 'herramienta';
+          else if (/proyecto/i.test(action))         entity = 'proyecto';
+          else if (/procedimiento/i.test(action))    entity = 'procedimiento';
+          else if (/infraestructura/i.test(action))  entity = 'infra';
+          else if (/formaci[oó]n/i.test(action))     entity = 'formacion';
           this.agentRefresh.notify(entity);
         }
         setTimeout(() => this.scrollMessagesToBottom(), 10);

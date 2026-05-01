@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgIf, NgForOf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscadorComponent } from '../buscador/buscador';
@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Subscription } from 'rxjs';
+import { AgentRefreshService } from '../agent-refresh.service';
 
 type TrainingItem = {
   id: string;
@@ -52,13 +54,17 @@ const DRAFT_ITEM_KEY = 'training_item_draft_v1';
     HttpClientModule
   ],
 })
-export class FormacionComponent {
+export class FormacionComponent implements OnInit, OnDestroy {
   title = '';
 
   paths: TrainingPath[] = [];
   filteredPaths: TrainingPath[] = [];
   filteredAllCourses: TrainingItem[] = [];
   lastSearch: string = '';
+
+  /** Cursos cargados desde la BD vía API (creados por el agente IA u otros) */
+  apiCourses: TrainingItem[] = [];
+  private agentRefreshSub!: Subscription;
 
   // UI state
   selectedPath?: TrainingPath;
@@ -71,9 +77,16 @@ export class FormacionComponent {
   // tabs: 'all' = all courses search, 'paths' = training paths UI
   activeTab: 'all' | 'paths' = 'all';
 
-  // cached search list for all courses
+  // cached search list for all courses (local paths + backend API courses)
   get allCourses(): TrainingItem[] {
     const map = new Map<string, TrainingItem>();
+    // Primero los cursos de la API (base de datos)
+    for (const it of this.apiCourses) {
+      const key = (it.name || '').trim().toLowerCase();
+      if (!key) continue;
+      map.set(key, { ...it });
+    }
+    // Luego los cursos de rutas locales (pueden sobreescribir si tienen el mismo nombre)
     for (const p of this.paths) {
       if (!p.items) continue;
       for (const it of p.items) {
@@ -103,10 +116,35 @@ export class FormacionComponent {
     private translate: TranslateService,
     private storage: LocalStorageService,
     private auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private agentRefresh: AgentRefreshService
   ) {
     this.load();
+    this.loadApiCourses();
     this.translate.get('TRAINING.TITLE').subscribe(t => (this.title = t));
+  }
+
+  ngOnInit(): void {
+    this.agentRefreshSub = this.agentRefresh.refresh$.subscribe(entity => {
+      if (entity === 'formacion' || entity === 'all') {
+        this.loadApiCourses();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.agentRefreshSub?.unsubscribe();
+  }
+
+  /** Carga cursos desde el backend (MongoDB). Los crea el agente IA u otros procesos. */
+  private loadApiCourses(): void {
+    this.http.get<TrainingItem[]>(`${environment.baseUrl}formacion/all`).subscribe({
+      next: (data) => {
+        this.apiCourses = data || [];
+        this.refreshAllCourses();
+      },
+      error: () => { /* silencioso: si el backend no responde, se usan solo los locales */ }
+    });
   }
 
   private load() {
