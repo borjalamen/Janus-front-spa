@@ -58,6 +58,7 @@
             <div class="msg-from"><strong>{{ m.from==='user' ? ('CLIP.USER' | translate) : ('CLIP.AI' | translate)
                 }}</strong></div>
             <div class="msg-text">{{ m.text }}</div>
+            <button *ngIf="m.from==='ai'" type="button" class="clip-download-btn" (click)="downloadMessage(m.text)" title="Descargar respuesta">&#x2B07; Descargar</button>
           </div>
           <div *ngIf="aiLoading" class="message ai ai-thinking">
             <div class="msg-from"><strong>{{ 'CLIP.AI' | translate }}</strong></div>
@@ -66,11 +67,25 @@
         </div>
 
         <div class="clip-input-row">
-          <textarea id="clip-input" class="clip-input" rows="3" title="clip" [(ngModel)]="userInput"
-            (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)" [disabled]="aiLoading"></textarea>
+          <div class="clip-input-wrap">
+            <div *ngIf="attachedFile" class="clip-attached-chip">
+              <span>&#x1F4CE; {{ attachedFile.name }}</span>
+              <button type="button" class="clip-chip-remove" (click)="removeAttachedFile()" title="Quitar fichero">&#x2715;</button>
+            </div>
+            <div *ngIf="attachError" class="clip-attach-error">
+              <span>&#x26A0;&#xFE0F; {{ attachError }}</span>
+              <button type="button" class="clip-chip-remove" (click)="attachError = null" title="Cerrar">&#x2715;</button>
+            </div>
+            <textarea id="clip-input" class="clip-input" rows="3" title="clip" [(ngModel)]="userInput"
+              (keydown.enter)="onEnter($event)" [placeholder]="('CLIP.PLACEHOLDER' | translate)" [disabled]="aiLoading"></textarea>
+            <input type="file" #fileInput class="clip-file-hidden"
+              accept=".txt,.md,.log,.js,.mjs,.ts,.java,.py,.cs,.go,.rs,.cpp,.c,.h,.php,.rb,.json,.yaml,.yml,.xml,.toml,.ini,.env,.properties,.csv,.sql,.html,.css,.scss,.sh,.bat,.ps1"
+              (change)="onFileSelected($event)">
+          </div>
           <div class="clip-buttons">
-            <button type="button" mat-flat-button color="primary" (click)="sendToAi()" [disabled]="aiLoading">{{ 'CLIP.SEND' | translate }}</button>
-            <button type="button" mat-stroked-button (click)="speakLast()" [disabled]="aiLoading">{{ 'CLIP.SPEAK' | translate }}</button>
+            <button type="button" class="clip-btn clip-btn-send" (click)="sendToAi()" [disabled]="aiLoading">{{ 'CLIP.SEND' | translate }}</button>
+            <button type="button" class="clip-btn clip-btn-speak" (click)="speakLast()" [disabled]="aiLoading">{{ 'CLIP.SPEAK' | translate }}</button>
+            <button type="button" class="clip-btn clip-btn-attach" [class.has-file]="!!attachedFile" (click)="fileInput.click()" [disabled]="aiLoading" title="Adjuntar fichero de texto">&#x1F4CE;</button>
           </div>
         </div>
       </div>

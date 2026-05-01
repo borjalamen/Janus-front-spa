@@ -1037,8 +1037,15 @@ mat-nav-list a[routerLink="/descargables"] {
   gap: 8px;
   margin-top: 10px;
 }
-.clip-input {
+.clip-input-wrap {
   flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.clip-input {
+  width: 100%;
+  box-sizing: border-box;
   resize: vertical;
   padding: 10px;
   border-radius: 8px;
@@ -1048,8 +1055,167 @@ mat-nav-list a[routerLink="/descargables"] {
   min-height: 56px;
   font-size: 0.95rem;
 }
-.clip-buttons{display:flex;flex-direction:column;gap:8px}
-.clip-buttons button{min-width:84px}
+
+/* ── Banner de error adjunto ── */
+.clip-attach-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: rgba(211, 47, 47, 0.15);
+  border: 1px solid rgba(211, 47, 47, 0.6);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  color: #ff8a80;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  line-height: 1.4;
+}
+.clip-attach-error span {
+  flex: 1;
+}
+
+/* ── Chip fichero adjunto ── */
+.clip-attached-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 111, 128, 0.2);
+  border: 1px solid #006f80;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  color: #FBC02D;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+.clip-attached-chip span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clip-chip-remove {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.clip-chip-remove:hover { color: #ff6b6b; }
+
+/* ── Input file oculto ── */
+.clip-file-hidden {
+  display: none;
+}
+
+/* ── Botón adjuntar ── */
+.clip-btn-attach {
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  border: 2px solid rgba(255,255,255,0.12);
+  font-size: 1.1rem;
+  padding: 6px 10px;
+}
+.clip-btn-attach:hover:not(:disabled) {
+  background: rgba(6, 81, 106, 0.3);
+  border-color: #006f80;
+  color: #FBC02D;
+  box-shadow: 0 0 10px rgba(6, 81, 106, 0.5);
+  transform: translateY(-2px);
+}
+.clip-btn-attach.has-file {
+  background: linear-gradient(135deg, #004d63, #006f80);
+  border-color: #FBC02D;
+  color: #FBC02D;
+  box-shadow: 0 0 8px rgba(251, 192, 45, 0.35);
+}
+.clip-btn-attach:focus-visible {
+  outline: 2px solid #FBC02D;
+  outline-offset: 2px;
+}
+
+/* ── Botón descargar en mensajes IA ── */
+.clip-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid rgba(6, 81, 106, 0.6);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.clip-download-btn:hover {
+  background: rgba(6, 81, 106, 0.25);
+  border-color: #FBC02D;
+  color: #FBC02D;
+  box-shadow: 0 0 8px rgba(6, 81, 106, 0.5);
+}
+.clip-buttons { display: flex; flex-direction: column; gap: 8px; }
+
+.clip-btn {
+  min-width: 84px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  letter-spacing: 0.03em;
+}
+
+/* ── Botón Enviar: relleno teal (acción primaria) ── */
+.clip-btn-send {
+  background: linear-gradient(135deg, #004d63, #006f80);
+  color: #FBC02D;
+  border: 2px solid #006f80;
+  box-shadow: 0 2px 8px rgba(0, 111, 128, 0.4);
+}
+.clip-btn-send:hover:not(:disabled) {
+  background: linear-gradient(135deg, #006f80, #004d63);
+  border-color: #FBC02D;
+  box-shadow: 0 0 12px rgba(251, 192, 45, 0.45), 0 2px 8px rgba(0, 111, 128, 0.5);
+  transform: translateY(-2px);
+}
+.clip-btn-send:focus-visible {
+  outline: 2px solid #FBC02D;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(251, 192, 45, 0.25);
+}
+
+/* ── Botón Hablar: contorno (acción secundaria) ── */
+.clip-btn-speak {
+  background: transparent;
+  color: #FBC02D;
+  border: 2px solid #06516a;
+}
+.clip-btn-speak:hover:not(:disabled) {
+  background: rgba(6, 81, 106, 0.3);
+  border-color: #FBC02D;
+  box-shadow: 0 0 10px rgba(6, 81, 106, 0.6);
+  transform: translateY(-2px);
+}
+.clip-btn-speak:focus-visible {
+  outline: 2px solid #FBC02D;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(251, 192, 45, 0.25);
+}
+
+/* ── Estado deshabilitado (cargando) ── */
+.clip-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 .user-avatar-img {
   width: 100%;

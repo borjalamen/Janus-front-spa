@@ -89,10 +89,12 @@ export class AppComponent implements OnDestroy, OnInit {
   userInput = '';
   aiLoading = false;
   private greeted = false;
+  attachedFile: { name: string, content: string } | null = null;
+  attachError: string | null = null;
 
   // ── Redimensionado del popup ──
-  popupWidth = 420;
-  popupHeight = 520;
+  popupWidth = 610;
+  popupHeight = 530;
   private isResizing = false;
   private resizeStartX = 0;
   private resizeStartY = 0;
@@ -326,13 +328,24 @@ export class AppComponent implements OnDestroy, OnInit {
 
   sendToAi() {
     const text = this.userInput?.trim();
-    if (!text || this.aiLoading) return;
-    this.aiMessages.push({ from: 'user', text });
+    if ((!text && !this.attachedFile) || this.aiLoading) return;
+
+    let question = text || 'Analiza este fichero: describe qué hace, cómo está estructurado y si ves algo que mejorar.';
+    let displayText = text || '(sin mensaje)';
+
+    if (this.attachedFile) {
+      const fileBlock = `\n\n[FICHERO ADJUNTO: ${this.attachedFile.name}]\n\`\`\`\n${this.attachedFile.content}\n\`\`\``;
+      question += fileBlock;
+      displayText += ` 📎 ${this.attachedFile.name}`;
+      this.attachedFile = null;
+    }
+
+    this.aiMessages.push({ from: 'user', text: displayText });
     this.userInput = '';
     this.aiLoading = true;
     setTimeout(() => this.scrollMessagesToBottom(), 10);
 
-    this.ai.query(text, this.username).subscribe({
+    this.ai.query(question, this.username).subscribe({
       next: res => {
         this.aiLoading = false;
         const answer = res?.answer ?? 'No hay respuesta';
@@ -354,6 +367,59 @@ export class AppComponent implements OnDestroy, OnInit {
     if (ke.shiftKey) return;
     ke.preventDefault();
     this.sendToAi();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    const ALLOWED_EXTENSIONS = new Set([
+      'txt','md','log','js','mjs','ts','java','py','cs','go','rs','cpp','c','h',
+      'php','rb','json','yaml','yml','xml','toml','ini','env','properties','csv',
+      'sql','html','css','scss','sh','bat','ps1'
+    ]);
+    const ext = (file.name.split('.').pop() ?? '').toLowerCase();
+    if (!ALLOWED_EXTENSIONS.has(ext)) {
+      this.attachError = `Formato no permitido: .${ext || '?'}. Solo se admiten ficheros de texto (txt, json, yaml, java, ts, py…)`;
+      input.value = '';
+      return;
+    }
+    const MAX_BYTES = 120 * 1024; // 120 KB
+    if (file.size > MAX_BYTES) {
+      this.attachError = `El fichero "${file.name}" pesa ${(file.size / 1024).toFixed(0)} KB. El límite es 120 KB — adjunta un fragmento más pequeño.`;
+      input.value = '';
+      return;
+    }
+    this.attachError = null;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      let content = (e.target?.result as string) ?? '';
+      const MAX_CHARS = 4000;
+      if (content.length > MAX_CHARS) {
+        content = content.substring(0, MAX_CHARS);
+        this.attachError = `"${file.name}" es extenso — se enviarán los primeros 4.000 caracteres para no saturar el modelo.`;
+      }
+      this.attachedFile = { name: file.name, content };
+    };
+    reader.readAsText(file, 'utf-8');
+    input.value = '';
+  }
+
+  removeAttachedFile() {
+    this.attachedFile = null;
+    this.attachError = null;
+  }
+
+  downloadMessage(text: string) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ianushub-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 
   private showGreeting() {
