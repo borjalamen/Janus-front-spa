@@ -1,0 +1,5877 @@
+Advanced Scrum Master
+Advanced Scrum Master
+Diagnóstico, antipatrones, métricas e IA
+aplicada a Scrum
+“Aprende a leer el sistema, intervenir con
+criterio y medir si realmente mejora.”
+
+-- 1 of 310 --
+
+Promesa del curso
+Lo que el alumno podrá hacer al terminar
+Advanced Scrum Master
+01
+Observar
+Leer dinámicas, roles,
+eventos, artefactos y
+tensiones del sistema.
+02
+Diagnosticar
+Separar síntomas de
+causas usando datos,
+entrevistas y health
+checks.
+03
+Intervenir
+Proponer acciones
+pequeñas, visibles y
+medibles.
+04
+Medir
+Usar métricas útiles para
+aprender, no para
+fiscalizar.
+05
+Amplificar
+Aplicar IA para analizar,
+resumir, preparar y
+facilitar.
+“Un Scrum Master avanzado no reacciona a síntomas: lee el sistema y actúa de forma consciente.”
+
+-- 2 of 310 --
+
+Tu Instructor
+Mi breve carta de presentación
+Advanced Scrum Master
+
+-- 3 of 310 --
+
+Expectativas
+Sinceridad y transparencia
+Advanced Scrum Master
+
+-- 4 of 310 --
+
+El hilo narrativo
+De la foto del sistema al plan de acción
+Advanced Scrum Master
+01
+Foto sistémica
+Contexto, roles, eventos,
+artefactos, cultura y datos
+históricos.
+02
+Hipótesis
+¿Qué comportamiento
+se repite? ¿Qué tensión
+intenta resolver?
+03
+Antipatrón
+Nombramos el patrón sin
+culpar al equipo.
+04
+Intervención
+Acción concreta,
+pequeña y alineada con el
+propósito de Scrum.
+05
+Evidencia
+Métrica + conversación
+para saber si el cambio
+mejora.
+Este hilo tiene recorrido en todas las secciones del curso.
+
+-- 5 of 310 --
+
+Antes de empezar: pacto de aprendizaje
+No buscamos Scrum perfecto: buscamos mejora consciente
+Advanced Scrum Master
+• Trabajaremos con casos realistas, no con equipos ideales.
+• Un antipatrón es información del sistema, no una etiqueta de culpa.
+• Las métricas deben abrir conversaciones, no cerrar debates.
+• La IA ayuda a acelerar el análisis, pero no sustituye criterio ni contexto.
+• Cada bloque termina con una idea aplicable mañana.
+“La mejora continua no empieza con una solución; empieza con una buena
+observación.”
+
+-- 6 of 310 --
+
+Rol avanzado y diagnóstico
+Mirar el sistema antes de intentar cambiarlo
+Rol Contexto Diagnóstico DAFO
+
+-- 7 of 310 --
+
+¿Qué es y qué no es el Scrum Master?
+Piensa detenidamente
+Advanced Scrum Master
+
+-- 8 of 310 --
+
+Scrum Master avanzado
+Más que facilitar eventos: desarrollar capacidad de mejora en el sistema
+Líder al servicio
+Se preocupa por personas, contexto y
+condiciones de trabajo.
+Facilitador
+Ayuda a que el equipo converse, decida e
+inspeccione.
+Entrenador / mentor
+Desarrolla autogestión, criterio Scrum y
+mejora continua.
+Agente de cambio
+Actúa sobre tensiones organizacionales,
+no solo de equipo.
+Observador
+Detecta señales, patrones y dinámicas
+invisibles.
+Idea clave: su trabajo es aumentar la capacidad del equipo para resolver sus propios problemas.
+
+-- 9 of 310 --
+
+Lo que NO es un Scrum Master
+Antirroles que generan dependencia y distorsionan Scrum
+Policía Scrum
+Impone reglas sin entender necesidades
+reales.
+Project Manager
+Convierte Scrum en micromanagement.
+Superhéroe
+Resuelve todo y se vuelve cuello de
+botella.
+Secretario
+Reduce el rol a agendas, actas y tareas
+administrativas.
+Administrador de herramientas
+Confunde Jira/Trello con agilidad.
+Scrum por inercia
+Sigue eventos sin propósito ni
+aprendizaje.
+“El rol no consiste en “hacer que se cumpla Scrum”, sino en ayudar a que Scrum genere transparencia,
+inspección y adaptación.”
+
+-- 10 of 310 --
+
+Ciclo de diagnóstico de un equipo Scrum
+Una ruta simple para transformar observaciones en acción
+1
+Observar
+contexto
+2
+Definir
+objetivo
+3
+Analizar
+dimensiones
+4
+Elegir
+herramientas
+5
+Validar
+con equipo
+✓ Primero observa la forma real de trabajar; después conversa con datos.
+✓ Define para qué diagnosticas: madurez, eficiencia, clima, alineamiento o bienestar.
+✓ Nunca presentes resultados como sentencia: valida con el equipo.
+
+-- 11 of 310 --
+
+Observación inicial y recopilación de contexto
+La primera foto debe ser sistémica, no superficial
+1. Entrevista con responsables
+Alinear expectativas, necesidades y límites
+de la intervención.
+2. Observar dinámicas
+Comunicación, colaboración, eventos,
+decisiones e interrupciones.
+3. Información histórica
+Velocidad, bloqueos, retrabajo,
+satisfacción, bugs, arrastre de historias.
+4. Composición y roles
+Quién decide, quién influye, canales de
+entrada y responsabilidades reales.
+5. Relaciones con la organización
+Dependencias, stakeholders, presión,
+prioridades y reglas del sistema.
+
+-- 12 of 310 --
+
+Definir objetivos claros de diagnóstico
+Sin una pregunta guía, el diagnóstico se vuelve ruido
+“¿Qué queremos conseguir con la evaluación?”
+÷ Detectar áreas de mejora y fortalezas del equipo.
+÷ Medir madurez Scrum y nivel de experiencia en el marco.
+÷ Comprender eficiencia, capacidad de entrega y calidad.
+÷ Evaluar bienestar, clima, motivación y colaboración.
+÷ Ver alineamiento con visión de producto y objetivos de negocio.
+
+-- 13 of 310 --
+
+Dimensiones del trabajo ágil
+Lo visible y lo invisible que conviene inspeccionar
+Valores
+Transparencia, respeto y foco
+Principios
+Entrega temprana y
+adaptación
+Cultura
+Seguridad psicológica y
+aprendizaje
+Herramientas
+Tableros, datos y trazabilidad
+Eventos
+Propósito, inspección y
+adaptación
+Roles
+Autoridad y
+responsabilidades
+Mindset
+Mejora continua y
+autogestión
+Negocio
+Valor, objetivos y
+stakeholders
+“Diagnosticar bien es mirar más allá de eventos: incluye cultura, roles, herramientas, flujo y negocio.”
+
+-- 14 of 310 --
+
+Herramientas de diagnóstico
+Combinamos percepción, conversación y datos
+01
+Health Check
+Plantillas para medir
+comunicación,
+transparencia,
+impedimentos, clima y
+satisfacción.
+02
+Assessment
+Autoevaluación de
+madurez adaptada al
+contexto del equipo.
+03
+Entrevistas
+1:1 con PO, Developers,
+stakeholders y
+responsables.
+04
+Focus Group
+Sesiones de conversación
+para contrastar hipótesis.
+05
+Métricas sencillas
+Satisfacción,
+colaboración,
+cumplimiento de eventos,
+velocidad, bloqueos.
+Consejo: no más de 20–25 preguntas en un assessment inicial.
+
+-- 15 of 310 --
+
+Confirmar datos con el equipo: DAFO
+La validación convierte el diagnóstico en compromiso
+Fortalezas
+Internas + positivas
+Prácticas ágiles eficientes.
+Debilidades
+Internas + negativas
+Bajas puntuaciones o hábitos a mejorar.
+Oportunidades
+Externas + positivas
+Factores que podemos aprovechar.
+Amenazas
+Externas + negativas
+Riesgos que impactan al equipo.
+Pregunta de facilitación: ¿qué dato nos sorprende y qué dato confirma algo que ya intuíamos?
+
+-- 16 of 310 --
+
+Ejercicio · Diagnóstico inicial
+Del contexto a los primeros comportamientos observables
+✓ Lee el contexto del equipo asignado.
+✓ Identifica comportamientos observables, no opiniones.
+✓ Clasifica evidencias: eventos, artefactos, roles, cultura y estrategia.
+✓ Formula 2 hipótesis de antipatrón.
+✓ Define qué dato necesitarías confirmar con el equipo.
+“No diagnostiques personas: diagnostica patrones y reglas del sistema.”
+
+-- 17 of 310 --
+
+Analiza el context de tu equipo
+Piensa detenidamente las preguntas, sigue las pautas del formador – Rellena el Scrum Avanzado (xls)
+Advanced Scrum Master
+
+-- 18 of 310 --
+
+Técnica avanzada: OKR
+Objectives and Key Results conectan ambición estratégica con resultados medibles.
+Qué es
+Metodología de gestión que vincula
+objetivos de empresa con resultados
+medibles y específicos.
+Fórmula
+Alcanzaremos el Objetivo (O), medido por
+los Resultados Clave (KR).
+Ambiciosos
+Inspiradores y desafiantes; no una lista
+rutinaria de tareas.
+Medibles
+Los resultados clave deben ser numéricos,
+cuantificables y verificables.
+Transparentes
+Públicos dentro de la organización para
+crear alineación y foco compartido.
+Orientados a cadencia
+Se evalúan en ciclos regulares para fomentar
+adaptabilidad y aprendizaje.
+“Los OKRs no son el Backlog: las tareas son actividades que nos acercan a los resultados clave.”
+
+-- 19 of 310 --
+
+OKRs: ciclo de vida
+Una disciplina de gestión orientada a foco, aprendizaje y revisión constante.
+OKR
+Planificación
+Definir objetivos ambiciosos y resultados clave
+medibles alineados con la estrategia.
+Ejecución
+Implementar iniciativas y actividades que impulsen
+progreso hacia los resultados clave.
+Seguimiento
+Monitorear progreso, identificar obstáculos y ajustar
+el rumbo cuando sea necesario.
+Evaluación
+Analizar resultados, extraer aprendizajes y usar
+insights para mejorar el próximo ciclo.
+Los OKRs no son una bala mágica: requieren compromiso, cadencia, transparencia y práctica constante.
+
+-- 20 of 310 --
+
+¿Qué es un antipatrón?
+Una solución aparente que deteriora el sistema con el tiempo
+“Al principio parece útil o inofensivo; a medio plazo erosiona transparencia, adaptación o entrega
+de valor.”
+Surge por tensiones
+Presión por fechas, urgencias, falta de
+autonomía, miedo al conflicto o métricas
+mal usadas.
+Se normaliza
+El equipo se acostumbra y deja de verlo
+como problema.
+Es una oportunidad
+Permite abrir conversaciones sobre
+principios, cultura, políticas y valor.
+La pregunta no es “¿quién lo hace mal?”, sino “¿qué tensión intenta resolver este comportamiento?”.
+
+-- 21 of 310 --
+
+De antipatrones a oportunidades
+El objetivo no es señalar lo que está mal, sino transformar tensiones visibles en mejora real.
+Principios ágiles
+Profundizar en el porqué del marco:
+transparencia, inspección, adaptación
+y entrega temprana de valor.
+Cultura de equipo
+Fortalecer seguridad psicológica,
+autonomía, colaboración y
+responsabilidad compartida.
+Capacidades organizativas
+Trabajar con stakeholders, políticas,
+dependencias, canales de entrada y
+reglas del sistema.
+Entrega de valor
+Reducir desperdicio, acelerar
+aprendizaje, mejorar calidad y
+aumentar impacto para cliente y
+negocio.
+Recordatorio
+La perfección no es el objetivo. La mejora continua y el aprendizaje
+constante sí lo son.
+“Cada antipatrón detectado es una oportunidad para intervenir con más conciencia.”
+
+-- 22 of 310 --
+
+Desarrollo de ojo crítico
+Habilidad para observar más allá de las prácticas visibles y comprender las tensiones del sistema.
+Observación
+Ver más allá de las apariencias
+Análisis
+Cuestionar el status quo
+Empatía
+Comprender sin juzgar
+Experimentación
+Probar nuevas soluciones
+Persistencia
+Mantener la mejora continua
+Colaboración
+Construir soluciones juntos
+Un Scrum Master avanzado no reacciona solo al síntoma: lee el
+sistema y decide dónde intervenir.
+
+-- 23 of 310 --
+
+Enfoque de exploración
+Investigar antes de aplicar recetas
+01
+Identificar
+¿Qué comportamiento
+se repite? ¿Dónde
+aparece?
+02
+Causa raíz
+¿Qué tensión, miedo,
+política o presión lo
+provoca?
+03
+Impacto
+¿Qué efecto tiene en
+valor, calidad, foco y
+motivación?
+04
+Solución
+¿Qué experimento
+pequeño podemos
+probar?
+05
+Métrica
+¿Cómo sabremos si
+mejora sin generar
+efectos tóxicos?
+“No exploramos para confirmar creencias; exploramos para aprender del sistema.”
+
+-- 24 of 310 --
+
+Plantilla de análisis de antipatrón
+Úsala como canvas para cualquier caso del curso
+1. Señales
+¿Qué vemos o escuchamos?
+2. Causa probable
+¿Qué lo está alimentando?
+3. Impacto
+¿Qué se deteriora?
+4. Intervención
+¿Qué haremos distinto?
+5. Métrica
+¿Cómo observamos mejora?
+6. Riesgo
+¿Qué podría empeorar?
+Recomendación: cada acción de mejora debería caber en un Sprint y poder revisarse en retrospectiva.
+
+-- 25 of 310 --
+
+Antipatrones esenciales
+Detectar, entender y reconducir prácticas que erosionan Scrum
+Eventos Roles Artefactos Priorización
+
+-- 26 of 310 --
+
+Antipatrón · Asignación de tareas en Planning
+Micromanagement que elimina autogestión
+Señales de alerta
+Tareas repartidas por líder; Developers pasivos; Sprint Backlog como
+lista de órdenes; poca voz sobre cómo abordar el trabajo.
+Soluciones
+Reexplicar propósito de Planning; autoasignación; pair/mob
+programming; swarming; intervención del SM ante microgestión.
+Métrica
+% de tareas autoasignadas por Developers
+vs asignadas por terceros.
+Idea para exponer
+La Planning define qué valor perseguimos y cómo organizamos el trabajo, no “quién recibe
+órdenes”.
+
+-- 27 of 310 --
+
+Antipatrón · Developers fuera de la estimación
+Sin participación no hay transparencia ni compromiso real
+Señales
+Estimaciones impuestas por líder técnico o externo; velocidad irreal;
+baja responsabilidad compartida; compromiso débil.
+Intervención
+Aclarar que estiman Developers; formar en técnicas; facilitar
+refinamiento; impedir interferencias; contrastar con datos reales.
+01
+Planning Poker
+Consenso y conversación sobre incertidumbre.
+02
+T-Shirt Sizing
+Rápido para agrupar tamaños.
+03
+Affinity Estimation
+Útil para grandes lotes.
+
+-- 28 of 310 --
+
+Antipatrón · Daily Scrum como reporting
+Cuando el equipo informa en vez de adaptar su plan
+Reporting
+✕ Monólogos al SM/PO
+✕ Sin foco en Sprint Goal
+✕ No se adapta el plan
+✕ Si falta el líder, no se hace
+Adaptación
+✓ Conversación entre Developers
+✓ Progreso hacia el Sprint Goal
+✓ Tablero como guía
+✓ Facilitación rotativa
+“20% pasado · 80% futuro: ¿cómo ajustamos el plan para acercarnos al objetivo?”
+
+-- 29 of 310 --
+
+Antipatrón · Falta de Definition of Done
+Sin acuerdo de calidad, “terminado” significa cosas distintas
+Señales
+Bugs tras entrega, retrabajo, incrementos incompletos, pruebas
+insuficientes, stakeholders reciben algo no usable.
+Soluciones
+Crear DoD consensuada y visible; incluir pruebas, integración,
+documentación mínima; revisarla en Review y Retrospective.
+Métricas
+% ítems que cumplen DoD · bugs post-entrega · ratio de retrabajo · ítems reabiertos.
+DoD no es burocracia: es transparencia sobre la calidad mínima aceptable.
+
+-- 30 of 310 --
+
+Antipatrón: el equipo cede a la presión
+Cuando el compromiso del Sprint deja de basarse en capacidad real y empieza a responder a presión externa o interna.
+Descripción
+Los Developers aceptan más trabajo del que realmente pueden completar en un
+Sprint. Esto genera incumplimientos constantes, desgaste, pérdida de confianza y una
+interpretación falsa de Scrum como “comprometerse a todo”.
+Señales de alerta
+• Sprint Goals incumplidos con frecuencia.
+• Historias no terminadas y arrastradas al siguiente Sprint.
+• Sensación de frustración y sobrecarga en el equipo.
+• Se prioriza cantidad sobre calidad del trabajo entregado.
+“No se trata de culpar: se trata de hacer visible el patrón y su impacto.”
+
+-- 31 of 310 --
+
+Cómo intervenir: presión y sobrecompromiso
+La conversación debe cambiar de “cuánto prometemos” a “qué valor podemos entregar de forma sostenible”.
+Intervenciones recomendadas
+• Reforzar que el Sprint Goal y el compromiso se definen por el propio equipo.
+• Empoderar al Product Owner para negociar alcance con stakeholders.
+• Revisar Sprint Backlog con el equipo y el PO durante la planificación.
+• Basar la planificación en datos reales: velocidad, disponibilidad, ausencias y capacidad.
+• Proteger al equipo de presión externa y educar a stakeholders.
+• Promover conversaciones transparentes sobre límites de capacidad y calidad.
+• Facilitar una mesa de priorización con stakeholders cuando todo parezca urgente.
+Métricas asociadas
+• % de historias completadas respecto al compromiso inicial.
+• Nº de Sprints consecutivos con Sprint Goal cumplido.
+• Variación entre capacidad planificada y capacidad real.
+• Índice de satisfacción del equipo sobre sostenibilidad del
+ritmo.
+Ejemplo de conversación
+“Si esto entra, ¿qué sale? ¿Qué objetivo del Sprint
+protegemos? ¿Qué riesgo asumimos si forzamos más
+alcance?”
+“Una intervención sin métrica es una opinión; una métrica sin conversación es control.”
+
+-- 32 of 310 --
+
+Antipatrón: retrospectivas sin valor
+Cuando la retrospectiva se convierte en rutina, queja recurrente o evento prescindible.
+Descripción
+Las retrospectivas no cumplen su propósito de inspeccionar y adaptar la forma de
+trabajo. Se perciben como reuniones repetitivas, irrelevantes o superficiales, sin
+acciones reales de mejora.
+Señales de alerta
+• El equipo repite siempre la misma dinámica sin resultados.
+• Las acciones de mejora no se implementan en los siguientes Sprints.
+• Falta de participación o interés de los Developers.
+• La retrospectiva se cancela o se hace de forma superficial.
+• El resultado recurrente es “todo está bien”.
+“No se trata de culpar: se trata de hacer visible el patrón y su impacto.”
+
+-- 33 of 310 --
+
+Cómo intervenir: retrospectivas accionables
+El valor de una retro no está en hablar mucho, sino en generar aprendizaje y cambio observable.
+Intervenciones recomendadas
+• Variar dinámicas y adaptarlas al contexto del equipo.
+• Asegurar acciones de mejora concretas, pequeñas y alcanzables.
+• Dar seguimiento en Daily o Planning al estado de las acciones.
+• Crear seguridad psicológica para que todos puedan participar.
+• Reconocer avances y reforzar motivación, no solo analizar problemas.
+• Revisar fortalezas y pensar cómo potenciarlas.
+• Usar métricas como disparador: Lead Time, Bugs, satisfacción, bloqueos.
+• Reflexionar sobre impacto en producto, no solo en proceso.
+Métricas asociadas
+• Nº de acciones definidas vs. implementadas en el siguiente
+Sprint.
+• % de Developers que aportan ideas.
+• Percepción de valor de la retrospectiva mediante encuesta
+rápida.
+• Evolución de métricas que dispararon la conversación.
+Ejemplo de conversación
+“¿Qué nos dicen estos datos? ¿Qué acción pequeña
+podemos probar en el próximo Sprint? ¿Cómo sabremos si
+funcionó?”
+“Una intervención sin métrica es una opinión; una métrica sin conversación es control.”
+
+-- 34 of 310 --
+
+Antipatrón: Sprint Review como demo
+Cuando la Review deja de ser inspección del producto y se transforma en presentación unilateral.
+Descripción
+La Sprint Review se limita a enseñar funcionalidades sin interacción real con
+stakeholders ni posibilidad de probar el incremento. Esto reduce feedback útil,
+transparencia y adaptación del Product Backlog.
+Señales de alerta
+• La Review es un “PowerPoint” en lugar de producto usable.
+• Stakeholders no participan ni hacen preguntas.
+• No se generan decisiones sobre próximos pasos.
+• El Product Backlog no cambia tras el feedback.
+• El evento se percibe como obligación, no como oportunidad de inspección.
+“No se trata de culpar: se trata de hacer visible el patrón y su impacto.”
+
+-- 35 of 310 --
+
+Cómo intervenir: Review orientada a decisión
+La Review debe conectar incremento, feedback y decisiones sobre el futuro del producto.
+Intervenciones recomendadas
+• Asegurar que el incremento esté usable y disponible para probar.
+• Invitar a stakeholders clave y fomentar interacción real.
+• Facilitar la conversación en torno al valor entregado, no solo a funcionalidad.
+• PO y equipo recogen feedback activamente para adaptar el Product Backlog.
+• Abrir con un Product Goal Radar para conectar entrega con objetivos
+estratégicos.
+Métricas asociadas
+• % de incrementos probados por stakeholders en la Review.
+• Nº de sugerencias incorporadas al Product Backlog.
+• Nivel de asistencia de stakeholders clave.
+• % de decisiones de priorización cambiadas tras feedback.
+Técnica avanzada
+Comenzar la Sprint Review con un Product Goal Radar: una
+visualización que muestra cuánto se avanza hacia objetivos
+estratégicos y qué gaps deben ajustar el Product Backlog.
+“La Review no termina en aplausos: termina en aprendizaje y adaptación del Backlog.”
+
+-- 36 of 310 --
+
+Antipatrón: Sprint sin propósito claro
+Cuando el Sprint Backlog es una lista de historias sin objetivo común que guíe decisiones.
+Descripción
+El equipo inicia el Sprint con ítems desconectados entre sí. Sin Sprint Goal claro,
+pierde foco, tiene dificultad para adaptarse y al final cuesta explicar qué valor se
+generó.
+Señales de alerta
+• Sprint Backlog como lista de tareas sin conexión.
+• En la Daily se habla de tareas sueltas, no de objetivo común.
+• Al final del Sprint cuesta explicar el valor generado.
+• Los cambios de alcance generan confusión por falta de propósito guía.
+“No se trata de culpar: se trata de hacer visible el patrón y su impacto.”
+
+-- 37 of 310 --
+
+Cómo intervenir: de Product Goal a Sprint Goal
+El Sprint Goal traduce la estrategia en foco táctico para la iteración.
+Intervenciones recomendadas
+• Asegurar que Sprint Planning incluya una definición clara de Sprint Goal.
+• Formular el objetivo en lenguaje simple y accesible para equipo y stakeholders.
+• Usar el Sprint Goal como referencia en tablero, Daily, Review y decisiones de alcance.
+• Facilitar talleres Product Goal ÷4QSJOU(PBMQBSBDPOFDUBSWJTJ	ón, estrategia y ejecución.
+• Revisar si la selección de Backlog realmente contribuye al objetivo.
+• Cuando surgen cambios, preguntar: ¿ayuda o amenaza al Sprint Goal?
+Métricas asociadas
+• % de Sprints con Sprint Goal definido y comunicado.
+• Nivel de comprensión del Sprint Goal al inicio del Sprint.
+• Nº de decisiones de alcance tomadas usando el Sprint Goal.
+• % de Sprint Goals cumplidos sin sacrificar calidad.
+Ejemplo de conversación
+“Este Sprint no va de completar tickets; va de lograr este
+resultado. ¿Qué selección de trabajo nos acerca más?”
+“Una intervención sin métrica es una opinión; una métrica sin conversación es control.”
+
+-- 38 of 310 --
+
+Antipatrón: Product Owner no dedicado
+Cuando el PO reparte su tiempo entre demasiadas responsabilidades y el producto pierde dirección.
+Descripción
+El Product Owner divide su tiempo con otras funciones —analista, manager, soporte o
+coordinación— y no dedica suficiente atención al Product Backlog ni a la conexión
+con stakeholders.
+Señales de alerta
+• Product Backlog no actualizado ni alineado con prioridades de negocio.
+• Decisiones de priorización tardan o las toma alguien externo al PO.
+• Developers carecen de claridad sobre propósito o historias.
+• Stakeholders perciben desconexión entre necesidades y entrega.
+• El PO queda reducido a administrador de tickets.
+“No se trata de culpar: se trata de hacer visible el patrón y su impacto.”
+
+-- 39 of 310 --
+
+Cómo intervenir: disponibilidad y foco del PO
+La autonomía del Product Owner requiere tiempo real, reconocimiento del rol y rutinas de producto.
+Intervenciones recomendadas
+• Asegurar dedicación suficiente al rol y reconocimiento de su responsabilidad.
+• Reforzar formación y coaching en gestión de producto.
+• Establecer rutinas frecuentes de refinamiento y comunicación con equipo y stakeholders.
+• Delegar en proxy solo para apoyo operativo, manteniendo autoridad en el PO real.
+• Facilitar sesiones de mapeo de historias de usuario o impacto con PO y stakeholders.
+• Hacer visible el coste de retrasos en decisiones de producto.
+Métricas asociadas
+• Satisfacción del equipo con claridad y disponibilidad del PO.
+• % de tiempo del PO dedicado a gestión del Product Backlog.
+• Grado de definición de historias al entrar al Sprint Backlog.
+• Tiempo medio de respuesta a decisiones de priorización.
+Ejemplo de conversación
+“¿Qué decisiones se están retrasando porque el PO no
+tiene espacio? ¿Qué impacto tiene eso en flujo y valor?”
+“Una intervención sin métrica es una opinión; una métrica sin conversación es control.”
+
+-- 40 of 310 --
+
+Antipatrón · Backlog sin priorización clara
+El equipo trabaja “lo fácil” o “lo último” en vez de lo más valioso
+Señales
+Ítems fáciles primero; stakeholders no ven impacto; reviews pobres;
+prioridades cambiantes sin criterio.
+Soluciones
+PO prioriza por valor; conectar con OKRs; revisar frecuentemente;
+limitar ítems; eliminar obsoletos; visibilizar criterio.
+ALTO VALOR BAJO ESFUERZO
+Prioriza primero lo que maximiza aprendizaje o impacto con menor coste.
+
+-- 41 of 310 --
+
+ADVANCED SCRUM MASTER
+Técnicas avanzadas
+de priorización
+Cómo decidir qué hacer primero
+cuando todo parece importante
+
+-- 42 of 310 --
+
+Por qué priorizar no es ordenar una lista
+Priorizar es hacer visible el criterio de decisión para maximizar valor, aprendizaje y foco.
+Sin priorización
+• El equipo trabaja en lo fácil
+• Mandan las urgencias
+• Se pierde alineación con negocio
+Con priorización
+• Se explicita el valor
+• Hay foco y trade-offs
+• Se protege la capacidad del equipo
+Rol del SM
+Facilitar conversaciones difíciles: qué
+entra, qué sale y por qué.
+“La prioridad no está en la herramienta; está en la conversación que la herramienta permite.”
+
+-- 43 of 310 --
+
+Qué se va a aprender
+Resultados de aprendizaje orientados a aplicación práctica.
+Diferenciar decisiones de urgencia, valor, coste, riesgo, satisfacción y consenso.
+Elegir la técnica adecuada según el contexto: producto, soporte, roadmap, discovery o retrospectiva.
+Facilitar una sesión de priorización sin caer en la opinión dominante ni en el criterio invisible.
+Aplicar ejemplos completos con backlog, métricas y trade-offs reales.
+Conectar la priorización con Product Goal, Sprint Goal, OKRs y entrega de valor.
+“La mejor técnica es la que ayuda a decidir mejor, no la que parece más sofisticada.”
+
+-- 44 of 310 --
+
+Modelo mental: criterio antes que técnica
+Antes de elegir un framework, aclara qué decisión estás intentando tomar.
+1
+Qué queremos
+conseguir
+2
+Qué opciones
+tenemos
+3
+Con qué criterios
+decidimos
+4
+Qué datos son fiables
+5
+Qué sacrificamos
+Preguntas clave
+¿Qué pasaría si no hacemos esto?
+¿Qué valor se pierde si esperamos?
+¿Quién se beneficia?
+Salida esperada
+Backlog ordenado, acuerdos visibles, criterios
+explícitos y próximos pasos claros.
+Riesgo
+Convertir la técnica en votación
+decorativa y no en decisión real.
+
+-- 45 of 310 --
+
+Antipatrón: falta de priorización del Backlog
+Cuando no hay criterio claro, el equipo acaba trabajando en lo fácil, lo reciente o lo impuesto.
+Señales de alerta
+• Ítems fáciles antes que valiosos
+• Cambios de prioridad sin explicación
+• Reviews sin feedback útil
+• Stakeholders desalineados
+Impacto
+• Pérdida de foco
+• Baja entrega de valor
+• Fricción PO-stakeholders
+• Sensación de urgencia permanente
+Intervención
+• PO lidera por valor
+• Criterios transparentes
+• Relación con objetivos
+• Refinement frecuente
+Idea clave
+La priorización no es una técnica aislada. En Scrum, priorizar forma parte del sistema de inspección y adaptación del producto.
+
+-- 46 of 310 --
+
+Elige la técnica según el tipo de decisión
+Una misma lista puede ordenarse distinto si cambia el objetivo.
+Eisenhower
+Urgencia vs importancia
+MoSCoW
+Alcance mínimo viable
+Valor / Esfuerzo
+Impacto rápido
+WSJF
+Coste de demora / tamaño
+RICE
+Roadmap con incertidumbre
+Kano
+Satisfacción del cliente
+Coste / Beneficio
+Decisión económica
+Por objetivos
+Alineación estratégica
+Dot Voting
+Consenso rápido
+“No hay priorización neutral: siempre estás optimizando algo.”
+
+-- 47 of 310 --
+
+Canvas de priorización
+Un patrón reutilizable para cualquier técnica.
+Antes de empezar
+1. Contexto: objetivo de negocio o Product Goal
+2. Opciones: ítems comparables entre sí
+3. Criterios: valor, urgencia, riesgo, esfuerzo, confianza
+4. Datos: métricas, feedback, restricciones, dependencias
+5. Regla de decisión: cómo se ordena y quién decide
+Salida mínima
+Una decisión explicable: qué entra primero, qué queda fuera, qué hipótesis validamos y cuándo revisaremos el orden.
+
+-- 48 of 310 --
+
+Priorización en Scrum: ordenar trabajo para generar valor
+El Product Owner ordena el Product Backlog; el equipo convierte una selección en un Incremento de valor.
+Product Goal
+Dirección estratégica. Ayuda a decidir
+qué aporta valor al producto.
+Product Backlog
+Lista emergente, visible, ordenada y
+refinada de trabajo del producto.
+Sprint Goal
+Foco táctico para seleccionar y
+adaptar trabajo durante el Sprint.
+1
+Objetivo
+2
+Opciones
+3
+Orden
+4
+Selección
+5
+Incremento
+“Ordenar el Backlog no es administrar tickets: es tomar decisiones de producto.”
+
+-- 49 of 310 --
+
+Criterios habituales para priorizar
+Los criterios deben ser pocos, comprensibles y defendibles ante stakeholders.
+Valor
+Impacto en cliente, negocio o aprendizaje
+Urgencia
+Coste de esperar o ventana temporal
+Riesgo
+Incertidumbre técnica, producto o mercado
+Esfuerzo
+Tamaño, complejidad y capacidad requerida
+Confianza
+Calidad de datos que soportan la decisión
+Dependencias
+Bloqueos o habilitadores para otros equipos
+“Menos criterios, mejor conversación. Demasiados criterios suelen esconder falta de estrategia.”
+
+-- 50 of 310 --
+
+Cómo preparar una sesión de priorización
+La calidad de la decisión depende de la calidad de la preparación.
+1
+Define el objetivo
+2
+Prepara opciones
+3
+Alinea criterios
+4
+Recoge datos
+5
+Facilita trade-offs
+6
+Cierra acuerdos
+Material necesario
+Backlog depurado, métricas relevantes,
+feedback de usuarios, capacidad
+aproximada y restricciones conocidas.
+Participantes
+PO, Developers clave, stakeholders
+con decisión y Scrum Master como
+facilitador neutral.
+Regla de oro
+No metas en la sesión ítems que
+nadie entiende o que no se pueden
+comparar.
+
+-- 51 of 310 --
+
+BLOQUE
+Matriz Eisenhower
+Útil cuando el problema principal es distinguir urgencia real
+de presión percibida.
+
+-- 52 of 310 --
+
+Eisenhower: urgente vs importante
+Ayuda a clasificar tareas cuando hay interrupciones, presión operativa o sensación de saturación.
+Urgencia
+Importancia
+Planifícalo
+Importante, no urgente
+Hazlo ya
+Importante y urgente
+Minimiza
+Ni urgente ni importante
+Delega
+Urgente, no importante
+Cuándo usarla
+Cuando hay demasiadas tareas mezcladas y el equipo necesita
+separar valor estratégico de ruido operativo.
+Cómo puntuar
+Valora urgencia e importancia de 0 a 10. Coloca cada ítem y
+decide acción según cuadrante.
+Riesgo
+Llamar urgente a todo. La urgencia sin impacto suele ser presión,
+no prioridad.
+
+-- 53 of 310 --
+
+Eisenhower: interpretación de cuadrantes
+Cada cuadrante implica una decisión distinta, no solo una etiqueta.
+Hazlo ya
+Crítico, bloqueante, con coste claro de demora. Requiere acción
+inmediata.
+Planifícalo
+Trabajo estratégico que evita urgencias futuras. Debe entrar en
+calendario.
+Delega
+Necesario pero no estratégico. Puede resolverlo otra persona,
+canal o automatización.
+Minimiza
+Distracción o tarea de bajo valor. Eliminar, posponer o limitar
+tiempo.
+“Lo importante que nunca planificas acaba convirtiéndose en urgente.”
+
+-- 54 of 310 --
+
+Ejemplo Eisenhower: plataforma de cursos online
+Caso: estás preparando una nueva plataforma para vender y entregar cursos.
+Ítem Import. Urg. Decisión
+Corregir error que impide pagar 9 10 Hazlo ya
+Diseñar sistema de recomendaciones IA 8 3 Planifícalo
+Responder petición estética de bajo impacto 3 8 Delega
+Cambiar iconos del dashboard sin evidencia 2 2 Minimiza
+Definir política de certificados 7 4 Planifícalo
+Lectura del ejemplo
+El error de pago va primero por coste directo; la IA puede aportar valor, pero no es urgente; lo estético sin evidencia no debe secuestrar foco.
+
+-- 55 of 310 --
+
+Eisenhower: cómo facilitar sin caer en el caos
+El Scrum Master protege la conversación de urgencias mal definidas.
+Pide evidencia de urgencia: fecha, contrato, riesgo, coste de espera o impacto real.
+Separa interrupciones operativas de decisiones de producto.
+Limita el número de ítems en 'Hazlo ya': si todo es urgente, nada es priorizable.
+Usa el cuadrante 'Planifícalo' para prevenir incendios recurrentes.
+Cierra con una decisión visible: qué entra, qué sale y quién asume cada acción.
+“La urgencia se valida con datos, no con volumen de voz.”
+
+-- 56 of 310 --
+
+BLOQUE
+MoSCoW
+Una técnica sencilla para negociar alcance y proteger lo
+esencial.
+
+-- 57 of 310 --
+
+MoSCoW: Must, Should, Could, Won’t
+Sirve para gestionar expectativas de alcance dentro de un timebox o entrega concreta.
+Must Have
+Imprescindible. Sin esto, la entrega no cumple su propósito.
+Should Have
+Importante. Puede existir alternativa temporal si no llega.
+Could Have
+Deseable. Aporta valor, pero no compromete la entrega.
+Won’t Have
+No entra ahora. Se reconoce, pero se deja fuera del alcance actual.
+“MoSCoW funciona cuando el Won’t Have se respeta de verdad.”
+
+-- 58 of 310 --
+
+MoSCoW: cómo validar un Must Have
+La pregunta clave evita que todo se convierta en imprescindible.
+Pregunta de validación
+¿Qué ocurre si este requisito no se entrega en esta versión?
+Must
+La entrega pierde sentido o no puede
+salir.
+Should
+Duele no tenerlo, pero existe
+workaround temporal.
+Could
+Sería bueno, pero no cambia la
+viabilidad.
+“Un Must sin consecuencia explícita suele ser un deseo disfrazado de necesidad.”
+
+-- 59 of 310 --
+
+Ejemplo MoSCoW: lanzamiento de curso online
+Objetivo: publicar un curso vendible y consumible en la primera versión.
+Requisito Categoría Razonamiento
+Reproductor de vídeo estable Must Sin él no hay consumo del curso
+Checkout con tarjeta Must Sin pago no hay venta
+Cupones de descuento Should Ayuda a marketing, pero puede lanzarse sin cupones
+Certificado descargable Should Aporta valor, no impide aprender
+Comunidad integrada Could Diferencia, pero no es esencial en MVP
+Gamificación avanzada Won’t Se evaluará cuando haya datos de uso
+“MoSCoW no ordena todo; separa lo necesario de lo negociable.”
+
+-- 60 of 310 --
+
+MoSCoW: reglas de facilitación
+Haz explícito el alcance y las expectativas desde el principio.
+Regla 1
+No permitas que más de la mitad del
+esfuerzo estimado sea Must Have.
+Regla 2
+Cada Must debe tener una consecuencia
+clara si no se entrega.
+Regla 3
+Won’t Have no significa nunca; significa
+fuera de este objetivo o ventana.
+Recomendación de uso
+Funciona especialmente bien con stakeholders para reducir discusiones de opinión: primero se acuerdan las categorías y después se negocia el
+alcance.
+“La priorización también consiste en proteger lo que no se va a hacer ahora.”
+
+-- 61 of 310 --
+
+MoSCoW: errores frecuentes
+La técnica es simple, por eso se suele aplicar demasiado rápido.
+Todos los ítems acaban como Must porque nadie quiere asumir renuncias.
+No se vincula la categoría al objetivo de producto o de release.
+Se clasifica por poder político del stakeholder, no por impacto real.
+El Won’t Have se comunica mal y se interpreta como rechazo definitivo.
+No se revisa la clasificación cuando cambia el contexto.
+Antídoto
+Pide siempre la consecuencia de no entregar: legal, económica, experiencia de usuario, aprendizaje o riesgo operativo.
+
+-- 62 of 310 --
+
+BLOQUE
+Matriz Valor / Esfuerzo
+La herramienta más rápida para descubrir quick wins y
+evitar apuestas caras de bajo impacto.
+
+-- 63 of 310 --
+
+Valor / Esfuerzo: impacto frente a inversión
+Permite ver visualmente qué iniciativas merecen atención inmediata.
+Esfuerzo
+Valor
+Prioridad máxima
+Alto valor
+Bajo esfuerzo
+Planificar
+Alto valor
+Alto esfuerzo
+¿Merece la pena?
+Bajo valor
+Bajo esfuerzo
+No invertir
+Bajo valor
+Alto esfuerzo
+Cuándo usar
+Cuando tienes muchas opciones y necesitas una primera
+ordenación rápida.
+Cómo puntuar
+Valor de 0 a 10; esfuerzo relativo usando Fibonacci o tallas.
+Limitación
+No captura urgencia ni riesgo por sí sola. Complementa
+con otros criterios si hace falta.
+
+-- 64 of 310 --
+
+Ejemplo Valor / Esfuerzo: decisiones de producto
+Backlog de mejoras para vender y entregar un curso online.
+Ítem Valor Esfuerzo Lectura
+Optimizar checkout 9 3 Prioridad máxima
+Subtítulos automáticos 7 5 Planificar
+Cambiar diseño de insignias 3 2 ¿Merece la pena?
+Marketplace propio completo 8 13 Planificar con cuidado
+Chat 24/7 custom 4 13 No invertir ahora
+Decisión
+Empieza por optimizar checkout: alto impacto en conversión y esfuerzo bajo. Planifica subtítulos si mejora accesibilidad y retención.
+
+-- 65 of 310 --
+
+Valor / Esfuerzo: cómo puntuar sin sesgos
+No confundas valor con deseo ni esfuerzo con comodidad técnica.
+Valor
+Impacto en objetivos: ingresos,
+aprendizaje, satisfacción, reducción de
+riesgo o eficiencia.
+Esfuerzo
+Complejidad, tiempo, coordinación,
+incertidumbre técnica y dependencias.
+Confianza
+Señala cuándo el dato es débil. Una
+puntuación alta con baja confianza
+requiere discovery.
+Puntúa comparativamente, no como verdad absoluta.
+Usa rangos relativos: 1, 2, 3, 5, 8, 13.
+Revisa outliers: ¿por qué alguien ve valor 9 y otro valor 3?
+No dejes que solo el equipo técnico puntúe valor ni que solo negocio puntúe esfuerzo.
+
+-- 66 of 310 --
+
+Valor / Esfuerzo: decisiones por cuadrante
+Convierte la matriz en acción clara.
+Prioridad máxima
+Entrar pronto si está alineado con el objetivo. Buen candidato para
+Sprint próximo.
+Planificar
+Requiere slicing, validación, diseño técnico o roadmap. No lo
+metas entero sin preparar.
+¿Merece la pena?
+Hazlo solo si hay capacidad sobrante o si habilita aprendizaje
+barato.
+No invertir
+Elimina, reevalúa o busca una alternativa más simple. No lo
+mantengas por inercia.
+“La matriz no decide por ti; hace visible dónde necesitas una conversación.”
+
+-- 67 of 310 --
+
+BLOQUE
+WSJF
+Weighted Shortest Job First: priorizar maximizando beneficio
+económico y coste de oportunidad.
+
+-- 68 of 310 --
+
+WSJF: priorizar el trabajo más valioso y corto primero
+Especialmente útil en entornos de escalado, portfolios, features y épicas.
+WSJF = Coste de demora / Duración
+Cuanto mayor sea el WSJF, antes debería hacerse el ítem, porque combina valor económico de no esperar con tamaño relativo.
+Coste de demora
+Valor perdido si retrasamos el trabajo.
+Duración / tamaño
+Esfuerzo o tiempo relativo necesario.
+Resultado
+Orden económico defendible.
+“Si solo cuantificas una cosa, cuantifica el coste de retrasar.”
+
+-- 69 of 310 --
+
+WSJF: componentes del Cost of Delay
+En práctica ágil escalada, el coste de demora suele descomponerse en tres factores.
+Valor negocio / usuario
+Impacto en ingresos, retención,
+ahorro, satisfacción o adopción.
+Criticidad temporal
+Ventana de mercado, fecha legal,
+compromiso contractual o
+estacionalidad.
+Reducción de riesgo / oportunidad
+Aprendizaje, mitigación técnica,
+habilitador o dependencia
+desbloqueada.
+CoD = Valor + Criticidad + Riesgo/Oportunidad
+Después divide por duración o tamaño relativo para obtener WSJF.
+
+-- 70 of 310 --
+
+Ejemplo WSJF: roadmap de plataforma de cursos
+Puntuaciones relativas: 1, 2, 3, 5, 8, 13. Ordena de mayor a menor WSJF.
+Feature Valor Tiempo Riesgo Tamaño WSJF
+Checkout con cupones 8 8 3 5 3.8
+Subtítulos automáticos 5 3 8 8 2.0
+Certificados verificables 5 5 5 5 3.0
+Dashboard instructor 8 3 3 8 1.8
+Mejora rendimiento vídeo 13 8 8 5 5.8
+Lectura
+La mejora de rendimiento de vídeo sale primera: alto valor, alta criticidad y reduce riesgo técnico con tamaño moderado.
+
+-- 71 of 310 --
+
+WSJF: cuándo no usarlo o cómo no usarlo
+Potente, pero puede crear falsa precisión si el contexto no está maduro.
+No usar si...
+Los ítems son demasiado pequeños, no
+comparables o no hay criterio de valor
+compartido.
+Cuidado con...
+Inflar valor para que 'mi iniciativa' salga
+arriba. Revisa sesgos y evidencia.
+Recuerda
+WSJF ayuda a secuenciar, pero no
+sustituye estrategia ni criterio de
+producto.
+Recomendación de uso
+Presenta WSJF como técnica económica para ordenar apuestas, no como fórmula mágica. El aprendizaje está en debatir Cost of Delay.
+
+-- 72 of 310 --
+
+BLOQUE
+RICE
+Un modelo de scoring útil cuando necesitas ordenar
+oportunidades de producto con incertidumbre.
+
+-- 73 of 310 --
+
+RICE: Reach, Impact, Confidence, Effort
+Ayuda a comparar iniciativas equilibrando alcance, impacto, confianza y esfuerzo.
+RICE = (Reach × Impact × Confidence) / Effort
+Cuanto mayor sea la puntuación, más atractiva es la iniciativa en relación con su esfuerzo.
+Reach
+A cuántos usuarios afecta.
+Impact
+Cuánto mejora el resultado.
+Confidence
+Cuánta evidencia tenemos.
+Effort
+Coste relativo de hacerlo.
+
+-- 74 of 310 --
+
+RICE: cómo puntuar cada factor
+La clave es que todos usen la misma escala.
+Factor Qué mide Ejemplo de escala
+Reach Usuarios, cuentas o transacciones afectadas en un periodo Ej.: 8.000 alumnos/mes
+Impact Impacto esperado por usuario 3 masivo · 2 alto · 1 medio · 0,5 bajo
+Confidence Nivel de evidencia 100% alto · 80% medio · 50% bajo
+Effort Personas-mes, semanas o tamaño relativo Ej.: 2 personas durante 1 mes = 2
+“RICE castiga las ideas con poca evidencia; eso lo hace útil para reducir apuestas impulsivas.”
+
+-- 75 of 310 --
+
+Ejemplo RICE: mejoras para alumnos
+Caso: decidir próximas funcionalidades del curso online.
+Idea Reach Impact Conf. Effort RICE
+Subtítulos automáticos 6.000 2 80% 3 3.200
+Gamificación 4.000 1 50% 5 400
+Recordatorios de avance 8.000 1 80% 2 3.200
+Comunidad integrada 2.500 2 50% 4 625
+Mejorar streaming 7.000 3 80% 4 4.200
+Lectura
+Mejorar streaming sale arriba: afecta a muchos usuarios, impacto alto y confianza suficiente. Gamificación queda baja por incertidumbre y
+esfuerzo.
+
+-- 76 of 310 --
+
+RICE: errores frecuentes
+El modelo es útil si la evidencia y las escalas son honestas.
+Reach inflado: contar usuarios potenciales en lugar de usuarios realmente afectados.
+Impact subjetivo: no definir qué significa impacto alto, medio o bajo.
+Confidence ignorada: tratar hipótesis débiles como verdades.
+Effort minimizado por optimismo técnico.
+Comparar ideas de naturaleza muy distinta sin segmentarlas.
+Consejo
+Usa RICE para crear una primera ordenación y después valida las decisiones importantes con conversación estratégica.
+
+-- 77 of 310 --
+
+BLOQUE
+Kano Model
+Priorizar entendiendo cómo cada funcionalidad impacta en
+la satisfacción del cliente.
+
+-- 78 of 310 --
+
+Kano: no todo valor se percibe igual
+Algunas funcionalidades son básicas, otras aumentan satisfacción y algunas sorprenden.
+Cumplimiento de la funcionalidad
+Satisfacción
+Performance
+Básicas
+Delighters Básicas
+Si faltan, generan insatisfacción. Si están, apenas se
+celebran.
+Performance
+A mayor cumplimiento, mayor satisfacción.
+Atractivas
+Sorprenden si existen, pero no se echan de menos si
+faltan.
+
+-- 79 of 310 --
+
+Ejemplo Kano: funcionalidades de una plataforma de cursos
+El mismo backlog se mira desde la satisfacción del alumno.
+Funcionalidad Categoría Interpretación
+Vídeo que carga sin cortes Básica Si falla, el alumno abandona
+Buscador dentro del curso Performance Cuanto mejor funciona, más satisfacción
+Certificado verificable Performance Aumenta valor percibido y empleabilidad
+Resumen IA de cada clase Atractiva Puede sorprender y diferenciar
+Tema visual alternativo Indiferente Puede no afectar la decisión
+“Kano te recuerda que no todo lo que satisface vende, y no todo lo que falta duele igual.”
+
+-- 80 of 310 --
+
+Kano: preguntas funcionales y disfuncionales
+Para clasificar mejor, pregunta cómo se sentiría el usuario con y sin la funcionalidad.
+Pregunta funcional
+¿Cómo te sentirías si el curso tuviera resúmenes IA al final de
+cada clase?
+Pregunta disfuncional
+¿Cómo te sentirías si el curso no tuviera resúmenes IA?
+4JFMVTVBSJPMPFTQFSBZTFFOGBEBTJGBMUB÷#	ásica.
+Si gusta cuando está y molesta cuando falta ÷1FSGPSNBODF
+Si encanta cuando está y no molesta cuando falta ÷"USBDUJWB
+4JEBJHVBMFOBNCPTDBTPT÷*OEJGFSFOUF
+“Kano es especialmente útil antes de construir, no después de gastar todo el presupuesto.”
+
+-- 81 of 310 --
+
+Kano: estrategia de priorización
+No priorices solo delighters: primero cubre lo básico.
+Primero
+Asegura básicos: estabilidad, seguridad,
+cumplimiento mínimo y experiencia
+sin fricción.
+Después
+Optimiza performance: velocidad,
+facilidad, precisión, capacidad o
+personalización.
+Finalmente
+Añade delighters con experimentos
+pequeños y medición de adopción.
+Advertencia
+Los delighters envejecen: lo que hoy sorprende mañana puede convertirse en expectativa básica del mercado.
+
+-- 82 of 310 --
+
+BLOQUE
+Análisis Coste / Beneficio
+Priorizar cuando la decisión necesita una conversación
+económica explícita.
+
+-- 83 of 310 --
+
+Coste / Beneficio: priorizar con impacto económico
+Útil para inversiones, decisiones con presupuesto o comparación de alternativas.
+Beneficio
+Ingresos, ahorro, reducción de riesgo,
+satisfacción, eficiencia o aprendizaje
+monetizable.
+Coste
+Desarrollo, operación, mantenimiento,
+soporte, formación, coste de oportunidad.
+Decisión
+Prioriza lo que aporta mejor retorno
+dentro de restricciones reales.
+Ratio = Beneficio esperado / Coste total
+No exige precisión absoluta; exige que las hipótesis económicas estén visibles y sean revisables.
+
+-- 84 of 310 --
+
+Ejemplo Coste / Beneficio
+Caso: mejoras para vender más cursos online.
+Iniciativa Beneficio Coste Lectura
+Optimizar checkout Alto Medio Mejora conversión directa
+Nueva landing para SEO Medio Medio Aumenta captación a medio plazo
+App móvil nativa Alto Muy alto Apuesta grande; requiere validación
+Automatizar certificados Medio Bajo Reduce soporte y aumenta percepción de valor
+Decisión
+Empieza por checkout y certificados: retorno más claro y menor coste. La app móvil requiere discovery antes de comprometer inversión.
+
+-- 85 of 310 --
+
+Coste / Beneficio: qué no olvidar
+El coste real rara vez es solo desarrollo.
+Incluye mantenimiento, soporte, deuda técnica y operación.
+Considera coste de oportunidad: qué dejamos de hacer si hacemos esto.
+Separa beneficio demostrado, supuesto e hipótesis por validar.
+No uses ROI como excusa para ignorar experiencia de usuario o sostenibilidad.
+Revisa beneficios después de entregar: priorizar también exige aprendizaje.
+“Lo caro no siempre es malo; lo peligroso es invertir mucho sin aprendizaje temprano.”
+
+-- 86 of 310 --
+
+BLOQUE
+Priorización por objetivos
+Cuando la estrategia manda, los criterios deben reflejar
+objetivos de negocio.
+
+-- 87 of 310 --
+
+Por objetivos: alinear decisiones con estrategia
+Se definen variables que ayudan a decidir según la prioridad de la compañía.
+Idea central
+No todos los criterios pesan igual. Se
+ordenan según objetivos explícitos.
+Ejemplo curso
+Retención > conversión > satisfacción
+> esfuerzo.
+Ejemplo telco
+NPS > SLA > tipo de cliente > esfuerzo.
+1
+Objetivo
+estratégico
+2
+Criterios
+3
+Ponderación
+4
+Score
+5
+Orden
+6
+Revisión
+
+-- 88 of 310 --
+
+Ejemplo por objetivos: equipo telco
+Objetivo de compañía: mejorar NPS sin incumplir SLA.
+Petición NPS SLA Cliente Esf. Prioridad
+Incidencia cliente estratégico sin servicio 10 10 10 5 Muy alta
+Mejora interna de reporting 3 2 4 3 Baja
+Solicitud cliente estándar con SLA cercano 6 8 5 3 Alta
+Automatizar despliegue repetitivo 7 4 6 8 Media
+Lectura
+El criterio principal no es quién grita más: es el objetivo estratégico acordado. NPS y SLA gobiernan la decisión.
+
+-- 89 of 310 --
+
+Diseña tu propio modelo por objetivos
+Muy útil cuando la organización tiene OKRs, métricas estratégicas o compromisos de negocio.
+1. Objetivo
+¿Qué resultado queremos
+mover?
+2. Criterios
+¿Qué variables explican
+prioridad?
+3. Peso
+¿Qué criterio manda sobre
+otro?
+4. Revisión
+¿Cuándo cambia?
+Ejemplo SaaS: ARR impactado, churn, adopción, riesgo, esfuerzo.
+Ejemplo formación: finalización del curso, satisfacción, conversión, soporte, esfuerzo.
+Ejemplo producto interno: ahorro operativo, cumplimiento, riesgo, dependencia, coste.
+
+-- 90 of 310 --
+
+Plantilla de scorecard por objetivos
+Se puede utilizar como plantilla de trabajo.
+Ítem Objetivo A Objetivo B Riesgo Esfuerzo Decisión
+Mejora 1 0-10 0-10 0-10 1-13 Orden
+Mejora 2 0-10 0-10 0-10 1-13 Orden
+Mejora 3 0-10 0-10 0-10 1-13 Orden
+Regla
+El modelo debe caber en una conversación. Si nadie puede explicar por qué un ítem sube o baja, el modelo no está ayudando.
+
+-- 91 of 310 --
+
+BLOQUE
+Dot Voting
+Una técnica rápida para crear foco, no para sustituir una
+decisión de producto compleja.
+
+-- 92 of 310 --
+
+Dot Voting: consenso rápido en grupo
+Útil para seleccionar problemas, ideas o temas cuando necesitas foco colectivo.
+1
+Define objetivo
+2
+Lista opciones
+3
+Entrega puntos
+4
+Votación
+5
+Conteo
+6
+Decisión
+Dónde usar
+Retrospectivas, ideación, selección de
+problemas, priorización ligera.
+Dónde no usar
+Decisiones de alto impacto económico
+sin datos o criterio explícito.
+Rol del SM
+Garantizar igualdad de voz y evitar
+sesgos de popularidad.
+
+-- 93 of 310 --
+
+Dot Voting: reglas prácticas
+La técnica es sencilla, pero necesita límites claros.
+Cada participante recibe un número fijo de puntos, por ejemplo 3 o 5.
+Puede repartirlos o concentrarlos, si esa regla se acuerda antes.
+Votación silenciosa antes de debatir para reducir influencia jerárquica.
+Después del conteo, se discuten las opciones más votadas y los outliers.
+El resultado abre conversación; no siempre cierra la decisión.
+“Dot Voting es una forma de escuchar al grupo, no de delegar el criterio de producto.”
+
+-- 94 of 310 --
+
+Ejemplo Dot Voting: retrospectiva
+Objetivo: elegir el problema que más duele para trabajarlo en el siguiente Sprint.
+Muchas interrupciones
+Votos: 12
+Refinamiento débil
+Votos: 7
+Falta de pruebas
+Votos: 10
+Daily poco útil
+Votos: 4
+Dependencias externas
+Votos: 8
+Historias grandes
+Votos: 9
+Decisión
+Se priorizan interrupciones y falta de pruebas. El equipo define acciones pequeñas y métricas de seguimiento.
+
+-- 95 of 310 --
+
+Dot Voting: cómo evitar sesgos
+Sin cuidado, gana la idea más visible, no necesariamente la más valiosa.
+Sesgo de autoridad
+Personas votan lo que intuyen que quiere
+el líder.
+Sesgo de popularidad
+Gana lo emocionalmente más atractivo.
+Sesgo de claridad
+Gana lo mejor redactado, no lo más
+importante.
+Votación silenciosa y simultánea.
+Reescribir opciones para que todas tengan claridad similar.
+Separar generación de ideas, clarificación, votación y decisión.
+Usar datos después de votar para validar la elección.
+
+-- 96 of 310 --
+
+BLOQUE
+Integración
+Cómo combinar técnicas y convertir la priorización en un
+sistema de decisión sostenible.
+
+-- 97 of 310 --
+
+Comparativa rápida de técnicas
+Elige por contexto, no por moda.
+Técnica Mejor contexto Para qué sirve
+Eisenhower Urgencia operativa Distinguir presión de prioridad
+MoSCoW Alcance de release/MVP Gestionar expectativas
+Valor/Esfuerzo Primera ordenación Encontrar quick wins
+WSJF Portfolio/features Maximizar beneficio económico
+RICE Roadmap con datos Comparar oportunidades
+Kano Discovery/UX Entender satisfacción
+Por objetivos Estrategia/OKRs Alinear con metas
+Dot Voting Talleres/retros Crear foco colectivo
+
+-- 98 of 310 --
+
+Cómo combinar técnicas sin complicarlo
+Un flujo realista suele usar varias técnicas con distinto nivel de profundidad.
+1
+MoSCoW para alcance
+2
+Valor/Esfuerzo para
+filtrar
+3
+RICE o WSJF para
+ordenar
+4
+Kano para validar
+percepción
+5
+Dot Voting para foco
+Ejemplo
+Para un MVP: usa MoSCoW para separar Must/Should/Could, Valor/Esfuerzo para identificar quick wins y RICE para ordenar las apuestas de
+producto con más incertidumbre.
+“No combines técnicas para parecer riguroso; combínalas solo si mejora la decisión.”
+
+-- 99 of 310 --
+
+De la técnica al Product Backlog
+La priorización solo crea valor si cambia la conversación y el trabajo real.
+1
+Orden visible
+2
+Historias refinadas
+3
+Sprint Goal
+4
+Incremento
+5
+Feedback
+6
+Repriorización
+Backlog
+Los ítems altos deben estar mejor
+refinados que los ítems bajos.
+Sprint Planning
+El Sprint Goal guía qué selección del
+Backlog tiene sentido ahora.
+Review
+El feedback puede cambiar el orden.
+Priorizar es continuo.
+
+-- 100 of 310 --
+
+Métricas para saber si priorizamos mejor
+No basta con ordenar; hay que verificar si el orden genera más valor.
+% ítems alineados 82% % valor entregado 68%
+Cambios explicados 75% Lead time alto valor 55%
+Feedback incorporado 62% Trabajo no planificado 28%
+Pregunta de cierre
+¿La priorización está reduciendo ruido, aumentando foco y acelerando aprendizaje sobre valor?
+
+-- 101 of 310 --
+
+Ejercicio integrador
+Caso: priorizar el siguiente trimestre de una plataforma de formación online.
+Backlog candidato
+Checkout, certificados, subtítulos, comunidad, app móvil, IA de
+resúmenes, streaming, panel analítico del curso.
+Objetivo
+Aumentar finalización del curso y conversión sin disparar soporte.
+Elige una técnica principal y justifica por qué.
+Puntúa 6 ítems y genera un orden inicial.
+Identifica qué dato falta para decidir con más confianza.
+Define una métrica para revisar si la decisión fue buena.
+Explica qué comunicarías a stakeholders sobre lo que queda fuera.
+
+-- 102 of 310 --
+
+Ideas clave
+La prioridad debe ser explicable.
+La técnica depende del tipo de decisión.
+El PO decide, pero el criterio debe ser transparente.
+El Scrum Master facilita conversaciones, no impone respuestas.
+Priorizar es continuo: cambia con feedback, métricas y objetivos.
+“Una buena priorización no elimina el conflicto: lo convierte en una decisión consciente.”
+
+-- 103 of 310 --
+
+Sprint Review como decisión: Product Goal Radar
+La Review deja de ser demo y conecta incremento con objetivos
+Usabilidad
+Seguridad
+Escalabilidad	Satisfacción
+Integración
+Cómo usarlo
+Define Product Goal y dimensiones clave. En la Review,
+stakeholders y equipo evalúan avance, gaps y próximos
+ajustes del Product Backlog.
+Decisión esperada
+Priorizar el siguiente Sprint hacia las dimensiones más débiles
+o estratégicas.
+
+-- 104 of 310 --
+
+Antipatrón · Waterfall dentro del Sprint
+Sprints con fases secuenciales no generan incrementos frecuentes
+01
+Análisis
+Todo al inicio
+02
+Diseño
+Después
+03
+Desarrollo
+Luego
+04
+Pruebas
+Al final
+05
+Entrega
+Demasiado tarde
+Soluciones
+Entrelazar análisis, diseño, desarrollo y pruebas; TDD; integración
+continua; pair/mob programming; objetivos comunes.
+Creencia limitante típica
+“No podemos probar hasta que todo esté desarrollado”.
+Reformular: “Podemos validar una rebanada mínima end-to-
+end”.
+
+-- 105 of 310 --
+
+Técnica · Trabajar creencias limitantes
+No es “pensamiento positivo”: es ampliar opciones de acción
+01
+Identificar
+Frases tipo: siempre,
+nunca, aquí no se
+puede.
+02
+Coste
+¿Qué nos impide? ¿Qué
+oportunidades
+perdemos?
+03
+Cuestionar
+¿Siempre ocurre? ¿Qué
+pruebas tenemos?
+¿Excepciones?
+04
+Sustituir
+Nueva creencia positiva,
+creíble y orientada al
+aprendizaje.
+05
+Anclar
+Experimento pequeño y
+seguimiento en 2–4
+semanas.
+¨¨1MBOJGJDBSFTQFSEFSUJFNQP©÷¨1MBOJGJDBNPTMPKVTUP
+
+-- 106 of 310 --
+
+Producto, calidad y escalado
+Conectar Scrum con valor, foco, sostenibilidad y coordinación
+Producto Calidad Escalado OKRs
+
+-- 107 of 310 --
+
+Antipatrón · Product Owner sin autonomía
+Cuando stakeholders o comités deciden por encima del PO
+Señales
+Developers reciben tareas directas; múltiples canales de entrada;
+backlog cambia sin criterio; PO visto como administrador de tickets.
+Intervención
+Responsabilidad formal del PO; canal único de entrada; educación a
+stakeholders; acompañamiento del SM al PO.
+Métricas
+% cambios introducidos por PO · interrupciones en Sprint · claridad de prioridades · % HUs urgentes.
+
+-- 108 of 310 --
+
+Product Backlog ordenado por valor
+El equipo necesita entender el “por qué” de las prioridades
+÷ Hacer visible el criterio de priorización para equipo y stakeholders.
+÷ Relacionar ítems con objetivos estratégicos, métricas de impacto u
+OKRs.
+÷ Revisar el orden del backlog de forma frecuente, no solo al inicio.
+÷ Eliminar funcionalidades obsoletas o sin hipótesis de valor.
+÷ Medir tiempo desde necesidad de negocio hasta incremento
+relacionado.
+Valor visible
+El backlog no es una lista.
+Es una secuencia de apuestas de valor.
+
+-- 109 of 310 --
+
+1SPEVDU(PBM÷4QSJOU(PBM
+De la estrategia a la ejecución diaria
+01
+Visión producto
+Necesidad de negocio,
+usuario y resultado
+esperado.
+02
+Product Goal
+Meta estratégica de
+medio plazo.
+03
+Sprint Goal
+Meta táctica del Sprint
+actual.
+04
+Daily
+Adaptación diaria del
+plan hacia el objetivo.
+05
+Review
+Inspección de avance y
+decisiones de backlog.
+“Si el Sprint Backlog es solo una lista de tareas, el equipo no tiene brújula para
+adaptarse.”
+
+-- 110 of 310 --
+
+Antipatrón · Trabajo no planificado durante el Sprint
+Interrupciones que destruyen foco y predictibilidad
+Señales
+Tareas urgentes frecuentes; Developers cambian de contexto; Sprint
+Goal incumplido; Planning “no sirve”; varios canales de entrada.
+Soluciones
+Todo pasa por PO; mecanismo para urgencias; buffer o Kanban de
+incidencias; análisis de causas en retro; Definition of Ready.
+Métricas
+% trabajo no planificado · tiempo invertido en urgencias · tendencia de interrupciones · cumplimiento Sprint Goal.
+El objetivo no es negar urgencias: es hacerlas visibles y gestionarlas con criterio.
+
+-- 111 of 310 --
+
+Antipatrón · Sprint sin entregables
+Si no hay incremento usable, no hay inspección real
+Señales
+Reviews vacías; historias arrastradas; equipo no invita stakeholders;
+“no hay nada que mostrar”.
+Intervención
+Historias más pequeñas; DoD clara; Sprint Goal como guía;
+backlog claro, conciso y estimado.
+Slicing vertical
+01
+Valor usuario
+¿Qué necesidad concreta
+resuelve?
+02
+Mínimo funcional
+¿Qué versión permite
+feedback?
+03
+Capas técnicas
+UI + lógica + datos +
+integración.
+04
+Rebanada
+Pequeña, completa y
+probable.
+
+-- 112 of 310 --
+
+Antipatrón · Generación de deuda técnica
+Cuando “terminar rápido” reduce capacidad futura de entregar valor
+Señales
+Bugs recurrentes, aumento de tiempo para cambios, falta de
+pruebas, refactorizaciones aplazadas, comentarios sobre código
+difícil.
+Soluciones
+Calidad en DoD; TDD; integración continua; pair/mob programming;
+capacity allocation para deuda; criterios de calidad y seguridad.
+Métricas
+% esfuerzo en reducción de deuda · defectos abiertos/cerrados · % HU que cumplen DoD · retrabajo.
+
+-- 113 of 310 --
+
+Escalado · Tablero de planificación / Program Board
+Hacer visibles dependencias, riesgos e hitos entre equipos
+Sprint 1 Sprint 2 Sprint 3
+Equipo A
+Equipo B
+Equipo C
+Antes
+Dependencias ocultas, bloqueos tardíos,
+crisis y comunicación ad-hoc.
+Después
+Dependencias visibles, planificación
+colaborativa y gestión proactiva.
+
+-- 114 of 310 --
+
+Backlog alineado con negocio mediante OKRs
+Conectar trabajo diario con objetivos estratégicos
+01
+Objetivo
+Dirección cualitativa y
+motivadora.
+02
+Key Results
+Resultados medibles que
+indican progreso.
+03
+Backlog
+Ítems vinculados a impacto
+esperado.
+04
+Review
+Inspección de avance y
+aprendizaje.
+Métricas útiles
+% ítems vinculados a objetivo estratégico · tiempo desde
+necesidad hasta incremento · satisfacción stakeholders.
+Riesgo a evitar
+Confundir outputs con outcomes: entregar muchas
+funcionalidades no garantiza impacto.
+
+-- 115 of 310 --
+
+Otros antipatrones a observar
+No todos se corrigen dentro del equipo
+SM como PM
+Control y asignación
+PO no dedicado
+Decisiones lentas
+Exceso documentación
+Información duplicada
+Roles duplicados
+Autoridad confusa
+Sin Discovery
+Construir sin validar
+WIP sin límite
+Multitarea y bloqueo
+DoR burocrático
+Entrada lenta
+Scrum superficial
+Eventos sin propósito
+“Cuando un antipatrón se repite en varios equipos, probablemente la causa está en políticas
+organizacionales.”
+
+-- 116 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Scrum Master actúa como Project Manager
+PM
+Qué ocurre
+El Scrum Master asume un rol jerárquico: supervisa,
+asigna tareas y controla el trabajo del equipo. En lugar
+de actuar como facilitador, coach y líder servicial,
+convierte Scrum en una versión maquillada de la
+gestión tradicional.
+Señales de alerta
+• El SM asigna tareas directamente a los Developers.
+• Las Dailies se convierten en reportes al Scrum Master.
+• El equipo espera permiso para decidir cómo organizar su
+trabajo.
+• El SM organiza todos los eventos y el equipo no asume la
+facilitación.
+• La organización no ha adoptado plenamente los principios
+ágiles.
+Impacto en el sistema
+• Dependencia del Scrum Master para tomar
+decisiones.
+• Menor autoorganización y menos responsabilidad
+compartida.
+• Scrum se percibe como control operativo, no como
+marco empírico.
+Ejemplo práctico
+Si en cada Daily el equipo mira al Scrum Master para “rendir
+cuentas”, cambia la dinámica: que el equipo mire el tablero,
+revise el Sprint Goal y decida cómo adaptar el plan.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 117 of 310 --
+
+ANTIPATRÓN · Intervención
+Scrum Master actúa como Project Manager
+PM
+Soluciones recomendadas
+• Reforzar el rol real del SM: líder servicial, facilitador y coach.
+• Fomentar que los Developers se autoasignen tareas y decidan cómo
+cumplir el Sprint Goal.
+• Usar técnicas de coaching en lugar de supervisión directa.
+• Involucrar al SM en conversaciones con stakeholders y eliminación de
+impedimentos.
+• Rotar facilitación de eventos para desarrollar autonomía del equipo.
+Métricas asociadas
+• % de tareas autoasignadas por Developers.
+• Nivel de satisfacción del equipo con el
+acompañamiento del SM.
+• % de eventos facilitados por miembros del
+equipo.
+• Evolución de decisiones tomadas por el
+equipo sin intervención externa.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 118 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Scrum Master no dedicado 100%
+SM
+Qué ocurre
+El Scrum Master combina su rol con otras funciones —
+desarrollador, tester, manager u otras
+responsabilidades— y reduce su capacidad para
+acompañar al equipo, gestionar impedimentos y
+fomentar la mejora continua.
+Señales de alerta
+• Dedica una parte muy pequeña de su tiempo al equipo.
+• Las retrospectivas y eventos se facilitan de forma superficial.
+• Los bloqueos se detectan tarde o no se eliminan.
+• El equipo percibe poca ayuda en su crecimiento.
+• La mejora continua queda relegada a “cuando haya
+tiempo”.
+Impacto en el sistema
+• El impacto de Scrum se diluye.
+• Los impedimentos organizacionales permanecen sin
+tratar.
+• El equipo opera con Scrum mecánico, pero con poco
+aprendizaje real.
+Ejemplo práctico
+Si el SM solo aparece para eventos, el equipo no recibe
+acompañamiento sistémico. Visualiza en un tablero qué
+impedimentos se están trabajando y qué cambios de
+sistema requieren apoyo organizacional.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 119 of 310 --
+
+ANTIPATRÓN · Intervención
+Scrum Master no dedicado 100%
+SM
+Soluciones recomendadas
+• Sensibilizar a la organización sobre la importancia de un SM con
+dedicación suficiente.
+• Definir expectativas claras de responsabilidades y tiempo mínimo
+para el rol.
+• Delegar tareas secundarias para liberar tiempo del Scrum Master.
+• Invertir en formación avanzada para potenciar el impacto del rol.
+• Hacer visible el trabajo del SM: coaching, impedimentos, sistema,
+mejora continua.
+Métricas asociadas
+• % de tiempo dedicado a actividades propias
+del rol.
+• Nivel de satisfacción del equipo con el
+acompañamiento del SM.
+• Número de impedimentos detectados y
+resueltos.
+• Acciones de mejora implementadas por Sprint.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 120 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Documentación excesiva y duplicidad en herramientas
+DOC
+Qué ocurre
+El equipo invierte demasiado tiempo en generar y
+mantener documentación redundante en múltiples
+herramientas: wikis, hojas de cálculo, tickets,
+presentaciones o reportes. Esto consume capacidad y
+aumenta inconsistencias.
+Señales de alerta
+• La misma información vive en Jira, Confluence, Excel u otras
+plataformas.
+• Los Developers dedican mucho tiempo a actualizar
+documentación.
+• Hay dudas sobre qué versión es la correcta.
+• Stakeholders reciben información contradictoria o
+desactualizada.
+• Se generan reportes manuales que podrían automatizarse.
+Impacto en el sistema
+• Retraso en la entrega de valor.
+• Pérdida de confianza en la información.
+• Sobrecarga cognitiva y burocracia innecesaria. Ejemplo práctico
+Si el estado del trabajo se actualiza en Jira, Excel y una
+presentación semanal, define una única fuente de verdad y
+automatiza el reporte desde esa fuente.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 121 of 310 --
+
+ANTIPATRÓN · Intervención
+Documentación excesiva y duplicidad en herramientas
+DOC
+Soluciones recomendadas
+• Definir un repositorio único de referencia para la documentación del
+producto.
+• Alinear con stakeholders qué documentación es realmente necesaria
+y útil.
+• Incluir en la Definition of Done documentación clara, suficiente y
+mínima.
+• Automatizar reportes cuando sea posible mediante herramientas o IA.
+• Eliminar documentos sin dueño, sin uso o duplicados.
+Métricas asociadas
+• Nº de fuentes duplicadas identificadas y
+eliminadas.
+• % de Developers que consideran clara y
+accesible la documentación.
+• Tiempo dedicado a documentación vs.
+desarrollo.
+• Incidencias causadas por información
+contradictoria o desactualizada.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 122 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Varias figuras de un mismo rol en el equipo
+ROL
+Qué ocurre
+Existen múltiples personas ejerciendo el mismo rol
+formal de Scrum, por ejemplo dos Product Owners o dos
+Scrum Masters. Esto genera ambigüedad, conflictos de
+autoridad y pérdida de foco.
+Señales de alerta
+• El equipo recibe mensajes contradictorios de diferentes POs o
+SMs.
+• No está claro quién toma la decisión final sobre producto
+o proceso.
+• La priorización se retrasa por falta de autoridad clara.
+• Los impedimentos se derivan de una persona a otra.
+• Stakeholders no saben a quién dirigirse.
+Impacto en el sistema
+• Decisiones lentas o contradictorias.
+• Retrabajo por falta de alineación.
+• Confusión en el equipo y pérdida de
+responsabilidad real.
+Ejemplo práctico
+Puede haber personas que apoyen al PO, pero debe existir
+una única responsabilidad final sobre el Product Backlog. La
+matriz de decisiones evita ambigüedad.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 123 of 310 --
+
+ANTIPATRÓN · Intervención
+Varias figuras de un mismo rol en el equipo
+ROL
+Soluciones recomendadas
+• Asegurar que cada rol Scrum tenga una persona claramente
+identificada como responsable.
+• Clarificar responsabilidades y comunicarlas al equipo y stakeholders.
+• Educar a la organización sobre la importancia de roles únicos y bien
+definidos.
+• Definir una matriz de decisiones: quién decide, quién participa y
+quién debe ser informado.
+• Distinguir soporte al rol de responsabilidad final del rol.
+Métricas asociadas
+• Nº de roles Scrum con una sola persona
+responsable vs. múltiples.
+• Grado de claridad percibida sobre quién
+ejerce cada rol.
+• Nº de conflictos o retrabajos por decisiones
+contradictorias.
+• Tiempo medio para tomar decisiones de
+priorización o proceso.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 124 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+No hay límite de trabajo en curso (WIP)
+WIP
+Qué ocurre
+El equipo no controla la cantidad de trabajo que
+mantiene abierto al mismo tiempo. La multitarea y el
+cambio de contexto ralentizan el flujo y dificultan
+entregar incrementos terminados dentro del Sprint.
+Señales de alerta
+• Muchas Historias de Usuario o tareas abiertas
+simultáneamente.
+• Los Developers cambian constantemente de actividad sin
+finalizar.
+• Entregables incompletos al final del Sprint.
+• Aumenta el tiempo de ciclo y baja la predictibilidad.
+• Se inicia más trabajo del que realmente se termina.
+Impacto en el sistema
+• Más multitasking y más coste de cambio de
+contexto.
+• Menos foco en terminar trabajo valioso.
+• Mayor lead time y menor capacidad de inspección.
+Ejemplo práctico
+Si hay 12 historias abiertas y solo 2 terminadas, el problema
+no es falta de actividad: es exceso de trabajo en curso. Limita
+WIP y prioriza terminar antes de empezar.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 125 of 310 --
+
+ANTIPATRÓN · Intervención
+No hay límite de trabajo en curso (WIP)
+WIP
+Soluciones recomendadas
+• Definir y consensuar límites de WIP visibles en el tablero.
+• Educar sobre el coste del cambio de contexto y los beneficios del foco.
+• Promover swarming para terminar trabajo antes de empezar nuevo.
+• Revisar límites de WIP en retrospectivas según capacidad real.
+• Impulsar perfiles T para aumentar colaboración y reducir cuellos de
+botella.
+Métricas asociadas
+• Nº promedio de ítems en curso por
+Developer.
+• Tiempo de ciclo / lead time de Historias de
+Usuario.
+• % de trabajo iniciado vs. terminado en cada
+Sprint.
+• Variabilidad de throughput entre Sprints.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 126 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+No hay actividades de Product Discovery
+DISC
+Qué ocurre
+El equipo trabaja únicamente en Delivery sin dedicar
+tiempo a explorar, validar o comprender necesidades
+reales de usuarios y stakeholders. El Product Backlog se
+llena de suposiciones.
+Señales de alerta
+• El Product Backlog se nutre solo de ideas internas.
+• No hay contacto real con clientes o usuarios.
+• Decisiones de producto basadas en suposiciones técnicas.
+• Incrementos entregados que no generan uso ni feedback
+relevante.
+• Stakeholders cuestionan la utilidad de lo entregado.
+Impacto en el sistema
+• Funcionalidades de poco valor o no usadas.
+• Retrabajo por validar demasiado tarde.
+• Desconexión entre producto, usuarios y negocio. Ejemplo práctico
+Antes de construir una gran funcionalidad, valida el problema
+con entrevistas, prototipo o experimento pequeño. Discovery
+reduce el riesgo de construir lo incorrecto.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 127 of 310 --
+
+ANTIPATRÓN · Intervención
+No hay actividades de Product Discovery
+DISC
+Soluciones recomendadas
+• Integrar Product Discovery en el ciclo de trabajo: entrevistas,
+prototipos y pruebas de usuario.
+• Formar al PO en validación de hipótesis, Lean UX, Design Thinking y
+Dual Track Agile.
+• Reservar capacidad para explorar problemas antes de definir
+soluciones.
+• Visibilizar en el Backlog los resultados de investigación y validación.
+• Validar hipótesis pequeñas antes de comprometer grandes
+desarrollos.
+Métricas asociadas
+• Nº de hipótesis validadas o invalidadas antes
+del Sprint.
+• % de funcionalidades usadas activamente por
+clientes.
+• Reducción de retrabajo por funcionalidades
+descartadas tras validación.
+• Feedback cualitativo incorporado al Product
+Backlog.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 128 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Exceso de burocracia en la Definition of Ready
+DoR
+Qué ocurre
+La Definition of Ready se aplica de manera rígida y
+excesiva, con listas de requisitos tan largas que
+bloquean la entrada de Historias de Usuario al Sprint y
+ralentizan el flujo de valor.
+Señales de alerta
+• Historias bloqueadas por no cumplir criterios formales
+excesivos.
+• El refinamiento se convierte en completar plantillas.
+• El equipo rechaza ítems valiosos por falta de
+documentación secundaria.
+• El PO y stakeholders perciben rigidez y poca agilidad.
+• La conversación se sustituye por checklist burocrático.
+Impacto en el sistema
+• Retrasos antes de empezar trabajo valioso.
+• Falsa sensación de control.
+• Menos adaptación y más burocracia. Ejemplo práctico
+Una DoR útil reduce bloqueos; una DoR excesiva retrasa
+aprendizaje. Si una plantilla sustituye la conversación, la DoR
+ha dejado de ayudar.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 129 of 310 --
+
+ANTIPATRÓN · Intervención
+Exceso de burocracia en la Definition of Ready
+DoR
+Soluciones recomendadas
+• Mantener la DoR ligera y centrada en lo mínimo necesario para
+empezar.
+• Revisar periódicamente la DoR según experiencia y contexto del
+equipo.
+• Fomentar conversación entre PO y Developers en lugar de depender
+de documentación excesiva.
+• Equilibrar claridad y flexibilidad, priorizando entrega de valor.
+• Separar “necesario para empezar” de “deseable para
+documentar”.
+Métricas asociadas
+• Tiempo medio de refinamiento por Historia de
+Usuario.
+• % de Historias bloqueadas por no cumplir
+criterios de DoR.
+• Tiempo desde idea priorizada hasta entrada al
+Sprint.
+• Percepción del equipo sobre utilidad de la
+DoR.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 130 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Falta de definición en las Historias de Usuario
+HU
+Qué ocurre
+Las Historias de Usuario llegan al Sprint Planning sin
+claridad suficiente en valor esperado, criterios de
+aceptación o dependencias. Esto genera dudas
+constantes, retrabajo y baja calidad.
+Señales de alerta
+• Historias demasiado vagas o incompletas.
+• Muchas preguntas durante Sprint Planning o Daily.
+• Bloqueos y trabajo detenido por falta de entendimiento.
+• Retrabajo al final del Sprint por interpretación incorrecta.
+• Bugs derivados de requisitos ambiguos.
+Impacto en el sistema
+• Menor calidad del incremento.
+• Más interrupciones dentro del Sprint.
+• Peor colaboración entre PO, Developers y
+stakeholders.
+Ejemplo práctico
+Una buena Historia está acotada, tiene tamaño adecuado,
+criterios verificables y está lista para trabajarse sin depender
+de aclaraciones constantes.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 131 of 310 --
+
+ANTIPATRÓN · Intervención
+Falta de definición en las Historias de Usuario
+HU
+Soluciones recomendadas
+• Incorporar refinamientos periódicos con PO y Developers.
+• Usar plantillas de Historia de Usuario: Como [rol] quiero
+[funcionalidad] para [beneficio].
+• Definir criterios de aceptación claros y verificables.
+• Incluir ejemplos y casos de prueba desde la definición inicial.
+• Dividir historias grandes en rebanadas verticales más manejables.
+Métricas asociadas
+• % de Historias que entran con criterios de
+aceptación completos.
+• % de Historias definidas con DoR y criterios de
+aceptación.
+• Satisfacción PO/equipo respecto a calidad de
+definición.
+• Nº de bugs causados por falta de definición.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 132 of 310 --
+
+ANTIPATRÓN · Diagnóstico
+Falta de Definition of Ready
+READY
+Qué ocurre
+Las Historias de Usuario entran al Sprint sin el nivel
+mínimo de claridad, detalle o preparación necesario
+para que los Developers puedan trabajar sin bloqueos
+constantes.
+Señales de alerta
+• Historias grandes o poco refinadas entran directamente al
+Sprint.
+• Developers plantean muchas dudas durante Planning o en
+mitad del Sprint.
+• Trabajo bloqueado a la espera de definiciones adicionales.
+• Aumenta el retrabajo por mal entendimiento de
+requerimientos.
+• El Sprint Planning se alarga o termina con incertidumbre.
+Impacto en el sistema
+• Interrupciones durante el Sprint.
+• Pérdida de foco y baja predictibilidad.
+• Calidad de entrega afectada por falta de
+preparación.
+Ejemplo práctico
+La DoR no garantiza que todo esté cerrado; garantiza que
+existe suficiente claridad para empezar con un nivel razonable
+de riesgo y conversación.
+Diagnosticar no es juzgar: es hacer visible un patrón que está limitando la entrega de valor.
+
+-- 133 of 310 --
+
+ANTIPATRÓN · Intervención
+Falta de Definition of Ready
+READY
+Soluciones recomendadas
+• Definir en conjunto una Definition of Ready como guía mínima de
+entrada al Sprint.
+• Asegurar sesiones de refinamiento frecuentes con PO y Developers.
+• Usar criterios claros: historia dividida, criterios de aceptación,
+dependencias identificadas.
+• Revisar la DoR regularmente y adaptarla según madurez del equipo.
+• Mantener la DoR como ayuda para conversar, no como barrera
+burocrática.
+Métricas asociadas
+• % de Historias que cumplen DoR antes de
+entrar al Sprint.
+• Nº de bloqueos por falta de preparación.
+• Tiempo invertido en aclaraciones dentro del
+Sprint.
+• Tendencia de retrabajo asociado a Historias
+mal definidas.
+Cómo facilitarlo
+1. Presenta señales observables · 2. Pregunta por impacto · 3. Acordad una acción pequeña · 4. Medid si cambia el
+comportamiento
+La intervención debe cambiar el sistema, no solo pedir al equipo que “se esfuerce más”.
+
+-- 134 of 310 --
+
+Métricas conscientes
+Medir para aprender y decidir, no para controlar personas
+Flujo Valor Calidad Equipo
+
+-- 135 of 310 --
+
+Principios de métricas conscientes
+La métrica correcta abre una conversación útil
+✓ Una métrica debe responder una pregunta clara.
+✓ Debe permitir tomar una decisión o iniciar una
+conversación.
+✓ Debe mirar sistema y resultados, no solo actividad
+individual.
+✓ Debe ser barata de obtener y entendible por el equipo.
+✓ Debe revisarse si genera incentivos perversos.
+“No hay nada más peligroso
+que una métrica sin
+propósito.”
+Preguntas guía
+¿Qué pregunta responde? ¿Qué decisión permite?
+¿Qué comportamiento incentiva? ¿Qué pasaría si
+dejamos de medirla?
+
+-- 136 of 310 --
+
+MÉTRICAS DE FLUJO
+Cómo leer el sistema, detectar cuellos de botella y
+mejorar la entrega de valor
+Advanced Scrum Master · Métricas para diagnóstico
+y mejora continua
+“Una métrica útil no juzga al equipo: hace visible cómo trabaja el sistema.”
+
+-- 137 of 310 --
+
+Mapa de métricas de flujo
+Visión completa del bloque: qué medimos y para qué nos sirve.
+Mapa
+Lead Time
+Tiempo total desde solicitud hasta producción
+Cycle Time
+Tiempo desde inicio real hasta terminado
+Throughput
+Ítems completados por periodo
+WIP
+Trabajo activo simultáneo
+Aging WIP
+Edad de ítems todavía abiertos
+CFD
+Evolución acumulada del flujo
+Burn Down
+Trabajo restante vs tiempo
+Burn Up
+Trabajo completado + cambios de alcance
+Retrabajo
+Trabajo reabierto o repetido
+Capacidad
+Planificada vs real
+Desperdicio
+Esperas entre fases
+El objetivo no es medir más: es elegir las métricas que ayuden a tomar mejores decisiones.
+
+-- 138 of 310 --
+
+Cómo usar métricas sin convertirlas en control
+Reglas de lectura para que las métricas sirvan a la mejora continua.
+Principios
+Sistema antes que personas
+La métrica describe el flujo de trabajo, no el valor individual de cada
+persona.
+Tendencia antes que foto fija
+Un dato aislado puede confundir. Lo importante es observar patrones y
+evolución.
+Conversación antes que castigo
+Cada métrica debe abrir preguntas: ¿qué vemos?, ¿qué aprendemos?,
+¿qué probamos?
+Decisión antes que dashboard
+Si una métrica no ayuda a decidir o aprender, probablemente sobra.
+Contexto antes que comparación
+Comparar equipos sin contexto incentiva comportamientos tóxicos.
+Acción antes que perfección
+Mejor una métrica simple que provoca mejora que un dashboard
+complejo que nadie usa.
+“La madurez no está en tener muchos indicadores, sino en saber qué conversación abre cada uno.”
+
+-- 139 of 310 --
+
+LEAD TIME
+Tiempo total desde que se solicita una funcionalidad
+hasta que está disponible para el usuario final.
+
+-- 140 of 310 --
+
+Lead Time
+Mide el tiempo end-to-end del sistema: desde la entrada en backlog hasta producción.
+Métrica de flujo
+Qué es
+Tiempo total transcurrido desde que se solicita una
+funcionalidad o entra un ítem en el sistema hasta que
+está finalizado y disponible en producción para el
+usuario final. Puede medirse en días u horas.
+Responde
+Si pedimos algo hoy, ¿cuándo
+lo tendremos listo?
+Con quién usarla
+Equipo
+Líderes
+Stakeholders
+Para qué sirve
+• Medir la velocidad general del sistema end-to-end.
+• Identificar retrasos sistémicos y oportunidades de
+optimización.
+• Entender cuánto tarda el sistema completo en transformar
+demanda en valor.
+• Definir o validar expectativas tipo SLA.
+Claves de interpretación
+• Incluye esperas, colas, refinamiento, desarrollo, pruebas y
+despliegue.
+• Es ideal para conversaciones con stakeholders porque conecta
+demanda con disponibilidad real.
+• Un Lead Time alto no siempre implica que el equipo trabaje lento;
+puede revelar esperas o bloqueos fuera del desarrollo.
+“Lead Time mira el sistema completo, no solo el tiempo que el equipo programa.”
+
+-- 141 of 310 --
+
+Ejemplos · Lead Time
+Casos prácticos para leer la métrica y convertirla en decisión.
+Ejemplos
+Historia de Usuario en e-commerce
+Funcionalidad: “Como cliente quiero guardar
+productos en favoritos para comprarlos más
+tarde”.
+Creación en Jira: 1 de marzo.
+Entrega en producción: 15 de marzo.
+Interpretación: el equipo necesita dos semanas
+completas para transformar una idea en valor
+entregado. Si la meta organizacional es 7 días,
+hay una oportunidad clara de optimización.
+Lead Time: 14 días
+Bug crítico en producción
+Error de pago con tarjeta que impide completar
+compras.
+Detección: 10 de abril, 09:00.
+Resolución: 11 de abril, 17:00.
+Análisis: aunque 32 horas puede parecer
+razonable, si la política de negocio exige
+resolver bugs críticos en menos de 24 horas, se
+incumple el SLA.
+Lead Time: 32 horas
+Funcionalidad prioritaria en SaaS
+Autenticación con Google.
+Solicitud y priorización: 5 de mayo.
+Tiempo en cola: 46 días esperando por otras
+prioridades.
+Desarrollo activo: 10 días.
+Entrega final: 30 de junio.
+Lectura: solo 10 de 56 días fueron trabajo activo.
+Lead Time: 56 días
+“La mejora continua comienza midiendo conscientemente los flujos de trabajo.”
+
+-- 142 of 310 --
+
+Lead Time: separar espera y trabajo activo
+El tiempo total suele esconder esperas que no se ven en las tareas.
+Visualización
+0
+10
+20
+30
+40
+50
+E-commerce Bug crítico SaaS
+Trabajo activo Espera / cola
+Lectura clave
+El caso SaaS no tarda 56 días por desarrollo; tarda por
+cola y priorización. La mejora no está solo en programar
+más rápido.
+Pregunta de diagnóstico
+¿Dónde está el tiempo muerto: backlog, refinamiento,
+desarrollo, QA, aprobación o despliegue?
+Uso práctico
+Úsalo para conversar sobre SLAs, políticas de entrada de
+trabajo y expectativas de entrega.
+
+-- 143 of 310 --
+
+CYCLE TIME
+Tiempo desde que el equipo empieza realmente a
+trabajar hasta que el ítem está terminado.
+
+-- 144 of 310 --
+
+Cycle Time
+Mide la eficiencia del flujo una vez que el trabajo está en curso.
+Métrica de flujo
+Qué es
+Tiempo activo desde que un equipo comienza a trabajar
+en una tarea hasta que la completa. Se mide desde el
+estado “En Curso” hasta “Terminado”. Evalúa la
+eficiencia de las etapas de producción y ayuda a detectar
+cuellos de botella.
+Responde
+¿Dónde se nos frena el trabajo?
+¿Cuánto tarda el equipo en
+completar una tarea una vez
+que comienza?
+Con quién usarla
+Equipo
+Para qué sirve
+• Detectar cuellos de botella dentro del flujo de trabajo.
+• Mejorar eficiencia y ritmo de entrega.
+• Establecer predictibilidad en entregas.
+• Detectar desperdicios en las etapas de producción.
+Claves de interpretación
+• No detecta retrasos antes de iniciar el trabajo.
+• Conviene analizarlo por tipo de trabajo: bugs, historias, incidencias,
+features.
+• Si aumenta de forma sostenida, puede indicar dependencias,
+demasiada complejidad o WIP excesivo.
+“Cycle Time enfoca la conversación en cómo fluye el trabajo una vez que lo hemos empezado.”
+
+-- 145 of 310 --
+
+Ejemplos · Cycle Time
+Casos prácticos para leer la métrica y convertirla en decisión.
+Ejemplos
+Historia de Usuario
+Funcionalidad: botón de compartir en redes
+sociales.
+Cycle Time observado: 4 días.
+Benchmark del equipo para historias similares: 1-2
+días.
+Oportunidades de mejora: desglose de tareas,
+proceso de testing y coordinación del equipo.
+4 días
+Corrección de bug
+Bug menor: logo mal visualizado en dispositivos
+móviles.
+Cycle Time observado: 6 horas.
+Interpretación: excelente capacidad de respuesta
+para incidencias menores y base útil para
+gestionar expectativas con stakeholders.
+6 horas
+Funcionalidad compleja
+Integración con nueva pasarela de pagos
+externa.
+Inicio: 1 de julio.
+Finalización: 20 de julio.
+Análisis: tiempo superior al promedio del equipo
+(7 días). Cuellos de botella: dependencias
+externas y revisiones de seguridad.
+19 días
+“El Cycle Time ayuda a descubrir en qué parte de la producción se ralentiza el sistema.”
+
+-- 146 of 310 --
+
+Cycle Time: evolución mensual
+Ejemplo de mejora: el tiempo de ciclo baja de 8 a 5 días y se mantiene estable.
+Visualización
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+Enero Febrero Marzo Abril Mayo Junio
+Interpretación
+Una reducción sostenida sugiere mejora real del flujo, no
+un pico puntual.
+Qué investigar
+¿Qué cambió en abril? ¿Menos WIP, mejor DoD, menos
+dependencias, mejores pruebas?
+Cuidado
+Reducir Cycle Time no debe hacerse sacrificando calidad o
+aumentando retrabajo.
+
+-- 147 of 310 --
+
+THROUGHPUT
+Cantidad de ítems terminados en un periodo:
+sprint, semana o mes.
+
+-- 148 of 310 --
+
+Throughput
+Mide la capacidad real de entrega del equipo en un periodo definido.
+Métrica de flujo
+Qué es
+Número de ítems completados —historias, tareas,
+bugs— en un periodo definido como sprint, semana o
+mes. También puede analizarse por clase de servicio para
+entender qué tipo de trabajo consume la capacidad del
+sistema.
+Responde
+¿Cuántas cosas completamos
+en este periodo?
+Con quién usarla
+Equipo
+Liderazgo operativo
+Para qué sirve
+• Medir la capacidad productiva real de forma simple.
+• Establecer benchmarks de entrega y rendimiento.
+• Detectar tendencias de entrega.
+• Planificar con datos y balancear carga por clases de servicio.
+• Analizar tendencias del proceso.
+Claves de interpretación
+• Mide entrega real, no esfuerzo.
+• No informa por sí sola sobre complejidad de los ítems.
+• Si las historias son muy desiguales, conviene dividir mejor o
+segmentar por tipo de trabajo.
+• No debe utilizarse para comparar equipos sin contexto.
+“Throughput dice cuánto termina el sistema, no cuánto ocupado está el equipo.”
+
+-- 149 of 310 --
+
+Ejemplos · Throughput
+Casos prácticos para leer la métrica y convertirla en decisión.
+Ejemplos
+Equipo A · E-commerce
+Sprint de 2 semanas con historias de tamaño
+relativamente uniforme.
+Miden historias + bugs completados.
+Resultado: promedio de 12 ítems por Sprint.
+Interpretación: throughput estable; el flujo es
+predecible y permite estimar que en 3 Sprints
+podrían completarse unos 36 ítems.
+12 ítems / Sprint
+Equipo B · Plataforma de Datos
+Historias de distinto tamaño: algunas muy
+grandes y otras muy pequeñas.
+Medición en 3 Sprints: 5, 3 y 7 ítems.
+Interpretación: throughput irregular; señal de
+cuellos de botella y de que conviene dividir mejor
+las historias para estabilizar el flujo.
+5 · 3 · 7 ítems
+Equipo C · App Móvil
+Reciben interrupciones frecuentes por bugs
+críticos de producción.
+Throughput semanal: 8, 2 y 6 ítems.
+Interpretación: la métrica evidencia el impacto
+de la deuda técnica y la falta de buffers en la
+planificación.
+8 · 2 · 6 ítems
+“El throughput permite hablar de capacidad real sin convertir la conversación en horas o ocupación.”
+
+-- 150 of 310 --
+
+Throughput: tendencia de entrega
+Ejemplo: aumento sostenido de ítems completados tras mejorar refinamiento, foco y WIP.
+Visualización
+0
+5
+10
+15
+20
+25
+30
+35
+Enero Febrero Marzo Abril Mayo Junio
+Lectura
+El incremento de 20 a 32 ítems puede indicar mejora de
+flujo si no aumenta el retrabajo ni baja la calidad.
+Pregunta útil
+¿Terminamos más porque el trabajo es más pequeño,
+porque fluye mejor o porque estamos sacrificando
+calidad?
+Recomendación
+Complementa con Cycle Time, WIP, retrabajo y defectos
+para evitar conclusiones superficiales.
+
+-- 151 of 310 --
+
+WORK IN PROGRESS (WIP)
+Trabajo activo simultáneo: cuánto trabajo se
+empieza y cuánto trabajo se consigue terminar.
+
+-- 152 of 310 --
+
+Work in Progress (WIP)
+Mide la cantidad de elementos en los que el equipo trabaja al mismo tiempo.
+Métrica de flujo
+Qué es
+Cantidad de elementos en los que el equipo está
+trabajando activamente de forma simultánea. Se obtiene
+como recuento de tareas en estado “En curso” o
+equivalentes en cada instante. Es el estado en tiempo real
+del trabajo.
+Responde
+¿Cuánto trabajo tenemos en
+ejecución simultánea y es
+sostenible?
+Con quién usarla
+Equipo
+Liderazgo operativo
+Para qué sirve
+• Reducir multitarea y cambios de contexto.
+• Detectar sobrecarga y cuellos de botella.
+• Optimizar el flujo limitando trabajo simultáneo.
+• Reducir ciclos de entrega y mejorar previsibilidad.
+• Proteger el foco y fomentar colaboración.
+Claves de interpretación
+• Más WIP suele generar más demora.
+• Un WIP bajo reduce tiempos y ayuda a terminar antes de empezar
+más.
+• Si se limita demasiado, puede infrautilizar recursos.
+• Debe visualizarse en tableros Kanban o herramientas ágiles y
+complementarse con Lead Time.
+“Regla simple: más WIP = más demora.”
+
+-- 153 of 310 --
+
+Ejemplo · Work in Progress (WIP)
+Muchas tareas empezadas, pocas terminadas: el flujo parece ocupado, pero no entrega valor.
+Caso práctico
+7
+Historias activas en desarrollo
+2
+Historias esperando validación
+1
+Historia completada y entregada
+9
+Trabajo en curso total
+Análisis de la situación
+Durante la primera semana del Sprint, el equipo ha iniciado trabajo
+en paralelo en múltiples historias. Aunque todos los miembros
+están ocupados, el flujo de valor está bloqueado: muchas tareas
+empezadas y pocas terminadas.
+Límites establecidos
+In Progress: máximo 3 ítems para permitir foco y
+concentración.
+Review: máximo 2 ítems para evitar acumulación de
+revisiones.
+Resultado tras limitar WIP
+In Progress: 3 historias.
+Review: 2 historias.
+Done: 4 historias.
+El WIP queda controlado (3 + 2 = 5) y el Throughput aumenta porque más trabajo se termina.
+“Empezar menos, terminar más.”
+
+-- 154 of 310 --
+
+WIP: foco frente a multitarea
+Un WIP alto genera multitarea, bloqueos y retrasos; un WIP controlado mejora el flujo.
+Visualización
+0
+1
+2
+3
+4
+5
+6
+7
+8
+In Progress Review Done
+Antes Después
+Antes
+El equipo está ocupado, pero entrega poco valor
+terminado.
+Después
+Menos trabajo iniciado y más historias terminadas:
+mejora de flujo real.
+Conversación en retro
+¿Qué límite de WIP nos ayuda a mantener foco sin
+bloquear aprendizaje?
+
+-- 155 of 310 --
+
+AGING WIP
+Un semáforo en vivo para detectar qué trabajo
+activo está envejeciendo en el flujo.
+
+-- 156 of 310 --
+
+Aging WIP
+Mide cuánto tiempo llevan abiertos los ítems que todavía no han terminado.
+Métrica de flujo
+Qué es
+Medida del tiempo que los ítems permanecen en estado
+“En Curso” sin avanzar. Agrupa las tareas activas por
+edad en días e identifica trabajos estancados,
+bloqueados, mal dimensionados o con dependencias
+ocultas.
+Responde
+¿Qué ítems llevan demasiado
+tiempo en ejecución y
+necesitan intervención?
+Con quién usarla
+Equipo
+Para qué sirve
+• Identificar bloqueos e impedimentos ocultos.
+• Priorizar acciones inmediatas en ítems bloqueados.
+• Reducir Lead Time eliminando cuellos de botella.
+• Anticipar problemas antes de que impacten en la entrega.
+• Reforzar en Daily la importancia de terminar antes de empezar
+algo nuevo.
+Claves de interpretación
+• Se centra en ítems activos, no en los ya terminados.
+• Está vinculado con Lead Time, pero se mide en tiempo real.
+• Cuanto más tiempo permanece un ítem en proceso, mayor
+probabilidad de riesgo.
+• Ayuda a gestionar el WIP activamente.
+“Aging WIP es el semáforo en vivo del trabajo que está envejeciendo.”
+
+-- 157 of 310 --
+
+Ejemplo · Aging WIP
+Identificar historias activas que superan el umbral definido por el equipo.
+Ejemplo
+Historia Estado actual Días en curso Umbral Observación
+HU-101 Desarrollo 2 días ≤ 5 días Normal
+HU-102 Testing 8 días ≤ 5 días En riesgo
+HU-103 Desarrollo 1 día ≤ 5 días Normal
+Lectura e interpretación
+• Problema identificado: HU-102 lleva 8 días en testing y supera el umbral de 5 días.
+• Posibles causas: problemas en el entorno de testing, complejidad de la historia, defectos recurrentes, capacidad del equipo QA o dependencias
+externas.
+• Decisión práctica: priorizar la finalización de la historia envejecida antes de abrir nuevo trabajo.
+• Uso en Daily Scrum: revisar primero los ítems más antiguos y preguntar qué necesita el equipo para terminarlos.
+
+-- 158 of 310 --
+
+Aging WIP: riesgo por edad del ítem
+El objetivo es actuar antes de que el bloqueo se materialice en retraso de entrega.
+Visualización
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+HU-101 HU-102 HU-103
+Días en curso Umbral
+Normal
+HU-101 y HU-103 están por debajo del umbral acordado.
+En riesgo
+HU-102 excede el umbral y merece intervención
+inmediata.
+Pregunta clave
+¿Qué impide que este ítem avance hoy?
+
+-- 159 of 310 --
+
+CFD · CUMULATIVE FLOW
+DIAGRAM
+Visualizar la salud general del sistema y detectar
+cuellos de botella.
+
+-- 160 of 310 --
+
+CFD · Cumulative Flow Diagram
+Muestra la cantidad acumulada de ítems en cada fase del flujo a lo largo del tiempo.
+Métrica de flujo
+Qué es
+Número acumulado de ítems en cada fase del flujo de
+trabajo a lo largo del tiempo. Muestra entrada,
+procesamiento y salida. Da información visual sobre la
+evolución del sistema y el histórico para análisis
+temporal.
+Responde
+¿Cómo está evolucionando
+nuestro sistema completo y
+dónde están los problemas?
+Con quién usarla
+Equipo
+Stakeholders
+Para qué sirve
+• Visualizar la salud general del sistema.
+• Detectar cambios en el ritmo de entrada vs. salida.
+• Identificar cuellos de botella.
+• Analizar estabilidad del flujo.
+• Anticipar sobrecarga y pérdida de predictibilidad.
+Claves de interpretación
+• Cantidad de ítems en cada estado por día.
+• Las bandas paralelas suelen indicar flujo estable.
+• Una banda que se ensancha revela acumulación en esa fase.
+• Requiere datos constantes y pierde utilidad si el proceso cambia
+mucho.
+“El CFD permite ver si el sistema está respirando o acumulando trabajo en alguna fase.”
+
+-- 161 of 310 --
+
+Ejemplo · CFD: flujo estable vs cuello de botella
+La lectura de bandas revela la salud del flujo de trabajo.
+Interpretación
+Ejemplo 1: flujo estable
+0
+2
+4
+6
+8
+10
+12
+14
+Día 1 Día 2 Día 3 Día 4 Día 5
+• Bandas paralelas entre estados.
+• WIP constante y controlado.
+• Entregas predecibles.
+• Velocidad sostenible.
+Ejemplo 2: cuello de botella
+0
+5
+10
+15
+20
+Día 1 Día 2 Día 3 Día 4 Día 5
+• Ensanchamiento de bandas específicas.
+• Acumulación de trabajo.
+• Ralentización de entregas.
+• Pérdida de predictibilidad.
+“Dominar la lectura del CFD permite detectar problemas antes de que se conviertan en crisis de entrega.”
+
+-- 162 of 310 --
+
+CFD: cómo utilizarlo en retrospectiva
+Entrenar la lectura visual del flujo ayuda a crear cultura de mejora continua.
+Uso práctico
+Clave para el éxito
+Comparar escenarios de flujo estable y cuello de botella permite
+detectar dónde actuar. El Scrum Master puede usar ejemplos
+simulados para entrenar al equipo en lectura temprana de
+problemas de flujo.
+Consejo práctico
+Usa el CFD en retrospectivas para preguntar: ¿qué banda
+crece?, ¿qué estado acumula trabajo?, ¿qué política de WIP
+necesitamos?, ¿qué dependencia está frenando el sistema?
+Qué observar
+• Entrada de trabajo: ¿entra más de lo que sale?
+• Procesamiento: ¿dónde se acumula?
+• Salida: ¿la línea de Done crece de forma estable?
+• Variabilidad: ¿hay saltos o cambios bruscos?
+Limitaciones
+• Requiere datos consistentes.
+• No es útil si cada sprint cambia el proceso o los estados.
+• No explica la causa; solo muestra dónde investigar.
+• Debe complementarse con conversación cualitativa.
+“Un CFD no resuelve el cuello de botella; lo hace visible para que el equipo actúe.”
+
+-- 163 of 310 --
+
+BURN DOWN CHART
+Trabajo restante frente al tiempo: seguimiento diario
+del Sprint y detección de desviaciones.
+
+-- 164 of 310 --
+
+Burn Down Chart
+Visualiza el trabajo restante frente a los días dentro del Sprint.
+Métrica de flujo
+Qué es
+Gráfico que muestra la cantidad de trabajo restante —
+puntos de historia, tareas u horas— durante un Sprint,
+iteración o proyecto, comparando el progreso real frente
+al ideal. Permite visualizar el ritmo de consumo de
+trabajo.
+Responde
+¿Vamos a completar el Sprint
+Goal según lo planificado?
+Con quién usarla
+Equipo
+Stakeholders
+Para qué sirve
+• Monitorizar diariamente el progreso del Sprint.
+• Comparar resultado real vs. ideal.
+• Detectar desviaciones tempranas.
+• Transparentar el estado a stakeholders.
+• Ajustar ritmos o expectativas.
+Limitaciones y examen
+• Es una métrica de flujo y también de ritmo/predictibilidad.
+• Es visual, fácil de actualizar diariamente.
+• No muestra el alcance acumulado ni cambios de scope durante el
+ciclo.
+• Debe interpretarse junto al Sprint Goal, no solo como consumo de
+puntos.
+Métrica de flujo · Trabajo restante frente a tiempo · Ideal para detectar desviaciones tempranas en el Sprint
+
+-- 165 of 310 --
+
+Ejemplo · Burn Down Chart
+El patrón muestra desviación frente al plan ideal y abre acciones correctivas.
+Visualización
+0
+20
+40
+60
+80
+100
+120
+Día 1 Día 2 Día 3 Día 4 Día 5 Día 6 Día 7 Día 8 Día 9 Día
+10
+Ideal Real
+Lectura
+La línea real se mantiene por encima de la ideal: el
+trabajo se consume más lento de lo previsto.
+No es fracaso
+Un Burn-down así es una oportunidad de aprendizaje
+para retrospectiva.
+Cuidado
+No debe usarse para presionar al equipo; debe servir para
+inspeccionar y adaptar.
+
+-- 166 of 310 --
+
+Burn Down: acciones correctivas recomendadas
+Qué puede hacer el equipo cuando detecta desviaciones tempranas.
+Acciones
+Refinar la estimación inicial
+Las 100 horas pueden haber sido optimistas dado el contexto real del
+equipo.
+Detectar impedimentos temprano
+El Daily Scrum debe hacer visibles bloqueos en las primeras 24-48
+horas.
+Mejorar la definición de “Hecho”
+Asegurar comprensión de criterios de aceptación y DoD desde el
+inicio.
+Analizar interrupciones
+Documentar reuniones no planificadas, soporte a producción u otras
+distracciones.
+Ajustar capacidad del siguiente Sprint
+Considerar 85-90 horas en lugar de 100 si el patrón se repite.
+Clave para Scrum Masters: usar los datos en retrospectiva para mejorar estimación, ejecución y capacidad de adaptación.
+
+-- 167 of 310 --
+
+BURN UP CHART
+Trabajo completado acumulado frente a alcance
+total: ideal para hablar de cambios de scope.
+
+-- 168 of 310 --
+
+Burn Up Chart
+Muestra progreso acumulado y alcance total a lo largo del tiempo.
+Métrica de flujo
+Qué es
+Gráfico que muestra el trabajo completado acumulado
+durante el proyecto junto con el alcance total. Permite
+visualizar cambios de scope, progreso real y tendencias.
+Complementa al Burn Down porque muestra si el backlog
+o alcance aumenta.
+Responde
+¿Estamos avanzando hacia la
+meta considerando cambios de
+alcance?
+Con quién usarla
+Equipo
+Stakeholders
+Líderes operativos
+Para qué sirve
+• Visualizar progreso acumulado contra alcance.
+• Detectar cambios de alcance durante la ejecución.
+• Comunicar impacto de cambios en timeline.
+• Gestionar releases.
+• Comparar resultado real vs. ideal y detectar desviaciones en
+entregas.
+Claves de interpretación
+• Es métrica de flujo y gestión de alcance.
+• Es visual y fácil de interpretar para mostrar incrementos y
+tendencias.
+• Puede ser engañosa si hay muchos cambios de alcance sin
+explicación.
+• Útil para conversaciones de release y gestión de expectativas.
+“El Burn Up muestra dos verdades a la vez: cuánto avanzamos y cuánto crece el objetivo.”
+
+-- 169 of 310 --
+
+Ejemplo · Burn Up Chart
+El alcance crece durante la ejecución y cambia las expectativas de fecha.
+Visualización
+0
+50
+100
+150
+200
+250
+300
+Sprint 1 Sprint 2 Sprint 3 Sprint 4 Sprint 5 Sprint 6
+Trabajo completado Alcance total
+Proyección optimista
+Asume la mejor velocidad histórica: alcanza el objetivo
+en la fecha más temprana realista.
+Proyección realista
+Utiliza la velocidad media del equipo: suele ser la
+estimación principal para release.
+Proyección pesimista
+Considera la velocidad más baja observada y ayuda a
+crear expectativas conservadoras.
+
+-- 170 of 310 --
+
+Burn Up: opciones estratégicas ante cambios de alcance
+El gráfico no solo informa: ayuda a decidir qué hacer con el scope.
+Decisiones
+Recortar alcance
+Si la fecha es crítica, el Product Owner
+puede revisar qué historias del nuevo
+alcance son realmente imprescindibles
+para el MVP. Eliminar 20-30 puntos menos
+prioritarios puede acercar las proyecciones
+a las fechas originales.
+Aceptar más Sprints
+Si el nuevo alcance es esencial y no
+negociable, la organización debe estar
+preparada para extender el proyecto 2-3
+Sprints adicionales. El Burn Up aporta
+justificación visual.
+Incrementar capacidad
+En casos excepcionales, puede considerarse
+añadir recursos. Aun así, no acelera
+proporcionalmente por costes de
+coordinación, onboarding y ramp-up.
+Lectura para stakeholders
+El Burn Up hace visible que una fecha no depende solo de la velocidad: también depende de si el alcance crece, se
+congela o se negocia.
+“Cuando el alcance cambia, el Burn Up evita discusiones abstractas y muestra el impacto de forma transparente.”
+
+-- 171 of 310 --
+
+RATIO DE RETRABAJO
+Calidad del flujo: cuánto trabajo vuelve atrás
+después de haber sido marcado como terminado.
+
+-- 172 of 310 --
+
+Ratio de Retrabajo
+Mide el porcentaje de ítems reabiertos o repetidos tras darse por terminados.
+Métrica de flujo
+Qué es
+Porcentaje o proporción de ítems que, tras ser
+marcados como terminados o completados, son
+reabiertos para correcciones, ajustes o modificaciones
+adicionales. Indica calidad del trabajo entregado
+inicialmente y efectividad de pruebas y revisiones.
+Responde
+¿Cuánto trabajo adicional se
+genera por entregas
+incompletas o defectuosas?
+Con quién usarla
+Equipo
+QA
+Para qué sirve
+• Evaluar la calidad del trabajo entregado.
+• Detectar problemas sistémicos en la Definition of Done.
+• Cuantificar desperdicio por defectos y retrabajos.
+• Analizar tipos de error o causa.
+• Reducir desperdicio y mejorar validaciones tempranas.
+Claves de interpretación
+• Debe medirse periódicamente.
+• Es fácil de obtener del sistema de seguimiento.
+• No distingue causas ni severidad de errores si no se clasifica.
+• Métrica de flujo y de calidad.
+Ratio de retrabajo = (# ítems reabiertos / # ítems terminados) × 100
+
+-- 173 of 310 --
+
+Ejemplo · Ratio de Retrabajo
+Medir el porcentaje de trabajo que tuvo que repetirse, rehacerse o modificar.
+Ejemplo
+Sprint Trabajo total Trabajo retrabajado Ratio Valoración Interpretación / Acción
+Sprint 1 120 h 36 h 30% Malo Revisar definición, DoD y pruebas
+Sprint 2 100 h 14 h 14% Mejorable Reforzar validación y
+comunicación
+Sprint 3 90 h 3 h 3% Excelente Mantener rigor y prevención
+Lectura e interpretación
+• Un ratio alto revela problemas en definición de requerimientos, testing, comunicación o validación de entregas.
+• Un ratio medio requiere identificar causas y ajustar procesos.
+• Un ratio bajo debe mantenerse reforzando buenas prácticas, validaciones y revisiones tempranas.
+• Puede medirse por número de tareas, historias, puntos u horas retrabajadas dentro de un Sprint o release.
+
+-- 174 of 310 --
+
+Ratio de Retrabajo: tendencia por Sprint
+Una bajada sostenida sugiere mejora de calidad, claridad y pruebas.
+Visualización
+0
+5
+10
+15
+20
+25
+30
+35
+Sprint 1 Sprint 2 Sprint 3
+30% · Malo
+Hay desperdicio significativo: revisar DoD, criterios de
+aceptación y pruebas.
+14% · Mejorable
+El proceso mejora, pero aún hay fricción que merece
+análisis de causa raíz.
+3% · Excelente
+Mantener las prácticas que anticipan defectos y evitan
+reabrir trabajo.
+
+-- 175 of 310 --
+
+CAPACIDAD PLANIFICADA VS
+REAL
+¿Planificamos con datos reales o con una expectativa
+que se repite mal Sprint tras Sprint?
+
+-- 176 of 310 --
+
+Variación capacidad planificada vs capacidad real
+Mide la desviación entre la capacidad estimada al inicio y la capacidad realmente disponible.
+Métrica de flujo
+Qué es
+Diferencia porcentual entre la capacidad estimada o
+planificada para el equipo en un Sprint y la capacidad real
+utilizada o disponible durante el mismo periodo. Permite
+evaluar precisión en la planificación y detectar
+sobrecarga o infrautilización.
+Responde
+¿Planificamos correctamente la
+capacidad del equipo o hay
+desviaciones sistemáticas?
+Con quién usarla
+Equipo
+Para qué sirve
+• Mejorar precisión en estimaciones y planificación.
+• Detectar sobrecarga o infrautilización.
+• Validar efectividad de políticas de WIP.
+• Evidenciar desviaciones en la previsión de capacidades.
+• Ajustar futuros ciclos con días libres, vacaciones, formaciones e
+imprevistos.
+Claves de interpretación
+• No mide calidad del trabajo ni factores externos por sí sola.
+• Desviaciones altas repetidas sugieren problemas de estimación,
+comunicación o gestión de incidencias.
+• Una variación baja refuerza fiabilidad y predicción del equipo.
+• Buena práctica: analizar causas en retrospectiva.
+Variación = ((Capacidad planificada − Capacidad real) / Capacidad planificada) × 100
+
+-- 177 of 310 --
+
+Ejemplo · Variación de capacidad
+Comparar capacidad planificada y real para mejorar la planificación futura.
+Ejemplo
+Sprint Capacidad planificada Capacidad real Variación Evaluación Acción / Interpretación
+Sprint 1 160 128 20% Alta Revisar causas: ausencias,
+imprevistos
+Sprint 2 150 149 0,70% Excelente Mantener proceso
+Sprint 3 170 150 11,80% Mejorable Ajustar previsiones y planificación
+Lectura e interpretación
+• La capacidad planificada se calcula antes del Sprint, por ejemplo en horas o puntos asignables.
+• Al finalizar, se determina la capacidad real disponible o consumida.
+• El objetivo no es que la variación sea cero, sino aprender de las desviaciones y planificar con más realismo.
+• Conviene considerar bajas, vacaciones, formación, guardias, soporte e interrupciones recurrentes.
+
+-- 178 of 310 --
+
+Capacidad: planificada vs real
+La comparación muestra si el equipo planifica sobre capacidad realista.
+Visualización
+0
+20
+40
+60
+80
+100
+120
+140
+160
+180
+Sprint 1 Sprint 2 Sprint 3
+Planificada Real
+Sprint 1
+Desviación alta: revisar causas, no culpar al equipo.
+Sprint 2
+Variación mínima: buen ajuste entre planificación y
+realidad.
+Sprint 3
+Mejorable: ajustar previsiones o gestionar interrupciones.
+
+-- 179 of 310 --
+
+TIEMPO DE DESPERDICIO ENTRE
+FASES
+Esperas y tiempos muertos entre análisis, desarrollo,
+pruebas y despliegue.
+
+-- 180 of 310 --
+
+Tiempo de desperdicio entre fases
+Mide cuánto tiempo permanece un ítem inactivo entre etapas del flujo.
+Métrica de flujo
+Qué es
+Tiempo que un ítem permanece inactivo o esperando
+entre diferentes fases del flujo de trabajo, sin que se le
+realice trabajo efectivo. Se registra entre fases como
+análisis ÷EFTBSSPMMP EFTBSSPMMP÷QSVFCBTPQSVFCBT÷
+despliegue.
+Responde
+¿Dónde se queda parado el
+trabajo aunque nadie lo esté
+trabajando?
+Con quién usarla
+Equipo
+Liderazgo operativo
+Para qué sirve
+• Detectar cuellos de botella y deficiencias del proceso.
+• Identificar oportunidades para mejorar fluidez y eficiencia.
+• Monitorizar procesos claramente definidos.
+• Reducir fricciones y esperas entre fases.
+• Priorizar automatización y mejora de sincronización.
+Claves de interpretación
+• Se calcula sumando tiempos en los que el ítem no progresa.
+• Es complejo calcularlo si los procesos no están claramente
+definidos o monitorizados.
+• Alto desperdicio indica problemas de sincronización,
+comunicación o automatización.
+• Ayuda a enfocar mejora continua en las etapas con más
+acumulación.
+Tiempo de desperdicio = Tiempo total en tránsito entre fases − Touch time (tiempo activo)
+
+-- 181 of 310 --
+
+Ejemplo · Tiempo de desperdicio entre fases
+Medir esperas entre análisis, desarrollo y pruebas para optimizar el flujo.
+Ejemplo
+Elemento Análisis ÷%FTBSSPMMP	%FTBSSPMMP÷1SVFCBT	Desperdicio Valoración Interpretación / Acción
+Historia A 3 días (2 espera) 2 días (1 espera) 3 días Alto Revisar causas de espera y cuellos
+Historia B 1 día (0 espera) 2 días (0.5 espera) 0.5 días Excelente Flujo eficiente, mantener prácticas
+Historia C 2 días (1 espera) 4 días (2 espera) 3 días Mejorable Identificar motivos y optimizar
+traspasos
+Lectura e interpretación
+• Se registra el tiempo total que cada elemento pasa entre dos fases y cuánto de ese tiempo fue espera.
+• El desperdicio se calcula como tiempo sin valor agregado, normalmente tiempo en cola o sin actividad.
+• Es importante reducirlo especialmente en etapas con mayor acumulación.
+• El análisis ayuda a mejorar sincronización, comunicación y automatización del flujo.
+
+-- 182 of 310 --
+
+Desperdicio entre fases: detectar esperas
+La métrica revela dónde se pierde tiempo aunque el trabajo no avance.
+Visualización
+0
+0,5
+1
+1,5
+2
+2,5
+3
+3,5
+Historia A Historia B Historia C
+Historia A
+Alto desperdicio: revisar esperas entre análisis, desarrollo
+y pruebas.
+Historia B
+Flujo eficiente: mantener prácticas actuales.
+Historia C
+Mejorable: identificar motivos y optimizar traspasos.
+
+-- 183 of 310 --
+
+Ejercicio · Métricas clave de flujo
+Aplicar las métricas al seguimiento de antipatrones del equipo.
+Ejercicio
+Objetivo
+Toma de decisión con métricas. El objetivo no es recopilar
+indicadores, sino elegir métricas que ayuden a detectar,
+confirmar y seguir la evolución de antipatrones reales.
+Dinámica
+En equipo, proponed métricas que ayuden a hacer
+seguimiento de los antipatrones en vuestro equipo. Después,
+decidid qué métrica usaríais primero y qué decisión
+permitiría tomar.
+Preguntas guía
+• ¿Qué antipatrón queremos observar?
+• ¿Qué métrica de flujo lo haría visible?
+• ¿Qué dato necesitamos para calcularla?
+• ¿Qué umbral o señal indicaría riesgo?
+• ¿Qué acción tomaríamos si la métrica empeora?
+• ¿Cómo evitamos usarla para culpar personas?
+Ejemplos de conexión
+• Daily como reporting ÷"HJOH8*1ZCMPRVFPT
+• Trabajo no planificado ÷8*1ZDBQBDJEBESFBM
+• Sprint sin entregables ÷5ISPVHIQVUZ#VSO%PX
+• Falta de DoD ÷3FUSBCBKPZEFGFDUPT
+• Waterfall dentro del Sprint ÷EFTQFSEJDJPFOUSFG
+“Pregunta final: ¿qué métrica ayuda mejor a aprender y decidir?”
+
+-- 184 of 310 --
+
+Checklist final de lectura de métricas
+Antes de añadir una métrica a un dashboard, valida que realmente ayuda.
+Cierre
+Pregunta
+¿Qué pregunta responde exactamente esta métrica?
+Decisión
+¿Qué decisión permite tomar o qué conversación abre?
+Comportamiento
+¿Qué comportamiento puede incentivar, bueno o malo?
+Coste
+¿Cuánto cuesta obtenerla y mantenerla actualizada?
+Complemento
+¿Qué otra métrica evita una interpretación parcial?
+Cadencia
+¿Cuándo se revisa y en qué evento tiene sentido?
+Una métrica es útil cuando cambia la calidad de la conversación y permite experimentar mejoras en el
+sistema.
+
+-- 185 of 310 --
+
+Métricas de valor, calidad y equipo
+Mirar resultados desde varias lentes
+Valor
+Valor entregado · ROI por entregable · %
+backlog vinculado a objetivos · feedback
+incorporado.
+Calidad
+Defectos en producción · retrabajo ·
+deuda técnica · cobertura de pruebas ·
+cumplimiento DoD.
+Equipo
+Satisfacción · clima · sentimiento de
+propósito · participación ·
+sostenibilidad del ritmo.
+“Un dashboard equilibrado evita optimizar velocidad a costa de calidad, valor o salud del
+equipo.”
+
+-- 186 of 310 --
+
+Métricas de valor
+Cómo saber si lo que entregamos importa,
+genera impacto y ayuda a decidir mejor
+“Las métricas de valor ponen el foco en resultados, no en
+actividad.”
+
+-- 187 of 310 --
+
+De métricas de actividad a métricas de valor
+El objetivo no es medir más, sino aprender mejor.
+Actividad
+Horas invertidas
+Tareas iniciadas
+Reuniones realizadas
+Velocidad comparada
+Valor
+Adopción real
+Satisfacción
+Impacto en negocio
+Calidad percibida
+Propósito del equipo
+Decisión
+Priorizar
+Corregir rumbo
+Eliminar desperdicio
+Aprender con evidencia
+“Medir valor no es controlar: es entender si vamos en la dirección correcta.”
+
+-- 188 of 310 --
+
+Mapa de métricas de valor
+Un sistema equilibrado mira cliente, negocio, calidad técnica y salud del equipo.
+Valor entregado
+Impacto negocio
+CSAT
+Satisfacción táctica
+NPS
+Lealtad estratégica
+Defectos en producción
+Calidad real
+Deuda técnica
+Sostenibilidad técnica
+Cobertura de pruebas
+Calidad preventiva
+Sentimiento de propósito
+Sentido del trabajo
+Satisfacción del equipo
+Bienestar sostenible
+Funcionalidades priorizadas
+Alineación estrategia
+“Una métrica aislada rara vez cuenta toda la historia. El valor necesita contexto.”
+
+-- 189 of 310 --
+
+Cómo leer cada métrica
+Usa siempre el mismo patrón para evitar métricas decorativas.
+1
+Qué mide
+2
+Qué pregunta responde
+3
+Qué decisión permite tomar
+4
+Qué sesgo puede crear
+5
+Con qué frecuencia revisarla
+6
+Qué conversación dispara
+“Una buena métrica no termina en un gráfico: termina en una conversación y una decisión.”
+
+-- 190 of 310 --
+
+VALOR ENTREGADO
+Impacto real para cliente y negocio
+Responde
+¿Entregamos lo que realmente importa al
+cliente y a los objetivos estratégicos?
+Fórmula / medición
+Resultados obtenidos: beneficio de
+negocio, satisfacción, uso/adopción y
+outcomes esperados.
+Con quién usarla
+Product Management, Product Owners,
+Business Owners, Portfolio y equipos.
+Para qué sirve
+Verificar si la ejecución genera resultados significativos, no solo output,
+y orientar decisiones hacia impacto de negocio.
+Cuidado con...
+No usarla para comparar equipos. Debe alinearse con objetivos
+estratégicos y validarse con feedback real.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 191 of 310 --
+
+Valor entregado · qué significa en la práctica
+El trabajo terminado solo es valor si genera efecto en usuarios, negocio o aprendizaje.
+Se considera valor cuando...
+• Responde a una necesidad real
+• Contribuye a un objetivo estratégico
+• Genera uso, satisfacción, ahorro, ingresos o aprendizaje
+• Puede rastrearse hasta una entrega concreta
+Ayuda a...
+• Priorizar funcionalidades
+• Demostrar retorno
+• Visibilizar impacto real
+• Conectar Sprint Review con objetivos de producto
+• Evitar backlogs llenos de “cosas hechas” sin efecto
+Preguntas de facilitación
+¿Quién se beneficia?
+¿Qué outcome esperamos mover?
+¿Qué evidencia confirmará que aportó valor?
+¿Qué decidiríamos si el impacto no aparece?
+“Valor entregado = impacto observado, no intención declarada.”
+
+-- 192 of 310 --
+
+Ejemplo · ROI por entregable
+Caso: sistema de chat en tiempo real para reducir llamadas al call center.
+Inversión realizada
+Coste del entregable: 20.000 €
+Incluye desarrollo, integración y
+configuración inicial del sistema de chat.
+Beneficios identificados
+Ahorro de 10.000 € en llamadas al call center
+5.000 € adicionales en retención de clientes
+Beneficio total: 15.000 €
+Resultado
+ROI = (15.000 - 20.000) / 20.000 × 100 = -
+25%
+El entregable aún no compensa el coste.
+Interpretación crítica
+El ROI negativo no implica cancelar automáticamente. Puede
+necesitar más tiempo para mostrar beneficios completos o una
+mejora en la estrategia de adopción.
+Acciones
+• Optimizar funcionalidades del chat
+• Revisar respuesta automática
+• Medir satisfacción y tiempo de resolución
+• Analizar si el beneficio crece con adopción
+“ROI > 0% genera valor; ROI = 0% recupera coste; ROI < 0% exige aprendizaje y ajuste.”
+
+-- 193 of 310 --
+
+Valor entregado · cómo usarlo en Scrum
+Conecta Product Goal, Sprint Review y priorización basada en evidencia.
+Product Goal
+Define qué resultado queremos mejorar:
+crecimiento, eficiencia, retención,
+satisfacción, cumplimiento, riesgo.
+Sprint Review
+No solo se muestra funcionalidad; se
+inspecciona si el incremento acerca al
+objetivo.
+Repriorización
+Si el impacto no aparece, el Product
+Backlog debe cambiar. La métrica
+alimenta la decisión.
+Señal saludable
+Stakeholders hablan de outcomes: adopción, ahorro, retención,
+satisfacción, riesgo reducido, cumplimiento.
+Señal de alerta
+El equipo solo informa de tareas terminadas, puntos completados
+o funcionalidades entregadas sin evidenciar impacto.
+“La Review es el lugar natural para preguntar: ¿qué valor real hemos aprendido que estamos creando?”
+
+-- 194 of 310 --
+
+CSAT · Customer Satisfaction Score
+Satisfacción inmediata con una entrega, servicio o interacción
+Responde
+¿El cliente está satisfecho con lo que
+recibió y con cómo lo recibió?
+Fórmula / medición
+CSAT = (# respuestas positivas 4-5 / total
+respuestas) × 100
+Con quién usarla
+Product Management, Product Owners,
+Business Owners, equipos ágiles, UX y
+Customer Experience.
+Para qué sirve
+Evaluar rápidamente la experiencia del cliente y detectar oportunidades
+de mejora en la entrega de valor.
+Cuidado con...
+Es subjetiva y depende del contexto de la interacción. No siempre
+está completamente bajo control del equipo.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 195 of 310 --
+
+CSAT · cómo preguntar y calcular
+Mide satisfacción táctica e inmediata.
+Pregunta típica
+“¿Qué tan satisfecho está con el servicio/producto
+recibido?”
+1 = Muy insatisfecho
+2 = Insatisfecho
+3 = Neutral
+4 = Satisfecho
+5 = Muy satisfecho
+Cálculo
+Solo cuentan como positivas las respuestas 4 y 5.
+CSAT = ((Satisfechos + Muy satisfechos) / Total respuestas)
+× 100
+Cuándo usarlo
+• Tras una Sprint Review
+• Después de una incidencia
+• Al entregar una mejora concreta
+• En puntos de contacto relevantes del journey
+Qué aporta
+Permite validar cambios rápidamente y detectar si una entrega
+concreta mejoró o empeoró la experiencia.
+
+-- 196 of 310 --
+
+Ejemplo CSAT · tres escenarios
+Interpretación rápida para decidir qué hacer.
+Escenario Respuestas positivas Total CSAT Interpretación
+Grave 25 100 25% Predomina la insatisfacción. Analizar causas y actuar rápido.
+Aceptable 60 100 60% Hay satisfacción, pero existe margen claro de mejora.
+Muy positivo 85 100 85% La experiencia cumple o supera expectativas. Mantener y evolucionar.
+Umbrales prácticos
+÷QSPCMFNBHSBWFEFTBUJTGBDDJ	ón
+50-÷BDFQUBCMF QFSPDPOPQPSUVOJEBEFT
+÷FYQFSJFODJBNVZQPTJUJWB
+Acciones recomendadas
+• Revisar comentarios cualitativos
+• Cruzar con defectos y uso real
+• Priorizar mejoras de experiencia
+• Medir de nuevo tras el ajuste
+“CSAT no explica todo, pero señala dónde hay fricción reciente.”
+
+-- 197 of 310 --
+
+CSAT vs NPS
+Usarlos juntos ayuda a distinguir satisfacción inmediata de lealtad a largo plazo.
+CSAT
+Mide satisfacción con una interacción, servicio o entrega
+concreta.
+Pregunta: “¿Qué tan satisfecho estás con esto?”
+Uso: calidad a corto plazo, feedback táctico.
+NPS
+Mide lealtad y probabilidad de recomendación hacia el
+producto o la empresa.
+Pregunta: “¿Recomendarías esto?”
+Uso: relación a medio-largo plazo.
+“CSAT es táctico e inmediato; NPS es estratégico y relacional.”
+
+-- 198 of 310 --
+
+NPS · Net Promoter Score
+Lealtad, recomendación y relación a medio-largo plazo
+Responde
+¿El cliente valora la solución lo suficiente
+como para recomendarla?
+Fórmula / medición
+NPS = % Promotores − % Detractores
+Con quién usarla
+Product Management, Business Owners,
+LPM, UX/Customer Experience y liderazgo.
+Para qué sirve
+Evaluar relación a largo plazo con el cliente y detectar riesgos u
+oportunidades de crecimiento.
+Cuidado con...
+No explica por sí solo los problemas específicos de producto. Debe
+segmentarse y acompañarse de comentarios.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 199 of 310 --
+
+NPS · clasificación y cálculo
+El resultado puede ir de -100 a +100.
+Pregunta
+“En una escala del 0 al 10, ¿qué probabilidad hay de que recomiende nuestro producto/servicio a un amigo o
+colega?”
+Promotores 9-10
+Clientes entusiastas que recomiendan,
+fidelizan y pueden impulsar crecimiento.
+Pasivos 7-8
+Clientes satisfechos pero no entusiastas. No
+cuentan en el cálculo.
+Detractores 0-6
+Clientes insatisfechos que pueden dañar
+reputación o abandonar.
+Lectura general
+/14÷QSFEPNJOBOEFUSBDUPSFT
+/14÷N	ás satisfechos que detractores
+/14÷CBTFGVFSUFEFQSPNPUPSFT
+Clave
+La tendencia importa tanto como el valor absoluto. Un NPS
+bajo ascendente puede ser mejor señal que uno alto
+descendente.
+
+-- 200 of 310 --
+
+Ejemplo NPS · matriz de interpretación
+Combina valor absoluto con tendencia.
+Categoría Ascendente Descendente Estable
+Malo (-20%) Continuar reforzando mejoras Foco urgente, gestionar crisis Provocar cambio de tendencia
+Razonable (15) Potenciar lo positivo y recoger ideas Revisar experiencia y validar causas Vigilar evolución
+Bueno (55%) Reconocer avances y mantener motivación Investigar bajada, corregir expectativas Compartir buenas prácticas
+Excelente (85%) Modelo ejemplar, fomentar innovación Prevención: riesgo de relajación Celebrar éxito y cuidar relación
+“El NPS no se “mejora” pidiendo mejores notas: se mejora entendiendo causas y actuando.”
+
+-- 201 of 310 --
+
+NPS · buenas prácticas de uso
+Convierte un número en una conversación de producto.
+Segmenta
+Por tipo de cliente, plan, canal, cohortes,
+mercado o momento del journey. El
+promedio esconde señales.
+Pregunta por qué
+El comentario libre explica el número. Sin
+verbatims, el NPS queda incompleto.
+Conecta con backlog
+Los temas recurrentes deben convertirse en
+hipótesis, mejoras o decisiones de
+priorización.
+Evita
+• Manipular la muestra
+• Medir demasiado pronto
+• Comparar equipos
+• Usarlo como objetivo aislado
+• Ignorar detractores cualitativos
+Usa para decidir
+¿Qué experiencia está generando detractores?
+¿Qué promotores describen como diferencial?
+¿Qué segmento merece más atención?
+“La voz del cliente debe cambiar conversaciones, no solo decorar reportes.”
+
+-- 202 of 310 --
+
+DEFECTOS EN PRODUCCIÓN
+Calidad real observada por usuarios finales
+Responde
+¿Estamos entregando soluciones con el
+nivel de calidad esperado por cliente y
+negocio?
+Fórmula / medición
+Total de defectos encontrados en
+producción en el periodo. También
+puede medirse como tasa o porcentaje.
+Con quién usarla
+Equipos ágiles, Product Owner,
+Ingeniería/Arquitectura y Product
+Management.
+Para qué sirve
+Evaluar calidad real de la solución entregada y efectividad de prácticas
+de calidad incorporada.
+Cuidado con...
+No refleja defectos no reportados. Debe complementarse con
+severidad, origen e impacto en usuario.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 203 of 310 --
+
+Defectos en producción · qué revela
+Mide errores que escaparon al proceso de pruebas y llegaron a usuarios reales.
+Qué indica
+• Robustez y confiabilidad del producto
+• Efectividad del testing
+• Calidad de requisitos y criterios de aceptación
+• Riesgos de experiencia de usuario
+• Estabilidad de la entrega
+Cómo analizar
+• Tendencia por periodo
+• Severidad e impacto
+• Origen del defecto
+• Módulo afectado
+• Causa raíz
+• Relación con deuda técnica o falta de DoD
+Regla práctica
+Un alto número indica deficiencias de testing, revisión, automatización o definición. La tendencia descendente indica
+mejora en prevención.
+“El foco no es contar bugs: es eliminar causas raíz.”
+
+-- 204 of 310 --
+
+Ejemplo · defectos en producción
+Interpretación por Sprint.
+Periodo Defectos en producción Evaluación Interpretación
+Sprint 1 12 Malo Fallos graves. Revisar proceso de pruebas.
+Sprint 2 4 Mejorable Aún hay incidencias recurrentes. Ajustar testing.
+Sprint 3 0 Excelente Proceso robusto. Alta calidad entregada.
+Si la tendencia sube
+• Priorizar revisión de calidad
+• Reforzar pruebas automatizadas
+• Analizar severidad y origen
+• Revisar Definition of Done
+Si la tendencia baja
+• Mantener prácticas preventivas
+• Compartir aprendizajes
+• Evitar relajación
+• Revisar si también mejora CSAT/NPS
+“La calidad que importa es la que experimenta el usuario, no la que declaramos antes de desplegar.”
+
+-- 205 of 310 --
+
+DEUDA TÉCNICA
+Trabajo técnico pendiente que reduce mantenibilidad y velocidad futura
+Responde
+¿Estamos sacrificando calidad y
+sostenibilidad por velocidad a corto
+plazo?
+Fórmula / medición
+Deuda técnica (%) = (esfuerzo para
+remediar / esfuerzo total del Sprint) × 100
+Con quién usarla
+Equipos ágiles, Product Owner,
+Arquitectura/Ingeniería y Product
+Management.
+Para qué sirve
+Hacer visible el impacto de compromisos técnicos y equilibrar entrega
+de valor con sostenibilidad del sistema.
+Cuidado con...
+Puede ser subjetiva si no se define bien. Debe cuantificarse por
+esfuerzo, riesgo o impacto.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 206 of 310 --
+
+Deuda técnica · cómo se acumula
+Decisiones razonables a corto plazo pueden convertirse en coste oculto.
+Qué es
+Coste acumulado por mantenimiento, refactorización o
+mejora pendiente debido a decisiones tomadas por rapidez,
+falta de recursos o presión de entrega.
+Impacto
+• Obstaculiza nuevos cambios
+• Aumenta defectos y fragilidad
+• Reduce velocidad futura
+• Hace más caro evolucionar
+• Genera dependencia de expertos
+Objetivos de medición
+• Priorizar trabajos técnicos
+• Fomentar mejora continua
+• Planificar refactorización
+• Hacer visible el riesgo técnico ante negocio
+Buenas prácticas
+Incorporar tareas de refactorización periódicas en los Sprints y
+analizar las causas de acumulación para evitar que vuelva a
+crecer.
+“La deuda técnica no desaparece por ignorarla: se paga con intereses en cada cambio futuro.”
+
+-- 207 of 310 --
+
+Ejemplo · deuda técnica por Sprint
+Medición como esfuerzo dedicado a remediar sobre esfuerzo total.
+Sprint Esfuerzo total Esfuerzo deuda técnica Deuda técnica (%) Comentario
+1 40 pts 4 pts 10% Inicio de medición
+2 38 pts 8 pts 21,1% Se atacan bugs críticos
+3 42 pts 6 pts 14,3% Refactor de módulo de pagos
+4 40 pts 10 pts 25% Sprint enfocado en deuda acumulada
+5 40 pts 4 pts 10% Nivel objetivo estable
+Interpretación
+Deuda alta = foco en remediar.
+Estable/mejorable = atención preventiva.
+Excelente = mantener cultura técnica.
+Decisiones posibles
+• Reservar capacidad fija
+• Cambiar DoD
+• Automatizar pruebas
+• Refactorizar zonas críticas
+• Acordar trade-off con PO
+
+-- 208 of 310 --
+
+COBERTURA DE PRUEBAS
+Protección automática frente a regresiones
+Responde
+¿Tenemos suficiente validación
+automática para sostener calidad y
+velocidad?
+Fórmula / medición
+Cobertura (%) = (elementos cubiertos por
+pruebas / elementos totales) × 100
+Con quién usarla
+Equipos ágiles, Ingeniería/Arquitectura y
+Product Owner.
+Para qué sirve
+Evaluar calidad incorporada, reducir riesgos de defectos y habilitar
+cambios rápidos y seguros.
+Cuidado con...
+El número por sí solo no garantiza reducción de errores. Importa la
+cobertura crítica y la calidad de los tests.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 209 of 310 --
+
+Cobertura de pruebas · lectura correcta
+No se trata de perseguir un porcentaje, sino de proteger comportamiento crítico.
+Qué mide
+La proporción del comportamiento implementado que está
+siendo validado automáticamente y, por tanto, protegido
+frente a regresiones.
+Relacionada con
+• Reducción de errores en producción
+• Mejora continua
+• Reducción de tiempos de entrega
+• Cumplimiento de Definition of Done
+• Disminución de defectos
+Umbrales orientativos
+÷SJFTHPBMUP
+60–÷BDFQUBCMF
+75–÷CVFOP
+÷NVZCVFOPTJDVCSFSBNBTDS	íticas
+Recomendación
+Aumentar progresivamente. Evitar imponer saltos bruscos que
+generen tests pobres o escritos solo para “subir la cifra”.
+“La cobertura útil protege decisiones de negocio, no solo líneas de código.”
+
+-- 210 of 310 --
+
+Ejemplo · evolución de cobertura de pruebas
+Crecimiento progresivo y sostenible.
+Sprint Elementos totales Elementos cubiertos Cobertura Comentarios
+1 50 25 50% Línea base inicial
+2 55 33 60% Tests unitarios en módulo de pedidos
+3 60 39 65% Tests de integración
+4 62 46 74,2% Sprint con foco en testing
+5 64 48 75% Cobertura objetivo alcanzada
+Cuidado
+Una cobertura alta con tests débiles puede dar falsa
+seguridad. Revisar calidad de pruebas, ramas críticas y
+defectos en producción.
+Decisión
+Combina cobertura con defectos en producción y deuda
+técnica para decidir dónde invertir en calidad.
+
+-- 211 of 310 --
+
+Triada de calidad de producto
+Estas métricas se interpretan mejor juntas.
+Defectos en producción
+Lo que falla en manos del usuario.
+Señal de calidad real.
+Deuda técnica
+Lo que compromete la sostenibilidad
+futura. Señal de riesgo interno.
+Cobertura de pruebas
+Lo que protege frente a regresiones.
+Señal de prevención.
+Lectura conjunta
+Si suben defectos y deuda, y la cobertura es baja, el sistema está sacrificando sostenibilidad. La respuesta no es “ir más
+rápido”, sino cambiar la forma de construir calidad.
+“La calidad no es una fase: es una capacidad del sistema de entrega.”
+
+-- 212 of 310 --
+
+SENTIMIENTO DE PROPÓSITO
+Sentido, impacto y conexión con objetivos mayores
+Responde
+¿Las personas entienden por qué hacen
+su trabajo y sienten que aporta valor real?
+Fórmula / medición
+Promedio de respuestas a: “¿Tu trabajo
+contribuye a un propósito significativo
+para ti y el equipo?”
+Con quién usarla
+Equipos ágiles, Product Management,
+liderazgo Lean-Agile y RR. HH.
+Para qué sirve
+Evaluar compromiso intrínseco, motivación y alineación con la visión
+y objetivos del producto o empresa.
+Cuidado con...
+Es subjetiva. Debe ser anónima/confidencial y complementarse con
+conversaciones cualitativas.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 213 of 310 --
+
+Sentimiento de propósito · por qué importa
+Un equipo con propósito suele ser más resiliente y sostenible.
+Qué mide
+El grado en que los miembros del equipo sienten que su trabajo
+contribuye a objetivos significativos y alineados con el producto
+u organización.
+Cómo medir
+Pregunta periódica, clara y anónima en escala 1-5 o 1-10.
+Combinar con verbatims para entender causas.
+Valores bajos
+Desconexión, riesgo de desmotivación,
+menor rendimiento y posible pérdida de
+foco.
+Valores medios
+Reforzar visión, objetivos, reconocimiento
+y conversación sobre impacto.
+Valores altos
+Equipo alineado, motivado y con sentido
+claro. Mantener liderazgo y autonomía.
+“El propósito conecta tareas diarias con valor real.”
+
+-- 214 of 310 --
+
+Ejemplo · sentimiento de propósito
+Promedio 1-5 por Sprint.
+Sprint Respondientes Promedio Evaluación Interpretación / acción
+Sprint 1 8 3,1 Mejorable Reforzar comunicación y motivación.
+Sprint 2 8 4,0 Bueno Alta alineación. Fomentar cultura y reconocimiento.
+Sprint 3 8 4,5 Excelente Mantener y potenciar liderazgo y autonomía.
+Preguntas útiles
+¿Entiendo cómo mi trabajo impacta en clientes?
+¿Veo conexión entre Sprint Goal y Product Goal?
+¿Siento que el equipo tiene autonomía real?
+Acciones posibles
+• Mejorar storytelling de producto
+• Invitar usuarios a Reviews
+• Visibilizar outcomes
+• Reconocer aportaciones
+• Clarificar objetivos
+
+-- 215 of 310 --
+
+SATISFACCIÓN DEL EQUIPO
+Bienestar, entorno y sostenibilidad del ritmo de trabajo
+Responde
+¿El equipo se siente satisfecho, apoyado y
+capaz de dar lo mejor de sí?
+Fórmula / medición
+eNPS, autoevaluaciones y media periódica
+de satisfacción interna.
+Con quién usarla
+Equipos ágiles, Scrum Master / Team
+Coach y liderazgo Lean-Agile.
+Para qué sirve
+Identificar riesgos de desmotivación, mejorar sostenibilidad y fortalecer
+desempeño del equipo.
+Cuidado con...
+Debe existir confianza y anonimato. No usar como arma ni para
+fiscalizar personas.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 216 of 310 --
+
+Satisfacción del equipo · eNPS
+Adaptación interna del NPS para medir recomendación del entorno de trabajo.
+Pregunta
+“En una escala del 0 al 10, ¿qué tan probable es que recomiendes esta empresa/equipo como lugar de trabajo a
+amigos o familiares?”
+Promotores 9-10
+Personas entusiastas que recomiendan y
+fortalecen cultura.
+Pasivos 7-8
+Satisfechos pero no entusiastas. No
+cuentan en el cálculo.
+Detractores 0-6
+Insatisfechos, con riesgo de desgaste o
+desconexión.
+Fórmula
+eNPS = % promotores − % detractores
+Resultado entre -100 y +100.
+Usar con cuidado
+El valor está en entender causas, no en presionar al equipo
+para mejorar la puntuación.
+
+-- 217 of 310 --
+
+Ejemplo · satisfacción del equipo
+Interpretación por nivel y tendencia.
+Categoría Ascendente Descendente Estable
+Malo (-20%) Hay mejoras: continuar reforzando Foco urgente, gestionar crisis Provocar cambio de tendencia
+Razonable (15) Potenciar lo positivo y recoger ideas Revisar experiencia, validar causas Vigilar evolución
+Bueno (55%) Reconocer avances y motivación Investigar bajada Compartir buenas prácticas
+Excelente (85%) Modelo ejemplar, innovar Prevención: evitar relajación Celebrar éxito y cuidar relaciones
+“La satisfacción del equipo es predictor de sostenibilidad, motivación y rendimiento a largo plazo.”
+
+-- 218 of 310 --
+
+FUNCIONALIDADES PRIORIZADAS
+Alineación entre estrategia, prioridades y ejecución
+Responde
+¿Estamos construyendo primero lo más
+importante?
+Fórmula / medición
+% funcionalidades con prioridad asignada y
+% funcionalidades terminadas por
+prioridad.
+Con quién usarla
+Product Management, Product Owner,
+Business Owners y equipos ágiles.
+Para qué sirve
+Asegurar que estrategia y ejecución estén conectadas, maximizando
+valor en cada iteración o PI.
+Cuidado con...
+No mide por sí sola la calidad de la priorización ni su
+correspondencia real con negocio.
+“Medir valor es entender si estamos generando impacto, no solo si estamos ocupados.”
+
+-- 219 of 310 --
+
+Funcionalidades priorizadas · qué observa
+Hace visible si el backlog tiene criterio antes de que el equipo empiece a construir.
+Qué mide
+Proporción de funcionalidades desarrolladas o planificadas
+con prioridad claramente definida.
+Para qué sirve
+• Auditar rigor de priorización
+• Facilitar foco
+• Mejorar toma de decisiones
+• Detectar backlog desordenado
+• Revisar si el equipo trabaja en lo importante
+Señal de alerta
+Un ratio bajo indica backlog desordenado y riesgo de mal
+enfoque del equipo. Si muchas funcionalidades entran sin
+prioridad, probablemente manda la urgencia.
+Señal saludable
+Un ratio alto facilita planificación basada en valor y entrega
+alineada a objetivos de producto.
+“Priorizar antes de construir evita convertir el Sprint en una lista de deseos.”
+
+-- 220 of 310 --
+
+Ejemplo · funcionalidades priorizadas
+Medición por Sprint.
+Sprint Total funcionalidades Funcionalidades priorizadas % priorizadas Evaluación Acción recomendada
+Sprint 1 54 31 57% Mejorable Revisar criterios, involucrar PO
+Sprint 2 48 46 96% Excelente Mantener proceso regular
+Sprint 3 37 15 41% Baja Realinear backlog con visión de producto
+Complementos útiles
+• % de funcionalidades terminadas por prioridad
+• % de funcionalidades sin prioridad
+• Edad de ítems prioritarios
+• Cambios de prioridad explicados
+Decisión
+Si se entregan muchos ítems P3/P4 y pocos P1, revisar
+capacidad, WIP, presión externa y claridad del Product Goal.
+
+-- 221 of 310 --
+
+Métricas de valor y antipatrones
+Las métricas ayudan a detectar si un comportamiento está afectando valor real.
+Antipatrón Señal de valor afectada Métricas útiles
+Sprint Review como demo Poco feedback y baja adopción CSAT, feedback incorporado, valor entregado
+Backlog sin priorización Trabajo no alineado con estrategia Funcionalidades priorizadas, valor entregado
+Deuda técnica Menor sostenibilidad y más defectos Deuda técnica, defectos, cobertura
+Scrum solo de nombre Output sin outcome Valor entregado, NPS, propósito
+Equipo sobrecargado Desgaste y pérdida de calidad Satisfacción equipo, defectos, retrabajo
+“No se mide para culpabilizar: se mide para ver el sistema.”
+
+-- 222 of 310 --
+
+Elaborar métricas propias
+Las métricas ágiles deben adaptarse a la realidad única de cada equipo y producto.
+1 · Identifica objetivo
+Define qué quieres mejorar o conocer: velocidad, calidad,
+satisfacción, ciclo, impacto, foco o sostenibilidad.
+2 · Selecciona datos observables
+Usa información accesible y medible en el tiempo: entregas,
+defectos, encuestas, uso, feedback.
+3 · Elige fórmula simple
+Define cálculo claro: suma, promedio, porcentaje, relación entre
+dos datos.
+4 · Contextualiza y revisa
+Cada equipo es distinto. Ajusta la métrica según resultados y
+evolución.
+Principio
+Experimenta, mide y adapta periódicamente según aprendizajes y nuevas necesidades.
+
+-- 223 of 310 --
+
+Cómo elegir métricas eficaces
+Una métrica buena debe ser útil, comprensible y sostenible.
+1
+Resultado específico
+Vinculada a un resultado concreto y deseable.
+2
+Comprensible
+Fácil de entender por equipo y stakeholders.
+3
+Fácil de obtener
+La recopilación no debe ser una barrera.
+4
+Alineada con objetivos
+Relacionada con negocio y estrategia.
+Buenas prácticas
+• Sé transparente
+• No uses métricas como arma
+• Acompaña datos de contexto
+• Revisa periódicamente tus métricas
+“Las métricas no mejoran equipos. Las conversaciones que generan sí.”
+
+-- 224 of 310 --
+
+Medir con propósito
+Medir no es un acto técnico: es un acto de enfoque estratégico.
+¿Qué pregunta responde?
+Sin una pregunta clara, la métrica carece de dirección.
+¿Qué decisión permite tomar?
+Define la acción concreta que ejecutaremos gracias a los
+datos.
+¿Qué pasaría sin ella?
+Si no cambiaría nada, probablemente no aporta suficiente
+valor.
+¿Cuánto cuesta mantenerla?
+El coste de obtención debe justificarse con el valor
+generado.
+“Las buenas métricas son brújulas, no cronómetros.”
+
+-- 225 of 310 --
+
+Métricas útiles vs métricas tóxicas
+No todas las métricas mejoran el sistema; algunas lo distorsionan.
+Métricas útiles
+• Conectan con el propósito
+• Ayudan a aprender y decidir
+• Son accionables
+• Reflejan valor entregado al cliente
+• Ejemplos: Lead Time, Throughput, defectos post-entrega, NPS
+Métricas tóxicas
+• Comparan personas o equipos de forma punitiva
+• Generan miedo o incentivos perversos
+• Miden esfuerzo en vez de impacto
+• Ejemplos: horas trabajadas, commits por desarrollador,
+velocidad comparada
+“No hay nada más peligroso que una métrica sin propósito.”
+
+-- 226 of 310 --
+
+Antipatrones comunes relacionados con métricas
+Cuando una métrica cambia el comportamiento en la dirección equivocada.
+Velocidad como objetivo
+Convierte velocidad en presión y reduce
+calidad.
+Métricas que castigan en lugar de orientar
+El dato se usa para culpar, no para aprender.
+Falta de transparencia
+Nadie entiende de dónde sale el número.
+Fiscalizar el equipo
+La métrica alimenta control, no mejora.
+Comparación entre equipos
+Ignora contexto, composición y tipo de
+trabajo.
+Métricas de vanidad
+Se mide porque queda bien, no porque
+permite decidir.
+“La pregunta no es qué medimos, sino para qué lo medimos.”
+
+-- 227 of 310 --
+
+Ejercicio · métricas clave de valor
+Toma de decisión con métricas.
+Objetivo
+Proponer métricas que ayuden a hacer seguimiento de
+antipatrones en un equipo Scrum.
+Pregunta guía
+¿Qué métricas de valor podemos utilizar para saber si el
+cambio está generando impacto?
+Dinámica sugerida
+1. Elegir un antipatrón
+2. Identificar impacto esperado
+3. Seleccionar 2 métricas de valor
+4. Definir cómo se obtienen
+5. Explicar qué decisión permitirán tomar
+Salida esperada
+Una hipótesis medible:
+“Si intervenimos sobre este antipatrón, esperamos
+observar mejora en ___ y tomaremos decisión si ___.”
+“No elijas métricas por moda; elígelas por la decisión que necesitas tomar.”
+
+-- 228 of 310 --
+
+Ejercicio · crear métricas propias
+Clasifica métricas útiles frente a métricas de vanidad.
+Paso 1
+Respecto a las métricas propias elegidas,
+responde las preguntas de ayuda.
+Paso 2
+¿Qué pregunta responde?
+¿Qué decisión permite tomar?
+¿Qué pasaría si no la midiéramos?
+¿Cuánto cuesta obtenerla?
+Paso 3
+Clasifica las métricas definidas:
+• Útiles
+• De vanidad
+• Potencialmente tóxicas
+Cierre
+Una métrica propia es válida si ayuda a aprender, tomar decisiones y mejorar el sistema sin generar
+incentivos perversos.
+
+-- 229 of 310 --
+
+Checklist final para métricas de valor
+Antes de incorporar una métrica al sistema de seguimiento.
+✓
+¿Está vinculada a un objetivo?
+✓
+¿Se entiende sin explicación
+larga?
+✓
+¿Permite decidir algo?
+✓
+¿Es fácil de obtener?
+✓
+¿Evita comparar personas?
+✓
+¿Incluye contexto y
+conversación?
+✓
+¿Se revisará periódicamente?
+⚠
+¿Puede generar incentivos
+tóxicos?
+“Una métrica de valor debe mejorar el sistema, no solo el informe.”
+
+-- 230 of 310 --
+
+Métricas útiles vs métricas tóxicas
+El uso de la métrica importa tanto como la métrica
+Útiles
+✓ Conectan con propósito
+✓ Ayudan a tomar decisiones
+✓ Invitan a mejora continua
+✓ Reflejan valor y calidad
+Tóxicas
+✕ Comparan personas/equipos
+✕ Generan miedo o estrés
+✕ Miden actividad, no impacto
+✕ Fiscalizan y distorsionan
+“Velocidad como objetivo deja de ser métrica: se convierte en presión.”
+
+-- 231 of 310 --
+
+Ejercicio · Crear métricas propias
+Clasificar métricas como útiles, de vanidad o tóxicas
+✓ Elige 3 métricas que uses o quieras usar en tu equipo.
+✓ Responde: ¿qué pregunta responde cada una?
+✓ Responde: ¿qué decisión permite tomar?
+✓ Responde: ¿qué comportamiento puede incentivar?
+✓ Clasifica: útil, vanidad o tóxica.
+“La métrica perfecta no existe; la métrica consciente sí.”
+
+-- 232 of 310 --
+
+IA aplicada al
+marco Scrum
+Cómo usar inteligencia artificial para analizar
+datos, facilitar conversaciones, mejorar decisiones y
+liberar tiempo para el trabajo realmente humano.
+“La IA no sustituye el criterio del equipo: amplifica su capacidad de
+observar, aprender y decidir.”
+
+-- 233 of 310 --
+
+Objetivo del módulo
+Aplicar IA en Scrum sin perder la esencia ágil.
+Idea central
+La IA puede automatizar tareas, detectar patrones, generar borradores y acelerar análisis. Pero Scrum sigue dependiendo de
+transparencia, inspección, adaptación y colaboración humana.
+1
+Obtener y analizar métricas con menor
+coste
+2
+Anticipar riesgos y bloqueos
+3
+Mejorar refinamiento, historias y criterios
+4
+Preparar conversaciones con stakeholders
+5
+Diseñar retrospectivas y acciones de mejora
+6
+Generar asistentes de consulta y soporte
+“El objetivo no es “usar IA”; es usarla donde mejore valor, aprendizaje o foco.”
+
+-- 234 of 310 --
+
+Índice del módulo
+Un recorrido desde fundamentos hasta casos prácticos dentro de Scrum.
+1 Introducción a la IA 2 Tipos de IA
+3 Lógica principal: regresión, clasificación y clustering 4 Preparación de datos
+5 Implantación en un equipo Scrum 6 Diseño de prompts efectivos
+7 IA en roles Scrum 8 Casos prácticos y ejercicios
+“Primero entendemos qué hace la IA; después decidimos cómo usarla con responsabilidad.”
+
+-- 235 of 310 --
+
+Ejercicio inicial · Uso actual de IA
+Punto de partida para conectar el módulo con la realidad de cada equipo.
+Objetivo
+Compartir cómo se utiliza la IA hoy y qué
+oportunidades reales aparecen en el día a día.
+Preguntas
+• ¿Qué herramientas de IA se usan actualmente?
+• ¿Para qué tareas concretas?
+• ¿Qué resultados han funcionado bien?
+• ¿Qué riesgos o dudas aparecen?
+• ¿Dónde podría aportar más valor en Scrum?
+Dinámica
+5 minutos de reflexión individual + 10 minutos de puesta en común. El foco no está en la herramienta, sino en el problema
+que se quiere resolver.
+“La IA empieza a aportar valor cuando se conecta con una necesidad real del equipo.”
+
+-- 236 of 310 --
+
+BLOQUE
+Introducción a la IA
+Qué es, qué capacidades aporta y por qué
+puede ser útil en equipos ágiles.
+IA aplicada a Scrum
+
+-- 237 of 310 --
+
+Introducción · qué entendemos por IA
+Sistemas capaces de simular capacidades humanas para aprender, analizar, generar y decidir.
+Aprendizaje empírico Análisis de datos Adaptación a contextos Toma de decisiones
+Procesamiento de lenguaje
+natural
+Reconocimiento de voz e
+imágenes
+Ayuda creativa Desarrollos industriales
+Explicación
+La inteligencia artificial busca crear máquinas y sistemas capaces de imitar, complementar o superar determinadas
+capacidades humanas en tareas concretas: comprender texto, clasificar información, detectar patrones, generar contenido,
+automatizar procesos y apoyar decisiones.
+“La IA no piensa como una persona; procesa patrones y genera respuestas según datos, instrucciones y
+contexto.”
+
+-- 238 of 310 --
+
+Evolución y ejemplos de herramientas
+El ecosistema cambia rápido; por eso conviene pensar en capacidades más que en marcas.
+Conversación y texto
+ChatGPT, Claude, Gemini, Copilot, Poe,
+Notion AI, Grammarly AI.
+Búsqueda y síntesis
+Perplexity AI, asistentes de búsqueda
+conversacional y herramientas de
+investigación asistida.
+Imagen, vídeo y contenido
+DALL·E, Midjourney, Runway, Jasper y otras
+soluciones de creación o edición asistida.
+Aplicación en Scrum
+Lo importante no es memorizar herramientas, sino identificar qué capacidad necesitamos: analizar feedback, crear historias,
+detectar riesgos, generar pruebas, sintetizar métricas o construir asistentes internos.
+“Herramientas cambian; los criterios de uso responsable permanecen.”
+
+-- 239 of 310 --
+
+Ejemplo transversal · tutor personal con IA
+Un prompt completo muestra cómo contexto, rol y reglas cambian la calidad de la respuesta.
+Prompt resumido
+Actúa como mi Tutor de Inglés Personal. Ayúdame a mejorar fluidez, vocabulario, gramática y
+comprensión.
+Personalidad: motivador y amable.
+Nivel de exigencia: corrector estricto.
+Idioma por defecto: inglés; usa español solo para explicaciones complejas o si lo pido.
+Comienza preguntando mi nivel y objetivos. Corrige mis errores tras cada turno: frase original, frase
+corregida en negrita y explicación breve. Introduce vocabulario relevante y crea un cronograma de
+estudio de 15 minutos al día. Mi nivel actual es B1.
+Qué enseña este ejemplo
+• Define rol y objetivo
+• Fija tono y nivel de exigencia
+• Establece método de trabajo
+• Define formato de corrección
+• Aporta contexto personal
+• Pide adaptación continua
+“La calidad del resultado suele depender más de la claridad del contexto que de la longitud del prompt.”
+
+-- 240 of 310 --
+
+BLOQUE
+Tipos de IA
+Clasificación práctica según la función que
+cumple y el tipo de problema que resuelve.
+IA aplicada a Scrum
+
+-- 241 of 310 --
+
+Tipos de IA · visión general
+Una clasificación útil para entender qué puede hacer cada tecnología.
+Tipo Qué hace Ejemplo de uso
+Machine Learning Aprende de datos y hace predicciones o decisiones automáticas. Recomendaciones, fraude, clasificación de imágenes.
+Deep Learning Usa redes profundas para imágenes, voz y lenguaje complejo. Reconocimiento facial, asistentes avanzados.
+Sistemas expertos Automatizan decisiones especializadas con reglas o conocimiento experto. Diagnóstico médico o soporte normativo.
+Agentes inteligentes Perciben el entorno y actúan según objetivos cambiantes. Chatbots, asistentes digitales, vehículos autónomos.
+Robótica autónoma Realiza tareas físicas adaptándose a entornos cambiantes. Drones, robots industriales o domésticos.
+PLN Entiende, interpreta o genera lenguaje humano. Traducción, asistentes de voz, generación de texto.
+“Para Scrum, las aplicaciones más frecuentes hoy están en PLN, análisis de datos, automatización y asistencia.”
+
+-- 242 of 310 --
+
+Machine Learning · aprendizaje automático
+Aprender de datos para predecir, clasificar o recomendar.
+Qué es
+Permite que un sistema aprenda patrones a partir de datos y realice
+predicciones o decisiones sin estar programado explícitamente
+para cada caso.
+Ejemplos
+• Recomendación de productos
+• Detección de fraude
+• Estimación de riesgo
+• Clasificación de tickets
+• Predicción de demanda
+• Modelos personalizados con plataformas AutoML
+“En Scrum puede ayudar a detectar tendencias y anticipar riesgos, siempre que los datos sean fiables.”
+
+-- 243 of 310 --
+
+Deep Learning · aprendizaje profundo
+Modelos más complejos para lenguaje, imagen, voz y patrones de alta dimensionalidad.
+Qué es
+Procesa grandes cantidades de datos con redes neuronales
+profundas. Es especialmente útil cuando las reglas no son obvias y el
+patrón debe aprenderse desde ejemplos.
+Ejemplos
+• Reconocimiento de imágenes
+• Voz y transcripción
+• Traducción avanzada
+• Asistentes virtuales
+• Generación de texto
+• Frameworks como TensorFlow o PyTorch
+“El equipo no necesita conocer la arquitectura técnica para usarlo, pero sí entender sus límites.”
+
+-- 244 of 310 --
+
+Sistemas expertos y agentes inteligentes
+Dos enfoques diferentes para automatizar decisiones y acciones.
+Sistemas expertos
+Automatizan decisiones especializadas en dominios concretos
+mediante conocimiento experto o reglas.
+Ejemplos: sistemas de diagnóstico, reglas de cumplimiento,
+soporte a decisiones clínicas o normativas.
+Agentes inteligentes
+Perciben el entorno, reciben objetivos y actúan en función
+de cambios.
+Ejemplos: chatbots, asistentes digitales, automatización de
+tareas, agentes que consultan fuentes y generan respuestas.
+“Un bot de consulta para documentación Scrum combina lenguaje, búsqueda y comportamiento de agente.”
+
+-- 245 of 310 --
+
+Robótica autónoma y procesamiento de lenguaje natural
+No toda IA es conversacional, pero el lenguaje es clave en el trabajo del conocimiento.
+Robótica autónoma
+Robots que desempeñan tareas físicas en entornos
+cambiantes, adaptándose a nueva información.
+Ejemplos: robots de manufactura, drones autónomos, robots
+de inspección o limpieza.
+Procesamiento de Lenguaje Natural
+Permite entender, interpretar o generar comunicación en
+lenguaje humano.
+Ejemplos: traductores automáticos, asistentes de voz,
+chatbots, generación de historias de usuario y síntesis de
+feedback.
+“En Scrum, gran parte del valor de la IA aparece porque convierte lenguaje disperso en información
+estructurada.”
+
+-- 246 of 310 --
+
+BLOQUE
+Lógica principal de la IA
+Tres enfoques prácticos para analizar datos de
+equipo: regresión, clasificación y clustering.
+IA aplicada a Scrum
+
+-- 247 of 310 --
+
+Tres métodos útiles para equipos Scrum
+La IA puede ayudar a predecir, categorizar y descubrir patrones.
+Regresión
+Previsión de valores numéricos.
+Ejemplo: capacidad del Sprint,
+velocidad esperada, lead time o
+defectos previstos.
+Clasificación
+Asignar elementos a categorías
+conocidas.
+Ejemplo: riesgo alto/medio/bajo,
+feedback positivo/neutro/negativo,
+impedimento bloqueante/parcial.
+Clustering
+Agrupar elementos similares sin
+categorías previas.
+Ejemplo: temas recurrentes de
+retrospectivas, familias de
+impedimentos o patrones ocultos.
+“Elegir el método correcto evita pedir a la IA una respuesta que el dato no puede sostener.”
+
+-- 248 of 310 --
+
+Método de regresión · previsión
+Predice un valor numérico continuo a partir de variables de entrada.
+Qué permite
+• Predecir velocidad o capacidad
+• Estimar defectos probables
+• Prever tiempo de entrega
+• Simular escenarios futuros
+• Ajustar expectativas con stakeholders
+Usos en Scrum
+• Planificación de Sprint
+• Forecast de release
+• Reservas de capacidad para defectos
+• Predicción de demanda estacional
+• Análisis de interrupciones
+Cuidado
+No capta cambios drásticos de contexto y puede generar una falsa sensación de precisión. Las predicciones deben abrir
+conversaciones, no reemplazarlas.
+“La regresión ayuda a preguntar “qué podría pasar”, no a prometer certezas.”
+
+-- 249 of 310 --
+
+Regresión · variables de entrada
+La calidad de la previsión depende de las variables usadas.
+Velocidad histórica Throughput Disponibilidad del equipo
+Vacaciones y festivos Tamaño del equipo Interrupciones
+Defectos previos Complejidad de historias Dependencias externas
+Buenas prácticas
+Usar métricas históricas, considerar factores que afectan resultados e iterar las estimaciones cada Sprint para ajustar el modelo.
+
+-- 250 of 310 --
+
+Regresión · prompt de ejemplo
+Predicción de velocidad y capacidad para defectos.
+Prompt
+Como Product Owner, predice la velocidad del equipo en el próximo Sprint y la capacidad que se
+dedicará a defectos.
+Datos:
+- En los tres últimos Sprints se completaron 25, 28 y 22 puntos de historia.
+- La capacidad dedicada a defectos fue 10%, 12% y 17%.
+- En el próximo Sprint habrá dos días festivos.
+Organiza la respuesta en una tabla y explica supuestos, riesgos y recomendaciones.
+Qué pedir siempre
+• Supuestos explícitos
+• Rango, no solo cifra única
+• Riesgos de contexto
+• Recomendaciones accionables
+• Advertencia sobre limitaciones del histórico
+“Un buen prompt obliga a la IA a mostrar supuestos y no solo resultado.”
+
+-- 251 of 310 --
+
+Regresión · salida esperada
+Ejemplo de respuesta útil para planificación.
+Variable Dato histórico Previsión Interpretación
+Velocidad 25, 28, 22 SP 22-25 SP Media ajustada por dos festivos.
+Capacidad defectos 10%, 12%, 17% 13-16% Tendencia creciente: reservar capacidad.
+Riesgo Variabilidad moderada Medio Revisar interrupciones y defectos abiertos.
+Acción Planificación No sobrecomprometer Priorizar Sprint Goal y margen de contingencia.
+Lectura
+La IA no decide el compromiso del Sprint. Ayuda a traer evidencia para que el equipo y el PO conversen sobre capacidad,
+foco y riesgos.
+“Predecir capacidad no sustituye la responsabilidad del equipo al seleccionar trabajo.”
+
+-- 252 of 310 --
+
+Método de clasificación · categorizar
+Asigna ítems o situaciones a categorías predefinidas.
+Qué permite
+• Clasificar historias por riesgo
+• Identificar impedimentos bloqueantes
+• Categorizar feedback de usuarios
+• Separar incidencias por severidad
+• Distinguir historias críticas de no críticas
+Valor para Scrum
+• Facilita priorización en refinamiento
+• Da claridad en Daily Scrum
+• Ordena grandes volúmenes de feedback
+• Ayuda a enfocar conversaciones de riesgo
+• Reduce ruido en el backlog
+Cuidado
+Puede ser subjetiva si los criterios no están claros y puede subestimar problemas complejos si solo fuerza categorías simples.
+“Clasificar bien exige definir las categorías antes de pedir la respuesta.”
+
+-- 253 of 310 --
+
+Clasificación · criterios claros
+La IA necesita reglas de clasificación comprensibles y revisables.
+Categoría Criterios posibles Ejemplo de decisión
+Riesgo alto Dependencias externas críticas, CA poco claros, baja experiencia previa. Revisar antes de entrar al Sprint o dividir.
+Riesgo medio Alguna dependencia o incertidumbre moderada. Refinar con Developers y validar supuestos.
+Riesgo bajo Criterios claros, tamaño manejable y experiencia previa. Candidata para Sprint si aporta valor.
+Regla práctica
+Revisar regularmente las categorías para evitar obsolescencia. Si el contexto cambia, la clasificación también debe cambiar.
+
+-- 254 of 310 --
+
+Clasificación · prompt de ejemplo
+Clasificar historias de usuario por riesgo.
+Prompt
+Como Equipo Scrum maduro, clasifica las historias adjuntas en riesgo alto (1), medio (2) o bajo (3).
+Criterios:
+- Dependencias con otros equipos.
+- Claridad de criterios de aceptación.
+- Experiencia previa del equipo en historias similares.
+El equipo se mantiene estable. Organiza la respuesta en una lista descendente por riesgo e incluye
+justificación breve por historia.
+Resultado útil
+No basta con la etiqueta. La salida debe incluir
+justificación, señales de riesgo y acción
+recomendada: refinar, dividir, validar, bloquear
+dependencia o aceptar.
+“Una clasificación sin acción recomendada se queda en etiquetado decorativo.”
+
+-- 255 of 310 --
+
+Clasificación · ejemplo de salida
+La tabla ayuda a convertir riesgo en decisión de refinamiento.
+Historia Riesgo Motivo Acción recomendada
+HU-102 API pagos Alto Dependencia externa y CA incompletos. Aclarar contrato API y dividir integración.
+HU-108 pruebas staging Medio Entorno pendiente y QA limitado. Resolver acceso antes del Sprint.
+HU-115 cambio visual Bajo Criterios claros y experiencia previa. Puede entrar si aporta valor.
+Uso en Scrum
+Esta salida puede alimentar refinement, Sprint Planning o una conversación temprana con stakeholders sobre dependencias y trade-
+offs.
+
+-- 256 of 310 --
+
+Método de clustering · encontrar patrones escondidos
+Agrupa elementos similares sin categorías predefinidas.
+Qué permite
+• Descubrir patrones ocultos
+• Agrupar resultados de retrospectivas
+• Detectar impedimentos recurrentes
+• Segmentar feedback por temas
+• Identificar familias de problemas
+Valor para Scrum
+• Impulsa retros basadas en datos
+• Muestra tendencias que el equipo no ve día a día
+• Agrupa ruido en temas accionables
+• Ayuda a crear planes de mejora por patrones
+Cuidado
+Puede producir agrupaciones poco útiles si no se define qué dimensión de similitud interesa. Requiere interpretación
+humana posterior.
+“El clustering no da respuestas finales: revela temas para conversar.”
+
+-- 257 of 310 --
+
+Clustering · prompt de ejemplo
+Agrupar retrospectivas para descubrir temas comunes.
+Prompt
+Como Scrum Master, agrupa en temas comunes los ítems adjuntos surgidos en retrospectivas de los
+últimos 5 Sprints.
+El equipo quiere desarrollar un plan de acción por temas comunes.
+Organiza la respuesta en una lista por tema e incluye:
+- Ítems agrupados.
+- Frecuencia del tema.
+- Impacto observado.
+- Acción de mejora sugerida.
+Datos recomendados
+• Comentarios de retrospectivas
+• Feedback de Sprint Reviews
+• Incidencias recurrentes
+• Bloqueos de Daily Scrum
+• Métricas de flujo y calidad asociadas
+“Agrupar retrospectivas evita tratar cada síntoma como si fuera un problema independiente.”
+
+-- 258 of 310 --
+
+Clustering · ejemplo de salida
+De comentarios dispersos a temas accionables.
+Tema común Señales agrupadas Impacto Acción sugerida
+Dependencias externas Bloqueos API, esperas de QA, decisiones tardías. Lead Time sube. Mapa de dependencias y acuerdo de escalado.
+Refinamiento débil CA incompletos, dudas en Sprint, retrabajo. Más interrupciones. DoR ligera y refinements frecuentes.
+Sobrecarga Historias arrastradas, estrés, baja satisfacción. Riesgo sostenible. Revisar capacidad y WIP.
+Conversación posterior
+¿Qué patrón causa más impacto? ¿Qué acción pequeña podemos probar durante 2-4 semanas? ¿Qué métrica indicará mejora?
+
+-- 259 of 310 --
+
+BLOQUE
+Preparación de datos
+La IA solo ayuda si los datos son mínimamente
+fiables, consistentes y seguros.
+IA aplicada a Scrum
+
+-- 260 of 310 --
+
+Preparación de datos
+Antes de analizar, hay que limpiar, completar y ordenar.
+Remover duplicados
+Evitar contar dos veces el
+mismo ítem.
+Corregir anomalías
+Revisar valores extremos o
+incoherentes.
+Completar datos
+Usar defaults o marcar
+ausencia de dato.
+Estandarizar datos
+Unificar nombres, estados y
+formatos.
+Organizar datos
+Estructurar en columnas,
+tablas o etiquetas.
+Buena práctica
+Diseñar desde el principio cómo se tomarán los datos: formularios consistentes, campos obligatorios, valores por defecto y
+nomenclaturas comunes ahorran mucho trabajo posterior.
+“Preparar datos no es burocracia: es reducir ruido para mejorar decisiones.”
+
+-- 261 of 310 --
+
+Checklist de calidad de datos
+Preguntas mínimas antes de pedir análisis a una IA.
+1
+¿Los datos representan el periodo correcto?
+2
+¿Hay ítems duplicados o estados mal cerrados?
+3
+¿Se mezclan tipos distintos sin segmentar?
+4
+¿Los nombres de estados son consistentes?
+5
+¿Hay datos sensibles que no deben compartirse?
+6
+¿La muestra es suficiente para inferir algo?
+7
+¿Qué campo falta para responder bien?
+8
+¿La salida será revisada por una persona?
+“Con datos pobres, la IA puede producir respuestas elegantes pero equivocadas.”
+
+-- 262 of 310 --
+
+Gobierno de datos y seguridad
+La IA debe adaptarse a la realidad del equipo y a las políticas de la organización.
+Evitar
+• Compartir datos sensibles en IAs abiertas
+• Copiar información de clientes sin anonimizar
+• Subir código propietario sin autorización
+• Usar métricas inconsistentes para predicciones
+• Automatizar decisiones sin revisión humana
+Recomendar
+• Usar IAs corporativas cuando aplique
+• Anonimizar o sintetizar datos
+• Definir permisos y fuentes autorizadas
+• Trazar qué datos alimentan la decisión
+• Mantener criterio humano en decisiones sensibles
+“La privacidad y la confianza son condiciones de adopción, no detalles técnicos.”
+
+-- 263 of 310 --
+
+BLOQUE
+Cómo implantar IA en un equipo Scrum
+Introducir tecnología sin perder transparencia,
+colaboración ni responsabilidad humana.
+IA aplicada a Scrum
+
+-- 264 of 310 --
+
+Implantar IA en un equipo Scrum
+La IA debe potenciar la entrega de valor, no sustituir roles humanos.
+Principio
+La integración inteligente permite aumentar capacidad de entrega, anticiparse a retos y reducir trabajo repetitivo, siempre
+que se mantenga foco en valor, adaptabilidad y aprendizaje continuo.
+1
+Empezar por una necesidad real
+2
+Hacer experimentos pequeños
+3
+Usar datos limpios
+4
+Mantener revisión humana
+5
+Medir impacto
+6
+Aprender y ajustar
+“La pregunta no es “qué IA usamos”, sino “qué fricción queremos reducir”.”
+
+-- 265 of 310 --
+
+Mejores prácticas de uso en equipos Scrum
+Dónde puede aportar valor sin desplazar la responsabilidad del equipo.
+Automatizar tareas repetitivas
+Clasificación, entrada de datos, generación
+de informes, testing automatizado, extracción
+de métricas.
+Optimizar planificación
+Sugerir escenarios de capacidad, detectar
+bloqueos técnicos y prever demanda
+estacional.
+Análisis predictivo
+Anticipar incidencias, evaluar tiempos de
+resolución y reservar capacidad de forma
+realista.
+Dashboards y mejora continua
+Mostrar métricas como Lead Time, alertas de
+flujo y patrones de trabajo para decisiones
+informadas.
+Apoyo al Scrum Master
+Automatizar parte del seguimiento para
+liberar tiempo de coaching, facilitación y
+mejora continua.
+Repositorio de conocimiento
+Crear asistentes de consulta sobre
+documentación, acuerdos, DoD, DoR,
+métricas o prácticas.
+“La IA debe liberar tiempo para conversaciones humanas, no sustituirlas.”
+
+-- 266 of 310 --
+
+Antipatrones al implantar IA
+Los errores se parecen mucho a los errores con métricas.
+Automatizar por automatizar
+Introducir IA sin necesidad real crea ruido y
+no aporta valor.
+Relegar decisiones humanas
+Usar la IA como juez final en estrategia,
+equipo o producto debilita responsabilidad.
+Falta de data governance
+Datos sucios, inconsistentes o sensibles
+pueden generar riesgo y decisiones
+erróneas.
+Fundamentalismo ágil
+Rechazar IA por dogma o adoptarla sin
+adaptación al contexto: ambos extremos
+son peligrosos.
+Usar IAs abiertas con datos sensibles
+Copiar información de clientes, personas o
+negocio sin control puede romper confianza
+y políticas.
+“La IA es una herramienta: el criterio, la ética y la responsabilidad siguen siendo humanos.”
+
+-- 267 of 310 --
+
+Ruta de implantación recomendada
+Un enfoque incremental reduce riesgo y acelera aprendizaje.
+1 Detectar fricción
+Seleccionar una tarea repetitiva, costosa o con alto ruido: informes,
+síntesis de feedback, clasificación de bugs.
+2 Definir experimento
+Acotar alcance, datos, herramienta, responsable de revisión y criterio
+de éxito.
+3 Probar con datos no sensibles
+Empezar con datos anonimizados, históricos o sintéticos. 4 Validar salida
+Comparar con juicio experto del equipo. Ajustar prompt, datos y
+formato.
+5 Integrar en cadencia Scrum
+Usar en refinement, Daily, Review, Retro o métricas solo si mejora la
+conversación.
+6 Medir utilidad
+Revisar si reduce tiempo, mejora calidad o ayuda a decidir. Eliminar si
+no aporta.
+“Un experimento pequeño bien medido vale más que una gran implantación sin aprendizaje.”
+
+-- 268 of 310 --
+
+BLOQUE
+Cómo diseñar prompts efectivos
+La IA responde mejor cuando recibe rol,
+instrucción, contexto, ejemplos, formato y tono.
+IA aplicada a Scrum
+
+-- 269 of 310 --
+
+Fórmula de prompt efectivo
+Un prompt claro reduce ambigüedad y mejora la utilidad de la respuesta.
+Fórmula
+PERSONA O ROL + INSTRUCCIÓN CLARA + CONTEXTO + EJEMPLOS O DETALLES + FORMATO DESEADO +
+TONO O ESTILO
+Persona o rol
+A quién representa la IA.
+Instrucción clara
+Qué debe hacer exactamente.
+Contexto
+Información necesaria para entender el caso.
+Ejemplos o detalles
+Criterios, datos, ejemplos o restricciones.
+Formato deseado
+Tabla, lista, plan, documento, Gherkin.
+Tono o estilo
+Claro, técnico, ejecutivo, didáctico.
+“Un prompt efectivo no es largo: es específico, contextual y verificable.”
+
+-- 270 of 310 --
+
+Prompt efectivo · ejemplo explicado
+Cada parte cumple una función.
+Prompt
+Como Scrum Master experimentado, explica las ventajas de usar métricas de velocidad en
+equipos Scrum para un público novato en el marco Scrum. Proporciona tips prácticos para
+los eventos Scrum, por ejemplo tener el objetivo presente en cada evento. Organiza la
+respuesta en una lista numerada y usa un tono claro y accesible.
+Desglose
+Rol: Scrum Master experimentado
+Instrucción: explicar ventajas
+Contexto: público novato
+Ejemplos: tips en eventos Scrum
+Formato: lista numerada
+Tono: claro y accesible
+“Cuando el formato de salida está claro, el resultado es mucho más usable.”
+
+-- 271 of 310 --
+
+Checklist antes de enviar un prompt
+Evita resultados vagos, peligrosos o imposibles de aplicar.
+1
+¿Qué rol debe adoptar la IA?
+2
+¿Qué tarea concreta debe realizar?
+3
+¿Qué datos y contexto necesita?
+4
+¿Qué criterios debe respetar?
+5
+¿Qué formato final quiero?
+6
+¿Qué tono o nivel de detalle necesito?
+7
+¿Qué limitaciones debe reconocer?
+8
+¿Cómo validaré la respuesta?
+“Si no sabes cómo validar la respuesta, probablemente el prompt aún no está listo.”
+
+-- 272 of 310 --
+
+Antipatrones al usar prompts
+El problema no es la IA: muchas veces es la petición.
+Prompt demasiado genérico
+“Hazme una retro” sin contexto de equipo,
+objetivo, problema o restricciones.
+Sin datos verificables
+Pedir análisis predictivo sin histórico,
+calidad de datos ni supuestos.
+Sin formato de salida
+Recibir texto largo cuando se necesitaba
+tabla, plan de acción o criterios Gherkin.
+Sin límites
+No indicar seguridad, privacidad, alcance,
+tono, nivel de detalle o supuestos.
+Sin revisión humana
+Copiar y pegar la salida sin contrastar con el
+contexto real del equipo.
+“La IA debe acelerar la reflexión, no saltarse la reflexión.”
+
+-- 273 of 310 --
+
+BLOQUE
+IA en los roles de Scrum
+Usos prácticos para Scrum Master, Product Owner
+y Developers.
+IA aplicada a Scrum
+
+-- 274 of 310 --
+
+IA en los roles de Scrum
+Una aliada para automatizar, detectar patrones y liberar tiempo.
+Scrum Master
+Planificación de Sprints
+Facilitación Daily
+Detección de impedimentos
+Diseño de retrospectivas
+Seguimiento del progreso
+Resolución de conflictos
+Previsión de capacidad
+Product Owner
+Priorización del Product Backlog
+Análisis de feedback
+Story Mapping
+Definición de historias
+Análisis predictivo
+Previsión de releases
+Bots de consulta
+Developers
+Generación de código
+Refactorización
+Detección de bugs
+Gestión de deuda técnica
+Análisis de métricas
+Documentación automática
+Traducción técnica-negocio
+“La IA aporta más cuando mejora el sistema, no cuando invade responsabilidades.”
+
+-- 275 of 310 --
+
+IA para Scrum Master
+Automatizar parte del análisis para dedicar más tiempo a coaching, facilitación y mejora.
+Puede ayudar a
+• Sintetizar métricas
+• Detectar bloqueos recurrentes
+• Preparar retrospectivas
+• Analizar comentarios del equipo
+• Identificar riesgo de incumplimiento
+• Preparar conversaciones difíciles
+• Generar opciones de intervención
+No debe hacer
+• Sustituir conversaciones humanas
+• Decidir por el equipo
+• Convertir métricas en vigilancia
+• Diagnosticar clima sin contexto
+• Automatizar feedback sensible sin cuidado
+• Resolver conflictos sin facilitación real
+Mensaje clave
+La IA puede liberar tiempo operativo para que el Scrum Master pueda observar mejor el sistema y acompañar la mejora continua.
+
+-- 276 of 310 --
+
+IA para Product Owner
+Optimizar tiempo, mejorar decisiones estratégicas y potenciar experiencia de usuario.
+Puede ayudar a
+• Clasificar feedback
+• Detectar temas de usuarios
+• Priorizar por impacto y esfuerzo
+• Generar historias iniciales
+• Explorar escenarios de roadmap
+• Simular impacto en métricas
+• Preparar argumentos con stakeholders
+No debe hacer
+• Reemplazar discovery real
+• Decidir valor sin evidencia
+• Inventar necesidades de usuario
+• Ignorar estrategia
+• Hacer backlog infinito de ideas generadas
+• Confundir output con outcome
+Mensaje clave
+La IA ayuda al PO a trabajar con más señales, pero el criterio de producto sigue naciendo del cliente, la estrategia y el aprendizaje
+real.
+
+-- 277 of 310 --
+
+IA para Developers
+Aumentar capacidad de entrega, aprendizaje, colaboración y calidad técnica.
+Puede ayudar a
+• Generar pruebas unitarias
+• Proponer refactorizaciones
+• Explicar código legado
+• Detectar bugs potenciales
+• Crear documentación técnica
+• Traducir lenguaje técnico a negocio
+• Explorar alternativas de diseño
+No debe hacer
+• Introducir código sin revisión
+• Sustituir criterio de arquitectura
+• Copiar soluciones inseguras
+• Ignorar estándares del equipo
+• Aumentar deuda técnica con “atajos”
+• Saltarse pruebas y peer review
+Mensaje clave
+La IA puede acelerar tareas técnicas, pero la calidad se protege con DoD, revisiones, pruebas y responsabilidad compartida.
+
+-- 278 of 310 --
+
+Ejercicio · acciones de mejora con IA
+Aplicar la IA dentro del plan de mejora del equipo.
+Objetivo
+Proponer acciones de mejora donde la IA pueda ayudar
+de forma concreta dentro del plan de mejora del equipo.
+Trabajo
+1. Elegir un problema real o antipatrón.
+2. Definir qué tarea podría apoyar la IA.
+3. Escribir el prompt.
+4. Ejecutar o simular la respuesta.
+5. Evaluar si el resultado ayuda a decidir.
+Preguntas
+¿Qué prompt utilizaríais?
+¿Qué resultado esperáis obtener?
+¿Cómo validaríais que la respuesta es útil?
+¿Qué riesgo habría que controlar?
+“Un buen uso de IA termina en una acción de mejora verificable.”
+
+-- 279 of 310 --
+
+BLOQUE
+Casos prácticos de IA en Scrum
+Prompts, tareas y salidas esperadas para
+situaciones reales del equipo.
+IA aplicada a Scrum
+
+-- 280 of 310 --
+
+Caso · colaboración con stakeholders
+Preparar conversaciones basadas en feedback y posibles fricciones.
+Herramienta
+ChatGPT u otra IA conversacional
+corporativa.
+Tareas
+• Preparar reuniones con stakeholders
+• Analizar feedback
+• Identificar resistencias o puntos de fricción
+• Generar argumentos para defender decisiones
+de producto
+Salida esperada
+Resumen de puntos clave, fricciones,
+argumentos, decisiones sugeridas y preguntas
+para la reunión.
+Prompt
+Como Product Owner experto, analiza este feedback de stakeholders y genera un resumen con puntos clave, posibles fricciones y argumentos para
+defender las decisiones de producto. Organiza la respuesta en un documento de texto. Feedback: [pega el texto].
+“La IA ayuda a preparar la conversación; la conversación sigue siendo humana.”
+
+-- 281 of 310 --
+
+Colaboración con stakeholders · ejemplo de salida
+Convertir feedback disperso en conversación estructurada.
+Puntos clave
+• Se valora la simplicidad de la aplicación.
+• El flujo de pagos necesita mejorar.
+• Se pide más flexibilidad en plantillas de recibos.
+• Preocupan tiempos de carga en móvil.
+Fricciones
+• Expectativas de alcance fuera del roadmap.
+• Posible conflicto entre personalización y rendimiento.
+• Diferentes prioridades entre stakeholders.
+Argumentos
+• Priorizar por impacto en retención.
+• Atacar primero fricciones de pago y rendimiento.
+• Posponer funcionalidades avanzadas hasta validar valor.
+• Explicar trade-offs con datos y roadmap.
+“El valor del análisis no está en resumir, sino en preparar mejores decisiones.”
+
+-- 282 of 310 --
+
+Caso · roadmap
+Ajustar roadmap con feedback, contexto de mercado y escenarios futuros.
+Herramientas
+Airfocus, ProductBoard, Jira Product Discovery,
+herramientas de planificación con IA o IA
+conversacional.
+Tareas
+• Ajuste automático del roadmap
+• Simulación de escenarios
+• Visualización de impacto
+• Priorización por visión y feedback
+Cuidado
+La IA puede sugerir orden, pero el roadmap
+debe reflejar estrategia, capacidad real,
+dependencias y decisiones de negocio.
+Prompt
+Como Product Owner experto, dado este contexto de mercado y feedback de usuarios, ajusta el roadmap del producto para los próximos 3 meses.
+Prioriza funcionalidades según impacto y alineación con la visión. Organiza la respuesta en una tabla. Contexto: [describe el contexto].
+“Un roadmap asistido por IA debe seguir siendo una hipótesis estratégica, no un contrato ciego.”
+
+-- 283 of 310 --
+
+Roadmap · ejemplo de tabla
+Priorizar por impacto inmediato y alineación con feedback.
+Mes Funcionalidades priorizadas Justificación
+Mes 1 Optimización de rendimiento en móvil + corrección de bugs críticos Mejora experiencia inmediata, reduce fricción y evita fuga de usuarios.
+Mes 2 Plantillas de recibos + edición rápida Responde a feedback directo y facilita tareas recurrentes.
+Mes 3 Recordatorios automáticos + dashboard básico de pagos Aporta valor añadido, fidelización y diferenciación.
+Preguntas de validación
+¿Qué métrica moverá cada mes? ¿Qué hipótesis estamos validando? ¿Qué queda explícitamente fuera y por qué?
+
+-- 284 of 310 --
+
+Caso · gestión del Product Backlog
+Clasificar, priorizar y generar historias a partir de insights.
+Herramientas
+ChatGPT, Jira con IA, Notion AI u otras
+soluciones integradas con backlog.
+Tareas
+• Clasificación automática por valor de
+negocio
+• Priorización sugerida por uso y feedback
+• Generación de nuevas historias desde
+insights
+• Detección de ítems duplicados o poco
+claros
+Salida esperada
+Tabla con funcionalidad, valor, urgencia,
+complejidad, impacto, esfuerzo y
+priorización sugerida.
+Prompt
+Como Product Owner experto, analiza este backlog y clasifica las funcionalidades por valor de negocio, urgencia y complejidad. Sugiere una priorización
+basada en impacto y esfuerzo. Organiza la respuesta en una tabla. Backlog: [pega tu lista].
+“La IA ayuda a ordenar; el PO sigue siendo responsable del Product Backlog.”
+
+-- 285 of 310 --
+
+Product Backlog · ejemplo de priorización
+Combinar impacto, urgencia y complejidad.
+Funcionalidad Valor negocio Urgencia Complejidad Lectura
+Búsqueda mejorada 5 4 2 Alto impacto y bajo esfuerzo relativo.
+Aplazar recibos 5 5 4 Muy valiosa, requiere gestionar complejidad.
+Alertas 4 3 3 Valor medio-alto, candidata tras validar.
+Historial comparativo 3 2 2 Menor urgencia, puede esperar.
+Priorización sugerida
+1. Búsqueda mejorada
+2. Aplazar recibos
+3. Alertas
+4. Historial comparativo
+Validación humana
+Revisar dependencias, estrategia, capacidad y feedback
+real antes de transformar la sugerencia en orden del
+backlog.
+
+-- 286 of 310 --
+
+Caso · refinamiento y definición de historias
+Generar historias, criterios de aceptación y escenarios Gherkin.
+Tareas
+• Redactar historias en formato “Como..., quiero..., para...”
+• Generar criterios de aceptación
+• Crear escenarios Gherkin
+• Simular impacto en métricas clave
+• Detectar ambigüedades
+Prompt
+Como Product Owner experto, redacta historias de usuario claras y alineadas con el
+valor para el cliente. Usa el formato “Como [rol], quiero [acción] para
+[beneficio]” y añade criterios de aceptación en formato Gherkin. El objetivo de la
+funcionalidad es: [describe el objetivo]. Organiza la respuesta en una tabla.
+Cuidado
+La IA puede generar un buen borrador, pero el refinamiento real
+ocurre en la conversación entre PO y Developers.
+“La historia no está lista porque la IA la escribió; está lista cuando el equipo la entiende.”
+
+-- 287 of 310 --
+
+Refinamiento · ejemplo de historia y Gherkin
+De objetivo funcional a conversación verificable.
+Historia de usuario
+Como inquilino, quiero crear una plantilla de recibo de alquiler con mis datos pre-rellenados, para generar recibos digitales
+rápidamente sin completar la información cada vez.
+Criterio de aceptación en Gherkin
+Scenario: Crear una nueva plantilla de recibo
+Given que soy un usuario autenticado
+When accedo a la opción “Crear Plantilla”
+And completo los campos requeridos: nombre, dirección e importe
+And guardo la plantilla
+Then la plantilla queda almacenada en mi perfil
+And puedo verla en la lista de plantillas disponibles
+Conversación posterior
+¿Qué campos son obligatorios? ¿Qué errores pueden ocurrir? ¿Qué validaciones aplican? ¿Qué datos se reutilizan? ¿Cómo se
+prueba?
+
+-- 288 of 310 --
+
+Caso · visión general del Sprint
+Revisión automática del progreso, bloqueos y foco del día.
+Herramientas
+Dashboards inteligentes: ClickUp, Jira AI,
+Notion AI o IA conectada a datos del Sprint.
+Tareas
+• Revisar progreso
+• Detectar tareas bloqueadas
+• Señalar desviaciones
+• Sugerir foco del día
+• Relacionar trabajo con Sprint Goal
+Salida esperada
+Estado actual, bloqueos, desviaciones,
+riesgos y recomendaciones para el Scrum
+Master.
+Prompt
+Como Scrum Master, revisa el estado actual del Sprint, identifica tareas bloqueadas, desviaciones en el progreso y sugiéreme en qué aspectos debería
+enfocar mi atención hoy como Scrum Master. Organiza la respuesta en un documento de texto.
+“La IA puede preparar la Daily, pero la adaptación del plan corresponde a los Developers.”
+
+-- 289 of 310 --
+
+Visión general del Sprint · ejemplo de salida
+Un resumen útil debe separar estado, bloqueos, desviaciones y acciones.
+Estado actual
+Burndown por debajo de lo previsto.
+2 historias completadas, 5 en progreso y 3 sin empezar.
+Los ítems críticos del Sprint Goal aún no se han abordado.
+Bloqueos
+HU-102 Integración API pagos: dependencia con equipo externo.
+HU-108 Pruebas automatizadas: falta acceso a staging.
+Desviaciones
+Developers centrados en ítems secundarios. QA sobrecargado y
+lead time de validación en aumento.
+Foco recomendado
+Reorientar Daily hacia Sprint Goal, gestionar dependencia
+externa, coordinar acceso a staging y balancear carga con
+pair/mob testing.
+“El objetivo del resumen es enfocar la intervención, no fiscalizar al equipo.”
+
+-- 290 of 310 --
+
+Caso · seguimiento del progreso
+Analizar métricas del Sprint y recomendar ajustes.
+Herramientas
+Jira con IA, dashboards internos o IA
+conectada a métricas de flujo.
+Tareas
+• Visualizar velocity, burndown y lead time
+• Alertar riesgo de incumplimiento
+• Recomendar ajustes al plan
+• Identificar tendencias para siguientes Sprints
+Resultado
+Evaluación de riesgo, causas probables,
+acciones inmediatas y recomendaciones
+futuras.
+Prompt
+Como Scrum Master, revisa estas métricas del Sprint: velocity, burndown y lead time. Evalúa el riesgo de incumplimiento. Propón ajustes al plan del
+Sprint y recomendaciones para mejorar el rendimiento del equipo. Organiza la respuesta en una tabla.
+“El seguimiento con IA debe aumentar transparencia y adaptación, no presión.”
+
+-- 291 of 310 --
+
+Seguimiento del progreso · ejemplo de recomendaciones
+De métrica a acción.
+Señal Interpretación Ajuste recomendado
+Lead Time +20% Problemas en testing o bloqueos tardíos. Analizar cola de QA y reforzar pruebas.
+Burndown acumulado al final Riesgo de no terminar historias comprometidas. Recentrar en Sprint Goal y reducir alcance secundario.
+Historias grandes Posible mal refinamiento o slicing débil. Dividir historias y revisar DoR.
+QA sobrecargado Validación se convierte en cuello de botella. Pair testing, automatización y WIP limitado.
+Recomendación futura
+Automatizar pruebas para reducir Lead Time y revisar prácticas de refinamiento para evitar historias mal dimensionadas.
+
+-- 292 of 310 --
+
+Caso · pruebas unitarias
+Apoyo para definir casos, escribir pruebas y automatizar validaciones.
+Herramientas
+ChatGPT, Copilot u otros asistentes de
+desarrollo integrados.
+Tareas
+• Definir casos de prueba
+• Crear entornos de prueba
+• Escribir código de prueba
+• Automatizar pruebas
+• Revisar casos borde
+Cuidado
+El código generado debe revisarse,
+ejecutarse y alinearse con estándares del
+equipo, arquitectura y Definition of Done.
+Prompt
+Como Developer, genera pruebas unitarias para una funcionalidad de registro de usuario en una app de movilidad sostenible. Usa lenguaje claro y buenas
+prácticas. Incluye casos positivos, errores de validación, duplicados y seguridad básica. Organiza la respuesta en un documento de texto.
+“La IA ayuda a recordar casos; la calidad se confirma ejecutando pruebas.”
+
+-- 293 of 310 --
+
+Pruebas unitarias · ejemplo de cobertura de casos
+La salida debe cubrir comportamiento esperado, errores y bordes.
+Caso Entrada Resultado esperado
+Registro válido Email válido, contraseña fuerte, datos completos Usuario creado y confirmación emitida.
+Email duplicado Email ya existente Error claro: usuario ya registrado.
+Contraseña débil Menos de longitud mínima o sin complejidad Validación rechaza registro.
+Datos obligatorios vacíos Nombre o email vacío Mensaje de campo requerido.
+Entrada maliciosa Texto con caracteres sospechosos Sanitización o rechazo seguro.
+Uso recomendado
+Pedir también mocks, casos borde y criterios de calidad vinculados a la DoD.
+
+-- 294 of 310 --
+
+Caso · preparar retrospectiva
+Diseñar una retro personalizada a partir de feedback y datos.
+Tareas
+• Generar preguntas reflexivas
+• Analizar comentarios del equipo
+• Sugerir dinámicas creativas
+• Proponer plan de acción
+• Conectar métricas con conversación
+Prompt
+Como Scrum Master, diseña una retrospectiva personalizada para este
+equipo. Analiza el feedback disponible y genera preguntas reflexivas,
+dinámica creativa y un plan para fomentar la mejora continua. Organiza la
+respuesta en una tabla.
+Datos de entrada
+Comentarios de la retro anterior, métricas de flujo, defectos,
+satisfacción del equipo, incidentes y temas repetidos.
+Cuidado
+No usar IA para etiquetar personas. El foco debe estar en sistema,
+procesos, colaboración y mejora.
+
+-- 295 of 310 --
+
+Retrospectiva · ejemplo de salida
+Preguntas, dinámica y plan de acción.
+Pregunta reflexiva
+Si este equipo fuera un coche, ¿qué piezas habría que
+revisar para poder llegar más lejos?
+Dinámica creativa
+El futuro alternativo: imaginar dos versiones del próximo
+Sprint, una con los problemas actuales y otra con una mejora
+aplicada.
+Plan de acción
+• Definir al menos una acción pequeña y concreta.
+• Rotar la facilitación de parte de la retro.
+• Revisar el estado de la acción en Daily o Planning.
+• Medir si la acción redujo el problema.
+“Una buena retro asistida por IA sigue necesitando seguridad psicológica.”
+
+-- 296 of 310 --
+
+Caso · apoyo al equipo y coaching
+Analizar señales de clima, colaboración y motivación con mucha prudencia.
+Tareas
+• Analizar interacciones para detectar tensiones
+• Sugerir dinámicas de equipo
+• Generar mensajes motivadores
+• Detectar señales de desmotivación
+• Proponer conversaciones de coaching
+Prompt
+Como Scrum Master, analiza este conjunto de interacciones del equipo y detecta
+señales de desmotivación, tensiones o falta de colaboración. Sugiere dinámicas
+o mensajes para mejorar el clima del equipo. Organiza la respuesta en una lista.
+Datos: [transcripciones, chats, feedback, mails].
+Cuidado ético
+Anonimizar datos, evitar conclusiones personales, no diagnosticar personas y revisar cualquier salida con sensibilidad humana.
+“La IA puede señalar patrones de lenguaje; el cuidado del equipo requiere empatía real.”
+
+-- 297 of 310 --
+
+Coaching · ejemplo de señales y acciones
+De señales de lenguaje a dinámicas de mejora.
+Señales detectadas
+• Lenguaje resignado: “otra vez lo mismo”, “esto no va a
+salir”.
+• Pocas voces dominan conversaciones.
+• Menciones a sobrecarga, estrés o bloqueo.
+• Bajo reconocimiento entre compañeros.
+Dinámicas sugeridas
+• Start, Stop, Continue para identificar energía y fricción.
+• Kudos o agradecimientos al final de la Daily.
+• Conversación sobre acuerdos de equipo.
+• Revisión de WIP y capacidad sostenible.
+Mensaje recomendado
+No usar estos análisis como juicio sobre personas. Llevarlos a la retro como hipótesis: “Parece que hay señales de
+sobrecarga. ¿Qué está pasando y qué podemos cambiar?”
+
+-- 298 of 310 --
+
+Ejercicio · IA en tu día a día
+Elegir una aplicación práctica para mañana.
+Pregunta central
+Mañana, ¿para qué usarías la IA en tu entorno?
+Plantilla de respuesta
+1. Problema o tarea concreta
+2. Dato o información de entrada
+3. Prompt inicial
+4. Resultado esperado
+5. Riesgo a controlar
+6. Cómo validar la respuesta
+Tiempo sugerido
+5 minutos de reflexión + 10 minutos de puesta en común.
+“El mejor caso de uso es el que reduce una fricción real y se puede probar rápido.”
+
+-- 299 of 310 --
+
+Generar bots de consulta
+Asistentes rápidos para documentación, formación y soporte interno.
+Herramientas
+Poe, Copilot Studio u otras plataformas de
+generación de asistentes.
+Tareas
+• Generar bots de consulta
+• Responder preguntas sobre
+documentación
+• Consultar formaciones
+• Soporte a comunidades de práctica
+• Resolver dudas de producto o proceso
+Valor
+Permiten consultar conocimiento de forma
+rápida e intuitiva, especialmente cuando
+hay mucha documentación dispersa.
+Casos de uso
+Repositorio de consulta · Consulta de formaciones · Documentación organizacional · Comunidad de prácticas ·
+Guías de DoD/DoR · Políticas de métricas
+“Un bot útil no sabe “todo”; sabe responder bien sobre un dominio acotado y actualizado.”
+
+-- 300 of 310 --
+
+Diseño de un bot de consulta
+Lo importante es acotar dominio, fuentes y reglas de respuesta.
+1 Dominio
+Qué puede responder: Scrum, métricas, onboarding, producto,
+documentación técnica. 2
+Fuentes
+Qué documentos o repositorios están autorizados y actualizados.
+3 Reglas
+Qué hacer si no sabe: declarar incertidumbre, pedir contexto o
+derivar.
+4 Seguridad
+Qué datos no puede mostrar ni procesar. Control de permisos y
+sensibilidad.
+5 Formato
+Cómo debe responder: breve, con pasos, con referencias, con
+ejemplos.
+6 Mantenimiento
+Quién revisa contenido, errores, feedback y actualización de fuentes.
+“Un asistente desactualizado puede convertirse en una fuente rápida de errores.”
+
+-- 301 of 310 --
+
+Ideas clave del módulo
+Usar IA con intención, seguridad y criterio humano.
+1. Empezar por el problema
+No implantar IA por moda. Elegir fricciones
+reales y casos acotados.
+2. Cuidar los datos
+Limpiar, estructurar, anonimizar y revisar
+calidad antes de analizar.
+3. Diseñar buenos prompts
+Rol, instrucción, contexto, ejemplos,
+formato y tono.
+4. Mantener revisión humana
+La IA propone, resume o detecta patrones;
+el equipo decide y aprende.
+5. Medir utilidad
+Si no mejora decisiones, foco o aprendizaje,
+no merece permanecer.
+6. Proteger confianza
+Privacidad, seguridad y transparencia son
+parte del diseño.
+“La IA debe hacer más visible el sistema, no convertirlo en una caja negra.”
+
+-- 302 of 310 --
+
+CIERRE
+IA aplicada a Scrum
+La inteligencia artificial puede ayudar a observar
+mejor, preparar mejores conversaciones y reducir
+trabajo repetitivo. Pero el valor en Scrum sigue
+naciendo de equipos que inspeccionan, adaptan y
+colaboran con propósito.
+Recordatorio final
+IA como apoyo. Personas como responsables. Valor
+como criterio.
+Fin del módulo
+
+-- 303 of 310 --
+
+Anexo
+Anexo · Casos prácticos
+Cinco escenarios para ejercicios, discusiones y evaluaciones
+TravelGo SoftDevWay BancoDrive TelecomTec Synergy
+Anexo
+
+-- 304 of 310 --
+
+Caso · TravelGo
+Turismo · equipo de 7 personas
+Anexo
+Contexto
+Alta presión por funcionalidades de experiencia cliente. IT impone
+prioridades, asigna tareas y sobrepasa al PO. Scrum se vive como ritual
+formal.
+Antipatrones candidatos
+• Micromanagement en Planning
+• Developers no estiman
+• Daily como reporting
+• Backlog sin priorización
+• Falta de DoD
+? Pregunta 1: ¿qué señales son síntomas y cuáles causas?
+? Pregunta 2: ¿qué intervención probarías en el próximo Sprint?
+? Pregunta 3: ¿qué métrica usarías y qué riesgo tendría?
+
+-- 305 of 310 --
+
+Caso · SoftDevWay
+Software a medida · equipo grande de 18 personas
+Anexo
+Contexto
+Producto planificado desde el inicio, presión por fecha, cambios
+continuos, eventos percibidos como obligación y trabajo en silos.
+Antipatrones candidatos
+• Sprint sobrecargado
+• Review como demo
+• Waterfall dentro del Sprint
+• Retros sin acciones
+• Scrum solo de nombre
+? Pregunta 1: ¿qué señales son síntomas y cuáles causas?
+? Pregunta 2: ¿qué intervención probarías en el próximo Sprint?
+? Pregunta 3: ¿qué métrica usarías y qué riesgo tendría?
+
+-- 306 of 310 --
+
+Caso · BancoDrive
+Banca digital · entorno regulado
+Anexo
+Contexto
+Equipo con varios proyectos en paralelo, decisiones de stakeholders,
+Daily como reporte, deuda técnica y falta de propósito de Sprint.
+Antipatrones candidatos
+• PO sin autoridad
+• Backlog sin valor visible
+• Sprint sin propósito
+• Deuda técnica
+• Multitarea y urgencias
+? Pregunta 1: ¿qué señales son síntomas y cuáles causas?
+? Pregunta 2: ¿qué intervención probarías en el próximo Sprint?
+? Pregunta 3: ¿qué métrica usarías y qué riesgo tendría?
+
+-- 307 of 310 --
+
+Caso · TelecomTec
+Telecomunicaciones · APIs e IoT
+Anexo
+Contexto
+Demanda cambiante, interrupciones constantes, stakeholders
+desconectados y Sprints sin entregables claros.
+Antipatrones candidatos
+• Trabajo no planificado
+• Sprint sin entregables
+• Backlog sin priorización
+• Falta de feedback
+• DoR / DoD ocasionales
+? Pregunta 1: ¿qué señales son síntomas y cuáles causas?
+? Pregunta 2: ¿qué intervención probarías en el próximo Sprint?
+? Pregunta 3: ¿qué métrica usarías y qué riesgo tendría?
+
+-- 308 of 310 --
+
+Caso · Synergy Solutions
+Energía · escalado con Scrum of Scrums
+Anexo
+Contexto
+Varios equipos y proyectos, falta de estrategia clara, Scrum of Scrums
+orientado a reporting y dependencias mal gestionadas.
+Antipatrones candidatos
+• Coordinación deficiente en escalado
+• Backlog desalineado con negocio
+• Dinámicas superficiales
+• Falta de foco
+• Dependencias invisibles
+? Pregunta 1: ¿qué señales son síntomas y cuáles causas?
+? Pregunta 2: ¿qué intervención probarías en el próximo Sprint?
+? Pregunta 3: ¿qué métrica usarías y qué riesgo tendría?
+
+-- 309 of 310 --
+
+Gracias
+Ahora toca aplicar: observa, conversa, experimenta y
+mide.
+“No buscamos equipos perfectos; buscamos
+sistemas que aprendan.”
+
+-- 310 of 310 --
+

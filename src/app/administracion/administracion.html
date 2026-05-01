@@ -358,6 +358,27 @@
                 ✗
               </button>
             </div>
+            <div
+              *ngIf="peticion.estado === 'INICIADA'"
+              style="display: flex; gap: 10px"
+            >
+              <button
+                class="btn-emoji confirm"
+                (click)="aceptarIniciada(peticion)"
+                [disabled]="!canEdit"
+                title="{{ 'ADMIN.ACCEPT_INITIATED' | translate }}"
+              >
+                ✓
+              </button>
+              <button
+                class="btn-emoji cancel"
+                (click)="eliminarIniciada(peticion)"
+                [disabled]="!canEdit"
+                title="{{ 'ADMIN.DELETE_INITIATED' | translate }}"
+              >
+                🗑
+              </button>
+            </div>
           </div>
         </div>
 
@@ -742,6 +763,40 @@
         <button
           class="btn-emoji confirm"
           (click)="inhabilitarUsuari()"
+          [title]="'ADMIN.DELETE' | translate"
+        >
+          ✓
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Popup confirmación eliminar solicitud INICIADA -->
+<div class="modal-overlay" *ngIf="mostrarPopupEliminarIniciada">
+  <div class="auth-card">
+    <h2 class="form-title">{{ 'ADMIN.DELETE_INITIATED_TITLE' | translate }}</h2>
+    <hr class="divider" />
+    <div class="form-content">
+      <p>
+        {{ 'ADMIN.DELETE_INITIATED_CONFIRM' | translate }}
+        <strong>{{ peticionAEliminar?.solicitante }}</strong>?
+      </p>
+      <p style="color: #ff6b6b; font-size: 0.9em">
+        {{ 'ADMIN.IRREVERSIBLE_ACTION' | translate }}
+      </p>
+      <hr class="divider" />
+      <div class="action-buttons">
+        <button
+          class="btn-emoji cancel"
+          (click)="cancelarEliminarIniciada()"
+          [title]="'ADMIN.CANCEL' | translate"
+        >
+          ✗
+        </button>
+        <button
+          class="btn-emoji confirm"
+          (click)="confirmarEliminarIniciada()"
           [title]="'ADMIN.DELETE' | translate"
         >
           ✓

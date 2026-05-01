@@ -30,11 +30,11 @@
     "SUBTITLE": "Completa los datos para registrar una nueva solicitud de acceso.",
     "ERROR_REQUIRED": "Este campo es obligatorio",
     "ERROR_EMAIL": "Introduce un correo electrónico válido",
-    "POPUP_TITLE": "Verifica tu correo",
-    "POPUP_DESC": "Se ha enviado un correo de confirmación a <strong>{{email}}</strong>. Por favor, verifica tu dirección de correo para completar la solicitud.",
+    "POPUP_TITLE": "Solicitud recibida",
+    "POPUP_DESC": "Hemos recibido tu solicitud de acceso. Un administrador revisará tu petición y se pondrá en contacto contigo a través del correo <strong>{{email}}</strong>.",
     "POPUP_USER_LABEL": "Usuario",
     "POPUP_PASS_LABEL": "Contraseña",
-    "POPUP_WARN": "⚠️ Si no recibes el correo en los próximos minutos, comprueba la carpeta de SPAM.",
+    "POPUP_WARN": "⚠️ Por favor, mantente atento a tu correo electrónico.",
     "POPUP_CONFIRM": "De acuerdo"
   },
   "MENU": {
@@ -1186,7 +1186,11 @@
     "INITIATED": "Iniciadas",
     "STATUS_INITIATED": "Iniciada",
     "STATUS_FINALIZED": "Finalizada",
-    "NO_TASK_REQUESTS": "No hay peticiones de tarea para revisar."
+    "NO_TASK_REQUESTS": "No hay peticiones de tarea para revisar.",
+    "ACCEPT_INITIATED": "Aceptar y pasar a Pendiente",
+    "DELETE_INITIATED": "Eliminar solicitud",
+    "DELETE_INITIATED_TITLE": "Eliminar solicitud",
+    "DELETE_INITIATED_CONFIRM": "\u00bfSeguro que quieres eliminar la solicitud de"
   },
   "PETICION": {
     "TITLE": "Nueva petición DevOps",

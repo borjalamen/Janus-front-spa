@@ -129,6 +129,10 @@ export class AdministracionComponent implements OnInit {
   // ESTADOS POPUPS USUARIOS
   mostrarPopup = false;
   mostrarPopupDelete = false;
+
+  // Popup confirmación eliminar solicitud INICIADA
+  mostrarPopupEliminarIniciada = false;
+  peticionAEliminar: PeticionAdmin | null = null;
   mostrarPopupPerfil = false;
   usuariPerfil: UsuariBackend | null = null;
 
@@ -903,6 +907,52 @@ export class AdministracionComponent implements OnInit {
 
   rechazarPeticion(peticion: PeticionAdmin) {
     this.actualizarEstadoPeticion(peticion, "RECHAZADA");
+  }
+
+  aceptarIniciada(peticion: PeticionAdmin) {
+    this.http
+      .put<any>(`${this.joinRequestsUrl}/${peticion.id}/accept-initiated`, {})
+      .subscribe({
+        next: (updated) => {
+          const mapped = this.mapJoinRequest(updated);
+          const idx = this.peticiones.findIndex((p) => p.id === peticion.id);
+          if (idx !== -1) this.peticiones[idx] = mapped;
+          this.aplicarFiltrosPeticiones();
+          this.showToast("✅ Solicitud movida a Pendiente.");
+        },
+        error: (err) => {
+          this.showToast("❌ " + (err.error || "Error al aceptar la solicitud."), false);
+        },
+      });
+  }
+
+  eliminarIniciada(peticion: PeticionAdmin) {
+    this.peticionAEliminar = peticion;
+    this.mostrarPopupEliminarIniciada = true;
+  }
+
+  confirmarEliminarIniciada() {
+    if (!this.peticionAEliminar) return;
+    const id = this.peticionAEliminar.id;
+    this.mostrarPopupEliminarIniciada = false;
+    this.peticionAEliminar = null;
+    this.http
+      .delete(`${this.joinRequestsUrl}/${id}`)
+      .subscribe({
+        next: () => {
+          this.peticiones = this.peticiones.filter((p) => p.id !== id);
+          this.aplicarFiltrosPeticiones();
+          this.showToast("🗑️ Solicitud eliminada.");
+        },
+        error: () => {
+          this.showToast("❌ Error al eliminar la solicitud.", false);
+        },
+      });
+  }
+
+  cancelarEliminarIniciada() {
+    this.mostrarPopupEliminarIniciada = false;
+    this.peticionAEliminar = null;
   }
 
   private actualizarEstadoPeticion(

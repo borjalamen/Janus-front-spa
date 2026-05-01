@@ -30,11 +30,11 @@
     "SUBTITLE": "Complete the data to register a new access request.",
     "ERROR_REQUIRED": "This field is required",
     "ERROR_EMAIL": "Enter a valid email address",
-    "POPUP_TITLE": "Verify your email",
-    "POPUP_DESC": "A confirmation email has been sent to <strong>{{email}}</strong>. Please verify your email address to complete the request.",
+    "POPUP_TITLE": "Request received",
+    "POPUP_DESC": "We have received your access request. An administrator will review your request and contact you at <strong>{{email}}</strong>.",
     "POPUP_USER_LABEL": "Username",
     "POPUP_PASS_LABEL": "Password",
-    "POPUP_WARN": "⚠️ If you don't receive the email in the next few minutes, check your SPAM folder.",
+    "POPUP_WARN": "⚠️ Please keep an eye on your inbox for news from the administrator.",
     "POPUP_CONFIRM": "OK"
   },
   "MENU": {
@@ -1205,6 +1205,10 @@
     "STATUS_REJECTED": "Rejected",
     "INITIATED": "Initiated",
     "STATUS_INITIATED": "Initiated",
+    "ACCEPT_INITIATED": "Accept and move to Pending",
+    "DELETE_INITIATED": "Delete request",
+    "DELETE_INITIATED_TITLE": "Delete request",
+    "DELETE_INITIATED_CONFIRM": "Are you sure you want to delete the request from"
     "STATUS_FINALIZED": "Finalized",
     "NO_TASK_REQUESTS": "No task requests to review."
   },

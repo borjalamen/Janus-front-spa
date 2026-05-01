@@ -34,7 +34,7 @@
     "POPUP_DESC": "S'ha enviat un correu de confirmació a <strong>{{email}}</strong>. Si us plau, verifica la teva adreça de correu per completar la sol·licitud.",
     "POPUP_USER_LABEL": "Usuari",
     "POPUP_PASS_LABEL": "Contrasenya",
-    "POPUP_WARN": "⚠️ Si no reps el correu en els pròxims minuts, comprova la carpeta de SPAM.",
+    "POPUP_WARN": "⚠️ Si us plau, mantingues el teu correu electrònic actiu per rebre notícies de l'administrador.",
     "POPUP_CONFIRM": "D'acord"
   },
   "MENU": {
@@ -1108,6 +1108,10 @@
     "STATUS_REJECTED": "Rebutjada",
     "INITIATED": "Iniciades",
     "STATUS_INITIATED": "Iniciada",
+    "ACCEPT_INITIATED": "Acceptar i passar a Pendent",
+    "DELETE_INITIATED": "Eliminar sol·licitud",
+    "DELETE_INITIATED_TITLE": "Eliminar sol·licitud",
+    "DELETE_INITIATED_CONFIRM": "Segur que vols eliminar la sol·licitud de",
     "STATUS_FINALIZED": "Finalitzada",
     "NO_TASK_REQUESTS": "No hi ha peticions de tasca per revisar."
   },
