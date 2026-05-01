@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -10,10 +9,4 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./home.css'],
   imports: [MatIconModule, TranslateModule],
 })
-export class HomeComponent { 
-  homeMsg = 'Bienvenido a JanusHUB.v0 ';
-  homeMsg2 = 'Quiénes somos';
-  homeMsg3 = 'Qué hacemos';
-  homeMsg4 = 'Nuestra misión';
-  homeMsg5 = 'Contacto';
-}
+export class HomeComponent {}

@@ -1,4 +1,10 @@
 {
+  "NOTIF": {
+    "TITLE": "Notifications",
+    "EMPTY": "No new notifications",
+    "CLEAR": "Clear all",
+    "TEST": "Send test notification"
+  },
   "PETICION": {
     "TITLE": "DevOps Request",
     "DESCRIPTION": "Send your request here.",
@@ -35,6 +41,7 @@
     "REQUEST": "Request",
     "JOIN": "Join",
     "WELCOME": "Welcome",
+    "DASHBOARD": "Dashboard",
     "PROJECTS": "Projects",
     "SCRUM": "Scrum",
     "ESTIMATION": "Estimation",
@@ -138,6 +145,38 @@
       "RUBEN": "Rubén Planté Félix",
       "FERNANDO": "Fernando Silvano Gil Pérez",
       "BORJA": "Borja Lara Menéndez"
+    },
+    "KPI": {
+      "DASHBOARD_TITLE": "Dashboard",
+      "DASHBOARD_SUB": "Activity summary and quick access",
+      "LOADING": "Loading data...",
+      "ERROR": "Could not load KPIs. Check the connection.",
+      "PETICIONES": "Requests",
+      "PENDIENTES": "pending",
+      "PROYECTOS": "Projects",
+      "BITACORA": "Logbook",
+      "JOIN_PENDIENTES": "Access requests",
+      "ATENCION": "attention",
+      "USUARIOS": "Users",
+      "BACKLOG": "Backlog",
+      "SPRINT_ACTIVO": "Active sprint",
+      "TAREAS": "Task progress",
+      "HORAS": "Hour progress",
+      "NO_SPRINT": "No active sprint",
+      "INICIAR_SPRINT": "Start sprint",
+      "PETICIONES_RECIENTES": "Recent requests",
+      "BITACORA_RECIENTE": "Recent logbook",
+      "SIN_DATOS": "No recent records",
+      "ACCESOS_RAPIDOS": "Quick access",
+      "IR_PETICIONES": "Requests",
+      "IR_PROYECTOS": "Projects",
+      "IR_SCRUM": "Scrum",
+      "IR_BITACORA": "Logbook",
+      "IR_ESTIMACION": "Estimation",
+      "IR_PROCEDIMIENTOS": "Procedures",
+      "IR_INFRA": "Infrastructure",
+      "IR_FORMACION": "Training",
+      "IR_ADMIN": "Administration"
     }
   },
   "USER_SECTION": {

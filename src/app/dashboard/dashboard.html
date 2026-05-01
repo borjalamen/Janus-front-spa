@@ -1,0 +1,239 @@
+<div class="menu-content-scroll">
+  <div class="section-container">
+
+    <div class="dash-header">
+      <mat-icon class="dash-header-icon">dashboard</mat-icon>
+      <div>
+        <h2 class="dash-title">{{ 'HOME.KPI.DASHBOARD_TITLE' | translate }}</h2>
+        <p class="dash-subtitle">{{ 'HOME.KPI.DASHBOARD_SUB' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="dash-loading">
+      <mat-icon class="spin">autorenew</mat-icon>
+      {{ 'HOME.KPI.LOADING' | translate }}
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="error && !loading" class="dash-error">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'HOME.KPI.ERROR' | translate }}
+    </div>
+
+    <!-- CONTENIDO DASHBOARD -->
+    <div *ngIf="!loading && !error && kpis" class="dash-grid-root">
+
+      <!-- ── FILA 1: KPI CARDS ──────────────────────────────────── -->
+      <div class="kpi-row">
+
+        <div class="kpi-card kpi-peticiones" [routerLink]="['/peticion']">
+          <mat-icon class="kpi-icon">assignment</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.peticiones.total }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.PETICIONES' | translate }}</div>
+          </div>
+          <div class="kpi-detail">
+            <span class="badge badge-pendiente">
+              {{ kpis.peticiones.byEstado['PENDIENTE'] || 0 }} {{ 'HOME.KPI.PENDIENTES' | translate }}
+            </span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-proyectos" [routerLink]="['/proyectos']">
+          <mat-icon class="kpi-icon">folder</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.proyectos.total }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.PROYECTOS' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-bitacora" *ngIf="isPrivileged" [routerLink]="['/bitacora']">
+          <mat-icon class="kpi-icon">book</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.bitacora.total }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.BITACORA' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-join" *ngIf="isPrivileged" [routerLink]="['/administracion']">
+          <mat-icon class="kpi-icon">person_add</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.join.pendientes }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.JOIN_PENDIENTES' | translate }}</div>
+          </div>
+          <div class="kpi-detail" *ngIf="kpis.join.pendientes > 0">
+            <span class="badge badge-pendiente pulse">{{ 'HOME.KPI.ATENCION' | translate }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-usuarios" *ngIf="rol === 'admin'" [routerLink]="['/administracion']">
+          <mat-icon class="kpi-icon">group</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.usuarios.total }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.USUARIOS' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-backlog" *ngIf="isPrivileged" [routerLink]="['/scrum']">
+          <mat-icon class="kpi-icon">playlist_add</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.backlog.total }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.BACKLOG' | translate }}</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── SPRINT ACTIVO ──────────────────────────────────────── -->
+      <div class="dash-section" *ngIf="isPrivileged">
+
+        <div *ngIf="kpis.sprint" class="sprint-panel">
+          <div class="sprint-header">
+            <mat-icon class="section-icon">view_week</mat-icon>
+            <h3 class="section-title">{{ 'HOME.KPI.SPRINT_ACTIVO' | translate }}</h3>
+            <span class="sprint-key">{{ kpis.sprint.sprintKey }}</span>
+            <a [routerLink]="['/scrum']" class="sprint-link"><mat-icon>open_in_new</mat-icon></a>
+          </div>
+          <div class="sprint-dates">
+            <mat-icon>date_range</mat-icon>
+            {{ kpis.sprint.startDate }}
+            <span *ngIf="kpis.sprint.endDate"> → {{ kpis.sprint.endDate }}</span>
+          </div>
+          <div class="progress-block">
+            <div class="progress-label">
+              <span>{{ 'HOME.KPI.TAREAS' | translate }}</span>
+              <span class="progress-pct">{{ kpis.sprint.pct }}%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width]="sprintBarWidth(kpis.sprint.pct)"></div>
+            </div>
+            <div class="sprint-stats-row">
+              <span class="stat-pill stat-todo">{{ kpis.sprint.todo }} TODO</span>
+              <span class="stat-pill stat-doing">{{ kpis.sprint.doing }} DOING</span>
+              <span class="stat-pill stat-done">{{ kpis.sprint.done }} DONE</span>
+            </div>
+          </div>
+          <div class="progress-block" *ngIf="kpis.sprint.totalHours > 0">
+            <div class="progress-label">
+              <span>{{ 'HOME.KPI.HORAS' | translate }}</span>
+              <span class="progress-pct">{{ kpis.sprint.doneHours }}h / {{ kpis.sprint.totalHours }}h</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill progress-bar-hours"
+                   [style.width]="sprintBarWidth(kpis.sprint.totalHours > 0 ? (kpis.sprint.doneHours / kpis.sprint.totalHours) * 100 : 0)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!kpis.sprint" class="sprint-empty">
+          <mat-icon>hourglass_empty</mat-icon>
+          <span>{{ 'HOME.KPI.NO_SPRINT' | translate }}</span>
+          <a [routerLink]="['/scrum']" class="sprint-link-start">{{ 'HOME.KPI.INICIAR_SPRINT' | translate }}</a>
+        </div>
+
+      </div>
+
+      <!-- ── DOS COLUMNAS: peticiones + bitácora ───────────────── -->
+      <div class="dash-cols" *ngIf="isPrivileged">
+
+        <div class="dash-col">
+          <div class="col-header">
+            <mat-icon class="section-icon">assignment</mat-icon>
+            <h3 class="section-title">{{ 'HOME.KPI.PETICIONES_RECIENTES' | translate }}</h3>
+            <a [routerLink]="['/peticion']" class="col-link"><mat-icon>open_in_new</mat-icon></a>
+          </div>
+          <div *ngIf="kpis.peticiones.recent.length === 0" class="col-empty">
+            <mat-icon>inbox</mat-icon> {{ 'HOME.KPI.SIN_DATOS' | translate }}
+          </div>
+          <div class="recent-list">
+            <div *ngFor="let p of kpis.peticiones.recent" class="recent-item" [routerLink]="['/peticion']">
+              <mat-icon class="recent-type-icon">{{ estadoIcon(p.estado) }}</mat-icon>
+              <div class="recent-text">
+                <div class="recent-title">{{ p.requesterName }} — {{ p.projectName }}</div>
+                <div class="recent-meta">
+                  <span [class]="'badge ' + estadoClass(p.estado)">{{ p.estado }}</span>
+                  <span class="recent-date">{{ p.createdAt | date:'dd/MM HH:mm' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-col">
+          <div class="col-header">
+            <mat-icon class="section-icon">book</mat-icon>
+            <h3 class="section-title">{{ 'HOME.KPI.BITACORA_RECIENTE' | translate }}</h3>
+            <a [routerLink]="['/bitacora']" class="col-link"><mat-icon>open_in_new</mat-icon></a>
+          </div>
+          <div *ngIf="kpis.bitacora.recent.length === 0" class="col-empty">
+            <mat-icon>inbox</mat-icon> {{ 'HOME.KPI.SIN_DATOS' | translate }}
+          </div>
+          <div class="recent-list">
+            <div *ngFor="let b of kpis.bitacora.recent" class="recent-item" [routerLink]="['/bitacora']">
+              <mat-icon class="recent-type-icon">book</mat-icon>
+              <div class="recent-text">
+                <div class="recent-title">{{ b.titulo }}</div>
+                <div class="recent-meta">
+                  <span class="badge badge-entorno">{{ b.entorno }}</span>
+                  <span class="recent-date">{{ b.fecha | date:'dd/MM HH:mm' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── ACCESOS RÁPIDOS ────────────────────────────────────── -->
+      <div class="quick-access-section">
+        <h3 class="section-title">
+          <mat-icon class="section-icon">rocket_launch</mat-icon>
+          {{ 'HOME.KPI.ACCESOS_RAPIDOS' | translate }}
+        </h3>
+        <div class="quick-grid">
+          <a [routerLink]="['/peticion']" class="quick-card">
+            <mat-icon>assignment</mat-icon>
+            <span>{{ 'HOME.KPI.IR_PETICIONES' | translate }}</span>
+          </a>
+          <a [routerLink]="['/proyectos']" class="quick-card">
+            <mat-icon>folder</mat-icon>
+            <span>{{ 'HOME.KPI.IR_PROYECTOS' | translate }}</span>
+          </a>
+          <a *ngIf="isPrivileged" [routerLink]="['/scrum']" class="quick-card">
+            <mat-icon>view_week</mat-icon>
+            <span>{{ 'HOME.KPI.IR_SCRUM' | translate }}</span>
+          </a>
+          <a *ngIf="isPrivileged" [routerLink]="['/bitacora']" class="quick-card">
+            <mat-icon>book</mat-icon>
+            <span>{{ 'HOME.KPI.IR_BITACORA' | translate }}</span>
+          </a>
+          <a *ngIf="isPrivileged" [routerLink]="['/estimacion']" class="quick-card">
+            <mat-icon>casino</mat-icon>
+            <span>{{ 'HOME.KPI.IR_ESTIMACION' | translate }}</span>
+          </a>
+          <a *ngIf="isPrivileged" [routerLink]="['/procedimientos']" class="quick-card">
+            <mat-icon>description</mat-icon>
+            <span>{{ 'HOME.KPI.IR_PROCEDIMIENTOS' | translate }}</span>
+          </a>
+          <a *ngIf="isPrivileged" [routerLink]="['/infraestructura']" class="quick-card">
+            <mat-icon>dns</mat-icon>
+            <span>{{ 'HOME.KPI.IR_INFRA' | translate }}</span>
+          </a>
+          <a [routerLink]="['/formacion']" class="quick-card">
+            <mat-icon>school</mat-icon>
+            <span>{{ 'HOME.KPI.IR_FORMACION' | translate }}</span>
+          </a>
+          <a *ngIf="rol === 'admin'" [routerLink]="['/administracion']" class="quick-card quick-card-admin">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>{{ 'HOME.KPI.IR_ADMIN' | translate }}</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <!-- /contenido dashboard -->
+
+  </div>
+</div>

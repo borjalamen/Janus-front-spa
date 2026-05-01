@@ -28,6 +28,7 @@ import { MENU_GROUPS } from './menu.groups';
 import { environment } from '../environments/environment';
 import { ApiService } from './api.service';
 import { AvatarService } from './avatar.service';
+import { NotificationService, AppNotification } from './notification.service';
 
 type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
 
@@ -74,6 +75,12 @@ export class AppComponent implements OnDestroy, OnInit {
   private authSubscription?: Subscription;
   private versionSubscription?: Subscription;
   private avatarSub?: Subscription;
+  private notifSub?: Subscription;
+
+  // ── Notificaciones push ──
+  notifPanelOpen = false;
+  notifications: AppNotification[] = [];
+  notifUnreadCount = 0;
 
   public menuGroups = MENU_GROUPS;
   public expandedGroups: { [id: string]: boolean } = {};
@@ -92,7 +99,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private storage: LocalStorageService,
     private logger: LoggerService,
     private apiService: ApiService,
-    private avatarService: AvatarService
+    private avatarService: AvatarService,
+    public notificationService: NotificationService
   ) {
     this.translate.addLangs(['es', 'ca', 'en']);
     const saved = this.storage.get('lang');
@@ -106,6 +114,8 @@ export class AppComponent implements OnDestroy, OnInit {
     // Cada cop que canvia l’usuari (login / logout)
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       if (user) {
+        // conectar WS de notificaciones al hacer login (con username para filtro por rol)
+        this.notificationService.connect(user.username);
         this.username = user.username;
         this.rol = user.rol as Rol;
 
@@ -138,7 +148,9 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
       } else {
-        // Logout
+        // Logout — desconectar WS y limpiar notificaciones
+        this.notificationService.disconnect();
+        this.notificationService.clearAll();
         this.username = '';
         this.rol = 'invitado';
         this.avatarPreview = null;
@@ -155,6 +167,18 @@ export class AppComponent implements OnDestroy, OnInit {
     this.versionSubscription = this.apiService.version$.subscribe(v => {
       if (v) this.appVersion = v;
     });
+
+    // Suscripción a notificaciones push
+    this.notifSub = this.notificationService.notifications$.subscribe(notifs => {
+      this.notifications = notifs;
+      this.notifUnreadCount = notifs.filter(n => !n.read).length;
+    });
+
+    // Si ya hay sesión activa al arrancar, conectar WS con el username guardado
+    const existingUser = this.authService.currentUserValue;
+    if (existingUser) {
+      this.notificationService.connect(existingUser.username);
+    }
 
     try {
       const raw = this.storage.get('menu.expanded');
@@ -198,6 +222,8 @@ export class AppComponent implements OnDestroy, OnInit {
     this.authSubscription?.unsubscribe();
     this.versionSubscription?.unsubscribe();
     this.avatarSub?.unsubscribe();
+    this.notifSub?.unsubscribe();
+    this.notificationService.disconnect();
     if (this.quoteTimer) clearTimeout(this.quoteTimer);
   }
 
@@ -318,6 +344,15 @@ export class AppComponent implements OnDestroy, OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+
+    // Cerrar panel de notificaciones si se hace clic fuera
+    if (this.notifPanelOpen) {
+      const bellContainer = document.querySelector('.notif-bell-container');
+      if (bellContainer && !bellContainer.contains(target)) {
+        this.notifPanelOpen = false;
+      }
+    }
+
     const clip = document.querySelector('.clip-helper');
     const popup = document.querySelector('.clip-popup');
     if (!clip || !popup) return;
@@ -385,6 +420,7 @@ export class AppComponent implements OnDestroy, OnInit {
   canShow(menuItem: string): boolean {
     switch (menuItem) {
       case 'bienvenida': return true;
+      case 'dashboard': return true;
       case 'proyectos':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
       case 'scrum':
@@ -422,5 +458,36 @@ export class AppComponent implements OnDestroy, OnInit {
     this.showUserMenu = false;
     this.userMenuOpen = false;
     this.router.navigate(['/usuario']);
+  }
+
+  // ── Notificaciones push ──────────────────────────────────────────
+
+  toggleNotifPanel(): void {
+    this.notifPanelOpen = !this.notifPanelOpen;
+    if (this.notifPanelOpen) {
+      this.notificationService.markAllRead();
+    }
+  }
+
+  closeNotifPanel(): void {
+    this.notifPanelOpen = false;
+  }
+
+  clearNotifications(): void {
+    this.notificationService.clearAll();
+  }
+
+  navigateToNotif(link: string): void {
+    this.notifPanelOpen = false;
+    if (link) {
+      this.router.navigate([link]);
+    }
+  }
+
+  sendTestNotification(): void {
+    this.http.get(`${environment.baseUrl}notifications/test`).subscribe({
+      next: () => { /* la notificación llegará por WS */ },
+      error: (err) => console.error('Error enviando test:', err)
+    });
   }
 }

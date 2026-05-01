@@ -1,4 +1,10 @@
 {
+  "NOTIF": {
+    "TITLE": "Notificaciones",
+    "EMPTY": "No hay notificaciones nuevas",
+    "CLEAR": "Borrar todas",
+    "TEST": "Enviar notificación de prueba"
+  },
   "PETICION": {
     "TITLE": "Petición DevOps",
     "DESCRIPTION": "Envía tu petición aquí.",
@@ -35,6 +41,7 @@
     "REQUEST": "Petición",
     "JOIN": "Únete",
     "WELCOME": "Bienvenida",
+    "DASHBOARD": "Dashboard",
     "PROJECTS": "Proyectos",
     "SCRUM": "Scrum",
     "ESTIMATION": "Estimación",
@@ -133,6 +140,38 @@
       "RUBEN": "Rubén Planté Félix",
       "FERNANDO": "Fernando Silvano Gil Pérez",
       "BORJA": "Borja Lara Menéndez"
+    },
+    "KPI": {
+      "DASHBOARD_TITLE": "Panel de control",
+      "DASHBOARD_SUB": "Resumen de actividad y accesos rápidos",
+      "LOADING": "Cargando datos...",
+      "ERROR": "No se pudieron cargar los KPIs. Comprueba la conexión.",
+      "PETICIONES": "Peticiones",
+      "PENDIENTES": "pendientes",
+      "PROYECTOS": "Proyectos",
+      "BITACORA": "Bitácora",
+      "JOIN_PENDIENTES": "Solicitudes de acceso",
+      "ATENCION": "atención",
+      "USUARIOS": "Usuarios",
+      "BACKLOG": "Backlog",
+      "SPRINT_ACTIVO": "Sprint activo",
+      "TAREAS": "Progreso tareas",
+      "HORAS": "Progreso horas",
+      "NO_SPRINT": "No hay ningún sprint activo",
+      "INICIAR_SPRINT": "Iniciar sprint",
+      "PETICIONES_RECIENTES": "Peticiones recientes",
+      "BITACORA_RECIENTE": "Bitácora reciente",
+      "SIN_DATOS": "Sin registros recientes",
+      "ACCESOS_RAPIDOS": "Accesos rápidos",
+      "IR_PETICIONES": "Peticiones",
+      "IR_PROYECTOS": "Proyectos",
+      "IR_SCRUM": "Scrum",
+      "IR_BITACORA": "Bitácora",
+      "IR_ESTIMACION": "Estimación",
+      "IR_PROCEDIMIENTOS": "Procedimientos",
+      "IR_INFRA": "Infraestructura",
+      "IR_FORMACION": "Formación",
+      "IR_ADMIN": "Administración"
     }
   },
   "USER_SECTION": {

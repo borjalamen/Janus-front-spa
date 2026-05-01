@@ -3,6 +3,7 @@ import { importProvidersFrom } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from "@angular/router";
 import { HomeComponent } from './app/home/home';
+import { DashboardComponent } from './app/dashboard/dashboard';
 import { DocumentsComponent } from './app/documents/documents';
 import { UsuarioComponent } from "./app/usuari/usuari";
 import { ProjectsComponent } from './app/projects/projects';
@@ -51,6 +52,7 @@ bootstrapApplication(AppComponent, {
     provideRouter([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'documents', component: DocumentsComponent },
       { path: 'usuario', component: UsuarioComponent },
       {path: 'projects', component: ProjectsComponent },

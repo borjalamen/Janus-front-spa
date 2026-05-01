@@ -1,4 +1,10 @@
 {
+  "NOTIF": {
+    "TITLE": "Notificacions",
+    "EMPTY": "No hi ha notificacions noves",
+    "CLEAR": "Esborrar totes",
+    "TEST": "Enviar notificació de prova"
+  },
   "PETICION": {
     "TITLE": "Petició DevOps",
     "DESCRIPTION": "Envia la teva petició aquí.",
@@ -35,6 +41,7 @@
     "REQUEST": "Petició",
     "JOIN": "Uneix-te",
     "WELCOME": "Benvinguda",
+    "DASHBOARD": "Tauler",
     "PROJECTS": "Projectes",
     "SCRUM": "Scrum",
     "ESTIMATION": "Estimació",
@@ -133,6 +140,38 @@
       "RUBEN": "Rubén Planté Félix",
       "FERNANDO": "Fernando Silvano Gil Pérez",
       "BORJA": "Borja Lara Menéndez"
+    },
+    "KPI": {
+      "DASHBOARD_TITLE": "Tauler de control",
+      "DASHBOARD_SUB": "Resum d'activitat i accés ràpid",
+      "LOADING": "Carregant dades...",
+      "ERROR": "No s'han pogut carregar els KPIs.",
+      "PETICIONES": "Peticions",
+      "PENDIENTES": "pendents",
+      "PROYECTOS": "Projectes",
+      "BITACORA": "Bitàcola",
+      "JOIN_PENDIENTES": "Sol·licituds d'accés",
+      "ATENCION": "atenció",
+      "USUARIOS": "Usuaris",
+      "BACKLOG": "Backlog",
+      "SPRINT_ACTIVO": "Sprint actiu",
+      "TAREAS": "Progrés tasques",
+      "HORAS": "Progrés hores",
+      "NO_SPRINT": "No hi ha cap sprint actiu",
+      "INICIAR_SPRINT": "Iniciar sprint",
+      "PETICIONES_RECIENTES": "Peticions recents",
+      "BITACORA_RECIENTE": "Bitàcola recent",
+      "SIN_DATOS": "Sense registres recents",
+      "ACCESOS_RAPIDOS": "Accessos ràpids",
+      "IR_PETICIONES": "Peticions",
+      "IR_PROYECTOS": "Projectes",
+      "IR_SCRUM": "Scrum",
+      "IR_BITACORA": "Bitàcola",
+      "IR_ESTIMACION": "Estimació",
+      "IR_PROCEDIMIENTOS": "Procediments",
+      "IR_INFRA": "Infraestructura",
+      "IR_FORMACION": "Formació",
+      "IR_ADMIN": "Administració"
     }
   },
   "USER_SECTION": {

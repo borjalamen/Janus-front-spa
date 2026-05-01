@@ -20,7 +20,8 @@ export const MENU_GROUPS: MenuGroup[] = [
     id: 'inicio',
     titleKey: 'MENU.GROUPS.INICIO',
     items: [
-      { id: 'bienvenida', labelKey: 'MENU.WELCOME', route: '/home', icon: 'home', requiresCheck: false }
+      { id: 'bienvenida', labelKey: 'MENU.WELCOME', route: '/home', icon: 'home', requiresCheck: false },
+      { id: 'dashboard', labelKey: 'MENU.DASHBOARD', route: '/dashboard', icon: 'dashboard', requiresCheck: false }
     ]
   },
   {

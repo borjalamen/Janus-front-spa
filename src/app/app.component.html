@@ -135,6 +135,49 @@
         </button>
       </div>
 
+      <!-- CAMPANA DE NOTIFICACIONES -->
+      <div class="notif-bell-container" *ngIf="username">
+        <button class="notif-bell-btn" (click)="toggleNotifPanel()" [matTooltip]="'NOTIF.TITLE' | translate">
+          <mat-icon>notifications</mat-icon>
+          <span class="notif-badge" *ngIf="notifUnreadCount > 0">{{ notifUnreadCount > 99 ? '99+' : notifUnreadCount }}</span>
+        </button>
+
+        <!-- Panel de notificaciones -->
+        <div class="notif-panel" *ngIf="notifPanelOpen" (click)="$event.stopPropagation()">
+          <div class="notif-panel-header">
+            <span>{{ 'NOTIF.TITLE' | translate }}</span>
+            <div class="notif-header-actions">
+              <button class="notif-test-btn" *ngIf="rol === 'admin' || rol === 'devops'"
+                      (click)="sendTestNotification()" [matTooltip]="'NOTIF.TEST' | translate">
+                <mat-icon>science</mat-icon>
+              </button>
+              <button class="notif-clear-btn" (click)="clearNotifications()" [matTooltip]="'NOTIF.CLEAR' | translate">
+                <mat-icon>delete_sweep</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="notif-empty" *ngIf="notifications.length === 0">
+            {{ 'NOTIF.EMPTY' | translate }}
+          </div>
+
+          <ul class="notif-list" *ngIf="notifications.length > 0">
+            <li *ngFor="let n of notifications"
+                class="notif-item"
+                [class.notif-unread]="!n.read"
+                [class.notif-clickable]="n.link"
+                (click)="n.link ? navigateToNotif(n.link) : null">
+              <mat-icon class="notif-type-icon">{{ n.type.startsWith('PETICION') ? 'assignment' : 'view_week' }}</mat-icon>
+              <div class="notif-text">
+                <span class="notif-item-title">{{ n.title }}</span>
+                <span class="notif-item-body">{{ n.body }}</span>
+                <span class="notif-item-time">{{ n.timestamp | date:'dd/MM HH:mm' }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <!-- ICONA ÚNICA -->
       <div class="user-dropdown-container">
         <div class="user-icon" (click)="username ? userMenuOpen = !userMenuOpen : openLoginDialog()">
