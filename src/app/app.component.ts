@@ -87,6 +87,8 @@ export class AppComponent implements OnDestroy, OnInit {
 
   aiMessages: { from: 'user' | 'ai', text: string }[] = [];
   userInput = '';
+  aiLoading = false;
+  creditsOpen = false;
   private greeted = false;
 
   constructor(
@@ -292,18 +294,22 @@ export class AppComponent implements OnDestroy, OnInit {
 
   sendToAi() {
     const text = this.userInput?.trim();
-    if (!text) return;
+    if (!text || this.aiLoading) return;
     this.aiMessages.push({ from: 'user', text });
     this.userInput = '';
+    this.aiLoading = true;
+    setTimeout(() => this.scrollMessagesToBottom(), 10);
 
     this.ai.query(text).subscribe({
       next: res => {
+        this.aiLoading = false;
         const answer = res?.answer ?? 'No hay respuesta';
         this.aiMessages.push({ from: 'ai', text: answer });
         setTimeout(() => this.scrollMessagesToBottom(), 10);
         this.speak(answer);
       },
       error: err => {
+        this.aiLoading = false;
         const msg = this.translate.instant('CLIP.ERROR_QUERY');
         this.aiMessages.push({ from: 'ai', text: msg });
         console.error(err);
