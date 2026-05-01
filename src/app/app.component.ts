@@ -88,8 +88,40 @@ export class AppComponent implements OnDestroy, OnInit {
   aiMessages: { from: 'user' | 'ai', text: string }[] = [];
   userInput = '';
   aiLoading = false;
-  creditsOpen = false;
   private greeted = false;
+
+  // ── Redimensionado del popup ──
+  popupWidth = 420;
+  popupHeight = 520;
+  private isResizing = false;
+  private resizeStartX = 0;
+  private resizeStartY = 0;
+  private resizeStartW = 0;
+  private resizeStartH = 0;
+
+  onResizeStart(e: MouseEvent): void {
+    e.preventDefault();
+    this.isResizing = true;
+    this.resizeStartX = e.clientX;
+    this.resizeStartY = e.clientY;
+    this.resizeStartW = this.popupWidth;
+    this.resizeStartH = this.popupHeight;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(e: MouseEvent): void {
+    if (!this.isResizing) return;
+    // El popup está anclado abajo-derecha: mover el handle a la izquierda/arriba agranda el popup
+    const dx = e.clientX - this.resizeStartX;
+    const dy = e.clientY - this.resizeStartY;
+    this.popupWidth  = Math.max(300, Math.min(window.innerWidth  - 150, this.resizeStartW - dx));
+    this.popupHeight = Math.max(320, Math.min(window.innerHeight -  40, this.resizeStartH - dy));
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp(): void {
+    this.isResizing = false;
+  }
 
   constructor(
     private dialog: MatDialog,
@@ -300,7 +332,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.aiLoading = true;
     setTimeout(() => this.scrollMessagesToBottom(), 10);
 
-    this.ai.query(text).subscribe({
+    this.ai.query(text, this.username).subscribe({
       next: res => {
         this.aiLoading = false;
         const answer = res?.answer ?? 'No hay respuesta';

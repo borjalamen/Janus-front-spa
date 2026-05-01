@@ -43,18 +43,14 @@
     <div class="clip-helper" tabindex="0" title="Ayuda" (click)="toggleClip()"></div>
 
     <!-- Popup tipo 'habla' del clip -> chat AI -->
-    <div class="clip-popup" *ngIf="clipOpen">
+    <div class="clip-popup" *ngIf="clipOpen"
+         [style.width.px]="popupWidth"
+         [style.height.px]="popupHeight">
+      <!-- Handle de redimensionado: arrástralo hacia arriba-izquierda para agrandar -->
+      <div class="clip-resize-handle" (mousedown)="onResizeStart($event)" title="Arrastra para redimensionar"></div>
       <div class="clip-chat">
         <div class="clip-header">
-          <span class="clip-header-title"><strong>{{ 'CLIP.AI' | translate }}</strong></span>
-          <button type="button" class="clip-credits-btn" (click)="creditsOpen = !creditsOpen" title="¿Quién me hizo?">✦ créditos</button>
-        </div>
-
-        <div class="clip-credits-panel" *ngIf="creditsOpen">
-          Fui creado con mucho café ☕ y cariño por<br>
-          <strong>Fernando Silvano Gil Pérez</strong> — ingeniero, visionario y escritor de la saga de fantasía <em>Arkhana</em>.<br>
-          📚 Libros: <strong>Aldaleon</strong> · <strong>Helena</strong> · <strong>Hire</strong><br>
-          (y los que estén por venir, porque el hombre no para)
+          <strong>{{ 'CLIP.AI' | translate }}</strong>
         </div>
 
         <div class="messages" #messagesContainer>
