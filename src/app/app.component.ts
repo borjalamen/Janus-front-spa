@@ -211,12 +211,17 @@ export class AppComponent implements OnDestroy, OnInit {
     this.quoteTimer = setTimeout(() => {
       this.quoteVisible = false;
       setTimeout(() => {
-        this.quoteIndex = (this.quoteIndex + 1) % this.quotes.length;
+        let nextIndex: number;
+        do {
+          nextIndex = Math.floor(Math.random() * this.quotes.length);
+        } while (nextIndex === this.quoteIndex && this.quotes.length > 1);
+        this.quoteIndex = nextIndex;
         this.currentQuote = this.quotes[this.quoteIndex];
         this.quoteVisible = true;
         this.scheduleNextQuote();
       }, 900);
-    }, 6000);  }
+    }, 6000);
+  }
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
