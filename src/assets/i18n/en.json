@@ -1,4 +1,4 @@
-﻿{
+{
   "NOTIF": {
     "TITLE": "Notifications",
     "EMPTY": "No new notifications",
@@ -1208,7 +1208,7 @@
     "ACCEPT_INITIATED": "Accept and move to Pending",
     "DELETE_INITIATED": "Delete request",
     "DELETE_INITIATED_TITLE": "Delete request",
-    "DELETE_INITIATED_CONFIRM": "Are you sure you want to delete the request from"
+    "DELETE_INITIATED_CONFIRM": "Are you sure you want to delete the request from",
     "STATUS_FINALIZED": "Finalized",
     "NO_TASK_REQUESTS": "No task requests to review."
   },
