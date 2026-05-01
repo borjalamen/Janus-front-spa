@@ -345,7 +345,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.aiLoading = true;
     setTimeout(() => this.scrollMessagesToBottom(), 10);
 
-    this.ai.query(question, this.username).subscribe({
+    this.ai.query(question, this.username, this.rol).subscribe({
       next: res => {
         this.aiLoading = false;
         const answer = res?.answer ?? 'No hay respuesta';
