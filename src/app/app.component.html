@@ -5,7 +5,10 @@
   <!-- ──────────────────────────────── -->
   <!--  MENÚ LATERAL                   -->
   <!-- ──────────────────────────────── -->
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav #sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="sidenavOpen"
+    (closedStart)="sidenavOpen = false">
     <mat-toolbar color="primary" class="sidenav-toolbar">
       <img src="assets/images/7dRimV7.png" alt="JanusHub" class="janus" />
     </mat-toolbar>
@@ -22,7 +25,8 @@
 
             <mat-nav-list *ngIf="isGroupOpen(group.id)" class="section-items">
               <a *ngFor="let item of getVisibleItems(group)" mat-list-item [routerLink]="item.route"
-                [class.active]="isRouteActive(item.route)">
+                [class.active]="isRouteActive(item.route)"
+                (click)="closeSidenavIfMobile()">
                 <mat-icon>{{ item.icon }}</mat-icon>
                 <span class="menu-text"><strong>{{ item.labelKey | translate }}</strong></span>
               </a>
@@ -142,6 +146,9 @@
     <!--  TOOLBAR SUPERIOR               -->
     <!-- ──────────────────────────────── -->
     <mat-toolbar color="primary" class="main-toolbar">
+      <button class="hamburger-btn" (click)="toggleSidenav()" [attr.aria-label]="'Menú'">
+        <span class="hamburger-icon">&#9776;</span>
+      </button>
       <span class="app-title">JanusHub Portal</span>
       <span class="spacer"></span>
 

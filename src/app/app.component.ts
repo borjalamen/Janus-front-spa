@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener, ViewChild } from '@angular/core';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,7 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterLinkWithHref, RouterOutlet } from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
 import { HttpClient } from '@angular/common/http';
@@ -58,6 +58,11 @@ type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnDestroy, OnInit {
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  isMobile = false;
+  sidenavOpen = true;
+
   clipOpen = false;
   username: string = '';
   rol: Rol = 'invitado';
@@ -125,6 +130,23 @@ export class AppComponent implements OnDestroy, OnInit {
   @HostListener('document:mouseup')
   onMouseUp(): void {
     this.isResizing = false;
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    const mobile = window.innerWidth < 768;
+    if (mobile !== this.isMobile) {
+      this.isMobile = mobile;
+      this.sidenavOpen = !mobile;
+    }
+  }
+
+  toggleSidenav(): void {
+    this.sidenavOpen = !this.sidenavOpen;
+  }
+
+  closeSidenavIfMobile(): void {
+    if (this.isMobile) { this.sidenavOpen = false; }
   }
 
   constructor(
@@ -204,6 +226,9 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
+    this.isMobile = window.innerWidth < 768;
+    this.sidenavOpen = !this.isMobile;
+
     this.versionSubscription = this.apiService.version$.subscribe(v => {
       if (v) this.appVersion = v;
     });

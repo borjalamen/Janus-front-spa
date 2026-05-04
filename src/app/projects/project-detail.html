@@ -287,6 +287,151 @@
                        placeholder="{{ 'PROJECTS.DEV_DISK_PLACEHOLDER' | translate }}">
               </div>
             </div>
+
+            <!-- ── OpenShift ── -->
+            <div class="machine-subsection">
+              <div class="members-header">
+                <h5 class="subsection-title-sm">OpenShift</h5>
+                <button class="btn-round btn-small btn-add" (click)="addOpenshift(i)">+ OpenShift</button>
+              </div>
+              <ng-container *ngIf="machine.openshifts && machine.openshifts.length > 0">
+                <div *ngFor="let os of machine.openshifts; let oi = index" class="sub-item-card">
+                  <div class="sub-item-header">
+                    <span class="sub-item-label">OpenShift #{{ oi + 1 }}</span>
+                    <button class="btn-remove" (click)="removeOpenshift(i, oi)">✕</button>
+                  </div>
+                  <div class="form-grid three-col">
+                    <div class="input-field">
+                      <label>Identificador</label>
+                      <input type="text" [(ngModel)]="os.identifier" (ngModelChange)="saveDraft()" placeholder="p.ej. OCP-DEV">
+                    </div>
+                    <div class="input-field">
+                      <label>Usuario</label>
+                      <input type="text" [(ngModel)]="os.user" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Contraseña</label>
+                      <input type="text" [(ngModel)]="os.password" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>RAM</label>
+                      <input type="text" [(ngModel)]="os.ram" (ngModelChange)="saveDraft()" placeholder="GB">
+                    </div>
+                    <div class="input-field">
+                      <label>CPU</label>
+                      <input type="text" [(ngModel)]="os.cpu" (ngModelChange)="saveDraft()" placeholder="cores">
+                    </div>
+                    <div class="input-field">
+                      <label>Disco</label>
+                      <input type="text" [(ngModel)]="os.disk" (ngModelChange)="saveDraft()" placeholder="GB">
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div *ngIf="!machine.openshifts || machine.openshifts.length === 0" class="empty-list-msg">Sin OpenShift configurado</div>
+            </div>
+
+            <!-- ── BBDD ── -->
+            <div class="machine-subsection">
+              <div class="members-header">
+                <h5 class="subsection-title-sm">BBDD</h5>
+                <button class="btn-round btn-small btn-add" (click)="addDb(i)">+ BBDD</button>
+              </div>
+              <ng-container *ngIf="machine.dbs && machine.dbs.length > 0">
+                <div *ngFor="let db of machine.dbs; let di = index" class="sub-item-card">
+                  <div class="sub-item-header">
+                    <span class="sub-item-label">BBDD #{{ di + 1 }}</span>
+                    <button class="btn-remove" (click)="removeDb(i, di)">✕</button>
+                  </div>
+                  <div class="form-grid three-col">
+                    <div class="input-field">
+                      <label>Identificador</label>
+                      <input type="text" [(ngModel)]="db.identifier" (ngModelChange)="saveDraft()" placeholder="p.ej. ORA-DEV">
+                    </div>
+                    <div class="input-field">
+                      <label>Motor</label>
+                      <input type="text" [(ngModel)]="db.engine" (ngModelChange)="saveDraft()" placeholder="Oracle / MySQL / …">
+                    </div>
+                    <div class="input-field">
+                      <label>Instancia</label>
+                      <input type="text" [(ngModel)]="db.instanceName" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Host</label>
+                      <input type="text" [(ngModel)]="db.host" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Puerto</label>
+                      <input type="text" [(ngModel)]="db.port" (ngModelChange)="saveDraft()" placeholder="1521 / 3306 / …">
+                    </div>
+                    <div class="input-field">
+                      <label>SID / Schema</label>
+                      <input type="text" [(ngModel)]="db.sid" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Usuario</label>
+                      <input type="text" [(ngModel)]="db.user" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Contraseña</label>
+                      <input type="text" [(ngModel)]="db.password" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Contacto</label>
+                      <input type="text" [(ngModel)]="db.contactPerson" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Email contacto</label>
+                      <input type="text" [(ngModel)]="db.contactMail" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field full-width">
+                      <label>Descripción</label>
+                      <input type="text" [(ngModel)]="db.description" (ngModelChange)="saveDraft()">
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div *ngIf="!machine.dbs || machine.dbs.length === 0" class="empty-list-msg">Sin BBDD configurada</div>
+            </div>
+
+            <!-- ── Otras herramientas ── -->
+            <div class="machine-subsection">
+              <div class="members-header">
+                <h5 class="subsection-title-sm">Otras herramientas</h5>
+                <button class="btn-round btn-small btn-add" (click)="addOtherTool(i)">+ Herramienta</button>
+              </div>
+              <ng-container *ngIf="machine.otherTools && machine.otherTools.length > 0">
+                <div *ngFor="let tool of machine.otherTools; let ti = index" class="sub-item-card">
+                  <div class="sub-item-header">
+                    <span class="sub-item-label">{{ tool.name || ('Herramienta #' + (ti + 1)) }}</span>
+                    <button class="btn-remove" (click)="removeOtherTool(i, ti)">✕</button>
+                  </div>
+                  <div class="form-grid three-col">
+                    <div class="input-field">
+                      <label>Identificador</label>
+                      <input type="text" [(ngModel)]="tool.identifier" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Nombre</label>
+                      <input type="text" [(ngModel)]="tool.name" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Ruta / URL</label>
+                      <input type="text" [(ngModel)]="tool.path" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Contacto</label>
+                      <input type="text" [(ngModel)]="tool.contactPerson" (ngModelChange)="saveDraft()">
+                    </div>
+                    <div class="input-field">
+                      <label>Email contacto</label>
+                      <input type="text" [(ngModel)]="tool.contactMail" (ngModelChange)="saveDraft()">
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <div *ngIf="!machine.otherTools || machine.otherTools.length === 0" class="empty-list-msg">Sin otras herramientas</div>
+            </div>
           </div>
           <div *ngIf="devMachines.length === 0" class="empty-list-msg">
             No hay máquinas de desarrollo añadidas

@@ -97,8 +97,32 @@ mat-nav-list a mat-icon {
   filter: grayscale(70%);
 }
 
+/* ── Botón hamburguesa ── */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px 4px 4px;
+  color: #FBC02D;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.hamburger-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
 /* RESPONSIVE menú lateral */
-@media (max-width: 800px) {
+@media (max-width: 767px) {
+  .hamburger-btn { display: flex; align-items: center; }
+  mat-sidenav {
+    width: 75vw;
+    min-width: 200px;
+    max-width: 300px;
+  }
+}
+@media (min-width: 768px) and (max-width: 800px) {
   mat-sidenav {
     width: 64vw;
     min-width: 180px;
