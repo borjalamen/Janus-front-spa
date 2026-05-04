@@ -937,18 +937,16 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   }
 
   exportPdf() {
+    const filename = (this.estimationName && this.estimationName.trim())
+      ? this.estimationName.replace(/[^a-z0-9\-_.]/gi, '_') + '.pdf'
+      : 'estimation.pdf';
+
     this.createPdfBlob().then(blob => {
       const url = URL.createObjectURL(blob);
-      const w = window.open(url, '_blank');
-      if (!w) {
-        const html = this.buildPrintableHtml();
-        const newWin = window.open('', '_blank', 'width=900,height=700');
-        if (!newWin) { this.snackBar.open('No se ha podido abrir la ventana de impresión.', '✕', { duration: 3500 }); return; }
-        newWin.document.open();
-        newWin.document.write(html);
-        newWin.document.close();
-        setTimeout(() => { newWin.print(); }, 300);
-      }
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     }).catch(_ => {
       const html = this.buildPrintableHtml();
