@@ -51,6 +51,10 @@
       <div class="clip-chat">
         <div class="clip-header">
           <strong>{{ 'CLIP.AI' | translate }}</strong>
+          <label class="clip-mute-label" [title]="aiMuted ? ('CLIP.UNMUTE' | translate) : ('CLIP.MUTE' | translate)">
+            <input type="checkbox" [checked]="aiMuted" (change)="toggleMute()">
+            <span class="clip-mute-icon">{{ aiMuted ? '🔇' : '🔊' }}</span>
+          </label>
         </div>
 
         <div class="messages" #messagesContainer>

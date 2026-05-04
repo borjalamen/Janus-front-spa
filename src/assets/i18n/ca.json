@@ -724,6 +724,8 @@
     "HELLO": "Hola, sóc el teu assistent IAnusHub, en què et puc ajudar?",
     "SEND": "Enviar",
     "SPEAK": "Parlar",
+    "MUTE": "Silenciar veu",
+    "UNMUTE": "Activar veu",
     "PLACEHOLDER": "Escriu la teva pregunta...",
     "USER": "Tu:",
     "AI": "IAnusHub:",

@@ -89,6 +89,7 @@ export class AppComponent implements OnDestroy, OnInit {
   aiMessages: { from: 'user' | 'ai' | 'action', text: string }[] = [];
   userInput = '';
   aiLoading = false;
+  aiMuted = false;
   private greeted = false;
   attachedFile: { name: string, content: string } | null = null;
   attachError: string | null = null;
@@ -148,6 +149,7 @@ export class AppComponent implements OnDestroy, OnInit {
     const matched = defaultLang.match(/en|es|ca/);
     const initial = (matched && matched[0]) ? matched[0] : 'es';
     this.translate.use(initial);
+    this.aiMuted = this.storage.get('aiMuted') === 'true';
 
     // Cada cop que canvia l’usuari (login / logout)
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
@@ -451,7 +453,16 @@ export class AppComponent implements OnDestroy, OnInit {
     } catch (e) { }
   }
 
+  toggleMute() {
+    this.aiMuted = !this.aiMuted;
+    this.storage.set('aiMuted', String(this.aiMuted));
+    if (this.aiMuted) {
+      try { (window as any).speechSynthesis?.cancel(); } catch (_) {}
+    }
+  }
+
   speak(text: string) {
+    if (this.aiMuted) return;
     try {
       const synth = (window as any).speechSynthesis;
       if (!synth) return;

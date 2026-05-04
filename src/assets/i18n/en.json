@@ -741,6 +741,8 @@
     "HELLO": "Hi, I'm your IAnusHub assistant — how can I help you?",
     "SEND": "Send",
     "SPEAK": "Speak",
+    "MUTE": "Mute voice",
+    "UNMUTE": "Unmute voice",
     "PLACEHOLDER": "Type your question...",
     "USER": "You:",
     "AI": "IAnusHub:",
