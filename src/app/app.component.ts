@@ -355,16 +355,29 @@ export class AppComponent implements OnDestroy, OnInit {
         const answer = res?.answer ?? 'No hay respuesta';
         this.aiMessages.push({ from: 'ai', text: answer });
         if (res?.actionResult) {
-          this.aiMessages.push({ from: 'action', text: res.actionResult });
-          // Determinar qué entidad fue modificada para refrescar solo el componente activo
-          const action = res.actionResult;
-          let entity: import('./agent-refresh.service').AgentEntity = 'all';
-          if (/herramienta/i.test(action))           entity = 'herramienta';
-          else if (/proyecto/i.test(action))         entity = 'proyecto';
-          else if (/procedimiento/i.test(action))    entity = 'procedimiento';
-          else if (/infraestructura/i.test(action))  entity = 'infra';
-          else if (/formaci[oó]n/i.test(action))     entity = 'formacion';
-          this.agentRefresh.notify(entity);
+          const actionResult: string = res.actionResult;
+          // Estimación: rellenar formulario (disponible para todos los roles)
+          if (actionResult.startsWith('FILL_ESTIMACION_DATA:')) {
+            try {
+              const fillData = JSON.parse(actionResult.slice('FILL_ESTIMACION_DATA:'.length));
+              this.agentRefresh.fillEstimacion(fillData);
+              const tasksCount = fillData.tasks?.length ?? 0;
+              const weeksCount = fillData.weeks?.length ?? 0;
+              this.aiMessages.push({ from: 'action', text: `✅ Estimación generada: **${fillData.estimationName || 'sin nombre'}** con ${tasksCount} tarea${tasksCount !== 1 ? 's' : ''} y ${weeksCount} semana${weeksCount !== 1 ? 's' : ''}. Ve a la pestaña "Hacer estimación" para verla.` });
+            } catch (_) {
+              this.aiMessages.push({ from: 'action', text: '⚠️ Error aplicando la estimación generada.' });
+            }
+          } else {
+            this.aiMessages.push({ from: 'action', text: actionResult });
+            // Determinar qué entidad fue modificada para refrescar solo el componente activo
+            let entity: import('./agent-refresh.service').AgentEntity = 'all';
+            if (/herramienta/i.test(actionResult))           entity = 'herramienta';
+            else if (/proyecto/i.test(actionResult))         entity = 'proyecto';
+            else if (/procedimiento/i.test(actionResult))    entity = 'procedimiento';
+            else if (/infraestructura/i.test(actionResult))  entity = 'infra';
+            else if (/formaci[oó]n/i.test(actionResult))     entity = 'formacion';
+            this.agentRefresh.notify(entity);
+          }
         }
         setTimeout(() => this.scrollMessagesToBottom(), 10);
         this.speak(answer);

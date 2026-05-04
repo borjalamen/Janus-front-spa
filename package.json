@@ -3,11 +3,12 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --configuration=loc --proxy-config proxy.conf.json",
+    "start:loc": "ng serve --configuration=loc --proxy-config proxy.conf.json",
     "start:dev": "ng serve --configuration=development",
     "start:pro": "ng serve --configuration=production",
-    "start:loc": "ng serve --configuration=loc --proxy-config proxy.conf.json",
-    "build": "ng build",
+    "build": "ng build --configuration=loc",
+    "build:loc": "ng build --configuration=loc",
     "build:dev": "ng build --configuration=development",
     "build:pro": "ng build --configuration=production"
   },

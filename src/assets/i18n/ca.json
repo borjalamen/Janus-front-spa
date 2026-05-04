@@ -809,6 +809,7 @@
     "CLEAR_ESTIMATION": "Netejar estimació",
     "CLEAR_SELECTED": "Netejar seleccionats",
     "CLEARED": "Neteja realitzada",
+    "AI_FILLED": "✅ Estimació emplenada per IAnusHub",
     "CLEAR_NONE": "Selecciona almenys una opció per netejar",
     "DELETE_CONFIRM_1": "Vols eliminar aquesta estimació?",
     "DELETE_CONFIRM_2": "Aquesta acció és permanent. Confirma de nou.",

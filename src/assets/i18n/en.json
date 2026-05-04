@@ -826,6 +826,7 @@
     "CLEAR_ESTIMATION": "Clear estimation",
     "CLEAR_SELECTED": "Clear selected",
     "CLEARED": "Cleared",
+    "AI_FILLED": "✅ Estimation filled by IAnusHub",
     "CLEAR_NONE": "Select at least one option to clear",
     "DELETE_CONFIRM_1": "Do you want to delete this estimation?",
     "DELETE_CONFIRM_2": "This action is permanent. Please confirm again.",

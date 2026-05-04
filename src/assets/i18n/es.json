@@ -823,6 +823,7 @@
     "CLEAR_ESTIMATION": "Limpiar estimación",
     "CLEAR_SELECTED": "Limpiar seleccionados",
     "CLEARED": "Limpieza realizada",
+    "AI_FILLED": "✅ Estimación rellenada por IAnusHub",
     "CLEAR_NONE": "Selecciona al menos una opción para limpiar",
     "DELETE_CONFIRM_1": "¿Quieres eliminar esta estimación?",
     "DELETE_CONFIRM_2": "Esta acción es permanente. Confirma de nuevo.",

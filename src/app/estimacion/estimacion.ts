@@ -16,6 +16,7 @@ import { LiveEstimationService, LiveSession, LiveParticipant, LiveAcceptedTask }
 import { LocalStorageService } from '../local-storage.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EstimacionRecord, EstimacionService } from './estimacion.service';
+import { AgentRefreshService } from '../agent-refresh.service';
 
 interface Task {
   id: string;
@@ -72,7 +73,8 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private translate: TranslateService,
     private storage: LocalStorageService,
-    private estimacionService: EstimacionService
+    private estimacionService: EstimacionService,
+    private agentRefresh: AgentRefreshService
   ) {}
 
   weeks: string[] = ['1'];
@@ -146,6 +148,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
   private liveSub: Subscription | null = null;
   private liveConnSub: Subscription | null = null;
   private liveErrSub: Subscription | null = null;
+  private fillEstimacionSub: Subscription | null = null;
 
   // ===== Draft helpers =====
 
@@ -742,6 +745,7 @@ export class EstimacionComponent implements OnInit, OnDestroy {
     if (this.liveSub) this.liveSub.unsubscribe();
     if (this.liveConnSub) this.liveConnSub.unsubscribe();
     if (this.liveErrSub) this.liveErrSub.unsubscribe();
+    if (this.fillEstimacionSub) this.fillEstimacionSub.unsubscribe();
     this.stopLiveTimer();
   }
 
