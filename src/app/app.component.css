@@ -137,8 +137,9 @@ mat-toolbar.main-toolbar {
   color: #FBC02D !important;
   font-size: 1.18em;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .app-title {
@@ -146,11 +147,11 @@ mat-toolbar.main-toolbar {
   font-weight: bold;
   color: #FBC02D;
   text-align: center;
-  width: 100%;
-
-  background: linear-gradient(90deg, #003948 0%, #003948 50%, #003948 100%);
-  -webkit-background-clip: text;
-
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
 
   text-shadow:
     0 0 6px #fbc02d80,

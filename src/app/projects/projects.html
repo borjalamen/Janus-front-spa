@@ -4,10 +4,20 @@
     <div class="top-tabs-bar">
       <button
         class="top-tab-btn"
-        [class.active]="activeTab === 'LIST'"
-        (click)="cambiarTab('LIST')"
+        [class.active]="activeTab === 'LIST' && !showDetailModal"
+        (click)="closeProjectDetail(); cambiarTab('LIST')"
       >
         <span class="tab-emoji">📋</span> {{ 'PROJECTS.LIST_TAB' | translate }}
+      </button>
+
+      <!-- Pestaña dinámica del proyecto abierto -->
+      <button
+        *ngIf="showDetailModal && selectedProjectForDetail"
+        class="top-tab-btn active project-tab"
+      >
+        <span class="tab-emoji">📂</span>
+        {{ (selectedProjectForDetail.codigoProyecto || '') + ' | ' + (selectedProjectForDetail.nombre || '') }}
+        <span class="tab-close" (click)="closeProjectDetail()" title="Cerrar">&#x2715;</span>
       </button>
 
       <button

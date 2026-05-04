@@ -87,6 +87,35 @@ body {
   box-shadow: 0 4px 16px rgba(251, 192, 45, 0.3);
 }
 
+/* Pestaña dinámica del proyecto abierto */
+.project-tab {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
+.tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #000;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.tab-close:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+
 /* SIDEBAR (kept for backwards compatibility) */
 .projects-sidebar {
   width: 220px;
