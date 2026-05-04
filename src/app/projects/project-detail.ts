@@ -234,6 +234,16 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     tokenValue?: string;
   }> = [];
 
+  // ── Visibilidad de contraseñas ──
+  private pwdVisible = new Set<string>();
+  isPwdVisible(key: string): boolean { return this.pwdVisible.has(key); }
+  togglePwd(key: string): void {
+    this.pwdVisible.has(key) ? this.pwdVisible.delete(key) : this.pwdVisible.add(key);
+  }
+  copyToClipboard(value: string | undefined): void {
+    if (value) navigator.clipboard.writeText(value).catch(() => { /* ignore */ });
+  }
+
   // removal workflow
   removeCandidate: {
     type:

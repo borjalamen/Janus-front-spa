@@ -1897,6 +1897,51 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 	color: #90caf9;
 }
 
+/* ── Campo contraseña con ojo y copiar ── */
+.pwd-wrapper {
+	display: flex;
+	align-items: center;
+	background: #1e1e2e;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.pwd-wrapper input {
+	flex: 1;
+	background: transparent;
+	border: none;
+	outline: none;
+	padding: 8px 10px;
+	color: inherit;
+	font-size: inherit;
+	min-width: 0;
+}
+
+.pwd-btn {
+	background: none;
+	border: none;
+	border-left: 1px solid rgba(255, 255, 255, 0.1);
+	cursor: pointer;
+	padding: 0 8px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	color: rgba(255, 255, 255, 0.5);
+	transition: color 0.2s;
+}
+
+.pwd-btn:hover {
+	color: #FBC02D;
+}
+
+.pwd-btn mat-icon {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+}
+
 .dev-machine-header {
 	display: flex;
 	justify-content: space-between;

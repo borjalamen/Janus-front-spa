@@ -261,9 +261,17 @@
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
-                <input type="text"
-                       [(ngModel)]="machine.password"
-                       (ngModelChange)="saveDraft()">
+                <div class="pwd-wrapper">
+                  <input [type]="isPwdVisible('m-'+i) ? 'text' : 'password'"
+                         [(ngModel)]="machine.password"
+                         (ngModelChange)="saveDraft()">
+                  <button type="button" class="pwd-btn" (click)="togglePwd('m-'+i)" title="Mostrar/ocultar">
+                    <mat-icon>{{ isPwdVisible('m-'+i) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <button type="button" class="pwd-btn" (click)="copyToClipboard(machine.password)" title="Copiar">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </div>
               </div>
               <div class="input-field">
                 <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
@@ -311,7 +319,16 @@
                     </div>
                     <div class="input-field">
                       <label>Contraseña</label>
-                      <input type="text" [(ngModel)]="os.password" (ngModelChange)="saveDraft()">
+                      <div class="pwd-wrapper">
+                        <input [type]="isPwdVisible('os-'+i+'-'+oi) ? 'text' : 'password'"
+                               [(ngModel)]="os.password" (ngModelChange)="saveDraft()">
+                        <button type="button" class="pwd-btn" (click)="togglePwd('os-'+i+'-'+oi)" title="Mostrar/ocultar">
+                          <mat-icon>{{ isPwdVisible('os-'+i+'-'+oi) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <button type="button" class="pwd-btn" (click)="copyToClipboard(os.password)" title="Copiar">
+                          <mat-icon>content_copy</mat-icon>
+                        </button>
+                      </div>
                     </div>
                     <div class="input-field">
                       <label>RAM</label>
@@ -374,7 +391,16 @@
                     </div>
                     <div class="input-field">
                       <label>Contraseña</label>
-                      <input type="text" [(ngModel)]="db.password" (ngModelChange)="saveDraft()">
+                      <div class="pwd-wrapper">
+                        <input [type]="isPwdVisible('db-'+i+'-'+di) ? 'text' : 'password'"
+                               [(ngModel)]="db.password" (ngModelChange)="saveDraft()">
+                        <button type="button" class="pwd-btn" (click)="togglePwd('db-'+i+'-'+di)" title="Mostrar/ocultar">
+                          <mat-icon>{{ isPwdVisible('db-'+i+'-'+di) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <button type="button" class="pwd-btn" (click)="copyToClipboard(db.password)" title="Copiar">
+                          <mat-icon>content_copy</mat-icon>
+                        </button>
+                      </div>
                     </div>
                     <div class="input-field">
                       <label>Contacto</label>
@@ -924,9 +950,17 @@
                       <div class="dev-fields grid-3" style="margin-top:6px">
                         <div class="field">
                           <label>{{ 'PROJECTS.DEV_PASSWORD' | translate }}</label>
-                          <input [(ngModel)]="m.password"
-                                 (ngModelChange)="saveDraft()"
-                                 type="text" />
+                          <div class="pwd-wrapper">
+                            <input [(ngModel)]="m.password"
+                                   (ngModelChange)="saveDraft()"
+                                   [type]="isPwdVisible('vm-'+selectedDevMachineIndex) ? 'text' : 'password'" />
+                            <button type="button" class="pwd-btn" (click)="togglePwd('vm-'+selectedDevMachineIndex)" title="Mostrar/ocultar">
+                              <mat-icon>{{ isPwdVisible('vm-'+selectedDevMachineIndex) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                            </button>
+                            <button type="button" class="pwd-btn" (click)="copyToClipboard(m.password)" title="Copiar">
+                              <mat-icon>content_copy</mat-icon>
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -983,9 +1017,17 @@
                               </div>
                               <div class="field">
                                 <label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label>
-                                <input [(ngModel)]="o.password"
-                                       (ngModelChange)="saveDraft()"
-                                       type="text" />
+                                <div class="pwd-wrapper">
+                                  <input [(ngModel)]="o.password"
+                                         (ngModelChange)="saveDraft()"
+                                         [type]="isPwdVisible('vo-'+selectedDevMachineIndex+'-'+oi) ? 'text' : 'password'" />
+                                  <button type="button" class="pwd-btn" (click)="togglePwd('vo-'+selectedDevMachineIndex+'-'+oi)" title="Mostrar/ocultar">
+                                    <mat-icon>{{ isPwdVisible('vo-'+selectedDevMachineIndex+'-'+oi) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                  </button>
+                                  <button type="button" class="pwd-btn" (click)="copyToClipboard(o.password)" title="Copiar">
+                                    <mat-icon>content_copy</mat-icon>
+                                  </button>
+                                </div>
                               </div>
                               <div class="field">
                                 <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
@@ -1097,10 +1139,18 @@
                               </div>
                               <div class="field">
                                 <label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label>
-                                <input [(ngModel)]="d.password"
-                                       (ngModelChange)="saveDraft()"
-                                       type="text"
-                                       placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_PASSWORD' | translate }}" />
+                                <div class="pwd-wrapper">
+                                  <input [(ngModel)]="d.password"
+                                         (ngModelChange)="saveDraft()"
+                                         [type]="isPwdVisible('vd-'+selectedDevMachineIndex+'-'+di) ? 'text' : 'password'"
+                                         placeholder="{{ 'PROJECTS.PLACEHOLDER_DB_PASSWORD' | translate }}" />
+                                  <button type="button" class="pwd-btn" (click)="togglePwd('vd-'+selectedDevMachineIndex+'-'+di)" title="Mostrar/ocultar">
+                                    <mat-icon>{{ isPwdVisible('vd-'+selectedDevMachineIndex+'-'+di) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                  </button>
+                                  <button type="button" class="pwd-btn" (click)="copyToClipboard(d.password)" title="Copiar">
+                                    <mat-icon>content_copy</mat-icon>
+                                  </button>
+                                </div>
                               </div>
                               <div class="field">
                                 <label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label>
