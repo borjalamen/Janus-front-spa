@@ -363,7 +363,8 @@ export class AppComponent implements OnDestroy, OnInit {
               this.agentRefresh.fillEstimacion(fillData);
               const tasksCount = fillData.tasks?.length ?? 0;
               const weeksCount = fillData.weeks?.length ?? 0;
-              this.aiMessages.push({ from: 'action', text: `✅ Estimación generada: **${fillData.estimationName || 'sin nombre'}** con ${tasksCount} tarea${tasksCount !== 1 ? 's' : ''} y ${weeksCount} semana${weeksCount !== 1 ? 's' : ''}. Ve a la pestaña "Hacer estimación" para verla.` });
+              this.aiMessages.push({ from: 'action', text: `✅ Estimación generada: **${fillData.estimationName || 'sin nombre'}** con ${tasksCount} tarea${tasksCount !== 1 ? 's' : ''} y ${weeksCount} semana${weeksCount !== 1 ? 's' : ''}. Cerrando chat para que puedas editarla.` });
+              setTimeout(() => { this.clipOpen = false; }, 1800);
             } catch (_) {
               this.aiMessages.push({ from: 'action', text: '⚠️ Error aplicando la estimación generada.' });
             }
