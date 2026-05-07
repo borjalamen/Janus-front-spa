@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="kpi-card kpi-join" *ngIf="isPrivileged" [routerLink]="['/administracion']">
+        <div class="kpi-card kpi-join" *ngIf="rol === 'admin'" [routerLink]="['/administracion']">
           <mat-icon class="kpi-icon">person_add</mat-icon>
           <div class="kpi-body">
             <div class="kpi-value">{{ kpis.join.pendientes }}</div>
