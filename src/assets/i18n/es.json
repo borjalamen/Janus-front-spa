@@ -199,7 +199,8 @@
   "COMMON": {
     "CANCEL": "Cancelar",
     "SAVE": "Guardar",
-    "OR": "o"
+    "OR": "o",
+    "INVALID_EMAIL": "El formato del email no es válido"
   },
 
   "PROJECTS": {

@@ -198,7 +198,8 @@
   "COMMON": {
     "CANCEL": "Cancel·lar",
     "SAVE": "Desar",
-    "OR": "o"
+    "OR": "o",
+    "INVALID_EMAIL": "El format del correu electrònic no és vàlid"
   },
   "PROJECTS": {
     "TITLE": "Projectes",

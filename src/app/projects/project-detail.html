@@ -161,9 +161,13 @@
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
             <input type="email"
+                   name="respEmail"
+                   #respEmail="ngModel"
                    [(ngModel)]="proyecto.responsableProyecto!.email"
                    (ngModelChange)="saveDraft()"
+                   pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
                    [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate">
+            <span *ngIf="respEmail.value && respEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
           </div>
 
           <div class="input-field">
@@ -176,9 +180,13 @@
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
             <input type="email"
+                   name="respTecEmail"
+                   #respTecEmail="ngModel"
                    [(ngModel)]="proyecto.responsableTecnico!.email"
                    (ngModelChange)="saveDraft()"
+                   pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
                    [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate">
+            <span *ngIf="respTecEmail.value && respTecEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
           </div>
 
           <div class="input-field">
@@ -885,10 +893,14 @@ spring.datasource.password=..."></textarea>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
                     <input type="email"
+                           name="detRespEmail"
+                           #detRespEmail="ngModel"
                            [(ngModel)]="proyecto.responsableProyecto!.email"
                            (ngModelChange)="saveDraft()"
+                           pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
                            [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate"
                            [readonly]="!editing" />
+                    <span *ngIf="editing && detRespEmail.value && detRespEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
                   </div>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
@@ -901,10 +913,14 @@ spring.datasource.password=..."></textarea>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
                     <input type="email"
+                           name="detRespTecEmail"
+                           #detRespTecEmail="ngModel"
                            [(ngModel)]="proyecto.responsableTecnico!.email"
                            (ngModelChange)="saveDraft()"
+                           pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
                            [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate"
                            [readonly]="!editing" />
+                    <span *ngIf="editing && detRespTecEmail.value && detRespTecEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
                   </div>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>

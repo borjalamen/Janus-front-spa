@@ -203,7 +203,8 @@
   "COMMON": {
     "CANCEL": "Cancel",
     "SAVE": "Save",
-    "OR": "or"
+    "OR": "or",
+    "INVALID_EMAIL": "Invalid email format"
   },
   "PROJECTS": {
     "TITLE": "Projects",

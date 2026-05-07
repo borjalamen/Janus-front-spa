@@ -330,9 +330,13 @@
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
             <input type="email"
+              name="newRespEmail"
+              #newRespEmail="ngModel"
               [(ngModel)]="editingProject.responsableProyecto!.email"
               (ngModelChange)="saveDraft()"
+              pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
               [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate" />
+            <span *ngIf="newRespEmail.value && newRespEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
           </div>
 
           <div class="input-field">
@@ -345,9 +349,13 @@
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
             <input type="email"
+              name="newRespTecEmail"
+              #newRespTecEmail="ngModel"
               [(ngModel)]="editingProject.responsableTecnico!.email"
               (ngModelChange)="saveDraft()"
+              pattern="^[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}$"
               [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate" />
+            <span *ngIf="newRespTecEmail.value && newRespTecEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
           </div>
 
           <div class="input-field">

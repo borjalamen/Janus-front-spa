@@ -13,6 +13,14 @@ a{
 *{
     box-sizing: border-box;
 }
+
+/* Mensaje de error de validación reutilizable */
+.field-error {
+  display: block;
+  color: #ff5252;
+  font-size: 0.75rem;
+  margin-top: 3px;
+}
 .mat-dialog-container {
   background: transparent !important;
   box-shadow: none !important;
