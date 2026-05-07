@@ -18,6 +18,7 @@ import { DocumentService } from "../document.service";
 import { TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
 import { SafePipe } from "../safe.pipe";
+import { ResponsableInfo } from "../project.service";
 
 import { Proyecto, Task } from "./projects";
 
@@ -90,8 +91,8 @@ type ProjectDetailDraft = {
     tokenValue?: string;
   }>;
   equipoMinsait: Proyecto["equipoMinsait"];
-  responsableProyecto: string;
-  responsableTecnico: string;
+  responsableProyecto: ResponsableInfo | null;
+  responsableTecnico: ResponsableInfo | null;
   horaDaily: string | null;
   entornoNotas: string;
   notasGenerales: string | null;
@@ -336,6 +337,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     const p = this.proyecto;
     p.ip = p.ip || [];
     (p as any).entornoNotas = (p as any).entornoNotas || "";
+    // Garantizar que los objetos responsable existen siempre
+    (p as any).responsableProyecto = (p as any).responsableProyecto || { nombre: "", email: "" };
+    (p as any).responsableTecnico  = (p as any).responsableTecnico  || { nombre: "", email: "" };
     this.ipString = (p.ip || []).join(", ");
 
     // Cargar documentos agregados durante creación
@@ -580,8 +584,8 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       crontabList: this.crontabList,
       sonarList: this.sonarList,
       equipoMinsait: this.proyecto.equipoMinsait || [],
-      responsableProyecto: this.proyecto.responsableProyecto || "",
-      responsableTecnico: this.proyecto.responsableTecnico || "",
+      responsableProyecto: this.proyecto.responsableProyecto ?? null,
+      responsableTecnico: this.proyecto.responsableTecnico ?? null,
       horaDaily: this.proyecto.horaDaily || null,
       entornoNotas: (this.proyecto as any).entornoNotas || "",
       notasGenerales: this.proyecto.notasGenerales || null,

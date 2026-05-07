@@ -322,20 +322,32 @@
         <div class="form-grid">
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
-            <input
-              type="text"
-              [(ngModel)]="editingProject.responsableProyecto"
+            <input type="text"
+              [(ngModel)]="editingProject.responsableProyecto!.nombre"
               (ngModelChange)="saveDraft()"
-            />
+              [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate" />
+          </div>
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
+            <input type="email"
+              [(ngModel)]="editingProject.responsableProyecto!.email"
+              (ngModelChange)="saveDraft()"
+              [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate" />
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
-            <input
-              type="text"
-              [(ngModel)]="editingProject.responsableTecnico"
+            <input type="text"
+              [(ngModel)]="editingProject.responsableTecnico!.nombre"
               (ngModelChange)="saveDraft()"
-            />
+              [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate" />
+          </div>
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
+            <input type="email"
+              [(ngModel)]="editingProject.responsableTecnico!.email"
+              (ngModelChange)="saveDraft()"
+              [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate" />
           </div>
 
           <div class="input-field">

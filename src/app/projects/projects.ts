@@ -368,7 +368,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     const draft = this.storage.getObject<any>(this.STORAGE_DRAFT_KEY);
     if (!draft) return;
 
-    if (draft.editingProject) this.editingProject = { ...draft.editingProject };
+    if (draft.editingProject) {
+      this.editingProject = { ...draft.editingProject };
+      // Normalizar objetos responsable por si el borrador es de una versión anterior
+      const ep = this.editingProject as any;
+      if (!ep.responsableProyecto || typeof ep.responsableProyecto === "string") {
+        ep.responsableProyecto = { nombre: ep.responsableProyecto || "", email: "" };
+      }
+      if (!ep.responsableTecnico || typeof ep.responsableTecnico === "string") {
+        ep.responsableTecnico = { nombre: ep.responsableTecnico || "", email: "" };
+      }
+    }
     if (draft.newProjectTab) this.newProjectTab = draft.newProjectTab;
     if (draft.newProjectMinsaitMembers)
       this.newProjectMinsaitMembers = draft.newProjectMinsaitMembers;
@@ -450,8 +460,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       tareasString: "",
       lote: "",
       departamento: "",
-      responsableProyecto: "",
-      responsableTecnico: "",
+      responsableProyecto: { nombre: "", email: "" },
+      responsableTecnico: { nombre: "", email: "" },
       urlEntornoDesarrollo: "",
       urlEntornoIntegracion: "",
       urlEntornoPreproduccion: "",

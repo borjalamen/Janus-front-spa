@@ -154,15 +154,31 @@
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
             <input type="text"
-                   [(ngModel)]="proyecto.responsableProyecto"
-                   (ngModelChange)="saveDraft()">
+                   [(ngModel)]="proyecto.responsableProyecto!.nombre"
+                   (ngModelChange)="saveDraft()"
+                   [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate">
+          </div>
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
+            <input type="email"
+                   [(ngModel)]="proyecto.responsableProyecto!.email"
+                   (ngModelChange)="saveDraft()"
+                   [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate">
           </div>
 
           <div class="input-field">
             <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
             <input type="text"
-                   [(ngModel)]="proyecto.responsableTecnico"
-                   (ngModelChange)="saveDraft()">
+                   [(ngModel)]="proyecto.responsableTecnico!.nombre"
+                   (ngModelChange)="saveDraft()"
+                   [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate">
+          </div>
+          <div class="input-field">
+            <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
+            <input type="email"
+                   [(ngModel)]="proyecto.responsableTecnico!.email"
+                   (ngModelChange)="saveDraft()"
+                   [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate">
           </div>
 
           <div class="input-field">
@@ -861,15 +877,33 @@ spring.datasource.password=..."></textarea>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
                     <input type="text"
-                           [(ngModel)]="proyecto.responsableProyecto"
+                           [(ngModel)]="proyecto.responsableProyecto!.nombre"
                            (ngModelChange)="saveDraft()"
+                           [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate"
+                           [readonly]="!editing" />
+                  </div>
+                  <div class="form-row">
+                    <label>{{ 'PROJECTS.RESPONSABLE_EMAIL' | translate }}</label>
+                    <input type="email"
+                           [(ngModel)]="proyecto.responsableProyecto!.email"
+                           (ngModelChange)="saveDraft()"
+                           [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate"
                            [readonly]="!editing" />
                   </div>
                   <div class="form-row">
                     <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
                     <input type="text"
-                           [(ngModel)]="proyecto.responsableTecnico"
+                           [(ngModel)]="proyecto.responsableTecnico!.nombre"
                            (ngModelChange)="saveDraft()"
+                           [placeholder]="'PROJECTS.MEMBER_NAME_PLACEHOLDER' | translate"
+                           [readonly]="!editing" />
+                  </div>
+                  <div class="form-row">
+                    <label>{{ 'PROJECTS.RESPONSABLE_TEC_EMAIL' | translate }}</label>
+                    <input type="email"
+                           [(ngModel)]="proyecto.responsableTecnico!.email"
+                           (ngModelChange)="saveDraft()"
+                           [placeholder]="'PROJECTS.MEMBER_EMAIL_PLACEHOLDER' | translate"
                            [readonly]="!editing" />
                   </div>
                   <div class="form-row">

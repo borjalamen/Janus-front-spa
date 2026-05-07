@@ -33,6 +33,11 @@ export interface OpenShiftInfo {
   grafana?: string | null;
 }
 
+export interface ResponsableInfo {
+  nombre?: string;
+  email?: string;
+}
+
 export interface MinsaitMember {
   nombre?: string;
   rol?: string;
@@ -88,8 +93,8 @@ export interface Project {
   urlEntornoProduccion?: string | null;
 
   // Responsables
-  responsableProyecto?: string | null;
-  responsableTecnico?: string | null;
+  responsableProyecto?: ResponsableInfo | null;
+  responsableTecnico?: ResponsableInfo | null;
   horaDaily?: string | null;
 
   // Listas
