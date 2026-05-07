@@ -428,6 +428,13 @@
                       <input type="text" [(ngModel)]="db.description" (ngModelChange)="saveDraft()">
                     </div>
                   </div>
+                  <div class="input-field full-width" style="margin-top:8px">
+                    <label>{{ 'PROJECTS.DB_CONNECTION_SETTINGS' | translate }}</label>
+                    <textarea [(ngModel)]="db.properties" (ngModelChange)="saveDraft()" rows="5"
+                              placeholder="spring.datasource.url=...
+spring.datasource.username=...
+spring.datasource.password=..."></textarea>
+                  </div>
                 </div>
               </ng-container>
               <div *ngIf="!machine.dbs || machine.dbs.length === 0" class="empty-list-msg">{{ 'PROJECTS.NO_BBDD' | translate }}</div>
