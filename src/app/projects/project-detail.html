@@ -299,15 +299,15 @@
                   </div>
                   <div class="form-grid three-col">
                     <div class="input-field">
-                      <label>Identificador</label>
-                      <input type="text" [(ngModel)]="os.identifier" (ngModelChange)="saveDraft()" placeholder="p.ej. OCP-DEV">
+                      <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                      <input type="text" [(ngModel)]="os.identifier" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.PLACEHOLDER_OPENSHIFT_ID' | translate">
                     </div>
                     <div class="input-field">
-                      <label>Usuario</label>
+                      <label>{{ 'PROJECTS.OPENSHIFT_USER' | translate }}</label>
                       <input type="text" [(ngModel)]="os.user" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Contraseña</label>
+                      <label>{{ 'PROJECTS.OPENSHIFT_PASSWORD' | translate }}</label>
                       <div class="pwd-wrapper">
                         <input [type]="isPwdVisible('os-'+i+'-'+oi) ? 'text' : 'password'"
                                [(ngModel)]="os.password" (ngModelChange)="saveDraft()">
@@ -320,66 +320,90 @@
                       </div>
                     </div>
                     <div class="input-field">
-                      <label>RAM</label>
-                      <input type="text" [(ngModel)]="os.ram" (ngModelChange)="saveDraft()" placeholder="GB">
+                      <label>{{ 'PROJECTS.DEV_RAM' | translate }}</label>
+                      <input type="text" [(ngModel)]="os.ram" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.DEV_RAM_PLACEHOLDER' | translate">
                     </div>
                     <div class="input-field">
-                      <label>CPU</label>
-                      <input type="text" [(ngModel)]="os.cpu" (ngModelChange)="saveDraft()" placeholder="cores">
+                      <label>{{ 'PROJECTS.DEV_CPU' | translate }}</label>
+                      <input type="text" [(ngModel)]="os.cpu" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.DEV_CPU_PLACEHOLDER' | translate">
                     </div>
                     <div class="input-field">
-                      <label>Disco</label>
-                      <input type="text" [(ngModel)]="os.disk" (ngModelChange)="saveDraft()" placeholder="GB">
+                      <label>{{ 'PROJECTS.DEV_DISK' | translate }}</label>
+                      <input type="text" [(ngModel)]="os.disk" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.DEV_DISK_PLACEHOLDER' | translate">
+                    </div>
+                  </div>
+
+                  <!-- Volúmenes -->
+                  <div class="form-row volumes-row" style="margin-top:10px">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px">
+                      <label style="margin:0">{{ 'PROJECTS.VOLUMES' | translate }}</label>
+                      <button type="button" class="btn-round btn-small btn-add" (click)="addVolume(i)">+</button>
+                    </div>
+                    <div class="volumes-list">
+                      <div class="volume" *ngFor="let v of (os.volumes || []); let vi = index">
+                        <div class="field">
+                          <label>{{ 'PROJECTS.VOLUME_NAME' | translate }}</label>
+                          <input [(ngModel)]="v.name" (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.VOLUME_NAME_PLACEHOLDER' | translate }}" />
+                        </div>
+                        <div class="field">
+                          <label>{{ 'PROJECTS.VOLUME_CAPACITY' | translate }}</label>
+                          <input [(ngModel)]="v.capacity" (ngModelChange)="saveDraft()"
+                                 placeholder="{{ 'PROJECTS.VOLUME_CAPACITY_PLACEHOLDER' | translate }}" />
+                        </div>
+                        <button type="button" class="btn-round btn-small btn-remove" (click)="removeVolume(i, vi)">-</button>
+                      </div>
+                      <div *ngIf="!os.volumes || os.volumes.length === 0" class="empty-list-msg">{{ 'PROJECTS.NO_VOLUMES' | translate }}</div>
                     </div>
                   </div>
                 </div>
               </ng-container>
-              <div *ngIf="!machine.openshifts || machine.openshifts.length === 0" class="empty-list-msg">Sin OpenShift configurado</div>
+              <div *ngIf="!machine.openshifts || machine.openshifts.length === 0" class="empty-list-msg">{{ 'PROJECTS.NO_OPENSHIFT' | translate }}</div>
             </div>
 
             <!-- ── BBDD ── -->
             <div class="machine-subsection">
               <div class="members-header">
-                <h5 class="subsection-title-sm">BBDD</h5>
-                <button class="btn-round btn-small btn-add" (click)="addDb(i)">+ BBDD</button>
+                <h5 class="subsection-title-sm">{{ 'PROJECTS.DB_LABEL' | translate }}</h5>
+                <button class="btn-round btn-small btn-add" (click)="addDb(i)">+ {{ 'PROJECTS.DB_LABEL' | translate }}</button>
               </div>
               <ng-container *ngIf="machine.dbs && machine.dbs.length > 0">
                 <div *ngFor="let db of machine.dbs; let di = index" class="sub-item-card">
                   <div class="sub-item-header">
-                    <span class="sub-item-label">BBDD #{{ di + 1 }}</span>
+                    <span class="sub-item-label">{{ 'PROJECTS.DB_LABEL' | translate }} #{{ di + 1 }}</span>
                     <button class="btn-remove" (click)="removeDb(i, di)">✕</button>
                   </div>
                   <div class="form-grid three-col">
                     <div class="input-field">
-                      <label>Identificador</label>
-                      <input type="text" [(ngModel)]="db.identifier" (ngModelChange)="saveDraft()" placeholder="p.ej. ORA-DEV">
+                      <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
+                      <input type="text" [(ngModel)]="db.identifier" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.PLACEHOLDER_DB_ID' | translate">
                     </div>
                     <div class="input-field">
-                      <label>Motor</label>
-                      <input type="text" [(ngModel)]="db.engine" (ngModelChange)="saveDraft()" placeholder="Oracle / MySQL / …">
+                      <label>{{ 'PROJECTS.DB_ENGINE' | translate }}</label>
+                      <input type="text" [(ngModel)]="db.engine" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.PLACEHOLDER_DB_ENGINE' | translate">
                     </div>
                     <div class="input-field">
-                      <label>Instancia</label>
+                      <label>{{ 'PROJECTS.DB_INSTANCE' | translate }}</label>
                       <input type="text" [(ngModel)]="db.instanceName" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Host</label>
-                      <input type="text" [(ngModel)]="db.host" (ngModelChange)="saveDraft()">
+                      <label>{{ 'PROJECTS.DB_HOST' | translate }}</label>
+                      <input type="text" [(ngModel)]="db.host" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.PLACEHOLDER_DB_HOST' | translate">
                     </div>
                     <div class="input-field">
-                      <label>Puerto</label>
-                      <input type="text" [(ngModel)]="db.port" (ngModelChange)="saveDraft()" placeholder="1521 / 3306 / …">
+                      <label>{{ 'PROJECTS.DB_PORT' | translate }}</label>
+                      <input type="text" [(ngModel)]="db.port" (ngModelChange)="saveDraft()" [placeholder]="'PROJECTS.PLACEHOLDER_DB_PORT' | translate">
                     </div>
                     <div class="input-field">
-                      <label>SID / Schema</label>
+                      <label>{{ 'PROJECTS.DB_SID' | translate }}</label>
                       <input type="text" [(ngModel)]="db.sid" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Usuario</label>
+                      <label>{{ 'PROJECTS.DB_USER' | translate }}</label>
                       <input type="text" [(ngModel)]="db.user" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Contraseña</label>
+                      <label>{{ 'PROJECTS.DB_PASSWORD' | translate }}</label>
                       <div class="pwd-wrapper">
                         <input [type]="isPwdVisible('db-'+i+'-'+di) ? 'text' : 'password'"
                                [(ngModel)]="db.password" (ngModelChange)="saveDraft()">
@@ -392,64 +416,64 @@
                       </div>
                     </div>
                     <div class="input-field">
-                      <label>Contacto</label>
+                      <label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label>
                       <input type="text" [(ngModel)]="db.contactPerson" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Email contacto</label>
+                      <label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label>
                       <input type="text" [(ngModel)]="db.contactMail" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field full-width">
-                      <label>Descripción</label>
+                      <label>{{ 'PROJECTS.DB_DESCRIPTION' | translate }}</label>
                       <input type="text" [(ngModel)]="db.description" (ngModelChange)="saveDraft()">
                     </div>
                   </div>
                 </div>
               </ng-container>
-              <div *ngIf="!machine.dbs || machine.dbs.length === 0" class="empty-list-msg">Sin BBDD configurada</div>
+              <div *ngIf="!machine.dbs || machine.dbs.length === 0" class="empty-list-msg">{{ 'PROJECTS.NO_BBDD' | translate }}</div>
             </div>
 
             <!-- ── Otras herramientas ── -->
             <div class="machine-subsection">
               <div class="members-header">
-                <h5 class="subsection-title-sm">Otras herramientas</h5>
-                <button class="btn-round btn-small btn-add" (click)="addOtherTool(i)">+ Herramienta</button>
+                <h5 class="subsection-title-sm">{{ 'PROJECTS.OTHER_TOOL' | translate }}</h5>
+                <button class="btn-round btn-small btn-add" (click)="addOtherTool(i)">+ {{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</button>
               </div>
               <ng-container *ngIf="machine.otherTools && machine.otherTools.length > 0">
                 <div *ngFor="let tool of machine.otherTools; let ti = index" class="sub-item-card">
                   <div class="sub-item-header">
-                    <span class="sub-item-label">{{ tool.name || ('Herramienta #' + (ti + 1)) }}</span>
+                    <span class="sub-item-label">{{ tool.name || (('PROJECTS.OTH_TOOL_NAME' | translate) + ' #' + (ti + 1)) }}</span>
                     <button class="btn-remove" (click)="removeOtherTool(i, ti)">✕</button>
                   </div>
                   <div class="form-grid three-col">
                     <div class="input-field">
-                      <label>Identificador</label>
+                      <label>{{ 'PROJECTS.FIELD_ID' | translate }}</label>
                       <input type="text" [(ngModel)]="tool.identifier" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Nombre</label>
+                      <label>{{ 'PROJECTS.OTH_TOOL_NAME' | translate }}</label>
                       <input type="text" [(ngModel)]="tool.name" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Ruta / URL</label>
+                      <label>{{ 'PROJECTS.OTH_TOOL_PATH' | translate }}</label>
                       <input type="text" [(ngModel)]="tool.path" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Contacto</label>
+                      <label>{{ 'PROJECTS.DB_CONTACT_PERSON' | translate }}</label>
                       <input type="text" [(ngModel)]="tool.contactPerson" (ngModelChange)="saveDraft()">
                     </div>
                     <div class="input-field">
-                      <label>Email contacto</label>
+                      <label>{{ 'PROJECTS.DB_CONTACT_MAIL' | translate }}</label>
                       <input type="text" [(ngModel)]="tool.contactMail" (ngModelChange)="saveDraft()">
                     </div>
                   </div>
                 </div>
               </ng-container>
-              <div *ngIf="!machine.otherTools || machine.otherTools.length === 0" class="empty-list-msg">Sin otras herramientas</div>
+              <div *ngIf="!machine.otherTools || machine.otherTools.length === 0" class="empty-list-msg">{{ 'PROJECTS.NO_TOOLS' | translate }}</div>
             </div>
           </div>
           <div *ngIf="devMachines.length === 0" class="empty-list-msg">
-            No hay máquinas de desarrollo añadidas
+            {{ 'PROJECTS.NO_MACHINES' | translate }}
           </div>
         </div>
 
