@@ -21,6 +21,47 @@ a{
   font-size: 0.75rem;
   margin-top: 3px;
 }
+
+/* Miniatura PDF clicable */
+.pdf-thumbnail-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #444;
+}
+.pdf-thumbnail-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
+  background: #1a1a1a;
+}
+.pdf-thumbnail-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.pdf-thumbnail-wrapper:hover .pdf-thumbnail-overlay {
+  opacity: 1;
+}
+.pdf-thumbnail-wrapper:hover .pdf-thumbnail-img {
+  filter: brightness(0.85);
+}
 .mat-dialog-container {
   background: transparent !important;
   box-shadow: none !important;

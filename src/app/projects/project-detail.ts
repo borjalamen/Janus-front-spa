@@ -145,6 +145,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   detailFileInput: File | null = null;
   detailFileDescription: string = "";
   documentPreviewUrls: Map<string, string> = new Map();
+  pdfThumbnailUrls: Map<string, string> = new Map();
   documentCsvContents: Map<string, string[][]> = new Map();
   private isRefreshingProject = false;
 
@@ -1558,9 +1559,13 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
       this.documentService.getFile(projectId, fileName).subscribe({
         next: (blob: Blob) => {
-          if (doc.tipo?.startsWith("image") || doc.tipo === "application/pdf") {
+          if (doc.tipo?.startsWith("image")) {
             const url = URL.createObjectURL(blob);
             this.documentPreviewUrls.set(key, url);
+          } else if (doc.tipo === "application/pdf") {
+            const url = URL.createObjectURL(blob);
+            this.documentPreviewUrls.set(key, url);
+            this.renderPdfThumbnail(key, blob);
           } else if (
             doc.tipo === "text/csv" ||
             doc.nombre?.toLowerCase().endsWith(".csv")
@@ -1585,6 +1590,37 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   getDocumentPreviewUrl(doc: any): string | null {
     return this.documentPreviewUrls.get(this.getDocumentKey(doc)) || null;
+  }
+
+  getPdfThumbnailUrl(doc: any): string | null {
+    return this.pdfThumbnailUrls.get(this.getDocumentKey(doc)) || null;
+  }
+
+  openPdfDocument(doc: any): void {
+    const url = this.documentPreviewUrls.get(this.getDocumentKey(doc));
+    if (url) window.open(url, '_blank');
+  }
+
+  private async renderPdfThumbnail(key: string, blob: Blob): Promise<void> {
+    try {
+      const arrayBuffer = await blob.arrayBuffer();
+      const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf');
+      (pdfjsLib as any).GlobalWorkerOptions.workerSrc = '/assets/pdf.worker.min.js';
+      const pdf = await (pdfjsLib as any).getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.0 });
+      const scale = 300 / viewport.width;
+      const scaledViewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = scaledViewport.width;
+      canvas.height = scaledViewport.height;
+      const ctx = canvas.getContext('2d')!;
+      await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+      this.pdfThumbnailUrls.set(key, canvas.toDataURL('image/jpeg', 0.85));
+      await pdf.destroy();
+    } catch (e) {
+      console.warn('Error al renderizar miniatura PDF', e);
+    }
   }
 
   getDocumentCsvContent(doc: any): string[][] | null {

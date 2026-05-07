@@ -1020,16 +1020,20 @@ spring.datasource.password=..."></textarea>
                   *ngIf="doc.tipo === 'application/pdf'"
                   class="preview-container"
                 >
-                  <iframe
-                    [src]="getDocumentPreviewUrl(doc) | safe: 'resourceUrl'"
-                    style="
-                      width: 100%;
-                      height: 500px;
-                      border: 1px solid #ddd;
-                      border-radius: 4px;
-                    "
-                    frameborder="0"
-                  ></iframe>
+                  <div class="pdf-thumbnail-wrapper" (click)="openNewProjectPdfDocument(doc)" [title]="'PROJECTS.CLICK_TO_VIEW_PDF' | translate">
+                    <img *ngIf="getNewProjectPdfThumbnail(doc)"
+                         [src]="getNewProjectPdfThumbnail(doc)"
+                         class="pdf-thumbnail-img"
+                         alt="{{ doc.nombre }}" />
+                    <div *ngIf="!getNewProjectPdfThumbnail(doc)" class="preview-placeholder pdf">
+                      <mat-icon>picture_as_pdf</mat-icon>
+                      <p>{{ 'PROJECTS.LOADING_PDF' | translate }}</p>
+                    </div>
+                    <div class="pdf-thumbnail-overlay">
+                      <mat-icon>open_in_new</mat-icon>
+                      <span>{{ 'PROJECTS.VIEW_AND_DOWNLOAD' | translate }}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div

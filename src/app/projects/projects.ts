@@ -7,7 +7,6 @@ import { LocalStorageService } from "../local-storage.service";
 import { ProjectService, Project, Department } from "../project.service";
 import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
-import { SafePipe } from "../safe.pipe";
 import { AuthService } from "../auth.service";
 import { Subscription } from "rxjs";
 import { AgentRefreshService } from "../agent-refresh.service";
@@ -59,7 +58,6 @@ export interface Proyecto extends Project {
     FormsModule,
     MatIconModule,
     ProjectDetailComponent,
-    SafePipe,
   ],
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
@@ -181,6 +179,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }> = [];
 
   projectFileInput: File | null = null;
+  newProjectPdfThumbnails: Map<string, string> = new Map();
   projectFileDescription: string = "";
   departments: Department[] = [];
   private agentRefreshSub!: Subscription;
@@ -685,6 +684,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     this.newProjectDocuments.push(doc);
 
+    if (doc.tipo === 'application/pdf') {
+      this.renderNewProjectPdfThumbnail(doc);
+    }
+
     this.projectFileInput = null;
     this.projectFileDescription = "";
     const fileInput = document.querySelector(
@@ -744,6 +747,40 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return URL.createObjectURL(doc.file);
     }
     return null;
+  }
+
+  getNewProjectPdfThumbnail(doc: any): string | null {
+    return this.newProjectPdfThumbnails.get(doc.nombre) || null;
+  }
+
+  openNewProjectPdfDocument(doc: any): void {
+    if (doc.file) {
+      const url = URL.createObjectURL(doc.file);
+      window.open(url, '_blank');
+    }
+  }
+
+  private async renderNewProjectPdfThumbnail(doc: any): Promise<void> {
+    if (!doc.file) return;
+    try {
+      const arrayBuffer = await doc.file.arrayBuffer();
+      const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf');
+      (pdfjsLib as any).GlobalWorkerOptions.workerSrc = '/assets/pdf.worker.min.js';
+      const pdf = await (pdfjsLib as any).getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.0 });
+      const scale = 300 / viewport.width;
+      const scaledViewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = scaledViewport.width;
+      canvas.height = scaledViewport.height;
+      const ctx = canvas.getContext('2d')!;
+      await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+      this.newProjectPdfThumbnails.set(doc.nombre, canvas.toDataURL('image/jpeg', 0.85));
+      await pdf.destroy();
+    } catch (e) {
+      console.warn('Error al renderizar miniatura PDF', e);
+    }
   }
 
   getDocumentTypeName(doc: any): string {
