@@ -146,6 +146,21 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     ram: string;
     cpu: string;
     disk: string;
+    openshifts: Array<{
+      identifier?: string; user?: string; password?: string;
+      ram?: string; cpu?: string; disk?: string;
+      volumes: Array<{ name?: string; capacity?: string }>;
+    }>;
+    dbs: Array<{
+      identifier?: string; engine?: string; instanceName?: string;
+      host?: string; port?: string; sid?: string;
+      user?: string; password?: string; description?: string;
+      properties?: string; contactPerson?: string; contactMail?: string;
+    }>;
+    otherTools: Array<{
+      identifier?: string; name?: string; path?: string;
+      contactPerson?: string; contactMail?: string;
+    }>;
   }> = [];
 
   newProjectCodeRepos: Array<{ name: string; url: string }> = [];
@@ -358,7 +373,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (draft.newProjectMinsaitMembers)
       this.newProjectMinsaitMembers = draft.newProjectMinsaitMembers;
     if (draft.newProjectDevMachines)
-      this.newProjectDevMachines = draft.newProjectDevMachines;
+      this.newProjectDevMachines = draft.newProjectDevMachines.map((m: any) => ({
+        ...m,
+        openshifts: m.openshifts ?? [],
+        dbs: m.dbs ?? [],
+        otherTools: m.otherTools ?? [],
+      }));
     if (draft.newProjectCodeRepos)
       this.newProjectCodeRepos = draft.newProjectCodeRepos;
     if (draft.newProjectArtifactRepos)
@@ -485,6 +505,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       ram: "",
       cpu: "",
       disk: "",
+      openshifts: [],
+      dbs: [],
+      otherTools: [],
     });
     this.saveDraft();
   }
@@ -495,6 +518,47 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return;
     }
     this.newProjectDevMachines.splice(i, 1);
+    this.saveDraft();
+  }
+
+  addNewProjectOpenShift(i: number) {
+    this.newProjectDevMachines[i].openshifts.push({
+      identifier: "", user: "", password: "", ram: "", cpu: "", disk: "", volumes: []
+    });
+    this.saveDraft();
+  }
+  removeNewProjectOpenShift(i: number, oi: number) {
+    this.newProjectDevMachines[i].openshifts.splice(oi, 1);
+    this.saveDraft();
+  }
+  addNewProjectOsVolume(i: number, oi: number) {
+    this.newProjectDevMachines[i].openshifts[oi].volumes.push({ name: "", capacity: "" });
+    this.saveDraft();
+  }
+  removeNewProjectOsVolume(i: number, oi: number, vi: number) {
+    this.newProjectDevMachines[i].openshifts[oi].volumes.splice(vi, 1);
+    this.saveDraft();
+  }
+  addNewProjectDb(i: number) {
+    this.newProjectDevMachines[i].dbs.push({
+      identifier: "", engine: "", instanceName: "", host: "", port: "",
+      sid: "", user: "", password: "", description: "", properties: "",
+      contactPerson: "", contactMail: ""
+    });
+    this.saveDraft();
+  }
+  removeNewProjectDb(i: number, di: number) {
+    this.newProjectDevMachines[i].dbs.splice(di, 1);
+    this.saveDraft();
+  }
+  addNewProjectOtherTool(i: number) {
+    this.newProjectDevMachines[i].otherTools.push({
+      identifier: "", name: "", path: "", contactPerson: "", contactMail: ""
+    });
+    this.saveDraft();
+  }
+  removeNewProjectOtherTool(i: number, ti: number) {
+    this.newProjectDevMachines[i].otherTools.splice(ti, 1);
     this.saveDraft();
   }
 
