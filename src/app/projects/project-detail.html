@@ -859,6 +859,20 @@ spring.datasource.password=..."></textarea>
               <div class="minsait-left-col">
                 <div class="daily-access-row">
                   <div class="form-row">
+                    <label>{{ 'PROJECTS.RESPONSABLE' | translate }}</label>
+                    <input type="text"
+                           [(ngModel)]="proyecto.responsableProyecto"
+                           (ngModelChange)="saveDraft()"
+                           [readonly]="!editing" />
+                  </div>
+                  <div class="form-row">
+                    <label>{{ 'PROJECTS.RESPONSABLE_TEC' | translate }}</label>
+                    <input type="text"
+                           [(ngModel)]="proyecto.responsableTecnico"
+                           (ngModelChange)="saveDraft()"
+                           [readonly]="!editing" />
+                  </div>
+                  <div class="form-row">
                     <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
                     <input type="time"
                            [(ngModel)]="proyecto.horaDaily"
