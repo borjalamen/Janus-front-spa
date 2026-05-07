@@ -241,7 +241,31 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.pwdVisible.has(key) ? this.pwdVisible.delete(key) : this.pwdVisible.add(key);
   }
   copyToClipboard(value: string | undefined): void {
-    if (value) navigator.clipboard.writeText(value).catch(() => { /* ignore */ });
+    if (!value) return;
+
+    const success = () => this.showToast("📋 Copiado al portapapeles");
+    const failure = () => this.showToast("❌ No se pudo copiar", false);
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(value).then(success, () => {
+        this.copyFallback(value) ? success() : failure();
+      });
+    } else {
+      this.copyFallback(value) ? success() : failure();
+    }
+  }
+
+  private copyFallback(value: string): boolean {
+    const ta = document.createElement("textarea");
+    ta.value = value;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
   }
 
   // removal workflow
