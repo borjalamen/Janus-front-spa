@@ -1237,6 +1237,12 @@
     "UPLOAD_TITLE": "Attach your documents",
     "UPLOAD_SUBTITLE": "Drag files here or click to select",
     "UPLOAD_BUTTON": "Select",
+    "PRIORITY": "Priority",
+    "PRIORITY_PH": "Select priority",
+    "PRIORITY_BAJA": "Low",
+    "PRIORITY_MEDIA": "Medium",
+    "PRIORITY_ALTA": "High",
+    "PRIORITY_CRITICA": "Critical",
     "SEND": "Send request",
     "SENDING": "Sending...",
     "RESET": "Reset"

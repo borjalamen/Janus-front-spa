@@ -74,6 +74,7 @@ interface PeticionTareaBackend {
   deadline?: string;
   comments?: string;
   attachments?: string[];
+  prioridad?: string;
   estado?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -91,6 +92,7 @@ interface PeticionTareaAdmin {
   deadline: string;
   comentario: string;
   comentarioAdmin: string;
+  prioridad: string;
   estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'INICIADA' | 'FINALIZADA';
   attachments: string[];
 }
@@ -821,6 +823,7 @@ export class AdministracionComponent implements OnInit {
       deadline: this.formatFecha(p.deadline),
       comentario: p.comments?.trim() || "",
       comentarioAdmin: p.adminComment?.trim() || "",
+      prioridad: p.prioridad?.trim() || "MEDIA",
       estado: this.normalizeEstadoTarea(p.estado),
       attachments: p.attachments ?? [],
     };

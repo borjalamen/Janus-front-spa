@@ -49,6 +49,7 @@ export class PeticionComponent implements OnInit {
     jiraTask: "",
     comments: "",
     devopsAssignee: "",
+    prioridad: "MEDIA",
   };
 
   deadline: Date | null = null;
@@ -56,8 +57,12 @@ export class PeticionComponent implements OnInit {
   sending = false;
 
   // Opcions del select (es carreguen des de l’API)
-  devopsOptions: string[] = [];
-
+  devopsOptions: string[] = [];  readonly prioridadOptions = [
+    { value: "BAJA",    labelKey: "PETICION.PRIORITY_BAJA" },
+    { value: "MEDIA",   labelKey: "PETICION.PRIORITY_MEDIA" },
+    { value: "ALTA",    labelKey: "PETICION.PRIORITY_ALTA" },
+    { value: "CRITICA", labelKey: "PETICION.PRIORITY_CRITICA" },
+  ];
   attachments: Array<{
     name: string;
     size: number;
@@ -67,6 +72,7 @@ export class PeticionComponent implements OnInit {
   }> = [];
 
   showErrors = false;
+  touched: Record<string, boolean> = {};
   previewPopup: { rawUrl: string; type: string; name: string } | null = null;
 
   toastMsg = "";
@@ -127,6 +133,14 @@ export class PeticionComponent implements OnInit {
     this.storage.setObject(this.STORAGE_KEY, this.form);
   }
 
+  touch(field: string): void {
+    this.touched[field] = true;
+  }
+
+  isFieldInvalid(field: string, condition: boolean): boolean {
+    return (this.showErrors || !!this.touched[field]) && condition;
+  }
+
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files || []);
@@ -179,11 +193,13 @@ export class PeticionComponent implements OnInit {
       jiraTask: "",
       comments: "",
       devopsAssignee: "Cualquiera",
+      prioridad: "MEDIA",
     };
     this.attachments = [];
     this.deadline = null;
     this.deadlineTime = "";
     this.showErrors = false;
+    this.touched = {};
     this.sending = false;
     this.storage.remove(this.STORAGE_KEY);
   }
@@ -234,6 +250,7 @@ export class PeticionComponent implements OnInit {
     }
 
     formData.append("devopsAssignee", this.form.devopsAssignee || "Cualquiera");
+    formData.append("prioridad", this.form.prioridad || "MEDIA");
 
     if (this.deadline) {
       formData.append("deadline", this.deadline.toISOString());

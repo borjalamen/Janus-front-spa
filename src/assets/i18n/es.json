@@ -1217,6 +1217,12 @@
     "UPLOAD_TITLE": "Adjunta tus documentos",
     "UPLOAD_SUBTITLE": "Arrastra archivos aquí o haz clic para seleccionar",
     "UPLOAD_BUTTON": "Seleccionar",
+    "PRIORITY": "Prioridad",
+    "PRIORITY_PH": "Selecciona la prioridad",
+    "PRIORITY_BAJA": "Baja",
+    "PRIORITY_MEDIA": "Media",
+    "PRIORITY_ALTA": "Alta",
+    "PRIORITY_CRITICA": "Crítica",
     "SEND": "Enviar petición",
     "SENDING": "Enviando...",
     "RESET": "Reiniciar"

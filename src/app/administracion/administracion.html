@@ -503,6 +503,9 @@
             <span class="status-pill" [ngClass]="tarea.estado.toLowerCase()">
               {{ getStatusTranslation(tarea.estado) | translate }}
             </span>
+            <span class="priority-pill" [ngClass]="'priority-' + tarea.prioridad.toLowerCase()">
+              {{ ('PETICION.PRIORITY_' + tarea.prioridad) | translate }}
+            </span>
           </div>
 
           <div class="request-meta">

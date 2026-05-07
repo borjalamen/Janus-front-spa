@@ -1140,6 +1140,12 @@
     "UPLOAD_TITLE": "Adjunta els teus documents",
     "UPLOAD_SUBTITLE": "Arrossega fitxers aquí o fes clic per seleccionar",
     "UPLOAD_BUTTON": "Seleccionar",
+    "PRIORITY": "Prioritat",
+    "PRIORITY_PH": "Selecciona la prioritat",
+    "PRIORITY_BAJA": "Baixa",
+    "PRIORITY_MEDIA": "Mitjana",
+    "PRIORITY_ALTA": "Alta",
+    "PRIORITY_CRITICA": "Crítica",
     "SEND": "Enviar petició",
     "SENDING": "Enviant...",
     "RESET": "Reinicia"

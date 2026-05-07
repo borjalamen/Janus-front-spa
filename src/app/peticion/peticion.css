@@ -3,7 +3,7 @@
   width: 100%;
   background: #0d0f14;
   color: #e0e0e0;
-  padding: 4px 8px;
+  padding: 4px 8px 32px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -136,6 +136,21 @@
   font-weight: 500;
 }
 
+/* Borde rojo en campos inválidos (touched o showErrors) */
+::ng-deep .peticion-invalid .mdc-notched-outline__leading,
+::ng-deep .peticion-invalid .mdc-notched-outline__notch,
+::ng-deep .peticion-invalid .mdc-notched-outline__trailing {
+  border-color: #ff5252 !important;
+  border-width: 2px !important;
+}
+::ng-deep .peticion-invalid .mat-mdc-form-field-label,
+::ng-deep .peticion-invalid .mdc-floating-label {
+  color: #ff5252 !important;
+}
+::ng-deep .peticion-invalid mat-icon[matprefix] {
+  color: #ff5252 !important;
+}
+
 /* ===== SELECT (amb scroll intern) ===== */
 ::ng-deep .peticion-select-panel {
   max-height: 200px !important;      /* alçada màxima del panell */
@@ -211,6 +226,7 @@
   align-items: center;
   margin-top: 4px;
   padding-top: 2px;
+  padding-bottom: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 

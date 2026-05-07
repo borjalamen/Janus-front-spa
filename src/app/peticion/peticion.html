@@ -10,7 +10,7 @@
       <div class="peticion-row">
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.requesterName || !form.requesterName.trim())"
+          [class.peticion-invalid]="isFieldInvalid('requesterName', !form.requesterName || !form.requesterName.trim())"
         >
           <mat-label>{{ 'PETICION.REQUESTER_NAME' | translate }}</mat-label>
           <mat-icon matPrefix>person</mat-icon>
@@ -18,12 +18,13 @@
             matInput
             [(ngModel)]="form.requesterName"
             (ngModelChange)="onFormChange()"
+            (blur)="touch('requesterName')"
             [placeholder]="'PETICION.REQUESTER_NAME_PH' | translate"
             required
           />
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && (!form.requesterName || !form.requesterName.trim())"
+            *ngIf="isFieldInvalid('requesterName', !form.requesterName || !form.requesterName.trim())"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
@@ -31,7 +32,7 @@
 
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.requesterEmail || !validateEmail(form.requesterEmail))"
+          [class.peticion-invalid]="isFieldInvalid('requesterEmail', !form.requesterEmail || !validateEmail(form.requesterEmail))"
         >
           <mat-label>{{ 'PETICION.REQUESTER_EMAIL' | translate }}</mat-label>
           <mat-icon matPrefix>email</mat-icon>
@@ -40,18 +41,19 @@
             type="email"
             [(ngModel)]="form.requesterEmail"
             (ngModelChange)="onFormChange()"
+            (blur)="touch('requesterEmail')"
             [placeholder]="'PETICION.REQUESTER_EMAIL_PH' | translate"
             required
           />
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && !form.requesterEmail"
+            *ngIf="isFieldInvalid('requesterEmail', !form.requesterEmail)"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && form.requesterEmail && !validateEmail(form.requesterEmail)"
+            *ngIf="isFieldInvalid('requesterEmail', !!form.requesterEmail && !validateEmail(form.requesterEmail))"
           >
             {{ 'UNETE.ERROR_EMAIL' | translate }}
           </div>
@@ -62,7 +64,7 @@
       <div class="peticion-row">
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.projectName || !form.projectName.trim())"
+          [class.peticion-invalid]="isFieldInvalid('projectName', !form.projectName || !form.projectName.trim())"
         >
           <mat-label>{{ 'PETICION.PROJECT_NAME' | translate }}</mat-label>
           <mat-icon matPrefix>work</mat-icon>
@@ -70,12 +72,13 @@
             matInput
             [(ngModel)]="form.projectName"
             (ngModelChange)="onFormChange()"
+            (blur)="touch('projectName')"
             [placeholder]="'PETICION.PROJECT_NAME_PH' | translate"
             required
           />
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && (!form.projectName || !form.projectName.trim())"
+            *ngIf="isFieldInvalid('projectName', !form.projectName || !form.projectName.trim())"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
@@ -83,7 +86,7 @@
 
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.projectCode || !form.projectCode.trim())"
+          [class.peticion-invalid]="isFieldInvalid('projectCode', !form.projectCode || !form.projectCode.trim())"
         >
           <mat-label>{{ 'PETICION.PROJECT_CODE' | translate }}</mat-label>
           <mat-icon matPrefix>code</mat-icon>
@@ -91,12 +94,13 @@
             matInput
             [(ngModel)]="form.projectCode"
             (ngModelChange)="onFormChange()"
+            (blur)="touch('projectCode')"
             [placeholder]="'PETICION.PROJECT_CODE_PH' | translate"
             required
           />
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && (!form.projectCode || !form.projectCode.trim())"
+            *ngIf="isFieldInvalid('projectCode', !form.projectCode || !form.projectCode.trim())"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
@@ -107,7 +111,7 @@
       <div class="peticion-row">
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.jiraTask || !form.jiraTask.trim())"
+          [class.peticion-invalid]="isFieldInvalid('jiraTask', !form.jiraTask || !form.jiraTask.trim())"
         >
           <mat-label>{{ 'PETICION.JIRA_TASK' | translate }}</mat-label>
           <mat-icon matPrefix>confirmation_number</mat-icon>
@@ -115,12 +119,13 @@
             matInput
             [(ngModel)]="form.jiraTask"
             (ngModelChange)="onFormChange()"
+            (blur)="touch('jiraTask')"
             [placeholder]="'PETICION.JIRA_TASK_PH' | translate"
             required
           />
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && (!form.jiraTask || !form.jiraTask.trim())"
+            *ngIf="isFieldInvalid('jiraTask', !form.jiraTask || !form.jiraTask.trim())"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
@@ -128,13 +133,14 @@
 
         <mat-form-field
           appearance="outline"
-          [class.peticion-invalid]="showErrors && (!form.devopsAssignee || !form.devopsAssignee.trim())"
+          [class.peticion-invalid]="isFieldInvalid('devopsAssignee', !form.devopsAssignee || !form.devopsAssignee.trim())"
         >
           <mat-label>{{ 'PETICION.DEVOPS_ASSIGNEE' | translate }}</mat-label>
           <mat-icon matPrefix>assignment_ind</mat-icon>
           <mat-select
             [(ngModel)]="form.devopsAssignee"
             (ngModelChange)="onFormChange()"
+            (openedChange)="$event === false && touch('devopsAssignee')"
             required
             panelClass="peticion-select-panel"
           >
@@ -144,14 +150,42 @@
           </mat-select>
           <div
             class="peticion-error-msg"
-            *ngIf="showErrors && (!form.devopsAssignee || !form.devopsAssignee.trim())"
+            *ngIf="isFieldInvalid('devopsAssignee', !form.devopsAssignee || !form.devopsAssignee.trim())"
           >
             {{ 'UNETE.ERROR_REQUIRED' | translate }}
           </div>
         </mat-form-field>
       </div>
 
-      <!-- Fila 4: Data + Hora (opcionales) -->
+      <!-- Fila 4: Prioridad -->
+      <div class="peticion-row">
+        <mat-form-field
+          appearance="outline"
+          [class.peticion-invalid]="isFieldInvalid('prioridad', !form.prioridad)"
+        >
+          <mat-label>{{ 'PETICION.PRIORITY' | translate }}</mat-label>
+          <mat-icon matPrefix>flag</mat-icon>
+          <mat-select
+            [(ngModel)]="form.prioridad"
+            (ngModelChange)="onFormChange()"
+            (openedChange)="$event === false && touch('prioridad')"
+            required
+            panelClass="peticion-select-panel"
+          >
+            <mat-option *ngFor="let opt of prioridadOptions" [value]="opt.value">
+              {{ opt.labelKey | translate }}
+            </mat-option>
+          </mat-select>
+          <div
+            class="peticion-error-msg"
+            *ngIf="isFieldInvalid('prioridad', !form.prioridad)"
+          >
+            {{ 'UNETE.ERROR_REQUIRED' | translate }}
+          </div>
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 5: Data + Hora (opcionales) -->
       <div class="peticion-row">
         <mat-form-field appearance="outline" class="peticion-date-field">
           <mat-label>{{ 'PETICION.DEADLINE' | translate }}</mat-label>

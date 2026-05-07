@@ -332,6 +332,23 @@ body {
   font-weight: 800;
 }
 
+/* Priority badges */
+.priority-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border: 1px solid #444;
+  background: #1a1d22;
+  color: #aaa;
+}
+.priority-pill.priority-baja    { border-color: #4caf50; color: #4caf50; }
+.priority-pill.priority-media   { border-color: #64b5f6; color: #64b5f6; }
+.priority-pill.priority-alta    { border-color: #FFA726; color: #FFA726; }
+.priority-pill.priority-critica { border-color: #E53935; color: #E53935; }
+
 .empty-state {
   text-align: center;
   color: #888;
