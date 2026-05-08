@@ -873,6 +873,16 @@ spring.datasource.password=..."></textarea>
                      [readonly]="!editing" />
             </div>
           </div>
+
+          <div class="form-divider"></div>
+          <div class="form-row notes-row">
+            <label>{{ 'PROJECTS.NOTES' | translate }}</label>
+            <textarea rows="4"
+                      [(ngModel)]="proyecto.notasGenerales"
+                      (ngModelChange)="saveDraft()"
+                      placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"
+                      [readonly]="!editing"></textarea>
+          </div>
         </section>
 
       </div>
@@ -1357,7 +1367,8 @@ spring.datasource.password=..."></textarea>
             <textarea [(ngModel)]="proyecto.entornoNotas"
                       (ngModelChange)="saveDraft()"
                       rows="4"
-                      placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
+                      placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"
+                      [readonly]="!editing"></textarea>
           </div>
         </section>
       </div>
