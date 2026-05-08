@@ -97,6 +97,10 @@ p {
   transition: all 0.2s ease;
 }
 
+.bitacora-row-clickable {
+  cursor: pointer;
+}
+
 .bitacora-row:hover {
   border-color: rgba(229, 57, 53, 0.3);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 10px rgba(229, 57, 53, 0.1);
@@ -2178,4 +2182,32 @@ p {
 
 .image-popup-close-btn:hover {
   background: rgba(200, 0, 0, 0.7);
+}
+
+/* ========================= */
+/*  PESTAÑA DETALLE DINÁMICA */
+/* ========================= */
+
+.bitacora-detail-tab {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  gap: 6px;
+}
+
+.tab-close {
+  margin-left: 8px;
+  font-size: 13px;
+  opacity: 0.7;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  border-radius: 3px;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.tab-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
 }

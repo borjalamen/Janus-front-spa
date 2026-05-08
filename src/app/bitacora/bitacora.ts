@@ -88,11 +88,22 @@ export class BitacoraComponent implements OnInit {
   mostrarVisualizacion = false;
   bitacoraVisualizacion: Bitacora | null = null;
 
-  // Visualización detalle steps (carrusel)
-  bitacoraDetall: Bitacora | null = null;
-  mostrarDetallSteps = false;
-  currentStepIndex = 0;
-  slideDirection: 'left' | 'right' = 'right';
+  // Multi-tab: lista de pestañas abiertas
+  openTabs: { bitacora: Bitacora; stepIndex: number; slideDir: 'left' | 'right' }[] = [];
+  activeDetailId: string | null = null;
+
+  get bitacoraDetall(): Bitacora | null {
+    if (!this.activeDetailId) return null;
+    return this.openTabs.find(t => t.bitacora.id === this.activeDetailId)?.bitacora || null;
+  }
+  get showDetailTab(): boolean { return this.openTabs.length > 0; }
+  get detailViewActive(): boolean { return this.activeDetailId !== null; }
+  get currentStepIndex(): number {
+    return this.openTabs.find(t => t.bitacora.id === this.activeDetailId)?.stepIndex ?? 0;
+  }
+  get slideDirection(): 'left' | 'right' {
+    return this.openTabs.find(t => t.bitacora.id === this.activeDetailId)?.slideDir ?? 'right';
+  }
 
   // Loading de archivos
   loadingFileId: string | null = null; // Ej: "create-0", "inline-1"
@@ -719,40 +730,45 @@ export class BitacoraComponent implements OnInit {
   }
 
   // ===== TOGGLE STEPS EN LISTADO =====
-  openDetallSteps(bitacora: Bitacora) {
-    this.bitacoraDetall = { ...bitacora };
-    this.mostrarDetallSteps = true;
-    this.currentStepIndex = 0;
-    this.slideDirection = 'right';
+  openBitacoraDetail(bitacora: Bitacora) {
+    const existing = this.openTabs.find(t => t.bitacora.id === bitacora.id);
+    if (!existing) {
+      this.openTabs.push({ bitacora: { ...bitacora }, stepIndex: 0, slideDir: 'right' });
+    }
+    this.activeDetailId = bitacora.id!;
   }
 
-  closeDetallSteps() {
-    this.mostrarDetallSteps = false;
-    this.bitacoraDetall = null;
-    this.currentStepIndex = 0;
+  closeBitacoraDetail(id?: string) {
+    const closeId = id ?? this.activeDetailId;
+    if (!closeId) return;
+    this.openTabs = this.openTabs.filter(t => t.bitacora.id !== closeId);
+    if (this.activeDetailId === closeId) {
+      this.activeDetailId = this.openTabs.length > 0 ? this.openTabs[this.openTabs.length - 1].bitacora.id! : null;
+    }
   }
 
   nextStep() {
-    if (this.bitacoraDetall && this.bitacoraDetall.soluciones && this.currentStepIndex < this.bitacoraDetall.soluciones.length - 1) {
-      this.slideDirection = 'right';
-      this.currentStepIndex++;
+    const tab = this.openTabs.find(t => t.bitacora.id === this.activeDetailId);
+    if (tab && tab.bitacora.soluciones && tab.stepIndex < tab.bitacora.soluciones.length - 1) {
+      tab.slideDir = 'right';
+      tab.stepIndex++;
     }
   }
 
   prevStep() {
-    if (this.currentStepIndex > 0) {
-      this.slideDirection = 'left';
-      this.currentStepIndex--;
+    const tab = this.openTabs.find(t => t.bitacora.id === this.activeDetailId);
+    if (tab && tab.stepIndex > 0) {
+      tab.slideDir = 'left';
+      tab.stepIndex--;
     }
   }
 
   goToStep(index: number) {
-    if (index > this.currentStepIndex) {
-      this.slideDirection = 'right';
-    } else if (index < this.currentStepIndex) {
-      this.slideDirection = 'left';
+    const tab = this.openTabs.find(t => t.bitacora.id === this.activeDetailId);
+    if (tab) {
+      tab.slideDir = index > tab.stepIndex ? 'right' : 'left';
+      tab.stepIndex = index;
     }
-    this.currentStepIndex = index;
   }
 
   onFileSelected(event: Event, solucion: Solucion) {

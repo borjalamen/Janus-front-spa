@@ -11,15 +11,15 @@
       <mat-icon inline="true">add</mat-icon>
       {{ 'PROCEDURES_SECTION.TAB_CREATE' | translate }}
     </button>
-    <button class="procedures-tab" [class.active]="activeTab==='listar' && !showDetailTab" (click)="closeProcDetail(); activeTab='listar'">
+    <button class="procedures-tab" [class.active]="activeTab==='listar' && !detailViewActive" (click)="activeDetailId=null; activeTab='listar'">
       <mat-icon inline="true">list</mat-icon>
       {{ 'PROCEDURES_SECTION.TAB_LIST' | translate }}
     </button>
-    <!-- Pestaña dinámica del procedimiento abierto -->
-    <button *ngIf="showDetailTab && procDetall" class="procedures-tab active procedure-detail-tab">
+    <!-- Pestañas dinámicas de procedimientos abiertos -->
+    <button *ngFor="let tab of openProcTabs" class="procedures-tab procedure-detail-tab" [class.active]="activeDetailId === tab.proc.id" (click)="activeDetailId=tab.proc.id ?? null; activeTab='listar'">
       <mat-icon inline="true">description</mat-icon>
-      {{ procDetall.titulo || '(Sense títol)' }}
-      <span class="tab-close" (click)="closeProcDetail()" title="Cerrar">&#x2715;</span>
+      {{ tab.proc.titulo || '(Sense títol)' }}
+      <span class="tab-close" (click)="$event.stopPropagation(); closeProcDetail(tab.proc.id)" title="Cerrar">&#x2715;</span>
     </button>
   </div>
 
@@ -209,7 +209,7 @@
   <!-- Pestanya: Llistar -->
   <div *ngIf="activeTab==='listar'" class="procedures-tab-panel">
     <!-- MODE LLISTAT -->
-    <ng-container *ngIf="!showDetailTab">
+    <ng-container *ngIf="!detailViewActive">
       <p class="procedures-description">
         {{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}
       </p>
@@ -337,7 +337,7 @@
     </ng-container>
 
     <!-- MODE DETALL STEPS -->
-    <div *ngIf="showDetailTab && procDetall" class="procedure-steps-detail-container">
+    <div *ngIf="detailViewActive && procDetall" class="procedure-steps-detail-container">
       <!-- Header: títol + data + entorn -->
       <div class="procedure-steps-detail-header">
         <button class="procedure-detail-back-btn" (click)="closeProcDetail()" title="Tornar">
@@ -446,7 +446,7 @@
             <span
               *ngFor="let s of procDetall.steps; let i = index"
               [class.active]="i === currentStepIndex"
-              (click)="currentStepIndex = i">
+              (click)="goToStep(i)">
             </span>
           </div>
         </div>

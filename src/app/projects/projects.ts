@@ -107,9 +107,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   toastOk = true;
   private _toastTimer: any = null;
 
-  showDetailModal = false;
-  selectedProjectForDetail: Proyecto | undefined = undefined;
-  detailMode: "view" | "edit" = "view";
+  openProjectTabs: { project: Proyecto; mode: 'view' | 'edit' }[] = [];
+  activeProjectId: string | null = null;
+
+  get selectedProjectForDetail(): Proyecto | undefined {
+    if (!this.activeProjectId) return undefined;
+    return this.openProjectTabs.find(t => t.project.id === this.activeProjectId)?.project;
+  }
+  get detailMode(): 'view' | 'edit' {
+    if (!this.activeProjectId) return 'view';
+    return this.openProjectTabs.find(t => t.project.id === this.activeProjectId)?.mode ?? 'view';
+  }
+  get showDetailModal(): boolean { return this.openProjectTabs.length > 0; }
+  get detailViewActive(): boolean { return this.activeProjectId !== null; }
 
   showProjectModal = false;
   editingProject: Partial<Proyecto> & {
@@ -317,6 +327,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.storage.set(this.STORAGE_LAST_PROJECT_KEY, project.codigoProyecto);
     }
 
+    // Si ya está abierto, actualizar modo y activar
+    const existing = this.openProjectTabs.find(t => t.project.id === project.id);
+    if (existing) {
+      existing.mode = mode;
+      this.activeProjectId = project.id ?? null;
+      return;
+    }
+
     if (project.id) {
       this.projectService.getById(project.id).subscribe({
         next: (fullProject) => {
@@ -325,27 +343,29 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             "📄 Documentos en proyecto:",
             (fullProject as any).documents,
           );
-          this.selectedProjectForDetail = fullProject as Proyecto;
-          this.detailMode = mode;
-          this.showDetailModal = true;
+          const fp = fullProject as Proyecto;
+          this.openProjectTabs.push({ project: fp, mode });
+          this.activeProjectId = fp.id ?? null;
         },
         error: (err) => {
           console.error("❌ Error al cargar proyecto:", err);
-          this.selectedProjectForDetail = project;
-          this.detailMode = mode;
-          this.showDetailModal = true;
+          this.openProjectTabs.push({ project, mode });
+          this.activeProjectId = project.id ?? null;
         },
       });
     } else {
-      this.selectedProjectForDetail = project;
-      this.detailMode = mode;
-      this.showDetailModal = true;
+      this.openProjectTabs.push({ project, mode });
+      this.activeProjectId = project.id ?? null;
     }
   }
 
-  closeProjectDetail() {
-    this.showDetailModal = false;
-    this.selectedProjectForDetail = undefined;
+  closeProjectDetail(id?: string) {
+    const closeId = id ?? this.activeProjectId;
+    if (!closeId) return;
+    this.openProjectTabs = this.openProjectTabs.filter(t => t.project.id !== closeId);
+    if (this.activeProjectId === closeId) {
+      this.activeProjectId = this.openProjectTabs.length > 0 ? this.openProjectTabs[this.openProjectTabs.length - 1].project.id ?? null : null;
+    }
   }
 
   saveDraft(): void {

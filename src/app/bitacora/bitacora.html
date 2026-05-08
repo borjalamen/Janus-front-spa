@@ -17,11 +17,17 @@
     </button>
     <button
       class="tab"
-      [class.active]="activeTab==='listar'"
-      (click)="setActiveTab('listar'); cerrarVisualizacion()"
+      [class.active]="activeTab==='listar' && !detailViewActive"
+      (click)="activeDetailId=null; setActiveTab('listar')"
     >
       <mat-icon inline="true">list</mat-icon>
       {{ 'ERRORS.TAB_LIST' | translate }}
+    </button>
+    <!-- Pestañas dinámicas de registros abiertos -->
+    <button *ngFor="let tab of openTabs" class="tab bitacora-detail-tab" [class.active]="activeDetailId === tab.bitacora.id" (click)="activeDetailId=tab.bitacora.id ?? null">
+      <mat-icon inline="true">bug_report</mat-icon>
+      {{ tab.bitacora.contexto || '(Sin contexto)' }}
+      <span class="tab-close" (click)="$event.stopPropagation(); closeBitacoraDetail(tab.bitacora.id)" title="Cerrar">&#x2715;</span>
     </button>
   </div>
 
@@ -243,9 +249,9 @@
     <p>{{ 'ERRORS.DESCRIPTION' | translate }}</p>
 
     <!-- LIST MODE -->
-    <ng-container *ngIf="!mostrarDetallSteps; else detallStepsTpl">
+    <ng-container *ngIf="!detailViewActive">
       <div class="bitacora-list" *ngIf="erroresFiltrados.length > 0">
-        <div *ngFor="let e of bitacorasPaginadas" class="bitacora-row" [class.editing]="bitacoraEditandoId === e.id">
+        <div *ngFor="let e of bitacorasPaginadas" class="bitacora-row bitacora-row-clickable" [class.editing]="bitacoraEditandoId === e.id" (click)="bitacoraEditandoId !== e.id && openBitacoraDetail(e)">
           <!-- VISTA NORMAL -->
           <ng-container *ngIf="bitacoraEditandoId !== e.id">
             <div
@@ -277,23 +283,15 @@
 
               <div class="bitacora-actions">
                 <button
-                  class="action-btn view-btn"
-                  (click)="openDetallSteps(e)"
-                  title="Ver pasos"
-                  *ngIf="e.soluciones && e.soluciones.length > 0"
-                >
-                  👁️
-                </button>
-                <button
                   class="action-btn edit-btn"
-                  (click)="abrirPopupEditar(e)"
+                  (click)="$event.stopPropagation(); abrirPopupEditar(e)"
                   title="Editar"
                 >
                   ✏️
                 </button>
                 <button
                   class="action-btn delete-btn"
-                  (click)="confirmarEliminar(e)"
+                  (click)="$event.stopPropagation(); confirmarEliminar(e)"
                   title="Eliminar"
                 >
                   🗑️
@@ -485,14 +483,13 @@
       </div>
     </ng-container>
 
-    <!-- DETAIL STEPS CAROUSEL -->
-    <ng-template #detallStepsTpl>
-      <div class="bitacora-steps-detail-container" *ngIf="bitacoraDetall">
-        <!-- Header -->
-        <div class="bitacora-steps-detail-header">
-          <button class="bitacora-detail-back-btn" (click)="closeDetallSteps()" title="Volver">
-            <mat-icon>arrow_back</mat-icon>
-          </button>
+    <!-- DETAIL CAROUSEL -->
+    <div *ngIf="detailViewActive && bitacoraDetall" class="bitacora-steps-detail-container">
+      <!-- Header -->
+      <div class="bitacora-steps-detail-header">
+        <button class="bitacora-detail-back-btn" (click)="closeBitacoraDetail()" title="Volver">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
           <div class="bitacora-steps-detail-title">
             <div class="bitacora-steps-detail-title-row">
               <h3>{{ bitacoraDetall.contexto || '(Sin contexto)' }}</h3>
@@ -633,7 +630,6 @@
           </div>
         </div>
       </div>
-    </ng-template>
   </div>
 
 </div>

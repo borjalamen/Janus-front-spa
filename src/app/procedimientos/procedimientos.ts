@@ -38,11 +38,22 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
   showImagePopup = false;
   imagePopupUrl: string | null = null;
   
-  // Detall i Carrusel
-  procDetall: Procedure | null = null;
-  showDetailTab = false;
-  currentStepIndex = 0;
-  slideDirection: 'left' | 'right' = 'right';
+  // Multi-tab: lista de pestañas abiertas
+  openProcTabs: { proc: Procedure; stepIndex: number; slideDir: 'left' | 'right' }[] = [];
+  activeDetailId: string | null = null;
+
+  get procDetall(): Procedure | null {
+    if (!this.activeDetailId) return null;
+    return this.openProcTabs.find(t => t.proc.id === this.activeDetailId)?.proc || null;
+  }
+  get showDetailTab(): boolean { return this.openProcTabs.length > 0; }
+  get detailViewActive(): boolean { return this.activeDetailId !== null; }
+  get currentStepIndex(): number {
+    return this.openProcTabs.find(t => t.proc.id === this.activeDetailId)?.stepIndex ?? 0;
+  }
+  get slideDirection(): 'left' | 'right' {
+    return this.openProcTabs.find(t => t.proc.id === this.activeDetailId)?.slideDir ?? 'right';
+  }
 
   // Feedback (Toast)
   toastMsg = '';
@@ -266,27 +277,43 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
   // ===== CARRUSEL / VISTA DETALL =====
 
   openProcDetail(proc: Procedure): void {
-    this.procDetall = proc;
-    this.showDetailTab = true;
-    this.currentStepIndex = 0;
+    const existing = this.openProcTabs.find(t => t.proc.id === proc.id);
+    if (!existing) {
+      this.openProcTabs.push({ proc, stepIndex: 0, slideDir: 'right' });
+    }
+    this.activeDetailId = proc.id!;
   }
 
-  closeProcDetail(): void {
-    this.showDetailTab = false;
-    this.procDetall = null;
+  closeProcDetail(id?: string): void {
+    const closeId = id ?? this.activeDetailId;
+    if (!closeId) return;
+    this.openProcTabs = this.openProcTabs.filter(t => t.proc.id !== closeId);
+    if (this.activeDetailId === closeId) {
+      this.activeDetailId = this.openProcTabs.length > 0 ? this.openProcTabs[this.openProcTabs.length - 1].proc.id! : null;
+    }
   }
 
   nextStep(): void {
-    if (this.procDetall?.steps && this.currentStepIndex < this.procDetall.steps.length - 1) {
-      this.slideDirection = 'right';
-      this.currentStepIndex++;
+    const tab = this.openProcTabs.find(t => t.proc.id === this.activeDetailId);
+    if (tab && tab.proc.steps && tab.stepIndex < tab.proc.steps.length - 1) {
+      tab.slideDir = 'right';
+      tab.stepIndex++;
     }
   }
 
   prevStep(): void {
-    if (this.currentStepIndex > 0) {
-      this.slideDirection = 'left';
-      this.currentStepIndex--;
+    const tab = this.openProcTabs.find(t => t.proc.id === this.activeDetailId);
+    if (tab && tab.stepIndex > 0) {
+      tab.slideDir = 'left';
+      tab.stepIndex--;
+    }
+  }
+
+  goToStep(index: number): void {
+    const tab = this.openProcTabs.find(t => t.proc.id === this.activeDetailId);
+    if (tab) {
+      tab.slideDir = index > tab.stepIndex ? 'right' : 'left';
+      tab.stepIndex = index;
     }
   }
 
