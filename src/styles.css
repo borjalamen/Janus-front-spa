@@ -9,17 +9,24 @@ html, body {
 /* Scrollbar global dorado (aplica a todos los elementos scrollables de Material) */
 .mat-drawer-content,
 .mat-sidenav-content,
-mat-sidenav-content {
+mat-sidenav-content,
+.mat-drawer-inner-container,
+mat-sidenav,
+mat-sidenav * {
   scrollbar-color: #FBC02D #000;
   scrollbar-width: thin;
 }
 .mat-drawer-content::-webkit-scrollbar,
-.mat-sidenav-content::-webkit-scrollbar {
+.mat-sidenav-content::-webkit-scrollbar,
+.mat-drawer-inner-container::-webkit-scrollbar,
+mat-sidenav::-webkit-scrollbar {
   width: 8px;
   background: #000;
 }
 .mat-drawer-content::-webkit-scrollbar-thumb,
-.mat-sidenav-content::-webkit-scrollbar-thumb {
+.mat-sidenav-content::-webkit-scrollbar-thumb,
+.mat-drawer-inner-container::-webkit-scrollbar-thumb,
+mat-sidenav::-webkit-scrollbar-thumb {
   background: #FBC02D;
   border-radius: 4px;
 }

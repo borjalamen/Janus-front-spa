@@ -694,7 +694,18 @@ body {
   flex: 1 1 auto;
   overflow-y: auto;
   scrollbar-color: #FBC02D #000;
+  scrollbar-width: thin;
   padding-bottom: 12px;
+}
+
+.scroll-nat-nav-list::-webkit-scrollbar {
+  width: 8px;
+  background: #000;
+}
+
+.scroll-nat-nav-list::-webkit-scrollbar-thumb {
+  background: #FBC02D;
+  border-radius: 4px;
 }
 
 /* Grupo de menú (encabezados de sección) */
