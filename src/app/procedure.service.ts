@@ -27,6 +27,8 @@ export interface Procedure {
   updatedAt?: string;
   visible?: boolean;
   deleted?: boolean;
+  createdByUsername?: string;
+  createdByEmail?: string;
 }
 
 @Injectable({ providedIn: 'root' })

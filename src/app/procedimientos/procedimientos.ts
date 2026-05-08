@@ -40,7 +40,7 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
   
   // Detall i Carrusel
   procDetall: Procedure | null = null;
-  mostrarDetallSteps = false;
+  showDetailTab = false;
   currentStepIndex = 0;
   slideDirection: 'left' | 'right' = 'right';
 
@@ -158,6 +158,14 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.modoForm === 'crear') {
+      const user = this.authService.currentUserValue;
+      if (user) {
+        this.procForm.createdByUsername = user.username;
+        this.procForm.createdByEmail = user.email || '';
+      }
+    }
+
     const obs = this.modoForm === 'editar' && this.procForm.id
       ? this.proceduresService.update(this.procForm.id, this.procForm)
       : this.proceduresService.create(this.procForm);
@@ -257,14 +265,14 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
 
   // ===== CARRUSEL / VISTA DETALL =====
 
-  verSteps(p: Procedure): void {
-    this.procDetall = p;
-    this.mostrarDetallSteps = true;
+  openProcDetail(proc: Procedure): void {
+    this.procDetall = proc;
+    this.showDetailTab = true;
     this.currentStepIndex = 0;
   }
 
-  tancarDetallSteps(): void {
-    this.mostrarDetallSteps = false;
+  closeProcDetail(): void {
+    this.showDetailTab = false;
     this.procDetall = null;
   }
 

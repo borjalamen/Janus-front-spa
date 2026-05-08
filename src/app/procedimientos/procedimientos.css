@@ -228,6 +228,10 @@
   transition: all 0.2s ease;
 }
 
+.procedure-row-clickable {
+  cursor: pointer;
+}
+
 .procedure-row:hover {
   border-color: rgba(251,192,45,0.6);
   box-shadow: 0 6px 18px rgba(0,0,0,0.7);
@@ -1110,3 +1114,56 @@
   flex-shrink: 0;
 }
 
+/* ========================= */
+/*   PESTAÑA DETALL + AUTOR  */
+/* ========================= */
+
+.procedure-detail-tab {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  gap: 6px;
+}
+
+.tab-close {
+  margin-left: 8px;
+  font-size: 13px;
+  opacity: 0.7;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  border-radius: 3px;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.tab-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.procedure-autor-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(251, 192, 45, 0.1);
+  border: 1px solid rgba(251, 192, 45, 0.35);
+  color: #FBC02D;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.procedure-autor-pill mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.procedure-autor-email {
+  opacity: 0.65;
+  font-style: italic;
+  margin-left: 4px;
+}

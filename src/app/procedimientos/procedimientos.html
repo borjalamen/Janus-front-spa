@@ -11,9 +11,15 @@
       <mat-icon inline="true">add</mat-icon>
       {{ 'PROCEDURES_SECTION.TAB_CREATE' | translate }}
     </button>
-    <button class="procedures-tab" [class.active]="activeTab==='listar'" (click)="activeTab='listar'">
+    <button class="procedures-tab" [class.active]="activeTab==='listar' && !showDetailTab" (click)="closeProcDetail(); activeTab='listar'">
       <mat-icon inline="true">list</mat-icon>
       {{ 'PROCEDURES_SECTION.TAB_LIST' | translate }}
+    </button>
+    <!-- Pestaña dinámica del procedimiento abierto -->
+    <button *ngIf="showDetailTab && procDetall" class="procedures-tab active procedure-detail-tab">
+      <mat-icon inline="true">description</mat-icon>
+      {{ procDetall.titulo || '(Sense títol)' }}
+      <span class="tab-close" (click)="closeProcDetail()" title="Cerrar">&#x2715;</span>
     </button>
   </div>
 
@@ -203,13 +209,13 @@
   <!-- Pestanya: Llistar -->
   <div *ngIf="activeTab==='listar'" class="procedures-tab-panel">
     <!-- MODE LLISTAT -->
-    <ng-container *ngIf="!mostrarDetallSteps; else detallStepsTpl">
+    <ng-container *ngIf="!showDetailTab">
       <p class="procedures-description">
         {{ 'PROCEDURES_SECTION.DESCRIPTION' | translate }}
       </p>
 
       <div class="procedures-list" *ngIf="procedimientosFiltrados.length > 0">
-        <div *ngFor="let p of procedimientosPaginados" class="procedure-row">
+        <div *ngFor="let p of procedimientosPaginados" class="procedure-row procedure-row-clickable" (click)="openProcDetail(p)">
           <!-- Cub entorn procediment -->
           <div
             class="procedure-icon"
@@ -243,6 +249,13 @@
                   {{ getNombreEntorno(p.entorno || '') }}
                 </span>
               </span>
+
+              <!-- Autor / creador del procediment -->
+              <span class="procedure-autor-pill" *ngIf="p.createdByUsername">
+                <mat-icon inline="true">person</mat-icon>
+                {{ p.createdByUsername }}
+                <span *ngIf="p.createdByEmail" class="procedure-autor-email">{{ p.createdByEmail }}</span>
+              </span>
             </div>
 
             <div class="procedure-text" *ngIf="p.descripcion">
@@ -273,21 +286,14 @@
 
             <div class="procedure-actions">
               <button
-                class="procedure-action-btn procedure-view-btn"
-                (click)="verSteps(p)"
-                title="Veure steps"
-                *ngIf="p.steps && p.steps.length > 0">
-                👁️
-              </button>
-              <button
                 class="procedure-action-btn procedure-edit-btn"
-                (click)="obrirPopupEditar(p)"
+                (click)="$event.stopPropagation(); obrirPopupEditar(p)"
                 title="Editar">
                 ✏️
               </button>
               <button
                 class="procedure-action-btn procedure-delete-btn"
-                (click)="confirmarEliminar(p)"
+                (click)="$event.stopPropagation(); confirmarEliminar(p)"
                 title="Eliminar">
                 🗑️
               </button>
@@ -330,14 +336,13 @@
       </div>
     </ng-container>
 
-    <!-- MODE DETALL STEPS (mateixa vista) -->
-    <ng-template #detallStepsTpl>
-      <div class="procedure-steps-detail-container" *ngIf="procDetall">
-        <!-- Header: títol + data + entorn -->
-        <div class="procedure-steps-detail-header">
-          <button class="procedure-detail-back-btn" (click)="tancarDetallSteps()" title="Tornar">
-            <mat-icon>arrow_back</mat-icon>
-          </button>
+    <!-- MODE DETALL STEPS -->
+    <div *ngIf="showDetailTab && procDetall" class="procedure-steps-detail-container">
+      <!-- Header: títol + data + entorn -->
+      <div class="procedure-steps-detail-header">
+        <button class="procedure-detail-back-btn" (click)="closeProcDetail()" title="Tornar">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
 
           <div class="procedure-steps-detail-title">
             <div class="procedure-steps-detail-title-row">
@@ -451,7 +456,6 @@
           <p>{{ 'PROCEDURES_SECTION.NO_STEPS' | translate }}</p>
         </div>
       </div>
-    </ng-template>
   </div>
 </div>
 
