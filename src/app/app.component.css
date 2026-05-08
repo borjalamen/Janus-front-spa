@@ -114,18 +114,13 @@ mat-nav-list a mat-icon {
 }
 
 /* RESPONSIVE menú lateral */
-@media (max-width: 767px) {
+@media (max-width: 1099px) {
   .hamburger-btn { display: flex; align-items: center; }
+  .app-title { display: none; }
   mat-sidenav {
     width: 75vw;
     min-width: 200px;
     max-width: 300px;
-  }
-}
-@media (min-width: 768px) and (max-width: 800px) {
-  mat-sidenav {
-    width: 64vw;
-    min-width: 180px;
   }
 }
 

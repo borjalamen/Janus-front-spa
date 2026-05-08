@@ -134,7 +134,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    const mobile = window.innerWidth < 768;
+    const mobile = window.innerWidth < 1100;
     if (mobile !== this.isMobile) {
       this.isMobile = mobile;
       this.sidenavOpen = !mobile;
@@ -226,7 +226,7 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.isMobile = window.innerWidth < 768;
+    this.isMobile = window.innerWidth < 1100;
     this.sidenavOpen = !this.isMobile;
 
     this.versionSubscription = this.apiService.version$.subscribe(v => {
