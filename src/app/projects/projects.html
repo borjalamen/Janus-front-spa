@@ -54,7 +54,10 @@
         ></app-buscador>
 
         <div class="projects-grid">
-          <div class="project-card" *ngFor="let p of pagedProjectesFiltrats">
+          <div class="project-card project-card-clickable" *ngFor="let p of pagedProjectesFiltrats"
+            (click)="openProjectDetail(p, 'view')"
+            title="{{ 'PROJECTS.VIEW' | translate }}"
+          >
             <div class="project-top">
               <div class="project-title">
                 {{ (p.codigoProyecto || '-') + ' | ' + (p.nombre ||
@@ -69,14 +72,6 @@
             </div>
 
             <div class="project-actions">
-              <button
-                class="icon-btn view"
-                title="{{ 'PROJECTS.VIEW' | translate }}"
-                (click)="openProjectDetail(p, 'view'); $event.stopPropagation()"
-              >
-                <span class="emoji-icon">👁️</span>
-              </button>
-
               <button
                 *ngIf="authService.canManageProjects"
                 class="icon-btn edit"

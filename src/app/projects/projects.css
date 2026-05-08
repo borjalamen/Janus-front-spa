@@ -266,6 +266,10 @@ body {
     0 10px 24px rgba(37, 99, 235, 0.6);
 }
 
+.project-card-clickable {
+  cursor: pointer;
+}
+
 .project-title {
   font-size: 16px;
   font-weight: 800;
