@@ -233,12 +233,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   private loadProjects() {
     this.isLoading = true;
-    console.log("🔄 Cargando proyectos desde API...");
 
     this.projectService.getAll().subscribe({
       next: (projects) => {
-        console.log("✅ Proyectos cargados:", projects);
-
         const sorted = (projects as Proyecto[])
           .slice()
           .sort((a, b) => Number(b.id) - Number(a.id));
@@ -273,7 +270,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.projectService.getDepartments().subscribe({
       next: (departments) => {
         this.departments = departments;
-        console.log("✅ Departamentos cargados:", departments);
       },
       error: (err) => {
         console.error("❌ Error al cargar departamentos:", err);
@@ -319,10 +315,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(
-      `📖 Cargando proyecto completo ${project.codigoProyecto} desde backend...`,
-    );
-
     if (project.codigoProyecto) {
       this.storage.set(this.STORAGE_LAST_PROJECT_KEY, project.codigoProyecto);
     }
@@ -338,11 +330,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (project.id) {
       this.projectService.getById(project.id).subscribe({
         next: (fullProject) => {
-          console.log("✅ Proyecto completo cargado:", fullProject);
-          console.log(
-            "📄 Documentos en proyecto:",
-            (fullProject as any).documents,
-          );
           const fp = fullProject as Proyecto;
           this.openProjectTabs.push({ project: fp, mode });
           this.activeProjectId = fp.id ?? null;
@@ -1034,8 +1021,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     let uploadedCount = 0;
     const totalDocs = this.newProjectDocuments.length;
 
-    console.log(`📤 Subiendo ${totalDocs} documento(s)...`);
-
     this.newProjectDocuments.forEach((doc) => {
       const formData = new FormData();
       formData.append("file", doc.file);
@@ -1044,15 +1029,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.projectService.uploadProjectDocument(projectId, formData).subscribe({
         next: (response) => {
           uploadedCount++;
-          console.log(
-            `✅ Documento ${uploadedCount}/${totalDocs} subido:`,
-            response,
-          );
 
           if (uploadedCount === totalDocs) {
-            console.log(
-              "✅ Todos los documentos subidos. Recargando proyecto...",
-            );
             this.reloadProject(projectId);
             this.newProjectDocuments = [];
           }
@@ -1079,7 +1057,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         if (idx !== -1) {
           this.projectes[idx] = updatedProject as Proyecto;
           this.projectesFiltrats = [...this.projectes];
-          console.log("✅ Proyecto recargado con documentos:", updatedProject);
         }
       },
       error: (err) => {

@@ -13,7 +13,6 @@ export class DocumentService {
   private baseUrl = "http://localhost:8080/api/documentos";
 
   constructor(private http: HttpClient) {
-    console.log("DocumentService baseUrl =", this.baseUrl);
   }
 
   // GET /getAllFolders

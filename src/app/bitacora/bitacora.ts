@@ -250,7 +250,6 @@ export class BitacoraComponent implements OnInit {
   cargarBitacoras() {
     this.http.get<any[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
-        console.log('✅ Bitácoras cargadas:', data);
         // Normalize entorno: backend stores as comma-string, frontend uses string[]
         this.errores = data.map(e => ({
           ...e,

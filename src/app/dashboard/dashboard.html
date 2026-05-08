@@ -56,6 +56,7 @@
           </div>
         </div>
 
+        <!-- Solicitudes de acceso — Admin: clicable -->
         <div class="kpi-card kpi-join" *ngIf="rol === 'admin'" [routerLink]="['/administracion']">
           <mat-icon class="kpi-icon">person_add</mat-icon>
           <div class="kpi-body">
@@ -64,6 +65,18 @@
           </div>
           <div class="kpi-detail" *ngIf="kpis.join.pendientes > 0">
             <span class="badge badge-pendiente pulse">{{ 'HOME.KPI.ATENCION' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Solicitudes de acceso — DevOps: solo informativo, sin enlace -->
+        <div class="kpi-card kpi-join kpi-no-link" *ngIf="rol === 'devops'">
+          <mat-icon class="kpi-icon">person_add</mat-icon>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ kpis.join.pendientes }}</div>
+            <div class="kpi-label">{{ 'HOME.KPI.JOIN_PENDIENTES' | translate }}</div>
+          </div>
+          <div class="kpi-detail">
+            <span class="badge badge-default">{{ 'HOME.KPI.JOIN_SOLO_ADMIN' | translate }}</span>
           </div>
         </div>
 

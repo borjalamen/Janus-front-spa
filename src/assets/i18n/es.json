@@ -151,6 +151,7 @@
       "PROYECTOS": "Proyectos",
       "BITACORA": "Bitácora",
       "JOIN_PENDIENTES": "Solicitudes de acceso",
+      "JOIN_SOLO_ADMIN": "Gestión exclusiva del Admin",
       "ATENCION": "atención",
       "USUARIOS": "Usuarios",
       "BACKLOG": "Backlog",

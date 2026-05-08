@@ -305,36 +305,24 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    // Inicializar datos cuando el proyecto esté disponible
-    console.log("🔵 ngOnInit - proyecto:", this.proyecto);
     if (this.proyecto) {
-      console.log("🔵 ngOnInit - Inicializando datos del proyecto");
       this.initializeProjectData();
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log("🔵 ngOnChanges:", changes);
     if (changes["proyecto"] && changes["proyecto"].currentValue) {
-      console.log("🔵 Proyecto cambió:", changes["proyecto"].currentValue);
       this.initializeProjectData();
     }
     if (changes["mode"]) {
       this.routeMode = this.mode === "edit" ? "edit" : "view";
       this.editing = this.mode === "edit";
     }
-    if (changes["proyecto"]) {
-      // Cargar datos cuando el proyecto cambia (incluso en el primer cambio)
-      if (this.proyecto) {
-        this.initializeProjectData();
-      }
-    }
   }
 
   private initializeProjectData() {
     if (!this.proyecto) return;
 
-    console.log("🔵 initializeProjectData - proyecto completo:", this.proyecto);
     const p = this.proyecto;
     p.ip = p.ip || [];
     (p as any).entornoNotas = (p as any).entornoNotas || "";
@@ -344,21 +332,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.ipString = (p.ip || []).join(", ");
 
     // Cargar documentos agregados durante creación
-    console.log("🔵 proyecto.documents RAW:", (p as any).documents);
-    console.log("🔵 Es array?:", Array.isArray((p as any).documents));
     this.projectDocumentsFromCreation =
       (p as any).documents && Array.isArray((p as any).documents)
         ? (p as any).documents
         : [];
-
-    console.log(
-      "📄 Documentos cargados en projectDocumentsFromCreation:",
-      this.projectDocumentsFromCreation,
-    );
-    console.log(
-      "📄 Cantidad de documentos:",
-      this.projectDocumentsFromCreation?.length || 0,
-    );
 
     // Limpiar URLs previas
     this.documentPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -1431,7 +1408,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       .uploadProjectDocument(this.proyecto.id, formData)
       .subscribe({
         next: (response: any) => {
-          console.log("✅ Documento subido:", response);
           if (response.document) {
             // Agregar el documento a la lista
             this.projectDocumentsFromCreation = [
@@ -1443,10 +1419,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
                 ...this.projectDocumentsFromCreation,
               ];
             }
-            console.log(
-              "📄 Lista actualizada de documentos:",
-              this.projectDocumentsFromCreation,
-            );
 
             // Cargar preview del nuevo documento
             setTimeout(() => {
@@ -1512,7 +1484,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
           this.loadProjectDocuments();
 
-          console.log("✅ Documento eliminado correctamente:", documentName);
           this.showToast("✅ Documento eliminado correctamente");
         },
         error: (err: any) => {

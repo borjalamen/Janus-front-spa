@@ -794,13 +794,11 @@ export class AdministracionComponent implements OnInit {
   private cargarPeticionsTareas() {
     this.http.get<PeticionTareaBackend[]>(this.peticionsTareasUrl).subscribe({
       next: (data) => {
-        console.log("TAREAS RAW", data);
         // Invertir orden: más nuevas arriba
         this.peticionsTareas = data
           .reverse()
           .map((p) => this.mapPeticionTarea(p));
         this.aplicarFiltrosTareas();
-        console.log("TAREAS ADMIN", this.peticionsTareas);
       },
 
       error: (err) => {
@@ -1474,7 +1472,7 @@ export class AdministracionComponent implements OnInit {
 
   cargarVersion() {
     this.http
-      .get<string>(`${environment.baseUrl}/config/parametrization/version`, {
+      .get<string>(`${environment.baseUrl}config/parametrization/version`, {
         responseType: "text" as "json",
       })
       .subscribe({

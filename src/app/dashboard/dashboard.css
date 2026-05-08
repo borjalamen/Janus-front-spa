@@ -81,6 +81,14 @@
   border-color: #FBC02D;
   transform: translateY(-2px);
 }
+.kpi-no-link {
+  cursor: default;
+  opacity: 0.75;
+}
+.kpi-no-link:hover {
+  border-color: #2a2d33;
+  transform: none;
+}
 .kpi-card::before {
   content: '';
   position: absolute;

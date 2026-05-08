@@ -56,16 +56,14 @@ export class DescargablesComponent implements OnInit {
     this.searchText = savedFilter || '';
 
     const url = 'assets/documents/index.json';
-    console.debug('Descargables: fetching', url);
     this.http.get<DocumentoIndexItem[]>(url)
       .subscribe({
         next: data => {
-          console.debug('Descargables: index loaded', data);
           this.documentos = data ?? [];
           this.loading = false;
         },
         error: (err) => {
-          console.error('Descargables: error loading index', err);
+          this.documentos = [];
           this.documentos = [];
           this.loading = false;
           this.loadError = true;

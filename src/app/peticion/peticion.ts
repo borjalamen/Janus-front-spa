@@ -100,8 +100,6 @@ export class PeticionComponent implements OnInit {
   private loadDevopsUsers(): void {
     this.http.get<any[]>(`${environment.baseUrl}users/all`).subscribe({
       next: (users) => {
-        console.log("USUARIOS API", users);
-
         const devopsUsers = (users || []).filter((u) => {
           const roles = Array.isArray(u?.roles)
             ? u.roles.map((r: string) => String(r || "").toUpperCase().trim())

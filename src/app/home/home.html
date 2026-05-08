@@ -1,82 +1,134 @@
 <div class="menu-content-scroll">
-  <div class="section-container">
+  <div class="home-page">
 
-    <h2>{{ 'HOME.TITLE' | translate }}</h2>
-    <p>{{ 'HOME.INTRO' | translate }}</p>
+    <!-- ── HERO ─────────────────────────────────────────────── -->
+    <div class="home-hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <mat-icon>hub</mat-icon>
+          <span>JanusHUB</span>
+        </div>
+        <h1 class="hero-title">{{ 'HOME.TITLE' | translate }}</h1>
+        <p class="hero-intro">{{ 'HOME.INTRO' | translate }}</p>
+      </div>
+      <div class="hero-deco" aria-hidden="true">
+        <mat-icon class="hero-icon-big">rocket_launch</mat-icon>
+      </div>
+    </div>
 
-    <hr />
+    <!-- ── FILA: Quiénes somos + Misión ─────────────────────── -->
+    <div class="home-row2">
+      <div class="home-card home-who">
+        <div class="card-header">
+          <mat-icon class="card-icon">groups</mat-icon>
+          <h2 class="card-title">{{ 'HOME.WHO_WE_ARE' | translate }}</h2>
+        </div>
+        <p class="card-text">{{ 'HOME.WHO_WE_ARE_TEXT' | translate }}</p>
+      </div>
 
-    <h2>{{ 'HOME.WHO_WE_ARE' | translate }}</h2>
-    <p>{{ 'HOME.WHO_WE_ARE_TEXT' | translate }}</p>
+      <div class="home-card home-mission">
+        <div class="card-header">
+          <mat-icon class="card-icon">flag</mat-icon>
+          <h2 class="card-title">{{ 'HOME.MISSION' | translate }}</h2>
+        </div>
+        <p class="card-text mission-intro">{{ 'HOME.MISSION_INTRO' | translate }}</p>
+        <div class="mission-pills">
+          <span class="mission-pill"><mat-icon>speed</mat-icon>{{ 'HOME.MISSION_ITEMS.FASTER' | translate }}</span>
+          <span class="mission-pill"><mat-icon>verified</mat-icon>{{ 'HOME.MISSION_ITEMS.QUALITY' | translate }}</span>
+          <span class="mission-pill"><mat-icon>checklist</mat-icon>{{ 'HOME.MISSION_ITEMS.STANDARDIZED' | translate }}</span>
+          <span class="mission-pill"><mat-icon>devices</mat-icon>{{ 'HOME.MISSION_ITEMS.TECH_AGNOSTIC' | translate }}</span>
+        </div>
+      </div>
+    </div>
 
-    <hr />
+    <!-- ── QUÉ HACEMOS ───────────────────────────────────────── -->
+    <div class="home-card">
+      <div class="card-header">
+        <mat-icon class="card-icon">build</mat-icon>
+        <h2 class="card-title">{{ 'HOME.WHAT_WE_DO' | translate }}</h2>
+      </div>
+      <div class="whatwedo-grid">
+        <div class="whatwedo-item wd-item-devops">
+          <mat-icon class="wd-icon wd-devops">engineering</mat-icon>
+          <strong>{{ 'HOME.WHAT_WE_DO_DEVOPS' | translate }}</strong>
+          <ul>
+            <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.CULTURE' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.ADVICE' | translate }}</li>
+          </ul>
+        </div>
+        <div class="whatwedo-item wd-item-cicd">
+          <mat-icon class="wd-icon wd-cicd">loop</mat-icon>
+          <strong>{{ 'HOME.WHAT_WE_DO_CICD' | translate }}</strong>
+          <ul>
+            <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.PIPELINES' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.AUTOMATION' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.SONARQUBE' | translate }}</li>
+          </ul>
+        </div>
+        <div class="whatwedo-item wd-item-env">
+          <mat-icon class="wd-icon wd-env">cloud</mat-icon>
+          <strong>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS' | translate }}</strong>
+          <ul>
+            <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.CLOUD' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.ON_PREM' | translate }}</li>
+          </ul>
+        </div>
+        <div class="whatwedo-item wd-item-db">
+          <mat-icon class="wd-icon wd-db">storage</mat-icon>
+          <strong>{{ 'HOME.WHAT_WE_DO_DATABASES' | translate }}</strong>
+          <ul>
+            <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.SQL' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.NOSQL' | translate }}</li>
+          </ul>
+        </div>
+        <div class="whatwedo-item wd-item-gov">
+          <mat-icon class="wd-icon wd-gov">school</mat-icon>
+          <strong>{{ 'HOME.WHAT_WE_DO_GOVERNANCE' | translate }}</strong>
+          <ul>
+            <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TEMPLATES' | translate }}</li>
+            <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TRAINING' | translate }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-    <h2>{{ 'HOME.WHAT_WE_DO' | translate }}</h2>
-    <ul class="no-list">
-      ? <strong>{{ 'HOME.WHAT_WE_DO_DEVOPS' | translate }}</strong>
-      <ul>
-        <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.CULTURE' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_DEVOPS_ITEMS.ADVICE' | translate }}</li>
-      </ul>
-
-      ? <strong>{{ 'HOME.WHAT_WE_DO_CICD' | translate }}</strong>
-      <ul>
-        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.PIPELINES' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.AUTOMATION' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_CICD_ITEMS.SONARQUBE' | translate }}</li>
-      </ul>
-
-      ? <strong>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS' | translate }}</strong>
-      <ul>
-        <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.CLOUD' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_ENVIRONMENTS_ITEMS.ON_PREM' | translate }}</li>
-      </ul>
-
-      ? <strong>{{ 'HOME.WHAT_WE_DO_DATABASES' | translate }}</strong>
-      <ul>
-        <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.SQL' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_DATABASES_ITEMS.NOSQL' | translate }}</li>
-      </ul>
-
-      ? <strong>{{ 'HOME.WHAT_WE_DO_GOVERNANCE' | translate }}</strong>
-      <ul>
-        <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TEMPLATES' | translate }}</li>
-        <li>{{ 'HOME.WHAT_WE_DO_GOVERNANCE_ITEMS.TRAINING' | translate }}</li>
-      </ul>
-    </ul>
-
-    <hr />
-
-    <h2>{{ 'HOME.MISSION' | translate }}</h2>
-    <p>{{ 'HOME.MISSION_INTRO' | translate }}</p>
-    <ul>
-      <li>{{ 'HOME.MISSION_ITEMS.FASTER' | translate }}</li>
-      <li>{{ 'HOME.MISSION_ITEMS.QUALITY' | translate }}</li>
-      <li>{{ 'HOME.MISSION_ITEMS.STANDARDIZED' | translate }}</li>
-      <li>{{ 'HOME.MISSION_ITEMS.TECH_AGNOSTIC' | translate }}</li>
-    </ul>
-
-    <hr />
-
-    <h2>{{ 'HOME.CONTACT' | translate }}</h2>
-    <ul>
-      <li>
-        <strong>{{ 'HOME.CONTACT_LIST.RAUL' | translate }}</strong> �
-        <a href="mailto:rgallegoga@minsait.com">rgallegoga@minsait.com??</a>
-      </li>
-      <li>
-        <strong>{{ 'HOME.CONTACT_LIST.RUBEN' | translate }}</strong> �
-        <a href="mailto:rplante@minsait.com">rplante@minsait.com??</a>
-      </li>
-      <li>
-        <strong>{{ 'HOME.CONTACT_LIST.FERNANDO' | translate }}</strong> �
-        <a href="mailto:fsgil@minsait.com">fsgil@minsait.com??</a>
-      </li>
-      <li>
-        <strong>{{ 'HOME.CONTACT_LIST.BORJA' | translate }}</strong> �
-        <a href="mailto:blara@eservicios.indra.es">blara@eservicios.indra.es??</a>
-      </li>
-    </ul>
+    <!-- ── CONTACTO ──────────────────────────────────────────── -->
+    <div class="home-card">
+      <div class="card-header">
+        <mat-icon class="card-icon">email</mat-icon>
+        <h2 class="card-title">{{ 'HOME.CONTACT' | translate }}</h2>
+      </div>
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:rgallegoga@minsait.com">
+          <div class="contact-avatar ca-1">RG</div>
+          <div class="contact-info">
+            <span class="contact-name">{{ 'HOME.CONTACT_LIST.RAUL' | translate }}</span>
+            <span class="contact-email">rgallegoga@minsait.com</span>
+          </div>
+        </a>
+        <a class="contact-card" href="mailto:rplante@minsait.com">
+          <div class="contact-avatar ca-2">RP</div>
+          <div class="contact-info">
+            <span class="contact-name">{{ 'HOME.CONTACT_LIST.RUBEN' | translate }}</span>
+            <span class="contact-email">rplante@minsait.com</span>
+          </div>
+        </a>
+        <a class="contact-card" href="mailto:fsgil@minsait.com">
+          <div class="contact-avatar ca-3">FS</div>
+          <div class="contact-info">
+            <span class="contact-name">{{ 'HOME.CONTACT_LIST.FERNANDO' | translate }}</span>
+            <span class="contact-email">fsgil@minsait.com</span>
+          </div>
+        </a>
+        <a class="contact-card" href="mailto:blara@eservicios.indra.es">
+          <div class="contact-avatar ca-4">BL</div>
+          <div class="contact-info">
+            <span class="contact-name">{{ 'HOME.CONTACT_LIST.BORJA' | translate }}</span>
+            <span class="contact-email">blara@eservicios.indra.es</span>
+          </div>
+        </a>
+      </div>
+    </div>
 
   </div>
 </div>

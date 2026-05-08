@@ -156,6 +156,7 @@
       "PROYECTOS": "Projects",
       "BITACORA": "Logbook",
       "JOIN_PENDIENTES": "Access requests",
+      "JOIN_SOLO_ADMIN": "Managed by Admin only",
       "ATENCION": "attention",
       "USUARIOS": "Users",
       "BACKLOG": "Backlog",
