@@ -4,10 +4,10 @@
   <div class="tabs" role="tablist" aria-label="Training tabs">
     <button
       role="tab"
-      aria-selected="{{ activeTab === 'all' }}"
+      aria-selected="{{ activeTab === 'all' && !showCourseDetail }}"
       class="tab"
-      [class.active]="activeTab === 'all'"
-      (click)="setTab('all')"
+      [class.active]="activeTab === 'all' && !showCourseDetail"
+      (click)="setTab('all'); activeCourseTabId = null"
     >
       <mat-icon inline="true">list</mat-icon>
       {{ 'TRAINING.TABS.ALL' | translate }}
@@ -15,195 +15,173 @@
 
     <button
       role="tab"
-      aria-selected="{{ activeTab === 'paths' }}"
+      aria-selected="{{ activeTab === 'paths' && !showCourseDetail }}"
       class="tab"
-      [class.active]="activeTab === 'paths'"
-      (click)="setTab('paths')"
+      [class.active]="activeTab === 'paths' && !showCourseDetail"
+      (click)="setTab('paths'); activeCourseTabId = null; activePathTabId = null"
     >
       <mat-icon inline="true">account_tree</mat-icon>
       {{ 'TRAINING.TABS.PATHS' | translate }}
     </button>
+
+    <!-- Pestañas dinámicas de cursos abiertos -->
+    <button
+      *ngFor="let tab of openCourseTabs"
+      class="tab course-detail-tab"
+      [class.active]="activeCourseTabId === tab.item.id"
+      (click)="activeCourseTabId = tab.item.id"
+    >
+      <mat-icon inline="true">{{ tab.readonly ? 'visibility' : 'edit' }}</mat-icon>
+      {{ tab.item.name }}
+      <span class="tab-close" (click)="$event.stopPropagation(); closeCourseTab(tab.item.id)" title="Cerrar">&#x2715;</span>
+    </button>
+
+    <!-- Pestañas dinámicas de rutas formativas abiertas -->
+    <button
+      *ngFor="let tab of openPathTabs"
+      class="tab path-detail-tab"
+      [class.active]="activePathTabId === tab.path.id"
+      (click)="activePathTabId = tab.path.id"
+    >
+      <mat-icon inline="true">{{ tab.readonly ? 'visibility' : 'edit' }}</mat-icon>
+      {{ tab.path.name }}
+      <span class="tab-close" (click)="$event.stopPropagation(); closePathTab(tab.path.id)" title="Cerrar">&#x2715;</span>
+    </button>
   </div>
 
   <div class="training-body">
-    <div class="left" *ngIf="isTab('paths')">
-      <div class="left-header">
-        <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
-        <div class="all-courses-actions">
-          <button
-            class="jenkins-add-btn"
-            *ngIf="!isConsultor"
-            (click)="newPath()"
-          >
-            <mat-icon inline="true">add</mat-icon>
-            <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
-          </button>
-          <button
-            *ngIf="!isConsultor"
-            class="import-excel-btn"
-            (click)="triggerImportPathInput()"
-            title="Importar training paths desde Excel"
-          >
-            <mat-icon inline="true">upload_file</mat-icon>
-            <span>Importar Excel</span>
-          </button>
-          <button
-            *ngIf="!isConsultor"
-            class="template-btn"
-            (click)="downloadPathExcelTemplate()"
-            title="Descargar plantilla Excel de training paths"
-          >
-            <mat-icon inline="true">download</mat-icon>
-            <span>Plantilla</span>
-          </button>
-          <input
-            id="excel-import-path-input"
-            type="file"
-            accept=".xlsx,.xls"
-            style="display:none"
-            (change)="onPathExcelFileSelected($event)"
-          />
+
+    <!-- ═══ TABLA RUTAS FORMATIVAS ═══ -->
+    <div class="all-courses" *ngIf="isTab('paths') && !showPathDetail">
+      <div class="left" style="width: 100%">
+        <div class="left-header all-courses-header">
+          <h2>{{ 'TRAINING.TITLE' | translate }}</h2>
+          <div class="all-courses-actions">
+            <button class="jenkins-add-btn" *ngIf="!isConsultor" (click)="newPath()">
+              <mat-icon inline="true">add</mat-icon>
+              <span>{{ 'TRAINING.NEW_PATH' | translate }}</span>
+            </button>
+            <button *ngIf="!isConsultor" class="import-excel-btn" (click)="triggerImportPathInput()" title="Importar training paths desde Excel">
+              <mat-icon inline="true">upload_file</mat-icon>
+              <span>Importar Excel</span>
+            </button>
+            <button *ngIf="!isConsultor" class="template-btn" (click)="downloadPathExcelTemplate()" title="Descargar plantilla Excel de training paths">
+              <mat-icon inline="true">download</mat-icon>
+              <span>Plantilla</span>
+            </button>
+            <input id="excel-import-path-input" type="file" accept=".xlsx,.xls" style="display:none" (change)="onPathExcelFileSelected($event)" />
+          </div>
+        </div>
+
+        <div class="course-grid-wrapper">
+          <table class="course-grid-table">
+            <thead>
+              <tr>
+                <th class="col-idx">#</th>
+                <th>{{ 'TRAINING.NAME' | translate }}</th>
+                <th>{{ 'TRAINING.AUDIENCE' | translate }}</th>
+                <th>{{ 'TRAINING.OBJECTIVES' | translate }}</th>
+                <th class="col-num">Nº cursos</th>
+                <th class="cactions-cell">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of filteredPaths; let i = index">
+                <td class="col-idx">{{ i + 1 }}</td>
+                <td><strong>{{ p.name }}</strong></td>
+                <td class="col-meta">{{ p.audience }}</td>
+                <td class="col-meta">{{ p.objectives }}</td>
+                <td class="col-num">{{ p.items.length }}</td>
+                <td class="cactions-cell">
+                  <button type="button" class="icon-btn view" (click)="viewPath(p)" title="{{ 'TRAINING.VIEW' | translate }}"><span class="icon-eye">👁️</span></button>
+                  <button *ngIf="!isConsultor" type="button" class="icon-btn edit" (click)="editPath(p)" title="{{ 'TRAINING.EDIT' | translate }}"><span class="icon-edit">✏️</span></button>
+                  <button *ngIf="!isConsultor" type="button" class="icon-btn delete" (click)="confirmDeletePath(p.id, p.name)" title="{{ 'TRAINING.DELETE' | translate }}"><span class="icon-delete">🗑️</span></button>
+                </td>
+              </tr>
+              <tr *ngIf="filteredPaths.length === 0">
+                <td colspan="6" style="text-align:center;color:#546e7a;padding:24px">No hay rutas formativas</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <ul class="paths-list">
-        <li
-          *ngFor="let p of filteredPaths"
-          (click)="selectPath(p)"
-          [class.selected]="selectedPath?.id === p.id"
-        >
-          <strong>{{ p.name }}</strong>
-          <div class="meta">{{ p.audience }}</div>
-
-          <div class="actions">
-            <button
-              type="button"
-              class="icon-btn view"
-              title="{{ 'TRAINING.VIEW' | translate }}"
-              (click)="selectPath(p); $event.stopPropagation()"
-            >
-              <span class="icon-eye">👁️</span>
-            </button>
-            <button
-              *ngIf="!isConsultor"
-              type="button"
-              class="icon-btn edit"
-              title="{{ 'TRAINING.EDIT' | translate }}"
-              (click)="editPath(p); $event.stopPropagation()"
-            >
-              <span class="icon-edit">✏️</span>
-            </button>
-            <button
-              *ngIf="!isConsultor"
-              type="button"
-              class="icon-btn delete"
-              title="{{ 'TRAINING.DELETE' | translate }}"
-              (click)="confirmDeletePath(p.id, p.name); $event.stopPropagation()"
-            >
-              <span class="icon-delete">🗑️</span>
-            </button>
-          </div>
-        </li>
-      </ul>
     </div>
 
-    <div class="right" *ngIf="isTab('paths')">
-      <div *ngIf="selectedPath; else noSelection">
-        <div class="path-header">
-          <h3>{{ selectedPath.name }}</h3>
-          <button
-            class="icon-btn csv-image-btn"
-            (click)="exportPathToCsv()"
-            title="{{ 'TRAINING.EXPORT' | translate }}"
-          >
-            <img
-              src="assets/images/ExportarCSV.png"
-              alt="Exportar CSV"
-              class="csv-export-image"
-            />
-          </button>
-        </div>
-
-        <div class="path-meta">
-          <div>
-            <strong>{{ 'TRAINING.AUDIENCE' | translate }}:</strong> {{
-            selectedPath.audience }}
+    <!-- ═══ PANEL DETALLE RUTA (pestaña abierta) ═══ -->
+    <div class="all-courses" *ngIf="showPathDetail && activePathTab">
+      <div class="left" style="width:100%">
+        <div class="course-detail-panel">
+          <div class="course-detail-header">
+            <h3>{{ activePathTab.readonly ? ('TRAINING.VIEW' | translate) : ('TRAINING.EDIT_PATH' | translate) }}: <span class="course-detail-name">{{ activePathTab.path.name }}</span></h3>
+            <button class="course-detail-close-btn" (click)="closePathTab(activePathTab.path.id)" title="Cerrar">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
-          <div>
-            <strong>{{ 'TRAINING.OBJECTIVES' | translate }}:</strong> {{
-            selectedPath.objectives }}
-          </div>
-          <div>
-            <strong>{{ 'TRAINING.PREREQUISITES' | translate }}:</strong> {{
-            selectedPath.prerequisites }}
-          </div>
-        </div>
 
-        <div class="items-header">
-          <h4>{{ 'TRAINING.ITEMS' | translate }}</h4>
-          <button
-            class="jenkins-add-btn"
-            *ngIf="!isConsultor"
-            (click)="addItem()"
-          >
-            <mat-icon inline="true">add</mat-icon>
-            <span>{{ 'TRAINING.ADD_ITEM' | translate }}</span>
-          </button>
-        </div>
-
-        <ul
-          class="items-list"
-          cdkDropList
-          (cdkDropListDropped)="dropItem($event)"
-          *ngIf="selectedPath"
-        >
-          <li *ngFor="let it of selectedPath.items; let i = index" cdkDrag>
-            <div class="item-main" (click)="openCourseLink(it)">
-              <div class="item-number">{{ i + 1 }}</div>
-              <div class="item-content">
-                <strong>{{ it.name }}</strong>
-                <div class="item-desc">{{ it.description }}</div>
-                <div class="item-tags" *ngIf="it.tags?.length">
-                  <span class="tag" *ngFor="let tag of it.tags">{{ tag }}</span>
-                </div>
-              </div>
-              <div class="item-actions">
-                <button
-                  type="button"
-                  class="icon-btn view"
-                  (click)="viewCourse(it); $event.stopPropagation()"
-                >
-                  <span class="icon-eye">👁️</span>
-                </button>
-                <button
-                  *ngIf="!isConsultor"
-                  type="button"
-                  class="icon-btn edit"
-                  (click)="editItem(it); $event.stopPropagation()"
-                >
-                  <span class="icon-edit">✏️</span>
-                </button>
-                <button
-                  *ngIf="!isConsultor"
-                  type="button"
-                  class="icon-btn delete"
-                  (click)="confirmDeleteItem(it.id, it.name); $event.stopPropagation()"
-                >
-                  <span class="icon-delete">🗑️</span>
-                </button>
-              </div>
+          <!-- Campos de la ruta -->
+          <div class="course-detail-form">
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="pd-name">{{ 'TRAINING.NAME' | translate }}</label>
+              <input id="pd-name" class="course-detail-input" [(ngModel)]="activePathTab.path.name" [readonly]="activePathTab.readonly" />
             </div>
-          </li>
-        </ul>
-      </div>
-      <ng-template #noSelection>
-        <div class="no-selection">
-          {{ 'TRAINING.NO_SELECTION' | translate }}
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="pd-audience">{{ 'TRAINING.AUDIENCE' | translate }}</label>
+              <input id="pd-audience" class="course-detail-input" [(ngModel)]="activePathTab.path.audience" [readonly]="activePathTab.readonly" />
+            </div>
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="pd-objectives">{{ 'TRAINING.OBJECTIVES' | translate }}</label>
+              <textarea id="pd-objectives" class="course-detail-input course-detail-textarea" rows="3" [(ngModel)]="activePathTab.path.objectives" [readonly]="activePathTab.readonly"></textarea>
+            </div>
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="pd-prereq">{{ 'TRAINING.PREREQUISITES' | translate }}</label>
+              <textarea id="pd-prereq" class="course-detail-input course-detail-textarea" rows="2" [(ngModel)]="activePathTab.path.prerequisites" [readonly]="activePathTab.readonly"></textarea>
+            </div>
+          </div>
+
+          <!-- Lista de cursos de la ruta -->
+          <div class="path-items-section">
+            <div class="path-items-header">
+              <h4>{{ 'TRAINING.ITEMS' | translate }} <span class="path-items-count">({{ activePathTab.path.items.length }})</span></h4>
+              <button class="jenkins-add-btn" *ngIf="!activePathTab.readonly && !isConsultor" (click)="openCourseSelectorForPathTab()">
+                <mat-icon inline="true">add</mat-icon>
+                <span>{{ 'TRAINING.ADD_ITEM' | translate }}</span>
+              </button>
+            </div>
+
+            <ul class="path-detail-items-list" cdkDropList (cdkDropListDropped)="dropItemInPathTab($event)" *ngIf="activePathTab.path.items?.length; else noItems">
+              <li *ngFor="let it of activePathTab.path.items; let i = index" cdkDrag [cdkDragDisabled]="activePathTab.readonly">
+                <div class="path-detail-item">
+                  <mat-icon class="drag-handle" *ngIf="!activePathTab.readonly" cdkDragHandle>drag_indicator</mat-icon>
+                  <div class="item-number">{{ i + 1 }}</div>
+                  <div class="item-content" style="flex:1">
+                    <strong>{{ it.name }}</strong>
+                    <div class="item-desc" *ngIf="it.description">{{ it.description }}</div>
+                    <div class="item-tags" *ngIf="it.tags?.length">
+                      <span class="tag" *ngFor="let tag of it.tags">{{ tag }}</span>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button type="button" class="icon-btn view" (click)="viewCourse(it)" title="{{ 'TRAINING.VIEW' | translate }}"><span class="icon-eye">👁️</span></button>
+                    <button *ngIf="!activePathTab.readonly && !isConsultor" type="button" class="icon-btn edit" (click)="editCourse(it)" title="{{ 'TRAINING.EDIT' | translate }}"><span class="icon-edit">✏️</span></button>
+                    <button *ngIf="!activePathTab.readonly && !isConsultor" type="button" class="icon-btn delete" (click)="removeItemFromPathTab(it.id)" title="{{ 'TRAINING.DELETE' | translate }}"><span class="icon-delete">🗑️</span></button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ng-template #noItems>
+              <div style="color:#546e7a;padding:16px 0;font-size:13px">No hay cursos en esta ruta.</div>
+            </ng-template>
+          </div>
+
+          <div class="course-detail-actions" *ngIf="!activePathTab.readonly">
+            <button class="cancelar-btn" (click)="closePathTab(activePathTab.path.id)">✗</button>
+            <button class="guardar-btn" (click)="saveActivePathTab()">✓</button>
+          </div>
         </div>
-      </ng-template>
+      </div>
     </div>
 
-    <div class="all-courses" *ngIf="isTab('all')">
+    <div class="all-courses" *ngIf="isTab('all') && !showCourseDetail">
       <div class="left" style="width: 100%">
         <div class="left-header all-courses-header">
           <h2>{{ 'TRAINING.ALL_COURSES' | translate }}</h2>
@@ -220,19 +198,19 @@
               *ngIf="!isConsultor"
               class="import-excel-btn"
               (click)="triggerImportInput()"
-              title="Importar cursos desde Excel"
+              [title]="'TRAINING.IMPORT_EXCEL_TITLE' | translate"
             >
               <mat-icon inline="true">upload_file</mat-icon>
-              <span>Importar Excel</span>
+              <span>{{ 'TRAINING.IMPORT_EXCEL' | translate }}</span>
             </button>
             <button
               *ngIf="!isConsultor"
               class="template-btn"
               (click)="downloadExcelTemplate()"
-              title="Descargar plantilla Excel vacía"
+              [title]="'TRAINING.TEMPLATE_TITLE' | translate"
             >
               <mat-icon inline="true">download</mat-icon>
-              <span>Plantilla</span>
+              <span>{{ 'TRAINING.TEMPLATE' | translate }}</span>
             </button>
             <input
               id="excel-import-input"
@@ -243,43 +221,207 @@
             />
           </div>
         </div>
-        <ul class="paths-list">
-          <li *ngFor="let c of filteredAllCourses">
-            <div class="course-card">
-              <div class="course-content" (click)="openCourseLink(c)">
-                <strong>{{ c.name }}</strong>
-                <div class="meta">{{ c.description }}</div>
-                <div class="item-tags" *ngIf="c.tags?.length">
-                  <span class="tag" *ngFor="let tag of c.tags">{{ tag }}</span>
-                </div>
-              </div>
-              <div class="course-actions">
-                <button
-                  class="icon-btn view"
-                  (click)="viewCourse(c); $event.stopPropagation()"
+        <div class="course-grid-wrapper">
+          <!-- info bar -->
+          <div class="course-grid-info-bar">
+            <span class="course-count-label">
+              <mat-icon inline="true">school</mat-icon>
+              {{ 'TRAINING.COURSES_COUNT' | translate: { count: filteredCourses.length } }}
+            </span>
+            <button
+              *ngIf="filterCourseName || filterCourseTags || filterCourseUploader || filterCourseDate || filterCoursePath"
+              class="clear-filters-btn"
+              (click)="clearCourseFilters()"
+            >
+              <mat-icon inline="true">filter_list_off</mat-icon>
+              {{ 'TRAINING.CLEAR_FILTERS' | translate }}
+            </button>
+          </div>
+
+          <!-- table -->
+          <div class="course-table-scroll">
+            <table class="course-grid-table">
+              <thead>
+                <tr class="course-header-row">
+
+                  <th class="ccol-name" (click)="sortCourseBy('name')" (keydown.enter)="sortCourseBy('name')">
+                    <div class="cth-label">
+                      <span>{{ 'TRAINING.COL_NAME' | translate }}</span>
+                      <mat-icon class="csort-icon" [class.csort-active]="sortCourseCol === 'name'">
+                        {{ sortCourseCol === 'name' ? (sortCourseAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                      </mat-icon>
+                    </div>
+                    <input class="ccol-filter-input" [(ngModel)]="filterCourseName" (ngModelChange)="onCourseFilterChange()" [placeholder]="'TRAINING.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
+                  </th>
+
+                  <th class="ccol-tags">
+                    <div class="cth-label"><span>{{ 'TRAINING.COL_TAGS' | translate }}</span></div>
+                    <input class="ccol-filter-input" [(ngModel)]="filterCourseTags" (ngModelChange)="onCourseFilterChange()" [placeholder]="'TRAINING.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
+                  </th>
+
+                  <th class="ccol-uploader">
+                    <div class="cth-label"><span>{{ 'TRAINING.COL_UPLOADED_BY' | translate }}</span></div>
+                    <input class="ccol-filter-input" [(ngModel)]="filterCourseUploader" (ngModelChange)="onCourseFilterChange()" [placeholder]="'TRAINING.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
+                  </th>
+
+                  <th class="ccol-date" (click)="sortCourseBy('createdAt')" (keydown.enter)="sortCourseBy('createdAt')">
+                    <div class="cth-label">
+                      <span>{{ 'TRAINING.COL_DATE' | translate }}</span>
+                      <mat-icon class="csort-icon" [class.csort-active]="sortCourseCol === 'createdAt'">
+                        {{ sortCourseCol === 'createdAt' ? (sortCourseAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                      </mat-icon>
+                    </div>
+                    <input class="ccol-filter-input" type="date" [(ngModel)]="filterCourseDate" (ngModelChange)="onCourseFilterChange()" (click)="$event.stopPropagation()" />
+                  </th>
+
+                  <th class="ccol-paths" (click)="sortCourseBy('paths')" (keydown.enter)="sortCourseBy('paths')">
+                    <div class="cth-label">
+                      <span>{{ 'TRAINING.COL_PATHS' | translate }}</span>
+                      <mat-icon class="csort-icon" [class.csort-active]="sortCourseCol === 'paths'">
+                        {{ sortCourseCol === 'paths' ? (sortCourseAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                      </mat-icon>
+                    </div>
+                    <input class="ccol-filter-input" [(ngModel)]="filterCoursePath" (ngModelChange)="onCourseFilterChange()" [placeholder]="'TRAINING.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
+                  </th>
+
+                  <th class="ccol-actions">
+                    <div class="cth-label"><span>{{ 'TRAINING.COL_ACTIONS' | translate }}</span></div>
+                    <div class="ccol-filter-spacer"></div>
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr *ngFor="let c of pagedCourses; let i = index; trackBy: trackCourse"
+                  class="course-row"
+                  [class.course-row-even]="i % 2 === 0"
                 >
-                  👁️
+                  <td class="ccol-name">
+                    <div class="course-name-cell">
+                      <span class="course-name-text" [title]="c.name">{{ c.name }}</span>
+                      <span *ngIf="c.link" class="course-has-link" [title]="'TRAINING.HAS_LINK' | translate">🔗</span>
+                    </div>
+                    <div *ngIf="c.description" class="course-desc-text" [title]="c.description">{{ c.description }}</div>
+                  </td>
+                  <td class="ccol-tags">
+                    <div class="course-tags-cell">
+                      <span class="ctag-badge" *ngFor="let tag of (c.tags || []).slice(0, 3)">{{ tag }}</span>
+                      <span *ngIf="(c.tags || []).length > 3" class="ctag-more" [title]="(c.tags || []).slice(3).join(', ')">+{{ (c.tags || []).length - 3 }}</span>
+                    </div>
+                  </td>
+                  <td class="ccol-uploader">
+                    <span class="cuploader-text">{{ c.uploadedBy || '—' }}</span>
+                  </td>
+                  <td class="ccol-date">
+                    <span class="cdate-text">{{ formatCourseDate(c.createdAt) }}</span>
+                  </td>
+                  <td class="ccol-paths">
+                    <div class="cpaths-cell">
+                      <span *ngIf="getPathsForCourse(c).length === 0" class="cno-path">—</span>
+                      <span class="cpath-badge" *ngFor="let p of getPathsForCourse(c).slice(0, 2)" [title]="p.name">{{ p.name }}</span>
+                      <span *ngIf="getPathsForCourse(c).length > 2"
+                        class="cpath-more"
+                        [title]="getExtraPathNames(c)">
+                        +{{ getPathsForCourse(c).length - 2 }}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="ccol-actions">
+                    <div class="cactions-cell">
+                      <button class="icon-btn view" (click)="viewCourse(c); $event.stopPropagation()" [title]="'TRAINING.VIEW' | translate">👁️</button>
+                      <button *ngIf="c.link" class="icon-btn copy" (click)="openCourseLink(c); $event.stopPropagation()" [title]="'TRAINING.OPEN_LINK' | translate">🔗</button>
+                      <button *ngIf="!isConsultor" class="icon-btn edit" (click)="editCourse(c); $event.stopPropagation()" [title]="'TRAINING.EDIT' | translate">✏️</button>
+                      <button *ngIf="!isConsultor" class="icon-btn delete" (click)="confirmDeleteCourse(c.id, c.name); $event.stopPropagation()" [title]="'TRAINING.DELETE' | translate">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr *ngIf="filteredCourses.length === 0">
+                  <td colspan="6" class="course-empty-cell">
+                    <mat-icon>search_off</mat-icon>
+                    <span>{{ 'TRAINING.NO_COURSES_FOUND' | translate }}</span>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- paginación -->
+          <div class="course-pagination" *ngIf="totalCoursePages > 1">
+            <button class="cpage-btn" (click)="coursePage = coursePage - 1" [disabled]="coursePage === 1">‹</button>
+            <ng-container *ngFor="let p of coursePagesArray">
+              <span *ngIf="p === -1" class="cpage-ellipsis">…</span>
+              <button *ngIf="p !== -1" class="cpage-btn" [class.active]="p === coursePage" (click)="coursePage = p">{{ p }}</button>
+            </ng-container>
+            <button class="cpage-btn" (click)="coursePage = coursePage + 1" [disabled]="coursePage === totalCoursePages">›</button>
+            <span class="cpage-info">{{ 'TRAINING.PAGE_INFO' | translate: { page: coursePage, total: totalCoursePages } }}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL DETALLE CURSO (pestaña abierta) ═══ -->
+    <div class="all-courses" *ngIf="showCourseDetail && activeCourseTab">
+      <div class="left" style="width:100%">
+        <div class="course-detail-panel">
+          <div class="course-detail-header">
+            <h3>{{ activeCourseTab.readonly ? ('TRAINING.VIEW' | translate) : ('TRAINING.EDIT_ITEM' | translate) }}: <span class="course-detail-name">{{ activeCourseTab.item.name }}</span></h3>
+            <button class="course-detail-close-btn" (click)="closeCourseTab(activeCourseTab.item.id)" title="Cerrar">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <div class="course-detail-form">
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="cd-name">{{ 'TRAINING.ITEM_NAME' | translate }}</label>
+              <input id="cd-name" class="course-detail-input" [(ngModel)]="activeCourseTab.item.name" [readonly]="activeCourseTab.readonly" />
+            </div>
+
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="cd-link">{{ 'TRAINING.ITEM_LINK' | translate }}</label>
+              <div class="course-detail-link-row">
+                <input id="cd-link" class="course-detail-input" [(ngModel)]="activeCourseTab.item.link" [readonly]="activeCourseTab.readonly" style="flex:1" />
+                <button class="icon-btn" *ngIf="activeCourseTab.item.link" (click)="openCourseLink(activeCourseTab.item)" [title]="'TRAINING.OPEN_LINK' | translate">
+                  <mat-icon inline="true">open_in_new</mat-icon>
                 </button>
-                <button
-                  *ngIf="!isConsultor"
-                  class="icon-btn edit"
-                  (click)="editCourse(c); $event.stopPropagation()"
-                >
-                  ✏️
-                </button>
-                <button
-                  *ngIf="!isConsultor"
-                  class="icon-btn delete"
-                  (click)="confirmDeleteCourse(c.id, c.name); $event.stopPropagation()"
-                >
-                  🗑️
+                <button class="icon-btn" *ngIf="activeCourseTab.item.link" (click)="copyToClipboard(activeCourseTab.item.link)" [title]="'TRAINING.COPY_LINK' | translate">
+                  <mat-icon inline="true">content_copy</mat-icon>
                 </button>
               </div>
             </div>
-          </li>
-        </ul>
+
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="cd-desc">{{ 'TRAINING.ITEM_DESC' | translate }}</label>
+              <textarea id="cd-desc" class="course-detail-input course-detail-textarea" rows="4" [(ngModel)]="activeCourseTab.item.description" [readonly]="activeCourseTab.readonly"></textarea>
+            </div>
+
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="cd-tags">{{ 'TRAINING.ITEM_TAGS' | translate }}</label>
+              <input id="cd-tags" class="course-detail-input" placeholder="Tag1,Tag2" [(ngModel)]="activeCourseTab.item.tagsString" [readonly]="activeCourseTab.readonly" />
+            </div>
+
+            <div class="course-detail-row" *ngIf="activeCourseTab.item.uploadedBy">
+              <label class="course-detail-label" for="cd-uploadedby">{{ 'TRAINING.COL_UPLOADED_BY' | translate }}</label>
+              <input id="cd-uploadedby" class="course-detail-input" [value]="activeCourseTab.item.uploadedBy" readonly />
+            </div>
+
+            <div class="course-detail-row" *ngIf="activeCourseTab.item.createdAt">
+              <label class="course-detail-label" for="cd-date">{{ 'TRAINING.COL_DATE' | translate }}</label>
+              <input id="cd-date" class="course-detail-input" [value]="formatCourseDate(activeCourseTab.item.createdAt)" readonly />
+            </div>
+          </div>
+
+          <div class="course-detail-actions" *ngIf="!activeCourseTab.readonly">
+            <button class="cancelar-btn" (click)="closeCourseTab(activeCourseTab.item.id)">✗</button>
+            <button class="guardar-btn" (click)="saveActiveCourseTab()">✓</button>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -382,7 +524,7 @@
   </div>
 </div>
 
-<div class="modal-backdrop" *ngIf="showItemModal">
+<div class="modal-backdrop" *ngIf="showItemModal" (click)="showItemModal = false; editingItem = {}">
   <div class="modal" (click)="$event.stopPropagation()">
     <h3>
       {{ editingItem.readonly ? ('TRAINING.VIEW' | translate) : (editingItem.id

@@ -18,9 +18,12 @@ type TrainingItem = {
   link?: string;
   description?: string;
   tags?: string[];
+  tagsString?: string;
   location?: string;
   visible?: boolean;
   deleted?: boolean;
+  uploadedBy?: string;
+  createdAt?: string;
 };
 
 type TrainingPath = {
@@ -66,6 +69,17 @@ export class FormacionComponent implements OnInit, OnDestroy {
   apiCourses: TrainingItem[] = [];
   private agentRefreshSub!: Subscription;
 
+  // ── Grid "Tots els cursos" ──
+  filterCourseName = '';
+  filterCourseTags = '';
+  filterCourseUploader = '';
+  filterCourseDate = '';
+  filterCoursePath = '';
+  sortCourseCol: keyof TrainingItem | 'paths' = 'name';
+  sortCourseAsc = true;
+  coursePage = 1;
+  readonly coursePageSize = 15;
+
   // UI state
   selectedPath?: TrainingPath;
   showPathModal = false;
@@ -77,16 +91,235 @@ export class FormacionComponent implements OnInit, OnDestroy {
   // tabs: 'all' = all courses search, 'paths' = training paths UI
   activeTab: 'all' | 'paths' = 'all';
 
-  // cached search list for all courses (local paths + backend API courses)
-  get allCourses(): TrainingItem[] {
-    const map = new Map<string, TrainingItem>();
-    // Primero los cursos de la API (base de datos)
-    for (const it of this.apiCourses) {
-      const key = (it.name || '').trim().toLowerCase();
-      if (!key) continue;
-      map.set(key, { ...it });
+  // ── Pestañas de detalle de curso (estilo bitácora) ──
+  openCourseTabs: { item: TrainingItem; readonly: boolean }[] = [];
+  activeCourseTabId: string | null = null;
+
+  // ── Pestañas de detalle de ruta formativa ──
+  openPathTabs: { path: TrainingPath; readonly: boolean }[] = [];
+  activePathTabId: string | null = null;
+  selectorForPathTab = false;
+
+  get activeCourseTab(): { item: TrainingItem; readonly: boolean } | null {
+    return this.openCourseTabs.find(t => t.item.id === this.activeCourseTabId) ?? null;
+  }
+
+  get showCourseDetail(): boolean {
+    return this.openCourseTabs.length > 0 && this.activeCourseTabId !== null;
+  }
+
+  openCourseTab(item: TrainingItem, readOnly: boolean) {
+    const existing = this.openCourseTabs.find(t => t.item.id === item.id);
+    if (!existing) {
+      this.openCourseTabs.push({ item: { ...item }, readonly: readOnly });
+    } else {
+      existing.readonly = readOnly;
     }
-    // Luego los cursos de rutas locales (pueden sobreescribir si tienen el mismo nombre)
+    this.activeCourseTabId = item.id;
+  }
+
+  closeCourseTab(id?: string) {
+    const closeId = id ?? this.activeCourseTabId;
+    if (!closeId) return;
+    this.openCourseTabs = this.openCourseTabs.filter(t => t.item.id !== closeId);
+    if (this.activeCourseTabId === closeId) {
+      this.activeCourseTabId = this.openCourseTabs.length > 0
+        ? this.openCourseTabs[this.openCourseTabs.length - 1].item.id
+        : null;
+    }
+  }
+
+  saveActiveCourseTab() {
+    const tab = this.activeCourseTab;
+    if (!tab || tab.readonly) return;
+    const it = tab.item as any;
+    it.tags = (it.tagsString || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+    // Persistir en la ruta que contiene el curso
+    const found = this.paths.find(p => p.items.some(i => i.id === it.id));
+    if (found) {
+      const idx = found.items.findIndex(i => i.id === it.id);
+      if (idx !== -1) found.items[idx] = { ...it };
+    }
+    this.save();
+    this.closeCourseTab(it.id);
+  }
+
+  // ════ GETTERS/MÉTODOS PESTAÑAS DE RUTA ════════════════════
+
+  get activePathTab(): { path: TrainingPath; readonly: boolean } | null {
+    return this.openPathTabs.find(t => t.path.id === this.activePathTabId) ?? null;
+  }
+
+  get showPathDetail(): boolean {
+    return this.openPathTabs.length > 0 && this.activePathTabId !== null;
+  }
+
+  openPathTab(path: TrainingPath, readOnly: boolean) {
+    const existing = this.openPathTabs.find(t => t.path.id === path.id);
+    if (!existing) {
+      this.openPathTabs.push({
+        path: { ...path, items: (path.items || []).map(i => ({ ...i })) },
+        readonly: readOnly,
+      });
+    } else {
+      existing.readonly = readOnly;
+    }
+    this.activePathTabId = path.id;
+  }
+
+  closePathTab(id?: string) {
+    const closeId = id ?? this.activePathTabId;
+    if (!closeId) return;
+    this.openPathTabs = this.openPathTabs.filter(t => t.path.id !== closeId);
+    if (this.activePathTabId === closeId) {
+      this.activePathTabId = this.openPathTabs.length > 0
+        ? this.openPathTabs[this.openPathTabs.length - 1].path.id
+        : null;
+    }
+  }
+
+  saveActivePathTab() {
+    const tab = this.activePathTab;
+    if (!tab || tab.readonly) return;
+    const p = tab.path;
+    if (!p.name) return;
+    const idx = this.paths.findIndex(x => x.id === p.id);
+    if (idx !== -1) {
+      this.paths[idx] = { ...p, items: [...p.items] };
+    } else {
+      this.paths.push({ ...p, items: [...p.items] });
+    }
+    this.save();
+    this.closePathTab(p.id);
+  }
+
+  removeItemFromPathTab(itemId: string) {
+    const tab = this.activePathTab;
+    if (!tab || tab.readonly) return;
+    tab.path.items = tab.path.items.filter(i => i.id !== itemId);
+  }
+
+  dropItemInPathTab(event: CdkDragDrop<TrainingItem[]>) {
+    const tab = this.activePathTab;
+    if (!tab || tab.readonly) return;
+    moveItemInArray(tab.path.items, event.previousIndex, event.currentIndex);
+  }
+
+  openCourseSelectorForPathTab() {
+    if (!this.activePathTab) return;
+    this.selectorCandidates = this.allCourses.map(i => ({ ...i }));
+    this.selectorFilteredCandidates = [...this.selectorCandidates];
+    this.selectedCandidate = undefined;
+    this.selectorForPathTab = true;
+    this.showCourseSelector = true;
+  }
+
+  // ════ GRID GETTERS ════════════════════════════════════════════
+
+  get filteredCourses(): TrainingItem[] {
+    let items = this.allCourses;
+    if (this.filterCourseName) {
+      const t = this.filterCourseName.toLowerCase();
+      items = items.filter(c => (c.name || '').toLowerCase().includes(t));
+    }
+    if (this.filterCourseTags) {
+      const t = this.filterCourseTags.toLowerCase();
+      items = items.filter(c => (c.tags || []).some(tag => tag.toLowerCase().includes(t)));
+    }
+    if (this.filterCourseUploader) {
+      const t = this.filterCourseUploader.toLowerCase();
+      items = items.filter(c => (c.uploadedBy || '').toLowerCase().includes(t));
+    }
+    if (this.filterCourseDate) {
+      items = items.filter(c => (c.createdAt || '').includes(this.filterCourseDate));
+    }
+    if (this.filterCoursePath) {
+      const t = this.filterCoursePath.toLowerCase();
+      items = items.filter(c => this.getPathsForCourse(c).some(p => (p.name || '').toLowerCase().includes(t)));
+    }
+    const col = this.sortCourseCol;
+    const asc = this.sortCourseAsc;
+    return [...items].sort((a, b) => {
+      let va: string, vb: string;
+      if (col === 'paths') {
+        va = this.getPathsForCourse(a).map(p => p.name).join(',');
+        vb = this.getPathsForCourse(b).map(p => p.name).join(',');
+      } else {
+        va = String((a as any)[col] ?? '');
+        vb = String((b as any)[col] ?? '');
+      }
+      const cmp = va.localeCompare(vb, undefined, { numeric: true });
+      return asc ? cmp : -cmp;
+    });
+  }
+
+  get totalCoursePages(): number {
+    return Math.max(1, Math.ceil(this.filteredCourses.length / this.coursePageSize));
+  }
+
+  get pagedCourses(): TrainingItem[] {
+    const start = (this.coursePage - 1) * this.coursePageSize;
+    return this.filteredCourses.slice(start, start + this.coursePageSize);
+  }
+
+  get coursePagesArray(): number[] {
+    const total = this.totalCoursePages;
+    const c = this.coursePage;
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages: number[] = [1];
+    if (c > 3) pages.push(-1);
+    for (let i = Math.max(2, c - 1); i <= Math.min(total - 1, c + 1); i++) pages.push(i);
+    if (c < total - 2) pages.push(-1);
+    pages.push(total);
+    return pages;
+  }
+
+  sortCourseBy(col: keyof TrainingItem | 'paths'): void {
+    if (this.sortCourseCol === col) { this.sortCourseAsc = !this.sortCourseAsc; }
+    else { this.sortCourseCol = col; this.sortCourseAsc = true; }
+    this.coursePage = 1;
+  }
+
+  onCourseFilterChange(): void { this.coursePage = 1; }
+
+  clearCourseFilters(): void {
+    this.filterCourseName = '';
+    this.filterCourseTags = '';
+    this.filterCourseUploader = '';
+    this.filterCourseDate = '';
+    this.filterCoursePath = '';
+    this.coursePage = 1;
+  }
+
+  getPathsForCourse(item: TrainingItem): TrainingPath[] {
+    const nameKey = (item.name || '').trim().toLowerCase();
+    return this.paths.filter(p =>
+      (p.items || []).some(i =>
+        i.id === item.id || (i.name || '').trim().toLowerCase() === nameKey
+      )
+    );
+  }
+
+  getExtraPathNames(item: TrainingItem): string {
+    return this.getPathsForCourse(item).slice(2).map(p => p.name).join(', ');
+  }
+
+  formatCourseDate(iso: string | undefined): string {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  // ════ END GRID GETTERS ════════════════════════════════════════
+
+  // cached search list for all courses (local paths + backend API courses)
+  /** Cursos cacheados — se actualizan solo en refreshAllCourses(), no en cada ciclo CD. */
+  allCourses: TrainingItem[] = [];
+
+  private computeAllCourses(): TrainingItem[] {
+    const map = new Map<string, TrainingItem>();
+    // Primero los cursos de rutas locales (tienen ID editable para acciones)
     for (const p of this.paths) {
       if (!p.items) continue;
       for (const it of p.items) {
@@ -95,7 +328,26 @@ export class FormacionComponent implements OnInit, OnDestroy {
         if (!map.has(key)) map.set(key, { ...it });
       }
     }
+    // Enriquecer con datos de API (uploadedBy, createdAt) y añadir cursos exclusivos de API
+    for (const it of this.apiCourses) {
+      const key = (it.name || '').trim().toLowerCase();
+      if (!key) continue;
+      if (map.has(key)) {
+        const existing = map.get(key)!;
+        map.set(key, {
+          ...existing,
+          uploadedBy: existing.uploadedBy || it.uploadedBy,
+          createdAt: existing.createdAt || it.createdAt,
+        });
+      } else {
+        map.set(key, { ...it });
+      }
+    }
     return Array.from(map.values());
+  }
+
+  trackCourse(_index: number, item: TrainingItem): string {
+    return item.id || item.name || String(_index);
   }
 
   isTab(tab: 'all' | 'paths') {
@@ -130,6 +382,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
         this.loadApiCourses();
       }
     });
+
   }
 
   ngOnDestroy(): void {
@@ -138,7 +391,9 @@ export class FormacionComponent implements OnInit, OnDestroy {
 
   /** Carga cursos desde el backend (MongoDB). Los crea el agente IA u otros procesos. */
   private loadApiCourses(): void {
-    this.http.get<TrainingItem[]>(`${environment.baseUrl}formacion/all`).subscribe({
+    this.http.get<TrainingItem[]>(`${environment.baseUrl}formacion/all`, {
+      headers: { 'X-No-Spinner': 'true' },
+    }).subscribe({
       next: (data) => {
         this.apiCourses = data || [];
         this.refreshAllCourses();
@@ -166,7 +421,17 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   refreshAllCourses() {
-    this.filteredAllCourses = this.allCourses.map(i => ({ ...i }));
+    this.allCourses = this.computeAllCourses();
+    const v = (this.lastSearch || '').toLowerCase();
+    if (!v) {
+      this.filteredAllCourses = [...this.allCourses];
+    } else {
+      this.filteredAllCourses = this.allCourses.filter(it =>
+        (it.name || '').toLowerCase().includes(v) ||
+        (it.description || '').toLowerCase().includes(v) ||
+        ((it.tags || []).join(' ').toLowerCase().includes(v))
+      );
+    }
   }
 
   filtrar(valor: string) {
@@ -174,7 +439,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
     const v = (valor || '').toLowerCase();
     if (this.activeTab === 'all') {
       if (!v) {
-        this.refreshAllCourses();
+        this.filteredAllCourses = [...this.allCourses];
         return;
       }
       this.filteredAllCourses = this.allCourses.filter(it =>
@@ -230,14 +495,11 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   editPath(p: TrainingPath) {
-    this.editingPath = { ...p };
-    this.showPathModal = true;
+    this.openPathTab(p, false);
   }
 
   viewPath(p: TrainingPath) {
-    this.editingPath = { ...p } as any;
-    this.editingPath.readonly = true;
-    this.showPathModal = true;
+    this.openPathTab(p, true);
   }
 
   savePath() {
@@ -317,16 +579,23 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   confirmAddSelectedCourse() {
-    if (!this.selectedPath || !this.selectedCandidate) return;
+    if (!this.selectedCandidate) return;
     const itemCopy: TrainingItem = {
       ...this.selectedCandidate,
       id: Math.random().toString(36).slice(2, 9),
     };
-    this.selectedPath.items.push(itemCopy);
-    const idxPath = this.paths.findIndex(p => p.id === this.selectedPath!.id);
-    if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
-    this.save();
-    this.refreshAllCourses();
+    if (this.selectorForPathTab) {
+      const tab = this.activePathTab;
+      if (tab) tab.path.items.push(itemCopy);
+      this.selectorForPathTab = false;
+    } else {
+      if (!this.selectedPath) return;
+      this.selectedPath.items.push(itemCopy);
+      const idxPath = this.paths.findIndex(p => p.id === this.selectedPath!.id);
+      if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
+      this.save();
+      this.refreshAllCourses();
+    }
     this.showCourseSelector = false;
     this.selectedCandidate = undefined;
   }
@@ -338,6 +607,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   editItem(item: TrainingItem) {
+    console.log('[formacion] editItem called', item?.name);
     this.editingItem = {
       ...item,
       tagsString: (item.tags || []).join(','),
@@ -346,8 +616,22 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   saveItem() {
-    if (!this.selectedPath) return;
     if ((this.editingItem as any).readonly) return;
+    // Si no hay ruta seleccionada, usar la primera disponible o crear una
+    if (!this.selectedPath) {
+      if (this.paths.length > 0) {
+        this.selectedPath = this.paths[0];
+      } else {
+        const p: TrainingPath = {
+          id: Math.random().toString(36).slice(2, 9),
+          name: this.translate.instant('TRAINING.ALL_COURSES'),
+          items: [],
+          visible: true,
+        };
+        this.paths.push(p);
+        this.selectedPath = p;
+      }
+    }
     const itPartial =
       this.editingItem as Partial<TrainingItem> & { tagsString?: string };
     const it: TrainingItem = {
@@ -419,24 +703,13 @@ export class FormacionComponent implements OnInit, OnDestroy {
   }
 
   viewCourse(it: TrainingItem) {
-    this.editingItem = {
-      ...it,
-      tagsString: (it.tags || []).join(','),
-    } as any;
-    this.editingItem.readonly = true;
-    this.showItemModal = true;
-  }
-
-  closeView() {
-    if (this.editingItem) this.editingItem.readonly = false;
-    this.showItemModal = false;
-    this.editingItem = {};
+    const itemWithTags = { ...it, tagsString: (it.tags || []).join(',') } as any;
+    this.openCourseTab(itemWithTags, true);
   }
 
   editCourse(it: TrainingItem) {
-    const found = this.paths.find(p => p.items.some(i => i.id === it.id));
-    if (found) this.selectedPath = found;
-    this.editItem(it);
+    const itemWithTags = { ...it, tagsString: (it.tags || []).join(',') } as any;
+    this.openCourseTab(itemWithTags, false);
   }
 
   confirmDeleteCourse(id: string, name?: string) {
