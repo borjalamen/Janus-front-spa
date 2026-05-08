@@ -1410,6 +1410,20 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    // Comprobar duplicado: el backend añade timestamp_ al nombre, comparamos la parte original
+    const originalName = this.detailFileInput.name;
+    const duplicate = (this.projectDocumentsFromCreation || []).some(doc => {
+      const storedName = doc.nombre || '';
+      // El nombre guardado puede ser "timestamp_nombreOriginal" o "nombreOriginal"
+      const withoutTimestamp = storedName.replace(/^\d+_/, '');
+      return storedName === originalName || withoutTimestamp === originalName;
+    });
+
+    if (duplicate) {
+      this.showToast("⚠️ " + this.translate.instant("PROJECTS.DUPLICATE_DOCUMENT"), false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", this.detailFileInput);
     formData.append("descripcion", this.detailFileDescription);

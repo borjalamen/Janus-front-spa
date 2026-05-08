@@ -425,6 +425,7 @@
     "UPLOAD": "Upload",
     "SELECT_FILE": "Select file",
     "UPLOAD_LIMIT_HINT": "Maximum size: {{size}}",
+    "DUPLICATE_DOCUMENT": "This document is already added to the project",
     "UPLOAD_ERROR_TOO_LARGE": "File is too large",
     "UPLOAD_GENERIC_ERROR": "Error uploading file",
     "UPLOAD_VALIDATION_TITLE": "File validation issues",

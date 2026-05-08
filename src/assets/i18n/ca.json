@@ -415,6 +415,7 @@
     "UPLOAD": "Pujar",
     "SELECT_FILE": "Seleccionar fitxer",
     "UPLOAD_LIMIT_HINT": "Mida màxima: {{size}}",
+    "DUPLICATE_DOCUMENT": "Aquest document ja està afegit al projecte",
     "UPLOAD_ERROR_TOO_LARGE": "El fitxer és massa gran",
     "UPLOAD_GENERIC_ERROR": "Error en pujar el fitxer",
     "UPLOAD_VALIDATION_TITLE": "Fitxer amb problemes",

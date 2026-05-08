@@ -422,6 +422,7 @@
     "UPLOAD": "Subir",
     "SELECT_FILE": "Seleccionar archivo",
     "UPLOAD_LIMIT_HINT": "Tamaño máximo: {{size}}",
+    "DUPLICATE_DOCUMENT": "Este documento ya está añadido al proyecto",
     "UPLOAD_ERROR_TOO_LARGE": "El archivo es demasiado grande",
     "UPLOAD_GENERIC_ERROR": "Error al subir el archivo",
     "UPLOAD_VALIDATION_TITLE": "Archivo con problemas",

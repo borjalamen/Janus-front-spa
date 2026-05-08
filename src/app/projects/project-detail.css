@@ -1835,6 +1835,17 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 	box-shadow: 0 4px 16px rgba(30, 132, 163, 0.4);
 }
 
+.btn-add-doc {
+	align-self: flex-start;
+}
+
+.btn-add-doc:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+	transform: none !important;
+	box-shadow: none !important;
+}
+
 .btn-round.btn-secondary {
 	background: rgba(255, 255, 255, 0.1);
 	color: #ccc;
