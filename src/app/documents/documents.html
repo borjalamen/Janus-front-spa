@@ -1,15 +1,11 @@
-<!-- TOAST FORA DE TOT -->
+<!-- TOAST -->
 <div class="app-toast" *ngIf="toastMsg" [class.toast-error]="!toastOk">
   {{ toastMsg }}
 </div>
 
-<!-- Buscador -->
-<app-buscador (buscar)="filtrar($event)"></app-buscador>
-
 <div class="section-container documents-wrapper">
   <div class="documents-header">
     <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
-
     <button
       *ngIf="canManageDocuments"
       class="jenkins-add-btn"
@@ -21,267 +17,226 @@
     </button>
   </div>
 
-  <div class="projects-list">
-    <div *ngFor="let project of projectsPaginats" class="project-container">
-      <div class="project-icon">
-        <img
-          src="assets/images/Folder.png"
-          alt="{{ 'DOCUMENTS.FOLDER_ALT' | translate }}"
-          class="folder-img"
-        />
-      </div>
-
-      <div class="project-info">
-        <div class="project-header-line">
-          <div class="project-details" (click)="selectProject(project)">
-            <span class="project-name-label">
-              {{ 'DOCUMENTS.PROJECT_NAME' | translate }}:
-            </span>
-            <span class="project-name-value">{{ project.name }}</span>
-          </div>
-        </div>
-
-        <div
-          *ngIf="project.documents && project.documents.length"
-          class="documents-list"
-        >
-          <div *ngFor="let doc of project.documents" class="document-row">
-            <div class="doc-info">
-              <img
-                src="assets/images/File.png"
-                alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
-                class="doc-icon file-img"
-              />
-              <span class="doc-name">{{ resolveDocumentName(doc) }}</span>
-            </div>
-
-            <div class="doc-actions">
-              <button
-                class="action-btn view-btn"
-                (click)="viewDocument(project, doc)"
-                title="{{ 'DOCUMENTS.VIEW' | translate }}"
-                aria-label="{{ 'DOCUMENTS.VIEW' | translate }}"
-              >
-                👁️
-              </button>
-
-              <button
-                class="action-btn download-btn"
-                (click)="downloadDocument(project, doc)"
-                title="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
-                aria-label="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}"
-              >
-                📥
-              </button>
-
-              <button
-                *ngIf="canManageDocuments"
-                class="action-btn delete-btn"
-                (click)="confirmDeleteDocument(project, doc)"
-                title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
-                aria-label="{{ 'DOCUMENTS.DELETE_BTN' | translate }}"
-              >
-                🗑️
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          *ngIf="!project.documents || project.documents.length === 0"
-          class="no-docs"
-        >
-          <span>{{ 'DOCUMENTS.NO_DOCS' | translate }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="projectsFiltrats.length === 0" class="no-results">
+  <!-- Empty state -->
+  <div *ngIf="allDocs.length === 0" class="no-results">
     <mat-icon>folder_off</mat-icon>
     <p>{{ 'DOCUMENTS.NO_PROJECTS' | translate }}</p>
   </div>
 
-  <div class="pagination-bar" *ngIf="totalPaginasProjects > 1">
-    <button
-      class="page-btn"
-      (click)="cambiarPaginaProjects(paginaActualProjects - 1)"
-      [disabled]="paginaActualProjects === 1"
-      aria-label="{{ 'DOCUMENTS.PAGINATION_PREVIOUS' | translate }}"
-    >
-      ‹
-    </button>
+  <!-- Grid -->
+  <div *ngIf="allDocs.length > 0" class="doc-grid-wrapper">
 
-    <button
-      class="page-btn"
-      *ngFor="let p of paginasArrayProjects"
-      [class.active]="p === paginaActualProjects"
-      (click)="cambiarPaginaProjects(p)"
-      aria-label="{{ 'DOCUMENTS.PAGINATION_GOTO' | translate:{ page: p } }}"
-    >
-      {{ p }}
-    </button>
+    <div class="doc-grid-info-bar">
+      <span class="doc-count-label">
+        <mat-icon inline="true">description</mat-icon>
+        {{ filteredDocs.length }} documento(s)
+      </span>
+      <button
+        *ngIf="filterProject || filterFileName || filterExtension || filterDate"
+        class="clear-filters-btn"
+        (click)="clearFilters()"
+      >
+        <mat-icon inline="true">filter_list_off</mat-icon>
+        Limpiar filtros
+      </button>
+    </div>
 
-    <button
-      class="page-btn"
-      (click)="cambiarPaginaProjects(paginaActualProjects + 1)"
-      [disabled]="paginaActualProjects === totalPaginasProjects"
-      aria-label="{{ 'DOCUMENTS.PAGINATION_NEXT' | translate }}"
-    >
-      ›
-    </button>
+    <div class="doc-table-scroll">
+      <table class="doc-grid-table">
+        <thead>
+          <tr class="doc-header-row">
 
-    <span class="page-info">
-      {{ 'DOCUMENTS.PAGINATION_INFO' | translate:{ current:
-      paginaActualProjects, total: totalPaginasProjects } }}
-    </span>
+            <th class="col-project" (click)="sortBy('projectName')" (keydown.enter)="sortBy('projectName')">
+              <div class="th-label">
+                <span>Proyecto</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'projectName'">
+                  {{ sortCol === 'projectName' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <input class="col-filter-input" [(ngModel)]="filterProject" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+            </th>
+
+            <th class="col-code" (click)="sortBy('projectCode')" (keydown.enter)="sortBy('projectCode')">
+              <div class="th-label">
+                <span>Código</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'projectCode'">
+                  {{ sortCol === 'projectCode' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <div class="col-filter-spacer"></div>
+            </th>
+
+            <th class="col-file" (click)="sortBy('fileName')" (keydown.enter)="sortBy('fileName')">
+              <div class="th-label">
+                <span>Archivo</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'fileName'">
+                  {{ sortCol === 'fileName' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <input class="col-filter-input" [(ngModel)]="filterFileName" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+            </th>
+
+            <th class="col-ext" (click)="sortBy('extension')" (keydown.enter)="sortBy('extension')">
+              <div class="th-label">
+                <span>Tipo</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'extension'">
+                  {{ sortCol === 'extension' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <input class="col-filter-input" [(ngModel)]="filterExtension" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+            </th>
+
+            <th class="col-uploader">
+              <div class="th-label"><span>Subido por</span></div>
+              <div class="col-filter-spacer"></div>
+            </th>
+
+            <th class="col-date" (click)="sortBy('lastModified')" (keydown.enter)="sortBy('lastModified')">
+              <div class="th-label">
+                <span>Fecha</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'lastModified'">
+                  {{ sortCol === 'lastModified' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <input class="col-filter-input" type="date" [(ngModel)]="filterDate" (ngModelChange)="onFilterChange()" (click)="$event.stopPropagation()" />
+            </th>
+
+            <th class="col-size" (click)="sortBy('size')" (keydown.enter)="sortBy('size')">
+              <div class="th-label">
+                <span>Tamaño</span>
+                <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'size'">
+                  {{ sortCol === 'size' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
+                </mat-icon>
+              </div>
+              <div class="col-filter-spacer"></div>
+            </th>
+
+            <th class="col-actions">
+              <div class="th-label"><span>Acciones</span></div>
+              <div class="col-filter-spacer"></div>
+            </th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let doc of pagedDocs; let i = index"
+            class="doc-row"
+            [class.doc-row-even]="i % 2 === 0"
+          >
+            <td class="col-project">
+              <span class="project-name-text" [title]="doc.projectName">{{ doc.projectName }}</span>
+            </td>
+            <td class="col-code">
+              <span class="project-code-badge">{{ doc.projectCode }}</span>
+            </td>
+            <td class="col-file">
+              <div class="file-cell">
+                <img src="assets/images/File.png" class="file-icon-img" alt="" />
+                <span class="file-name-text" [title]="doc.fileName">{{ doc.fileName }}</span>
+              </div>
+            </td>
+            <td class="col-ext">
+              <span
+                class="ext-badge"
+                [style.background]="getExtColor(doc.extension) + '22'"
+                [style.borderColor]="getExtColor(doc.extension)"
+                [style.color]="getExtColor(doc.extension)"
+              >.{{ doc.extension }}</span>
+            </td>
+            <td class="col-uploader">
+              <span class="uploader-na">—</span>
+            </td>
+            <td class="col-date">
+              <span class="date-text">{{ formatDate(doc.lastModified) }}</span>
+            </td>
+            <td class="col-size">
+              <span class="size-text">{{ formatSize(doc.size) }}</span>
+            </td>
+            <td class="col-actions">
+              <div class="actions-cell">
+                <button *ngIf="canViewOnline(doc)" class="action-btn view-btn" (click)="viewDocument(doc)" title="{{ 'DOCUMENTS.VIEW' | translate }}">👁️</button>
+                <button class="action-btn download-btn" (click)="downloadDocument(doc)" title="{{ 'DOCUMENTS.DOWNLOAD_BTN' | translate }}">📥</button>
+                <button *ngIf="canManageDocuments" class="action-btn delete-btn" (click)="confirmDeleteDocument(doc)" title="{{ 'DOCUMENTS.DELETE_BTN' | translate }}">🗑️</button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredDocs.length === 0">
+            <td colspan="8" class="doc-empty-cell">
+              <mat-icon>search_off</mat-icon>
+              <span>No se encontraron documentos con los filtros aplicados</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="doc-pagination" *ngIf="totalDocPages > 1">
+      <button class="page-btn" (click)="docPage = docPage - 1" [disabled]="docPage === 1">‹</button>
+      <ng-container *ngFor="let p of docPagesArray">
+        <span *ngIf="p === -1" class="page-ellipsis">…</span>
+        <button *ngIf="p !== -1" class="page-btn" [class.active]="p === docPage" (click)="docPage = p">{{ p }}</button>
+      </ng-container>
+      <button class="page-btn" (click)="docPage = docPage + 1" [disabled]="docPage === totalDocPages">›</button>
+      <span class="page-info">Página {{ docPage }} de {{ totalDocPages }}</span>
+    </div>
+
   </div>
 </div>
 
-<!-- POPUP AFEGIR DOCUMENT -->
-<div class="popup-fons" *ngIf="showAddPopup" (click)="toggleAddPopup()">
-  <div class="popup-container" (click)="$event.stopPropagation()">
+<!-- ── POPUP AFEGIR DOCUMENT ── -->
+<div class="popup-fons" *ngIf="showAddPopup" (click)="toggleAddPopup()" (keydown.escape)="toggleAddPopup()">
+  <div class="popup-container" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <h3>{{ 'DOCUMENTS.ADD_POPUP_TITLE' | translate }}</h3>
 
     <div class="form-field">
-      <label>{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
-
-      <input
-        type="text"
-        class="project-search-input"
-        [(ngModel)]="projectSearch"
-        (input)="filterProjectsForPopup()"
-        [placeholder]="'DOCUMENTS.FIELD_PROJECT_SEARCH_PLACEHOLDER' | translate"
-      />
-
+      <label for="doc-popup-project">{{ 'DOCUMENTS.FIELD_PROJECT_ID' | translate }}</label>
+      <input id="doc-popup-project" type="text" class="project-search-input" [(ngModel)]="projectSearch" (input)="filterProjectsForPopup()" [placeholder]="'DOCUMENTS.FIELD_PROJECT_SEARCH_PLACEHOLDER' | translate" />
       <select [(ngModel)]="projectId" (change)="onProjectChange()">
-        <option [ngValue]="''" disabled>
-          {{ 'DOCUMENTS.FIELD_PROJECT_SELECT_PLACEHOLDER' | translate }}
-        </option>
-        <option
-          *ngFor="let p of filteredProjectsForPopup"
-          [ngValue]="p.projectId"
-        >
-          {{ p.projectId }} - {{ p.name }}
-        </option>
+        <option [ngValue]="''" disabled>{{ 'DOCUMENTS.FIELD_PROJECT_SELECT_PLACEHOLDER' | translate }}</option>
+        <option *ngFor="let p of filteredProjectsForPopup" [ngValue]="p.projectId">{{ p.codigoProyecto }} - {{ p.name }}</option>
       </select>
-
       <div class="field-error" *ngIf="projectError">{{ projectError }}</div>
     </div>
 
     <div class="form-field">
-      <label>{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}</label>
-
-      <input
-        type="text"
-        [(ngModel)]="name"
-        [placeholder]="'DOCUMENTS.FIELD_DOC_NAME' | translate"
-        readonly
-      />
-
-      <input
-        type="file"
-        #fileInput
-        style="display: none"
-        (change)="onFileSelected($event)"
-      />
-
-      <div class="selected-file-name" *ngIf="selectedFile">
-        {{ 'DOCUMENTS.SELECTED_FILE' | translate }}: {{ selectedFile.name }}
-      </div>
-
+      <label for="doc-popup-name">{{ 'DOCUMENTS.FIELD_DOC_NAME' | translate }}</label>
+      <input id="doc-popup-name" type="text" [(ngModel)]="name" [placeholder]="'DOCUMENTS.FIELD_DOC_NAME' | translate" readonly />
+      <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+      <div class="selected-file-name" *ngIf="selectedFile">{{ 'DOCUMENTS.SELECTED_FILE' | translate }}: {{ selectedFile.name }}</div>
       <div class="field-error" *ngIf="fileError">{{ fileError }}</div>
     </div>
 
     <div class="popup-actions">
-      <button
-        class="file-btn"
-        type="button"
-        (click)="fileInput.click()"
-        title="{{ 'DOCUMENTS.BROWSE' | translate }}"
-        aria-label="{{ 'DOCUMENTS.BROWSE' | translate }}"
-      >
-        <img
-          src="assets/images/File.png"
-          alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}"
-        />
+      <button class="file-btn" type="button" (click)="fileInput.click()">
+        <img src="assets/images/File.png" alt="{{ 'DOCUMENTS.FILE_ALT' | translate }}" />
       </button>
-
       <div class="popup-actions-right">
-        <button
-          class="cancelar-btn"
-          (click)="toggleAddPopup()"
-          title="{{ 'DOCUMENTS.CANCEL' | translate }}"
-          aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
-        >
-          ✗
-        </button>
-
-        <button
-          class="guardar-btn"
-          (click)="addDocument()"
-          title="{{ 'DOCUMENTS.SAVE' | translate }}"
-          aria-label="{{ 'DOCUMENTS.SAVE' | translate }}"
-        >
-          ✓
-        </button>
+        <button class="cancelar-btn" (click)="toggleAddPopup()">✗</button>
+        <button class="guardar-btn" (click)="addDocument()">✓</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- POPUP ELIMINAR DOCUMENT -->
-<div
-  class="popup-fons"
-  *ngIf="deleteDocPopupOpen && docToDelete"
-  (click)="cancelDeleteDocument()"
->
-  <div class="popup-container" (click)="$event.stopPropagation()">
+<!-- ── POPUP ELIMINAR ── -->
+<div class="popup-fons" *ngIf="deleteDocPopupOpen && docToDelete" (click)="cancelDeleteDocument()" (keydown.escape)="cancelDeleteDocument()">
+  <div class="popup-container" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <h3>{{ 'DOCUMENTS.DELETE_DOC_TITLE' | translate }}</h3>
-    <p>
-      {{ 'DOCUMENTS.DELETE_DOC_QUESTION' | translate:{ name:
-      resolveDocumentName(docToDelete.document) } }}
-    </p>
+    <p>{{ 'DOCUMENTS.DELETE_DOC_QUESTION' | translate:{ name: docToDelete.fileName } }}</p>
     <div class="popup-actions">
-      <button
-        class="cancelar-btn"
-        (click)="cancelDeleteDocument()"
-        title="{{ 'DOCUMENTS.CANCEL' | translate }}"
-        aria-label="{{ 'DOCUMENTS.CANCEL' | translate }}"
-      >
-        ✗
-      </button>
-      <button
-        class="guardar-btn"
-        (click)="deleteDocument()"
-        title="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
-        aria-label="{{ 'DOCUMENTS.CONFIRM_DELETE' | translate }}"
-      >
-        ✓
-      </button>
+      <button class="cancelar-btn" (click)="cancelDeleteDocument()">✗</button>
+      <button class="guardar-btn" (click)="deleteDocument()">✓</button>
     </div>
   </div>
 </div>
 
-<!-- POPUP PREVIEW IMATGE -->
-<div
-  class="image-popup-backdrop"
-  *ngIf="imagePreviewPopupOpen && imagePreviewUrl"
-  (click)="closeImagePreview()"
->
-  <div class="image-popup-container" (click)="$event.stopPropagation()">
-    <button
-      class="image-popup-close-btn"
-      (click)="closeImagePreview()"
-      title="{{ 'DOCUMENTS.CLOSE' | translate }}"
-      aria-label="{{ 'DOCUMENTS.CLOSE' | translate }}"
-    >
-      ✕
-    </button>
-    <img
-      [src]="imagePreviewUrl"
-      [alt]="imagePreviewName || ('DOCUMENTS.IMAGE_PREVIEW_ALT' | translate)"
-      class="image-popup-img"
-    />
+<!-- ── POPUP PREVIEW IMATGE ── -->
+<div class="image-popup-backdrop" *ngIf="imagePreviewPopupOpen && imagePreviewUrl" (click)="closeImagePreview()" (keydown.escape)="closeImagePreview()">
+  <div class="image-popup-container" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+    <button class="image-popup-close-btn" (click)="closeImagePreview()">✕</button>
+    <img [src]="imagePreviewUrl" [attr.alt]="previewCaption || 'Previa del archivo'" class="image-popup-img" />
   </div>
 </div>
