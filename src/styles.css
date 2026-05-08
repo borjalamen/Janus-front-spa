@@ -6,6 +6,24 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
+/* Scrollbar global dorado (aplica a todos los elementos scrollables de Material) */
+.mat-drawer-content,
+.mat-sidenav-content,
+mat-sidenav-content {
+  scrollbar-color: #FBC02D #000;
+  scrollbar-width: thin;
+}
+.mat-drawer-content::-webkit-scrollbar,
+.mat-sidenav-content::-webkit-scrollbar {
+  width: 8px;
+  background: #000;
+}
+.mat-drawer-content::-webkit-scrollbar-thumb,
+.mat-sidenav-content::-webkit-scrollbar-thumb {
+  background: #FBC02D;
+  border-radius: 4px;
+}
+
 a{
     color: #E0E0E0;
     text-decoration: none;
