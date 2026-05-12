@@ -89,11 +89,17 @@ body {
 
 /* Pestaña dinámica del proyecto abierto */
 .project-tab {
-  max-width: 260px;
+  max-width: 280px;
+  overflow: visible;
+  padding-right: 10px;
+}
+
+.project-tab .tab-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-right: 10px;
+  min-width: 0;
+  flex: 1;
 }
 
 .tab-close {

@@ -17,7 +17,7 @@
         (click)="activeProjectId=tab.project.id ?? null"
       >
         <span class="tab-emoji">📂</span>
-        {{ (tab.project.codigoProyecto || '') + ' | ' + (tab.project.nombre || '') }}
+        <span class="tab-label">{{ (tab.project.codigoProyecto || '') + ' | ' + (tab.project.nombre || '') }}</span>
         <span class="tab-close" (click)="$event.stopPropagation(); closeProjectDetail(tab.project.id)" title="Cerrar">&#x2715;</span>
       </button>
 
