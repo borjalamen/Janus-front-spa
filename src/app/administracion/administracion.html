@@ -3,6 +3,7 @@
     <h2 class="admin-top-title">{{ 'ADMIN.PANEL_TITLE' | translate }}</h2>
     <div class="admin-top-tabs-bar">
       <button
+        *ngIf="isAdmin"
         class="menu-btn"
         [class.active]="activeTab === 'USERS'"
         (click)="cambiarTab('USERS')"
@@ -11,6 +12,7 @@
       </button>
 
       <button
+        *ngIf="isAdmin"
         class="menu-btn"
         [class.active]="activeTab === 'APP'"
         (click)="cambiarTab('APP')"
@@ -19,6 +21,7 @@
       </button>
 
       <button
+        *ngIf="isAdmin"
         class="menu-btn"
         [class.active]="activeTab === 'PARAM'"
         (click)="cambiarTab('PARAM')"
@@ -27,6 +30,7 @@
       </button>
 
       <button
+        *ngIf="isAdmin"
         class="menu-btn"
         [class.active]="activeTab === 'DB'"
         (click)="cambiarTab('DB')"

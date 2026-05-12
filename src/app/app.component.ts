@@ -611,7 +611,7 @@ export class AppComponent implements OnDestroy, OnInit {
       case 'multimedia':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
       case 'administracion':
-        return ['admin'].includes(this.rol);
+        return ['admin', 'devops'].includes(this.rol);
       case 'bitacora':
         return ['devops', 'admin'].includes(this.rol);
       case 'peticion':

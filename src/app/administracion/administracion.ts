@@ -583,6 +583,14 @@ export class AdministracionComponent implements OnInit {
     const savedTab = this.storage.get(this.STORAGE_KEY_TAB) as string | null;
     if (savedTab) this.activeTab = savedTab;
 
+    // Si es devops (no admin), solo puede ver REQUESTS y PETICIONES_TAREAS
+    if (!this.authService.isAdmin) {
+      const devopsTabs = ['REQUESTS', 'PETICIONES_TAREAS'];
+      if (!devopsTabs.includes(this.activeTab)) {
+        this.activeTab = 'REQUESTS';
+      }
+    }
+
     // restaurar filtres
     const savedUserFilter =
       (this.storage.get(this.STORAGE_KEY_USER_FILTER) as string) || "";
@@ -604,6 +612,10 @@ export class AdministracionComponent implements OnInit {
 
   get canEdit(): boolean {
     return this.authService.canEdit;
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin;
   }
 
   get peticionesPendientes(): number {
