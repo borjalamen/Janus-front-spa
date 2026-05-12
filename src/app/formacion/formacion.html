@@ -381,13 +381,31 @@
             </div>
 
             <div class="course-detail-row">
-              <label class="course-detail-label" for="cd-link">{{ 'TRAINING.ITEM_LINK' | translate }}</label>
+              <label class="course-detail-label" for="cd-location">Plataforma</label>
+              <input id="cd-location" class="course-detail-input" placeholder="Udemy, Coursera, Pluralsight..." [(ngModel)]="activeCourseTab.item.location" [readonly]="activeCourseTab.readonly" />
+            </div>
+
+            <div class="course-detail-row">
+              <label class="course-detail-label" for="cd-link">{{ 'TRAINING.ITEM_LINK' | translate }}{{ isUdemy(activeCourseTab.item) ? ' (URL Pública)' : '' }}</label>
               <div class="course-detail-link-row">
                 <input id="cd-link" class="course-detail-input" [(ngModel)]="activeCourseTab.item.link" [readonly]="activeCourseTab.readonly" style="flex:1" />
                 <button class="icon-btn" *ngIf="activeCourseTab.item.link" (click)="openCourseLink(activeCourseTab.item)" [title]="'TRAINING.OPEN_LINK' | translate">
                   <mat-icon inline="true">open_in_new</mat-icon>
                 </button>
                 <button class="icon-btn" *ngIf="activeCourseTab.item.link" (click)="copyToClipboard(activeCourseTab.item.link)" [title]="'TRAINING.COPY_LINK' | translate">
+                  <mat-icon inline="true">content_copy</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="course-detail-row" *ngIf="isUdemy(activeCourseTab.item)">
+              <label class="course-detail-label" for="cd-link-business">URL Udemy Business</label>
+              <div class="course-detail-link-row">
+                <input id="cd-link-business" class="course-detail-input" placeholder="https://minsait.udemy.com/course/..." [(ngModel)]="activeCourseTab.item.linkBusiness" [readonly]="activeCourseTab.readonly" style="flex:1" />
+                <button class="icon-btn" *ngIf="activeCourseTab.item.linkBusiness" (click)="openCourseLinkBusiness(activeCourseTab.item)" title="Abrir URL Business">
+                  <mat-icon inline="true">open_in_new</mat-icon>
+                </button>
+                <button class="icon-btn" *ngIf="activeCourseTab.item.linkBusiness" (click)="copyToClipboard(activeCourseTab.item.linkBusiness)" title="Copiar URL Business">
                   <mat-icon inline="true">content_copy</mat-icon>
                 </button>
               </div>
@@ -540,7 +558,16 @@
       />
     </div>
     <div class="form-row">
-      <label>{{ 'TRAINING.ITEM_LINK' | translate }}</label>
+      <label>Plataforma</label>
+      <input
+        placeholder="Udemy, Coursera, Pluralsight..."
+        [(ngModel)]="editingItem.location"
+        [readonly]="editingItem.readonly"
+        (ngModelChange)="onItemFormChange()"
+      />
+    </div>
+    <div class="form-row">
+      <label>{{ 'TRAINING.ITEM_LINK' | translate }}{{ isUdemy(editingItem) ? ' (URL Pública)' : '' }}</label>
       <div style="display: flex; gap: 8px; align-items: center">
         <input
           style="flex: 1"
@@ -552,9 +579,25 @@
           class="jenkins-add-btn csv-btn-small"
           (click)="copyToClipboard(editingItem.link)"
         >
-          <mat-icon inline="true" style="font-size: 16px"
-            >content_copy</mat-icon
-          >
+          <mat-icon inline="true" style="font-size: 16px">content_copy</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="form-row" *ngIf="isUdemy(editingItem)">
+      <label>URL Udemy Business</label>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <input
+          style="flex: 1"
+          placeholder="https://minsait.udemy.com/course/..."
+          [(ngModel)]="editingItem.linkBusiness"
+          [readonly]="editingItem.readonly"
+          (ngModelChange)="onItemFormChange()"
+        />
+        <button
+          class="jenkins-add-btn csv-btn-small"
+          (click)="copyToClipboard(editingItem.linkBusiness)"
+        >
+          <mat-icon inline="true" style="font-size: 16px">content_copy</mat-icon>
         </button>
       </div>
     </div>

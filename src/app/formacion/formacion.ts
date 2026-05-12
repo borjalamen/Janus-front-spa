@@ -16,6 +16,7 @@ type TrainingItem = {
   id: string;
   name: string;
   link?: string;
+  linkBusiness?: string;
   description?: string;
   tags?: string[];
   tagsString?: string;
@@ -611,6 +612,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
     this.editingItem = {
       ...item,
       tagsString: (item.tags || []).join(','),
+      linkBusiness: item.linkBusiness || '',
     };
     this.showItemModal = true;
   }
@@ -638,6 +640,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
       id: itPartial.id || '',
       name: itPartial.name || '',
       link: itPartial.link,
+      linkBusiness: itPartial.linkBusiness,
       description: itPartial.description,
       tags: itPartial.tags || [],
       location: itPartial.location,
@@ -678,6 +681,19 @@ export class FormacionComponent implements OnInit, OnDestroy {
     }
   }
 
+  openCourseLinkBusiness(it: TrainingItem) {
+    if (!it || !it.linkBusiness) return;
+    try {
+      window.open(it.linkBusiness, '_blank');
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  isUdemy(item: Partial<TrainingItem>): boolean {
+    return (item.location || '').toLowerCase().includes('udemy');
+  }
+
   /** Actions for All Courses tab */
   addCourseFromAll() {
     if (!this.selectedPath) {
@@ -693,6 +709,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
     this.editingItem = {
       name: '',
       link: '',
+      linkBusiness: '',
       description: '',
       tags: [],
       location: '',
