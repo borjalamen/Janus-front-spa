@@ -56,6 +56,7 @@ export class BitacoraComponent implements OnInit {
   private readonly STORAGE_KEY_TAB = 'bitacora_active_tab_v1';
   private readonly STORAGE_KEY_FILTER = 'bitacora_filter_v1';
   private readonly STORAGE_KEY_FORM = 'bitacora_form_v1';          // DRAFT
+  private readonly STORAGE_KEY_LAST_OPEN = 'bitacora_last_open_id'; // Último tab abierto
 
   errores: Bitacora[] = [];
   erroresFiltrados: Bitacora[] = [];
@@ -265,9 +266,23 @@ export class BitacoraComponent implements OnInit {
         if (this.searchText && this.searchText.trim()) {
           this.filtrar(this.searchText);
         }
+
+        this.restoreLastOpenTab();
       },
       error: (err) => console.error('❌ Error cargando bitácoras', err)
     });
+  }
+
+  private restoreLastOpenTab(): void {
+    const lastId = this.storage.get(this.STORAGE_KEY_LAST_OPEN) as string | null;
+    if (!lastId || !this.errores.length) return;
+    const bitacora = this.errores.find(e => e.id === lastId);
+    if (!bitacora) return;
+    const existing = this.openTabs.find(t => t.bitacora.id === lastId);
+    if (!existing) {
+      this.openTabs.push({ bitacora: { ...bitacora }, stepIndex: 0, slideDir: 'right' });
+    }
+    this.activeDetailId = lastId;
   }
 
   /** Convert any entorno representation to string[] */
@@ -735,6 +750,7 @@ export class BitacoraComponent implements OnInit {
       this.openTabs.push({ bitacora: { ...bitacora }, stepIndex: 0, slideDir: 'right' });
     }
     this.activeDetailId = bitacora.id!;
+    this.storage.set(this.STORAGE_KEY_LAST_OPEN, bitacora.id!);
   }
 
   closeBitacoraDetail(id?: string) {
@@ -743,6 +759,11 @@ export class BitacoraComponent implements OnInit {
     this.openTabs = this.openTabs.filter(t => t.bitacora.id !== closeId);
     if (this.activeDetailId === closeId) {
       this.activeDetailId = this.openTabs.length > 0 ? this.openTabs[this.openTabs.length - 1].bitacora.id! : null;
+    }
+    if (this.openTabs.length === 0) {
+      this.storage.remove(this.STORAGE_KEY_LAST_OPEN);
+    } else {
+      this.storage.set(this.STORAGE_KEY_LAST_OPEN, this.openTabs[this.openTabs.length - 1].bitacora.id!);
     }
   }
 

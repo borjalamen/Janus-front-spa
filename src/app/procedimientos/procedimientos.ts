@@ -62,6 +62,7 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
 
   // Keys per LocalStorage
   private readonly STORAGE_KEY_FORM = 'procedimientos_form_state';
+  private readonly STORAGE_KEY_LAST_OPEN = 'procedimientos_last_open_id'; // Último tab abierto
   private agentRefreshSub!: Subscription;
 
   constructor(
@@ -90,9 +91,22 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.procedures = this.sortByDate(data);
         this.procedimientosFiltrados = [...this.procedures];
+        this.restoreLastOpenTab();
       },
       error: (err) => console.error('Error carregant procediments', err)
     });
+  }
+
+  private restoreLastOpenTab(): void {
+    const lastId = this.storage.get(this.STORAGE_KEY_LAST_OPEN) as string | null;
+    if (!lastId || !this.procedures.length) return;
+    const proc = this.procedures.find(p => p.id === lastId);
+    if (!proc) return;
+    const existing = this.openProcTabs.find(t => t.proc.id === lastId);
+    if (!existing) {
+      this.openProcTabs.push({ proc, stepIndex: 0, slideDir: 'right' });
+    }
+    this.activeDetailId = lastId;
   }
 
   private sortByDate(data: Procedure[]): Procedure[] {
@@ -282,6 +296,7 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
       this.openProcTabs.push({ proc, stepIndex: 0, slideDir: 'right' });
     }
     this.activeDetailId = proc.id!;
+    this.storage.set(this.STORAGE_KEY_LAST_OPEN, proc.id!);
   }
 
   closeProcDetail(id?: string): void {
@@ -290,6 +305,11 @@ export class ProcedimientosComponent implements OnInit, OnDestroy {
     this.openProcTabs = this.openProcTabs.filter(t => t.proc.id !== closeId);
     if (this.activeDetailId === closeId) {
       this.activeDetailId = this.openProcTabs.length > 0 ? this.openProcTabs[this.openProcTabs.length - 1].proc.id! : null;
+    }
+    if (this.openProcTabs.length === 0) {
+      this.storage.remove(this.STORAGE_KEY_LAST_OPEN);
+    } else {
+      this.storage.set(this.STORAGE_KEY_LAST_OPEN, this.openProcTabs[this.openProcTabs.length - 1].proc.id!);
     }
   }
 

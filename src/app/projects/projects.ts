@@ -353,6 +353,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (this.activeProjectId === closeId) {
       this.activeProjectId = this.openProjectTabs.length > 0 ? this.openProjectTabs[this.openProjectTabs.length - 1].project.id ?? null : null;
     }
+    // Si no quedan tabs abiertos, limpiar la clave de localStorage para que no se restaure al recargar
+    if (this.openProjectTabs.length === 0) {
+      this.storage.remove(this.STORAGE_LAST_PROJECT_KEY);
+    } else {
+      // Actualizar la clave con el último tab activo
+      const lastTab = this.openProjectTabs[this.openProjectTabs.length - 1];
+      if (lastTab.project.codigoProyecto) {
+        this.storage.set(this.STORAGE_LAST_PROJECT_KEY, lastTab.project.codigoProyecto);
+      }
+    }
   }
 
   saveDraft(): void {
