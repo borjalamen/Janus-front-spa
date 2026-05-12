@@ -970,9 +970,9 @@ export class FormacionComponent implements OnInit, OnDestroy {
     XLSX.utils.book_append_sheet(wb, wsPath, 'Paths');
 
     // Hoja 2: Courses (con columna path_name para agrupar)
-    const courseHeaders = [['path_name', 'name', 'link', 'description', 'tags (semicolon-separated)', 'location']];
+    const courseHeaders = [['path_name', 'name', 'link', 'description', 'tags (semicolon-separated)', 'location', 'link_business (solo Udemy)']];
     const wsCourses = XLSX.utils.aoa_to_sheet(courseHeaders);
-    wsCourses['!cols'] = [{ wch: 35 }, { wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }];
+    wsCourses['!cols'] = [{ wch: 35 }, { wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }, { wch: 60 }];
     XLSX.utils.book_append_sheet(wb, wsCourses, 'Courses');
 
     XLSX.writeFile(wb, 'training-paths-template.xlsx');
@@ -1046,7 +1046,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
       }
 
       // Procesar courses (fila 0 = cabecera)
-      // Columnas: path_name(0), name(1), link(2), description(3), tags(4), location(5)
+      // Columnas: path_name(0), name(1), link(2), description(3), tags(4), location(5), link_business(6)
       for (const row of courseRows.slice(1)) {
         const pathName = (row[0] ?? '').toString().trim();
         const courseName = (row[1] ?? '').toString().trim();
@@ -1090,16 +1090,17 @@ export class FormacionComponent implements OnInit, OnDestroy {
           const description = (row[3] ?? '').toString().trim();
           const tagsRaw = (row[4] ?? '').toString().trim();
           const location = (row[5] ?? '').toString().trim();
+          const linkBusiness = (row[6] ?? '').toString().trim();
           const tags = tagsRaw ? tagsRaw.split(';').map((t: string) => t.trim()).filter(Boolean) : [];
           const newItem: TrainingItem = {
             id: Math.random().toString(36).slice(2, 9),
-            name: courseName, link, description, tags, location, visible: true, deleted: false
+            name: courseName, link, linkBusiness, description, tags, location, visible: true, deleted: false
           };
           targetPath.items.push(newItem);
           coursesAdded++;
 
           // Enviar al backend (fire-and-forget — errores no bloquean)
-          this.http.post(`${environment.baseUrl}formacion/import`, [{ name: courseName, link, description, tags, location }])
+          this.http.post(`${environment.baseUrl}formacion/import`, [{ name: courseName, link, linkBusiness, description, tags, location }])
             .subscribe({ error: (e) => errors.push(`Error guardando "${courseName}" en servidor`) });
         }
 
@@ -1128,9 +1129,9 @@ export class FormacionComponent implements OnInit, OnDestroy {
 
   async downloadExcelTemplate() {
     const XLSX = await import('xlsx');
-    const headers = [['name', 'link', 'description', 'tags (semicolon-separated)', 'location']];
+    const headers = [['name', 'link', 'description', 'tags (semicolon-separated)', 'location', 'link_business (solo Udemy)']];
     const ws = XLSX.utils.aoa_to_sheet(headers);
-    ws['!cols'] = [{ wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }];
+    ws['!cols'] = [{ wch: 40 }, { wch: 60 }, { wch: 60 }, { wch: 40 }, { wch: 20 }, { wch: 60 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Courses');
     XLSX.writeFile(wb, 'courses-template.xlsx');
@@ -1167,7 +1168,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Cabecera en la fila 0: name(0), link(1), description(2), tags(3), location(4)
+      // Cabecera en la fila 0: name(0), link(1), description(2), tags(3), location(4), link_business(5)
       const dataRows = rows.slice(1);
       const courses: TrainingItem[] = [];
       const payloadForBackend: any[] = [];
@@ -1179,13 +1180,14 @@ export class FormacionComponent implements OnInit, OnDestroy {
         const description = (row[2] ?? '').toString().trim();
         const tagsRaw = (row[3] ?? '').toString().trim();
         const location = (row[4] ?? '').toString().trim();
+        const linkBusiness = (row[5] ?? '').toString().trim();
         const tags = tagsRaw ? tagsRaw.split(';').map((t: string) => t.trim()).filter(Boolean) : [];
 
         courses.push({
           id: Math.random().toString(36).slice(2, 9),
-          name, link, description, tags, location, visible: true, deleted: false
+          name, link, linkBusiness, description, tags, location, visible: true, deleted: false
         });
-        payloadForBackend.push({ name, link, description, tags, location });
+        payloadForBackend.push({ name, link, linkBusiness, description, tags, location });
       }
 
       if (courses.length === 0) {
