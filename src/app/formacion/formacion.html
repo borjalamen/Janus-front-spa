@@ -382,7 +382,26 @@
 
             <div class="course-detail-row">
               <label class="course-detail-label" for="cd-location">Plataforma</label>
-              <input id="cd-location" class="course-detail-input" placeholder="Udemy, Coursera, Pluralsight..." [(ngModel)]="activeCourseTab.item.location" [readonly]="activeCourseTab.readonly" />
+              <div class="platform-dropdown">
+                <button type="button" class="platform-trigger" (click)="platformDropdownOpenTab = !platformDropdownOpenTab" [disabled]="!!activeCourseTab.readonly">
+                  <ng-container *ngIf="getPlatformOption(activeCourseTab.item.location) as opt; else noSelTab">
+                    <span class="platform-badge" [style.background]="opt.bg" [style.color]="opt.color">{{ opt.initial }}</span>
+                    <span>{{ opt.label }}</span>
+                  </ng-container>
+                  <ng-template #noSelTab><span class="platform-placeholder">-- Selecciona plataforma --</span></ng-template>
+                  <mat-icon inline="true" class="platform-arrow">expand_more</mat-icon>
+                </button>
+                <div class="platform-backdrop" *ngIf="platformDropdownOpenTab" (click)="platformDropdownOpenTab = false"></div>
+                <div class="platform-options" *ngIf="platformDropdownOpenTab">
+                  <div class="platform-option" (click)="selectPlatformForTab('')">
+                    <span class="platform-badge empty">—</span><span>-- Sin plataforma --</span>
+                  </div>
+                  <div class="platform-option" *ngFor="let opt of PLATFORM_OPTIONS" (click)="selectPlatformForTab(opt.value)">
+                    <span class="platform-badge" [style.background]="opt.bg" [style.color]="opt.color">{{ opt.initial }}</span>
+                    <span>{{ opt.label }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="course-detail-row">
@@ -559,12 +578,26 @@
     </div>
     <div class="form-row">
       <label>Plataforma</label>
-      <input
-        placeholder="Udemy, Coursera, Pluralsight..."
-        [(ngModel)]="editingItem.location"
-        [readonly]="editingItem.readonly"
-        (ngModelChange)="onItemFormChange()"
-      />
+      <div class="platform-dropdown">
+        <button type="button" class="platform-trigger" (click)="platformDropdownOpen = !platformDropdownOpen" [disabled]="!!editingItem.readonly">
+          <ng-container *ngIf="getPlatformOption(editingItem.location) as opt; else noSelModal">
+            <span class="platform-badge" [style.background]="opt.bg" [style.color]="opt.color">{{ opt.initial }}</span>
+            <span>{{ opt.label }}</span>
+          </ng-container>
+          <ng-template #noSelModal><span class="platform-placeholder">-- Selecciona plataforma --</span></ng-template>
+          <mat-icon inline="true" class="platform-arrow">expand_more</mat-icon>
+        </button>
+        <div class="platform-backdrop" *ngIf="platformDropdownOpen" (click)="platformDropdownOpen = false"></div>
+        <div class="platform-options" *ngIf="platformDropdownOpen">
+          <div class="platform-option" (click)="selectPlatformForModal('')">
+            <span class="platform-badge empty">—</span><span>-- Sin plataforma --</span>
+          </div>
+          <div class="platform-option" *ngFor="let opt of PLATFORM_OPTIONS" (click)="selectPlatformForModal(opt.value)">
+            <span class="platform-badge" [style.background]="opt.bg" [style.color]="opt.color">{{ opt.initial }}</span>
+            <span>{{ opt.label }}</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="form-row">
       <label>{{ 'TRAINING.ITEM_LINK' | translate }}{{ isUdemy(editingItem) ? ' (URL Pública)' : '' }}</label>

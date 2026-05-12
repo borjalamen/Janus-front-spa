@@ -61,6 +61,52 @@ const DRAFT_ITEM_KEY = 'training_item_draft_v1';
 export class FormacionComponent implements OnInit, OnDestroy {
   title = '';
 
+  readonly PLATFORM_OPTIONS: { value: string; label: string; bg: string; color: string; initial: string }[] = [
+    { value: 'Udemy',             label: 'Udemy',             bg: '#a435f0', color: '#ffffff', initial: '𝐔'  },
+    { value: 'Coursera',          label: 'Coursera',          bg: '#0056d2', color: '#ffffff', initial: '©'  },
+    { value: 'Pluralsight',       label: 'Pluralsight',       bg: '#f15b2a', color: '#ffffff', initial: '▶'  },
+    { value: 'LinkedIn Learning', label: 'LinkedIn Learning', bg: '#0a66c2', color: '#ffffff', initial: 'in' },
+    { value: 'edX',               label: 'edX',               bg: '#02262b', color: '#ffffff', initial: 'eX' },
+    { value: 'YouTube',           label: 'YouTube',           bg: '#ff0000', color: '#ffffff', initial: '▶'  },
+    { value: 'Confluence',        label: 'Confluence',        bg: '#0052cc', color: '#ffffff', initial: '≋'  },
+    { value: 'Otro',              label: 'Otro',              bg: '#37474f', color: '#eceff1', initial: '?'  },
+  ];
+
+  platformDropdownOpen = false;
+  platformDropdownOpenTab = false;
+
+  getPlatformOption(value?: string) {
+    return this.PLATFORM_OPTIONS.find(p => p.value === value) ?? null;
+  }
+
+  selectPlatformForModal(value: string) {
+    this.editingItem.location = value;
+    this.platformDropdownOpen = false;
+    if (value) this.autoAddPlatformTags(this.editingItem);
+    this.onItemFormChange();
+  }
+
+  selectPlatformForTab(value: string) {
+    if (!this.activeCourseTab) return;
+    this.activeCourseTab.item.location = value;
+    this.platformDropdownOpenTab = false;
+    if (value) this.autoAddPlatformTags(this.activeCourseTab.item);
+  }
+
+  private autoAddPlatformTags(item: Partial<TrainingItem>): void {
+    const platformTag = (item.location || '').toLowerCase().replace(/\s+/g, '-');
+    // Tags de plataforma conocidas (para limpiar las previas)
+    const knownPlatformTags = new Set(
+      this.PLATFORM_OPTIONS.map(p => p.value.toLowerCase().replace(/\s+/g, '-'))
+    );
+    // Filtrar las tags existentes quitando las de plataforma previas
+    const existing = (item.tagsString || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+    const userTags = existing.filter(t => !knownPlatformTags.has(t) && t !== 'online');
+    const merged = [...new Set([...userTags, 'online', platformTag])];
+    item.tagsString = merged.join(',');
+    (item as any).tags = merged;
+  }
+
   paths: TrainingPath[] = [];
   filteredPaths: TrainingPath[] = [];
   filteredAllCourses: TrainingItem[] = [];
