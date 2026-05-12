@@ -394,6 +394,17 @@
 .quick-card-admin mat-icon { color: #a78bfa !important; }
 .quick-card-admin:hover { border-color: #a78bfa; color: #a78bfa; }
 
+/* GitHub externos */
+.quick-card-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+.quick-card-github { border-color: #30363d; }
+.quick-card-minsait:hover { border-color: #e040fb; color: #e040fb; }
+.quick-card-ctti:hover    { border-color: #00e5ff; color: #00e5ff; }
+
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .kpi-card { max-width: 100%; }
