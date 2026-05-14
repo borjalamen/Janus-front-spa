@@ -1520,3 +1520,68 @@
   font-style: italic;
 }
 
+/* ── Minsait: badge en tabla ── */
+.minsait-internal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px 2px 5px;
+  border-radius: 999px;
+  background: rgba(226, 0, 26, 0.12);
+  border: 1px solid rgba(226, 0, 26, 0.4);
+  color: #ff6b6b;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.minsait-internal-badge mat-icon {
+  font-size: 11px !important;
+  width: 11px !important;
+  height: 11px !important;
+  line-height: 11px !important;
+}
+
+/* ── Minsait: aviso en modal y panel de detalle ── */
+.minsait-internal-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 0 0 16px 0;
+  border-radius: 8px;
+  background: rgba(226, 0, 26, 0.08);
+  border: 1px solid rgba(226, 0, 26, 0.35);
+  border-left: 4px solid #e2001a;
+}
+
+.minsait-notice-icon {
+  color: #e2001a;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.minsait-notice-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.minsait-notice-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff6b6b;
+  letter-spacing: 0.02em;
+}
+
+.minsait-notice-desc {
+  font-size: 12px;
+  color: #b0bec5;
+  line-height: 1.4;
+}
+

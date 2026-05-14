@@ -69,6 +69,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
     { value: 'edX',               label: 'edX',               bg: '#02262b', color: '#ffffff', initial: 'eX' },
     { value: 'YouTube',           label: 'YouTube',           bg: '#ff0000', color: '#ffffff', initial: '▶'  },
     { value: 'Confluence',        label: 'Confluence',        bg: '#0052cc', color: '#ffffff', initial: '≋'  },
+    { value: 'Minsait',           label: 'Minsait',           bg: '#e2001a', color: '#ffffff', initial: 'M'  },
     { value: 'Otro',              label: 'Otro',              bg: '#37474f', color: '#eceff1', initial: '?'  },
   ];
 

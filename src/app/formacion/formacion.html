@@ -301,6 +301,9 @@
                     <div class="course-name-cell">
                       <span class="course-name-text" [title]="c.name">{{ c.name }}</span>
                       <span *ngIf="c.link" class="course-has-link" [title]="'TRAINING.HAS_LINK' | translate">🔗</span>
+                      <span *ngIf="c.location === 'Minsait'" class="minsait-internal-badge" [title]="'TRAINING.MINSAIT_INTERNAL_DESC' | translate">
+                        <mat-icon inline="true">lock</mat-icon> {{ 'TRAINING.MINSAIT_INTERNAL_BADGE' | translate }}
+                      </span>
                     </div>
                     <div *ngIf="c.description" class="course-desc-text" [title]="c.description">{{ c.description }}</div>
                   </td>
@@ -401,6 +404,15 @@
                     <span>{{ opt.label }}</span>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Aviso acceso interno Minsait -->
+            <div class="minsait-internal-notice" *ngIf="activeCourseTab.item.location === 'Minsait'">
+              <mat-icon class="minsait-notice-icon">lock</mat-icon>
+              <div class="minsait-notice-text">
+                <span class="minsait-notice-title">{{ 'TRAINING.MINSAIT_INTERNAL_TITLE' | translate }}</span>
+                <span class="minsait-notice-desc">{{ 'TRAINING.MINSAIT_INTERNAL_DESC' | translate }}</span>
               </div>
             </div>
 
@@ -599,6 +611,15 @@
         </div>
       </div>
     </div>
+    <!-- Aviso acceso interno Minsait -->
+    <div class="minsait-internal-notice" *ngIf="editingItem.location === 'Minsait'">
+      <mat-icon class="minsait-notice-icon">lock</mat-icon>
+      <div class="minsait-notice-text">
+        <span class="minsait-notice-title">{{ 'TRAINING.MINSAIT_INTERNAL_TITLE' | translate }}</span>
+        <span class="minsait-notice-desc">{{ 'TRAINING.MINSAIT_INTERNAL_DESC' | translate }}</span>
+      </div>
+    </div>
+
     <div class="form-row">
       <label>{{ 'TRAINING.ITEM_LINK' | translate }}{{ isUdemy(editingItem) ? ' (URL Pública)' : '' }}</label>
       <div style="display: flex; gap: 8px; align-items: center">
