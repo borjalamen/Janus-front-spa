@@ -281,6 +281,14 @@
   gap: 16px;
   flex-wrap: wrap;
 }
+.dash-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .dash-cols-3 { grid-template-columns: 1fr; }
+}
 .dash-col {
   flex: 1 1 300px;
   background: #1c1f26;

@@ -31,6 +31,14 @@ export interface PeticionRecent {
   createdAt: string;
 }
 
+export interface SolicitudRecent {
+  id: string;
+  fullName: string;
+  email: string;
+  estado: string;
+  createdAt: string;
+}
+
 export interface BitacoraRecent {
   id: string;
   titulo: string;
@@ -46,11 +54,19 @@ export interface DashboardKpis {
     byEstado: Record<string, number>;
     recent: PeticionRecent[];
   };
+  solicitudes: {
+    total: number;
+    pendientes: number;
+    recent: SolicitudRecent[];
+  };
   join: { total: number; pendientes: number };
   proyectos: { total: number };
   bitacora: { total: number; recent: BitacoraRecent[] };
   usuarios: { total: number };
   backlog: { total: number };
+  procedimientos: { total: number };
+  herramientas: { total: number };
+  formaciones: { total: number };
 }
 
 @Component({
@@ -98,6 +114,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (e === 'FINALIZADA') return 'badge-finalizada';
     if (e === 'RECHAZADA')  return 'badge-rechazada';
     return 'badge-default';
+  }
+
+  solicitudEstadoClass(estado: string): string {
+    return this.estadoClass(estado);
+  }
+
+  solicitudEstadoIcon(estado: string): string {
+    const e = (estado ?? '').toUpperCase();
+    if (e === 'PENDIENTE')  return 'hourglass_empty';
+    if (e === 'APROBADA')   return 'how_to_reg';
+    if (e === 'RECHAZADA')  return 'person_off';
+    return 'person_add';
   }
 
   estadoIcon(estado: string): string {
