@@ -8,7 +8,6 @@ import { AgentRefreshService } from '../agent-refresh.service';
 
 import { BuscadorComponent } from '../buscador/buscador';
 import { LocalStorageService } from '../local-storage.service';
-import { ProjectService, Project } from '../project.service';
 import { HerramientasService } from './herramientas.service';
 
 type Tool = {
@@ -18,8 +17,6 @@ type Tool = {
   functionality?: string;
   tags?: string[];
   installSteps?: ToolStep[];
-  projects?: string[];
-  projectsString?: string;
 };
 
 type ToolAttachment = {
@@ -134,16 +131,6 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
           </div>
 
           <div class="form-field">
-            <label>{{ 'HERRAMIENTAS.LABEL_PROJECTS' | translate }}</label>
-            <button type="button" class="projects-selector-btn" (click)="openProjectsModal()">
-              {{ getSelectedProjectsDisplay() }}
-            </button>
-            <div class="projects-selected-display" *ngIf="getProjectsListForDisplay()">
-              {{ getProjectsListForDisplay() }}
-            </div>
-          </div>
-
-          <div class="form-field">
             <label>{{ 'HERRAMIENTAS.TAGS' | translate }}</label>
             <input type="text" [(ngModel)]="tagsInput" [placeholder]="'HERRAMIENTAS.TAGS_PLACEHOLDER' | translate" (ngModelChange)="saveDraft()" />
           </div>
@@ -230,13 +217,6 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
                   <h3>{{ toolInDetail.name || ('HERRAMIENTAS.EMPTY_NAME' | translate) }}</h3>
                   <span class="bitacora-fecha-pill">ID: {{ toolInDetail.id }}</span>
                   <span *ngFor="let tag of toolInDetail.tags" class="tag-pill">{{ tag }}</span>
-                  <span
-                    *ngFor="let p of getToolProjectNames(toolInDetail)"
-                    class="bitacora-chip"
-                    [style.backgroundColor]="'rgba(251, 192, 45, 0.12)'"
-                    [style.borderColor]="'#FBC02D'">
-                    <span>{{ p }}</span>
-                  </span>
                 </div>
 
                 <div class="bitacora-detail-meta-block">
@@ -249,10 +229,6 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
                   <p class="bitacora-steps-detail-sub">{{ toolInDetail.functionality }}</p>
                 </div>
 
-                <div class="bitacora-detail-meta-block" *ngIf="getToolProjectNames(toolInDetail).length > 0">
-                  <h4>{{ 'HERRAMIENTAS.DETAIL_PROJECTS' | translate }}</h4>
-                  <p class="bitacora-steps-detail-sub">{{ getToolProjectNames(toolInDetail).join(', ') }}</p>
-                </div>
               </div>
             </div>
 
@@ -316,49 +292,6 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
             </div>
           </div>
         </ng-template>
-      </div>
-
-      <div class="modal-overlay" *ngIf="showProjectsModal" (click)="closeProjectsModal()">
-        <div class="auth-card projects-modal" (click)="$event.stopPropagation()">
-          <h2 class="form-title">{{ 'HERRAMIENTAS.SELECT_PROJECTS' | translate }}</h2>
-          <hr class="divider">
-
-          <div class="projects-search-container">
-            <app-buscador (buscar)="buscarProyectos($event)"></app-buscador>
-          </div>
-
-          <div class="form-content projects-list-content">
-            <div class="projects-mosaic-grid">
-              <div class="project-card-selector" *ngFor="let proj of filteredProjectsForModal" [class.selected]="isProjectSelected(proj.codigoProyecto || '')" (click)="toggleProjectSelection(proj)">
-                <div class="project-card-checkbox">
-                  <input
-                    type="checkbox"
-                    [checked]="isProjectSelected(proj.codigoProyecto || '')"
-                    (change)="toggleProjectSelection(proj)"
-                    (click)="$event.stopPropagation()"
-                    class="hidden-checkbox"
-                  >
-                  <span class="checkbox-symbol">{{ isProjectSelected(proj.codigoProyecto || '') ? '✓' : '' }}</span>
-                </div>
-                <div class="project-card-content">
-                  <div class="project-name">{{ proj.nombre || ('HERRAMIENTAS.EMPTY_NAME' | translate) }}</div>
-                  <div class="project-code">{{ proj.codigoProyecto || '-' }}</div>
-                  <div class="project-dept">{{ proj.departamento || '-' }}</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="empty-projects" *ngIf="filteredProjectsForModal.length === 0">
-              <p>{{ 'HERRAMIENTAS.NO_PROJECTS' | translate }}</p>
-            </div>
-          </div>
-
-          <hr class="divider">
-          <div class="action-buttons">
-            <button class="btn-emoji cancel" (click)="closeProjectsModal()" [title]="'HERRAMIENTAS.CONFIRM_CANCEL' | translate">✗</button>
-            <button class="btn-emoji confirm" (click)="confirmProjectsSelection()" [title]="'HERRAMIENTAS.CONFIRM_OK' | translate">✓</button>
-          </div>
-        </div>
       </div>
 
       <div class="modal-overlay" *ngIf="confirmAction" (click)="cancelDelete()">
@@ -1439,60 +1372,6 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
       margin: 12px 0;
     }
 
-    .projects-modal {
-      max-height: 90vh;
-      overflow: auto;
-    }
-
-    .projects-mosaic-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-    }
-
-    .project-card-selector {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      gap: 8px;
-      background: #12151d;
-    }
-
-    .project-card-selector.selected {
-      border-color: #FBC02D;
-      background: #1c212c;
-    }
-
-    .hidden-checkbox {
-      display: none;
-    }
-
-    .checkbox-symbol {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      border: 1px solid #70798d;
-      border-radius: 4px;
-      color: #FBC02D;
-      font-size: 13px;
-    }
-
-    .project-name {
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 3px;
-    }
-
-    .project-code,
-    .project-dept {
-      color: #b7bdc8;
-      font-size: 0.8rem;
-    }
-
     .action-buttons {
       display: flex;
       justify-content: flex-end;
@@ -1614,21 +1493,14 @@ const STORAGE_DRAFT_KEY = 'tools_draft_v1';
       .bitacora-row {
         flex-direction: column;
       }
-
-      .projects-mosaic-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
     }
   `]
 })
 export class HerramientasComponent implements OnInit, OnDestroy {
   tools: Tool[] = [];
   filteredTools: Tool[] = [];
-  availableProjects: Project[] = [];
-  filteredProjectsForModal: Project[] = [];
 
   activeTab: 'crear' | 'listar' = 'listar';
-  showProjectsModal = false;
   showStepsDetail = false;
 
   editingTool: Tool = this.getEmptyTool();
@@ -1638,22 +1510,18 @@ export class HerramientasComponent implements OnInit, OnDestroy {
   tagsInput = '';
   lastSearch = '';
 
-  paginaActualTools = 1;
-  readonly toolsPorPagina = 10;
-
-  selectedProjectIds = new Set<string>();
-  projectsSearchQuery = '';
-
   confirmAction: { id: string; name: string } | null = null;
 
   showImagePopup = false;
   imagePopupUrl = '';
 
+  paginaActualTools = 1;
+  readonly toolsPorPagina = 10;
+
   private refreshSub!: Subscription;
 
   constructor(
     private localStorage: LocalStorageService,
-    private projectService: ProjectService,
     private herramientasService: HerramientasService,
     private translate: TranslateService,
     private agentRefresh: AgentRefreshService
@@ -1661,7 +1529,6 @@ export class HerramientasComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadTools();
-    this.loadProjects();
     this.refreshSub = this.agentRefresh.refresh$.subscribe(entity => {
       if (entity === 'herramienta' || entity === 'all') this.loadTools();
     });
@@ -1710,17 +1577,6 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadProjects() {
-    this.projectService.getAll().subscribe(
-      (projects: Project[]) => {
-        this.availableProjects = projects || [];
-      },
-      (error: any) => {
-        console.error('Error loading projects:', error);
-      }
-    );
-  }
-
   filtrar(query: string) {
     this.lastSearch = query;
     const q = query.toLowerCase();
@@ -1729,7 +1585,7 @@ export class HerramientasComponent implements OnInit, OnDestroy {
         .map(s => `${s.text || ''} ${(s.attachments || []).map(a => `${a.name || ''} ${a.mimeType || ''} ${a.size || ''}`).join(' ')}`)
         .join(' ');
 
-      const haystack = `${t.id || ''} ${t.name || ''} ${t.description || ''} ${t.functionality || ''} ${(t.tags || []).join(' ')} ${stepsText} ${(t.projects || []).join(' ')} ${t.projectsString || ''}`
+      const haystack = `${t.id || ''} ${t.name || ''} ${t.description || ''} ${t.functionality || ''} ${(t.tags || []).join(' ')} ${stepsText}`
         .toLowerCase();
 
       return haystack.includes(q);
@@ -1751,11 +1607,6 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     };
     this.tagsInput = (tool.tags || []).join(', ');
 
-    const projectsString = tool.projectsString || '';
-    this.selectedProjectIds = new Set(
-      projectsString.split(',').map((s: string) => s.trim()).filter(Boolean)
-    );
-
     this.activeTab = 'crear';
   }
 
@@ -1766,12 +1617,10 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     }
 
     const tags = this.tagsInput.split(',').map(t => t.trim()).filter(t => t);
-    const projectsString = Array.from(this.selectedProjectIds).join(',');
 
     const toolToSave: Tool = {
       ...this.editingTool,
-      tags,
-      projectsString
+      tags
     };
 
     const afterSave = () => {
@@ -1807,18 +1656,13 @@ export class HerramientasComponent implements OnInit, OnDestroy {
   clearForm() {
     this.editingTool = this.getEmptyTool();
     this.tagsInput = '';
-    this.selectedProjectIds.clear();
   }
 
   saveDraft() {
     const tags = this.tagsInput.split(',').map(t => t.trim()).filter(t => t);
     this.editingTool.tags = tags;
 
-    const projectsString = Array.from(this.selectedProjectIds).join(',');
-    const draft = {
-      ...this.editingTool,
-      projectsString
-    };
+    const draft = { ...this.editingTool };
 
     this.localStorage.set(STORAGE_DRAFT_KEY, JSON.stringify(draft));
   }
@@ -1956,82 +1800,6 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     return fileName.slice(idx + 1).toUpperCase();
   }
 
-  openProjectsModal() {
-    this.projectsSearchQuery = '';
-    this.filteredProjectsForModal = [...this.availableProjects];
-    this.showProjectsModal = true;
-  }
-
-  closeProjectsModal() {
-    this.showProjectsModal = false;
-  }
-
-  buscarProyectos(query: string) {
-    this.projectsSearchQuery = query;
-    const q = query.toLowerCase();
-
-    if (!q) {
-      this.filteredProjectsForModal = [...this.availableProjects];
-    } else {
-      this.filteredProjectsForModal = this.availableProjects.filter(p =>
-        (p.nombre || '').toLowerCase().includes(q) ||
-        (p.codigoProyecto || '').toLowerCase().includes(q) ||
-        (p.departamento || '').toLowerCase().includes(q)
-      );
-    }
-  }
-
-  toggleProjectSelection(project: Project) {
-    const id = project.codigoProyecto || '';
-    if (this.selectedProjectIds.has(id)) {
-      this.selectedProjectIds.delete(id);
-    } else {
-      this.selectedProjectIds.add(id);
-    }
-  }
-
-  isProjectSelected(projectId: string): boolean {
-    return this.selectedProjectIds.has(projectId);
-  }
-
-  confirmProjectsSelection() {
-    this.saveDraft();
-    this.closeProjectsModal();
-  }
-
-  getSelectedProjectsDisplay(): string {
-    return this.translate.instant('HERRAMIENTAS.SELECT_PROJECT');
-  }
-
-  getProjectsListForDisplay(): string {
-    if (this.selectedProjectIds.size === 0) {
-      return '';
-    }
-
-    return Array.from(this.selectedProjectIds)
-      .map(code => {
-        const project = this.availableProjects.find(p => p.codigoProyecto === code);
-        return this.formatProjectLabel(project, code);
-      })
-      .join(', ');
-  }
-
-  getToolProjectNames(tool: Tool): string[] {
-    if (!tool) {
-      return [];
-    }
-
-    const raw = (tool.projectsString || '').split(',').map(code => code.trim()).filter(Boolean);
-    if (raw.length === 0 && Array.isArray(tool.projects) && tool.projects.length > 0) {
-      return tool.projects;
-    }
-
-    return raw.map(code => {
-      const project = this.availableProjects.find(p => p.codigoProyecto === code);
-      return this.formatProjectLabel(project, code);
-    });
-  }
-
   private normalizeInstallSteps(steps: any): ToolStep[] {
     if (!Array.isArray(steps)) {
       return [];
@@ -2083,17 +1851,6 @@ export class HerramientasComponent implements OnInit, OnDestroy {
     });
   }
 
-  private formatProjectLabel(project: Project | undefined, fallbackCode: string): string {
-    const code = (project?.codigoProyecto || fallbackCode || '').trim();
-    const name = (project?.nombre || '').trim();
-
-    if (name && code) {
-      return `${name} | ${code}`;
-    }
-    return name || code || '-';
-  }
-  
-
   private getEmptyTool(): Tool {
     return {
       id: '',
@@ -2101,12 +1858,10 @@ export class HerramientasComponent implements OnInit, OnDestroy {
       description: '',
       functionality: '',
       tags: [],
-      installSteps: [],
-      projects: [],
-      projectsString: ''
+      installSteps: []
     };
   }
-  
+
 }
 
 export { HerramientasComponent as Herramientas };
