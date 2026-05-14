@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
-import { ProjectService, Project, Department, ConnectivityEntry, ExternalService } from "../project.service";
+import { ProjectService, Project, Department, ConnectivityEntry, ExternalService, Daily } from "../project.service";
 import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
 import { AuthService } from "../auth.service";
@@ -148,6 +148,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     rol: string;
     email: string;
   }> = [];
+
+  newProjectDailies: Daily[] = [];
+  readonly WEEK_DAYS = ['L','M','X','J','V','S','D'];
 
   newProjectDevMachines: Array<{
     identifier: string;
@@ -377,6 +380,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       editingProject: this.editingProject,
       newProjectTab: this.newProjectTab,
       newProjectMinsaitMembers: this.newProjectMinsaitMembers,
+      newProjectDailies: this.newProjectDailies,
       newProjectDevMachines: this.newProjectDevMachines,
       newProjectCodeRepos: this.newProjectCodeRepos,
       newProjectArtifactRepos: this.newProjectArtifactRepos,
@@ -406,6 +410,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (draft.newProjectTab) this.newProjectTab = draft.newProjectTab;
     if (draft.newProjectMinsaitMembers)
       this.newProjectMinsaitMembers = draft.newProjectMinsaitMembers;
+    if (Array.isArray(draft.newProjectDailies))
+      this.newProjectDailies = draft.newProjectDailies;
     if (draft.newProjectDevMachines)
       this.newProjectDevMachines = draft.newProjectDevMachines.map((m: any) => ({
         ...m,
@@ -425,6 +431,24 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.newProjectDocuments = draft.newProjectDocuments;
     if (Array.isArray(draft.newProjectConnectivities))
       this.newProjectConnectivities = draft.newProjectConnectivities;
+  }
+
+  addNewProjectDaily(): void {
+    this.newProjectDailies.push({ hora: '09:00', dias: ['L','M','X','J','V'], notas: '' });
+    this.saveDraft();
+  }
+
+  removeNewProjectDaily(i: number): void {
+    this.newProjectDailies.splice(i, 1);
+    this.saveDraft();
+  }
+
+  newProjectToggleDay(daily: Daily, day: string): void {
+    if (!daily.dias) daily.dias = [];
+    const idx = daily.dias.indexOf(day);
+    if (idx >= 0) daily.dias.splice(idx, 1);
+    else daily.dias.push(day);
+    this.saveDraft();
   }
 
   clearDraft(): void {
@@ -493,10 +517,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       urlEntornoPreproduccion: "",
       urlEntornoProduccion: "",
       horaDaily: "",
+      dailies: [],
       notasGenerales: "",
     } as any;
 
     this.newProjectMinsaitMembers = [];
+    this.newProjectDailies = [];
     this.newProjectDevMachines = [];
     this.newProjectCodeRepos = [];
     this.newProjectArtifactRepos = [];
@@ -970,6 +996,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       urlEntornoPreproduccion: (partial as any).urlEntornoPreproduccion || null,
       urlEntornoProduccion: (partial as any).urlEntornoProduccion || null,
       horaDaily: (partial as any).horaDaily || null,
+      dailies: this.newProjectDailies,
       tareas: this.parseTareasString(partial.tareasString || ""),
       herramientas: partial.herramientas || [],
       jenkinsNodes: partial.jenkinsNodes || [],

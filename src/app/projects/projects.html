@@ -361,13 +361,25 @@
             <span *ngIf="newRespTecEmail.value && newRespTecEmail.invalid" class="field-error">{{ 'COMMON.INVALID_EMAIL' | translate }}</span>
           </div>
 
-          <div class="input-field">
-            <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
-            <input
-              type="time"
-              [(ngModel)]="editingProject.horaDaily"
-              (ngModelChange)="saveDraft()"
-            />
+          <div class="input-field daily-field-group">
+            <div class="daily-section-label">
+              <label>{{ 'PROJECTS.HORA_DAILY' | translate }}</label>
+              <button type="button" class="btn small btn-add-daily" (click)="addNewProjectDaily()">{{ 'PROJECTS.DAILY_ADD' | translate }}</button>
+            </div>
+            <div *ngFor="let d of newProjectDailies; let di = index" class="daily-edit-card">
+              <div class="daily-edit-header">
+                <input type="time" [(ngModel)]="d.hora" (ngModelChange)="saveDraft()" class="daily-time-input">
+                <div class="daily-days-picker">
+                  <button *ngFor="let day of WEEK_DAYS" type="button"
+                          class="day-btn" [class.active]="d.dias.includes(day)"
+                          (click)="newProjectToggleDay(d, day)">{{ day }}</button>
+                </div>
+                <button type="button" class="btn remove-large daily-remove-btn" (click)="removeNewProjectDaily(di)">-</button>
+              </div>
+              <textarea [(ngModel)]="d.notas" (ngModelChange)="saveDraft()"
+                        rows="2" [placeholder]="'PROJECTS.DAILY_NOTES_PLACEHOLDER' | translate" class="daily-notes-input"></textarea>
+            </div>
+            <span *ngIf="!newProjectDailies.length" class="mind-empty">{{ 'PROJECTS.DAILY_EMPTY' | translate }}</span>
           </div>
         </div>
 

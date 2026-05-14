@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatIconModule } from "@angular/material/icon";
-import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel } from "../project.service";
+import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel, Daily } from "../project.service";
 import { DocumentService } from "../document.service";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth.service";
@@ -93,6 +93,7 @@ type ProjectDetailDraft = {
   responsableProyecto: ResponsableInfo | null;
   responsableTecnico: ResponsableInfo | null;
   horaDaily: string | null;
+  dailies: Daily[];
   entornoNotas: string;
   notasGenerales: string | null;
   monitoringTools?: MonitoringTools;
@@ -600,6 +601,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       responsableProyecto: this.proyecto.responsableProyecto ?? null,
       responsableTecnico: this.proyecto.responsableTecnico ?? null,
       horaDaily: this.proyecto.horaDaily || null,
+      dailies: this.proyecto.dailies || [],
       entornoNotas: (this.proyecto as any).entornoNotas || "",
       notasGenerales: this.proyecto.notasGenerales || null,
       monitoringTools: this.proyecto.monitoringTools,
@@ -653,6 +655,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.proyecto.responsableTecnico =
       draft.responsableTecnico ?? this.proyecto.responsableTecnico;
     this.proyecto.horaDaily = draft.horaDaily ?? this.proyecto.horaDaily;
+    if (Array.isArray(draft.dailies)) this.proyecto.dailies = draft.dailies;
     (this.proyecto as any).entornoNotas =
       draft.entornoNotas ?? (this.proyecto as any).entornoNotas;
     this.proyecto.notasGenerales =
@@ -1097,6 +1100,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       (p as any).documentacion = this.docsString || "";
       p.equipoMinsait = p.equipoMinsait || [];
       p.horaDaily = p.horaDaily || null;
+      p.dailies = Array.isArray(p.dailies) ? p.dailies : [];
+      if (p.horaDaily && !p.dailies.length) {
+        p.dailies = [{ hora: p.horaDaily, dias: ['L','M','X','J','V'], notas: '' }];
+      }
       p.devMachines = this.devMachines as any;
 
       p.documents = documentsSnapshot as any;
@@ -1271,6 +1278,28 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   cancelRemove() {
     this.removeCandidate = null;
+  }
+
+  readonly WEEK_DAYS = ['L','M','X','J','V','S','D'];
+
+  addDaily(): void {
+    if (!this.proyecto) return;
+    this.proyecto.dailies = this.proyecto.dailies || [];
+    this.proyecto.dailies.push({ hora: '09:00', dias: ['L','M','X','J','V'], notas: '' });
+    this.saveDraft();
+  }
+
+  removeDaily(i: number): void {
+    this.proyecto?.dailies?.splice(i, 1);
+    this.saveDraft();
+  }
+
+  toggleDay(daily: Daily, day: string): void {
+    if (!daily.dias) daily.dias = [];
+    const idx = daily.dias.indexOf(day);
+    if (idx >= 0) daily.dias.splice(idx, 1);
+    else daily.dias.push(day);
+    this.saveDraft();
   }
 
   addMember() {

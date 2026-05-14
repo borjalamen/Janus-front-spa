@@ -126,6 +126,12 @@ export interface Department {
   name: string;
 }
 
+export interface Daily {
+  hora: string;
+  dias: string[];
+  notas: string;
+}
+
 export interface Project {
   id?: string;
   codigoProyecto?: string;
@@ -144,6 +150,7 @@ export interface Project {
   responsableProyecto?: ResponsableInfo | null;
   responsableTecnico?: ResponsableInfo | null;
   horaDaily?: string | null;
+  dailies?: Daily[];
 
   // Listas
   ip?: string[];
