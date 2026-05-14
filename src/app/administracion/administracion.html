@@ -280,7 +280,7 @@
             (click)="filtrarPorEstado('INICIADA')"
             style="cursor: pointer"
           >
-            {{ peticionesIniciadas }} Iniciadas
+            {{ peticionesIniciadas }} {{ 'ADMIN.INITIATED' | translate | uppercase }}
           </span>
 
           <span
@@ -460,7 +460,7 @@
             (click)="filtrarPorEstadoTareas('FINALIZADA')"
             style="cursor: pointer"
           >
-            {{ tareasFinalizadas }} FINALIZADAS
+            {{ tareasFinalizadas }} {{ 'ADMIN.FINALIZED' | translate | uppercase }}
           </span>
 
           <span

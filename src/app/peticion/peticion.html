@@ -145,7 +145,7 @@
             panelClass="peticion-select-panel"
           >
             <mat-option *ngFor="let opt of devopsOptions" [value]="opt">
-              {{ opt }}
+              {{ opt === 'Cualquiera' ? ('PETICION.ASSIGNEE_ANY' | translate) : opt }}
             </mat-option>
           </mat-select>
           <div
