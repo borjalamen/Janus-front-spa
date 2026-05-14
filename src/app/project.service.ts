@@ -73,6 +73,22 @@ export interface HerramientasMind {
   sonarList?: SonarConfig[];
 }
 
+export interface MonitoringEnv {
+  grafanaUrl?: string;
+  grafanaUser?: string;
+  grafanaPassword?: string;
+  kibanaUrl?: string;
+  kibanaUser?: string;
+  kibanaPassword?: string;
+}
+
+export interface MonitoringTools {
+  dev?: MonitoringEnv;
+  pre?: MonitoringEnv;
+  pro?: MonitoringEnv;
+  [key: string]: MonitoringEnv | undefined;
+}
+
 export interface Department {
   id?: string;
   name: string;
@@ -119,6 +135,9 @@ export interface Project {
 
   // Herramientas MIND
   herramientasMind?: HerramientasMind;
+
+  // Herramientas de Monitorización
+  monitoringTools?: MonitoringTools;
 
   // Documentos
   documents?: Array<{

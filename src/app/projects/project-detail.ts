@@ -19,7 +19,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth.service";
 import { SafePipe } from "../safe.pipe";
-import { ResponsableInfo } from "../project.service";
+import { ResponsableInfo, MonitoringTools } from "../project.service";
 
 import { Proyecto, Task } from "./projects";
 
@@ -97,6 +97,7 @@ type ProjectDetailDraft = {
   horaDaily: string | null;
   entornoNotas: string;
   notasGenerales: string | null;
+  monitoringTools?: MonitoringTools;
 };
 
 @Component({
@@ -503,6 +504,15 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
     this.selectedDevMachineIndex = this.devMachines.length ? 0 : -1;
 
+    // Monitoring Tools
+    const emptyMonEnv = () => ({ grafanaUrl: '', grafanaUser: '', grafanaPassword: '', kibanaUrl: '', kibanaUser: '', kibanaPassword: '' });
+    const mt = (p as any).monitoringTools || {};
+    p.monitoringTools = {
+      dev: { ...emptyMonEnv(), ...mt.dev },
+      pre: { ...emptyMonEnv(), ...mt.pre },
+      pro: { ...emptyMonEnv(), ...mt.pro },
+    };
+
     p.herramientasMind = p.herramientasMind || ({} as any);
     const h = p.herramientasMind as any;
     h.nexus = h.nexus || [];
@@ -573,6 +583,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       horaDaily: this.proyecto.horaDaily || null,
       entornoNotas: (this.proyecto as any).entornoNotas || "",
       notasGenerales: this.proyecto.notasGenerales || null,
+      monitoringTools: this.proyecto.monitoringTools,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -625,6 +636,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       draft.entornoNotas ?? (this.proyecto as any).entornoNotas;
     this.proyecto.notasGenerales =
       draft.notasGenerales ?? this.proyecto.notasGenerales;
+    if (draft.monitoringTools) this.proyecto.monitoringTools = draft.monitoringTools;
   }
 
   clearDraft(): void {

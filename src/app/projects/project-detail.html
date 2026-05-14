@@ -508,6 +508,64 @@ spring.datasource.password=..."></textarea>
           </div>
         </div>
 
+        <!-- Herramientas de Monitorización (edición) -->
+        <div class="form-divider"></div>
+        <div class="monitoring-section">
+          <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MONITORING' | translate }}</h3>
+
+          <ng-container *ngFor="let env of [{key:'dev',label:'DEV'},{key:'pre',label:'PRE'},{key:'pro',label:'PRO'}]">
+            <ng-container *ngIf="$any(proyecto.monitoringTools)[env.key] as mon">
+              <h4 class="subsection-title monitoring-env-label">{{ env.label }}</h4>
+              <div class="form-grid three-col">
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_GRAFANA_URL' | translate }}</label>
+                  <input type="text" [(ngModel)]="mon.grafanaUrl" (ngModelChange)="saveDraft()">
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_GRAFANA_USER' | translate }}</label>
+                  <input type="text" [(ngModel)]="mon.grafanaUser" (ngModelChange)="saveDraft()">
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_GRAFANA_PASSWORD' | translate }}</label>
+                  <div class="pwd-wrapper">
+                    <input [type]="isPwdVisible('grafana-'+env.key) ? 'text' : 'password'"
+                           [(ngModel)]="mon.grafanaPassword"
+                           (ngModelChange)="saveDraft()">
+                    <button type="button" class="pwd-btn" (click)="togglePwd('grafana-'+env.key)" title="Mostrar/ocultar">
+                      <mat-icon>{{ isPwdVisible('grafana-'+env.key) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                    <button type="button" class="pwd-btn" (click)="copyToClipboard(mon.grafanaPassword)" title="Copiar">
+                      <mat-icon>content_copy</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_KIBANA_URL' | translate }}</label>
+                  <input type="text" [(ngModel)]="mon.kibanaUrl" (ngModelChange)="saveDraft()">
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_KIBANA_USER' | translate }}</label>
+                  <input type="text" [(ngModel)]="mon.kibanaUser" (ngModelChange)="saveDraft()">
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.MONITORING_KIBANA_PASSWORD' | translate }}</label>
+                  <div class="pwd-wrapper">
+                    <input [type]="isPwdVisible('kibana-'+env.key) ? 'text' : 'password'"
+                           [(ngModel)]="mon.kibanaPassword"
+                           (ngModelChange)="saveDraft()">
+                    <button type="button" class="pwd-btn" (click)="togglePwd('kibana-'+env.key)" title="Mostrar/ocultar">
+                      <mat-icon>{{ isPwdVisible('kibana-'+env.key) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                    <button type="button" class="pwd-btn" (click)="copyToClipboard(mon.kibanaPassword)" title="Copiar">
+                      <mat-icon>content_copy</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
         <div class="form-divider"></div>
         <div class="input-field full-width">
           <label>{{ 'PROJECTS.NOTES' | translate }}</label>
@@ -1360,6 +1418,60 @@ spring.datasource.password=..."></textarea>
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- Herramientas de Monitorización (vista) -->
+          <div class="monitoring-view-section" *ngIf="proyecto.monitoringTools">
+            <div class="section-title">{{ 'PROJECTS.SECTION_MONITORING' | translate }}</div>
+            <ng-container *ngFor="let env of [{key:'dev',label:'DEV'},{key:'pre',label:'PRE'},{key:'pro',label:'PRO'}]">
+              <ng-container *ngIf="proyecto.monitoringTools![env.key] as monEnv">
+                <h4 class="subsection-title monitoring-env-label">{{ env.label }}</h4>
+                <div class="dev-fields grid-3 compact">
+                  <div class="field" *ngIf="monEnv.grafanaUrl">
+                    <label>{{ 'PROJECTS.MONITORING_GRAFANA_URL' | translate }}</label>
+                    <a [href]="monEnv.grafanaUrl" target="_blank" rel="noopener noreferrer">{{ monEnv.grafanaUrl }}</a>
+                  </div>
+                  <div class="field" *ngIf="monEnv.grafanaUser">
+                    <label>{{ 'PROJECTS.MONITORING_GRAFANA_USER' | translate }}</label>
+                    <span>{{ monEnv.grafanaUser }}</span>
+                  </div>
+                  <div class="field" *ngIf="monEnv.grafanaPassword">
+                    <label>{{ 'PROJECTS.MONITORING_GRAFANA_PASSWORD' | translate }}</label>
+                    <div class="pwd-wrapper">
+                      <input [type]="isPwdVisible('v-grafana-'+env.key) ? 'text' : 'password'"
+                             [value]="monEnv.grafanaPassword" readonly>
+                      <button type="button" class="pwd-btn" (click)="togglePwd('v-grafana-'+env.key)">
+                        <mat-icon>{{ isPwdVisible('v-grafana-'+env.key) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                      <button type="button" class="pwd-btn" (click)="copyToClipboard(monEnv.grafanaPassword)">
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="field" *ngIf="monEnv.kibanaUrl">
+                    <label>{{ 'PROJECTS.MONITORING_KIBANA_URL' | translate }}</label>
+                    <a [href]="monEnv.kibanaUrl" target="_blank" rel="noopener noreferrer">{{ monEnv.kibanaUrl }}</a>
+                  </div>
+                  <div class="field" *ngIf="monEnv.kibanaUser">
+                    <label>{{ 'PROJECTS.MONITORING_KIBANA_USER' | translate }}</label>
+                    <span>{{ monEnv.kibanaUser }}</span>
+                  </div>
+                  <div class="field" *ngIf="monEnv.kibanaPassword">
+                    <label>{{ 'PROJECTS.MONITORING_KIBANA_PASSWORD' | translate }}</label>
+                    <div class="pwd-wrapper">
+                      <input [type]="isPwdVisible('v-kibana-'+env.key) ? 'text' : 'password'"
+                             [value]="monEnv.kibanaPassword" readonly>
+                      <button type="button" class="pwd-btn" (click)="togglePwd('v-kibana-'+env.key)">
+                        <mat-icon>{{ isPwdVisible('v-kibana-'+env.key) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                      <button type="button" class="pwd-btn" (click)="copyToClipboard(monEnv.kibanaPassword)">
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
 
           <div class="form-row notes-row">
