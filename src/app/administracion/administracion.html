@@ -339,6 +339,7 @@
           </div>
           <div class="request-meta">
             <span>👤 {{ peticion.solicitante }}</span>
+            <span *ngIf="peticion.email">📧 {{ peticion.email }}</span>
             <span>📅 {{ peticion.fecha }}</span>
           </div>
           <p class="request-note">{{ peticion.comentario }}</p>

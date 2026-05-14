@@ -43,6 +43,7 @@ interface BackupVersion {
 interface PeticionAdmin {
   id: string;
   solicitante: string;
+  email?: string;
   tipo: string;
   fecha: string;
   comentario: string;
@@ -1044,6 +1045,7 @@ export class AdministracionComponent implements OnInit {
     return {
       id: req.id ?? "",
       solicitante: req.fullName?.trim() || req.email?.trim() || "",
+      email: req.email?.trim() || "",
       tipo:
         req.role?.trim() ||
         req.projectName?.trim() ||
