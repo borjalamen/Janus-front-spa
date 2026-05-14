@@ -89,6 +89,38 @@ export interface MonitoringTools {
   [key: string]: MonitoringEnv | undefined;
 }
 
+export interface ConnectivityEntry {
+  id?: string;
+  role?: 'PRODUCER' | 'CONSUMER' | 'MIXED';
+  type?: 'INTERNAL' | 'EXTERNAL' | 'OTHER';
+
+  // Para INTERNAL (proyecto JanusHub)
+  internalProjectId?: string;
+  internalProjectCode?: string;
+  internalProjectName?: string;
+
+  // Para EXTERNAL (servicio externo)
+  externalServiceId?: string;
+  externalServiceName?: string;
+
+  // Para OTHER
+  otherName?: string;
+  otherCode?: string;
+  otherNotes?: string;
+
+  // Común
+  environments?: string[];   // 'DEV' | 'INT' | 'PRE' | 'PRO'
+  notes?: string;
+}
+
+export interface ExternalService {
+  id?: string;
+  name?: string;
+  code?: string;
+  description?: string;
+  url?: string;
+}
+
 export interface Department {
   id?: string;
   name: string;
@@ -139,6 +171,9 @@ export interface Project {
   // Herramientas de Monitorización
   monitoringTools?: MonitoringTools;
 
+  // Conectividades del proyecto
+  connectivities?: ConnectivityEntry[];
+
   // Documentos
   documents?: Array<{
     nombre: string;
@@ -165,6 +200,7 @@ export interface ProjectStats {
 export class ProjectService {
   private baseUrl = `${environment.baseUrl}projects`;
   private departmentsUrl = `${environment.baseUrl}departments`;
+  private externalServicesUrl = `${environment.baseUrl}external-services`;
 
   constructor(private http: HttpClient) {}
 
@@ -320,5 +356,39 @@ export class ProjectService {
    */
   deleteDepartment(id: string): Observable<any> {
     return this.http.delete<any>(`${this.departmentsUrl}/${id}`);
+  }
+
+  // ── Servicios Externos ──
+
+  /**
+   * GET /api/external-services
+   * Obtener todos los servicios externos
+   */
+  getExternalServices(): Observable<ExternalService[]> {
+    return this.http.get<ExternalService[]>(this.externalServicesUrl);
+  }
+
+  /**
+   * POST /api/external-services
+   * Crear servicio externo
+   */
+  createExternalService(data: Partial<ExternalService>): Observable<ExternalService> {
+    return this.http.post<ExternalService>(this.externalServicesUrl, data);
+  }
+
+  /**
+   * PUT /api/external-services/{id}
+   * Actualizar servicio externo
+   */
+  updateExternalService(id: string, data: Partial<ExternalService>): Observable<ExternalService> {
+    return this.http.put<ExternalService>(`${this.externalServicesUrl}/${id}`, data);
+  }
+
+  /**
+   * DELETE /api/external-services/{id}
+   * Eliminar servicio externo
+   */
+  deleteExternalService(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.externalServicesUrl}/${id}`);
   }
 }

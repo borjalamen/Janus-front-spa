@@ -40,6 +40,13 @@
         {{ 'PROJECTS.TAB_MIND' | translate }}
       </button>
       <button class="new-project-tab"
+              [class.active]="activeTab === $any('connectivity')"
+              (click)="activeTab='connectivity'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('connectivity')">
+        {{ 'PROJECTS.TAB_CONNECTIVITY' | translate }}
+      </button>
+      <button class="new-project-tab"
               [class.active]="activeTab === $any('docs')"
               (click)="activeTab='docs'; saveDraft()"
               role="tab"
@@ -1716,6 +1723,200 @@ spring.datasource.password=..."></textarea>
 
             </div>
           </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- Pestaña Conectividad                                    -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div *ngIf="activeTab === $any('connectivity')">
+      <div class="sections-container">
+        <section class="section" [ngClass]="{ 'admin-card new-project-section': editing }">
+
+          <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_CONNECTIVITY' | translate }}</h3>
+
+          <!-- Modo edición -->
+          <ng-container *ngIf="editing">
+
+            <!-- Lista de conectividades -->
+            <div *ngFor="let conn of connectivities; let i = index" class="connectivity-card">
+
+              <!-- Cabecera de la tarjeta -->
+              <div class="connectivity-card-header">
+                <span class="conn-index">#{{ i + 1 }}</span>
+                <button type="button" class="conn-remove-btn" (click)="removeConnectivity(i)">
+                  <mat-icon>delete_outline</mat-icon>
+                  {{ 'PROJECTS.CONN_REMOVE' | translate }}
+                </button>
+              </div>
+
+              <div class="form-grid three-col">
+
+                <!-- ROL -->
+                <div class="input-field">
+                  <label class="conn-label-with-info">
+                    {{ 'PROJECTS.CONN_ROLE' | translate }}
+                    <button type="button" class="info-icon-btn" (click)="toggleConnTooltip(i)" [title]="'PROJECTS.CONN_ROLE_INFO' | translate">
+                      <mat-icon>info_outline</mat-icon>
+                    </button>
+                  </label>
+                  <div *ngIf="connTooltipIndex === i" class="conn-role-tooltip">
+                    {{ 'PROJECTS.CONN_ROLE_INFO' | translate }}
+                  </div>
+                  <select [(ngModel)]="conn.role" (ngModelChange)="saveDraft()">
+                    <option value="PRODUCER">{{ 'PROJECTS.CONN_ROLE_PRODUCER' | translate }}</option>
+                    <option value="CONSUMER">{{ 'PROJECTS.CONN_ROLE_CONSUMER' | translate }}</option>
+                    <option value="MIXED">{{ 'PROJECTS.CONN_ROLE_MIXED' | translate }}</option>
+                  </select>
+                </div>
+
+                <!-- TIPO -->
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.CONN_TYPE' | translate }}</label>
+                  <select [(ngModel)]="conn.type" (ngModelChange)="onConnTypeChange(conn)">
+                    <option value="INTERNAL">{{ 'PROJECTS.CONN_TYPE_INTERNAL' | translate }}</option>
+                    <option value="EXTERNAL">{{ 'PROJECTS.CONN_TYPE_EXTERNAL' | translate }}</option>
+                    <option value="OTHER">{{ 'PROJECTS.CONN_TYPE_OTHER' | translate }}</option>
+                  </select>
+                </div>
+
+                <!-- PROYECTO INTERNO -->
+                <div class="input-field" *ngIf="conn.type === 'INTERNAL'">
+                  <label>{{ 'PROJECTS.CONN_INTERNAL_PROJECT' | translate }}</label>
+                  <select [(ngModel)]="conn.internalProjectId" (ngModelChange)="onInternalProjectChange(conn)">
+                    <option value="">{{ 'PROJECTS.CONN_INTERNAL_SELECT' | translate }}</option>
+                    <option *ngFor="let proj of allProjects" [value]="proj.id">
+                      {{ proj.codigoProyecto }} | {{ proj.nombre }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- SERVICIO EXTERNO -->
+                <div class="input-field" *ngIf="conn.type === 'EXTERNAL'">
+                  <label>{{ 'PROJECTS.CONN_EXTERNAL_SERVICE' | translate }}</label>
+                  <ng-container *ngIf="externalServices.length > 0; else noExternalServices">
+                    <select [(ngModel)]="conn.externalServiceId" (ngModelChange)="onExternalServiceChange(conn)">
+                      <option value="">{{ 'PROJECTS.CONN_EXTERNAL_SELECT' | translate }}</option>
+                      <option *ngFor="let svc of externalServices" [value]="svc.id">
+                        {{ svc.code ? svc.code + ' — ' : '' }}{{ svc.name }}
+                      </option>
+                    </select>
+                  </ng-container>
+                  <ng-template #noExternalServices>
+                    <p class="conn-external-empty">{{ 'PROJECTS.CONN_EXTERNAL_EMPTY' | translate }}</p>
+                  </ng-template>
+                </div>
+
+              </div>
+
+              <!-- Campos tipo OTHER -->
+              <div *ngIf="conn.type === 'OTHER'" class="form-grid three-col">
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.CONN_OTHER_NAME' | translate }}</label>
+                  <input type="text" [(ngModel)]="conn.otherName" (ngModelChange)="saveDraft()"
+                         [placeholder]="'PROJECTS.CONN_OTHER_NAME_PH' | translate">
+                </div>
+                <div class="input-field">
+                  <label>{{ 'PROJECTS.CONN_OTHER_CODE' | translate }}</label>
+                  <input type="text" [(ngModel)]="conn.otherCode" (ngModelChange)="saveDraft()"
+                         [placeholder]="'PROJECTS.CONN_OTHER_CODE_PH' | translate">
+                </div>
+                <div class="input-field full-width">
+                  <label>{{ 'PROJECTS.CONN_OTHER_NOTES' | translate }}</label>
+                  <textarea rows="2" [(ngModel)]="conn.otherNotes" (ngModelChange)="saveDraft()"
+                            [placeholder]="'PROJECTS.CONN_OTHER_NOTES_PH' | translate"></textarea>
+                </div>
+              </div>
+
+              <!-- Entornos -->
+              <div class="conn-environments">
+                <label>{{ 'PROJECTS.CONN_ENVIRONMENTS' | translate }}</label>
+                <div class="conn-env-checkboxes">
+                  <label class="conn-env-check" *ngFor="let env of ['DEV','INT','PRE','PRO']">
+                    <input type="checkbox"
+                           [checked]="hasEnv(conn, env)"
+                           (change)="toggleEnv(conn, env)">
+                    <span class="conn-env-badge conn-env-{{ env | lowercase }}">{{ env }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Notas de la conectividad -->
+              <div class="input-field full-width">
+                <label>{{ 'PROJECTS.CONN_NOTES' | translate }}</label>
+                <textarea rows="3" [(ngModel)]="conn.notes" (ngModelChange)="saveDraft()"
+                          [placeholder]="'PROJECTS.CONN_NOTES_PH' | translate"></textarea>
+              </div>
+
+            </div>
+
+            <!-- Estado vacío -->
+            <div *ngIf="connectivities.length === 0" class="conn-empty-state">
+              <mat-icon class="conn-empty-icon">device_hub</mat-icon>
+              <p>{{ 'PROJECTS.CONN_EMPTY' | translate }}</p>
+            </div>
+
+            <!-- Botón añadir -->
+            <div class="conn-add-row">
+              <button type="button" class="jh-btn jh-btn-secondary" (click)="addConnectivity()">
+                <mat-icon>add_circle_outline</mat-icon>
+                {{ 'PROJECTS.CONN_ADD' | translate }}
+              </button>
+            </div>
+
+          </ng-container>
+
+          <!-- Modo vista -->
+          <ng-container *ngIf="!editing">
+
+            <div *ngIf="connectivities.length === 0" class="conn-empty-state">
+              <mat-icon class="conn-empty-icon">device_hub</mat-icon>
+              <p>{{ 'PROJECTS.CONN_EMPTY' | translate }}</p>
+            </div>
+
+            <div *ngFor="let conn of connectivities; let i = index" class="connectivity-view-card">
+
+              <!-- Badges de rol, tipo y entornos -->
+              <div class="conn-view-header">
+                <span class="conn-role-badge conn-role-{{ conn.role | lowercase }}">
+                  {{ 'PROJECTS.CONN_ROLE_' + conn.role | translate }}
+                </span>
+                <span class="conn-type-badge">
+                  {{ 'PROJECTS.CONN_TYPE_' + conn.type | translate }}
+                </span>
+                <span *ngFor="let env of (conn.environments || [])"
+                      class="conn-env-badge conn-env-{{ env | lowercase }}">{{ env }}</span>
+              </div>
+
+              <!-- Sistema conectado -->
+              <div class="conn-view-system">
+                <ng-container *ngIf="conn.type === 'INTERNAL'">
+                  <mat-icon class="conn-system-icon">business</mat-icon>
+                  <strong>{{ conn.internalProjectCode }}</strong>
+                  <span *ngIf="conn.internalProjectName"> — {{ conn.internalProjectName }}</span>
+                </ng-container>
+                <ng-container *ngIf="conn.type === 'EXTERNAL'">
+                  <mat-icon class="conn-system-icon">cloud</mat-icon>
+                  <strong>{{ conn.externalServiceName || '—' }}</strong>
+                </ng-container>
+                <ng-container *ngIf="conn.type === 'OTHER'">
+                  <mat-icon class="conn-system-icon">extension</mat-icon>
+                  <strong>{{ conn.otherCode ? '[' + conn.otherCode + '] ' : '' }}{{ conn.otherName || '—' }}</strong>
+                  <span *ngIf="conn.otherNotes" class="conn-view-other-notes"> — {{ conn.otherNotes }}</span>
+                </ng-container>
+              </div>
+
+              <!-- Notas -->
+              <div *ngIf="conn.notes" class="conn-view-notes">
+                <mat-icon class="conn-notes-icon">notes</mat-icon>
+                <span>{{ conn.notes }}</span>
+              </div>
+
+            </div>
+
+          </ng-container>
+
         </section>
       </div>
     </div>

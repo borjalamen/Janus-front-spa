@@ -11,17 +11,15 @@ import {
 import { CommonModule } from "@angular/common";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatIconModule } from "@angular/material/icon";
-import { ProjectService } from "../project.service";
+import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel } from "../project.service";
 import { DocumentService } from "../document.service";
-import { TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth.service";
 import { SafePipe } from "../safe.pipe";
-import { ResponsableInfo, MonitoringTools } from "../project.service";
 
-import { Proyecto, Task } from "./projects";
+import { Proyecto } from "./projects";
 
 type Volume = { name?: string; capacity?: string };
 type OpenShift = {
@@ -71,7 +69,7 @@ type DevMachine = {
   otherTools?: OtherTool[];
 };
 
-type ProjectDetailTab = "info" | "minsait" | "dev" | "mind" | "docs";
+type ProjectDetailTab = "info" | "minsait" | "dev" | "mind" | "connectivity" | "docs";
 
 type ProjectDetailDraft = {
   codigoProyecto: string | null;
@@ -98,6 +96,7 @@ type ProjectDetailDraft = {
   entornoNotas: string;
   notasGenerales: string | null;
   monitoringTools?: MonitoringTools;
+  connectivities: ConnectivityEntry[];
 };
 
 @Component({
@@ -240,6 +239,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   // ── Visibilidad de contraseñas ──
   private pwdVisible = new Set<string>();
+
+  // ── Conectividad ──
+  connectivities: ConnectivityEntry[] = [];
+  allProjects: ProjectModel[] = [];
+  externalServices: ExternalService[] = [];
+  connTooltipIndex: number | null = null;
   isPwdVisible(key: string): boolean { return this.pwdVisible.has(key); }
   togglePwd(key: string): void {
     this.pwdVisible.has(key) ? this.pwdVisible.delete(key) : this.pwdVisible.add(key);
@@ -315,6 +320,15 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (this.proyecto) {
       this.initializeProjectData();
     }
+    // Cargar proyectos y servicios externos para los selectores de conectividad
+    this.projectService.getAll().subscribe({
+      next: (projects) => { this.allProjects = projects; },
+      error: () => { this.allProjects = []; }
+    });
+    this.projectService.getExternalServices().subscribe({
+      next: (services) => { this.externalServices = services; },
+      error: () => { this.externalServices = []; }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -513,6 +527,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       pro: { ...emptyMonEnv(), ...mt.pro },
     };
 
+    // Conectividades
+    this.connectivities = Array.isArray((p as any).connectivities)
+      ? [...(p as any).connectivities]
+      : [];
+
     p.herramientasMind = p.herramientasMind || ({} as any);
     const h = p.herramientasMind as any;
     h.nexus = h.nexus || [];
@@ -584,6 +603,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       entornoNotas: (this.proyecto as any).entornoNotas || "",
       notasGenerales: this.proyecto.notasGenerales || null,
       monitoringTools: this.proyecto.monitoringTools,
+      connectivities: this.connectivities,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -609,6 +629,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       "minsait",
       "dev",
       "mind",
+      "connectivity",
       "docs",
     ];
     if (draft.activeTab && validTabs.includes(draft.activeTab)) {
@@ -637,10 +658,78 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.proyecto.notasGenerales =
       draft.notasGenerales ?? this.proyecto.notasGenerales;
     if (draft.monitoringTools) this.proyecto.monitoringTools = draft.monitoringTools;
+    if (Array.isArray(draft.connectivities)) this.connectivities = draft.connectivities;
   }
 
   clearDraft(): void {
     this.storage.remove(this.STORAGE_DRAFT_KEY);
+  }
+
+  // ===== CONECTIVIDAD =====
+
+  addConnectivity(): void {
+    this.connectivities = [
+      ...this.connectivities,
+      {
+        id: crypto.randomUUID(),
+        role: 'PRODUCER',
+        type: 'INTERNAL',
+        environments: [],
+        notes: '',
+      },
+    ];
+    this.saveDraft();
+  }
+
+  removeConnectivity(index: number): void {
+    this.connectivities = this.connectivities.filter((_, i) => i !== index);
+    this.saveDraft();
+  }
+
+  hasEnv(conn: ConnectivityEntry, env: string): boolean {
+    return (conn.environments || []).includes(env);
+  }
+
+  toggleEnv(conn: ConnectivityEntry, env: string): void {
+    const envs = conn.environments || [];
+    conn.environments = envs.includes(env)
+      ? envs.filter(e => e !== env)
+      : [...envs, env];
+    this.saveDraft();
+  }
+
+  onConnTypeChange(conn: ConnectivityEntry): void {
+    // Limpiar campos del tipo anterior
+    conn.internalProjectId = undefined;
+    conn.internalProjectCode = undefined;
+    conn.internalProjectName = undefined;
+    conn.externalServiceId = undefined;
+    conn.externalServiceName = undefined;
+    conn.otherName = undefined;
+    conn.otherCode = undefined;
+    conn.otherNotes = undefined;
+    this.saveDraft();
+  }
+
+  onInternalProjectChange(conn: ConnectivityEntry): void {
+    const proj = this.allProjects.find(p => p.id === conn.internalProjectId);
+    if (proj) {
+      conn.internalProjectCode = proj.codigoProyecto;
+      conn.internalProjectName = proj.nombre;
+    }
+    this.saveDraft();
+  }
+
+  onExternalServiceChange(conn: ConnectivityEntry): void {
+    const svc = this.externalServices.find(s => s.id === conn.externalServiceId);
+    if (svc) {
+      conn.externalServiceName = svc.name;
+    }
+    this.saveDraft();
+  }
+
+  toggleConnTooltip(index: number): void {
+    this.connTooltipIndex = this.connTooltipIndex === index ? null : index;
   }
 
   private getDocsProjectId(): string | number | undefined {
@@ -1011,6 +1100,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       p.devMachines = this.devMachines as any;
 
       p.documents = documentsSnapshot as any;
+      p.connectivities = this.connectivities;
     } catch (e) {
       /* ignore */
     }
