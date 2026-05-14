@@ -1532,14 +1532,12 @@ spring.datasource.password=..."></textarea>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!editing">
-                    <div *ngFor="let r of codeRepos">
-                      <a *ngIf="isValidUrl(r.url)"
-                         (click)="openUrl(r.url)" class="mind-link">
-                        {{ r.name || r.url }}
-                      </a>
-                      <span *ngIf="!isValidUrl(r.url)">{{ r.name || r.url }}</span>
-                    </div>
+                  <div *ngIf="!editing" class="mind-chip-row">
+                    <ng-container *ngFor="let r of codeRepos">
+                      <a *ngIf="isValidUrl(r.url)" class="mind-chip mind-chip-code clickable" (click)="openUrl(r.url)">⎇ {{ r.name || r.url }}</a>
+                      <span *ngIf="!isValidUrl(r.url)" class="mind-chip mind-chip-code">⎇ {{ r.name || r.url }}</span>
+                    </ng-container>
+                    <span *ngIf="codeRepos.length === 0" class="mind-empty">—</span>
                   </div>
                 </div>
               </div>
@@ -1576,13 +1574,12 @@ spring.datasource.password=..."></textarea>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!editing">
-                    <div *ngFor="let a of artifactRepos">
-                      <a *ngIf="isValidUrl(a.url)" (click)="openUrl(a.url)">
-                        {{ a.name||a.url }}
-                      </a>
-                      <span *ngIf="!isValidUrl(a.url)">{{ a.name||a.url }}</span>
-                    </div>
+                  <div *ngIf="!editing" class="mind-chip-row">
+                    <ng-container *ngFor="let a of artifactRepos">
+                      <a *ngIf="isValidUrl(a.url)" class="mind-chip mind-chip-artifacts clickable" (click)="openUrl(a.url)">▦ {{ a.name || a.url }}</a>
+                      <span *ngIf="!isValidUrl(a.url)" class="mind-chip mind-chip-artifacts">▦ {{ a.name || a.url }}</span>
+                    </ng-container>
+                    <span *ngIf="artifactRepos.length === 0" class="mind-empty">—</span>
                   </div>
                 </div>
               </div>
@@ -1619,13 +1616,12 @@ spring.datasource.password=..."></textarea>
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="!editing">
-                      <div *ngFor="let j of jenkinsList">
-                        <a *ngIf="isValidUrl(j.url)" (click)="openUrl(j.url)">
-                          {{ j.name||j.url }}
-                        </a>
-                        <span *ngIf="!isValidUrl(j.url)">{{ j.name||j.url }}</span>
-                      </div>
+                    <div *ngIf="!editing" class="mind-chip-row">
+                      <ng-container *ngFor="let j of jenkinsList">
+                        <a *ngIf="isValidUrl(j.url)" class="mind-chip mind-chip-jenkins clickable" (click)="openUrl(j.url)">⚙ {{ j.name || j.url }}</a>
+                        <span *ngIf="!isValidUrl(j.url)" class="mind-chip mind-chip-jenkins">⚙ {{ j.name || j.url }}</span>
+                      </ng-container>
+                      <span *ngIf="jenkinsList.length === 0" class="mind-empty">—</span>
                     </div>
                   </div>
 
@@ -1655,10 +1651,12 @@ spring.datasource.password=..."></textarea>
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="!editing">
-                      <div *ngFor="let c of crontabList">
-                        <span>{{ c.expr }} - {{ c.desc }}</span>
+                    <div *ngIf="!editing" class="mind-chip-row">
+                      <div *ngFor="let c of crontabList" class="mind-chip mind-chip-cron">
+                        <code class="cron-expr">{{ c.expr }}</code>
+                        <span class="cron-desc" *ngIf="c.desc">{{ c.desc }}</span>
                       </div>
+                      <span *ngIf="crontabList.length === 0" class="mind-empty">—</span>
                     </div>
                   </div>
                 </div>
@@ -1699,10 +1697,13 @@ spring.datasource.password=..."></textarea>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!editing">
-                    <div *ngFor="let s of sonarList">
-                      <span>{{ s.prefix }} - {{ s.url }}</span>
+                  <div *ngIf="!editing" class="mind-chip-row">
+                    <div *ngFor="let s of sonarList" class="mind-chip mind-chip-sonar">
+                      <span *ngIf="s.prefix" class="sonar-prefix">{{ s.prefix }}</span>
+                      <a *ngIf="isValidUrl(s.url)" class="sonar-link" (click)="openUrl(s.url)">{{ s.url }}</a>
+                      <span *ngIf="!isValidUrl(s.url)" class="sonar-link">{{ s.url }}</span>
                     </div>
+                    <span *ngIf="sonarList.length === 0" class="mind-empty">—</span>
                   </div>
                 </div>
               </div>

@@ -169,16 +169,96 @@
 
 /* Herramientas MIND - suave turquesa (mantener tarjeta) */
 .section-mind { background: transparent; padding:0 }
-.section-mind .mind-card { background: rgba(15,143,168,0.07); border:1px solid rgba(15,143,168,0.12); color:#06282b; margin-top:8px }
-.section-mind .mind-card-header h3 { color: #ffd166 }
-.section-mind .mind-card-body { padding:10px }
+.section-mind .mind-card {
+  background: rgba(10,130,155,0.06);
+  border: 1px solid rgba(15,143,168,0.18);
+  border-radius: 12px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.section-mind .mind-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(15,143,168,0.15);
+  background: rgba(15,143,168,0.06);
+}
+.section-mind .mind-card-header h3 { color: #ffd166; margin: 0; font-size: 15px; font-weight: 700; }
+.section-mind .mind-card-body { padding: 12px; }
 
 /* MIND blocks layout */
-.mind-block { padding:12px; border-radius:8px; margin-bottom:8px }
-.mind-block-title { font-weight:700; color:#cfe8ff; margin-bottom:8px }
+.mind-block { padding: 14px 16px; border-radius: 8px; margin-bottom: 8px; }
+.mind-block-title {
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 3px solid rgba(207,232,255,0.3);
+  color: #cfe8ff;
+}
+.mind-block-code .mind-block-title       { border-color: #5fc6ff; color: #a0deff; }
+.mind-block-artifacts .mind-block-title  { border-color: #48cea0; color: #8eefd4; }
+.mind-block-pipelines .mind-block-title  { border-color: #ffaf4e; color: #ffd4a0; }
+.mind-block-quality .mind-block-title    { border-color: #ff7070; color: #ffb0b0; }
+.mind-block-others .mind-block-title     { border-color: rgba(255,255,255,0.25); color: #c8d0d8; }
+
 .mind-block-body input, .mind-block-body textarea { width:100%; box-sizing:border-box; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: #e8eef0 }
-.mind-block-body.two-cols { display:flex; gap:12px }
+.mind-block-body.two-cols { display:flex; gap:16px }
 .mind-block-body.two-cols .col { flex:1 }
+.mind-block-body.two-cols label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(207,232,255,0.45);
+  margin-bottom: 8px;
+}
+
+/* View-mode chip pills */
+.mind-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.mind-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: default;
+  transition: filter 0.15s, transform 0.1s;
+  text-decoration: none;
+}
+.mind-chip.clickable { cursor: pointer; }
+.mind-chip.clickable:hover { filter: brightness(1.25); transform: translateY(-1px); }
+.mind-chip-code       { background: rgba(95,198,255,0.13);  border: 1px solid rgba(95,198,255,0.35);  color: #7dd9ff; }
+.mind-chip-artifacts  { background: rgba(72,206,160,0.13);  border: 1px solid rgba(72,206,160,0.35);  color: #6fe8c0; }
+.mind-chip-jenkins    { background: rgba(255,175,78,0.13);  border: 1px solid rgba(255,175,78,0.35);  color: #ffc87a; }
+.mind-chip-cron {
+  background: rgba(180,180,200,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #c8d0d8;
+  border-radius: 8px;
+  padding: 7px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.mind-chip-sonar {
+  background: rgba(255,110,110,0.08);
+  border: 1px solid rgba(255,110,110,0.25);
+  color: #ff9090;
+  border-radius: 8px;
+  padding: 7px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.cron-expr { font-family: 'Courier New', monospace; font-size: 12px; color: #ffd166; }
+.cron-desc { color: rgba(200,210,220,0.6); font-size: 11px; }
+.sonar-prefix { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #ffd166; }
+.sonar-link { color: #ff9090; text-decoration: underline; cursor: pointer; font-size: 12px; word-break: break-all; }
+.sonar-link:hover { color: #ffbbbb; }
+.mind-empty { color: rgba(255,255,255,0.2); font-style: italic; font-size: 13px; }
 
 /* Repo duo: white-ish border around name+url and remove button aligned right */
 .repo-item { margin-bottom: 8px }
@@ -2045,10 +2125,10 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 
 
 /* --------------------------------------------------------------
-   PESTAÑA CONECTIVIDAD
+   PESTAï¿½A CONECTIVIDAD
    -------------------------------------------------------------- */
 
-/* Tarjeta de conectividad (edición) */
+/* Tarjeta de conectividad (ediciï¿½n) */
 .connectivity-card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,215,0,0.15);
@@ -2181,7 +2261,7 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 .conn-env-pre  { background: rgba(255,167,38,0.2);  color: #ffa726; border: 1px solid rgba(255,167,38,0.4); }
 .conn-env-pro  { background: rgba(239,83,80,0.2);   color: #ef5350; border: 1px solid rgba(239,83,80,0.4); }
 
-/* Estado vacío */
+/* Estado vacï¿½o */
 .conn-empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -2198,7 +2278,7 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
   font-size: 14px;
 }
 
-/* Fila del botón añadir */
+/* Fila del botï¿½n aï¿½adir */
 .conn-add-row {
   display: flex;
   justify-content: flex-start;
