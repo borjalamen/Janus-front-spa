@@ -17,6 +17,7 @@ import { ProjectService } from "../project.service";
 import { DocumentService } from "../document.service";
 import { TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
+import { AuthService } from "../auth.service";
 import { SafePipe } from "../safe.pipe";
 import { ResponsableInfo } from "../project.service";
 
@@ -291,6 +292,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   // STORAGE KEY per draft de detall
   private readonly STORAGE_DRAFT_KEY = "project_detail_draft";
 
+  get canViewEntorno(): boolean {
+    return this.authService.isAdmin || this.authService.isDevOps;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -298,6 +303,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     private documentService: DocumentService,
     private translate: TranslateService,
     private storage: LocalStorageService,
+    private authService: AuthService,
   ) {
     // Inicializar propiedades básicas
     this.routeMode = this.mode === "edit" ? "edit" : "view";

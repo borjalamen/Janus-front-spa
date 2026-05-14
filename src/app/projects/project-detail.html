@@ -25,7 +25,7 @@
               [attr.aria-selected]="activeTab === $any('minsait')">
         {{ 'PROJECTS.TAB_MINSAIT' | translate }}
       </button>
-      <button class="new-project-tab"
+      <button *ngIf="canViewEntorno" class="new-project-tab"
               [class.active]="activeTab === $any('dev')"
               (click)="activeTab='dev'; saveDraft()"
               role="tab"
@@ -233,7 +233,7 @@
       </div>
 
       <!-- Sub-tab: Entorno de Desarrollo -->
-      <div *ngIf="activeTab === $any('dev')" class="admin-card new-project-section section-dev-bg">
+      <div *ngIf="activeTab === $any('dev') && canViewEntorno" class="admin-card new-project-section section-dev-bg">
         <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_DEV' | translate }}</h3>
 
         <div class="members-header">
@@ -999,7 +999,7 @@ spring.datasource.password=..."></textarea>
     </div>
 
     <!-- Dev tab -->
-    <div *ngIf="activeTab === $any('dev')">
+    <div *ngIf="activeTab === $any('dev') && canViewEntorno">
       <div class="sections-container">
         <section class="section section-dev" [ngClass]="{ 'admin-card new-project-section section-dev-bg': editing }">
           <div class="section-title">
