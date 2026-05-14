@@ -57,6 +57,11 @@ export class NotificationService implements OnDestroy {
         const data = JSON.parse(event.data);
         const notification: AppNotification = { ...data, read: false };
         const current = this._notifications$.value;
+        // Evitar duplicados: misma combinación de type + timestamp
+        const isDuplicate = current.some(
+          n => n.type === notification.type && n.timestamp === notification.timestamp
+        );
+        if (isDuplicate) return;
         // Máximo 50 notificaciones en memoria
         this._notifications$.next([notification, ...current].slice(0, 50));
       } catch {
