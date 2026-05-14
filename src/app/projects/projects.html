@@ -186,6 +186,13 @@
         </button>
         <button
           class="new-project-tab"
+          [class.active]="newProjectTab === 'connectivity'"
+          (click)="cambiarNewProjectTab('connectivity')"
+        >
+          🔗 {{ 'PROJECTS.TAB_CONNECTIVITY' | translate }}
+        </button>
+        <button
+          class="new-project-tab"
           [class.active]="newProjectTab === 'documentos'"
           (click)="cambiarNewProjectTab('documentos')"
         >
@@ -902,6 +909,124 @@ spring.datasource.password=..."></textarea>
               {{ 'PROJECTS.NO_SONAR' | translate }}
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB CONECTIVIDAD -->
+      <div
+        *ngIf="newProjectTab === 'connectivity'"
+        class="admin-card new-project-section"
+      >
+        <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_CONNECTIVITY' | translate }}</h3>
+
+        <div *ngFor="let conn of newProjectConnectivities; let i = index" class="connectivity-card">
+          <div class="connectivity-card-header">
+            <span class="conn-index">#{{ i + 1 }}</span>
+            <button type="button" class="conn-remove-btn" (click)="removeNewProjectConnectivity(i)">
+              <mat-icon>delete_outline</mat-icon>
+              {{ 'PROJECTS.CONN_REMOVE' | translate }}
+            </button>
+          </div>
+
+          <div class="form-grid three-col">
+            <div class="input-field">
+              <label class="conn-label-with-info">
+                {{ 'PROJECTS.CONN_ROLE' | translate }}
+                <button type="button" class="info-icon-btn" (click)="newProjectToggleConnTooltip(i)" [title]="'PROJECTS.CONN_ROLE_INFO' | translate">
+                  <mat-icon>info_outline</mat-icon>
+                </button>
+              </label>
+              <div *ngIf="newProjectConnTooltipIndex === i" class="conn-role-tooltip">
+                {{ 'PROJECTS.CONN_ROLE_INFO' | translate }}
+              </div>
+              <select [(ngModel)]="conn.role" (ngModelChange)="saveDraft()">
+                <option value="PRODUCER">{{ 'PROJECTS.CONN_ROLE_PRODUCER' | translate }}</option>
+                <option value="CONSUMER">{{ 'PROJECTS.CONN_ROLE_CONSUMER' | translate }}</option>
+                <option value="MIXED">{{ 'PROJECTS.CONN_ROLE_MIXED' | translate }}</option>
+              </select>
+            </div>
+
+            <div class="input-field">
+              <label>{{ 'PROJECTS.CONN_TYPE' | translate }}</label>
+              <select [(ngModel)]="conn.type" (ngModelChange)="newProjectOnConnTypeChange(conn)">
+                <option value="INTERNAL">{{ 'PROJECTS.CONN_TYPE_INTERNAL' | translate }}</option>
+                <option value="EXTERNAL">{{ 'PROJECTS.CONN_TYPE_EXTERNAL' | translate }}</option>
+                <option value="OTHER">{{ 'PROJECTS.CONN_TYPE_OTHER' | translate }}</option>
+              </select>
+            </div>
+
+            <div class="input-field" *ngIf="conn.type === 'INTERNAL'">
+              <label>{{ 'PROJECTS.CONN_INTERNAL_PROJECT' | translate }}</label>
+              <select [(ngModel)]="conn.internalProjectId" (ngModelChange)="newProjectOnInternalProjectChange(conn)">
+                <option value="">{{ 'PROJECTS.CONN_INTERNAL_SELECT' | translate }}</option>
+                <option *ngFor="let proj of projectes" [value]="proj.id">
+                  {{ proj.codigoProyecto }} | {{ proj.nombre }}
+                </option>
+              </select>
+            </div>
+
+            <div class="input-field" *ngIf="conn.type === 'EXTERNAL'">
+              <label>{{ 'PROJECTS.CONN_EXTERNAL_SERVICE' | translate }}</label>
+              <ng-container *ngIf="newProjectExternalServices.length > 0; else noExtSvcNew">
+                <select [(ngModel)]="conn.externalServiceId" (ngModelChange)="newProjectOnExternalServiceChange(conn)">
+                  <option value="">{{ 'PROJECTS.CONN_EXTERNAL_SELECT' | translate }}</option>
+                  <option *ngFor="let svc of newProjectExternalServices" [value]="svc.id">
+                    {{ svc.code ? svc.code + ' — ' : '' }}{{ svc.name }}
+                  </option>
+                </select>
+              </ng-container>
+              <ng-template #noExtSvcNew>
+                <p class="conn-external-empty">{{ 'PROJECTS.CONN_EXTERNAL_EMPTY' | translate }}</p>
+              </ng-template>
+            </div>
+          </div>
+
+          <div *ngIf="conn.type === 'OTHER'" class="form-grid three-col">
+            <div class="input-field">
+              <label>{{ 'PROJECTS.CONN_OTHER_NAME' | translate }}</label>
+              <input type="text" [(ngModel)]="conn.otherName" (ngModelChange)="saveDraft()"
+                     [placeholder]="'PROJECTS.CONN_OTHER_NAME_PH' | translate">
+            </div>
+            <div class="input-field">
+              <label>{{ 'PROJECTS.CONN_OTHER_CODE' | translate }}</label>
+              <input type="text" [(ngModel)]="conn.otherCode" (ngModelChange)="saveDraft()"
+                     [placeholder]="'PROJECTS.CONN_OTHER_CODE_PH' | translate">
+            </div>
+            <div class="input-field full-width">
+              <label>{{ 'PROJECTS.CONN_OTHER_NOTES' | translate }}</label>
+              <textarea rows="2" [(ngModel)]="conn.otherNotes" (ngModelChange)="saveDraft()"
+                        [placeholder]="'PROJECTS.CONN_OTHER_NOTES_PH' | translate"></textarea>
+            </div>
+          </div>
+
+          <div class="conn-environments">
+            <label>{{ 'PROJECTS.CONN_ENVIRONMENTS' | translate }}</label>
+            <div class="conn-env-checkboxes">
+              <label class="conn-env-check" *ngFor="let env of ['DEV','INT','PRE','PRO']">
+                <input type="checkbox"
+                       [checked]="newProjectHasEnv(conn, env)"
+                       (change)="newProjectToggleEnv(conn, env)">
+                <span class="conn-env-badge conn-env-{{ env | lowercase }}">{{ env }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="input-field full-width">
+            <label>{{ 'PROJECTS.CONN_NOTES' | translate }}</label>
+            <textarea rows="3" [(ngModel)]="conn.notes" (ngModelChange)="saveDraft()"
+                      [placeholder]="'PROJECTS.CONN_NOTES_PH' | translate"></textarea>
+          </div>
+        </div>
+
+        <div *ngIf="newProjectConnectivities.length === 0" class="conn-empty-state">
+          <mat-icon class="conn-empty-icon">device_hub</mat-icon>
+          <p>{{ 'PROJECTS.CONN_EMPTY' | translate }}</p>
+        </div>
+
+        <div class="conn-add-row">
+          <button type="button" class="btn-round btn-small btn-add" (click)="addNewProjectConnectivity()">
+            + {{ 'PROJECTS.CONN_ADD' | translate }}
+          </button>
         </div>
       </div>
 

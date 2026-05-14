@@ -1263,3 +1263,175 @@ body {
   font-size: 14px;
   font-weight: 600;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CONECTIVIDAD — nuevo proyecto
+   ═══════════════════════════════════════════════════════════════ */
+
+.connectivity-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.connectivity-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.conn-index {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+}
+
+.conn-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(239, 83, 80, 0.5);
+  color: #ef5350;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+.conn-remove-btn:hover {
+  background: rgba(239, 83, 80, 0.15);
+  border-color: #ef5350;
+  transform: translateY(-1px);
+}
+.conn-remove-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Label con icono de info */
+.conn-label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #90a4ae;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.info-icon-btn {
+  background: transparent;
+  border: none;
+  color: #90caf9;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.info-icon-btn:hover { color: #64b5f6; }
+.info-icon-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Tooltip del rol */
+.conn-role-tooltip {
+  background: rgba(25, 35, 55, 0.97);
+  border: 1px solid rgba(144, 202, 249, 0.4);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #b0bec5;
+  margin-bottom: 10px;
+}
+
+/* Mensaje cuando no hay servicios externos */
+.conn-external-empty {
+  font-size: 12px;
+  color: #90a4ae;
+  font-style: italic;
+  margin: 8px 0 0;
+}
+
+/* Checkboxes de entornos */
+.conn-environments {
+  margin: 18px 0 14px;
+}
+.conn-environments > label {
+  font-size: 11px;
+  color: #90a4ae;
+  display: block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+.conn-env-checkboxes {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.conn-env-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.conn-env-check input[type="checkbox"] {
+  accent-color: #ffd700;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Badges de entorno */
+.conn-env-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.conn-env-dev { background: rgba(102,187,106,0.18); color: #66bb6a; border: 1px solid rgba(102,187,106,0.4); }
+.conn-env-int { background: rgba(41,182,246,0.18);  color: #29b6f6; border: 1px solid rgba(41,182,246,0.4); }
+.conn-env-pre { background: rgba(255,167,38,0.18);  color: #ffa726; border: 1px solid rgba(255,167,38,0.4); }
+.conn-env-pro { background: rgba(239,83,80,0.18);   color: #ef5350; border: 1px solid rgba(239,83,80,0.4); }
+
+/* Estado vacío */
+.conn-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #607d8b;
+}
+.conn-empty-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  opacity: 0.4;
+}
+.conn-empty-state p {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+/* Fila del botón añadir */
+.conn-add-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 16px;
+}

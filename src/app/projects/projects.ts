@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
-import { ProjectService, Project, Department } from "../project.service";
+import { ProjectService, Project, Department, ConnectivityEntry, ExternalService } from "../project.service";
 import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
 import { AuthService } from "../auth.service";
@@ -138,7 +138,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projectJsonFile: File | null = null;
   importResult: { success: boolean; message: string } | null = null;
 
-  newProjectTab: "info" | "minsait" | "dev" | "mind" | "documentos" = "info";
+  newProjectTab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos" = "info";
+  newProjectConnectivities: ConnectivityEntry[] = [];
+  newProjectExternalServices: ExternalService[] = [];
+  newProjectConnTooltipIndex: number | null = null;
 
   newProjectMinsaitMembers: Array<{
     nombre: string;
@@ -222,6 +225,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     this.loadProjects();
     this.loadDepartments();
+    this.projectService.getExternalServices().subscribe({
+      next: (services) => { this.newProjectExternalServices = services; },
+      error: () => { this.newProjectExternalServices = []; }
+    });
     this.agentRefreshSub = this.agentRefresh.refresh$.subscribe(entity => {
       if (entity === 'proyecto' || entity === 'all') this.loadProjects();
     });
@@ -376,6 +383,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       newProjectJenkinsList: this.newProjectJenkinsList,
       newProjectSonarList: this.newProjectSonarList,
       newProjectDocuments: this.newProjectDocuments,
+      newProjectConnectivities: this.newProjectConnectivities,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -415,6 +423,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.newProjectSonarList = draft.newProjectSonarList;
     if (draft.newProjectDocuments)
       this.newProjectDocuments = draft.newProjectDocuments;
+    if (Array.isArray(draft.newProjectConnectivities))
+      this.newProjectConnectivities = draft.newProjectConnectivities;
   }
 
   clearDraft(): void {
@@ -451,7 +461,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   cambiarNewProjectTab(
-    tab: "info" | "minsait" | "dev" | "mind" | "documentos",
+    tab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos",
   ) {
     if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per editar projectes", false);
@@ -493,11 +503,67 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.newProjectJenkinsList = [];
     this.newProjectSonarList = [];
     this.newProjectDocuments = [];
+    this.newProjectConnectivities = [];
+    this.newProjectConnTooltipIndex = null;
     this.projectFileInput = null;
     this.projectFileDescription = "";
     this.newProjectTab = "info";
 
     this.clearDraft();
+  }
+
+  addNewProjectConnectivity(): void {
+    this.newProjectConnectivities = [
+      ...this.newProjectConnectivities,
+      { id: crypto.randomUUID(), role: 'PRODUCER', type: 'INTERNAL', environments: [], notes: '' },
+    ];
+    this.saveDraft();
+  }
+
+  removeNewProjectConnectivity(index: number): void {
+    this.newProjectConnectivities = this.newProjectConnectivities.filter((_, i) => i !== index);
+    this.saveDraft();
+  }
+
+  newProjectHasEnv(conn: ConnectivityEntry, env: string): boolean {
+    return (conn.environments || []).includes(env);
+  }
+
+  newProjectToggleEnv(conn: ConnectivityEntry, env: string): void {
+    const envs = conn.environments || [];
+    conn.environments = envs.includes(env) ? envs.filter(e => e !== env) : [...envs, env];
+    this.saveDraft();
+  }
+
+  newProjectOnConnTypeChange(conn: ConnectivityEntry): void {
+    conn.internalProjectId = undefined;
+    conn.internalProjectCode = undefined;
+    conn.internalProjectName = undefined;
+    conn.externalServiceId = undefined;
+    conn.externalServiceName = undefined;
+    conn.otherName = undefined;
+    conn.otherCode = undefined;
+    conn.otherNotes = undefined;
+    this.saveDraft();
+  }
+
+  newProjectOnInternalProjectChange(conn: ConnectivityEntry): void {
+    const proj = this.projectes.find(p => p.id === conn.internalProjectId);
+    if (proj) {
+      conn.internalProjectCode = proj.codigoProyecto;
+      conn.internalProjectName = proj.nombre;
+    }
+    this.saveDraft();
+  }
+
+  newProjectOnExternalServiceChange(conn: ConnectivityEntry): void {
+    const svc = this.newProjectExternalServices.find(s => s.id === conn.externalServiceId);
+    if (svc) conn.externalServiceName = svc.name;
+    this.saveDraft();
+  }
+
+  newProjectToggleConnTooltip(index: number): void {
+    this.newProjectConnTooltipIndex = this.newProjectConnTooltipIndex === index ? null : index;
   }
 
   addNewProjectMember() {
@@ -928,6 +994,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       devMachines: this.newProjectDevMachines.filter(
         (m) => m.ip || m.identifier,
       ) as any,
+      connectivities: this.newProjectConnectivities,
     };
 
     const isEdit = partial.id !== undefined && partial.id !== "";
