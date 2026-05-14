@@ -19,7 +19,7 @@
       <div class="days-scroll combined">
         <div class="days-cols header-row">
           <div
-            *ngFor="let d of daysOfWeek()"
+            *ngFor="let d of daysOfWeek(); trackBy: trackByDate"
             [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)"
             class="day-col"
           >
@@ -30,14 +30,14 @@
 
         <div class="days-cols full-width body-row">
           <div
-            *ngFor="let d of daysOfWeek()"
+            *ngFor="let d of daysOfWeek(); trackBy: trackByDate"
             [class.weekend]="(d.getUTCDay()===0 || d.getUTCDay()===6)"
             class="day-col-body"
           >
             <div class="slot" (click)="createOrEditEvent(undefined, 'DEV', d)">
               <div class="slot-inner">
                 <div
-                  *ngFor="let ev of eventsForDay(d)"
+                  *ngFor="let ev of eventsForDay(d); trackBy: trackByEventId"
                   class="event event-{{ ev.env }}"
                   [ngClass]="{
                     'event-train': ev.eventType==='TRAIN',

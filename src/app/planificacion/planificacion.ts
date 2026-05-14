@@ -175,6 +175,14 @@ export class PlanificacionComponent implements OnInit {
     return days;
   }
 
+  trackByDate(_index: number, d: Date): string {
+    return d.toISOString().slice(0, 10);
+  }
+
+  trackByEventId(_index: number, ev: EventItem): string {
+    return ev.id ?? ev.date + ev.startTime + ev.project;
+  }
+
   // --- CONECTIVIDAD: Cargar Eventos ---
   loadEvents() {
     this.isLoading = true;
