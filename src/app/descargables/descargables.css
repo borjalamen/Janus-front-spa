@@ -157,6 +157,8 @@
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
+.view-btn { color: var(--accent, #0a7f7f); }
+.view-btn:hover { background: rgba(10,127,127,0.12); }
 .download-btn { color: #4a90d9; }
 .download-btn:hover:not(:disabled) { background: rgba(74,144,217,0.15); }
 .delete-btn { color: #e57373; }

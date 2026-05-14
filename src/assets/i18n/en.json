@@ -92,7 +92,9 @@
     "COL_SIZE": "Size",
     "COL_UPLOADED_BY": "Uploaded by",
     "COL_DATE": "Date",
-    "COL_ACTIONS": "Actions"
+    "COL_ACTIONS": "Actions",
+    "VIEW": "View in browser",
+    "DBLCLICK_HINT": "Double-click to open in browser"
   },
   "DOCS": {
     "ACORD_DGP": "Confidentiality agreement (DGP)",
@@ -878,12 +880,37 @@
     "DELETE_CONFIRM": "Delete event?"
   },
   "MULTIMEDIA": {
-    "SEARCH_PLACEHOLDER": "Search videos by title or description...",
-    "SEARCH": "Search",
-    "PLAY": "Play",
+    "TITLE": "Multimedia",
+    "SEARCH_PLACEHOLDER": "Search by title, description...",
+    "PLAY": "Play video",
+    "VIEW": "View in browser",
     "DOWNLOAD": "Download",
-    "NO_RESULTS": "No videos found.",
-    "CLOSE": "Close"
+    "NO_RESULTS": "No results found.",
+    "NO_FILES": "No multimedia files available.",
+    "CLOSE": "Close",
+    "OFFLINE_MODE": "Backend unavailable — showing static multimedia (read-only)",
+    "UPLOAD_NEW": "Upload new multimedia file",
+    "SELECT_FILE": "Select file...",
+    "SELECT_THUMB": "Thumbnail (optional)",
+    "DISPLAY_NAME": "Display name",
+    "CATEGORY": "Category",
+    "DURATION": "Duration (MM:SS)",
+    "DESCRIPTION_LABEL": "Description",
+    "UPLOAD": "Upload",
+    "UPLOADING": "Uploading...",
+    "DELETE": "Delete",
+    "LOADING": "Loading...",
+    "ERROR": "Error loading file list.",
+    "COL_NAME": "Name",
+    "COL_CATEGORY": "Category",
+    "COL_DURATION": "Duration",
+    "COL_DESCRIPTION": "Description",
+    "COL_SIZE": "Size",
+    "COL_UPLOADED_BY": "Uploaded by",
+    "COL_DATE": "Date",
+    "COL_ACTIONS": "Actions",
+    "DBLCLICK_HINT": "Double-click to play or open",
+    "STREAM_ERROR": "Could not play the video. Try downloading it."
   },
   "ESTIMATION": {
     "TITLE": "Task Estimation",

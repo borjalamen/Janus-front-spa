@@ -92,7 +92,9 @@
     "COL_SIZE": "Tamaño",
     "COL_UPLOADED_BY": "Subido por",
     "COL_DATE": "Fecha",
-    "COL_ACTIONS": "Acciones"
+    "COL_ACTIONS": "Acciones",
+    "VIEW": "Ver en el navegador",
+    "DBLCLICK_HINT": "Doble clic para abrir en el navegador"
   },
   "DOCS": {
     "ACORD_DGP": "Acuerdo de confidencialidad (DGP)",
@@ -876,12 +878,37 @@
     "DELETE_CONFIRM": "¿Eliminar evento?"
   },
   "MULTIMEDIA": {
-    "SEARCH_PLACEHOLDER": "Buscar videos por título o descripción...",
-    "SEARCH": "Buscar",
-    "PLAY": "Reproducir",
+    "TITLE": "Multimedia",
+    "SEARCH_PLACEHOLDER": "Buscar por título, descripción...",
+    "PLAY": "Reproducir vídeo",
+    "VIEW": "Ver en el navegador",
     "DOWNLOAD": "Descargar",
-    "NO_RESULTS": "No se encontraron vídeos.",
-    "CLOSE": "Cerrar"
+    "NO_RESULTS": "No se encontraron resultados.",
+    "NO_FILES": "No hay ficheros multimedia disponibles.",
+    "CLOSE": "Cerrar",
+    "OFFLINE_MODE": "Backend no disponible — mostrando multimedia estático (solo lectura)",
+    "UPLOAD_NEW": "Subir nuevo fichero multimedia",
+    "SELECT_FILE": "Seleccionar fichero...",
+    "SELECT_THUMB": "Miniatura (opcional)",
+    "DISPLAY_NAME": "Nombre para mostrar",
+    "CATEGORY": "Categoría",
+    "DURATION": "Duración (MM:SS)",
+    "DESCRIPTION_LABEL": "Descripción",
+    "UPLOAD": "Subir",
+    "UPLOADING": "Subiendo...",
+    "DELETE": "Eliminar",
+    "LOADING": "Cargando...",
+    "ERROR": "Error cargando la lista de ficheros.",
+    "COL_NAME": "Nombre",
+    "COL_CATEGORY": "Categoría",
+    "COL_DURATION": "Duración",
+    "COL_DESCRIPTION": "Descripción",
+    "COL_SIZE": "Tamaño",
+    "COL_UPLOADED_BY": "Subido por",
+    "COL_DATE": "Fecha",
+    "COL_ACTIONS": "Acciones",
+    "DBLCLICK_HINT": "Doble clic para reproducir o abrir",
+    "STREAM_ERROR": "No se pudo reproducir el vídeo. Prueba a descargarlo."
   },
   "ESTIMATION": {
     "TITLE": "Estimación de tareas",

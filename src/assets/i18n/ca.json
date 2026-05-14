@@ -92,7 +92,9 @@
     "COL_SIZE": "Mida",
     "COL_UPLOADED_BY": "Pujat per",
     "COL_DATE": "Data",
-    "COL_ACTIONS": "Accions"
+    "COL_ACTIONS": "Accions",
+    "VIEW": "Veure al navegador",
+    "DBLCLICK_HINT": "Doble clic per obrir al navegador"
   },
   "DOCS": {
     "ACORD_DGP": "Acord de confidencialitat (DGP)",
@@ -861,12 +863,37 @@
     "DELETE_CONFIRM": "Eliminar esdeveniment?"
   },
   "MULTIMEDIA": {
-    "SEARCH_PLACEHOLDER": "Cerca vídeos per títol o descripció...",
-    "SEARCH": "Cerca",
-    "PLAY": "Reproduir",
+    "TITLE": "Multimèdia",
+    "SEARCH_PLACEHOLDER": "Cerca per títol, descripció...",
+    "PLAY": "Reproduir vídeo",
+    "VIEW": "Veure al navegador",
     "DOWNLOAD": "Descarregar",
-    "NO_RESULTS": "No s'han trobat vídeos.",
-    "CLOSE": "Tancar"
+    "NO_RESULTS": "No s'han trobat resultats.",
+    "NO_FILES": "No hi ha fitxers multimèdia disponibles.",
+    "CLOSE": "Tancar",
+    "OFFLINE_MODE": "Backend no disponible — mostrant multimèdia estàtic (només lectura)",
+    "UPLOAD_NEW": "Pujar nou fitxer multimèdia",
+    "SELECT_FILE": "Seleccionar fitxer...",
+    "SELECT_THUMB": "Miniatura (opcional)",
+    "DISPLAY_NAME": "Nom per mostrar",
+    "CATEGORY": "Categoria",
+    "DURATION": "Duració (MM:SS)",
+    "DESCRIPTION_LABEL": "Descripció",
+    "UPLOAD": "Pujar",
+    "UPLOADING": "Pujant...",
+    "DELETE": "Eliminar",
+    "LOADING": "Carregant...",
+    "ERROR": "Error carregant la llista de fitxers.",
+    "COL_NAME": "Nom",
+    "COL_CATEGORY": "Categoria",
+    "COL_DURATION": "Duració",
+    "COL_DESCRIPTION": "Descripció",
+    "COL_SIZE": "Mida",
+    "COL_UPLOADED_BY": "Pujat per",
+    "COL_DATE": "Data",
+    "COL_ACTIONS": "Accions",
+    "DBLCLICK_HINT": "Doble clic per reproduir o obrir",
+    "STREAM_ERROR": "No s'ha pogut reproduir el vídeo. Prova a descarregar-lo."
   },
   "ESTIMATION": {
     "TITLE": "Estimació de tasques",

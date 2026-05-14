@@ -1,56 +1,176 @@
-<div class="multimedia-root">
-  <div class="desc-search">
-    <mat-form-field appearance="outline" class="search-field">
+<div class="mm-root">
+
+  <!-- Cabecera -->
+  <div class="mm-header">
+    <div class="mm-title-row">
+      <mat-icon class="mm-title-icon">smart_display</mat-icon>
+      <h2>{{ 'MULTIMEDIA.TITLE' | translate }}</h2>
+    </div>
+    <!-- Buscador inline -->
+    <mat-form-field appearance="outline" class="mm-search-field">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="search" [(ngModel)]="query" [placeholder]="'MULTIMEDIA.SEARCH_PLACEHOLDER' | translate" [attr.aria-label]="'MULTIMEDIA.SEARCH_PLACEHOLDER' | translate" (input)="search(query)" />
-      <button *ngIf="query" mat-icon-button matSuffix (click)="query=''; search('')" [attr.aria-label]="'DESCARGABLES.CLEAR' | translate" title="{{ 'DESCARGABLES.CLEAR' | translate }}">
+      <input matInput type="search" [(ngModel)]="searchText"
+             [placeholder]="'MULTIMEDIA.SEARCH_PLACEHOLDER' | translate"
+             (input)="setSearchText(searchText)" />
+      <button *ngIf="searchText" mat-icon-button matSuffix
+              (click)="searchText=''; setSearchText('')">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
   </div>
 
-  <div class="results">
-    <div *ngFor="let r of results" class="card">
-      <div class="thumb-wrap" (click)="openPlayer(r)">
-        <img *ngIf="r.thumbnail" [src]="r.thumbnail" class="thumb" />
-        <div *ngIf="!r.thumbnail" class="thumb-fallback">▶</div>
-      </div>
-      <div class="meta">
-        <h4 class="title" (click)="openPlayer(r)">{{ r.title }}</h4>
-        <div class="desc">{{ r.description }}</div>
-        <div class="meta-row">
-          <div class="duration">{{ r.duration || '' }}</div>
-          <div class="actions">
-            <button mat-icon-button class="action-btn" (click)="openPlayer(r)" [attr.aria-label]="'MULTIMEDIA.PLAY' | translate" title="{{ 'MULTIMEDIA.PLAY' | translate }}">
-              <mat-icon>play_arrow</mat-icon>
-            </button>
-            <button mat-icon-button class="action-btn" (click)="download(r)" [attr.aria-label]="'MULTIMEDIA.DOWNLOAD' | translate" title="{{ 'MULTIMEDIA.DOWNLOAD' | translate }}">
-              <mat-icon>download</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="results.length === 0" class="empty">{{ 'MULTIMEDIA.NO_RESULTS' | translate }}</div>
+  <!-- Aviso modo offline -->
+  <div class="offline-banner" *ngIf="!backendAvailable && !loading">
+    <mat-icon>cloud_off</mat-icon>
+    {{ 'MULTIMEDIA.OFFLINE_MODE' | translate }}
   </div>
 
-  <!-- Player modal -->
-  <div class="modal-backdrop" *ngIf="playing">
-    <div class="modal-player" (click)="$event.stopPropagation()">
-      <button class="close" (click)="closePlayer()">✖</button>
-      <h3>{{ playing.title }}</h3>
+  <!-- Panel de subida (admin/devops con backend activo) -->
+  <div class="upload-panel" *ngIf="canEdit">
+    <h3 class="upload-title">
+      <mat-icon>upload_file</mat-icon>
+      {{ 'MULTIMEDIA.UPLOAD_NEW' | translate }}
+    </h3>
+    <div class="upload-form">
+      <label class="file-pick-btn">
+        <mat-icon>attach_file</mat-icon>
+        <span>{{ selectedFile ? selectedFile.name : ('MULTIMEDIA.SELECT_FILE' | translate) }}</span>
+        <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+      </label>
+
+      <label class="file-pick-btn thumb-pick">
+        <mat-icon>image</mat-icon>
+        <span>{{ selectedThumb ? selectedThumb.name : ('MULTIMEDIA.SELECT_THUMB' | translate) }}</span>
+        <input type="file" hidden accept="image/*" (change)="onThumbSelected($event)" />
+      </label>
+
+      <input class="upload-input" type="text" [(ngModel)]="newDisplayName"
+             [placeholder]="'MULTIMEDIA.DISPLAY_NAME' | translate" />
+      <input class="upload-input" type="text" [(ngModel)]="newCategory"
+             [placeholder]="'MULTIMEDIA.CATEGORY' | translate" />
+      <input class="upload-input" type="text" [(ngModel)]="newDuration"
+             [placeholder]="'MULTIMEDIA.DURATION' | translate" />
+      <input class="upload-input upload-input-desc" type="text" [(ngModel)]="newDescription"
+             [placeholder]="'MULTIMEDIA.DESCRIPTION_LABEL' | translate" />
+
+      <button class="upload-btn" [disabled]="!selectedFile || uploading" (click)="uploadItem()">
+        <mat-icon>{{ uploading ? 'hourglass_empty' : 'cloud_upload' }}</mat-icon>
+        {{ uploading ? ('MULTIMEDIA.UPLOADING' | translate) : ('MULTIMEDIA.UPLOAD' | translate) }}
+      </button>
+    </div>
+    <p class="upload-error" *ngIf="uploadError">{{ uploadError }}</p>
+  </div>
+
+  <!-- Estado de carga -->
+  <div class="mm-status" *ngIf="loading">
+    <mat-icon class="spin">hourglass_empty</mat-icon> {{ 'MULTIMEDIA.LOADING' | translate }}
+  </div>
+  <div class="mm-status mm-error" *ngIf="loadError">
+    <mat-icon>error_outline</mat-icon> {{ 'MULTIMEDIA.ERROR' | translate }}
+  </div>
+
+  <!-- Tabla de items -->
+  <div class="mm-table-wrap" *ngIf="!loading && !loadError">
+
+    <table class="mm-table" *ngIf="filteredItems.length; else noItems">
+      <thead>
+        <tr>
+          <th class="col-thumb"></th>
+          <th>{{ 'MULTIMEDIA.COL_NAME' | translate }}</th>
+          <th class="col-cat">{{ 'MULTIMEDIA.COL_CATEGORY' | translate }}</th>
+          <th class="col-dur">{{ 'MULTIMEDIA.COL_DURATION' | translate }}</th>
+          <th class="col-desc">{{ 'MULTIMEDIA.COL_DESCRIPTION' | translate }}</th>
+          <th class="col-size">{{ 'MULTIMEDIA.COL_SIZE' | translate }}</th>
+          <th class="col-user">{{ 'MULTIMEDIA.COL_UPLOADED_BY' | translate }}</th>
+          <th class="col-date">{{ 'MULTIMEDIA.COL_DATE' | translate }}</th>
+          <th class="col-actions">{{ 'MULTIMEDIA.COL_ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems"
+            (dblclick)="openItem(item)"
+            class="mm-row"
+            [title]="'MULTIMEDIA.DBLCLICK_HINT' | translate">
+          <!-- Miniatura o icono -->
+          <td class="col-thumb">
+            <img *ngIf="thumbnailUrl(item) as turl" [src]="turl" class="thumb-img"
+                 alt="" role="presentation"
+                 (error)="$any($event.target).style.display='none'" />
+            <mat-icon *ngIf="!thumbnailUrl(item)" class="mime-icon">{{ mimeIcon(item) }}</mat-icon>
+          </td>
+          <td>
+            <div class="item-name">{{ getLabel(item) }}</div>
+            <div class="item-filename" *ngIf="item.fileName && item.fileName !== getLabel(item)">{{ item.fileName }}</div>
+          </td>
+          <td class="col-cat">
+            <span class="cat-badge" *ngIf="item.category">{{ item.category }}</span>
+          </td>
+          <td class="col-dur">{{ item.duration }}</td>
+          <td class="col-desc">{{ item.description }}</td>
+          <td class="col-size">{{ formatSize(item.sizeBytes) }}</td>
+          <td class="col-user">{{ item.uploadedBy }}</td>
+          <td class="col-date">{{ formatDate(item.createdAt) }}</td>
+          <td class="col-actions">
+            <!-- Ojo: abre video en popup o documento en pestaña -->
+            <button class="action-btn view-btn" (click)="openItem(item)"
+                    [title]="(isVideo(item) ? 'MULTIMEDIA.PLAY' : 'MULTIMEDIA.VIEW') | translate">
+              <mat-icon>{{ isVideo(item) ? 'play_circle' : 'visibility' }}</mat-icon>
+            </button>
+            <button class="action-btn download-btn" (click)="download(item)"
+                    [disabled]="downloading[item.id]"
+                    [title]="'MULTIMEDIA.DOWNLOAD' | translate">
+              <mat-icon>{{ downloading[item.id] ? 'hourglass_empty' : 'download' }}</mat-icon>
+            </button>
+            <button class="action-btn delete-btn" *ngIf="canEdit" (click)="delete(item)"
+                    [disabled]="deleting[item.id]"
+                    [title]="'MULTIMEDIA.DELETE' | translate">
+              <mat-icon>{{ deleting[item.id] ? 'hourglass_empty' : 'delete' }}</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noItems>
+      <div class="mm-empty">
+        <mat-icon>videocam_off</mat-icon>
+        <p>{{ searchText ? ('MULTIMEDIA.NO_RESULTS' | translate) : ('MULTIMEDIA.NO_FILES' | translate) }}</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Modal player de vídeo -->
+  <div class="modal-backdrop" *ngIf="playing"
+       (click)="closePlayer()"
+       (keydown.escape)="closePlayer()">
+    <div class="modal-player"
+         (click)="$event.stopPropagation()"
+         (keydown)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closePlayer()" [title]="'MULTIMEDIA.CLOSE' | translate">
+        <mat-icon>close</mat-icon>
+      </button>
+      <h3 class="modal-title">{{ getLabel(playing) }}</h3>
       <div class="player-wrap">
-        <video *ngIf="playerReady" controls autoplay [src]="playing.file" class="player"></video>
-        <div *ngIf="!playerReady" class="player-loading">Cargando...</div>
+        <video controls autoplay
+               [src]="playerSrc(playing)" class="player"
+               (error)="onPlayerError()">
+          <track kind="captions" />
+        </video>
+        <div *ngIf="playerError" class="player-error">
+          <mat-icon>error_outline</mat-icon> {{ 'MULTIMEDIA.STREAM_ERROR' | translate }}
+        </div>
       </div>
       <div class="player-actions">
-        <button mat-icon-button class="action-btn" (click)="download(playing!)" [attr.aria-label]="'MULTIMEDIA.DOWNLOAD' | translate" title="{{ 'MULTIMEDIA.DOWNLOAD' | translate }}">
+        <button class="action-btn download-btn" (click)="download(playing!)"
+                [title]="'MULTIMEDIA.DOWNLOAD' | translate">
           <mat-icon>download</mat-icon>
         </button>
-        <button mat-icon-button class="action-btn" (click)="closePlayer()" [attr.aria-label]="'MULTIMEDIA.CLOSE' | translate" title="{{ 'MULTIMEDIA.CLOSE' | translate }}">
+        <button class="action-btn" (click)="closePlayer()"
+                [title]="'MULTIMEDIA.CLOSE' | translate">
           <mat-icon>close</mat-icon>
         </button>
       </div>
     </div>
   </div>
+
 </div>

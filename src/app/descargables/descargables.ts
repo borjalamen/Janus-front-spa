@@ -142,6 +142,14 @@ export class DescargablesComponent implements OnInit {
     );
   }
 
+  /** Abre el documento en una pestaña del navegador (para ver PDFs, imágenes, etc.) */
+  openInTab(rec: RecursoDescargable): void {
+    const url = rec._assetPath
+      ? `assets/documents/${rec._assetPath}`
+      : `${this.apiUrl}/${rec.id}/file?inline=true`;
+    window.open(url, '_blank');
+  }
+
   download(rec: RecursoDescargable): void {
     this.downloading[rec.id] = true;
     // Si es un recurso de assets (fallback), descarga desde assets/

@@ -285,7 +285,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.quoteVisible = true;
         this.scheduleNextQuote();
       }, 900);
-    }, 6000);
+    }, 10000);
   }
 
   ngOnDestroy() {

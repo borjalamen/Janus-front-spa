@@ -70,7 +70,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let rec of filteredRecursos">
+        <tr *ngFor="let rec of filteredRecursos"
+            (dblclick)="openInTab(rec)"
+            [title]="'DESCARGABLES.DBLCLICK_HINT' | translate">
           <td class="col-icon">
             <mat-icon class="mime-icon">{{ mimeIcon(rec.mimeType) }}</mat-icon>
           </td>
@@ -86,6 +88,10 @@
           <td class="col-user">{{ rec.uploadedBy }}</td>
           <td class="col-date">{{ formatDate(rec.createdAt) }}</td>
           <td class="col-actions">
+            <button class="action-btn view-btn" (click)="openInTab(rec)"
+                    [title]="'DESCARGABLES.VIEW' | translate">
+              <mat-icon>visibility</mat-icon>
+            </button>
             <button class="action-btn download-btn" (click)="download(rec)"
                     [disabled]="downloading[rec.id]" [title]="'DESCARGABLES.DOWNLOAD' | translate">
               <mat-icon>{{ downloading[rec.id] ? 'hourglass_empty' : 'download' }}</mat-icon>
