@@ -87,6 +87,11 @@ body {
   box-shadow: 0 4px 16px rgba(251, 192, 45, 0.3);
 }
 
+.top-tab-btn.active .tab-label,
+.top-tab-btn.active .tab-emoji {
+  color: #000000 !important;
+}
+
 /* Pestaña dinámica del proyecto abierto */
 .project-tab {
   max-width: 280px;
