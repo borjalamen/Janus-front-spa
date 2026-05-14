@@ -1,32 +1,110 @@
-<div class="descargables-root">
-  <h2>{{ 'DESCARGABLES.TITLE' | translate }}</h2>
+<div class="desc-root">
 
-  <app-buscador (buscar)="searchText = $event"></app-buscador>
-
-  <div *ngIf="documentos && documentos.length; else noFiles">
-    <div *ngFor="let doc of filteredDocuments" class="doc-row">
-      <div class="doc-info">
-        <div class="doc-title-row">
-          <strong class="doc-name">{{ doc.name }}</strong>
-          <span class="doc-size">{{ formatSize(doc.size) }}</span>
-        </div>
-        <div class="doc-desc">{{ doc.descriptionKey ? (doc.descriptionKey | translate) : doc.description }}</div>
-        <div class="doc-modified">{{ 'DESCARGABLES.LAST_MODIFIED' | translate }}: <strong>{{ formatDate(doc.modified) }}</strong></div>
-      </div>
-      <div class="doc-actions">
-        <button mat-stroked-button (click)="download(doc)" [disabled]="downloading[doc.path]">
-          <mat-icon>download</mat-icon>
-          <span *ngIf="!downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOAD' | translate }}</span>
-          <span *ngIf="downloading[doc.path]">{{ 'DESCARGABLES.DOWNLOADING' | translate }}</span>
-        </button>
-      </div>
+  <!-- Cabecera -->
+  <div class="desc-header">
+    <div class="desc-title-row">
+      <mat-icon class="desc-title-icon">download</mat-icon>
+      <h2>{{ 'DESCARGABLES.TITLE' | translate }}</h2>
     </div>
+    <app-buscador (buscar)="setSearchText($event)"></app-buscador>
   </div>
 
-  <ng-template #noFiles>
-    <p *ngIf="!loading && !loadError">{{ 'DESCARGABLES.NO_FILES' | translate }}</p>
-    <p *ngIf="!loading && !loadError && (documentos && documentos.length && filteredDocuments && filteredDocuments.length === 0)">{{ 'DESCARGABLES.NO_RESULTS' | translate }}</p>
-    <p *ngIf="loading">{{ 'DESCARGABLES.LOADING' | translate }}</p>
-    <p *ngIf="loadError">{{ 'DESCARGABLES.ERROR' | translate }}</p>
-  </ng-template>
+  <!-- Aviso modo offline (assets) -->
+  <div class="offline-banner" *ngIf="!backendAvailable && !loading">
+    <mat-icon>cloud_off</mat-icon>
+    {{ 'DESCARGABLES.OFFLINE_MODE' | translate }}
+  </div>
+
+  <!-- Panel de subida (solo admins/devops con backend disponible) -->
+  <div class="upload-panel" *ngIf="canEdit">
+    <h3 class="upload-title">
+      <mat-icon>upload_file</mat-icon>
+      {{ 'DESCARGABLES.UPLOAD_NEW' | translate }}
+    </h3>
+    <div class="upload-form">
+      <label class="file-pick-btn">
+        <mat-icon>attach_file</mat-icon>
+        <span>{{ selectedFile ? selectedFile.name : ('DESCARGABLES.SELECT_FILE' | translate) }}</span>
+        <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+      </label>
+
+      <input class="upload-input" type="text" [(ngModel)]="newDisplayName"
+             [placeholder]="'DESCARGABLES.DISPLAY_NAME' | translate" />
+
+      <input class="upload-input" type="text" [(ngModel)]="newCategory"
+             [placeholder]="'DESCARGABLES.CATEGORY' | translate" />
+
+      <input class="upload-input upload-input-desc" type="text" [(ngModel)]="newDescription"
+             [placeholder]="'DESCARGABLES.DESCRIPTION_LABEL' | translate" />
+
+      <button class="upload-btn" [disabled]="!selectedFile || uploading" (click)="uploadRecurso()">
+        <mat-icon>{{ uploading ? 'hourglass_empty' : 'cloud_upload' }}</mat-icon>
+        {{ uploading ? ('DESCARGABLES.UPLOADING' | translate) : ('DESCARGABLES.UPLOAD' | translate) }}
+      </button>
+    </div>
+    <p class="upload-error" *ngIf="uploadError">{{ uploadError }}</p>
+  </div>
+
+  <!-- Estados de carga -->
+  <div class="desc-status" *ngIf="loading">
+    <mat-icon class="spin">hourglass_empty</mat-icon> {{ 'DESCARGABLES.LOADING' | translate }}
+  </div>
+  <div class="desc-status desc-error" *ngIf="loadError">
+    <mat-icon>error_outline</mat-icon> {{ 'DESCARGABLES.ERROR' | translate }}
+  </div>
+
+  <!-- Tabla -->
+  <div class="desc-table-wrap" *ngIf="!loading && !loadError">
+
+    <table class="desc-table" *ngIf="filteredRecursos.length; else noFiles">
+      <thead>
+        <tr>
+          <th class="col-icon"></th>
+          <th>{{ 'DESCARGABLES.COL_NAME' | translate }}</th>
+          <th class="col-cat">{{ 'DESCARGABLES.COL_CATEGORY' | translate }}</th>
+          <th class="col-desc">{{ 'DESCARGABLES.COL_DESCRIPTION' | translate }}</th>
+          <th class="col-size">{{ 'DESCARGABLES.COL_SIZE' | translate }}</th>
+          <th class="col-user">{{ 'DESCARGABLES.COL_UPLOADED_BY' | translate }}</th>
+          <th class="col-date">{{ 'DESCARGABLES.COL_DATE' | translate }}</th>
+          <th class="col-actions">{{ 'DESCARGABLES.COL_ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rec of filteredRecursos">
+          <td class="col-icon">
+            <mat-icon class="mime-icon">{{ mimeIcon(rec.mimeType) }}</mat-icon>
+          </td>
+          <td>
+            <div class="file-name">{{ rec.displayName }}</div>
+            <div class="file-original" *ngIf="rec.displayName !== rec.fileName">{{ rec.fileName }}</div>
+          </td>
+          <td class="col-cat">
+            <span class="cat-badge" *ngIf="rec.category">{{ rec.category }}</span>
+          </td>
+          <td class="col-desc">{{ rec.description }}</td>
+          <td class="col-size">{{ formatSize(rec.sizeBytes) }}</td>
+          <td class="col-user">{{ rec.uploadedBy }}</td>
+          <td class="col-date">{{ formatDate(rec.createdAt) }}</td>
+          <td class="col-actions">
+            <button class="action-btn download-btn" (click)="download(rec)"
+                    [disabled]="downloading[rec.id]" [title]="'DESCARGABLES.DOWNLOAD' | translate">
+              <mat-icon>{{ downloading[rec.id] ? 'hourglass_empty' : 'download' }}</mat-icon>
+            </button>
+            <button class="action-btn delete-btn" *ngIf="canEdit" (click)="delete(rec)"
+                    [disabled]="deleting[rec.id]" [title]="'DESCARGABLES.DELETE' | translate">
+              <mat-icon>{{ deleting[rec.id] ? 'hourglass_empty' : 'delete' }}</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noFiles>
+      <div class="desc-empty">
+        <mat-icon>inbox</mat-icon>
+        <p>{{ searchText ? ('DESCARGABLES.NO_RESULTS' | translate) : ('DESCARGABLES.NO_FILES' | translate) }}</p>
+      </div>
+    </ng-template>
+  </div>
+
 </div>
