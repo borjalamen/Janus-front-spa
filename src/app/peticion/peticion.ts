@@ -17,6 +17,7 @@ import {
 import { TranslateModule } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
 import { LocalStorageService } from "../local-storage.service";
+import { AuthService } from "../auth.service";
 import { environment } from "../../environments/environment";
 
 @Component({
@@ -83,12 +84,24 @@ export class PeticionComponent implements OnInit {
     private storage: LocalStorageService,
     private dialog: MatDialog,
     private http: HttpClient,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
     const saved = this.storage.getObject<typeof this.form>(this.STORAGE_KEY);
     if (saved) {
       this.form = saved;
+    }
+
+    // Pre-rellenar con datos del usuario logado si los campos están vacíos
+    const user = this.auth.currentUserValue;
+    if (user) {
+      if (!this.form.requesterName && user.fullName) {
+        this.form.requesterName = user.fullName;
+      }
+      if (!this.form.requesterEmail && user.email) {
+        this.form.requesterEmail = user.email;
+      }
     }
 
     this.loadDevopsUsers();
