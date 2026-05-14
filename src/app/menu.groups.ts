@@ -21,7 +21,7 @@ export const MENU_GROUPS: MenuGroup[] = [
     titleKey: 'MENU.GROUPS.INICIO',
     items: [
       { id: 'bienvenida', labelKey: 'MENU.WELCOME', route: '/home', icon: 'home', requiresCheck: false },
-      { id: 'dashboard', labelKey: 'MENU.DASHBOARD', route: '/dashboard', icon: 'dashboard', requiresCheck: false }
+      { id: 'dashboard', labelKey: 'MENU.DASHBOARD', route: '/dashboard', icon: 'dashboard', requiresCheck: true }
     ]
   },
   {

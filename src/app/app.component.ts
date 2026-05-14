@@ -593,7 +593,7 @@ export class AppComponent implements OnDestroy, OnInit {
   canShow(menuItem: string): boolean {
     switch (menuItem) {
       case 'bienvenida': return true;
-      case 'dashboard': return true;
+      case 'dashboard': return this.rol !== 'invitado';
       case 'proyectos':
         return ['consultor', 'devops', 'admin'].includes(this.rol);
       case 'scrum':

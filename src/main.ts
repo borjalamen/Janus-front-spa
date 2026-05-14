@@ -39,6 +39,7 @@ import { spinnerInterceptor } from './app/spinner.interceptor';
 import installNetworkSpinner from './app/network-spinner-patch';
 import { APP_INITIALIZER } from '@angular/core';
 import { SpinnerService } from './app/spinner.service';
+import { authGuard } from './app/auth.guard';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -52,7 +53,7 @@ bootstrapApplication(AppComponent, {
     provideRouter([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
       { path: 'documents', component: DocumentsComponent },
       { path: 'usuario', component: UsuarioComponent },
       {path: 'projects', component: ProjectsComponent },
