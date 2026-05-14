@@ -789,7 +789,18 @@
 
     "DELETE_CONFIRM": "Delete",
     "CLOSE": "Close",
-    "IMAGE_PREVIEW_ALT": "Enlarged image"
+    "IMAGE_PREVIEW_ALT": "Enlarged image",
+    "COL_PROJECT": "Project",
+    "COL_CODE": "Code",
+    "COL_FILE": "File",
+    "COL_TYPE": "Type",
+    "COL_UPLOADED_BY": "Uploaded by",
+    "COL_DATE": "Date",
+    "COL_SIZE": "Size",
+    "COL_ACTIONS": "Actions",
+    "FILTER_PLACEHOLDER": "Filter...",
+    "DOC_COUNT": "{{count}} document(s)",
+    "CLEAR_FILTERS": "Clear filters"
   },
   "SEARCH": {
     "PLACEHOLDER": "Type to search..."

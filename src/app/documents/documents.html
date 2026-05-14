@@ -29,7 +29,7 @@
     <div class="doc-grid-info-bar">
       <span class="doc-count-label">
         <mat-icon inline="true">description</mat-icon>
-        {{ filteredDocs.length }} documento(s)
+        {{ 'DOCUMENTS.DOC_COUNT' | translate: { count: filteredDocs.length } }}
       </span>
       <button
         *ngIf="filterProject || filterFileName || filterExtension || filterDate"
@@ -37,7 +37,7 @@
         (click)="clearFilters()"
       >
         <mat-icon inline="true">filter_list_off</mat-icon>
-        Limpiar filtros
+        {{ 'DOCUMENTS.CLEAR_FILTERS' | translate }}
       </button>
     </div>
 
@@ -48,17 +48,17 @@
 
             <th class="col-project" (click)="sortBy('projectName')" (keydown.enter)="sortBy('projectName')">
               <div class="th-label">
-                <span>Proyecto</span>
+                <span>{{ 'DOCUMENTS.COL_PROJECT' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'projectName'">
                   {{ sortCol === 'projectName' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
               </div>
-              <input class="col-filter-input" [(ngModel)]="filterProject" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+              <input class="col-filter-input" [(ngModel)]="filterProject" (ngModelChange)="onFilterChange()" [placeholder]="'DOCUMENTS.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
             </th>
 
             <th class="col-code" (click)="sortBy('projectCode')" (keydown.enter)="sortBy('projectCode')">
               <div class="th-label">
-                <span>Código</span>
+                <span>{{ 'DOCUMENTS.COL_CODE' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'projectCode'">
                   {{ sortCol === 'projectCode' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
@@ -68,32 +68,32 @@
 
             <th class="col-file" (click)="sortBy('fileName')" (keydown.enter)="sortBy('fileName')">
               <div class="th-label">
-                <span>Archivo</span>
+                <span>{{ 'DOCUMENTS.COL_FILE' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'fileName'">
                   {{ sortCol === 'fileName' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
               </div>
-              <input class="col-filter-input" [(ngModel)]="filterFileName" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+              <input class="col-filter-input" [(ngModel)]="filterFileName" (ngModelChange)="onFilterChange()" [placeholder]="'DOCUMENTS.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
             </th>
 
             <th class="col-ext" (click)="sortBy('extension')" (keydown.enter)="sortBy('extension')">
               <div class="th-label">
-                <span>Tipo</span>
+                <span>{{ 'DOCUMENTS.COL_TYPE' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'extension'">
                   {{ sortCol === 'extension' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
               </div>
-              <input class="col-filter-input" [(ngModel)]="filterExtension" (ngModelChange)="onFilterChange()" placeholder="Filtrar..." (click)="$event.stopPropagation()" />
+              <input class="col-filter-input" [(ngModel)]="filterExtension" (ngModelChange)="onFilterChange()" [placeholder]="'DOCUMENTS.FILTER_PLACEHOLDER' | translate" (click)="$event.stopPropagation()" />
             </th>
 
             <th class="col-uploader">
-              <div class="th-label"><span>Subido por</span></div>
+              <div class="th-label"><span>{{ 'DOCUMENTS.COL_UPLOADED_BY' | translate }}</span></div>
               <div class="col-filter-spacer"></div>
             </th>
 
             <th class="col-date" (click)="sortBy('lastModified')" (keydown.enter)="sortBy('lastModified')">
               <div class="th-label">
-                <span>Fecha</span>
+                <span>{{ 'DOCUMENTS.COL_DATE' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'lastModified'">
                   {{ sortCol === 'lastModified' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
@@ -103,7 +103,7 @@
 
             <th class="col-size" (click)="sortBy('size')" (keydown.enter)="sortBy('size')">
               <div class="th-label">
-                <span>Tamaño</span>
+                <span>{{ 'DOCUMENTS.COL_SIZE' | translate }}</span>
                 <mat-icon class="sort-icon" [class.sort-active]="sortCol === 'size'">
                   {{ sortCol === 'size' ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}
                 </mat-icon>
@@ -112,7 +112,7 @@
             </th>
 
             <th class="col-actions">
-              <div class="th-label"><span>Acciones</span></div>
+              <div class="th-label"><span>{{ 'DOCUMENTS.COL_ACTIONS' | translate }}</span></div>
               <div class="col-filter-spacer"></div>
             </th>
 
