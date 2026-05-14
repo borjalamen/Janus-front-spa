@@ -104,9 +104,13 @@ export class ScrumComponent implements OnInit {
   }
 
   private refreshAssignees(): void {
+    const registeredSet = new Set(this.registeredDevopsAssignees);
+
+    // Incluir assignees de tareas existentes solo si no hay usuarios registrados
+    // que los cubran (para evitar duplicados username / fullName)
     const taskAssignees = this.tasks
       .map((t) => (t.assignee || '').trim())
-      .filter((name) => !!name);
+      .filter((name) => !!name && !registeredSet.has(name));
 
     this.assignees = Array.from(new Set([
       ...this.registeredDevopsAssignees,
