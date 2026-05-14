@@ -265,7 +265,7 @@ export class FormacionComponent implements OnInit, OnDestroy {
   // ════ GRID GETTERS ════════════════════════════════════════════
 
   get filteredCourses(): TrainingItem[] {
-    let items = this.allCourses;
+    let items = this.filteredAllCourses;
     if (this.filterCourseName) {
       const t = this.filterCourseName.toLowerCase();
       items = items.filter(c => (c.name || '').toLowerCase().includes(t));
