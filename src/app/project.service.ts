@@ -121,6 +121,11 @@ export interface ExternalService {
   url?: string;
 }
 
+export interface ExtraMetadata {
+  key: string;
+  value: string;
+}
+
 export interface Department {
   id?: string;
   name: string;
@@ -188,6 +193,9 @@ export interface Project {
     tipo: string;
     path: string;
   }>;
+
+  // Metadatos extra clave-valor
+  extras?: ExtraMetadata[];
 
   // Auditoría
   createdAt?: string;

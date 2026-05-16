@@ -53,6 +53,13 @@
               [attr.aria-selected]="activeTab === $any('docs')">
         {{ 'PROJECTS.TAB_DOCS' | translate }}
       </button>
+      <button class="new-project-tab"
+              [class.active]="activeTab === $any('extras')"
+              (click)="activeTab='extras'; saveDraft()"
+              role="tab"
+              [attr.aria-selected]="activeTab === $any('extras')">
+        {{ 'PROJECTS.TAB_EXTRAS' | translate }}
+      </button>
     </div>
 
     <!-- Formulario de edicion (mismo layout que Nuevo Proyecto) -->
@@ -864,6 +871,43 @@ spring.datasource.password=..."></textarea>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab: Extras -->
+      <div *ngIf="activeTab === $any('extras')" class="admin-card new-project-section">
+        <h3 class="section-subtitle">⚙️ {{ 'PROJECTS.EXTRAS_TITLE' | translate }}</h3>
+
+        <div *ngIf="extras.length === 0" class="empty-list-msg">
+          {{ 'PROJECTS.EXTRAS_EMPTY' | translate }}
+        </div>
+
+        <div class="extras-list">
+          <div *ngFor="let extra of extras; let i = index" class="extras-row">
+            <div class="input-field">
+              <label>{{ 'PROJECTS.EXTRAS_KEY' | translate }}</label>
+              <input type="text"
+                     [(ngModel)]="extra.key"
+                     (ngModelChange)="saveDraft()"
+                     [placeholder]="'PROJECTS.EXTRAS_KEY_PH' | translate">
+            </div>
+            <div class="input-field extras-value-field">
+              <label>{{ 'PROJECTS.EXTRAS_VALUE' | translate }}</label>
+              <input type="text"
+                     [(ngModel)]="extra.value"
+                     (ngModelChange)="saveDraft()"
+                     [placeholder]="'PROJECTS.EXTRAS_VALUE_PH' | translate">
+            </div>
+            <button class="btn-remove-item" (click)="removeExtra(i)" title="{{ 'PROJECTS.EXTRAS_REMOVE' | translate }}">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-actions">
+          <button class="btn-round btn-secondary" (click)="addExtra()">
+            {{ 'PROJECTS.EXTRAS_ADD' | translate }}
+          </button>
         </div>
       </div>
     </div>
@@ -2099,6 +2143,34 @@ spring.datasource.password=..."></textarea>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Extras tab -->
+    <div *ngIf="activeTab === $any('extras')">
+      <div class="sections-container">
+        <section class="section section-general">
+          <div class="section-title">⚙️ {{ 'PROJECTS.EXTRAS_TITLE' | translate }}</div>
+          <div class="project-form-grid full-width">
+            <div *ngIf="!extras || extras.length === 0" class="empty-list-msg">
+              {{ 'PROJECTS.EXTRAS_EMPTY' | translate }}
+            </div>
+            <table *ngIf="extras && extras.length > 0" class="extras-view-table">
+              <thead>
+                <tr>
+                  <th>{{ 'PROJECTS.EXTRAS_KEY' | translate }}</th>
+                  <th>{{ 'PROJECTS.EXTRAS_VALUE' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let extra of extras">
+                  <td class="extras-key-cell">{{ extra.key }}</td>
+                  <td>{{ extra.value }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
       </div>

@@ -1454,3 +1454,12 @@ body {
   justify-content: flex-start;
   margin-top: 16px;
 }
+
+/* ===== EXTRAS TAB ===== */
+.extras-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.extras-row { display: flex; align-items: flex-end; gap: 12px; }
+.extras-row .input-field { flex: 1; }
+.extras-row .extras-value-field { flex: 2; }
+.btn-remove-item { background: transparent; border: 1px solid rgba(239,68,68,0.4); color: #ef4444; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; margin-bottom: 2px; }
+.btn-remove-item:hover { background: rgba(239,68,68,0.12); border-color: #ef4444; }
+.btn-remove-item mat-icon { font-size: 18px; width: 18px; height: 18px; }

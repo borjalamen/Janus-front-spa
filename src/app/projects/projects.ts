@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
-import { ProjectService, Project, Department, ConnectivityEntry, ExternalService, Daily } from "../project.service";
+import { ProjectService, Project, Department, ConnectivityEntry, ExternalService, Daily, ExtraMetadata } from "../project.service";
 import { FormsModule } from "@angular/forms";
 import { ProjectDetailComponent } from "./project-detail";
 import { AuthService } from "../auth.service";
@@ -138,7 +138,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projectJsonFile: File | null = null;
   importResult: { success: boolean; message: string } | null = null;
 
-  newProjectTab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos" = "info";
+  newProjectTab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos" | "extras" = "info";
   newProjectConnectivities: ConnectivityEntry[] = [];
   newProjectExternalServices: ExternalService[] = [];
   newProjectConnTooltipIndex: number | null = null;
@@ -193,6 +193,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     descripcion: string;
     tipo: string;
   }> = [];
+
+  newProjectExtras: ExtraMetadata[] = [];
 
   projectFileInput: File | null = null;
   newProjectPdfThumbnails: Map<string, string> = new Map();
@@ -388,6 +390,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       newProjectSonarList: this.newProjectSonarList,
       newProjectDocuments: this.newProjectDocuments,
       newProjectConnectivities: this.newProjectConnectivities,
+      newProjectExtras: this.newProjectExtras,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -431,6 +434,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.newProjectDocuments = draft.newProjectDocuments;
     if (Array.isArray(draft.newProjectConnectivities))
       this.newProjectConnectivities = draft.newProjectConnectivities;
+    if (Array.isArray(draft.newProjectExtras))
+      this.newProjectExtras = draft.newProjectExtras;
   }
 
   addNewProjectDaily(): void {
@@ -485,7 +490,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   cambiarNewProjectTab(
-    tab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos",
+    tab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos" | "extras"
   ) {
     if (!this.authService.canManageProjects) {
       this.showToast("❌ No tens permisos per editar projectes", false);
@@ -531,6 +536,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.newProjectDocuments = [];
     this.newProjectConnectivities = [];
     this.newProjectConnTooltipIndex = null;
+    this.newProjectExtras = [];
     this.projectFileInput = null;
     this.projectFileDescription = "";
     this.newProjectTab = "info";
@@ -590,6 +596,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   newProjectToggleConnTooltip(index: number): void {
     this.newProjectConnTooltipIndex = this.newProjectConnTooltipIndex === index ? null : index;
+  }
+
+  addNewProjectExtra(): void {
+    this.newProjectExtras = [...this.newProjectExtras, { key: '', value: '' }];
+    this.saveDraft();
+  }
+
+  removeNewProjectExtra(index: number): void {
+    this.newProjectExtras = this.newProjectExtras.filter((_, i) => i !== index);
+    this.saveDraft();
   }
 
   addNewProjectMember() {
@@ -1022,6 +1038,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         (m) => m.ip || m.identifier,
       ) as any,
       connectivities: this.newProjectConnectivities,
+      extras: this.newProjectExtras.filter(e => !!e.key?.trim()),
     };
 
     const isEdit = partial.id !== undefined && partial.id !== "";

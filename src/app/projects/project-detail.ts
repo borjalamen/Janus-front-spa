@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatIconModule } from "@angular/material/icon";
-import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel, Daily } from "../project.service";
+import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel, Daily, ExtraMetadata } from "../project.service";
 import { DocumentService } from "../document.service";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth.service";
@@ -69,7 +69,7 @@ type DevMachine = {
   otherTools?: OtherTool[];
 };
 
-type ProjectDetailTab = "info" | "minsait" | "dev" | "mind" | "connectivity" | "docs";
+type ProjectDetailTab = "info" | "minsait" | "dev" | "mind" | "connectivity" | "docs" | "extras";
 
 type ProjectDetailDraft = {
   codigoProyecto: string | null;
@@ -98,6 +98,7 @@ type ProjectDetailDraft = {
   notasGenerales: string | null;
   monitoringTools?: MonitoringTools;
   connectivities: ConnectivityEntry[];
+  extras: ExtraMetadata[];
 };
 
 @Component({
@@ -246,6 +247,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   allProjects: ProjectModel[] = [];
   externalServices: ExternalService[] = [];
   connTooltipIndex: number | null = null;
+
+  // ── Extras (metadatos clave-valor) ──
+  extras: ExtraMetadata[] = [];
   isPwdVisible(key: string): boolean { return this.pwdVisible.has(key); }
   togglePwd(key: string): void {
     this.pwdVisible.has(key) ? this.pwdVisible.delete(key) : this.pwdVisible.add(key);
@@ -533,6 +537,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       ? [...(p as any).connectivities]
       : [];
 
+    // Extras
+    this.extras = Array.isArray((p as any).extras)
+      ? [...(p as any).extras]
+      : [];
+
     p.herramientasMind = p.herramientasMind || ({} as any);
     const h = p.herramientasMind as any;
     h.nexus = h.nexus || [];
@@ -606,6 +615,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       notasGenerales: this.proyecto.notasGenerales || null,
       monitoringTools: this.proyecto.monitoringTools,
       connectivities: this.connectivities,
+      extras: this.extras,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -633,6 +643,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       "mind",
       "connectivity",
       "docs",
+      "extras",
     ];
     if (draft.activeTab && validTabs.includes(draft.activeTab)) {
       this.activeTab = draft.activeTab;
@@ -662,6 +673,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       draft.notasGenerales ?? this.proyecto.notasGenerales;
     if (draft.monitoringTools) this.proyecto.monitoringTools = draft.monitoringTools;
     if (Array.isArray(draft.connectivities)) this.connectivities = draft.connectivities;
+    if (Array.isArray(draft.extras)) this.extras = draft.extras;
   }
 
   clearDraft(): void {
@@ -733,6 +745,17 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   toggleConnTooltip(index: number): void {
     this.connTooltipIndex = this.connTooltipIndex === index ? null : index;
+  }
+
+  // ===== EXTRAS =====
+  addExtra(): void {
+    this.extras = [...this.extras, { key: '', value: '' }];
+    this.saveDraft();
+  }
+
+  removeExtra(index: number): void {
+    this.extras = this.extras.filter((_, i) => i !== index);
+    this.saveDraft();
   }
 
   private getDocsProjectId(): string | number | undefined {
@@ -1108,6 +1131,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
       p.documents = documentsSnapshot as any;
       p.connectivities = this.connectivities;
+      (p as any).extras = this.extras.filter(e => !!e.key?.trim());
     } catch (e) {
       /* ignore */
     }

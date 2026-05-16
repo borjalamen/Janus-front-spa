@@ -198,6 +198,13 @@
         >
           📂 {{ 'PROJECTS.TAB_DOCUMENTOS' | translate }}
         </button>
+        <button
+          class="new-project-tab"
+          [class.active]="newProjectTab === 'extras'"
+          (click)="cambiarNewProjectTab('extras')"
+        >
+          ⚙️ {{ 'PROJECTS.TAB_EXTRAS' | translate }}
+        </button>
       </div>
 
       <!-- TAB INFO -->
@@ -1190,6 +1197,56 @@ spring.datasource.password=..."></textarea>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB EXTRAS -->
+      <div
+        *ngIf="newProjectTab === 'extras'"
+        class="admin-card new-project-section"
+      >
+        <h3 class="section-subtitle">
+          ⚙️ {{ 'PROJECTS.EXTRAS_TITLE' | translate }}
+        </h3>
+
+        <div *ngIf="newProjectExtras.length === 0" class="empty-list-msg">
+          {{ 'PROJECTS.EXTRAS_EMPTY' | translate }}
+        </div>
+
+        <div class="extras-list">
+          <div *ngFor="let extra of newProjectExtras; let i = index" class="extras-row">
+            <div class="input-field">
+              <label>{{ 'PROJECTS.EXTRAS_KEY' | translate }}</label>
+              <input
+                type="text"
+                [(ngModel)]="extra.key"
+                (ngModelChange)="saveDraft()"
+                [placeholder]="'PROJECTS.EXTRAS_KEY_PH' | translate"
+              />
+            </div>
+            <div class="input-field extras-value-field">
+              <label>{{ 'PROJECTS.EXTRAS_VALUE' | translate }}</label>
+              <input
+                type="text"
+                [(ngModel)]="extra.value"
+                (ngModelChange)="saveDraft()"
+                [placeholder]="'PROJECTS.EXTRAS_VALUE_PH' | translate"
+              />
+            </div>
+            <button
+              class="btn-remove-item"
+              (click)="removeNewProjectExtra(i)"
+              [title]="'PROJECTS.EXTRAS_REMOVE' | translate"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-actions">
+          <button class="btn-round btn-secondary" (click)="addNewProjectExtra()">
+            {{ 'PROJECTS.EXTRAS_ADD' | translate }}
+          </button>
         </div>
       </div>
 
