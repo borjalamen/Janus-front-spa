@@ -182,13 +182,34 @@ export class FormacionComponent implements OnInit, OnDestroy {
     if (!tab || tab.readonly) return;
     const it = tab.item as any;
     it.tags = (it.tagsString || '').split(',').map((t: string) => t.trim()).filter(Boolean);
-    // Persistir en la ruta que contiene el curso
+
+    // Persistir en la ruta local que contiene el curso
     const found = this.paths.find(p => p.items.some(i => i.id === it.id));
     if (found) {
       const idx = found.items.findIndex(i => i.id === it.id);
       if (idx !== -1) found.items[idx] = { ...it };
     }
     this.save();
+
+    // Si el curso viene del backend, persistir también en la API
+    const apiIdx = this.apiCourses.findIndex(c => c.id === it.id);
+    if (apiIdx !== -1) {
+      const payload = {
+        name: it.name,
+        link: it.link || '',
+        description: it.description || '',
+        tags: it.tags || [],
+        location: it.location || '',
+      };
+      this.http.put(`${environment.baseUrl}formacion/update/${it.id}`, payload).subscribe({
+        next: (updated: any) => {
+          this.apiCourses[apiIdx] = { ...this.apiCourses[apiIdx], ...updated };
+          this.refreshAllCourses();
+        },
+        error: () => { /* silencioso: el fallo de red no debe bloquear la UI */ }
+      });
+    }
+
     this.closeCourseTab(it.id);
   }
 
@@ -711,6 +732,25 @@ export class FormacionComponent implements OnInit, OnDestroy {
     if (idxPath !== -1) this.paths[idxPath] = this.selectedPath!;
     this.save();
     this.refreshAllCourses();
+
+    // Si el curso es de la API, persistir también en el backend
+    const apiIdx = this.apiCourses.findIndex(c => c.id === it.id);
+    if (apiIdx !== -1) {
+      const payload = {
+        name: it.name,
+        link: it.link || '',
+        description: it.description || '',
+        tags: it.tags || [],
+        location: it.location || '',
+      };
+      this.http.put(`${environment.baseUrl}formacion/update/${it.id}`, payload).subscribe({
+        next: (updated: any) => {
+          this.apiCourses[apiIdx] = { ...this.apiCourses[apiIdx], ...updated };
+          this.refreshAllCourses();
+        },
+        error: () => { /* silencioso */ }
+      });
+    }
 
     // esborrem draft del item
     this.storage.remove(DRAFT_ITEM_KEY);
