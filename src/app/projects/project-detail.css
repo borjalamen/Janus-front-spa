@@ -480,7 +480,7 @@
   color: rgba(200,210,220,0.65);
   line-height: 1.5;
 }
-.daily-section-row { flex-direction: column; align-items: stretch !important; gap: 0 !important; }
+.daily-section-row { flex-direction: column; align-items: stretch !important; gap: 0 !important; grid-column: 1 / -1; }
 
 /* Openshift subsection styling */
 .openshift-toggle { margin-top:8px; margin-bottom:8px }
