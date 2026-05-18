@@ -256,8 +256,10 @@
 .cron-expr { font-family: 'Courier New', monospace; font-size: 12px; color: #ffd166; }
 .cron-desc { color: rgba(200,210,220,0.6); font-size: 11px; }
 .sonar-prefix { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #ffd166; }
-.sonar-link { color: #ff9090; text-decoration: underline; cursor: pointer; font-size: 12px; word-break: break-all; }
-.sonar-link:hover { color: #ffbbbb; }
+.sonar-link { color: #ff9090; text-decoration: underline; font-size: 12px; word-break: break-all; }
+.mind-chip-sonar-clickable { cursor: pointer; }
+.mind-chip-sonar-clickable:hover { background: rgba(255,110,110,0.18); border-color: rgba(255,110,110,0.5); }
+.mind-chip-sonar-clickable:hover .sonar-link { color: #ffbbbb; }
 .mind-empty { color: rgba(255,255,255,0.2); font-style: italic; font-size: 13px; }
 
 /* Repo duo: white-ish border around name+url and remove button aligned right */

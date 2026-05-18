@@ -1786,10 +1786,12 @@ spring.datasource.password=..."></textarea>
                     </div>
                   </div>
                   <div *ngIf="!editing" class="mind-chip-row">
-                    <div *ngFor="let s of sonarList" class="mind-chip mind-chip-sonar">
+                    <div *ngFor="let s of sonarList"
+                         class="mind-chip mind-chip-sonar"
+                         [class.mind-chip-sonar-clickable]="isValidUrl(s.url)"
+                         (click)="isValidUrl(s.url) && openUrl(s.url)">
                       <span *ngIf="s.prefix" class="sonar-prefix">{{ s.prefix }}</span>
-                      <a *ngIf="isValidUrl(s.url)" class="sonar-link" (click)="openUrl(s.url)">{{ s.url }}</a>
-                      <span *ngIf="!isValidUrl(s.url)" class="sonar-link">{{ s.url }}</span>
+                      <span class="sonar-link">{{ s.url }}</span>
                     </div>
                     <span *ngIf="sonarList.length === 0" class="mind-empty">—</span>
                   </div>
