@@ -978,6 +978,7 @@
 
 .course-row-even td { background: rgba(255, 255, 255, 0.015); }
 .course-row:hover td { background: rgba(255, 213, 79, 0.05); }
+.course-row-clickable { cursor: pointer; }
 
 /* Name cell */
 .course-name-cell {

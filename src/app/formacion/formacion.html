@@ -294,8 +294,9 @@
               <tbody>
 
                 <tr *ngFor="let c of pagedCourses; let i = index; trackBy: trackCourse"
-                  class="course-row"
+                  class="course-row course-row-clickable"
                   [class.course-row-even]="i % 2 === 0"
+                  (click)="viewCourse(c)"
                 >
                   <td class="ccol-name">
                     <div class="course-name-cell">
@@ -332,7 +333,6 @@
                   </td>
                   <td class="ccol-actions">
                     <div class="cactions-cell">
-                      <button class="icon-btn view" (click)="viewCourse(c); $event.stopPropagation()" [title]="'TRAINING.VIEW' | translate">👁️</button>
                       <button *ngIf="c.link" class="icon-btn copy" (click)="openCourseLink(c); $event.stopPropagation()" [title]="'TRAINING.OPEN_LINK' | translate">🔗</button>
                       <button *ngIf="!isConsultor" class="icon-btn edit" (click)="editCourse(c); $event.stopPropagation()" [title]="'TRAINING.EDIT' | translate">✏️</button>
                       <button *ngIf="!isConsultor" class="icon-btn delete" (click)="confirmDeleteCourse(c.id, c.name); $event.stopPropagation()" [title]="'TRAINING.DELETE' | translate">🗑️</button>
