@@ -86,16 +86,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let p of filteredPaths; let i = index">
+              <tr *ngFor="let p of filteredPaths; let i = index"
+                class="course-row course-row-clickable"
+                (click)="viewPath(p)">
                 <td class="col-idx">{{ i + 1 }}</td>
                 <td><strong>{{ p.name }}</strong></td>
                 <td class="col-meta">{{ p.audience }}</td>
                 <td class="col-meta">{{ p.objectives }}</td>
                 <td class="col-num">{{ p.items.length }}</td>
                 <td class="cactions-cell">
-                  <button type="button" class="icon-btn view" (click)="viewPath(p)" title="{{ 'TRAINING.VIEW' | translate }}"><span class="icon-eye">👁️</span></button>
-                  <button *ngIf="!isConsultor" type="button" class="icon-btn edit" (click)="editPath(p)" title="{{ 'TRAINING.EDIT' | translate }}"><span class="icon-edit">✏️</span></button>
-                  <button *ngIf="!isConsultor" type="button" class="icon-btn delete" (click)="confirmDeletePath(p.id, p.name)" title="{{ 'TRAINING.DELETE' | translate }}"><span class="icon-delete">🗑️</span></button>
+                  <button *ngIf="!isConsultor" type="button" class="icon-btn edit" (click)="editPath(p); $event.stopPropagation()" title="{{ 'TRAINING.EDIT' | translate }}"><span class="icon-edit">✏️</span></button>
+                  <button *ngIf="!isConsultor" type="button" class="icon-btn delete" (click)="confirmDeletePath(p.id, p.name); $event.stopPropagation()" title="{{ 'TRAINING.DELETE' | translate }}"><span class="icon-delete">🗑️</span></button>
                 </td>
               </tr>
               <tr *ngIf="filteredPaths.length === 0">
