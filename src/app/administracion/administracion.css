@@ -836,6 +836,26 @@ body {
   color: #7c8084;
 }
 
+/* Validación de contraseña */
+.pwd-rules-hint {
+  font-size: 11px;
+  color: #7c8084;
+  margin-top: 5px;
+}
+.pwd-error-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+}
+.pwd-error-list li {
+  font-size: 12px;
+  color: #ff6b6b;
+  padding: 2px 0;
+}
+.pwd-error-list li::before {
+  content: '⚠ ';
+}
+
 /* Section label para roles */
 .section-label {
   display: block;

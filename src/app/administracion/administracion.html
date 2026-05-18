@@ -690,8 +690,15 @@
         <input
           type="password"
           [(ngModel)]="nouUsuari.contrasenya"
+          (ngModelChange)="passwordErrors = []"
           [placeholder]="usuariEditant ? ('ADMIN.KEEP_PASSWORD' | translate) : ('ADMIN.ENTER_PASSWORD' | translate)"
         />
+        <div class="pwd-rules-hint" *ngIf="!usuariEditant">
+          {{ 'ADMIN.PWD_HINT' | translate }}
+        </div>
+        <ul class="pwd-error-list" *ngIf="passwordErrors.length > 0">
+          <li *ngFor="let err of passwordErrors">{{ err | translate }}</li>
+        </ul>
       </div>
 
       <hr class="divider" />

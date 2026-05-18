@@ -176,6 +176,9 @@ export class AdministracionComponent implements OnInit {
   mostrarPopupCredenciales = false;
   credencialesNuevas: { username: string; password: string } | null = null;
 
+  // Errores de validación de contraseña
+  passwordErrors: string[] = [];
+
   // ESTADOS PETICIONES (Solicitudes de Unete)
   peticiones: PeticionAdmin[] = [];
   peticionesFiltradas: PeticionAdmin[] = [];
@@ -1184,6 +1187,18 @@ export class AdministracionComponent implements OnInit {
     });
   }
 
+  /** Valida la contraseña contra las reglas de seguridad. Devuelve claves i18n de errores. */
+  validatePassword(pwd: string): string[] {
+    const errors: string[] = [];
+    if (!pwd || pwd.length < 9)          errors.push('ADMIN.PWD_MIN_LENGTH');
+    if (!/[A-Z]/.test(pwd))              errors.push('ADMIN.PWD_UPPERCASE');
+    if (!/[a-z]/.test(pwd))              errors.push('ADMIN.PWD_LOWERCASE');
+    if (!/[0-9]/.test(pwd))              errors.push('ADMIN.PWD_NUMBER');
+    if (!/[@#$%&]/.test(pwd))            errors.push('ADMIN.PWD_SPECIAL');
+    if (/\s/.test(pwd))                  errors.push('ADMIN.PWD_NO_SPACES');
+    return errors;
+  }
+
   guardarUsuari() {
     const rolsSeleccionats = Object.entries(this.nouUsuari.rols)
       .filter(([_, v]) => v)
@@ -1205,6 +1220,8 @@ export class AdministracionComponent implements OnInit {
 
       // Incluir password solo si se proporciona una nueva
       if (this.nouUsuari.contrasenya && this.nouUsuari.contrasenya.trim()) {
+        this.passwordErrors = this.validatePassword(this.nouUsuari.contrasenya);
+        if (this.passwordErrors.length > 0) return;
         body.password = this.nouUsuari.contrasenya;
       }
 
@@ -1233,6 +1250,8 @@ export class AdministracionComponent implements OnInit {
         this.showToast("El nombre es requerido para crear un usuario", false);
         return;
       }
+      this.passwordErrors = this.validatePassword(this.nouUsuari.contrasenya);
+      if (this.passwordErrors.length > 0) return;
 
       const body = {
         username: this.nouUsuari.nombre,
@@ -1351,6 +1370,7 @@ export class AdministracionComponent implements OnInit {
   tancarPopup() {
     this.mostrarPopup = false;
     this.usuariEditant = null;
+    this.passwordErrors = [];
   }
 
   cancelarInhabilitar() {
