@@ -45,6 +45,9 @@ export class UsuarioComponent {
   msgError?: string;
 
   showPasswordForm = false;
+  showOldPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
   passwordForm = {
     oldPassword: '',
     newPassword: '',
@@ -195,6 +198,9 @@ export class UsuarioComponent {
 
   cancelPasswordForm(): void {
     this.showPasswordForm = false;
+    this.showOldPassword = false;
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
     this.passwordForm = { oldPassword: '', newPassword: '', confirmPassword: '' };
   }
 

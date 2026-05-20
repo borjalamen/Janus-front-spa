@@ -118,21 +118,36 @@
         </button>
 
         <div *ngIf="showPasswordForm" class="usuario-password-form">
-          <input
-            type="password"
-            [(ngModel)]="passwordForm.oldPassword"
-            [placeholder]="'USER_SECTION.OLD_PASSWORD' | translate"
-          />
-          <input
-            type="password"
-            [(ngModel)]="passwordForm.newPassword"
-            [placeholder]="'USER_SECTION.NEW_PASSWORD' | translate"
-          />
-          <input
-            type="password"
-            [(ngModel)]="passwordForm.confirmPassword"
-            [placeholder]="'USER_SECTION.CONFIRM_PASSWORD' | translate"
-          />
+          <div class="pwd-input-wrapper">
+            <input
+              [type]="showOldPassword ? 'text' : 'password'"
+              [(ngModel)]="passwordForm.oldPassword"
+              [placeholder]="'USER_SECTION.OLD_PASSWORD' | translate"
+            />
+            <button type="button" class="pwd-toggle-btn" (click)="showOldPassword = !showOldPassword" [attr.aria-label]="'Toggle visibility'">
+              <mat-icon>{{ showOldPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div class="pwd-input-wrapper">
+            <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              [(ngModel)]="passwordForm.newPassword"
+              [placeholder]="'USER_SECTION.NEW_PASSWORD' | translate"
+            />
+            <button type="button" class="pwd-toggle-btn" (click)="showNewPassword = !showNewPassword" [attr.aria-label]="'Toggle visibility'">
+              <mat-icon>{{ showNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div class="pwd-input-wrapper">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              [(ngModel)]="passwordForm.confirmPassword"
+              [placeholder]="'USER_SECTION.CONFIRM_PASSWORD' | translate"
+            />
+            <button type="button" class="pwd-toggle-btn" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="'Toggle visibility'">
+              <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
 
           <div class="usuario-password-actions">
             <button class="usuario-secondary-btn" (click)="cancelPasswordForm()">
