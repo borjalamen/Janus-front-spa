@@ -26,7 +26,7 @@
     <!-- Pestañas dinámicas de registros abiertos -->
     <button *ngFor="let tab of openTabs" class="tab bitacora-detail-tab" [class.active]="activeDetailId === tab.bitacora.id" (click)="activeDetailId=tab.bitacora.id ?? null">
       <mat-icon inline="true">bug_report</mat-icon>
-      {{ tab.bitacora.contexto || '(Sin contexto)' }}
+      {{ tab.bitacora.contexto || ('ERRORS.NO_CONTEXT' | translate) }}
       <span class="tab-close" (click)="$event.stopPropagation(); closeBitacoraDetail(tab.bitacora.id)" title="Cerrar">&#x2715;</span>
     </button>
   </div>
@@ -42,7 +42,7 @@
           type="text"
           [(ngModel)]="formBitacora.contexto"
           (ngModelChange)="onFormChange()"
-          placeholder="Contexto del error"
+          [placeholder]="'ERRORS.PLACEHOLDER_CONTEXT' | translate"
         />
       </div>
 
@@ -52,12 +52,12 @@
           rows="3"
           [(ngModel)]="formBitacora.error"
           (ngModelChange)="onFormChange()"
-          placeholder="Descripción del error"
+          [placeholder]="'ERRORS.PLACEHOLDER_ERROR' | translate"
         ></textarea>
       </div>
 
       <div class="form-field">
-        <label>Entorno</label>
+        <label>{{ 'ERRORS.FIELD_ENV' | translate }}</label>
         <div class="entorno-botones-wrapper">
           <button
             type="button"
@@ -75,9 +75,9 @@
             [class.active]="isBitacoraEntornoSelected('preproduccion', formBitacora)"
             (click)="toggleBitacoraEntorno('preproduccion', formBitacora); onFormChange()"
             [style.--color]="'#FBC02D'"
-            title="Preproducción"
+            [title]="'ERRORS.ENV_PRE' | translate"
           >
-            Preproducción
+            {{ 'ERRORS.ENV_PRE' | translate }}
           </button>
           <button
             type="button"
@@ -85,9 +85,9 @@
             [class.active]="isBitacoraEntornoSelected('produccion', formBitacora)"
             (click)="toggleBitacoraEntorno('produccion', formBitacora); onFormChange()"
             [style.--color]="'#E53935'"
-            title="Producción"
+            [title]="'ERRORS.ENV_PRO' | translate"
           >
-            Producción
+            {{ 'ERRORS.ENV_PRO' | translate }}
           </button>
           <div
             class="entorno-icon-preview"
@@ -107,7 +107,7 @@
             type="button"
             class="guardar-btn agregar-solucion-btn"
             (click)="agregarSolucion()"
-            title="Agregar Solución"
+            [title]="'ERRORS.ADD_SOLUTION_TITLE' | translate"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -116,7 +116,7 @@
             *ngIf="!formBitacora.soluciones || formBitacora.soluciones.length === 0"
             class="no-soluciones"
           >
-            <p>No hay soluciones agregadas</p>
+            <p>{{ 'ERRORS.NO_SOLUTIONS' | translate }}</p>
           </div>
 
           <div
@@ -125,17 +125,17 @@
             [style.borderLeftColor]="getColorEntorno(solucion.entorno)"
           >
             <div class="solucion-header">
-              <span class="solucion-numero">Paso {{ solucion.numero }}</span>
+              <span class="solucion-numero">{{ 'ERRORS.SOLUTION_STEP' | translate }} {{ solucion.numero }}</span>
               <div class="solucion-entorno-btns">
                 <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'minsait'" (click)="solucion.entorno='minsait'; onFormChange()" [style.--color]="'#1E88E5'" title="Minsait">M</button>
-                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'; onFormChange()" [style.--color]="'#FBC02D'" title="Preproducción">PRE</button>
-                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'; onFormChange()" [style.--color]="'#E53935'" title="Producción">PRO</button>
+                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'; onFormChange()" [style.--color]="'#FBC02D'" [title]="'ERRORS.ENV_PRE' | translate">PRE</button>
+                <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'; onFormChange()" [style.--color]="'#E53935'" [title]="'ERRORS.ENV_PRO' | translate">PRO</button>
               </div>
               <button
                 type="button"
                 class="eliminar-solucion-btn"
                 (click)="eliminarSolucion(i)"
-                title="Eliminar solución"
+                [title]="'ERRORS.DELETE_SOLUTION_TITLE' | translate"
               >
                 <mat-icon>close</mat-icon>
               </button>
@@ -146,7 +146,7 @@
                 type="button"
                 class="file-btn"
                 (click)="fileInput.click()"
-                title="Añadir archivo"
+                [title]="'ERRORS.ADD_FILE_TITLE' | translate"
               >
                 <img src="assets/images/File.png" alt="Archivo" />
               </button>
@@ -154,7 +154,7 @@
               <!-- Loading spinner while file is being loaded -->
               <div class="file-loading" *ngIf="loadingFileId === 'create-' + solucion.numero">
                 <mat-spinner diameter="24"></mat-spinner>
-                <span>Cargando archivo...</span>
+                <span>{{ 'ERRORS.LOADING_FILE' | translate }}</span>
               </div>
 
               <!-- File name with type badge -->
@@ -173,7 +173,7 @@
                 [(ngModel)]="solucion.descripcion"
                 (ngModelChange)="onFormChange()"
                 rows="2"
-                placeholder="Descripción de la solución"
+                [placeholder]="'ERRORS.PLACEHOLDER_SOLUTION' | translate"
                 class="solucion-textarea"
               ></textarea>
             </div>
@@ -209,7 +209,7 @@
             type="text"
             [(ngModel)]="tagsInput"
             (ngModelChange)="onFormChange()"
-            placeholder="Tags separados por coma"
+            [placeholder]="'ERRORS.PLACEHOLDER_TAGS' | translate"
             class="tags-input"
           />
         </div>
@@ -229,14 +229,14 @@
         <button
           class="cancelar-btn"
           (click)="cerrarPopup()"
-          title="Cancelar"
+          [title]="'ERRORS.BTN_CANCEL' | translate"
         >
           ✗
         </button>
         <button
           class="guardar-btn"
           (click)="guardarBitacora()"
-          [title]="editando ? 'Actualizar' : 'Guardar'"
+          [title]="editando ? ('ERRORS.BTN_UPDATE' | translate) : ('ERRORS.BTN_SAVE' | translate)"
         >
           ✓
         </button>
@@ -266,7 +266,7 @@
             <div class="bitacora-info">
               <div class="bitacora-title-row">
                 <strong class="bitacora-contexto">
-                  {{ e.contexto || '(Sin contexto)' }}
+                  {{ e.contexto || ('ERRORS.NO_CONTEXT' | translate) }}
                 </strong>
                 <span class="bitacora-fecha">{{ e.fecha }}</span>
               </div>
@@ -304,30 +304,30 @@
           <ng-container *ngIf="bitacoraEditandoId === e.id && formBitacoraInline">
             <div class="bitacora-edit-form">
               <div class="edit-form-header">
-                <h4>Editando: {{ formBitacoraInline.contexto || '(Sin contexto)' }}</h4>
+                <h4>{{ 'ERRORS.EDIT_TITLE' | translate }}: {{ formBitacoraInline.contexto || ('ERRORS.NO_CONTEXT' | translate) }}</h4>
               </div>
 
               <div class="edit-form-content">
                 <div class="form-field">
-                  <label>Contexto</label>
+                  <label>{{ 'ERRORS.FIELD_CONTEXT' | translate }}</label>
                   <input
                     type="text"
                     [(ngModel)]="formBitacoraInline.contexto"
-                    placeholder="Contexto del error"
+                    [placeholder]="'ERRORS.PLACEHOLDER_CONTEXT' | translate"
                   />
                 </div>
 
                 <div class="form-field">
-                  <label>Error</label>
+                  <label>{{ 'ERRORS.FIELD_ERROR' | translate }}</label>
                   <textarea
                     rows="3"
                     [(ngModel)]="formBitacoraInline.error"
-                    placeholder="Descripción del error"
+                    [placeholder]="'ERRORS.PLACEHOLDER_ERROR' | translate"
                   ></textarea>
                 </div>
 
                 <div class="form-field">
-                  <label>Entorno</label>
+                  <label>{{ 'ERRORS.FIELD_ENV' | translate }}</label>
                   <div class="entorno-options-inline">
                     <button
                       type="button"
@@ -345,9 +345,9 @@
                       [class.active]="isBitacoraEntornoSelected('preproduccion', formBitacoraInline)"
                       (click)="toggleBitacoraEntorno('preproduccion', formBitacoraInline)"
                       [style.--color]="'#FBC02D'"
-                      title="Preproducción"
+                      [title]="'ERRORS.ENV_PRE' | translate"
                     >
-                      Preproducción
+                      {{ 'ERRORS.ENV_PRE' | translate }}
                     </button>
                     <button
                       type="button"
@@ -355,62 +355,62 @@
                       [class.active]="isBitacoraEntornoSelected('produccion', formBitacoraInline)"
                       (click)="toggleBitacoraEntorno('produccion', formBitacoraInline)"
                       [style.--color]="'#E53935'"
-                      title="Producción"
+                      [title]="'ERRORS.ENV_PRO' | translate"
                     >
-                      Producción
+                      {{ 'ERRORS.ENV_PRO' | translate }}
                     </button>
                   </div>
                 </div>
 
                 <div class="form-field">
-                  <label>Tags</label>
+                  <label>{{ 'ERRORS.FIELD_TAGS' | translate }}</label>
                   <input
                     type="text"
                     [(ngModel)]="tagsInputInline"
-                    placeholder="Etiquetas separadas por comas"
+                    [placeholder]="'ERRORS.PLACEHOLDER_TAGS' | translate"
                   />
                 </div>
 
                 <!-- Soluciones/Pasos -->
                 <div class="form-field solutions-field">
                   <div class="solutions-header-inline">
-                    <label>Soluciones/Pasos</label>
+                    <label>{{ 'ERRORS.FIELD_SOLUTION' | translate }}</label>
                   </div>
                   <button
                     type="button"
                     class="guardar-btn agregar-solucion-btn"
                     (click)="agregarSolucionInline()"
-                    title="Agregar Solución"
+                    [title]="'ERRORS.ADD_SOLUTION_TITLE' | translate"
                   >
                     <mat-icon>add</mat-icon>
                   </button>
 
                   <div *ngIf="!formBitacoraInline.soluciones || formBitacoraInline.soluciones.length === 0" class="no-soluciones">
-                    <p>No hay soluciones agregadas</p>
+                    <p>{{ 'ERRORS.NO_SOLUTIONS' | translate }}</p>
                   </div>
 
                   <div *ngFor="let solucion of formBitacoraInline.soluciones; let i = index" class="solucion-item" [style.borderLeftColor]="getColorEntorno(solucion.entorno)">
                     <div class="solucion-header">
-                      <span class="solucion-numero">Paso {{ solucion.numero }}</span>
+                      <span class="solucion-numero">{{ 'ERRORS.SOLUTION_STEP' | translate }} {{ solucion.numero }}</span>
                       <div class="solucion-entorno-btns">
                         <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'minsait'" (click)="solucion.entorno='minsait'" [style.--color]="'#1E88E5'" title="Minsait">M</button>
-                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'" [style.--color]="'#FBC02D'" title="Preproducción">PRE</button>
-                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'" [style.--color]="'#E53935'" title="Producción">PRO</button>
+                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'preproduccion'" (click)="solucion.entorno='preproduccion'" [style.--color]="'#FBC02D'" [title]="'ERRORS.ENV_PRE' | translate">PRE</button>
+                        <button type="button" class="solucion-entorno-btn" [class.active]="solucion.entorno === 'produccion'" (click)="solucion.entorno='produccion'" [style.--color]="'#E53935'" [title]="'ERRORS.ENV_PRO' | translate">PRO</button>
                       </div>
-                      <button type="button" class="eliminar-solucion-btn" (click)="eliminarSolucionInline(i)" title="Eliminar solución">
+                      <button type="button" class="eliminar-solucion-btn" (click)="eliminarSolucionInline(i)" [title]="'ERRORS.DELETE_SOLUTION_TITLE' | translate">
                         <mat-icon>close</mat-icon>
                       </button>
                     </div>
                     <div class="solucion-content-wrapper">
                       <input type="file" #fileInputInline style="display: none;" (change)="onFileSelectedInline($event, solucion)" accept="image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.csv" />
-                      <button type="button" class="file-btn" (click)="fileInputInline.click()" title="Añadir archivo">
+                      <button type="button" class="file-btn" (click)="fileInputInline.click()" [title]="'ERRORS.ADD_FILE_TITLE' | translate">
                         <img src="assets/images/File.png" alt="Archivo" />
                       </button>
 
                       <!-- Loading spinner while file is being loaded -->
                       <div class="file-loading" *ngIf="loadingFileId === 'inline-' + solucion.numero">
                         <mat-spinner diameter="20"></mat-spinner>
-                        <span>Cargando archivo...</span>
+                        <span>{{ 'ERRORS.LOADING_FILE' | translate }}</span>
                       </div>
 
                       <!-- File name with type badge -->
@@ -428,7 +428,7 @@
                       <textarea
                         [(ngModel)]="solucion.descripcion"
                         rows="2"
-                        placeholder="Descripción de la solución"
+                        [placeholder]="'ERRORS.PLACEHOLDER_SOLUTION' | translate"
                         class="solucion-textarea"
                       ></textarea>
                     </div>
@@ -436,10 +436,10 @@
                 </div>
 
                 <div class="edit-form-actions">
-                  <button type="button" class="cancelar-btn" (click)="cancelarEditarInline()" title="Cancelar edición">
+                  <button type="button" class="cancelar-btn" (click)="cancelarEditarInline()" [title]="'ERRORS.BTN_CANCEL' | translate">
                     ✗
                   </button>
-                  <button type="button" class="guardar-btn" (click)="guardarEditarInline()" title="Guardar cambios">
+                  <button type="button" class="guardar-btn" (click)="guardarEditarInline()" [title]="'ERRORS.BTN_SAVE' | translate">
                     ✓
                   </button>
                 </div>
@@ -492,7 +492,7 @@
         </button>
           <div class="bitacora-steps-detail-title">
             <div class="bitacora-steps-detail-title-row">
-              <h3>{{ bitacoraDetall.contexto || '(Sin contexto)' }}</h3>
+              <h3>{{ bitacoraDetall.contexto || ('ERRORS.NO_CONTEXT' | translate) }}</h3>
               <span class="bitacora-fecha-pill" *ngIf="bitacoraDetall.fecha">
                 {{ bitacoraDetall.fecha }}
               </span>
@@ -540,7 +540,7 @@
                     </div>
                     <div class="bitacora-step-detail-title">
                       <strong>
-                        Paso {{ currentStepIndex + 1 }} - {{ getNombreEntorno(s.entorno) }}
+                        {{ 'ERRORS.SOLUTION_STEP' | translate }} {{ currentStepIndex + 1 }} - {{ getNombreEntorno(s.entorno) }}
                       </strong>
                     </div>
                   </div>
@@ -648,7 +648,7 @@
       <button
         class="cancelar-btn"
         (click)="cancelarEliminar()"
-        title="Cancelar"
+        [title]="'ERRORS.BTN_CANCEL' | translate"
       >
         ✗
       </button>
