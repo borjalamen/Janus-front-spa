@@ -90,7 +90,7 @@
       <div class="procedure-field">
         <div class="procedure-steps-header">
           <label>{{ 'PROCEDURES_SECTION.FIELD_STEPS' | translate }}</label>
-          <button type="button" class="procedure-add-step-btn" (click)="afegirStep()" title="Afegir step">
+          <button type="button" class="procedure-add-step-btn" (click)="afegirStep()" [title]="'PROCEDURES_SECTION.STEP_BTN_ADD_TITLE' | translate">
             <mat-icon>add</mat-icon>
             {{ 'PROCEDURES_SECTION.ADD_STEP' | translate }}
           </button>
@@ -112,7 +112,7 @@
                 type="button"
                 class="procedure-step-delete-btn"
                 (click)="eliminarStep(i)"
-                title="Eliminar step">
+                [title]="'PROCEDURES_SECTION.STEP_BTN_DELETE_TITLE' | translate">
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -130,7 +130,7 @@
                 type="text"
                 [ngModel]="s.responsable"
                 (ngModelChange)="onStepResponsableChange($event, i)"
-                placeholder="Responsable"
+                [placeholder]="'PROCEDURES_SECTION.STEP_PLACEHOLDER_RESPONSIBLE' | translate"
                 class="procedure-step-edit-input" />
             </div>
             <!-- Tags step -->
@@ -139,21 +139,21 @@
                 type="text"
                 [ngModel]="s.tags?.join(', ')"
                 (ngModelChange)="onStepTagsChange($event, i)"
-                placeholder="tag1, tag2 (només lletres, números i guions)"
+                [placeholder]="'PROCEDURES_SECTION.STEP_PLACEHOLDER_TAGS' | translate"
                 class="procedure-step-edit-input"
                 pattern="^[a-zA-Z0-9À-ÿ\s,\-_]*$" />
             </div>
 
             <!-- Imatge step: URL + arxiu -->
             <div class="procedure-step-image-field">
-              <label>Imatge del step</label>
+              <label>{{ 'PROCEDURES_SECTION.STEP_LABEL_IMAGE' | translate }}</label>
               <div class="procedure-step-image-row">
                 <!-- URL directa (opcional) -->
                 <input
                   type="text"
                   [(ngModel)]="s.imageUrl"
                   (ngModelChange)="saveFormToLocalStorage()"
-                  placeholder="URL (opcional)"
+                  [placeholder]="'PROCEDURES_SECTION.STEP_PLACEHOLDER_URL' | translate"
                   class="procedure-step-edit-input" />
 
                 <!-- Input ocult per triar arxiu (un per step) -->
@@ -185,7 +185,7 @@
               rows="2"
               [ngModel]="s.descripcion"
               (ngModelChange)="onStepDescripcionChange($event, i)"
-              placeholder="Descripció del step"
+              [placeholder]="'PROCEDURES_SECTION.STEP_PLACEHOLDER_DESCRIPTION' | translate"
               class="procedure-step-edit-textarea">
             </textarea>
           </div>
