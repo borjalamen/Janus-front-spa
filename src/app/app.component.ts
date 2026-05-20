@@ -647,7 +647,10 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   clearNotifications(): void {
-    this.notificationService.clearAll();
+    this.http.delete(`${environment.baseUrl}notifications`).subscribe({
+      next: () => this.notificationService.clearAll(),
+      error: () => this.notificationService.clearAll()
+    });
   }
 
   navigateToNotif(link: string): void {
