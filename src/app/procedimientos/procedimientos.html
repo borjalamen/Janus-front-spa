@@ -82,7 +82,7 @@
           type="text"
           [ngModel]="primerResponsable"
           (ngModelChange)="onPrimerResponsableChange($event)"
-          placeholder="Responsable principal"
+          [placeholder]="'PROCEDURES_SECTION.PLACEHOLDER_RESPONSIBLE' | translate"
           class="procedure-step-edit-input" />
       </div>
 
