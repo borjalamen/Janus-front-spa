@@ -147,6 +147,8 @@ export class AdministracionComponent implements OnInit {
       admin: false,
       consultor: false,
       devops: false,
+      manager: false,
+      team: false,
     },
   };
 
@@ -1205,6 +1207,8 @@ export class AdministracionComponent implements OnInit {
       .map(([k]) => {
         if (k === "admin") return "ADMIN";
         if (k === "consultor") return "CONSULTOR";
+        if (k === "manager") return "MANAGER";
+        if (k === "team") return "TEAM";
         return "DEVOPS";
       });
 
@@ -1342,7 +1346,7 @@ export class AdministracionComponent implements OnInit {
       nombre: "",
       contrasenya: "",
       email: "",
-      rols: { admin: false, consultor: false, devops: false },
+      rols: { admin: false, consultor: false, devops: false, manager: false, team: false },
     };
     this.mostrarPopup = true;
   }
@@ -1357,6 +1361,8 @@ export class AdministracionComponent implements OnInit {
         admin: usuari.roles.includes("ADMIN"),
         consultor: usuari.roles.includes("CONSULTOR"),
         devops: usuari.roles.includes("DEV"),
+        manager: usuari.roles.includes("MANAGER"),
+        team: usuari.roles.includes("TEAM"),
       },
     };
     this.mostrarPopup = true;

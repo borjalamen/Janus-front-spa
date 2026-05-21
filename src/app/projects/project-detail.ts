@@ -307,6 +307,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     return this.authService.isAdmin || this.authService.isDevOps;
   }
 
+  /** MANAGER puede editar el proyecto pero no el tab MIND (solo admin/devops). */
+  get canEditMindTab(): boolean {
+    return this.authService.isAdmin || this.authService.isDevOps;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

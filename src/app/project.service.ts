@@ -228,6 +228,16 @@ export class ProjectService {
   }
 
   /**
+   * GET /api/projects/for-user?email={email}
+   * Obtener proyectos filtrados por email de usuario (para roles MANAGER y TEAM)
+   */
+  getForUser(email: string): Observable<Project[]> {
+    return this.http.get<Project[]>(`${this.baseUrl}/for-user`, {
+      params: { email }
+    });
+  }
+
+  /**
    * GET /api/projects/{id}
    * Obtener proyecto por ID
    */

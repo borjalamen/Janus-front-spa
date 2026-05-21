@@ -246,7 +246,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   private loadProjects() {
     this.isLoading = true;
 
-    this.projectService.getAll().subscribe({
+    const rol = this.authService.currentUserValue?.rol;
+    const email = this.authService.currentUserValue?.email;
+    const loadObs = (rol === 'manager' || rol === 'team') && email
+      ? this.projectService.getForUser(email)
+      : this.projectService.getAll();
+
+    loadObs.subscribe({
       next: (projects) => {
         const sorted = (projects as Proyecto[])
           .slice()
@@ -321,8 +327,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.projectes.unshift(project);
   }
 
+  /** Devuelve true si el usuario puede editar el proyecto dado. Admin/DevOps siempre; MANAGER sólo si su email aparece en el equipo del proyecto. */
+  canEditThisProject(project: Proyecto): boolean {
+    return this.authService.canEditProject(project as any);
+  }
+
   openProjectDetail(project: Proyecto, mode: "view" | "edit" = "view") {
-    if (mode === "edit" && !this.authService.canManageProjects) {
+    if (mode === "edit" && !this.canEditThisProject(project)) {
       this.showToast("❌ No tens permisos per editar projectes", false);
       return;
     }

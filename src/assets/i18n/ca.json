@@ -17,6 +17,8 @@
     "FULLNAME": "Nom complet",
     "EMAIL": "Correu electrònic",
     "ROLE": "Rol suggerit",
+    "ROLE_CONSULTOR": "Consultor",
+    "ROLE_DEVOPS": "DevOps",
     "PROJECT_CODE": "Codi del projecte",
     "PROJECT_NAME": "Nom del projecte",
     "COMMENTS": "Comentaris",

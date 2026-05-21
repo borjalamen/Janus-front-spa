@@ -608,6 +608,13 @@ spring.datasource.password=..."></textarea>
       <div *ngIf="activeTab === $any('mind')" class="admin-card new-project-section section-mind-bg">
         <h3 class="section-subtitle">{{ 'PROJECTS.SECTION_MIND' | translate }}</h3>
 
+        <!-- Aviso solo lectura para MANAGER -->
+        <div *ngIf="editing && !canEditMindTab" class="readonly-section-banner">
+          🔒 Esta sección es de solo lectura para tu rol.
+        </div>
+
+        <div [class.mind-readonly-wrap]="editing && !canEditMindTab">
+
         <!-- Repositorios de código -->
         <div class="mind-block">
           <div class="members-header">
@@ -741,6 +748,8 @@ spring.datasource.password=..."></textarea>
             </div>
           </div>
         </div>
+
+        </div><!-- end mind-readonly-wrap -->
       </div>
 
       <!-- Sub-tab: Documentos -->

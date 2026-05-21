@@ -74,7 +74,7 @@
 
             <div class="project-actions">
               <button
-                *ngIf="authService.canManageProjects"
+                *ngIf="canEditThisProject(p)"
                 class="icon-btn edit"
                 title="{{ 'PROJECTS.EDIT' | translate }}"
                 (click)="openProjectDetail(p, 'edit'); $event.stopPropagation()"

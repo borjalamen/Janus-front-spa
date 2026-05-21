@@ -31,7 +31,7 @@ import { ApiService } from './api.service';
 import { AvatarService } from './avatar.service';
 import { NotificationService, AppNotification } from './notification.service';
 
-type Rol = 'invitado' | 'consultor' | 'devops' | 'admin';
+type Rol = 'invitado' | 'consultor' | 'devops' | 'admin' | 'manager' | 'team';
 
 @Component({
   selector: 'app-root',
@@ -595,7 +595,7 @@ export class AppComponent implements OnDestroy, OnInit {
       case 'bienvenida': return true;
       case 'dashboard': return this.rol !== 'invitado';
       case 'proyectos':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
+        return ['consultor', 'devops', 'admin', 'manager', 'team'].includes(this.rol);
       case 'scrum':
         return ['devops', 'admin'].includes(this.rol);
       case 'estimacion':
@@ -609,7 +609,7 @@ export class AppComponent implements OnDestroy, OnInit {
       case 'planificacion':
         return ['devops', 'admin'].includes(this.rol);
       case 'multimedia':
-        return ['consultor', 'devops', 'admin'].includes(this.rol);
+        return ['consultor', 'devops', 'admin', 'manager', 'team'].includes(this.rol);
       case 'administracion':
         return ['admin', 'devops'].includes(this.rol);
       case 'bitacora':

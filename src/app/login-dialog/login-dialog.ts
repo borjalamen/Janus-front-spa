@@ -74,6 +74,10 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
             rolFront = 'admin';
           } else if (rolesStr.includes('DEVOPS')) {
             rolFront = 'devops';
+          } else if (rolesStr.includes('MANAGER')) {
+            rolFront = 'manager';
+          } else if (rolesStr.includes('TEAM')) {
+            rolFront = 'team';
           } else if (rolesStr.includes('CONSULTOR')) {
             rolFront = 'consultor';
           }

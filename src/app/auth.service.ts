@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "./local-storage.service";
 
-export type Rol = "invitado" | "consultor" | "devops" | "admin";
+export type Rol = "invitado" | "consultor" | "devops" | "admin" | "manager" | "team";
 
 export interface User {
   id: string;
@@ -63,6 +63,14 @@ export class AuthService {
     return this.currentUserValue?.rol === "devops";
   }
 
+  get isManager(): boolean {
+    return this.currentUserValue?.rol === "manager";
+  }
+
+  get isTeam(): boolean {
+    return this.currentUserValue?.rol === "team";
+  }
+
   get canEdit(): boolean {
     const rol = this.currentUserValue?.rol;
     return rol === "admin" || rol === "devops";
@@ -76,7 +84,29 @@ export class AuthService {
     return !!currentRol && roles.includes(currentRol);
   }
 
+  /** Admin/DevOps: gestión completa. MANAGER/TEAM usan canEditProject por proyecto. */
   get canManageProjects(): boolean {
     return this.hasAnyRole(["admin", "devops"]);
+  }
+
+  /**
+   * Comprueba si el usuario logado tiene acceso de edición sobre un proyecto concreto.
+   * Admin/DevOps: siempre sí. MANAGER: si su email aparece en el equipo del proyecto.
+   */
+  canEditProject(project: { equipoMinsait?: Array<{email?: string}> | null; responsableProyecto?: {email?: string} | null; responsableTecnico?: {email?: string} | null }): boolean {
+    if (this.canManageProjects) return true;
+    if (!this.isManager) return false;
+    const email = this.currentUserValue?.email?.toLowerCase();
+    if (!email) return false;
+    return this.isEmailInProject(email, project);
+  }
+
+  /** Devuelve true si el email del usuario aparece en cualquier campo de equipo del proyecto. */
+  isEmailInProject(userEmail: string, project: { equipoMinsait?: Array<{email?: string}> | null; responsableProyecto?: {email?: string} | null; responsableTecnico?: {email?: string} | null }): boolean {
+    const email = userEmail.toLowerCase();
+    if (project.equipoMinsait?.some(m => m.email?.toLowerCase() === email)) return true;
+    if (project.responsableProyecto?.email?.toLowerCase() === email) return true;
+    if (project.responsableTecnico?.email?.toLowerCase() === email) return true;
+    return false;
   }
 }

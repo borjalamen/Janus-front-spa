@@ -168,6 +168,8 @@
               {{ 'ADMIN.CONSULTANT' | translate }}
             </option>
             <option value="DEV">{{ 'ADMIN.DEVOPS' | translate }}</option>
+            <option value="MANAGER">Manager</option>
+            <option value="TEAM">Team</option>
           </select>
         </div>
 
@@ -728,6 +730,22 @@
             <span class="custom-slider"></span>
           </label>
           <span class="role-text">{{ 'ADMIN.DEVOPS' | translate }}</span>
+        </div>
+
+        <div class="switch-item">
+          <label class="custom-switch">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.manager" />
+            <span class="custom-slider"></span>
+          </label>
+          <span class="role-text">Manager</span>
+        </div>
+
+        <div class="switch-item">
+          <label class="custom-switch">
+            <input type="checkbox" [(ngModel)]="nouUsuari.rols.team" />
+            <span class="custom-slider"></span>
+          </label>
+          <span class="role-text">Team</span>
         </div>
       </div>
 
