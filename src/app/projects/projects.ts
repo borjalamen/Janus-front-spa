@@ -4,9 +4,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { BuscadorComponent } from "../buscador/buscador";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "../local-storage.service";
-import { ProjectService, Project, Department, ConnectivityEntry, ExternalService, Daily, ExtraMetadata } from "../project.service";
+import { ProjectService, Project, Department, ConnectivityEntry, ExternalService, Daily, ExtraMetadata, TechnologyEntry } from "../project.service";
 import { FormsModule } from "@angular/forms";
-import { ProjectDetailComponent } from "./project-detail";
+import { ProjectDetailComponent, TECH_CATALOG } from "./project-detail";
 import { AuthService } from "../auth.service";
 import { Subscription } from "rxjs";
 import { AgentRefreshService } from "../agent-refresh.service";
@@ -195,6 +195,24 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }> = [];
 
   newProjectExtras: ExtraMetadata[] = [];
+  newProjectTechnologies: TechnologyEntry[] = [];
+  readonly techCatalog = TECH_CATALOG;
+
+  getVersionsFor(techName: string): string[] {
+    return TECH_CATALOG.find(t => t.name === techName)?.versions ?? ['N/A'];
+  }
+  addNewProjectTechnology(): void {
+    this.newProjectTechnologies = [...this.newProjectTechnologies, { name: TECH_CATALOG[0].name, version: TECH_CATALOG[0].versions[0], comment: '' }];
+    this.saveDraft();
+  }
+  removeNewProjectTechnology(index: number): void {
+    this.newProjectTechnologies = this.newProjectTechnologies.filter((_, i) => i !== index);
+    this.saveDraft();
+  }
+  onNewTechNameChange(tech: TechnologyEntry): void {
+    tech.version = this.getVersionsFor(tech.name)[0] ?? '';
+    this.saveDraft();
+  }
 
   projectFileInput: File | null = null;
   newProjectPdfThumbnails: Map<string, string> = new Map();
@@ -402,6 +420,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       newProjectDocuments: this.newProjectDocuments,
       newProjectConnectivities: this.newProjectConnectivities,
       newProjectExtras: this.newProjectExtras,
+      newProjectTechnologies: this.newProjectTechnologies,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -447,6 +466,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.newProjectConnectivities = draft.newProjectConnectivities;
     if (Array.isArray(draft.newProjectExtras))
       this.newProjectExtras = draft.newProjectExtras;
+    if (Array.isArray(draft.newProjectTechnologies))
+      this.newProjectTechnologies = draft.newProjectTechnologies;
   }
 
   addNewProjectDaily(): void {
@@ -548,6 +569,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.newProjectConnectivities = [];
     this.newProjectConnTooltipIndex = null;
     this.newProjectExtras = [];
+    this.newProjectTechnologies = [];
     this.projectFileInput = null;
     this.projectFileDescription = "";
     this.newProjectTab = "info";
@@ -1050,6 +1072,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       ) as any,
       connectivities: this.newProjectConnectivities,
       extras: this.newProjectExtras.filter(e => !!e.key?.trim()),
+      technologies: this.newProjectTechnologies.filter(t => !!t.name),
     };
 
     const isEdit = partial.id !== undefined && partial.id !== "";

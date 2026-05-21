@@ -168,15 +168,15 @@
           </button>
         </div>
 
-        <div *ngIf="technologies.length === 0 && !editing" class="empty-list-msg">
+        <div *ngIf="technologies.length === 0 && !editing" class="tech-empty-state">
+          <span>⚙️</span>
           {{ 'PROJECTS.NO_TECHNOLOGIES' | translate }}
         </div>
 
         <div class="tech-list">
-          <div *ngFor="let tech of technologies; let i = index" class="tech-row">
+          <div *ngFor="let tech of technologies; let i = index" class="tech-card">
 
-            <!-- Selector de tecnología -->
-            <div class="tech-field tech-name-field">
+            <div class="tech-field">
               <label class="tech-label">{{ 'PROJECTS.TECH_NAME' | translate }}</label>
               <select *ngIf="editing"
                       [(ngModel)]="tech.name"
@@ -187,8 +187,7 @@
               <span *ngIf="!editing" class="tech-value-text">{{ tech.name }}</span>
             </div>
 
-            <!-- Selector de versión -->
-            <div class="tech-field tech-version-field">
+            <div class="tech-field">
               <label class="tech-label">{{ 'PROJECTS.TECH_VERSION' | translate }}</label>
               <select *ngIf="editing"
                       [(ngModel)]="tech.version"
@@ -199,8 +198,7 @@
               <span *ngIf="!editing" class="tech-value-text tech-version-badge">{{ tech.version }}</span>
             </div>
 
-            <!-- Comentario -->
-            <div class="tech-field tech-comment-field">
+            <div class="tech-field">
               <label class="tech-label">{{ 'PROJECTS.TECH_COMMENT' | translate }}</label>
               <input *ngIf="editing"
                      type="text"
@@ -212,8 +210,8 @@
               <span *ngIf="!editing && !tech.comment" class="tech-value-text tech-empty">—</span>
             </div>
 
-            <!-- Eliminar -->
-            <button *ngIf="editing" class="btn-remove tech-remove-btn" (click)="removeTechnology(i)" title="{{ 'PROJECTS.REMOVE_TECHNOLOGY' | translate }}">✕</button>
+            <button *ngIf="editing" class="tech-remove-btn" (click)="removeTechnology(i)"
+                    [title]="'PROJECTS.REMOVE_TECHNOLOGY' | translate">✕</button>
           </div>
         </div>
       </div>
