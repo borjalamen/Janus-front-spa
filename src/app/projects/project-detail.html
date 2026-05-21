@@ -158,6 +158,64 @@
                     (ngModelChange)="saveDraft()"
                     placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"></textarea>
         </div>
+
+        <!-- ── Tecnologías ── -->
+        <div class="form-divider"></div>
+        <div class="tech-section-header">
+          <h4 class="subsection-title">{{ 'PROJECTS.SECTION_TECHNOLOGIES' | translate }}</h4>
+          <button *ngIf="editing" class="btn-round btn-small btn-add" (click)="addTechnology()">
+            + {{ 'PROJECTS.ADD_TECHNOLOGY' | translate }}
+          </button>
+        </div>
+
+        <div *ngIf="technologies.length === 0 && !editing" class="empty-list-msg">
+          {{ 'PROJECTS.NO_TECHNOLOGIES' | translate }}
+        </div>
+
+        <div class="tech-list">
+          <div *ngFor="let tech of technologies; let i = index" class="tech-row">
+
+            <!-- Selector de tecnología -->
+            <div class="tech-field tech-name-field">
+              <label class="tech-label">{{ 'PROJECTS.TECH_NAME' | translate }}</label>
+              <select *ngIf="editing"
+                      [(ngModel)]="tech.name"
+                      (ngModelChange)="onTechNameChange(tech)"
+                      class="tech-select">
+                <option *ngFor="let t of techCatalog" [value]="t.name">{{ t.name }}</option>
+              </select>
+              <span *ngIf="!editing" class="tech-value-text">{{ tech.name }}</span>
+            </div>
+
+            <!-- Selector de versión -->
+            <div class="tech-field tech-version-field">
+              <label class="tech-label">{{ 'PROJECTS.TECH_VERSION' | translate }}</label>
+              <select *ngIf="editing"
+                      [(ngModel)]="tech.version"
+                      (ngModelChange)="saveDraft()"
+                      class="tech-select">
+                <option *ngFor="let v of getVersionsFor(tech.name)" [value]="v">{{ v }}</option>
+              </select>
+              <span *ngIf="!editing" class="tech-value-text tech-version-badge">{{ tech.version }}</span>
+            </div>
+
+            <!-- Comentario -->
+            <div class="tech-field tech-comment-field">
+              <label class="tech-label">{{ 'PROJECTS.TECH_COMMENT' | translate }}</label>
+              <input *ngIf="editing"
+                     type="text"
+                     [(ngModel)]="tech.comment"
+                     (ngModelChange)="saveDraft()"
+                     [placeholder]="'PROJECTS.TECH_COMMENT_PLACEHOLDER' | translate"
+                     class="tech-input" />
+              <span *ngIf="!editing && tech.comment" class="tech-value-text tech-comment-text">{{ tech.comment }}</span>
+              <span *ngIf="!editing && !tech.comment" class="tech-value-text tech-empty">—</span>
+            </div>
+
+            <!-- Eliminar -->
+            <button *ngIf="editing" class="btn-remove tech-remove-btn" (click)="removeTechnology(i)" title="{{ 'PROJECTS.REMOVE_TECHNOLOGY' | translate }}">✕</button>
+          </div>
+        </div>
       </div>
 
       <!-- Sub-tab: Equipo Minsait -->

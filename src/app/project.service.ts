@@ -126,6 +126,12 @@ export interface ExtraMetadata {
   value: string;
 }
 
+export interface TechnologyEntry {
+  name: string;
+  version: string;
+  comment?: string;
+}
+
 export interface Department {
   id?: string;
   name: string;
@@ -196,6 +202,9 @@ export interface Project {
 
   // Metadatos extra clave-valor
   extras?: ExtraMetadata[];
+
+  // Tecnologías utilizadas en el proyecto
+  technologies?: TechnologyEntry[];
 
   // Auditoría
   createdAt?: string;

@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatIconModule } from "@angular/material/icon";
-import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel, Daily, ExtraMetadata } from "../project.service";
+import { ProjectService, ResponsableInfo, MonitoringTools, ConnectivityEntry, ExternalService, Project as ProjectModel, Daily, ExtraMetadata, TechnologyEntry } from "../project.service";
 import { DocumentService } from "../document.service";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth.service";
@@ -99,7 +99,94 @@ type ProjectDetailDraft = {
   monitoringTools?: MonitoringTools;
   connectivities: ConnectivityEntry[];
   extras: ExtraMetadata[];
+  technologies: TechnologyEntry[];
 };
+
+/** Catálogo de tecnologías con sus versiones disponibles */
+export const TECH_CATALOG: { name: string; versions: string[] }[] = [
+  { name: 'Java', versions: ['7', '8', '11', '17', '21', '22', '23', '24'] },
+  { name: '.NET Framework', versions: ['2.0', '3.0', '3.5', '4.0', '4.5', '4.6', '4.7', '4.8'] },
+  { name: '.NET / .NET Core', versions: ['1.0', '1.1', '2.0', '2.1', '2.2', '3.0', '3.1', '5', '6', '7', '8', '9', '10'] },
+  { name: 'Spring Boot', versions: ['1.5', '2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '3.0', '3.1', '3.2', '3.3', '3.4', '3.5'] },
+  { name: 'Spring Framework', versions: ['4.x', '5.x', '6.x'] },
+  { name: 'Spring Security', versions: ['4.x', '5.x', '6.x'] },
+  { name: 'Hibernate / JPA', versions: ['4.x', '5.x', '6.x'] },
+  { name: 'Quarkus', versions: ['2.x', '3.x'] },
+  { name: 'Micronaut', versions: ['3.x', '4.x'] },
+  { name: 'WildFly / JBoss EAP', versions: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0'] },
+  { name: 'WebLogic', versions: ['12c', '14c'] },
+  { name: 'WebSphere', versions: ['8.5', '9.0'] },
+  { name: 'Apache Tomcat', versions: ['8.5', '9', '10', '11'] },
+  { name: 'Kotlin', versions: ['1.5', '1.6', '1.7', '1.8', '1.9', '2.0', '2.1'] },
+  { name: 'Scala', versions: ['2.12', '2.13', '3.0', '3.1', '3.2', '3.3'] },
+  { name: 'Groovy', versions: ['2.5', '3.0', '4.0'] },
+  { name: 'Angular', versions: ['2', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'] },
+  { name: 'React', versions: ['15', '16', '17', '18', '19'] },
+  { name: 'Vue.js', versions: ['2', '3'] },
+  { name: 'TypeScript', versions: ['3.x', '4.x', '5.x'] },
+  { name: 'JavaScript (ES)', versions: ['ES5', 'ES6/ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 'ES2021', 'ES2022', 'ES2023', 'ES2024'] },
+  { name: 'NestJS', versions: ['7', '8', '9', '10', '11'] },
+  { name: 'Next.js', versions: ['11', '12', '13', '14', '15'] },
+  { name: 'Nuxt.js', versions: ['2', '3'] },
+  { name: 'Angular Material', versions: ['12', '13', '14', '15', '16', '17', '18', '19', '20'] },
+  { name: 'Bootstrap', versions: ['3', '4', '5'] },
+  { name: 'Tailwind CSS', versions: ['2', '3', '4'] },
+  { name: 'Node.js', versions: ['10', '12', '14', '16', '18', '20', '22', '24'] },
+  { name: 'Express.js', versions: ['4.x', '5.x'] },
+  { name: 'Python', versions: ['2.7', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13'] },
+  { name: 'Django', versions: ['2.0', '2.1', '2.2', '3.0', '3.1', '3.2', '4.0', '4.1', '4.2', '5.0', '5.1'] },
+  { name: 'Flask', versions: ['1.0', '1.1', '2.0', '2.1', '2.2', '2.3', '3.0'] },
+  { name: 'FastAPI', versions: ['0.95', '0.100', '0.105', '0.110', '0.115'] },
+  { name: 'PHP', versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4'] },
+  { name: 'Laravel', versions: ['5', '6', '7', '8', '9', '10', '11', '12'] },
+  { name: 'Symfony', versions: ['3', '4', '5', '6', '7'] },
+  { name: 'Go (Golang)', versions: ['1.16', '1.17', '1.18', '1.19', '1.20', '1.21', '1.22', '1.23', '1.24'] },
+  { name: 'Rust', versions: ['1.60', '1.65', '1.70', '1.75', '1.80', '1.85', '1.87'] },
+  { name: 'Ruby', versions: ['2.5', '2.6', '2.7', '3.0', '3.1', '3.2', '3.3', '3.4'] },
+  { name: 'Ruby on Rails', versions: ['5', '6', '7', '8'] },
+  { name: 'Swift', versions: ['5.5', '5.6', '5.7', '5.8', '5.9', '5.10', '6.0'] },
+  { name: 'Objective-C', versions: ['2.0'] },
+  { name: 'C', versions: ['C89', 'C99', 'C11', 'C17', 'C23'] },
+  { name: 'C++', versions: ['C++11', 'C++14', 'C++17', 'C++20', 'C++23'] },
+  { name: 'C# / .NET', versions: ['7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0'] },
+  { name: 'Oracle DB', versions: ['11g', '12c', '18c', '19c', '21c', '23c'] },
+  { name: 'MySQL', versions: ['5.6', '5.7', '8.0', '8.4', '9.0'] },
+  { name: 'PostgreSQL', versions: ['10', '11', '12', '13', '14', '15', '16', '17'] },
+  { name: 'SQL Server', versions: ['2012', '2014', '2016', '2017', '2019', '2022'] },
+  { name: 'MariaDB', versions: ['10.3', '10.4', '10.5', '10.6', '10.11', '11.0', '11.1', '11.2', '11.4'] },
+  { name: 'MongoDB', versions: ['4.0', '4.2', '4.4', '5.0', '6.0', '7.0', '8.0'] },
+  { name: 'Redis', versions: ['5', '6', '7', '8'] },
+  { name: 'Elasticsearch', versions: ['6.x', '7.x', '8.x'] },
+  { name: 'Cassandra', versions: ['3.x', '4.x', '5.x'] },
+  { name: 'Neo4j', versions: ['3.5', '4.x', '5.x'] },
+  { name: 'CouchDB', versions: ['2.x', '3.x'] },
+  { name: 'InfluxDB', versions: ['1.x', '2.x', '3.x'] },
+  { name: 'Apache Kafka', versions: ['2.x', '3.x'] },
+  { name: 'RabbitMQ', versions: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13'] },
+  { name: 'ActiveMQ / Artemis', versions: ['5.x', 'Artemis 2.x'] },
+  { name: 'Apache Spark', versions: ['2.4', '3.0', '3.1', '3.2', '3.3', '3.4', '3.5'] },
+  { name: 'Hadoop', versions: ['2.x', '3.x'] },
+  { name: 'Docker', versions: ['19.x', '20.x', '23.x', '24.x', '25.x', '26.x', '27.x', '28.x'] },
+  { name: 'Kubernetes', versions: ['1.22', '1.24', '1.26', '1.27', '1.28', '1.29', '1.30', '1.31', '1.32'] },
+  { name: 'OpenShift', versions: ['3.x', '4.x'] },
+  { name: 'Terraform', versions: ['0.13', '0.14', '0.15', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10'] },
+  { name: 'Ansible', versions: ['2.9', '2.10', '2.11', '2.12', '2.13', '2.14', '2.15', '2.16', '2.17'] },
+  { name: 'Jenkins', versions: ['LTS 2.x', 'Weekly 2.x'] },
+  { name: 'GitLab CI/CD', versions: ['13.x', '14.x', '15.x', '16.x', '17.x'] },
+  { name: 'GitHub Actions', versions: ['N/A'] },
+  { name: 'Maven', versions: ['3.5', '3.6', '3.8', '3.9', '4.0'] },
+  { name: 'Gradle', versions: ['6.x', '7.x', '8.x'] },
+  { name: 'npm', versions: ['6', '7', '8', '9', '10', '11'] },
+  { name: 'GraphQL', versions: ['15', '16'] },
+  { name: 'gRPC', versions: ['1.x'] },
+  { name: 'Keycloak', versions: ['18', '19', '20', '21', '22', '23', '24', '25', '26'] },
+  { name: 'Swagger / OpenAPI', versions: ['2.0', '3.0', '3.1'] },
+  { name: 'Prometheus', versions: ['2.x'] },
+  { name: 'Grafana', versions: ['8.x', '9.x', '10.x', '11.x'] },
+  { name: 'Nginx', versions: ['1.18', '1.20', '1.22', '1.24', '1.26', '1.28'] },
+  { name: 'Apache HTTP Server', versions: ['2.2', '2.4'] },
+  { name: 'Otros / Custom', versions: ['N/A'] },
+];
 
 @Component({
   selector: "app-project-detail",
@@ -250,6 +337,33 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   // ── Extras (metadatos clave-valor) ──
   extras: ExtraMetadata[] = [];
+
+  // ── Tecnologías del proyecto ──
+  technologies: TechnologyEntry[] = [];
+
+  /** Devuelve las versiones disponibles para la tecnología seleccionada */
+  getVersionsFor(techName: string): string[] {
+    return TECH_CATALOG.find(t => t.name === techName)?.versions ?? ['N/A'];
+  }
+
+  /** Catálogo expuesto al template */
+  readonly techCatalog = TECH_CATALOG;
+
+  addTechnology(): void {
+    this.technologies = [...this.technologies, { name: TECH_CATALOG[0].name, version: TECH_CATALOG[0].versions[0], comment: '' }];
+    this.saveDraft();
+  }
+
+  removeTechnology(index: number): void {
+    this.technologies = this.technologies.filter((_, i) => i !== index);
+    this.saveDraft();
+  }
+
+  onTechNameChange(tech: TechnologyEntry): void {
+    const versions = this.getVersionsFor(tech.name);
+    tech.version = versions[0] ?? '';
+    this.saveDraft();
+  }
   isPwdVisible(key: string): boolean { return this.pwdVisible.has(key); }
   togglePwd(key: string): void {
     this.pwdVisible.has(key) ? this.pwdVisible.delete(key) : this.pwdVisible.add(key);
@@ -547,6 +661,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       ? [...(p as any).extras]
       : [];
 
+    // Tecnologías
+    this.technologies = Array.isArray((p as any).technologies)
+      ? [...(p as any).technologies]
+      : [];
+
     p.herramientasMind = p.herramientasMind || ({} as any);
     const h = p.herramientasMind as any;
     h.nexus = h.nexus || [];
@@ -621,6 +740,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       monitoringTools: this.proyecto.monitoringTools,
       connectivities: this.connectivities,
       extras: this.extras,
+      technologies: this.technologies,
     };
     this.storage.setObject(this.STORAGE_DRAFT_KEY, draft);
   }
@@ -679,6 +799,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (draft.monitoringTools) this.proyecto.monitoringTools = draft.monitoringTools;
     if (Array.isArray(draft.connectivities)) this.connectivities = draft.connectivities;
     if (Array.isArray(draft.extras)) this.extras = draft.extras;
+    if (Array.isArray(draft.technologies)) this.technologies = draft.technologies;
   }
 
   clearDraft(): void {
@@ -1137,6 +1258,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
       p.documents = documentsSnapshot as any;
       p.connectivities = this.connectivities;
       (p as any).extras = this.extras.filter(e => !!e.key?.trim());
+      (p as any).technologies = this.technologies.filter(t => !!t.name);
     } catch (e) {
       /* ignore */
     }
