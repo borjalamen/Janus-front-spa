@@ -174,11 +174,23 @@
         </div>
 
         <div class="tech-list">
-          <div *ngFor="let tech of technologies; let i = index" class="tech-card">
+          <div *ngFor="let tech of technologies; let i = index"
+               [class]="'tech-card' + (tech.obsolete ? ' tech-card--obsolete' : '')">
+
+            <!-- ── Columna 1: checkbox de obsolescencia con tooltip ── -->
+            <div class="tech-obs-cell">
+              <label class="tech-obs-toggle" [for]="'obs_pd_' + i">
+                <input *ngIf="editing" type="checkbox" [id]="'obs_pd_' + i"
+                       [(ngModel)]="tech.obsolete" (ngModelChange)="saveDraft()"
+                       class="tech-obs-check" />
+                <input *ngIf="!editing" type="checkbox" [checked]="tech.obsolete"
+                       disabled class="tech-obs-check" />
+                <span class="tech-obs-tooltip">{{ 'PROJECTS.TECH_OBSOLETE_INFO' | translate }}</span>
+              </label>
+            </div>
 
             <div class="tech-field">
               <label class="tech-label">{{ 'PROJECTS.TECH_NAME' | translate }}</label>
-              <!-- Catalog mode: dropdown -->
               <select *ngIf="editing && !isCustomTech(tech.name)"
                       [(ngModel)]="tech.name"
                       (ngModelChange)="onTechNameChange(tech)"

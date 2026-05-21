@@ -130,6 +130,7 @@ export interface TechnologyEntry {
   name: string;
   version: string;
   comment?: string;
+  obsolete?: boolean;
 }
 
 export interface Department {

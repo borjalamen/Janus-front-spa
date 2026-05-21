@@ -334,7 +334,19 @@
         </div>
 
         <div class="tech-list">
-          <div *ngFor="let tech of newProjectTechnologies; let i = index" class="tech-card">
+          <div *ngFor="let tech of newProjectTechnologies; let i = index"
+               [class]="'tech-card' + (tech.obsolete ? ' tech-card--obsolete' : '')">
+
+            <!-- ── Columna 1: checkbox de obsolescencia con tooltip ── -->
+            <div class="tech-obs-cell">
+              <label class="tech-obs-toggle" [for]="'obs_np_' + i">
+                <input type="checkbox" [id]="'obs_np_' + i"
+                       [(ngModel)]="tech.obsolete" (ngModelChange)="saveDraft()"
+                       class="tech-obs-check" />
+                <span class="tech-obs-tooltip">{{ 'PROJECTS.TECH_OBSOLETE_INFO' | translate }}</span>
+              </label>
+            </div>
+
             <div class="tech-field">
               <label class="tech-label">{{ 'PROJECTS.TECH_NAME' | translate }}</label>
               <select *ngIf="!isCustomTech(tech.name)"
@@ -366,6 +378,7 @@
               <input type="text" [(ngModel)]="tech.comment" (ngModelChange)="saveDraft()"
                      [placeholder]="'PROJECTS.TECH_COMMENT_PLACEHOLDER' | translate" class="tech-input" />
             </div>
+
             <button class="tech-remove-btn" (click)="removeNewProjectTechnology(i)"
                     [title]="'PROJECTS.REMOVE_TECHNOLOGY' | translate">✕</button>
           </div>
