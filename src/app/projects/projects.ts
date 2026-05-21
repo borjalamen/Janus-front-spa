@@ -910,7 +910,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   getDocumentPreviewUrl(doc: any): string | null {
-    if (!doc.file) return null;
+    if (!doc.file || !(doc.file instanceof Blob)) return null;
     if (
       doc.tipo &&
       (doc.tipo.startsWith("image/") || doc.tipo === "application/pdf")
@@ -925,7 +925,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   openNewProjectPdfDocument(doc: any): void {
-    if (doc.file) {
+    if (doc.file && doc.file instanceof Blob) {
       const url = URL.createObjectURL(doc.file);
       window.open(url, '_blank');
     }
