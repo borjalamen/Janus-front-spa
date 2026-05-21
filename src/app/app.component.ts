@@ -622,6 +622,8 @@ export class AppComponent implements OnDestroy, OnInit {
         return ['devops', 'admin'].includes(this.rol);
       case 'herramientas':
         return ['devops', 'admin'].includes(this.rol);
+      case 'obsolescencia':
+        return ['consultor', 'devops', 'admin'].includes(this.rol);
       default:
         return false;
     }

@@ -57,6 +57,7 @@
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Herramientas",
     "DESCARGABLES": "Descargables",
+    "OBSOLESCENCE": "Obsolescencia",
     "GROUPS": {
       "CONTACTO": "Contacto",
       "INICIO": "Inicio",
@@ -67,6 +68,21 @@
       "RECURSOS": "Recursos",
       "ADMINISTRACION": "Administración"
     }
+  },
+  "OBSOLESCENCE": {
+    "TITLE": "Obsolescencia tecnológica",
+    "SUBTITLE": "Tecnologías de proyectos marcadas para proceso de obsolescencia",
+    "SEARCH_PLACEHOLDER": "Buscar por proyecto, tecnología o versión...",
+    "NO_RESULTS": "No se encontraron resultados para la búsqueda.",
+    "EMPTY": "No hay tecnologías marcadas para obsolescencia.",
+    "COL_PROJECT": "Proyecto",
+    "COL_TECH": "Tecnología",
+    "COL_VERSION": "Versión",
+    "COL_COMMENT": "Comentario",
+    "COL_DATE": "Fecha",
+    "COL_ACTIONS": "Acciones",
+    "DELETE_TITLE": "Eliminar registro de obsolescencia",
+    "PAGE_INFO": "Página {{current}} de {{total}}"
   },
   "DESCARGABLES": {
     "TITLE": "Descargables",

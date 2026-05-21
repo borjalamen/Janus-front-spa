@@ -57,6 +57,7 @@
     "INFRASTRUCTURE": "Infraestructura",
     "TOOLS": "Eines",
     "DESCARGABLES": "Descarregables",
+    "OBSOLESCENCE": "Obsolescència",
     "GROUPS": {
       "CONTACTO": "Contacte",
       "INICIO": "Inici",
@@ -67,6 +68,21 @@
       "RECURSOS": "Recursos",
       "ADMINISTRACION": "Administració"
     }
+  },
+  "OBSOLESCENCE": {
+    "TITLE": "Obsolescència tecnològica",
+    "SUBTITLE": "Tecnologies de projectes marcades per al procés d'obsolescència",
+    "SEARCH_PLACEHOLDER": "Cerca per projecte, tecnologia o versió...",
+    "NO_RESULTS": "No s'han trobat resultats per a la cerca.",
+    "EMPTY": "No hi ha tecnologies marcades per a obsolescència.",
+    "COL_PROJECT": "Projecte",
+    "COL_TECH": "Tecnologia",
+    "COL_VERSION": "Versió",
+    "COL_COMMENT": "Comentari",
+    "COL_DATE": "Data",
+    "COL_ACTIONS": "Accions",
+    "DELETE_TITLE": "Eliminar registre d'obsolescència",
+    "PAGE_INFO": "Pàgina {{current}} de {{total}}"
   },
   "DESCARGABLES": {
     "TITLE": "Descarregables",

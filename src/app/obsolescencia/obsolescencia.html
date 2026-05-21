@@ -1,0 +1,91 @@
+<div class="obs-root">
+
+  <!-- ── Cabecera ── -->
+  <div class="obs-header">
+    <div class="obs-title-wrap">
+      <span class="obs-title-icon">⚠️</span>
+      <h2 class="obs-title">{{ 'OBSOLESCENCE.TITLE' | translate }}</h2>
+      <span class="obs-counter" *ngIf="filteredEntries.length > 0">{{ filteredEntries.length }}</span>
+    </div>
+    <p class="obs-subtitle">{{ 'OBSOLESCENCE.SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- ── Barra de búsqueda ── -->
+  <div class="obs-search-bar">
+    <div class="obs-search-wrap">
+      <span class="obs-search-icon">🔍</span>
+      <input
+        type="text"
+        class="obs-search-input"
+        [(ngModel)]="searchText"
+        (ngModelChange)="filtrar()"
+        placeholder="{{ 'OBSOLESCENCE.SEARCH_PLACEHOLDER' | translate }}"
+      />
+      <button *ngIf="searchText" class="obs-clear-btn" (click)="clearSearch()" title="Limpiar búsqueda">✕</button>
+    </div>
+  </div>
+
+  <!-- ── Sin resultados ── -->
+  <div *ngIf="filteredEntries.length === 0" class="obs-empty">
+    <span class="obs-empty-icon">📭</span>
+    <span>{{ (searchText ? 'OBSOLESCENCE.NO_RESULTS' : 'OBSOLESCENCE.EMPTY') | translate }}</span>
+  </div>
+
+  <!-- ── Grid ── -->
+  <div class="obs-table-wrap" *ngIf="filteredEntries.length > 0">
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th class="col-idx">#</th>
+          <th class="col-project">{{ 'OBSOLESCENCE.COL_PROJECT' | translate }}</th>
+          <th class="col-tech">{{ 'OBSOLESCENCE.COL_TECH' | translate }}</th>
+          <th class="col-version">{{ 'OBSOLESCENCE.COL_VERSION' | translate }}</th>
+          <th class="col-comment">{{ 'OBSOLESCENCE.COL_COMMENT' | translate }}</th>
+          <th class="col-date">{{ 'OBSOLESCENCE.COL_DATE' | translate }}</th>
+          <th *ngIf="isAdmin" class="col-actions">{{ 'OBSOLESCENCE.COL_ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of pagedEntries; let i = index" class="obs-row">
+          <td class="col-idx">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td class="col-project">
+            <span class="obs-project-code">{{ entry.projectCode }}</span>
+            <span class="obs-project-name">{{ entry.projectName }}</span>
+          </td>
+          <td class="col-tech">
+            <span class="obs-tech-badge">⚠️ {{ entry.techName }}</span>
+          </td>
+          <td class="col-version">
+            <span class="obs-version-chip">{{ entry.techVersion }}</span>
+          </td>
+          <td class="col-comment">
+            <span *ngIf="entry.techComment" class="obs-comment">{{ entry.techComment }}</span>
+            <span *ngIf="!entry.techComment" class="obs-empty-cell">—</span>
+          </td>
+          <td class="col-date">{{ formatDate(entry.markedAt) }}</td>
+          <td *ngIf="isAdmin" class="col-actions">
+            <button class="obs-delete-btn" (click)="delete(entry)"
+                    title="{{ 'OBSOLESCENCE.DELETE_TITLE' | translate }}">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Paginación ── -->
+  <div class="obs-pagination" *ngIf="totalPages > 1">
+    <button class="obs-page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+    <button
+      *ngFor="let p of pages"
+      class="obs-page-btn"
+      [class.active]="p === currentPage"
+      (click)="goToPage(p)">{{ p }}</button>
+    <button class="obs-page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+    <span class="obs-page-info">
+      {{ 'OBSOLESCENCE.PAGE_INFO' | translate: { current: currentPage, total: totalPages } }}
+    </span>
+  </div>
+
+</div>
