@@ -199,7 +199,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   readonly techCatalog = TECH_CATALOG;
 
   getVersionsFor(techName: string): string[] {
-    return TECH_CATALOG.find(t => t.name === techName)?.versions ?? ['N/A'];
+    return TECH_CATALOG.find(t => t.name === techName)?.versions ?? [];
+  }
+  isCustomTech(name: string): boolean {
+    return !name || name === '__CUSTOM__' || !TECH_CATALOG.some(t => t.name === name);
   }
   addNewProjectTechnology(): void {
     this.newProjectTechnologies = [...this.newProjectTechnologies, { name: TECH_CATALOG[0].name, version: TECH_CATALOG[0].versions[0], comment: '' }];
@@ -210,7 +213,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.saveDraft();
   }
   onNewTechNameChange(tech: TechnologyEntry): void {
-    tech.version = this.getVersionsFor(tech.name)[0] ?? '';
+    if (tech.name === '__CUSTOM__') {
+      tech.name = '';
+      tech.version = '';
+    } else {
+      tech.version = this.getVersionsFor(tech.name)[0] ?? '';
+    }
+    this.saveDraft();
+  }
+  resetNewTechToFirstCatalog(tech: TechnologyEntry): void {
+    tech.name = TECH_CATALOG[0].name;
+    tech.version = TECH_CATALOG[0].versions[0];
     this.saveDraft();
   }
 

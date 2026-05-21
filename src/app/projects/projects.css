@@ -1568,6 +1568,33 @@ body {
   color: #445566;
 }
 
+.tech-custom-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.tech-custom-wrap .tech-input { flex: 1; }
+.tech-catalog-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 34px;
+  background: rgba(41,182,246,0.08);
+  border: 1px solid rgba(41,182,246,0.3);
+  color: #29b6f6;
+  border-radius: 7px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.tech-catalog-btn:hover {
+  background: rgba(41,182,246,0.2);
+  border-color: #29b6f6;
+}
+
 .tech-remove-btn {
   align-self: flex-end;
   flex-shrink: 0;
