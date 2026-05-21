@@ -18,7 +18,7 @@
     <!-- Pestañas dinámicas de procedimientos abiertos -->
     <button *ngFor="let tab of openProcTabs" class="procedures-tab procedure-detail-tab" [class.active]="activeDetailId === tab.proc.id" (click)="activeDetailId=tab.proc.id ?? null; activeTab='listar'">
       <mat-icon inline="true">description</mat-icon>
-      {{ tab.proc.titulo || '(Sense títol)' }}
+      <span class="tab-label">{{ tab.proc.titulo || '(Sense títol)' }}</span>
       <span class="tab-close" (click)="$event.stopPropagation(); closeProcDetail(tab.proc.id)" title="Cerrar">&#x2715;</span>
     </button>
   </div>

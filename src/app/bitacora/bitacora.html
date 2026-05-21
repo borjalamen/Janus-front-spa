@@ -26,7 +26,7 @@
     <!-- Pestañas dinámicas de registros abiertos -->
     <button *ngFor="let tab of openTabs" class="tab bitacora-detail-tab" [class.active]="activeDetailId === tab.bitacora.id" (click)="activeDetailId=tab.bitacora.id ?? null">
       <mat-icon inline="true">bug_report</mat-icon>
-      {{ tab.bitacora.contexto || ('ERRORS.NO_CONTEXT' | translate) }}
+      <span class="tab-label">{{ tab.bitacora.contexto || ('ERRORS.NO_CONTEXT' | translate) }}</span>
       <span class="tab-close" (click)="$event.stopPropagation(); closeBitacoraDetail(tab.bitacora.id)" title="Cerrar">&#x2715;</span>
     </button>
   </div>
