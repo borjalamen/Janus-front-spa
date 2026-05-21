@@ -1533,8 +1533,8 @@ body {
   display: none;
   position: absolute;
   bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  transform: none;
   width: 270px;
   background: #101823;
   border: 1px solid rgba(245,158,11,0.45);
@@ -1552,8 +1552,8 @@ body {
   content: '';
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 10px;
+  transform: none;
   border: 6px solid transparent;
   border-top-color: rgba(245,158,11,0.45);
 }
