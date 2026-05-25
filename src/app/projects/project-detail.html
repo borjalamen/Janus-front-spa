@@ -105,10 +105,9 @@
             <select [(ngModel)]="proyecto.departamento"
                    (ngModelChange)="saveDraft()">
               <option value="">Selecciona un departamento</option>
-              <option value="Agricultura">Agricultura</option>
-              <option value="Cultura">Cultura</option>
-              <option value="Policía">Policía</option>
-              <option value="Justicia">Justicia</option>
+              <option *ngFor="let dept of departments" [value]="dept.name">
+                {{ dept.name }}
+              </option>
             </select>
           </div>
         </div>

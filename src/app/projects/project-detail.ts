@@ -227,6 +227,7 @@ export const TECH_CATALOG: { name: string; versions: string[] }[] = [
 export class ProjectDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input() proyecto?: Proyecto;
   @Input() mode: "view" | "edit" = "view";
+  @Input() departments: any[] = [];
   @Output() close = new EventEmitter<void>();
 
   private _editing = false;
