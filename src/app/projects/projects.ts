@@ -1276,7 +1276,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     const project = this.projectes.find((p) => p.codigoProyecto === code);
     if (!project || !project.id) return;
 
-    this.projectService.softDelete(project.id).subscribe({
+    this.projectService.delete(project.id).subscribe({
       next: () => {
         this.projectes = this.projectes.filter(
           (p) => p.codigoProyecto !== code,
