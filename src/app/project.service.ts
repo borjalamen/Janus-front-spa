@@ -314,7 +314,9 @@ export class ProjectService {
    * Eliminar proyecto permanentemente (hard delete)
    */
   delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/delete/${id}`);
+    return this.http.delete(`${this.baseUrl}/delete/${id}`, {
+      responseType: "text",
+    });
   }
 
   /**
