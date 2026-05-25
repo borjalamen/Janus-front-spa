@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
@@ -84,17 +84,15 @@ import { Subscription } from 'rxjs';
     `
   ]
 })
-export class SpinnerComponent {
+export class SpinnerComponent implements OnInit, OnDestroy {
   images = ['assets/images/Clip.png', 'assets/images/Clip2.png'];
   currentImage: string | null = null;
   loadedImages: string[] = [];
   useFallback = false;
   private sub?: Subscription;
   private switchTimer?: ReturnType<typeof setInterval>;
-  private pendingRaf1?: number;
-  private pendingRaf2?: number;
 
-  constructor(public spinner: SpinnerService, private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
+  constructor(public spinner: SpinnerService, private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     // Preload images and detect load errors
@@ -113,29 +111,10 @@ export class SpinnerComponent {
     this.sub = this.spinner.visible$.subscribe(visible => {
       const doc = document.documentElement || document.body;
       if (visible) {
-        // showing spinner
-
-        // Forzar que el navegador pinte el overlay antes de que el contenido cambie:
-        // hacemos dos requestAnimationFrame fuera de Angular y luego volvemos a entrar
-        // para añadir la clase y arrancar la animación.
-        this.ngZone.runOutsideAngular(() => {
-          if (this.pendingRaf1) cancelAnimationFrame(this.pendingRaf1);
-          if (this.pendingRaf2) cancelAnimationFrame(this.pendingRaf2);
-          this.pendingRaf1 = requestAnimationFrame(() => {
-            this.pendingRaf2 = requestAnimationFrame(() => {
-              this.ngZone.run(() => {
-                doc.classList.add('no-scroll');
-                this.startSwitching();
-                this.cdr.detectChanges();
-              });
-            });
-          });
-        });
-
+        doc.classList.add('no-scroll');
+        this.startSwitching();
+        this.cdr.detectChanges();
       } else {
-        // hiding spinner
-        if (this.pendingRaf1) cancelAnimationFrame(this.pendingRaf1);
-        if (this.pendingRaf2) cancelAnimationFrame(this.pendingRaf2);
         doc.classList.remove('no-scroll');
         this.stopSwitching();
       }
