@@ -1360,7 +1360,7 @@ export class AdministracionComponent implements OnInit {
       rols: {
         admin: usuari.roles.includes("ADMIN"),
         consultor: usuari.roles.includes("CONSULTOR"),
-        devops: usuari.roles.includes("DEV"),
+        devops: usuari.roles.includes("DEVOPS"),
         manager: usuari.roles.includes("MANAGER"),
         team: usuari.roles.includes("TEAM"),
       },
