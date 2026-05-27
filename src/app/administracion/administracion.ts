@@ -1168,11 +1168,19 @@ export class AdministracionComponent implements OnInit {
   carregarUsuaris() {
     this.http.get<UsuariBackend[]>(`${this.baseUrl}/all`).subscribe({
       next: (data) => {
+        console.log('DEBUG - Usuarios recibidos del backend:', data);
+        console.log('DEBUG - Total usuarios recibidos:', data?.length);
+        
         const activeUsers = (data || []).filter((u) =>
           this.isActiveStatus(u.status),
         );
+        console.log('DEBUG - Usuarios activos tras filtrado:', activeUsers);
+        console.log('DEBUG - Total usuarios activos:', activeUsers.length);
+        
         this.usuaris = this.ordenarUsuariosMasRecientesPrimero(activeUsers);
         this.usuarisFiltrats = [...this.usuaris];
+        console.log('DEBUG - usuarisFiltrats final:', this.usuarisFiltrats);
+        console.log('DEBUG - searchUsers actual:', this.searchUsers);
 
         if (this.searchUsers) {
           this.filtrar(this.searchUsers);
