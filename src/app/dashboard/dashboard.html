@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div class="kpi-card kpi-procedimientos" [routerLink]="['/procedimientos']">
+        <div class="kpi-card kpi-procedimientos" *ngIf="isPrivileged" [routerLink]="['/procedimientos']">
           <mat-icon class="kpi-icon">description</mat-icon>
           <div class="kpi-body">
             <div class="kpi-value">{{ kpis.procedimientos.total }}</div>
@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <div class="kpi-card kpi-herramientas" [routerLink]="['/herramientas']">
+        <div class="kpi-card kpi-herramientas" *ngIf="isPrivileged" [routerLink]="['/herramientas']">
           <mat-icon class="kpi-icon">build</mat-icon>
           <div class="kpi-body">
             <div class="kpi-value">{{ kpis.herramientas.total }}</div>

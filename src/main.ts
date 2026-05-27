@@ -40,6 +40,7 @@ import installNetworkSpinner from './app/network-spinner-patch';
 import { APP_INITIALIZER } from '@angular/core';
 import { SpinnerService } from './app/spinner.service';
 import { authGuard } from './app/auth.guard';
+import { roleGuard } from './app/role.guard';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -54,27 +55,27 @@ bootstrapApplication(AppComponent, {
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-      { path: 'documents', component: DocumentsComponent },
+      { path: 'documents', component: DocumentsComponent, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
       { path: 'usuario', component: UsuarioComponent },
-      {path: 'projects', component: ProjectsComponent },
-      {path: 'projects/:code', component: ProjectDetailComponent },
-      {path: 'procedimientos', component: ProcedimientosComponent },
-      {path: 'formacion', component: FormacionComponent },
-      {path: 'planificacion', component: PlanificacionComponent },
-      {path: 'multimedia', component: MultimediaComponent },
-      { path: 'administracion', component: AdministracionComponent },
+      { path: 'projects', component: ProjectsComponent, canActivate: [roleGuard], data: { roles: ['consultor', 'devops', 'admin', 'manager', 'team'] } },
+      { path: 'projects/:code', component: ProjectDetailComponent, canActivate: [roleGuard], data: { roles: ['consultor', 'devops', 'admin', 'manager', 'team'] } },
+      { path: 'procedimientos', component: ProcedimientosComponent, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'formacion', component: FormacionComponent },
+      { path: 'planificacion', component: PlanificacionComponent, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'multimedia', component: MultimediaComponent, canActivate: [roleGuard], data: { roles: ['consultor', 'devops', 'admin', 'manager', 'team'] } },
+      { path: 'administracion', component: AdministracionComponent, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
       { path: 'peticion', loadComponent: () => import('./app/peticion/peticion').then(m => m.PeticionComponent) },
       { path: 'unete', loadComponent: () => import('./app/unete/unete').then(m => m.UneteComponent) },
       { path: 'user-profile/:id', component: UserProfileComponent },
       { path: 'descargables', component: DescargablesComponent },
-      { path: 'bitacora', component: Bitacora},
-      {path: 'jenkins', component: Jenkins},
-      {path: 'usuario', component: UsuarioComponent},
-      {path: 'infraestructura', component: Infraestructura},
-      {path: 'herramientas', component: Herramientas}
-      ,{ path: 'scrum', loadComponent: () => import('./app/scrum/scrum').then(m => m.ScrumComponent) }
-      ,{ path: 'estimacion', loadComponent: () => import('./app/estimacion/estimacion').then(m => m.EstimacionComponent) }
-      ,{ path: 'obsolescencia', loadComponent: () => import('./app/obsolescencia/obsolescencia').then(m => m.ObsolescenciaComponent) }
+      { path: 'bitacora', component: Bitacora, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'jenkins', component: Jenkins },
+      { path: 'usuario', component: UsuarioComponent },
+      { path: 'infraestructura', component: Infraestructura, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'herramientas', component: Herramientas, canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'scrum', loadComponent: () => import('./app/scrum/scrum').then(m => m.ScrumComponent), canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'estimacion', loadComponent: () => import('./app/estimacion/estimacion').then(m => m.EstimacionComponent), canActivate: [roleGuard], data: { roles: ['admin', 'devops'] } },
+      { path: 'obsolescencia', loadComponent: () => import('./app/obsolescencia/obsolescencia').then(m => m.ObsolescenciaComponent), canActivate: [roleGuard], data: { roles: ['consultor', 'devops', 'admin'] } }
     ]),
 
     provideHttpClient(withInterceptors([spinnerInterceptor]))
