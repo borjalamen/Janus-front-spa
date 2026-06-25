@@ -159,6 +159,35 @@ mat-nav-list a mat-icon {
 }
 /* ----- DESPLEGABLE (que ja et funciona i t’agrada) ----- */
 
+/* ----- DESPLEGABLE GENÈRIC FOSC (formularis) ----- */
+.dark-select-panel.mat-mdc-select-panel {
+  background-color: #1a1d26;
+  color: #e0e0e0;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 57, 53, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+  padding: 4px 0;
+}
+
+.dark-select-panel .mat-mdc-option {
+  color: #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark-select-panel .mat-mdc-option:last-child {
+  border-bottom: none;
+}
+
+.dark-select-panel .mat-mdc-option.mdc-list-item--selected,
+.dark-select-panel .mat-mdc-option.mdc-list-item--activated {
+  background-color: rgba(229, 57, 53, 0.25);
+  color: #fbc02d;
+}
+
+.dark-select-panel .mat-mdc-option:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
 .lang-panel.mat-mdc-select-panel {
   background-color: #021920;
   color: #f5f5f5;

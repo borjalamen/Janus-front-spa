@@ -67,7 +67,7 @@
         <mat-form-field appearance="outline" class="full">
           <mat-label>{{ 'UNETE.ROLE' | translate }}</mat-label>
           <mat-icon matPrefix>badge</mat-icon>
-          <mat-select name="role" [(ngModel)]="form.role" (ngModelChange)="onFormChange()">
+          <mat-select name="role" [(ngModel)]="form.role" (ngModelChange)="onFormChange()" panelClass="dark-select-panel">
             <mat-option value="CONSULTOR">{{ 'UNETE.ROLE_CONSULTOR' | translate }}</mat-option>
             <mat-option value="DEVOPS">{{ 'UNETE.ROLE_DEVOPS' | translate }}</mat-option>
             <mat-option value="MANAGER">Manager</mat-option>
