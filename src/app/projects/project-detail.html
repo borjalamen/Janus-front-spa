@@ -1098,6 +1098,42 @@ spring.datasource.password=..."></textarea>
                       placeholder="{{ 'PROJECTS.NOTES_PLACEHOLDER' | translate }}"
                       [readonly]="!editing"></textarea>
           </div>
+
+          <!-- ── Tecnologías (modo vista) ── -->
+          <div class="form-divider"></div>
+          <div class="tech-section-header">
+            <h4 class="subsection-title">{{ 'PROJECTS.SECTION_TECHNOLOGIES' | translate }}</h4>
+          </div>
+
+          <div *ngIf="technologies.length === 0" class="tech-empty-state">
+            <span>⚙️</span>
+            {{ 'PROJECTS.NO_TECHNOLOGIES' | translate }}
+          </div>
+
+          <div class="tech-list">
+            <div *ngFor="let tech of technologies; let i = index"
+                 [class]="'tech-card' + (tech.obsolete ? ' tech-card--obsolete' : '')">
+              <div class="tech-obs-cell">
+                <label class="tech-obs-toggle">
+                  <input type="checkbox" [checked]="tech.obsolete" disabled class="tech-obs-check" />
+                  <span class="tech-obs-tooltip">{{ 'PROJECTS.TECH_OBSOLETE_INFO' | translate }}</span>
+                </label>
+              </div>
+              <div class="tech-field">
+                <label class="tech-label">{{ 'PROJECTS.TECH_NAME' | translate }}</label>
+                <span class="tech-value-text">{{ tech.name }}</span>
+              </div>
+              <div class="tech-field">
+                <label class="tech-label">{{ 'PROJECTS.TECH_VERSION' | translate }}</label>
+                <span class="tech-value-text tech-version-badge">{{ tech.version }}</span>
+              </div>
+              <div class="tech-field">
+                <label class="tech-label">{{ 'PROJECTS.TECH_COMMENT' | translate }}</label>
+                <span *ngIf="tech.comment" class="tech-value-text tech-comment-text">{{ tech.comment }}</span>
+                <span *ngIf="!tech.comment" class="tech-value-text tech-empty">—</span>
+              </div>
+            </div>
+          </div>
         </section>
 
       </div>
