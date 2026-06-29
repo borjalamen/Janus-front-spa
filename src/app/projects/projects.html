@@ -1374,6 +1374,17 @@ spring.datasource.password=..."></textarea>
           </label>
         </div>
 
+        <div class="action-buttons-right" style="margin-top:12px">
+          <button
+            class="btn-round btn-primary"
+            (click)="importFromJsonFile()"
+            [disabled]="!projectJsonFile"
+            type="button"
+          >
+            📥 {{ 'PROJECTS.IMPORT_JSON_BTN' | translate }}
+          </button>
+        </div>
+
         <div *ngIf="importResult" class="import-result" [class.success]="importResult.success">
           <p>{{ importResult.message }}</p>
         </div>
@@ -1425,31 +1436,6 @@ spring.datasource.password=..."></textarea>
         </div>
       </div>
 
-      <!-- ── Importar JSON desde texto ── -->
-      <div class="admin-card import-card">
-        <div class="import-card-header">
-          <h3>📋 {{ 'PROJECTS.IMPORT_TEXT_JSON_TITLE' | translate }}</h3>
-        </div>
-        <p class="import-desc">{{ 'PROJECTS.IMPORT_TEXT_JSON_DESC' | translate }}</p>
-
-        <div class="input-field">
-          <textarea
-            rows="10"
-            [(ngModel)]="jsonTextImport"
-            [placeholder]="'PROJECTS.IMPORT_PASTE_JSON_PLACEHOLDER' | translate"
-          ></textarea>
-        </div>
-
-        <div class="action-buttons-right">
-          <button
-            class="btn-round btn-primary"
-            (click)="importFromJsonText()"
-            [disabled]="!jsonTextImport"
-          >
-            📥 {{ 'PROJECTS.IMPORT_JSON_BTN' | translate }}
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>

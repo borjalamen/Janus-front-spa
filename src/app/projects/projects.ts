@@ -1320,55 +1320,26 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.confirmAction = null;
   }
 
-  onJsonFileSelected(event: Event) {
-    if (!this.authService.canManageProjects) {
-      this.importResult = {
-        success: false,
-        message: "❌ No tens permisos per importar projectes",
-      };
-      return;
-    }
-
+  onJsonFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-
-    const file = input.files[0];
-    this.projectJsonFile = file;
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      this.processJsonImport(content);
-    };
-
-    reader.onerror = () => {
-      this.importResult = {
-        success: false,
-        message: "❌ Error al leer el archivo JSON",
-      };
-    };
-
-    reader.readAsText(file);
+    this.projectJsonFile = input.files[0];
+    this.importResult = null;
   }
 
-  importFromJsonText() {
+  importFromJsonFile(): void {
     if (!this.authService.canManageProjects) {
-      this.importResult = {
-        success: false,
-        message: "❌ No tens permisos per importar projectes",
-      };
+      this.importResult = { success: false, message: "❌ No tens permisos per importar projectes" };
       return;
     }
-
-    if (!this.jsonTextImport.trim()) {
-      this.importResult = {
-        success: false,
-        message: "❌ El texto JSON está vacío",
-      };
+    if (!this.projectJsonFile) {
+      this.importResult = { success: false, message: "❌ No s'ha seleccionat cap arxiu JSON" };
       return;
     }
-
-    this.processJsonImport(this.jsonTextImport);
+    const reader = new FileReader();
+    reader.onload = (e) => this.processJsonImport(e.target?.result as string);
+    reader.onerror = () => { this.importResult = { success: false, message: "❌ Error al llegir l'arxiu JSON" }; };
+    reader.readAsText(this.projectJsonFile);
   }
 
   parseJsonToProyectos(json: string): Proyecto[] {
