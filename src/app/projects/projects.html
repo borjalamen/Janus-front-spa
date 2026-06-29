@@ -1340,9 +1340,16 @@ spring.datasource.password=..."></textarea>
         <h2>📥 {{ 'PROJECTS.IMPORT_TITLE' | translate }}</h2>
       </div>
 
-      <div class="admin-card">
-        <h3>📄 {{ 'PROJECTS.IMPORT_JSON_TITLE' | translate }}</h3>
-        <p>{{ 'PROJECTS.IMPORT_JSON_DESC' | translate }}</p>
+      <!-- ── Importar desde JSON (archivo) ── -->
+      <div class="admin-card import-card">
+        <div class="import-card-header">
+          <h3>📄 {{ 'PROJECTS.IMPORT_JSON_TITLE' | translate }}</h3>
+          <button class="btn-template" (click)="downloadJsonTemplate()" type="button"
+                  [title]="'PROJECTS.IMPORT_JSON_TEMPLATE_HINT' | translate">
+            ⬇ {{ 'PROJECTS.IMPORT_DOWNLOAD_JSON_TEMPLATE' | translate }}
+          </button>
+        </div>
+        <p class="import-desc">{{ 'PROJECTS.IMPORT_JSON_DESC' | translate }}</p>
 
         <div class="import-area">
           <input
@@ -1362,24 +1369,68 @@ spring.datasource.password=..."></textarea>
               {{ 'PROJECTS.IMPORT_DRAG_DROP_JSON' | translate }}
             </span>
             <span class="file-name">
-              {{ projectJsonFile?.name || ('PROJECTS.NO_FILE_SELECTED' |
-              translate) }}
+              {{ projectJsonFile?.name || ('PROJECTS.NO_FILE_SELECTED' | translate) }}
             </span>
           </label>
         </div>
 
-        <div
-          *ngIf="importResult"
-          class="import-result"
-          [class.success]="importResult.success"
-        >
+        <div *ngIf="importResult" class="import-result" [class.success]="importResult.success">
           <p>{{ importResult.message }}</p>
         </div>
       </div>
 
-      <div class="admin-card">
-        <h3>📋 {{ 'PROJECTS.IMPORT_TEXT_JSON_TITLE' | translate }}</h3>
-        <p>{{ 'PROJECTS.IMPORT_TEXT_JSON_DESC' | translate }}</p>
+      <!-- ── Importar desde Excel ── -->
+      <div class="admin-card import-card">
+        <div class="import-card-header">
+          <h3>📊 {{ 'PROJECTS.IMPORT_EXCEL_TITLE' | translate }}</h3>
+          <button class="btn-template btn-template-excel" (click)="downloadExcelTemplate()" type="button"
+                  [title]="'PROJECTS.IMPORT_EXCEL_TEMPLATE_HINT' | translate">
+            ⬇ {{ 'PROJECTS.IMPORT_DOWNLOAD_EXCEL_TEMPLATE' | translate }}
+          </button>
+        </div>
+        <p class="import-desc">{{ 'PROJECTS.IMPORT_EXCEL_DESC' | translate }}</p>
+
+        <div class="import-area">
+          <input
+            type="file"
+            id="excelFile"
+            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            (change)="onExcelFileSelected($event)"
+            hidden
+          />
+          <label for="excelFile" class="import-dropzone import-dropzone-excel">
+            <span class="import-excel-icon">📊</span>
+            <span class="import-text">
+              {{ 'PROJECTS.IMPORT_DRAG_DROP_EXCEL' | translate }}
+            </span>
+            <span class="file-name">
+              {{ excelFile?.name || ('PROJECTS.NO_FILE_SELECTED' | translate) }}
+            </span>
+          </label>
+        </div>
+
+        <div class="action-buttons-right" style="margin-top:12px">
+          <button
+            class="btn-round btn-primary"
+            (click)="importFromExcel()"
+            [disabled]="!excelFile"
+            type="button"
+          >
+            📊 {{ 'PROJECTS.IMPORT_EXCEL_BTN' | translate }}
+          </button>
+        </div>
+
+        <div *ngIf="excelImportResult" class="import-result" [class.success]="excelImportResult.success">
+          <p>{{ excelImportResult.message }}</p>
+        </div>
+      </div>
+
+      <!-- ── Importar JSON desde texto ── -->
+      <div class="admin-card import-card">
+        <div class="import-card-header">
+          <h3>📋 {{ 'PROJECTS.IMPORT_TEXT_JSON_TITLE' | translate }}</h3>
+        </div>
+        <p class="import-desc">{{ 'PROJECTS.IMPORT_TEXT_JSON_DESC' | translate }}</p>
 
         <div class="input-field">
           <textarea

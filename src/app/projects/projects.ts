@@ -137,6 +137,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   jsonTextImport = "";
   projectJsonFile: File | null = null;
   importResult: { success: boolean; message: string } | null = null;
+  excelFile: File | null = null;
+  excelImportResult: { success: boolean; message: string } | null = null;
 
   newProjectTab: "info" | "minsait" | "dev" | "mind" | "connectivity" | "documentos" | "extras" = "info";
   newProjectConnectivities: ConnectivityEntry[] = [];
@@ -1432,6 +1434,217 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         success: false,
         message: "❌ Error al procesar el archivo JSON",
       };
+    }
+  }
+
+  /** Descarga una plantilla JSON de ejemplo con todos los campos disponibles */
+  downloadJsonTemplate(): void {
+    const template = [
+      {
+        "_ayuda": "Elimina este campo _ayuda antes de importar. Campos marcados con (*) son obligatorios.",
+        "codigoProyecto": "1001",
+        "nombre": "Nom de l'aplicació (*)",
+        "acronim": "ACR",
+        "blocServei": "Bloc de Servei",
+        "estat": "Alta",
+        "departamento": "DEPARTAMENT D'AGRICULTURA, RAMADERIA, PESCA I ALIMENTACIÓ",
+        "codidep": "1234",
+        "codient": "5678",
+        "lote": "AM16_23",
+        "codiClientAdmin": "CA-001",
+        "codiDialeg": "DIA-001",
+        "responsableProyecto": { "nombre": "Joan Garcia", "email": "joan@exemple.cat" },
+        "responsableTecnico": { "nombre": "Maria López", "email": "maria@exemple.cat" },
+        "gestionadaCdC": "Sí",
+        "nivelCriticitat": "Crític",
+        "serveiMantHorari": "8x5",
+        "tipusAplicacio": "WEB",
+        "notasGenerales": "Descripció general de l'aplicació",
+        "cmdb": "CMDB-001",
+        "empresaManteniment": "Empresa SL",
+        "contracteManteniment": "CONT-2024-001",
+        "descripcioLot": "Lot de manteniment correctiu i evolutiu",
+        "sistemaInformacio": "SI-001",
+        "codiSolucio": "SOL-001",
+        "familiaSolucions": "Família A",
+        "anyImplantacio": "2020",
+        "plataforma": "Cloud",
+        "entornTecnologic": "ET2",
+        "descEntornTecnologic": "Descripció de l'entorn tecnològic",
+        "numUsuaris": "T3",
+        "estacionalitat": "No",
+        "lotCPD": "LOT-CPD-01",
+        "proveidor": "Proveïdor SL",
+        "producteUtilitzat": "Producte X",
+        "urlEntornoIntegracion": "https://integ.exemple.cat",
+        "urlEntornoPreproduccion": "https://preprod.exemple.cat",
+        "urlEntornoProduccion": "https://exemple.cat",
+        "technologies": [
+          { "name": "Java", "version": "21", "comment": "Llenguatge principal", "obsolete": false }
+        ],
+        "extras": [
+          { "key": "Aplicació Monitorada", "value": "Sí" }
+        ]
+      }
+    ];
+    const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'plantilla_projectes.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  /** Descarga una plantilla Excel con columnas y fila de ejemplo */
+  async downloadExcelTemplate(): Promise<void> {
+    const XLSX = await import('xlsx');
+    const headers = [
+      'Codi Aplicació (*)', 'Nom Aplicació (*)', 'Acrònim', 'Bloc de Servei',
+      'Estat (Alta|Baixa|En fase de projecte)', 'Departament', 'CODIDEP', 'CODIENT',
+      'Lot manteniment', 'Responsable (Nom)', 'Responsable (Email)',
+      'Gestionada CdC (Sí|No)', 'Nivell Criticitat', 'Tipus Aplicació',
+      'Descripció', 'CMDB', 'Empresa Manteniment', 'Plataforma',
+      'Entorn Tecnològic (ET1-ET5)', 'Núm. Usuaris (T1-T11)',
+      'URL Integració', 'URL Preproducció', 'URL Producció',
+      'Sistema Informació', 'Codi Solució', 'Família Solucions', 'Any Implantació'
+    ];
+    const exampleRow = [
+      '1001', "Exemple d'Aplicació", 'EXA', 'Bloc exemple',
+      'Alta', "DEPARTAMENT D'AGRICULTURA, RAMADERIA, PESCA I ALIMENTACIÓ", '1234', '5678',
+      'AM16_23', 'Joan Garcia', 'joan@exemple.cat',
+      'Sí', 'Crític', 'WEB',
+      "Aplicació d'exemple per a la plantilla d'importació", 'CMDB-001', 'Empresa SL', 'Cloud',
+      'ET2', 'T3',
+      'https://integ.exemple.cat', 'https://preprod.exemple.cat', 'https://exemple.cat',
+      'SI-001', 'SOL-001', 'Família A', '2020'
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, exampleRow]);
+    ws['!cols'] = headers.map(() => ({ wch: 24 }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Projectes');
+    XLSX.writeFile(wb, 'plantilla_projectes.xlsx');
+  }
+
+  /** Gestiona la selección del archivo Excel */
+  onExcelFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    this.excelFile = input.files[0];
+    this.excelImportResult = null;
+  }
+
+  /** Importa proyectos desde el archivo Excel seleccionado */
+  async importFromExcel(): Promise<void> {
+    if (!this.authService.canManageProjects) {
+      this.excelImportResult = { success: false, message: '❌ No tens permisos per importar projectes' };
+      return;
+    }
+    if (!this.excelFile) {
+      this.excelImportResult = { success: false, message: '❌ No s\'ha seleccionat cap arxiu Excel' };
+      return;
+    }
+
+    try {
+      const XLSX = await import('xlsx');
+      const buffer = await this.excelFile.arrayBuffer();
+      const data = new Uint8Array(buffer);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows: string[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }) as string[][];
+
+      // Column index mapping (matches template order)
+      const C = {
+        codigoProyecto: 0, nombre: 1, acronim: 2, blocServei: 3, estat: 4,
+        departamento: 5, codidep: 6, codient: 7, lote: 8,
+        responsableNombre: 9, responsableEmail: 10, gestionadaCdC: 11,
+        nivelCriticitat: 12, tipusAplicacio: 13, notasGenerales: 14,
+        cmdb: 15, empresaManteniment: 16, plataforma: 17,
+        entornTecnologic: 18, numUsuaris: 19,
+        urlInteg: 20, urlPreprod: 21, urlProd: 22,
+        sistemaInformacio: 23, codiSolucio: 24, familiaSolucions: 25, anyImplantacio: 26
+      };
+      const s = (row: string[], idx: number): string | null => {
+        const v = row[idx];
+        return (v !== undefined && v !== null && String(v).trim() !== '') ? String(v).trim() : null;
+      };
+
+      const proyectos: Proyecto[] = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row[C.codigoProyecto] && !row[C.nombre]) continue;
+        const nombre = s(row, C.nombre);
+        if (!nombre) continue;
+
+        proyectos.push({
+          codigoProyecto: s(row, C.codigoProyecto) ?? undefined,
+          nombre,
+          acronim: s(row, C.acronim),
+          blocServei: s(row, C.blocServei),
+          estat: s(row, C.estat),
+          departamento: s(row, C.departamento),
+          codidep: s(row, C.codidep),
+          codient: s(row, C.codient),
+          lote: s(row, C.lote),
+          responsableProyecto: s(row, C.responsableNombre)
+            ? { nombre: s(row, C.responsableNombre)!, email: s(row, C.responsableEmail) }
+            : null,
+          gestionadaCdC: s(row, C.gestionadaCdC),
+          nivelCriticitat: s(row, C.nivelCriticitat),
+          tipusAplicacio: s(row, C.tipusAplicacio),
+          notasGenerales: s(row, C.notasGenerales),
+          cmdb: s(row, C.cmdb),
+          empresaManteniment: s(row, C.empresaManteniment),
+          plataforma: s(row, C.plataforma),
+          entornTecnologic: s(row, C.entornTecnologic),
+          numUsuaris: s(row, C.numUsuaris),
+          urlEntornoIntegracion: s(row, C.urlInteg),
+          urlEntornoPreproduccion: s(row, C.urlPreprod),
+          urlEntornoProduccion: s(row, C.urlProd),
+          sistemaInformacio: s(row, C.sistemaInformacio),
+          codiSolucio: s(row, C.codiSolucio),
+          familiaSolucions: s(row, C.familiaSolucions),
+          anyImplantacio: s(row, C.anyImplantacio),
+          ip: [], tareas: [], herramientas: [], technologies: [], extras: [],
+        } as Proyecto);
+      }
+
+      if (proyectos.length === 0) {
+        this.excelImportResult = { success: false, message: '❌ No s\'han trobat projectes a l\'arxiu Excel' };
+        return;
+      }
+
+      let imported = 0;
+      proyectos.forEach((p) => {
+        if (!p.codigoProyecto) {
+          p.codigoProyecto = 'PRJ-' + Math.random().toString(36).slice(2, 9).toUpperCase();
+        }
+        this.projectService.create(p).subscribe({
+          next: (created) => {
+            this.projectes.push(created as Proyecto);
+            imported++;
+            if (imported === proyectos.length) {
+              this.projectes = [...this.projectes].sort(
+                (a, b) => Number(a.codigoProyecto) - Number(b.codigoProyecto)
+              );
+              this.projectesFiltrats = [...this.projectes];
+              this.currentPage = 0;
+              this.excelImportResult = {
+                success: true,
+                message: `✅ S'han importat ${proyectos.length} projecte(s) correctament`,
+              };
+              this.excelFile = null;
+            }
+          },
+          error: (err) => console.error('Error al importar projecte:', err),
+        });
+      });
+    } catch (err) {
+      console.error('Error al importar Excel:', err);
+      this.excelImportResult = { success: false, message: '❌ Error al processar l\'arxiu Excel' };
     }
   }
 

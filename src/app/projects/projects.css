@@ -767,6 +767,70 @@ body {
   margin: 16px 0;
 }
 
+/* Card header: title + template download button side by side */
+.import-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.import-card-header h3 {
+  margin: 0;
+}
+.import-desc {
+  color: #aaa;
+  font-size: 13px;
+  margin: 0 0 4px;
+}
+
+/* Template download button */
+.btn-template {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 200, 220, 0.5);
+  background: rgba(0, 200, 220, 0.08);
+  color: #00c8dc;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  white-space: nowrap;
+}
+.btn-template:hover {
+  background: rgba(0, 200, 220, 0.18);
+  border-color: #00c8dc;
+  color: #fff;
+}
+.btn-template-excel {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(76, 175, 80, 0.08);
+  color: #81c784;
+}
+.btn-template-excel:hover {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: #81c784;
+  color: #fff;
+}
+
+/* Excel dropzone variant */
+.import-dropzone-excel {
+  border-color: rgba(76, 175, 80, 0.4);
+}
+.import-dropzone-excel:hover {
+  border-color: #81c784;
+  background: rgba(76, 175, 80, 0.05);
+}
+.import-excel-icon {
+  font-size: 52px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
 .import-dropzone {
   display: flex;
   flex-direction: column;
