@@ -1,8 +1,7 @@
 // src/app/document.service.ts
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable, of } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { environment } from "../environments/environment";
 
 // cada document és només el nom del fitxer
@@ -25,13 +24,7 @@ export class DocumentService {
     const params = new HttpParams().set("idProyecto", String(projectId));
     return this.http.get<BackendDocument[]>(`${this.baseUrl}/getAllFiles`, {
       params,
-    }).pipe(
-      catchError((err) => {
-        // 404 = carpeta del proyecto no existe aún (sin documentos). No es un error real.
-        if (err.status === 404) return of([]);
-        throw err;
-      })
-    );
+    });
   }
 
   // POST /uploadDoc  (idProyecto + documento)
