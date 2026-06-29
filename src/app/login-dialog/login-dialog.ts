@@ -59,7 +59,10 @@ export class LoginDialogComponent implements OnInit, OnDestroy {
       password: this.password
     }
   ).subscribe({
-    next: () => {
+    next: (signinRes) => {
+      // Guardar el token JWT antes de la siguiente petición
+      this.authService.setToken(signinRes.token);
+
       // 2) Un cop signin OK, demanem el perfil complet
       this.http.get<any>(
         `${environment.baseUrl}profile`,

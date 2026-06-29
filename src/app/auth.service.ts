@@ -41,14 +41,23 @@ export class AuthService {
 
   // REP el user COMPLET (amb id) i el guarda
   setLoggedUser(user: User) {
-    this.storage.setObject("user", user);
+    this.storage.setObject('user', user);
     this.currentUserSubject.next(user);
   }
 
+  setToken(token: string): void {
+    this.storage.set('jwt_token', token);
+  }
+
+  getToken(): string | null {
+    return this.storage.get('jwt_token');
+  }
+
   logout() {
-    this.storage.remove("user");
+    this.storage.remove('user');
+    this.storage.remove('jwt_token');
     this.currentUserSubject.next(null);
-    this.router.navigate(["/home"]);
+    this.router.navigate(['/home']);
   }
 
   get currentUserValue(): User | null {

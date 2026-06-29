@@ -36,6 +36,7 @@ import { Infraestructura } from './app/infraestructura/infraestructura';
 import { Herramientas } from './app/herramientas/herramientas';
 import { DescargablesComponent } from './app/descargables/descargables';
 import { spinnerInterceptor } from './app/spinner.interceptor';
+import { jwtInterceptor } from './app/auth.interceptor';
 import installNetworkSpinner from './app/network-spinner-patch';
 import { APP_INITIALIZER } from '@angular/core';
 import { SpinnerService } from './app/spinner.service';
@@ -78,7 +79,7 @@ bootstrapApplication(AppComponent, {
       { path: 'obsolescencia', loadComponent: () => import('./app/obsolescencia/obsolescencia').then(m => m.ObsolescenciaComponent), canActivate: [roleGuard], data: { roles: ['consultor', 'devops', 'admin'] } }
     ]),
 
-    provideHttpClient(withInterceptors([spinnerInterceptor]))
+    provideHttpClient(withInterceptors([jwtInterceptor, spinnerInterceptor]))
     ,
     {
       provide: APP_INITIALIZER,
