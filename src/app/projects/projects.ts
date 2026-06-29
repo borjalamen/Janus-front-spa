@@ -287,12 +287,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       next: (projects) => {
         const sorted = (projects as Proyecto[])
           .slice()
-          .sort((a, b) => Number(b.id) - Number(a.id));
+          .sort((a, b) => Number(a.codigoProyecto) - Number(b.codigoProyecto));
 
         this.projectes = sorted;
-
-        // Posem primer l'últim projecte creat
-        this.prioritizeLastCreatedProject();
 
         this.projectesFiltrats = [...this.projectes];
         this.currentPage = 0;
