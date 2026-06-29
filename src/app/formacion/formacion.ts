@@ -7,7 +7,7 @@ import { LocalStorageService } from '../local-storage.service';
 import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
 import { AgentRefreshService } from '../agent-refresh.service';
@@ -54,8 +54,7 @@ const DRAFT_ITEM_KEY = 'training_item_draft_v1';
     BuscadorComponent,
     TranslateModule,
     DragDropModule,
-    MatIconModule,
-    HttpClientModule
+    MatIconModule
   ],
 })
 export class FormacionComponent implements OnInit, OnDestroy {

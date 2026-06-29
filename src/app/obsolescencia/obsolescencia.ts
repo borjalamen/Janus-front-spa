@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth.service';
 import { environment } from '../../environments/environment';
@@ -22,7 +22,7 @@ export interface ObsolescenciaEntry {
   templateUrl: './obsolescencia.html',
   styleUrls: ['./obsolescencia.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
 })
 export class ObsolescenciaComponent implements OnInit {
   private readonly api = `${environment.baseUrl}obsolescencia`;
