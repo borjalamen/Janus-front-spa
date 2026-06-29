@@ -190,11 +190,7 @@ export class AppComponent implements OnDestroy, OnInit {
           if (savedUser) {
             const u = JSON.parse(savedUser);
             if (u?.avatarPath && u?.username) {
-              const url =
-                `${environment.baseUrl}profile/image?username=${encodeURIComponent(u.username)}`;
-              this.avatarPreview = url;
-              this.storage.set('userAvatar', url);
-              this.avatarService.setAvatar(url);
+              this.loadUserAvatar(u.username);
               return;
             }
           }
@@ -202,9 +198,9 @@ export class AppComponent implements OnDestroy, OnInit {
           console.error('Error parsejant user per carregar avatar a currentUser$', e);
         }
 
-        // 2) fallback: avatar ja guardat
+        // 2) fallback: avatar ja guardat (blob URL)
         const savedAvatar = this.storage.get('userAvatar');
-        if (savedAvatar) {
+        if (savedAvatar && savedAvatar.startsWith('blob:')) {
           this.avatarPreview = savedAvatar;
           this.avatarService.setAvatar(savedAvatar);
         } else {
@@ -669,6 +665,28 @@ export class AppComponent implements OnDestroy, OnInit {
     this.http.get(`${environment.baseUrl}notifications/test`).subscribe({
       next: () => { /* la notificación llegará por WS */ },
       error: (err) => console.error('Error enviando test:', err)
+    });
+  }
+
+  /**
+   * Carga el avatar del usuario usando HttpClient para que pase por el interceptor JWT
+   */
+  private loadUserAvatar(username: string): void {
+    this.http.get(
+      `${environment.baseUrl}profile/image?username=${encodeURIComponent(username)}`,
+      { responseType: 'blob' }
+    ).subscribe({
+      next: (blob) => {
+        const objectURL = URL.createObjectURL(blob);
+        this.avatarPreview = objectURL;
+        this.storage.set('userAvatar', objectURL);
+        this.avatarService.setAvatar(objectURL);
+      },
+      error: (err) => {
+        console.error('Error cargando avatar en app component', err);
+        this.avatarPreview = null;
+        this.avatarService.setAvatar(null);
+      }
     });
   }
 }

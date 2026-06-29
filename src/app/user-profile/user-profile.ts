@@ -45,8 +45,6 @@ export class UserProfileComponent implements OnInit {
   error = false;
   avatarLoadError = false;
   avatarUrlToRender: string | null = null;
-  private avatarCandidates: string[] = [];
-  private avatarCandidateIndex = 0;
 
   private baseUrl = `${environment.baseUrl}users`;
 
@@ -254,8 +252,6 @@ export class UserProfileComponent implements OnInit {
 
   private setupAvatarCandidates(): void {
     this.avatarLoadError = false;
-    this.avatarCandidateIndex = 0;
-    this.avatarCandidates = [];
     this.avatarUrlToRender = null;
 
     const username = (this.user?.username || '').trim();
@@ -264,44 +260,19 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    const apiOrigin = this.getApiOrigin();
-    const encodedUser = encodeURIComponent(username);
-    const cacheBust = Date.now();
-
-    this.avatarCandidates.push(`${environment.baseUrl}profile/image?username=${encodedUser}&t=${cacheBust}`);
-
-    const normalizedUploadsBase = apiOrigin ? `${apiOrigin}/uploads` : '/uploads';
-    const avatarBase = `${normalizedUploadsBase}/${encodedUser}/avatar`;
-    this.avatarCandidates.push(`${avatarBase}.png?t=${cacheBust}`);
-    this.avatarCandidates.push(`${avatarBase}.jpg?t=${cacheBust}`);
-    this.avatarCandidates.push(`${avatarBase}.jpeg?t=${cacheBust}`);
-    this.avatarCandidates.push(`${avatarBase}.webp?t=${cacheBust}`);
-    this.avatarCandidates.push(`${avatarBase}.gif?t=${cacheBust}`);
-
-    this.avatarUrlToRender = this.avatarCandidates[0] || null;
-  }
-
-  private getApiOrigin(): string {
-    const base = (environment.baseUrl || '').trim();
-    if (!base) return '';
-    if (base.startsWith('http://') || base.startsWith('https://')) {
-      try {
-        return new URL(base).origin;
-      } catch {
-        return '';
+    // Usa HttpClient para que pase por el interceptor JWT
+    this.http.get(
+      `${environment.baseUrl}profile/image?username=${encodeURIComponent(username)}`,
+      { responseType: 'blob' }
+    ).subscribe({
+      next: (blob) => {
+        const objectURL = URL.createObjectURL(blob);
+        this.avatarUrlToRender = objectURL;
+      },
+      error: (err) => {
+        console.error('Error cargando avatar en user-profile', err);
+        this.avatarLoadError = true;
       }
-    }
-    return '';
-  }
-
-  onAvatarError(): void {
-    this.avatarCandidateIndex += 1;
-    if (this.avatarCandidateIndex < this.avatarCandidates.length) {
-      this.avatarUrlToRender = this.avatarCandidates[this.avatarCandidateIndex];
-      return;
-    }
-
-    this.avatarUrlToRender = null;
-    this.avatarLoadError = true;
+    });
   }
 }

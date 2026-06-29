@@ -89,12 +89,7 @@ export class UsuarioComponent {
         this.profileForm.phone = user.phone || '';
 
         if (user.avatarPath) {
-          const url =
-            `${environment.baseUrl}profile/image?username=${encodeURIComponent(this.username)}`;
-          this.avatarPreview = url;
-
-          this.storage.set('userAvatar', this.avatarPreview);
-          this.avatarService.setAvatar(this.avatarPreview);
+          this.loadAvatarImage();
         }
       } catch (e) {
         console.error('Error parseando user de localStorage', e);
@@ -129,6 +124,24 @@ export class UsuarioComponent {
   /* ===========================
      AVATAR
      =========================== */
+  private loadAvatarImage(): void {
+    // Usa HttpClient para que pase por el interceptor con el token JWT
+    this.http.get(
+      `${environment.baseUrl}profile/image?username=${encodeURIComponent(this.username)}`,
+      { responseType: 'blob' }
+    ).subscribe({
+      next: (blob) => {
+        const objectURL = URL.createObjectURL(blob);
+        this.avatarPreview = objectURL;
+        this.storage.set('userAvatar', objectURL);
+        this.avatarService.setAvatar(objectURL);
+      },
+      error: (err) => {
+        console.error('Error cargando avatar', err);
+      }
+    });
+  }
+
   onAvatarSelected(event: Event): void {
     if (!this.ensureUserId()) return;
 
@@ -173,11 +186,8 @@ export class UsuarioComponent {
           this.storage.setObject('user', this.storedUser);
         }
 
-        const url =
-          `${environment.baseUrl}profile/image?username=${encodeURIComponent(this.username)}`;
-        this.avatarPreview = url;
-        this.storage.set('userAvatar', url);
-        this.avatarService.setAvatar(url);
+        // Recarga la imagen desde el servidor con el token JWT
+        this.loadAvatarImage();
       },
       error: (err) => {
         console.error('Error subiendo avatar', err);

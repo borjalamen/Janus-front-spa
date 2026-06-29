@@ -32,7 +32,6 @@
           [src]="avatarUrlToRender"
           [alt]="user.fullName"
           class="avatar-image"
-          (error)="onAvatarError()"
         />
         <mat-icon *ngIf="!avatarUrlToRender || avatarLoadError" class="avatar-fallback-icon">person</mat-icon>
       </div>
