@@ -17,13 +17,13 @@ export class DocumentService {
 
   // GET /getAllFolders
   getAllFolders(): Observable<(string | number)[]> {
-    return this.http.get<(string | number)[]>(`${this.baseUrl}\/getAllFolders`);
+    return this.http.get<(string | number)[]>(`${this.baseUrl}/getAllFolders`);
   }
 
   // GET /getAllFiles?idProyecto=...
   getAllFiles(projectId: string | number): Observable<BackendDocument[]> {
     const params = new HttpParams().set("idProyecto", String(projectId));
-    return this.http.get<BackendDocument[]>(`${this.baseUrl}\/getAllFiles`, {
+    return this.http.get<BackendDocument[]>(`${this.baseUrl}/getAllFiles`, {
       params,
     }).pipe(
       catchError((err) => {
@@ -40,7 +40,7 @@ export class DocumentService {
     formData.append("idProyecto", String(projectId));
     formData.append("documento", file);
 
-    return this.http.post(`${this.baseUrl}\/uploadDoc`, formData, {
+    return this.http.post(`${this.baseUrl}/uploadDoc`, formData, {
       responseType: "text",
     });
   }
@@ -51,7 +51,7 @@ export class DocumentService {
       .set("idProyecto", String(projectId))
       .set("nombreArchivo", fileName);
 
-    return this.http.delete(`${this.baseUrl}\/deleteFile`, {
+    return this.http.delete(`${this.baseUrl}/deleteFile`, {
       params,
       responseType: "text",
     });
@@ -63,7 +63,7 @@ export class DocumentService {
     const params = new HttpParams()
       .set("idProyecto", String(projectId))
       .set("nombreArchivo", fileName);
-    return this.http.get(`${this.baseUrl}\/getFile`, {
+    return this.http.get(`${this.baseUrl}/getFile`, {
       params,
       responseType: "blob",
     });
@@ -72,7 +72,7 @@ export class DocumentService {
   // DELETE /deleteAllFiles?idProyecto=...
   deleteProjectFiles(projectId: string | number) {
     const params = new HttpParams().set("idProyecto", String(projectId));
-    return this.http.delete(`${this.baseUrl}\/deleteAllFiles`, {
+    return this.http.delete(`${this.baseUrl}/deleteAllFiles`, {
       params,
       responseType: "text",
     });
@@ -82,7 +82,7 @@ export class DocumentService {
   // returns array of file metadata: { name, size, contentType, lastModified }
   getFolderInfo(projectId: string | number): Observable<any[]> {
     const params = new HttpParams().set("idProyecto", String(projectId));
-    return this.http.get<any[]>(`${this.baseUrl}\/getFolderInfo`, { params });
+    return this.http.get<any[]>(`${this.baseUrl}/getFolderInfo`, { params });
   }
 
   // GET /getFile?idProyecto=...&nombreArchivo=...
@@ -91,7 +91,7 @@ export class DocumentService {
     const params = new HttpParams()
       .set("idProyecto", String(projectId))
       .set("nombreArchivo", fileName);
-    return this.http.get(`${this.baseUrl}\/getFile`, {
+    return this.http.get(`${this.baseUrl}/getFile`, {
       params,
       responseType: "blob",
     });
