@@ -75,7 +75,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projectesFiltrats: Proyecto[] = this.projectes;
   isLoading = false;
 
-  pageSize = 8;
+  pageSize = 12;
   currentPage = 0;
 
   get totalPages(): number {
