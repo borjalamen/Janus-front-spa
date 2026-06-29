@@ -175,7 +175,10 @@ export class AppComponent implements OnDestroy, OnInit {
 
     // Cada cop que canvia l’usuari (login / logout)
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
-      if (user) {
+      if (user) {        // Reintentar versión si el arranque inicial falló (sin token)
+        if (!this.appVersion || this.appVersion === 'error obteniendo versión') {
+          this.loadVersion();
+        }
         // conectar WS de notificaciones al hacer login (con username para filtro por rol)
         this.notificationService.connect(user.username);
         this.username = user.username;

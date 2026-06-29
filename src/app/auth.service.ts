@@ -29,13 +29,21 @@ export class AuthService {
     private storage: LocalStorageService,
   ) {
     const userStr = this.storage.get("user");
-    if (userStr) {
+    const token = this.storage.get("jwt_token");
+
+    if (userStr && token) {
+      // Sesión completa: usuario + token válidos
       try {
         const user: User = JSON.parse(userStr);
         this.currentUserSubject.next(user);
       } catch (e) {
         console.error("Error carregant usuari", e);
+        this.storage.remove("user");
+        this.storage.remove("jwt_token");
       }
+    } else if (userStr && !token) {
+      // Sesión antigua sin token (pre-JWT): limpiar y forzar nuevo login
+      this.storage.remove("user");
     }
   }
 
