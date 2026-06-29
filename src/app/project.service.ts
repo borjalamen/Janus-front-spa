@@ -207,6 +207,47 @@ export interface Project {
   // Tecnologías utilizadas en el proyecto
   technologies?: TechnologyEntry[];
 
+  // ── Campos CTTI / Inventari d'Aplicacions ──
+
+  // Classificació
+  acronim?: string | null;
+  codiComponent?: string | null;
+  blocServei?: string | null;
+  estat?: string | null;
+  tipusAplicacio?: string | null;
+  nivelCriticitat?: string | null;
+  gestionadaCdC?: string | null;
+
+  // Identificació addicional
+  codidep?: string | null;
+  codient?: string | null;
+  entitat?: string | null;
+  codiClientAdmin?: string | null;
+  codiDialeg?: string | null;
+
+  // Contracte i manteniment
+  empresaManteniment?: string | null;
+  contracteManteniment?: string | null;
+  serveiMantHorari?: string | null;
+  descripcioLot?: string | null;
+  cmdb?: string | null;
+
+  // Taxonomia
+  sistemaInformacio?: string | null;
+  codiSolucio?: string | null;
+  familiaSolucions?: string | null;
+  anyImplantacio?: string | null;
+
+  // Plataforma i Entorn Tecnològic
+  plataforma?: string | null;
+  entornTecnologic?: string | null;
+  descEntornTecnologic?: string | null;
+  numUsuaris?: string | null;
+  estacionalitat?: string | null;
+  lotCPD?: string | null;
+  proveidor?: string | null;
+  producteUtilitzat?: string | null;
+
   // Auditoría
   createdAt?: string;
   updatedAt?: string;

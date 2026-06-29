@@ -334,9 +334,11 @@
 .member-actions { display:flex; align-items:center; margin-left:6px }
 .member-controls .members-actions { margin-top:6px }
 
-/* daily access row layout: keep time and person on separate columns on wide screens */
-.daily-access-row { display:grid; grid-template-columns: 200px 1fr; gap:12px; align-items:center; margin-top:12px }
+/* daily access row layout: 2 equal columns for responsable fields */
+.daily-access-row { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; align-items:start; margin-top:12px }
 .daily-access-row .form-row { margin:0 }
+/* dailies section row spans full width */
+.daily-section-row { grid-column: 1 / -1; }
 
 /* Ensure the persona responsable input fills the available space and matches other inputs */
 .section-minsait .daily-access-row .form-row input {
@@ -1544,8 +1546,8 @@ input:checked + .custom-slider:before { transform: translateX(24px); }
 	.general-grid.three-col > .divider-dots { grid-column: 1 / -1; }
 }
 
-/* left column wrapper for minsait content */
-.general-grid.three-col > .minsait-left-col { grid-column: 1 / 2; display:flex; flex-direction:column; gap:12px }
+/* left column wrapper for minsait content - spans full width */
+.general-grid.three-col > .minsait-left-col { grid-column: 1 / -1; display:flex; flex-direction:column; gap:12px }
 .general-grid.three-col > .minsait-left-col .divider-dots { grid-column: 1 / -1 }
 
 @media (max-width: 900px) {
